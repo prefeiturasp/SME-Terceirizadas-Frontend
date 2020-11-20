@@ -6,6 +6,12 @@ form.homologacao-produto {
     color: $blackInput;
     font-weight: bold;
   }
+  .texto-wysiwyg {
+    border: 1px #dddddd solid !important;
+    padding: 0.5rem;
+    font-size: 12px;
+    border-radius: 2px;
+  }
   table.table-informacoes-nutricionais {
     width: 100%;
     thead {

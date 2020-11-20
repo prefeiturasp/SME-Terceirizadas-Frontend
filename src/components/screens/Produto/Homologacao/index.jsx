@@ -168,6 +168,8 @@ class HomologacaoProduto extends Component {
       justificativa
     } = this.props;
     const { ultima_homologacao } = produto !== null && produto;
+    const logAnaliseSensorial =
+      ultima_homologacao && ultima_homologacao.ultimo_log;
     return (
       <div className="card">
         <div className="card-body">
@@ -242,6 +244,40 @@ class HomologacaoProduto extends Component {
                     <MotivoHomologacao logs={logs} />
                   </Fragment>
                 )}
+              {logAnaliseSensorial.status_evento_explicacao ===
+                "CODAE pediu análise sensorial" && (
+                <div className="row col-12">
+                  <div className="row col-10 ml-0">
+                    <div className="col-6 pl-0">
+                      <p className="text-muted">
+                        Solicitação de análise sensorial
+                      </p>
+                    </div>
+                    <div className="col-6">
+                      <p>
+                        <span className="text-muted">
+                          Protocolo Análise Sensorial:
+                        </span>{" "}
+                        {produto.ultima_homologacao.protocolo_analise_sensorial}
+                      </p>
+                    </div>
+
+                    <section className="texto-wysiwyg row col-12 ml-0">
+                      {logAnaliseSensorial && (
+                        <div className="col-12">
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: logAnaliseSensorial.justificativa
+                            }}
+                          />
+                        </div>
+                      )}
+                    </section>
+                  </div>
+                </div>
+              )}
+
+              <hr />
               {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
