@@ -82,6 +82,9 @@ export const email = value =>
     ? "Email inválido"
     : undefined;
 
+export const cep = value =>
+  value && /^[\d]{5}-[\d]{3}/.test(value) ? undefined : "Cep inválido";
+
 export const prefeituraEmail = value =>
   value && /.+@\prefeitura.sp.gov.br/.test(value)
     ? undefined
