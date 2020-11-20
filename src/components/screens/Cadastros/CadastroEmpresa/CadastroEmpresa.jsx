@@ -57,7 +57,7 @@ class CadastroEmpresa extends Component {
       contatosEmpresa: [
         {
           telefone: null,
-          email: null
+          email: ""
         }
       ],
 
@@ -173,7 +173,7 @@ class CadastroEmpresa extends Component {
 
   setaContatosEmpresa(input, event, indice) {
     let contatosEmpresa = this.state.contatosEmpresa;
-    contatosEmpresa[indice][input] = event;
+    contatosEmpresa[indice][input] = event ? event : "";
     this.setState({ contatosEmpresa });
   }
 
@@ -1030,7 +1030,8 @@ class CadastroEmpresa extends Component {
                                           label="E-mail"
                                           type={"email"}
                                           component={InputText}
-                                          validate={email}
+                                          required
+                                          validate={[email, required]}
                                           onChange={event =>
                                             this.setaContatosNutricionista(
                                               "email",
