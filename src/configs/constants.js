@@ -27,6 +27,10 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE =
+  "solicitacoes-autorizadas-temporariamente";
+export const SOLICITACOES_INATIVAS_TEMPORARIAMENTE =
+  "solicitacoes-inativas-temporariamente";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
@@ -43,9 +47,12 @@ export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
 };
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
+export const AUTORIZADAS_TEMPORARIAMENTE_DIETA =
+  "autorizadas-temporariamente-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";
 export const NEGADOS_DIETA = "negados-dieta";
 export const CANCELADOS_DIETA = "cancelados-dieta";
+export const INATIVAS_TEMPORARIAMENTE_DIETA = "inativas-temporariamente-dieta";
 
 export const DIETA_ESPECIAL_SOLICITACOES = {
   CODAE: "codae-solicitacoes",

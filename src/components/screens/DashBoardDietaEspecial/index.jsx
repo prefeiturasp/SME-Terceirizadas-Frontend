@@ -246,7 +246,7 @@ class DashBoardDietaEspecial extends Component {
                         : []
                     }
                     icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas-temporariamente`}
                   />
                 </div>
                 <div className="col-6">
@@ -259,7 +259,7 @@ class DashBoardDietaEspecial extends Component {
                         : []
                     }
                     icon={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
-                    href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
               </div>

@@ -17,10 +17,14 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   AUTORIZADOS_DIETA,
+  AUTORIZADAS_TEMPORARIAMENTE_DIETA,
   CANCELADOS_DIETA,
   PENDENTES_DIETA,
   NEGADOS_DIETA,
-  DIETA_ESPECIAL_SOLICITACOES
+  DIETA_ESPECIAL_SOLICITACOES,
+  SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE,
+  SOLICITACOES_INATIVAS_TEMPORARIAMENTE,
+  INATIVAS_TEMPORARIAMENTE_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -204,6 +208,46 @@ export class StatusSolicitacoes extends Component {
                 icone: ICON_CARD_TYPE_ENUM.CANCELADO,
                 titulo: "Canceladas",
                 urlPaginacao: this.retornaUrlPaginacao(visao, CANCELADOS_DIETA)
+              });
+            });
+          break;
+        case SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE:
+          this.props
+            .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  this.props.logPara
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
+                icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
+                titulo: "Autorizadas Temporariamente",
+                urlPaginacao: this.retornaUrlPaginacao(
+                  visao,
+                  AUTORIZADAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          break;
+        case SOLICITACOES_INATIVAS_TEMPORARIAMENTE:
+          this.props
+            .getDietaEspecialInativasTemporariamente(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  this.props.logPara
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                titulo: "Inativas Temporariamente",
+                urlPaginacao: this.retornaUrlPaginacao(
+                  visao,
+                  INATIVAS_TEMPORARIAMENTE_DIETA
+                )
               });
             });
           break;

@@ -50,24 +50,21 @@ class DietaEspecialBase extends React.Component {
 
 // Escola
 export const DietaEspecialEscola = () => (
-  <>
-    <h1>AQUI</h1>
-    <DietaEspecialBase
-      visao={ESCOLA}
-      getDietaEspecialPendenteAutorizacao={
-        getDietaEspecialPendenteAutorizacaoEscola
-      }
-      getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
-      getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
-      getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
-      getDietaEspecialAutorizadasTemporariamente={
-        getDietaEspecialAutorizadasTemporariamenteEscola
-      }
-      getDietaEspecialInativasTemporariamente={
-        getDietaEspecialInativasTemporariamenteEscola
-      }
-    />
-  </>
+  <DietaEspecialBase
+    visao={ESCOLA}
+    getDietaEspecialPendenteAutorizacao={
+      getDietaEspecialPendenteAutorizacaoEscola
+    }
+    getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
+    getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
+    getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteEscola
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteEscola
+    }
+  />
 );
 
 // DRE
