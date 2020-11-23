@@ -847,11 +847,14 @@ class CadastroEmpresa extends Component {
                   <div className="card-body">
                     {ehDistribuidor ? (
                       <Fragment>
+                        <div className="card-title font-weight-bold">
+                          Cadastro do Usuário Responsável pelo acesso ao Sistema
+                        </div>
                         <div className="row">
                           <div className="col-7">
                             <Field
                               component={InputText}
-                              label="Responsavel nome"
+                              label="Nome"
                               name="responsavel_nome"
                               required
                               validate={required}
@@ -861,9 +864,8 @@ class CadastroEmpresa extends Component {
                           <div className="col-5">
                             <Field
                               component={InputText}
-                              label="Responsavel email"
+                              label="Email"
                               name="responsavel_email"
-                              placeholder="email@exemplo.com"
                               type="email"
                               required
                               validate={[required, email]}
@@ -876,7 +878,7 @@ class CadastroEmpresa extends Component {
                             <Field
                               {...cpfMask}
                               component={InputText}
-                              label="Responsavel cpf"
+                              label="CPF"
                               name="responsavel_cpf"
                               required
                               validate={[required, validaCPF]}
@@ -885,7 +887,7 @@ class CadastroEmpresa extends Component {
                           <div className="col-4">
                             <Field
                               component={InputText}
-                              label="Responsavel cargo"
+                              label="Cargo"
                               name="responsavel_cargo"
                               required
                               validate={required}
@@ -895,7 +897,7 @@ class CadastroEmpresa extends Component {
                           <div className="col-4">
                             <Field
                               component={TelefoneOuCelular}
-                              label="Responsavel telefone"
+                              label="Telefone"
                               name="responsavel_telefone"
                               cenario="distribuidor"
                               required
