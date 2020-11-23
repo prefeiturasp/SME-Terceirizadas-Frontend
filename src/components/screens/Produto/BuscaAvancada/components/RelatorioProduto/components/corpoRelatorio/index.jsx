@@ -126,11 +126,15 @@ export default class CorpoRelatorio extends Component {
     const { produto, historico } = this.props;
     const { informacoes, logs, logSelecionado } = this.state;
     const status = produto.ultima_homologacao.status;
-    const logAnaliseSensorial =
+    const logsAnaliseSensorial =
       produto.ultima_homologacao.logs &&
-      produto.ultima_homologacao.logs.find(
+      produto.ultima_homologacao.logs.filter(
         log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
       );
+    const logAnaliseSensorial =
+      logsAnaliseSensorial &&
+      logsAnaliseSensorial.length > 0 &&
+      logsAnaliseSensorial[logsAnaliseSensorial.length - 1];
     return (
       <section className="corpo-reatorio-produto">
         {!!logs.length && (
