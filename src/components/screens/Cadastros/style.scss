@@ -217,7 +217,16 @@ table.cadastro-empresa {
     &:first-child {
       padding-left: 20px;
     }
+    width: auto;
+    &:last-child {
+      max-width: 150px;
+
+      input {
+        width: 80%;
+      }
+    }
   }
+
   td {
     font-size: 14px;
     color: #707683;
@@ -234,7 +243,7 @@ table.cadastro-empresa {
     }
     &:nth-child(5) {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       padding-right: 20%;
     }
   }
@@ -286,7 +295,11 @@ table.cadastro-empresa {
 
         .endereco-empresa {
           display: grid;
-          grid-template-columns: 60% 40%;
+          grid-template-columns: 25% 25% 25% 25%;
+        }
+        .endereco-empresa-top {
+          display: grid;
+          grid-template-columns: 25% 50% 25%;
         }
         .contato-empresa {
           margin-top: 2%;
@@ -676,5 +689,21 @@ table.cadastro-lote {
     display: grid;
     grid-template-columns: 34% 64%;
     grid-column-gap: 2%;
+  }
+}
+
+.botao-direita {
+  span {
+    float: right;
+  }
+}
+
+.secao-distribuidor {
+  header {
+    display: flex;
+    justify-content: flex-start;
+    font-weight: bold;
+    font-size: 14px;
+    color: #353535;
   }
 }

@@ -86,15 +86,32 @@ export const retornArrayTerceirizadas = response => {
       ativo: false,
       endereco: resp.endereco,
       cep: resp.cep,
+      contatos: resp.contatos.map(contato => {
+        return {
+          telefone: contato.telefone,
+          email: contato.email
+        };
+      }),
+      eh_distribuidor: resp.eh_distribuidor,
       telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
       email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
-
       representante: resp.representante_legal,
       telefonefax: resp.representante_telefone,
       email_representante: resp.representante_email,
       nutricionistas: retornaNutricionistas(resp.nutricionistas),
       editais: retornaEditais(resp.contratos),
-      lotes: retornaLotes(resp.lotes)
+      lotes: retornaLotes(resp.lotes),
+      bairro: resp.bairro,
+      cidade: resp.cidade,
+      estado: resp.estado,
+      numero: resp.numero,
+      tipo: resp.eh_distribuidor ? "Distribuidor" : "Terceirizada",
+      complemento: resp.complemento,
+      responsavel_nome: resp.responsavel_nome,
+      responsavel_email: resp.responsavel_email,
+      responsavel_cpf: resp.responsavel_cpf,
+      responsavel_telefone: resp.responsavel_telefone,
+      responsavel_cargo: resp.responsavel_cargo
     };
   });
   return listaTerceirizadas;
