@@ -83,7 +83,8 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhLogistica
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -113,6 +114,7 @@ import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
+import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 
 const routesConfig = [
   {
@@ -949,6 +951,14 @@ const routesConfig = [
     component: LancamentoMedicaoInicialPage,
     exact: true,
     tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${
+      constants.DISPONIBILIZACAO_DE_SOLICITACOES
+    }`,
+    component: DisponibilizacaoDeSolicitacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 
