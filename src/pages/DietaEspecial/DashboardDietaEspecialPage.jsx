@@ -28,7 +28,13 @@ import {
   getDietaEspecialCanceladasCODAE,
   getDietaEspecialCanceladasDRE,
   getDietaEspecialCanceladasTerceirizada,
-  getDietaEspecialCanceladasEscola
+  getDietaEspecialCanceladasEscola,
+  getDietaEspecialAutorizadasTemporariamenteCODAE,
+  getDietaEspecialAutorizadasTemporariamenteDRE,
+  getDietaEspecialAutorizadasTemporariamenteEscola,
+  getDietaEspecialInativasTemporariamenteCODAE,
+  getDietaEspecialInativasTemporariamenteDRE,
+  getDietaEspecialInativasTemporariamenteEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -52,6 +58,12 @@ export const DietaEspecialEscola = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
     getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteEscola
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteEscola
+    }
   />
 );
 
@@ -63,6 +75,12 @@ export const DietaEspecialDRE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
     getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasDRE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteDRE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteDRE
+    }
   />
 );
 
@@ -76,6 +94,12 @@ export const DietaEspecialCODAE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
     getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasCODAE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteCODAE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteCODAE
+    }
   />
 );
 

@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { fetchGet } from "./_fetch";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -71,6 +72,16 @@ export const getDietaEspecialCanceladasEscola = uuid => {
     });
 };
 
+export const getDietaEspecialAutorizadasTemporariamenteEscola = uuid =>
+  fetchGet(
+    `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteEscola = uuid =>
+  fetchGet(
+    `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
+
 // DRE
 export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -136,6 +147,16 @@ export const getDietaEspecialCanceladasDRE = uuid => {
     });
 };
 
+export const getDietaEspecialAutorizadasTemporariamenteDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
+
 // CODAE
 export const getDietaEspecialPendenteAutorizacaoCODAE = () => {
   const url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
@@ -200,6 +221,12 @@ export const getDietaEspecialCanceladasCODAE = () => {
       console.log(error);
     });
 };
+
+export const getDietaEspecialAutorizadasTemporariamenteCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`);
+
+export const getDietaEspecialInativasTemporariamenteCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`);
 
 // TERCEIRIZADA
 export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {

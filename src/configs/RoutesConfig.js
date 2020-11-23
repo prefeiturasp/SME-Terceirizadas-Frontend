@@ -602,6 +602,22 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_INATIVAS_TEMPORARIAMENTE
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/ajuda`,
     component: FaqPage,
     exact: true,

@@ -18,6 +18,7 @@ const MenuDietaEspecial = () => {
   const exibePainelInicial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
+    usuarioEhDRE() ||
     usuarioEhEscola();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =

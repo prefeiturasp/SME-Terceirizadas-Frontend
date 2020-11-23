@@ -20,7 +20,13 @@ import {
   getDietaEspecialPendenteAutorizacaoTerceirizada,
   getDietaEspecialAutorizadasTerceirizada,
   getDietaEspecialNegadasTerceirizada,
-  getDietaEspecialCanceladasTerceirizada
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialAutorizadasTemporariamenteCODAE,
+  getDietaEspecialAutorizadasTemporariamenteDRE,
+  getDietaEspecialAutorizadasTemporariamenteEscola,
+  getDietaEspecialInativasTemporariamenteCODAE,
+  getDietaEspecialInativasTemporariamenteDRE,
+  getDietaEspecialInativasTemporariamenteEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -64,6 +70,12 @@ export const SolicitacoesDietaEspecialEscola = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
     getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteEscola
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteEscola
+    }
   />
 );
 
@@ -76,6 +88,12 @@ export const SolicitacoesDietaEspecialDRE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
     getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasDRE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteDRE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteDRE
+    }
   />
 );
 
@@ -90,6 +108,12 @@ export const SolicitacoesDietaEspecialCODAE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
     getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasCODAE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteCODAE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteCODAE
+    }
   />
 );
 
