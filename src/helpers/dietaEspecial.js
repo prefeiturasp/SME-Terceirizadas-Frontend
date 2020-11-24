@@ -147,3 +147,13 @@ export const getStatusSolicitacoesVigentes = () => {
     "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
   ];
 };
+
+export const getStatusSolicitacoesInativas = () => {
+  return [
+    "CODAE_AUTORIZADO",
+    "CODAE_NEGOU_PEDIDO",
+    "ESCOLA_CANCELOU",
+    "CODAE_AUTORIZOU_INATIVACAO",
+    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
+  ];
+};
