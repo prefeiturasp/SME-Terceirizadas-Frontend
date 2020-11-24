@@ -16,6 +16,7 @@ export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const ATIVAS_ANATIVAS = "ativas-inativas";
 export const GESTAO_PRODUTO = "gestao-produto";
 export const LANCAMENTO_INICIAL = "lancamento-inicial";
+export const LOGISTICA = "logistica";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -122,6 +123,8 @@ export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
 export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
   "tipo-alimentacao-unidade-escolar";
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
+export const DISPONIBILIZACAO_DE_SOLICITACOES =
+  "disponibilizacao-de-solicitacoes";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
