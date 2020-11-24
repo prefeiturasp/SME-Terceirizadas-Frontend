@@ -303,6 +303,12 @@ export const usuarioEhEscola = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhLogistica = () => {
+  return [PERFIL.COORDENADOR_LOGISTICA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$/i.test(
     localStorage.getItem("nome_instituicao")
