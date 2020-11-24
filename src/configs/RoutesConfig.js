@@ -112,6 +112,7 @@ import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/Relatori
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
 
 const routesConfig = [
@@ -159,6 +160,12 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialEscolaPage,
+    exact: false,
+    tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.CANCELAMENTO}`,
+    component: CancelamentoDietaPage,
     exact: false,
     tipoUsuario: usuarioEhEscola()
   },

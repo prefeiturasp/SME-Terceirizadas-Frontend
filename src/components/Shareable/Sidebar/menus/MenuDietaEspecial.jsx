@@ -3,7 +3,9 @@ import { Menu, LeafItem } from "./shared";
 import {
   GESTAO_PRODUTO,
   AVALIAR_SOLICITACAO_CADASTRO_PRODUTO,
-  ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO
+  ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO,
+  DIETA_ESPECIAL,
+  CANCELAMENTO
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -67,6 +69,11 @@ const MenuDietaEspecial = () => {
           to={`/${GESTAO_PRODUTO}/${ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO}`}
         >
           Acompanhar solic. novos produtos
+        </LeafItem>
+      )}
+      {usuarioEhEscola() && (
+        <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
+          Cancel. Dieta Especial
         </LeafItem>
       )}
     </Menu>
