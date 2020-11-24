@@ -702,7 +702,7 @@ class CadastroEmpresa extends Component {
                     <div className="col-3">
                       <Field
                         component={InputText}
-                        label="Numero"
+                        label="Número"
                         name="numero"
                         maxlength="5"
                       />
