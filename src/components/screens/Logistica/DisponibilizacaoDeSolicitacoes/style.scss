@@ -1,0 +1,56 @@
+@import "styles/variables.scss";
+
+div.disponibilizacao-solicitacoes {
+  table.solicitacoes {
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid #e9eaea;
+    border-radius: 4px;
+    thead {
+      tr {
+        color: $blackInput;
+        border: 1px solid #e9eaea;
+        background-color: #f5f6f8;
+        th {
+          padding: 15px;
+          border-right: 1px solid #e9eaea;
+        }
+      }
+    }
+    tbody {
+      tr {
+        color: $blackInput;
+        border: 1px solid #e9eaea;
+        font-weight: bold;
+        td {
+          padding: 15px;
+          border-right: 1px solid #e9eaea;
+          &.link {
+            cursor: pointer;
+            color: $blue;
+            font-size: 12px;
+            padding: 10px;
+            text-align: center;
+            &.red {
+              color: $red;
+            }
+          }
+        }
+        &.guia,
+        &.guia-alimento {
+          font-weight: normal;
+          border-top: 1px solid #e9eaea;
+          td {
+            border: none;
+            span {
+              font-weight: bold;
+            }
+          }
+        }
+        &.guia-alimento {
+          border-top: hidden;
+        }
+      }
+    }
+  }
+}

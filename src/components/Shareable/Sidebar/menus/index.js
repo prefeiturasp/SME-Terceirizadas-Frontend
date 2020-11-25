@@ -8,3 +8,4 @@ export { default as MenuLancamentoInicial } from "./MenuLancamentoInicial";
 export {
   default as MenuPesquisaDesenvolvimento
 } from "./MenuPesquisaDesenvolvimento";
+export { default as MenuLogistica } from "./MenuLogistica";
