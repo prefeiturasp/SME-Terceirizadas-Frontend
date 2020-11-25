@@ -199,8 +199,8 @@ class CadastroEmpresa extends Component {
     this.setState({
       contatosEmpresa: this.state.contatosEmpresa.concat([
         {
-          telefone: null,
-          email: null
+          telefone: "",
+          email: ""
         }
       ])
     });
