@@ -26,6 +26,15 @@ export const DisponibilizacaoDeSolicitacoes = () => {
       });
   }, []);
 
+  const [, updateState] = React.useState();
+  const forceUpdate = React.useCallback(() => updateState({}), []);
+
+  const expandir = key => {
+    solicitacoes[key].ativo = !solicitacoes[key].ativo;
+    setSolicitacoes(solicitacoes);
+    forceUpdate();
+  };
+
   return (
     <div className="disponibilizacao-solicitacoes">
       <div className="card">
@@ -52,7 +61,7 @@ export const DisponibilizacaoDeSolicitacoes = () => {
                 </thead>
                 <tbody>
                   {solicitacoes.map((solicitacao, key) => {
-                    return (
+                    return [
                       <tr key={key}>
                         <td>{solicitacao.numero_solicitacao}</td>
                         <td>{solicitacao.guias.length}</td>
@@ -62,10 +71,95 @@ export const DisponibilizacaoDeSolicitacoes = () => {
                           {solicitacao.guias &&
                             solicitacao.guias[0].data_entrega}
                         </td>
-                        <td className="link">Ver mais</td>
+                        <td
+                          onClick={() => expandir(key)}
+                          className={solicitacao.ativo ? "link red" : "link"}
+                        >
+                          {solicitacao.ativo ? "Ver menos" : "Ver mais"}
+                        </td>
                         <td className="link">Enviar</td>
-                      </tr>
-                    );
+                      </tr>,
+                      solicitacao.ativo &&
+                        solicitacao.guias.map((guia, keyGuia) => {
+                          return [
+                            <tr className="guia" key={keyGuia}>
+                              <td>
+                                Nº da guia <br />
+                                <span>{guia.numero_guia}</span>
+                              </td>
+                              <td />
+                              <td>
+                                Cód. EOL UE <br />
+                                <span>{guia.codigo_unidade}</span>
+                              </td>
+                              <td colSpan="4">
+                                Nome Unidade de Ensino <br />
+                                <span>{guia.nome_unidade}</span>
+                              </td>
+                            </tr>,
+                            <tr className="guia-alimento" key={keyGuia}>
+                              <td colSpan="2" />
+                              <td colSpan="2">
+                                Endereço <br />
+                                <span>{guia.endereco_unidade}</span>
+                              </td>
+                              <td colSpan="3">
+                                Número <br />
+                                <span>{guia.numero_unidade}</span>
+                              </td>
+                            </tr>,
+                            <tr className="guia-alimento" key={keyGuia}>
+                              <td colSpan="2" />
+                              <td>
+                                Bairro <br />
+                                <span>{guia.bairro_unidade}</span>
+                              </td>
+                              <td>
+                                CEP <br />
+                                <span>{guia.cep_unidade}</span>
+                              </td>
+                              <td colSpan="2">
+                                Estado <br />
+                                <span>{guia.estado_unidade}</span>
+                              </td>
+                            </tr>,
+                            <tr className="guia-alimento" key={keyGuia}>
+                              <td colSpan="2" />
+                              <td>
+                                Cidade <br />
+                                <span>{guia.cidade_unidade}</span>
+                              </td>
+                              <td>
+                                Contato <br />
+                                <span>{guia.contato_unidade}</span>
+                              </td>
+                              <td colSpan="2">
+                                Telefone <br />
+                                <span>{guia.telefone_unidade}</span>
+                              </td>
+                            </tr>,
+                            guia.alimentos.map((alimento, keyAlimento) => {
+                              return (
+                                <tr className="guia-alimento" key={keyAlimento}>
+                                  <td colSpan="2" />
+                                  <td>
+                                    Nome do produto <br />
+                                    <span>{alimento.nome_alimento}</span>
+                                  </td>
+                                  <td>
+                                    Qtde. <br />
+                                    <span>{alimento.qtd_volume}</span>
+                                  </td>
+                                  <td colSpan="3">
+                                    Unidade <br />
+                                    <span>{alimento.embalagem}</span>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          ];
+                        })
+                    ];
                   })}
                 </tbody>
               </table>
