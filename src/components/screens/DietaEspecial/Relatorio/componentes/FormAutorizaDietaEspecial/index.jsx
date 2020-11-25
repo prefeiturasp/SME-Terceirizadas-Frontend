@@ -14,7 +14,7 @@ import {
   getSolicitacoesDietaEspecial,
   getProtocolosDietaEspecial
 } from "../../../../../../services/dietaEspecial.service";
-import { getNomeProdutosHomologados } from "services/produto.service";
+import { getSubstitutos } from "services/produto.service";
 import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 
 import { TIPO_SOLICITACAO_DIETA } from "../../../../../../constants/shared";
@@ -69,7 +69,7 @@ export default class FormAutorizaDietaEspecial extends Component {
     const { aluno, uuid } = this.props.dietaEspecial;
     const alergiasIntolerancias = await getAlergiasIntolerancias();
     const alimentos = await getAlimentos();
-    const produtos = await getNomeProdutosHomologados();
+    const produtos = await getSubstitutos();
     const protocolosDietaEspecial = await getProtocolosDietaEspecial();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
     const params = gerarParametrosConsulta({
