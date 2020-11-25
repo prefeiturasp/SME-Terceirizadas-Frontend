@@ -20,6 +20,7 @@ import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 
 import "./style.scss";
+import { cabecalhoDieta } from "./helpers";
 
 const BotaoGerarRelatorio = ({ uuid }) => {
   return (
@@ -109,9 +110,7 @@ export default class Relatorio extends Component {
     }
     return (
       <>
-        <span className="page-title">{`Dieta Especial - Solicitação # ${
-          dietaEspecial.id_externo
-        }`}</span>
+        <span className="page-title">{cabecalhoDieta(dietaEspecial)}</span>
         <div className="card mt-3">
           <div className="card-body">
             <CorpoRelatorio
