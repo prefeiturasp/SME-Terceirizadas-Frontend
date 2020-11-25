@@ -6,7 +6,7 @@ const MenuLogistica = () => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Logística">
       <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
-        Disponibilizacao de solicitações
+        Disponibilização de solicitações
       </LeafItem>
     </Menu>
   );

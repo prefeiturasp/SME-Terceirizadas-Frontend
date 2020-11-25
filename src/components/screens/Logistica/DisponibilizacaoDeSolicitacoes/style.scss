@@ -31,7 +31,24 @@ div.disponibilizacao-solicitacoes {
             font-size: 12px;
             padding: 10px;
             text-align: center;
+            &.red {
+              color: $red;
+            }
           }
+        }
+        &.guia,
+        &.guia-alimento {
+          font-weight: normal;
+          border-top: 1px solid #e9eaea;
+          td {
+            border: none;
+            span {
+              font-weight: bold;
+            }
+          }
+        }
+        &.guia-alimento {
+          border-top: hidden;
         }
       }
     }

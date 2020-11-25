@@ -26,6 +26,7 @@ export default ({ dieta, showModal, setShowModal }) => {
     escolaInativaDietaEspecial(dieta.uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Solicitação de inativação realizada com sucesso.");
+        setShowModal(false);
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(getError(response.data));
       } else {
