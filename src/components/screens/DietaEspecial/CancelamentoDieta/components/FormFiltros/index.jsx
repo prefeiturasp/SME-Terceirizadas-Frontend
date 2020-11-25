@@ -91,7 +91,7 @@ export default ({ setLoading, setFiltros }) => {
   const getAlunoPorEol = async (codigoEol, values) => {
     if (codigoEol.length !== 7) {
       setDesabilitarAluno(false);
-      setDadosIniciais({ ...values, nome_aluno: undefined });
+      setDadosIniciais({ ...values });
       return;
     }
     setCarregandoAluno(true);
@@ -215,9 +215,7 @@ export default ({ setLoading, setFiltros }) => {
                   texto="Limpar Filtros"
                   className="float-right ml-3"
                   onClick={() => {
-                    form.reset({
-                      ...dadosIniciais
-                    });
+                    form.reset({ dre: values.dre, escola: values.escola });
                   }}
                   disabled={pristine}
                   style={BUTTON_STYLE.GREEN_OUTLINE}

@@ -12,7 +12,15 @@ import { getSolicitacoesDietaEspecial } from "services/dietaEspecial.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getStatusSolicitacoesInativas } from "helpers/dietaEspecial";
 
-export default ({ dieta, bordas, ativos, setAtivos, icone }) => {
+export default ({
+  dieta,
+  bordas,
+  ativos,
+  setAtivos,
+  icone,
+  filtros,
+  setFiltros
+}) => {
   const [showModal, setShowModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(null);
 
@@ -171,6 +179,8 @@ export default ({ dieta, bordas, ativos, setAtivos, icone }) => {
         dieta={dieta}
         showModal={showModal}
         setShowModal={setShowModal}
+        filtros={filtros}
+        setFiltros={setFiltros}
       />
     </>
   );

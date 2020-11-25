@@ -64,6 +64,7 @@ export default () => {
                 ativos={ativos}
                 setAtivos={setAtivos}
                 filtros={filtros}
+                setFiltros={setFiltros}
               />
               <Pagination
                 current={page || 1}
