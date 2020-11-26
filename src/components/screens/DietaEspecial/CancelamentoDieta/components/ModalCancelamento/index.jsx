@@ -21,12 +21,13 @@ import {
 } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 
-export default ({ dieta, showModal, setShowModal }) => {
+export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
   const onSubmit = values => {
     escolaInativaDietaEspecial(dieta.uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de inativação realizada com sucesso.");
+        toastSuccess("Solicitação de cancelamento realizada com sucesso.");
         setShowModal(false);
+        setFiltros({ ...filtros });
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         toastError(getError(response.data));
       } else {

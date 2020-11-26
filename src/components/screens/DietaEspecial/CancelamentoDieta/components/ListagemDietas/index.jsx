@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import TabelaDieta from "../TabelaDieta";
 
-const ListagemDietas = ({ dietas, ativos, setAtivos, filtros }) => {
+const ListagemDietas = ({ dietas, ativos, setAtivos, filtros, setFiltros }) => {
   const getTitulo = () => {
     if (filtros.nome_aluno) return `"${filtros.nome_aluno}"`;
     return "busca";
@@ -31,6 +31,8 @@ const ListagemDietas = ({ dietas, ativos, setAtivos, filtros }) => {
                 icone={icone}
                 ativos={ativos}
                 setAtivos={setAtivos}
+                filtros={filtros}
+                setFiltros={setFiltros}
               />
             </>
           );

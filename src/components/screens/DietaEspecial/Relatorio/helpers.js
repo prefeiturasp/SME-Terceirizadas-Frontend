@@ -11,5 +11,5 @@ const DESCRICAO_SOLICITACAO = {
 export const cabecalhoDieta = dietaEspecial => {
   return `Dieta Especial - ${
     DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao]
-  } # ${dietaEspecial.id_externo}`;
+  }`;
 };
