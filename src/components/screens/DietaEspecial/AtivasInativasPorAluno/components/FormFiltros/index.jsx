@@ -103,7 +103,7 @@ const FormFiltros = ({
     if (resposta.status !== 200) {
       setDesabilitarAluno(false);
       setDadosIniciais({ ...values, nome_aluno: "" });
-      toastError("Não há aluno para o código EOL informado.");
+      toastError("Não há dieta especial para o aluno informado.");
     } else if (resposta.status === 200) {
       if (
         tipoUsuario === TIPO_PERFIL.ESCOLA &&
