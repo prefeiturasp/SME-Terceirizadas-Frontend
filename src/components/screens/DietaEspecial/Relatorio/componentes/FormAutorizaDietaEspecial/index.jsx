@@ -136,14 +136,21 @@ export default class FormAutorizaDietaEspecial extends Component {
   getInitialValuesSubstituicoes(substituicoes) {
     return substituicoes && substituicoes.length > 0
       ? substituicoes.map(substituicao => {
+          const substitutos = [];
+          if (substituicao.substitutos) {
+            substituicao.substitutos.forEach(s => substitutos.push(s.uuid));
+          }
+          if (substituicao.alimentos_substitutos) {
+            substituicao.alimentos_substitutos.forEach(s =>
+              substitutos.push(s.uuid)
+            );
+          }
           return {
             alimento: substituicao.alimento
               ? substituicao.alimento.id
               : undefined,
             tipo: substituicao.tipo === "" ? undefined : substituicao.tipo,
-            substitutos: substituicao.substitutos
-              ? substituicao.substitutos.map(substituto => substituto.uuid)
-              : undefined
+            substitutos: substitutos
           };
         })
       : [{}];

@@ -337,8 +337,15 @@ export const CorpoRelatorio = props => {
                       </td>
                       <td className="value">
                         <ul>
-                          {substituicao.substitutos.map((substituto, key2) => (
-                            <li key={key2}>{substituto.nome}</li>
+                          {substituicao.alimentos_substitutos.map(
+                            (substituto, key2) => (
+                              <li key={key2}>{substituto.nome}</li>
+                            )
+                          )}
+                        </ul>
+                        <ul>
+                          {substituicao.substitutos.map((substituto, key3) => (
+                            <li key={key3}>{substituto.nome}</li>
                           ))}
                         </ul>
                       </td>
