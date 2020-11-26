@@ -14,7 +14,7 @@ import {
   getSolicitacoesDietaEspecial,
   getProtocolosDietaEspecial
 } from "../../../../../../services/dietaEspecial.service";
-import { getNomeProdutosHomologados } from "services/produto.service";
+import { getSubstitutos } from "services/produto.service";
 import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 
 import { TIPO_SOLICITACAO_DIETA } from "../../../../../../constants/shared";
@@ -69,7 +69,7 @@ export default class FormAutorizaDietaEspecial extends Component {
     const { aluno, uuid } = this.props.dietaEspecial;
     const alergiasIntolerancias = await getAlergiasIntolerancias();
     const alimentos = await getAlimentos();
-    const produtos = await getNomeProdutosHomologados();
+    const produtos = await getSubstitutos();
     const protocolosDietaEspecial = await getProtocolosDietaEspecial();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
     const params = gerarParametrosConsulta({
@@ -136,14 +136,21 @@ export default class FormAutorizaDietaEspecial extends Component {
   getInitialValuesSubstituicoes(substituicoes) {
     return substituicoes && substituicoes.length > 0
       ? substituicoes.map(substituicao => {
+          const substitutos = [];
+          if (substituicao.substitutos) {
+            substituicao.substitutos.forEach(s => substitutos.push(s.uuid));
+          }
+          if (substituicao.alimentos_substitutos) {
+            substituicao.alimentos_substitutos.forEach(s =>
+              substitutos.push(s.uuid)
+            );
+          }
           return {
             alimento: substituicao.alimento
               ? substituicao.alimento.id
               : undefined,
             tipo: substituicao.tipo === "" ? undefined : substituicao.tipo,
-            substitutos: substituicao.substitutos
-              ? substituicao.substitutos.map(substituto => substituto.uuid)
-              : undefined
+            substitutos: substitutos
           };
         })
       : [{}];

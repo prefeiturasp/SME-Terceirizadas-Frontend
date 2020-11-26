@@ -486,6 +486,10 @@ export const getNomeProdutosHomologados = async () => {
   return await axios.get(`/produtos/lista-nomes-homologados/`);
 };
 
+export const getSubstitutos = async () => {
+  return await axios.get(`/produtos/lista-substitutos/`);
+};
+
 export const getNomesProdutosSolicitacaoInclusao = async () =>
   await axios.get("/solicitacao-cadastro-produto-dieta/nomes-produtos/");
 
