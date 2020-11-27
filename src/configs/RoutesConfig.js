@@ -620,6 +620,14 @@ const routesConfig = [
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_INATIVAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
       constants.SOLICITACOES_INATIVAS_TEMPORARIAMENTE
     }`,
     component: StatusSolicitacoesDietaEspecial(),

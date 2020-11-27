@@ -24,6 +24,7 @@ class DashBoardDietaEspecial extends Component {
       pendentesListFiltered: null,
       negadasListFiltered: null,
       canceladasListFiltered: null,
+      inativasListFiltered: null,
       instituicao: null
     };
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -43,6 +44,7 @@ class DashBoardDietaEspecial extends Component {
       pendentesListFiltered,
       negadasListFiltered,
       canceladasListFiltered,
+      inativasListFiltered,
       autorizadasTemporariamenteListFiltered,
       inativasTemporariamenteListFiltered,
       instituicao
@@ -100,6 +102,18 @@ class DashBoardDietaEspecial extends Component {
         });
       });
     }
+    if (
+      inativasListFiltered !== prevState.inativasListFiltered &&
+      !inativasListFiltered
+    ) {
+      this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
+        this.setState({
+          inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.data.results
+          )
+        });
+      });
+    }
 
     if (
       autorizadasTemporariamenteListFiltered !==
@@ -147,19 +161,34 @@ class DashBoardDietaEspecial extends Component {
       pendentesListFiltered,
       autorizadasListFiltered,
       negadasListFiltered,
-      canceladasListFiltered
+      canceladasListFiltered,
+      autorizadasTemporariamenteListFiltered,
+      inativasTemporariamenteListFiltered,
+      inativasListFiltered
     } = this.state;
 
     pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
     autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
     negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
     canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+    inativasListFiltered = this.filtrarNome(inativasListFiltered, event);
+    autorizadasTemporariamenteListFiltered = this.filtrarNome(
+      autorizadasTemporariamenteListFiltered,
+      event
+    );
+    inativasTemporariamenteListFiltered = this.filtrarNome(
+      inativasTemporariamenteListFiltered,
+      event
+    );
 
     this.setState({
       autorizadasListFiltered,
       pendentesListFiltered,
       negadasListFiltered,
-      canceladasListFiltered
+      canceladasListFiltered,
+      autorizadasTemporariamenteListFiltered,
+      inativasTemporariamenteListFiltered,
+      inativasListFiltered
     });
   }
 
@@ -171,6 +200,7 @@ class DashBoardDietaEspecial extends Component {
       canceladasListFiltered,
       autorizadasTemporariamenteListFiltered,
       inativasTemporariamenteListFiltered,
+      inativasListFiltered,
       instituicao
     } = this.state;
 
@@ -236,6 +266,19 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
                   />
                 </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Inativas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={
+                      inativasListFiltered ? inativasListFiltered : []
+                    }
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-inativas`}
+                  />
+                </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Autorizados Temporariamente"}
@@ -249,6 +292,8 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas-temporariamente`}
                   />
                 </div>
+              </div>
+              <div className="row pt-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
                     cardTitle={"Inativas Temporariamente"}

@@ -82,6 +82,9 @@ export const getDietaEspecialInativasTemporariamenteEscola = uuid =>
     `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
 
+export const getDietaEspecialInativasEscola = uuid =>
+  fetchGet(`${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`);
+
 // DRE
 export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -157,6 +160,11 @@ export const getDietaEspecialInativasTemporariamenteDRE = uuid =>
     `${API_URL}/diretoria-regional-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
 
+export const getDietaEspecialInativasDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/inativas-dieta/${uuid}/`
+  );
+
 // CODAE
 export const getDietaEspecialPendenteAutorizacaoCODAE = () => {
   const url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
@@ -227,6 +235,9 @@ export const getDietaEspecialAutorizadasTemporariamenteCODAE = () =>
 
 export const getDietaEspecialInativasTemporariamenteCODAE = () =>
   fetchGet(`${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`);
+
+export const getDietaEspecialInativasCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/inativas-dieta/`);
 
 // TERCEIRIZADA
 export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {
