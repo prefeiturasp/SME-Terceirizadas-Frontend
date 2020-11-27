@@ -3,12 +3,28 @@ import HTTP_STATUS from "http-status-codes";
 import { getSolicitacoesDisponibilizadas } from "services/disponibilizacaoDeSolicitacoes.service";
 import "./style.scss";
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE
+} from "components/Shareable/Botao/constants";
+import { Modal } from "react-bootstrap";
+import {
+  enviaSolicitacaoRemessa,
+  enviaSolicitacoesDaGrade
+} from "../../../../services/disponibilizacaoDeSolicitacoes.service";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess
+} from "components/Shareable/Toast/dialogs";
 
 export const DisponibilizacaoDeSolicitacoes = () => {
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [erroAPI, setErroAPI] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [numeroSolicitacao, setNumeroSolicitacao] = useState(null);
+  const [solicitacaoUuid, setSolicitacaoUuid] = useState(null);
 
   useEffect(() => {
     getSolicitacoesDisponibilizadas()
@@ -33,6 +49,76 @@ export const DisponibilizacaoDeSolicitacoes = () => {
     solicitacoes[key].ativo = !solicitacoes[key].ativo;
     setSolicitacoes(solicitacoes);
     forceUpdate();
+  };
+
+  const exibeToastPeloStatus = status => {
+    if (status === HTTP_STATUS.OK && solicitacaoUuid) {
+      toastSuccess("Solicitação enviada com sucesso");
+    } else if (status === HTTP_STATUS.OK && !solicitacaoUuid) {
+      toastSuccess("Solicitações enviadas com sucesso");
+    } else if (status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro de transição de estado");
+    } else {
+      toastInfo("Nenhuma solicitação a enviar");
+    }
+  };
+
+  const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
+    dataSolicitacoes.forEach(solicit => {
+      solicitacoes.forEach(solicitacao => {
+        if (solicit.uuid === solicitacao.uuid) {
+          solicitacao.status = solicit.log_atual.status_evento_explicacao;
+        }
+      });
+    });
+    setSolicitacoes(solicitacoes);
+  };
+
+  const enviarSolicitacoes = async () => {
+    const arrayUuidSolicitacoes = [];
+    solicitacoes.forEach(solicitacao => {
+      if (solicitacao.status === "Aguardando envio") {
+        arrayUuidSolicitacoes.push(solicitacao.uuid);
+      }
+    });
+    const response = await enviaSolicitacoesDaGrade(arrayUuidSolicitacoes);
+    if (response.status === HTTP_STATUS.OK && response.data.length === 0) {
+      atualizaStatusdaSolicitacao(response.data);
+      setShowModal(false);
+      response.status = 500;
+    } else if (response.status === HTTP_STATUS.OK && response.data.length > 0) {
+      atualizaStatusdaSolicitacoes(response.data);
+      setShowModal(false);
+    } else {
+      response.status = 500;
+    }
+    exibeToastPeloStatus(response.status);
+  };
+
+  const atualizaStatusdaSolicitacao = dataSolicitacao => {
+    solicitacoes.forEach(solicitacao => {
+      if (solicitacao.uuid === dataSolicitacao.uuid) {
+        solicitacao.status = dataSolicitacao.log_atual.status_evento_explicacao;
+      }
+    });
+    setSolicitacoes(solicitacoes);
+  };
+
+  const enviarSolicitacao = async () => {
+    const response = await enviaSolicitacaoRemessa(solicitacaoUuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setSolicitacaoUuid(null);
+      setNumeroSolicitacao(null);
+      atualizaStatusdaSolicitacao(response.data);
+      setShowModal(false);
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      setSolicitacaoUuid(null);
+      setNumeroSolicitacao(null);
+      setShowModal(false);
+    } else {
+      response.status = 500;
+    }
+    exibeToastPeloStatus(response.status);
   };
 
   return (
@@ -71,13 +157,29 @@ export const DisponibilizacaoDeSolicitacoes = () => {
                           {solicitacao.guias &&
                             solicitacao.guias[0].data_entrega}
                         </td>
-                        <td
-                          onClick={() => expandir(key)}
-                          className={solicitacao.ativo ? "link red" : "link"}
-                        >
+                        <td onClick={() => expandir(key)} className="link">
                           {solicitacao.ativo ? "Ver menos" : "Ver mais"}
                         </td>
-                        <td className="link">Enviar</td>
+                        {solicitacao.status === "Aguardando envio" ? (
+                          <td
+                            className={`${
+                              solicitacao.status !== "Aguardando envio"
+                                ? "link-desativo"
+                                : "link"
+                            }`}
+                            onClick={() => {
+                              setShowModal(true);
+                              setNumeroSolicitacao(
+                                solicitacao.numero_solicitacao
+                              );
+                              setSolicitacaoUuid(solicitacao.uuid);
+                            }}
+                          >
+                            Enviar
+                          </td>
+                        ) : (
+                          <td />
+                        )}
                       </tr>,
                       solicitacao.ativo &&
                         solicitacao.guias.map((guia, keyGuia) => {
@@ -168,6 +270,9 @@ export const DisponibilizacaoDeSolicitacoes = () => {
                   <Botao
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     texto="Enviar todos"
+                    onClick={() => {
+                      setShowModal(true);
+                    }}
                   />
                 </div>
               </div>
@@ -175,6 +280,45 @@ export const DisponibilizacaoDeSolicitacoes = () => {
           )}
         </div>
       </div>
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+          setNumeroSolicitacao(null);
+          setSolicitacaoUuid(null);
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Atenção</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {!numeroSolicitacao
+            ? `Deseja enviar todas as Solicitações da Grade ?`
+            : `Deseja enviar a Solicitação n° ${numeroSolicitacao} ? `}
+        </Modal.Body>
+        <Modal.Footer>
+          <Botao
+            texto="SIM"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() =>
+              numeroSolicitacao ? enviarSolicitacao() : enviarSolicitacoes()
+            }
+            style={BUTTON_STYLE.BLUE}
+            className="ml-3"
+          />
+          <Botao
+            texto="NÃO"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() => {
+              setShowModal(false);
+              setNumeroSolicitacao(null);
+              setSolicitacaoUuid(null);
+            }}
+            style={BUTTON_STYLE.BLUE}
+            className="ml-3"
+          />
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
