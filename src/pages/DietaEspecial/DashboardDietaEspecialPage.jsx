@@ -34,7 +34,10 @@ import {
   getDietaEspecialAutorizadasTemporariamenteEscola,
   getDietaEspecialInativasTemporariamenteCODAE,
   getDietaEspecialInativasTemporariamenteDRE,
-  getDietaEspecialInativasTemporariamenteEscola
+  getDietaEspecialInativasTemporariamenteEscola,
+  getDietaEspecialInativasCODAE,
+  getDietaEspecialInativasDRE,
+  getDietaEspecialInativasEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -64,6 +67,7 @@ export const DietaEspecialEscola = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteEscola
     }
+    getDietaEspecialInativas={getDietaEspecialInativasEscola}
   />
 );
 
@@ -81,6 +85,7 @@ export const DietaEspecialDRE = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteDRE
     }
+    getDietaEspecialInativas={getDietaEspecialInativasDRE}
   />
 );
 
@@ -100,6 +105,7 @@ export const DietaEspecialCODAE = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteCODAE
     }
+    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
   />
 );
 
