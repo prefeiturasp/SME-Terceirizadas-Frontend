@@ -47,7 +47,7 @@ export class TextAreaWYSIWYG extends Component {
     if (
       input.value &&
       input.value !== this.props.value &&
-      input.value !== "<p></p>\n"
+      !input.value.replace(/\s/g, "") === "<p></p>"
     ) {
       const contentBlock = htmlToDraft(input.value);
       const contentState = ContentState.createFromBlockArray(
