@@ -24,7 +24,9 @@ import {
   DIETA_ESPECIAL_SOLICITACOES,
   SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE,
   SOLICITACOES_INATIVAS_TEMPORARIAMENTE,
-  INATIVAS_TEMPORARIAMENTE_DIETA
+  INATIVAS_TEMPORARIAMENTE_DIETA,
+  SOLICITACOES_INATIVAS,
+  INATIVAS_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -248,6 +250,23 @@ export class StatusSolicitacoes extends Component {
                   visao,
                   INATIVAS_TEMPORARIAMENTE_DIETA
                 )
+              });
+            });
+          break;
+        case SOLICITACOES_INATIVAS:
+          this.props
+            .getDietaEspecialInativas(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  this.props.logPara
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.CANCELADO,
+                icone: ICON_CARD_TYPE_ENUM.CANCELADO,
+                titulo: "Inativas",
+                urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
               });
             });
           break;

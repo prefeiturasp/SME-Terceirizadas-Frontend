@@ -26,7 +26,10 @@ import {
   getDietaEspecialAutorizadasTemporariamenteEscola,
   getDietaEspecialInativasTemporariamenteCODAE,
   getDietaEspecialInativasTemporariamenteDRE,
-  getDietaEspecialInativasTemporariamenteEscola
+  getDietaEspecialInativasTemporariamenteEscola,
+  getDietaEspecialInativasCODAE,
+  getDietaEspecialInativasDRE,
+  getDietaEspecialInativasEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -76,6 +79,7 @@ export const SolicitacoesDietaEspecialEscola = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteEscola
     }
+    getDietaEspecialInativas={getDietaEspecialInativasEscola}
   />
 );
 
@@ -94,6 +98,7 @@ export const SolicitacoesDietaEspecialDRE = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteDRE
     }
+    getDietaEspecialInativas={getDietaEspecialInativasDRE}
   />
 );
 
@@ -114,6 +119,7 @@ export const SolicitacoesDietaEspecialCODAE = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteCODAE
     }
+    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
   />
 );
 
