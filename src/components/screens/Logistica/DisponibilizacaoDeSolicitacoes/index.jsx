@@ -178,7 +178,16 @@ export const DisponibilizacaoDeSolicitacoes = () => {
                             Enviar
                           </td>
                         ) : (
-                          <td />
+                          <td
+                            className={`${
+                              solicitacao.status !== "Aguardando envio"
+                                ? "link-desativo"
+                                : "link"
+                            }`}
+                            onClick={() => {}}
+                          >
+                            Enviar
+                          </td>
                         )}
                       </tr>,
                       solicitacao.ativo &&
