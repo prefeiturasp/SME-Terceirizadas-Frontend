@@ -281,9 +281,19 @@ export default class FormAutorizaDietaEspecial extends Component {
       }).then(
         response => {
           if (response.status === HTTP_STATUS.OK) {
-            toastSuccess(
-              "Autorização de Dieta Especial realizada com sucesso!"
-            );
+            if (
+              dietaEspecial.tipo_solicitacao ===
+              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE
+            ) {
+              toastSuccess(
+                "Solicitação de alteração de U.E autorizada com sucesso!"
+              );
+            } else {
+              toastSuccess(
+                "Autorização de Dieta Especial realizada com sucesso!"
+              );
+            }
+
             this.props.onAutorizarOuNegar();
             resolve();
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
