@@ -46,6 +46,7 @@ import ClassificacaoDaDieta from "./componentes/ClassificacaoDaDieta";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import DataOpcional from "./componentes/DataOpcional";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
+import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
 import ModalAdicionaProtocolo from "./componentes/ModalAdicionaProtocolo";
 import ModalSolicitacaoCadastroProduto from "./componentes/ModalSolicitacaoCadastroProduto";
@@ -61,7 +62,8 @@ export default class FormAutorizaDietaEspecial extends Component {
       produtos: [],
       exibirModalAdicionaProtocoloDieta: false,
       showModalAdicionaProtocolo: false,
-      showModalSolicitacaoCadastroProduto: false
+      showModalSolicitacaoCadastroProduto: false,
+      showAutorizarAlteracaoUEModal: false
     };
   }
 
@@ -126,12 +128,20 @@ export default class FormAutorizaDietaEspecial extends Component {
     this.setState({ showAutorizarModal: true });
   };
 
+  showAutorizarAlteracaoUEModal = () => {
+    this.setState({ showAutorizarAlteracaoUEModal: true });
+  };
+
   closeNaoAprovaModal = () => {
     this.setState({ showNaoAprovaModal: false });
   };
 
   closeAutorizarModal = () => {
     this.setState({ showAutorizarModal: false });
+  };
+
+  closeAutorizarAlteracaoUEModal = () => {
+    this.setState({ showAutorizarAlteracaoUEModal: false });
   };
   getInitialValuesSubstituicoes(substituicoes) {
     return substituicoes && substituicoes.length > 0
@@ -226,11 +236,24 @@ export default class FormAutorizaDietaEspecial extends Component {
   };
 
   onAutorizar = values => {
-    const { solicitacoesVigentes, showAutorizarModal } = this.state;
+    const {
+      solicitacoesVigentes,
+      showAutorizarModal,
+      showAutorizarAlteracaoUEModal
+    } = this.state;
+    const { dietaEspecial } = this.props;
+
     if (
+      dietaEspecial.tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
+      !showAutorizarAlteracaoUEModal
+    ) {
+      this.showAutorizarAlteracaoUEModal();
+      return;
+    } else if (
       solicitacoesVigentes &&
       solicitacoesVigentes.length > 0 &&
-      !showAutorizarModal
+      !showAutorizarModal &&
+      dietaEspecial.tipo_solicitacao !== TIPO_SOLICITACAO_DIETA.ALTERACAO_UE
     ) {
       this.showAutorizarModal();
       return;
@@ -238,7 +261,6 @@ export default class FormAutorizaDietaEspecial extends Component {
     if (showAutorizarModal) {
       this.closeAutorizarModal();
     }
-    const { dietaEspecial } = this.props;
     let { nome_protocolo, data_termino } = values;
     if (nome_protocolo)
       if (nome_protocolo[0] === "") nome_protocolo.splice(0, 1);
@@ -293,7 +315,8 @@ export default class FormAutorizaDietaEspecial extends Component {
       showAutorizarModal,
       protocolosDietaEspecial,
       showModalAdicionaProtocolo,
-      showModalSolicitacaoCadastroProduto
+      showModalSolicitacaoCadastroProduto,
+      showAutorizarAlteracaoUEModal
     } = this.state;
     const { dietaEspecial, setTemSolicitacaoCadastroProduto } = this.props;
     return (
@@ -470,6 +493,12 @@ export default class FormAutorizaDietaEspecial extends Component {
               <ModalAutorizaDietaEspecial
                 closeModal={this.closeAutorizarModal}
                 showModal={showAutorizarModal}
+                dietaEspecial={dietaEspecial}
+                handleSubmit={form.submit}
+              />
+              <ModalAutorizaAlteracaoUE
+                closeModal={this.closeAutorizarAlteracaoUEModal}
+                showModal={showAutorizarAlteracaoUEModal}
                 dietaEspecial={dietaEspecial}
                 handleSubmit={form.submit}
               />
