@@ -125,9 +125,12 @@ export const getDetalheInversaoCardapio = uuid => {
   return url;
 };
 
-export const getDetalheSuspensaoAlimentacao = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
-  return url;
+export const imprimeRelatorioSuspensaoAlimentacao = async uuid => {
+  const url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_suspensao_alimentacao.pdf");
 };
 
 export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
