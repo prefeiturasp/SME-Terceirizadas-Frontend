@@ -6,7 +6,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
-import { getDetalheSuspensaoAlimentacao } from "../../../../services/relatorios";
+import { imprimeRelatorioSuspensaoAlimentacao } from "../../../../services/relatorios";
 import Botao from "../../../Shareable/Botao";
 import { fluxoInformativoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
@@ -40,14 +40,15 @@ export const CorpoRelatorio = props => {
           </span>
         </div>
         <p className={`col-2 title-message`}>
-          <a href={getDetalheSuspensaoAlimentacao(suspensaoAlimentacao.uuid)}>
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right"
-            />
-          </a>
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            className="float-right"
+            onClick={() =>
+              imprimeRelatorioSuspensaoAlimentacao(suspensaoAlimentacao.uuid)
+            }
+          />
         </p>
       </div>
       <div className="row">
