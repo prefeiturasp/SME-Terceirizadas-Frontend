@@ -139,7 +139,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                       component={InputComData}
                       name="data_inicio"
                       className="data_inicio"
-                      label="Data entrega"
+                      label="Período de Entrega"
                       labelClassName="datepicker-fixed-padding"
                       popperPlacement="bottom-end"
                       placeholder="De"
