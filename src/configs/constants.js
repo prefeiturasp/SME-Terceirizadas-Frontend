@@ -128,6 +128,7 @@ export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
 export const DISPONIBILIZACAO_DE_SOLICITACOES =
   "disponibilizacao-de-solicitacoes";
+export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 

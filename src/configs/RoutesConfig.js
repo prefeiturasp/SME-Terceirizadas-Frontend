@@ -116,6 +116,7 @@ import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
+import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 
 const routesConfig = [
   {
@@ -972,6 +973,12 @@ const routesConfig = [
       constants.DISPONIBILIZACAO_DE_SOLICITACOES
     }`,
     component: DisponibilizacaoDeSolicitacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA}`,
+    component: FiltroRequisicaoDilog,
     exact: true,
     tipoUsuario: usuarioEhLogistica()
   }

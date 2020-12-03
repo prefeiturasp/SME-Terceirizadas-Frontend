@@ -18,7 +18,7 @@ import {
   toastSuccess
 } from "components/Shareable/Toast/dialogs";
 
-export const DisponibilizacaoDeSolicitacoes = () => {
+export const DisponibilizacaoDeSolicitacoes = props => {
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [erroAPI, setErroAPI] = useState(false);
@@ -27,19 +27,24 @@ export const DisponibilizacaoDeSolicitacoes = () => {
   const [solicitacaoUuid, setSolicitacaoUuid] = useState(null);
 
   useEffect(() => {
-    getSolicitacoesDisponibilizadas()
-      .then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          setSolicitacoes(response.data);
+    if (props.requisicoes && props.requisicoes.length > 0) {
+      setSolicitacoes(props.requisicoes);
+      setLoading(false);
+    } else {
+      getSolicitacoesDisponibilizadas()
+        .then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            setSolicitacoes(response.data);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => {
           setLoading(false);
-        } else {
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-        setErroAPI(true);
-      });
+          setErroAPI(true);
+        });
+    }
   }, []);
 
   const [, updateState] = React.useState();
@@ -136,8 +141,8 @@ export const DisponibilizacaoDeSolicitacoes = () => {
               <table className="solicitacoes">
                 <thead>
                   <tr>
-                    <th>Nº da solicitação</th>
-                    <th>Qtde. de guias</th>
+                    <th>N° da Requisição de Entrega</th>
+                    <th>Qtde. de Guias Remessa</th>
                     <th>Distribuidor/Fornecedor</th>
                     <th>Status</th>
                     <th>Data de entrega</th>
