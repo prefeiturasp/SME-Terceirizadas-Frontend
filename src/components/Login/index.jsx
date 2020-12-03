@@ -530,7 +530,8 @@ export class Login extends Component {
 
 Login = reduxForm({
   form: "login",
-  destroyOnUnmount: false
+  destroyOnUnmount: false,
+  initialValues: { tipo_email: 0 }
 })(Login);
 
 export default Login;

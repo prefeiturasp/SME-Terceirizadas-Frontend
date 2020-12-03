@@ -35,6 +35,16 @@ div.disponibilizacao-solicitacoes {
               color: $red;
             }
           }
+          &.link-desativo {
+            cursor: default;
+            color: $blue;
+            font-size: 12px;
+            padding: 10px;
+            text-align: center;
+            &.red {
+              color: $red;
+            }
+          }
         }
         &.guia,
         &.guia-alimento {
