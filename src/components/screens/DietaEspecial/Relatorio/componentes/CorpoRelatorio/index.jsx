@@ -81,7 +81,7 @@ export const CorpoRelatorio = props => {
           <div className="col-12 report-label-value">
             <p className="value">
               <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
-              HÁ SOLICITAÇÂO DE CADASTRO DE PRODUTO EM ANDAMENTO
+              HÁ SOLICITAÇÃO DE CADASTRO DE PRODUTO EM ANDAMENTO
             </p>
           </div>
         </div>
@@ -110,9 +110,9 @@ export const CorpoRelatorio = props => {
             <br />
             {tipo_solicitacao ===
             TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
-              <span className="dre-name">ALUNOS NÂO MATRICULADOS</span>
+              <span className="dre-name">ALUNOS NÃO MATRICULADOS</span>
             ) : (
-              <span className="dre-name">ALTERAÇÂO DE U.E</span>
+              <span className="dre-name">ALTERAÇÃO DE U.E</span>
             )}
           </div>
         )}
