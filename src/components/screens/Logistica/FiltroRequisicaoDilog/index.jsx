@@ -147,7 +147,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                       maxDate={
                         values.data_fim
                           ? moment(values.data_fim, "DD/MM/YYYY")._d
-                          : moment()._d
+                          : null
                       }
                     />
                   </div>
@@ -164,7 +164,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                           ? moment(values.data_inicio, "DD/MM/YYYY")._d
                           : null
                       }
-                      maxDate={moment()._d}
+                      maxDate={null}
                     />
                   </div>
                 </div>

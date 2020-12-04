@@ -69,14 +69,17 @@ export const DisponibilizacaoDeSolicitacoes = props => {
   };
 
   const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
+    let arraySolicitacoes = [];
     dataSolicitacoes.forEach(solicit => {
       solicitacoes.forEach(solicitacao => {
         if (solicit.uuid === solicitacao.uuid) {
-          solicitacao.status = solicit.log_atual.status_evento_explicacao;
+          arraySolicitacoes = solicitacoes.filter(
+            item => item.uuid !== solicit.uuid
+          );
         }
       });
     });
-    setSolicitacoes(solicitacoes);
+    setSolicitacoes(arraySolicitacoes);
   };
 
   const enviarSolicitacoes = async () => {
@@ -101,12 +104,15 @@ export const DisponibilizacaoDeSolicitacoes = props => {
   };
 
   const atualizaStatusdaSolicitacao = dataSolicitacao => {
+    let arraySolicitacoes = [];
     solicitacoes.forEach(solicitacao => {
       if (solicitacao.uuid === dataSolicitacao.uuid) {
-        solicitacao.status = dataSolicitacao.log_atual.status_evento_explicacao;
+        arraySolicitacoes = solicitacoes.filter(
+          item => item.uuid !== dataSolicitacao.uuid
+        );
       }
     });
-    setSolicitacoes(solicitacoes);
+    setSolicitacoes(arraySolicitacoes);
   };
 
   const enviarSolicitacao = async () => {
