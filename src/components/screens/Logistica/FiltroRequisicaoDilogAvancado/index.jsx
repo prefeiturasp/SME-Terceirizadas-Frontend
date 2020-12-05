@@ -1,43 +1,41 @@
-import React, { useEffect, useReducer, useState, Fragment } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 const FORM_NAME = "buscaRequisicoesDilogAvancado";
 
-const initialState = {
-  dados: {},
-  status: [
-    { key: 1, value: "Todos" },
-    { key: 2, value: "Aguardando envio" },
-    { key: 3, value: "Enviada" },
-    { key: 4, value: "Cancelada" },
-    { key: 5, value: "Confirmada" },
-    { key: 6, value: "Em análise" }
-  ]
-};
+// const initialState = {
+//   dados: {},
+//   status: [
+//     { key: 1, value: "Todos" },
+//     { key: 2, value: "Aguardando envio" },
+//     { key: 3, value: "Enviada" },
+//     { key: 4, value: "Cancelada" },
+//     { key: 5, value: "Confirmada" },
+//     { key: 6, value: "Em análise" }
+//   ]
+// };
 
-function reducer(state, { type: actionType, payload }) {
-  switch (actionType) {
-    case "atualizarFiltro": {
-      if (!payload.searchText.length) {
-        return { ...state, [payload.filtro]: [] };
-      }
-      const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
-      return { ...state, [payload.filtro]: filtrado };
-    }
+// function reducer(state, { type: actionType, payload }) {
+//   switch (actionType) {
+//     case "atualizarFiltro": {
+//       if (!payload.searchText.length) {
+//         return { ...state, [payload.filtro]: [] };
+//       }
+//       const reg = new RegExp(payload.searchText, "i");
+//       const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
+//       return { ...state, [payload.filtro]: filtrado };
+//     }
 
-    case "resetar":
-      return { ...initialState, dados: state.dados };
-    default:
-      // eslint-disable-next-line no-console
-      console.error("Invalid action type: ", actionType);
-  }
-}
+//     case "resetar":
+//       return { ...initialState, dados: state.dados };
+//     default:
+//       // eslint-disable-next-line no-console
+//       console.error("Invalid action type: ", actionType);
+//   }
+// }
 
-const FiltroRequisicaoDilogAvancado = ({ initialValues, history }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+const FiltroRequisicaoDilogAvancado = () => {
   return <div>djkskjsldljksjklfsdfsd</div>;
 };
 
