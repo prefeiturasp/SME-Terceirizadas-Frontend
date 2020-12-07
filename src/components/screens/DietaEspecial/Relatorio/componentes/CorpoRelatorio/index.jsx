@@ -39,6 +39,7 @@ export const CorpoRelatorio = props => {
       substituicoes,
       informacoes_adicionais,
       registro_funcional_nutricionista,
+      data_inicio,
       data_termino,
       tem_solicitacao_cadastro_produto,
       tipo_solicitacao,
@@ -81,7 +82,7 @@ export const CorpoRelatorio = props => {
           <div className="col-12 report-label-value">
             <p className="value">
               <i className="pr-1 fas fa-check-circle tem-solicitacao-cadastro-produto" />
-              HÁ SOLICITAÇÂO DE CADASTRO DE PRODUTO EM ANDAMENTO
+              HÁ SOLICITAÇÃO DE CADASTRO DE PRODUTO EM ANDAMENTO
             </p>
           </div>
         </div>
@@ -110,9 +111,9 @@ export const CorpoRelatorio = props => {
             <br />
             {tipo_solicitacao ===
             TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
-              <span className="dre-name">ALUNOS NÂO MATRICULADOS</span>
+              <span className="dre-name">ALUNOS NÃO MATRICULADOS</span>
             ) : (
-              <span className="dre-name">ALTERAÇÂO DE U.E</span>
+              <span className="dre-name">ALTERAÇÃO DE U.E</span>
             )}
           </div>
         )}
@@ -361,14 +362,6 @@ export const CorpoRelatorio = props => {
               />
             </div>
           )}
-          {statusDietaAutorizada.includes(status_solicitacao) && (
-            <div className="report-label-value">
-              <p>Data de término</p>
-              <div className="value">
-                {data_termino || "Sem data de término"}
-              </div>
-            </div>
-          )}
 
           {informacoes_adicionais && (
             <div className="report-label-value">
@@ -461,6 +454,22 @@ export const CorpoRelatorio = props => {
                 __html: observacoes_alteracao
               }}
             />
+          </div>
+        </div>
+      )}
+      {statusDietaAutorizada.includes(status_solicitacao) && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>
+              Período de Vigência: Início:
+              <span className="value-sp">
+                {data_inicio || "Sem data de início"}
+              </span>{" "}
+              - Término:
+              <span className="value-sp">
+                {data_termino || "Sem data de término"}
+              </span>
+            </p>
           </div>
         </div>
       )}
