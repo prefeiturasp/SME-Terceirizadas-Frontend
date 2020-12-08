@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { CODAE } from "../../configs/constants";
+import { CODAE, DRE } from "../../configs/constants";
 import { TAMANHO_RF } from "../../constants/shared";
 import { stringSeparadaPorVirgulas, getError } from "../../helpers/utilities";
 import { meusDados } from "../../services/perfil.service";
@@ -89,7 +89,7 @@ class Permissoes extends Component {
         break;
       }
     }
-    if (visao === CODAE || mesmaInstituicao) {
+    if (visao === CODAE || visao === DRE || mesmaInstituicao) {
       this.setState({ bloquearBotao: true });
       criarEquipeAdministradora(minhaInstituicao.uuid, registroFuncional)
         .then(response => {
