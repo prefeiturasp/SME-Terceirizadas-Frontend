@@ -5,20 +5,20 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhTerceirizada,
-  usuarioEhNutricionistaSupervisao,
+  usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDRE,
-  usuarioEhCODAEGestaoProduto,
-  usuarioEhCoordenadorEscola
+  usuarioEhCoordenadorEscola,
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhCoordenadorNutriCODAE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
-    usuarioEhCODAEDietaEspecial() ||
-    usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhCoordenadorNutriCODAE() ||
+    usuarioEhCoordenadorGpCODAE() ||
     usuarioEhDRE() ||
     usuarioEhCoordenadorEscola() ||
-    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
