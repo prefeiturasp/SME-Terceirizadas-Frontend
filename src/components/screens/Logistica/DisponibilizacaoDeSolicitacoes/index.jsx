@@ -18,7 +18,7 @@ import {
   toastSuccess
 } from "components/Shareable/Toast/dialogs";
 
-export const DisponibilizacaoDeSolicitacoes = () => {
+export const DisponibilizacaoDeSolicitacoes = props => {
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [erroAPI, setErroAPI] = useState(false);
@@ -27,19 +27,24 @@ export const DisponibilizacaoDeSolicitacoes = () => {
   const [solicitacaoUuid, setSolicitacaoUuid] = useState(null);
 
   useEffect(() => {
-    getSolicitacoesDisponibilizadas()
-      .then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          setSolicitacoes(response.data);
+    if (props.requisicoes && props.requisicoes.length > 0) {
+      setSolicitacoes(props.requisicoes);
+      setLoading(false);
+    } else {
+      getSolicitacoesDisponibilizadas()
+        .then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            setSolicitacoes(response.data);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(() => {
           setLoading(false);
-        } else {
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-        setErroAPI(true);
-      });
+          setErroAPI(true);
+        });
+    }
   }, []);
 
   const [, updateState] = React.useState();
@@ -64,14 +69,17 @@ export const DisponibilizacaoDeSolicitacoes = () => {
   };
 
   const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
+    let arraySolicitacoes = [];
     dataSolicitacoes.forEach(solicit => {
       solicitacoes.forEach(solicitacao => {
         if (solicit.uuid === solicitacao.uuid) {
-          solicitacao.status = solicit.log_atual.status_evento_explicacao;
+          arraySolicitacoes = solicitacoes.filter(
+            item => item.uuid !== solicit.uuid
+          );
         }
       });
     });
-    setSolicitacoes(solicitacoes);
+    setSolicitacoes(arraySolicitacoes);
   };
 
   const enviarSolicitacoes = async () => {
@@ -96,12 +104,15 @@ export const DisponibilizacaoDeSolicitacoes = () => {
   };
 
   const atualizaStatusdaSolicitacao = dataSolicitacao => {
+    let arraySolicitacoes = [];
     solicitacoes.forEach(solicitacao => {
       if (solicitacao.uuid === dataSolicitacao.uuid) {
-        solicitacao.status = dataSolicitacao.log_atual.status_evento_explicacao;
+        arraySolicitacoes = solicitacoes.filter(
+          item => item.uuid !== dataSolicitacao.uuid
+        );
       }
     });
-    setSolicitacoes(solicitacoes);
+    setSolicitacoes(arraySolicitacoes);
   };
 
   const enviarSolicitacao = async () => {
@@ -136,8 +147,8 @@ export const DisponibilizacaoDeSolicitacoes = () => {
               <table className="solicitacoes">
                 <thead>
                   <tr>
-                    <th>Nº da solicitação</th>
-                    <th>Qtde. de guias</th>
+                    <th>N° da Requisição de Entrega</th>
+                    <th>Qtde. de Guias Remessa</th>
                     <th>Distribuidor/Fornecedor</th>
                     <th>Status</th>
                     <th>Data de entrega</th>
