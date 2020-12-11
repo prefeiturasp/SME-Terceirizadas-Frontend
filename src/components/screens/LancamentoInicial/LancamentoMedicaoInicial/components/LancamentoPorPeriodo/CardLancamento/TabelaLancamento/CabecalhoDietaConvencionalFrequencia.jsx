@@ -3,9 +3,6 @@ import "./styles.scss";
 
 export default ({ panorama, mostrarMatriculados }) => (
   <div className="cabecalho-tabela">
-    <div>
-      <span>Freq.</span>
-    </div>
     {mostrarMatriculados && (
       <div>
         <span>
@@ -15,6 +12,9 @@ export default ({ panorama, mostrarMatriculados }) => (
         </span>
       </div>
     )}
+    <div>
+      <span>Freq.</span>
+    </div>
     {panorama.horas_atendimento !== 5 && (
       <div>
         <span>

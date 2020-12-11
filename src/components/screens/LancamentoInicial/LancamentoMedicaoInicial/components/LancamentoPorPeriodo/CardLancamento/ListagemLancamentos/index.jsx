@@ -58,8 +58,8 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
                   eh_feriado_ou_fds ? " linha-tabela-fds-feriado" : ""
                 }`}
               >
-                <div>{lancamento && lancamento.frequencia}</div>
                 <div>{quantidade_alunos}</div>
+                <div>{lancamento && lancamento.frequencia}</div>
                 {panorama.horas_atendimento !== 5 && (
                   <div>{lancamento && lancamento.lanche_4h}</div>
                 )}

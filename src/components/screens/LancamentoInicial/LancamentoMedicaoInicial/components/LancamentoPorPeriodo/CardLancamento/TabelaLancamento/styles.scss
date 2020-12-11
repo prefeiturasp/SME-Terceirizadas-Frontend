@@ -72,6 +72,17 @@
 }
 
 .tabela-frequencia-por-dia {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+  }
+  &.com-dieta {
+    .cabecalho-tabela,
+    .linha-tabela {
+      display: grid;
+      grid-template-columns: 40% 30% 30%;
+    }
+  }
   .report-label-value {
     margin-top: 0px;
     p {
@@ -83,11 +94,6 @@
   }
   .linha-tabela {
     min-height: 2em;
-  }
-  .cabecalho-tabela,
-  .linha-tabela {
-    display: grid;
-    grid-template-columns: 40% 30% 30%;
   }
 }
 
