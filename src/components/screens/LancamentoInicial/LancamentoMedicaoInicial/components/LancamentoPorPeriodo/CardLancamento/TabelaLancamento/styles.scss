@@ -71,6 +71,32 @@
   }
 }
 
+.tabela-frequencia-por-dia {
+  .cabecalho-tabela,
+  .linha-tabela {
+    display: grid;
+  }
+  &.com-dieta {
+    .cabecalho-tabela,
+    .linha-tabela {
+      display: grid;
+      grid-template-columns: 40% 30% 30%;
+    }
+  }
+  .report-label-value {
+    margin-top: 0px;
+    p {
+      margin-bottom: 0px;
+    }
+  }
+  .cabecalho-tabela {
+    min-height: 2em;
+  }
+  .linha-tabela {
+    min-height: 2em;
+  }
+}
+
 .tabela-dieta-especial-3col,
 .tabela-dieta-especial-4col {
   .report-label-value {
