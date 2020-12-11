@@ -7,6 +7,7 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
+  usuarioEhAdministradorDRE,
   usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
   usuarioEhAdministradorGpCODAE,
@@ -64,7 +65,8 @@ export const SidebarContent = () => {
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
     !usuarioEhAdministradorGpCODAE() &&
-    !usuarioEhAdministradorNutriSupervisao();
+    !usuarioEhAdministradorNutriSupervisao() &&
+    !usuarioEhAdministradorDRE();
   const exibirMenuLogistica = usuarioEhLogistica();
 
   const _props = {

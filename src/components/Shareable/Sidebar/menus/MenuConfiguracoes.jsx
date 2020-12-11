@@ -9,13 +9,15 @@ import {
   usuarioEhDRE,
   usuarioEhCoordenadorEscola,
   usuarioEhCoordenadorGpCODAE,
-  usuarioEhCoordenadorNutriCODAE
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCoordenadorCODAE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCoordenadorCODAE() ||
     usuarioEhDRE() ||
     usuarioEhCoordenadorEscola() ||
     usuarioEhCoordenadorNutriSupervisao() ||
