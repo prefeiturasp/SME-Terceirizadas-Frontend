@@ -29,6 +29,7 @@ import { OK } from "http-status-codes";
 import ListagemLancamentos from "./ListagemLancamentos";
 import { Spin } from "antd";
 import ModalConfirmacao from "components/Shareable/ModalConfirmacao";
+import Matriculados from "./TabelaLancamento/Matriculados";
 
 export default ({
   textoCabecalho,
@@ -55,6 +56,7 @@ export default ({
   const [showModalConfirmacao, setShowModalConfirmacao] = useState(false);
   const [mensagemModalConfirmacao, setMensagemModalConfirmacao] = useState("");
   const [campoSendoValidado, setCampoSendoValidado] = useState();
+  const [dadosMatriculados, setDadosMatriculados] = useState();
 
   const abreFechaLancamento = () => {
     setLancamentoAberto(!lancamentoAberto);
@@ -74,6 +76,7 @@ export default ({
       promiseLancamentos
     ]);
     if (respostaLancamentos.status === OK && respostaDados.status === OK) {
+      setDadosMatriculados(respostaDados.data.quantidade_alunos);
       const initialValues = {
         data_lancamento: dia,
         escola_periodo_escolar: panorama.uuid_escola_periodo_escolar
@@ -332,6 +335,11 @@ export default ({
                       name="escola_periodo_escolar"
                     />
                   </div>
+                  {dadosMatriculados && (
+                    <div className="offset-1 col-8">
+                      <Matriculados dadosMatriculados={dadosMatriculados} />
+                    </div>
+                  )}
                 </div>
                 {values.data_lancamento && (
                   <>

@@ -1,8 +1,17 @@
 import React from "react";
 import "./styles.scss";
 
-export default ({ panorama }) => (
+export default ({ panorama, mostrarMatriculados }) => (
   <div className="cabecalho-tabela">
+    {mostrarMatriculados && (
+      <div>
+        <span>
+          Matricu-
+          <br />
+          lados
+        </span>
+      </div>
+    )}
     <div>
       <span>Freq.</span>
     </div>

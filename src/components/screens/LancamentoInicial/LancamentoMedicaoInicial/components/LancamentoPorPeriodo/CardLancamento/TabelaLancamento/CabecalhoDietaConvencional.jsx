@@ -1,11 +1,16 @@
 import React from "react";
 import "./styles.scss";
 
-export default () => (
+export default ({ mostrarMatriculados }) => (
   <div className="cabecalho-tabela">
     <div>
       <span>Dia</span>
     </div>
+    {mostrarMatriculados && (
+      <div>
+        <span>Matriculados</span>
+      </div>
+    )}
     <div>
       <span>
         Troca
