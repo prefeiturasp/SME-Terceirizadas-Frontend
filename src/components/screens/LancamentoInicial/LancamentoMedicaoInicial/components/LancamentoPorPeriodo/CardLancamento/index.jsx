@@ -335,7 +335,7 @@ export default ({
                       name="escola_periodo_escolar"
                     />
                   </div>
-                  {dadosMatriculados && (
+                  {values.data_lancamento && dadosMatriculados && (
                     <div className="offset-1 col-8">
                       <Matriculados dadosMatriculados={dadosMatriculados} />
                     </div>
