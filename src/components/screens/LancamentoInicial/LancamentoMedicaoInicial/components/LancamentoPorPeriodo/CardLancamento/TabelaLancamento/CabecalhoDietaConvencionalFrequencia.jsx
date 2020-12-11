@@ -1,11 +1,20 @@
 import React from "react";
 import "./styles.scss";
 
-export default ({ panorama }) => (
+export default ({ panorama, mostrarMatriculados }) => (
   <div className="cabecalho-tabela">
     <div>
       <span>Freq.</span>
     </div>
+    {mostrarMatriculados && (
+      <div>
+        <span>
+          Matricu-
+          <br />
+          lados
+        </span>
+      </div>
+    )}
     {panorama.horas_atendimento !== 5 && (
       <div>
         <span>

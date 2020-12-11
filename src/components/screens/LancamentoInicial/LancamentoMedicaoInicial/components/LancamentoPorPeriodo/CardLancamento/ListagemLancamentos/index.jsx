@@ -45,38 +45,44 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
         </div>
       </div>
       <div className="tabela-lancamento tabela-dieta-convencional-frequencia col-8">
-        <CabecalhoDietaConvencionalFrequencia panorama={panorama} />
-        {lancamentos.map(({ eh_feriado_ou_fds, lancamento }, indice) => {
-          return (
-            <div
-              key={indice}
-              className={`linha-tabela${
-                eh_feriado_ou_fds ? " linha-tabela-fds-feriado" : ""
-              }`}
-            >
-              <div>{lancamento && lancamento.frequencia}</div>
-              {panorama.horas_atendimento !== 5 && (
-                <div>{lancamento && lancamento.lanche_4h}</div>
-              )}
-              {panorama.horas_atendimento !== 4 && (
-                <div>{lancamento && lancamento.lanche_5h}</div>
-              )}
-              <div>{get(lancamento, "refeicoes.0.ref_oferta")}</div>
-              <div>{get(lancamento, "refeicoes.0.ref_repet")}</div>
-              <div>{get(lancamento, "refeicoes.0.sob_oferta")}</div>
-              <div>{get(lancamento, "refeicoes.0.sob_repet")}</div>
-              {panorama.periodo === "INTEGRAL" && (
-                <>
-                  <div>{get(lancamento, "refeicoes.1.ref_oferta")}</div>
-                  <div>{get(lancamento, "refeicoes.1.ref_repet")}</div>
-                  <div>{get(lancamento, "refeicoes.1.sob_oferta")}</div>
-                  <div>{get(lancamento, "refeicoes.1.sob_repet")}</div>
-                </>
-              )}
-              <div>{lancamento && lancamento.observacoes}</div>
-            </div>
-          );
-        })}
+        <CabecalhoDietaConvencionalFrequencia
+          panorama={panorama}
+          mostrarMatriculados
+        />
+        {lancamentos.map(
+          ({ eh_feriado_ou_fds, lancamento, quantidade_alunos }, indice) => {
+            return (
+              <div
+                key={indice}
+                className={`linha-tabela${
+                  eh_feriado_ou_fds ? " linha-tabela-fds-feriado" : ""
+                }`}
+              >
+                <div>{lancamento && lancamento.frequencia}</div>
+                <div>{quantidade_alunos}</div>
+                {panorama.horas_atendimento !== 5 && (
+                  <div>{lancamento && lancamento.lanche_4h}</div>
+                )}
+                {panorama.horas_atendimento !== 4 && (
+                  <div>{lancamento && lancamento.lanche_5h}</div>
+                )}
+                <div>{get(lancamento, "refeicoes.0.ref_oferta")}</div>
+                <div>{get(lancamento, "refeicoes.0.ref_repet")}</div>
+                <div>{get(lancamento, "refeicoes.0.sob_oferta")}</div>
+                <div>{get(lancamento, "refeicoes.0.sob_repet")}</div>
+                {panorama.periodo === "INTEGRAL" && (
+                  <>
+                    <div>{get(lancamento, "refeicoes.1.ref_oferta")}</div>
+                    <div>{get(lancamento, "refeicoes.1.ref_repet")}</div>
+                    <div>{get(lancamento, "refeicoes.1.sob_oferta")}</div>
+                    <div>{get(lancamento, "refeicoes.1.sob_repet")}</div>
+                  </>
+                )}
+                <div>{lancamento && lancamento.observacoes}</div>
+              </div>
+            );
+          }
+        )}
         <div className="linha-tabela mt-4">
           <div>{totaisAbsolutos && totaisAbsolutos.frequencia}</div>
           {panorama.horas_atendimento !== 5 && (
