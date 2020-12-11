@@ -347,6 +347,14 @@ export const usuarioEhDRE = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
+export const usuarioEhCoordenadorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
+};
+
+export const usuarioEhAdministradorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+};
+
 export const usuarioEhCODAEGestaoAlimentacao = () => {
   /*
    * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
@@ -358,6 +366,20 @@ export const usuarioEhCODAEGestaoAlimentacao = () => {
   return (
     tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.LOGISTICA
+  );
+};
+
+export const usuarioEhCoordenadorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioEhAdministradorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 
