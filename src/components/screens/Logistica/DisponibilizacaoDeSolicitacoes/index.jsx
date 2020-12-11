@@ -69,19 +69,19 @@ export const DisponibilizacaoDeSolicitacoes = props => {
     }
   };
 
-  const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
-    let arraySolicitacoes = [];
-    dataSolicitacoes.forEach(solicit => {
-      solicitacoes.forEach(solicitacao => {
-        if (solicit.uuid === solicitacao.uuid) {
-          arraySolicitacoes = solicitacoes.filter(
-            item => item.uuid !== solicit.uuid
-          );
-        }
-      });
-    });
-    setSolicitacoes(arraySolicitacoes);
-  };
+  // const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
+  //   let arraySolicitacoes = [];
+  //   dataSolicitacoes.forEach(solicit => {
+  //     solicitacoes.forEach(solicitacao => {
+  //       if (solicit.uuid === solicitacao.uuid) {
+  //         arraySolicitacoes = solicitacoes.filter(
+  //           item => item.uuid !== solicit.uuid
+  //         );
+  //       }
+  //     });
+  //   });
+  //   setSolicitacoes(arraySolicitacoes);
+  // };
 
   const enviarSolicitacoes = async () => {
     const arrayUuidSolicitacoes = [];
