@@ -1,6 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
 import {
   SUSPENSAO_ALIMENTACAO,
@@ -11,12 +11,6 @@ import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
 } from "../../../services/suspensaoDeAlimentacao.service";
-import Botao from "../../Shareable/Botao";
-import {
-  BUTTON_ICON,
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "../../Shareable/Botao/constants";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import "./style.scss";
@@ -109,16 +103,6 @@ class RelatorioSuspensaoAlimentacao extends Component {
             <span className="page-title">{`Suspensão de Alimentação - Solicitação # ${
               suspensaoAlimentacao.id_externo
             }`}</span>
-            <Link to={`/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`}>
-              <Botao
-                texto="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                titulo="voltar"
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
