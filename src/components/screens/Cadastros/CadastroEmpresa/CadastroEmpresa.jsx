@@ -50,7 +50,7 @@ class CadastroEmpresa extends Component {
       contatosEmpresaForm: ["contatoEmpresa_0"],
       contatosTerceirizadaForm: ["contatoTerceirizada_0"],
       editaisContratosForm: ["editalContrato_0"],
-      ehDistribuidor: null,
+      ehDistribuidor: false,
       contatosEmpresa: [
         {
           telefone: null,
@@ -297,7 +297,7 @@ class CadastroEmpresa extends Component {
   }
 
   setaValoresForm(data) {
-    const super_admin_contato = data.super_admin.contatos.pop();
+    const super_admin = data.super_admin;
     this.props.change("cep", data.cep);
     this.props.change("cnpj", data.cnpj);
     this.props.change("nome_fantasia", data.nome_fantasia);
@@ -306,14 +306,20 @@ class CadastroEmpresa extends Component {
     this.props.change("representante_legal", data.representante_legal);
     this.props.change("email_representante_legal", data.representante_email);
     this.props.change("telefone_representante", data.representante_telefone);
-    this.props.change("super_admin.nome", data.super_admin.nome);
-    this.props.change("super_admin.email", data.super_admin.email);
-    this.props.change("super_admin.cpf", data.super_admin.cpf);
-    this.props.change("super_admin.cargo", data.super_admin.cargo);
-    this.props.change(
-      "super_admin.telefone",
-      super_admin_contato ? super_admin_contato.telefone : undefined
-    );
+    if (super_admin) {
+      const super_admin_contato = data.super_admin.contatos.pop();
+      this.props.change(
+        "super_admin.nome",
+        data.super_admin.nome ? data.super_admin.nome : undefined
+      );
+      this.props.change("super_admin.email", data.super_admin.email);
+      this.props.change("super_admin.cpf", data.super_admin.cpf);
+      this.props.change("super_admin.cargo", data.super_admin.cargo);
+      this.props.change(
+        "super_admin.telefone",
+        super_admin_contato ? super_admin_contato.telefone : undefined
+      );
+    }
     this.props.change("bairro", data.bairro);
     this.props.change("cidade", data.cidade);
     this.props.change("estado", data.estado);
