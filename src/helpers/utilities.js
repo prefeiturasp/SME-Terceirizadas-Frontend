@@ -295,6 +295,34 @@ export const usuarioEhCoordenadorEscola = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
 };
 
+export const usuarioEhCoordenadorGpCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_GESTAO_PRODUTO;
+};
+
+export const usuarioEhAdministradorGpCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_GESTAO_PRODUTO;
+};
+
+export const usuarioEhCoordenadorNutriCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DIETA_ESPECIAL;
+};
+
+export const usuarioEhAdministradorNutriCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DIETA_ESPECIAL;
+};
+
+export const usuarioEhCoordenadorNutriSupervisao = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+  );
+};
+
+export const usuarioEhAdministradorNutriSupervisao = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_SUPERVISAO_NUTRICAO
+  );
+};
+
 export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
@@ -319,6 +347,14 @@ export const usuarioEhDRE = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
+export const usuarioEhCoordenadorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
+};
+
+export const usuarioEhAdministradorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+};
+
 export const usuarioEhCODAEGestaoAlimentacao = () => {
   /*
    * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
@@ -330,6 +366,20 @@ export const usuarioEhCODAEGestaoAlimentacao = () => {
   return (
     tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
     tipoPerfil === TIPO_PERFIL.LOGISTICA
+  );
+};
+
+export const usuarioEhCoordenadorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioEhAdministradorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 

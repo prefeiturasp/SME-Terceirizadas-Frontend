@@ -189,6 +189,9 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
                     disabled={submitting}
+                    onClick={() => {
+                      setFiltrado(false);
+                    }}
                   />
 
                   <Botao
