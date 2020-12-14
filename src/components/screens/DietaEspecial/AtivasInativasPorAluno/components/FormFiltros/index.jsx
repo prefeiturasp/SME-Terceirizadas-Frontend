@@ -103,7 +103,7 @@ const FormFiltros = ({
     if (resposta.status !== 200) {
       setDesabilitarAluno(false);
       setDadosIniciais({ ...values, nome_aluno: "" });
-      toastError("Não há dieta especial para o aluno informado.");
+      toastError("Não há Aluno para código EOL informado.");
     } else if (resposta.status === 200) {
       if (
         tipoUsuario === TIPO_PERFIL.ESCOLA &&
@@ -118,6 +118,10 @@ const FormFiltros = ({
       ) {
         setDesabilitarAluno(false);
         toastError("Código EOL do aluno não pertence a esta DRE.");
+        setDadosIniciais({ ...values, nome_aluno: "" });
+      } else if (!resposta.data.possui_dieta_especial) {
+        setDesabilitarAluno(false);
+        toastError("Não há dieta especial para o aluno informado.");
         setDadosIniciais({ ...values, nome_aluno: "" });
       } else {
         setDesabilitarAluno(true);
