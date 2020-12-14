@@ -84,6 +84,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
           }
         )}
         <div className="linha-tabela mt-4">
+          <div />
           <div>{totaisAbsolutos && totaisAbsolutos.frequencia}</div>
           {panorama.horas_atendimento !== 5 && (
             <div>{totaisAbsolutos && totaisAbsolutos.lanche_4h}</div>
