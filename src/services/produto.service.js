@@ -69,6 +69,33 @@ export const getNomesFabricantes = async queryparams => {
   return await axios.get(url);
 };
 
+export const getNovaReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-nova-reclamacao/");
+
+export const getNovaReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-nova-reclamacao/");
+
+export const getNovaReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-nova-reclamacao/");
+
+export const getAvaliarReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-avaliar-reclamacao/");
+
+export const getAvaliarReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-avaliar-reclamacao/");
+
+export const getAvaliarReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-avaliar-reclamacao/");
+
+export const getResponderReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-responder-reclamacao/");
+
+export const getResponderReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-responder-reclamacao/");
+
+export const getResponderReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-responder-reclamacao/");
+
 export const getNomesTerceirizadas = async () => {
   return await axios.get(`/terceirizadas/lista-nomes/`);
 };

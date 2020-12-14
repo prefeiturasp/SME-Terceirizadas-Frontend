@@ -14,9 +14,9 @@ import {
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getResponderReclamacaoNomesProdutos,
+  getResponderReclamacaoNomesMarcas,
+  getResponderReclamacaoNomesFabricantes
 } from "services/produto.service";
 
 import "./style.scss";
@@ -62,9 +62,9 @@ const FormBuscaProduto = ({
   useEffect(() => {
     async function fetchData() {
       Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes()
+        getResponderReclamacaoNomesProdutos(),
+        getResponderReclamacaoNomesMarcas(),
+        getResponderReclamacaoNomesFabricantes()
       ]).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
