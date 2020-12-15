@@ -219,8 +219,8 @@ export const getDietasAtivasInativasPorAluno = async (params = {}) => {
   return response;
 };
 
-export const getAlimentos = async () => {
-  return await axios.get(`${ENDPOINT.ALIMENTOS}/`);
+export const getAlimentos = async params => {
+  return await axios.get(`${ENDPOINT.ALIMENTOS}/`, { params });
 };
 
 export const getSolicitacaoDietaEspecial = async uuid => {

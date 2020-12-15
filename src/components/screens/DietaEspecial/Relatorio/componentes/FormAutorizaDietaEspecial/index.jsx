@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import { Form, Field } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { InputComData } from "components/Shareable/DatePicker";
-import { HelpText } from "../../../../../Shareable/HelpText";
 
 import {
   atualizaDietaEspecial,
@@ -51,6 +50,7 @@ import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
 import ModalAdicionaProtocolo from "./componentes/ModalAdicionaProtocolo";
 import ModalSolicitacaoCadastroProduto from "./componentes/ModalSolicitacaoCadastroProduto";
+import AlertaTextoVermelho from "components/Shareable/AlertaTextoVermelho";
 
 export default class FormAutorizaDietaEspecial extends Component {
   constructor(props) {
@@ -69,10 +69,19 @@ export default class FormAutorizaDietaEspecial extends Component {
   }
 
   componentDidMount = async () => {
-    const { aluno, uuid } = this.props.dietaEspecial;
+    const { aluno, escola, uuid } = this.props.dietaEspecial;
     const alergiasIntolerancias = await getAlergiasIntolerancias();
-    const alimentos = await getAlimentos();
-    const produtos = await getSubstitutos();
+    const alimentos = await getAlimentos({
+      tipo: escola.tipo_gestao.nome === "TERC TOTAL" ? "E" : "P"
+    });
+    const produtos =
+      escola.tipo_gestao.nome === "TERC TOTAL"
+        ? await (await getSubstitutos()).data.results
+        : alimentos.data.map(alimento =>
+            Object.assign({}, alimento, {
+              nome: `${alimento.nome} (${alimento.marca.nome})`
+            })
+          );
     const protocolosDietaEspecial = await getProtocolosDietaEspecial();
     const classificacoesDieta = await getClassificacoesDietaEspecial();
     const params = gerarParametrosConsulta({
@@ -87,7 +96,7 @@ export default class FormAutorizaDietaEspecial extends Component {
       diagnosticos: alergiasIntolerancias.results,
       classificacoesDieta: classificacoesDieta.results,
       alimentos: alimentos.data,
-      produtos: produtos.data.results,
+      produtos: produtos,
       solicitacoesVigentes: formatarSolicitacoesVigentes(
         solicitacoesVigentes.data.results.filter(
           solicitacaoVigente => solicitacaoVigente.uuid !== uuid
@@ -408,13 +417,16 @@ export default class FormAutorizaDietaEspecial extends Component {
                         produtos={produtos}
                       />
                       <div className="row">
-                        <div className="col-9">
+                        <div className="col-10">
                           <Field
                             component={CKEditorField}
                             label="Descrever características do alimento"
                             name="caracteristicas_do_alimento"
                           />
-                          <HelpText helpText="Os produtos (Alimentos) devem ser adquiridos utilizando a verba PTRF ou outro recurso disponível." />
+                          <AlertaTextoVermelho>
+                            Os produtos (Alimentos) devem ser adquiridos
+                            utilizando a verba PTRF ou outro recurso disponível.
+                          </AlertaTextoVermelho>
                         </div>
                       </div>
                       <div className="row">
