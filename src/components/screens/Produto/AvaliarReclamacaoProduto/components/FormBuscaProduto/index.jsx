@@ -12,9 +12,9 @@ import "./style.scss";
 import { useHistory } from "react-router-dom";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getAvaliarReclamacaoNomesProdutos,
+  getAvaliarReclamacaoNomesMarcas,
+  getAvaliarReclamacaoNomesFabricantes
 } from "services/produto.service";
 import { SelectWithHideOptions } from "components/Shareable/SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
@@ -58,9 +58,9 @@ export const FormBuscaProduto = ({
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
-      getNomesProdutos("?filtrar_por=reclamacoes"),
-      getNomesMarcas("?filtrar_por=reclamacoes"),
-      getNomesFabricantes("?filtrar_por=reclamacoes")
+      getAvaliarReclamacaoNomesProdutos("?filtrar_por=reclamacoes"),
+      getAvaliarReclamacaoNomesMarcas("?filtrar_por=reclamacoes"),
+      getAvaliarReclamacaoNomesFabricantes("?filtrar_por=reclamacoes")
     ];
     async function fetchData() {
       Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
