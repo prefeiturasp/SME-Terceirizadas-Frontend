@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { Form, Field } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { InputComData } from "components/Shareable/DatePicker";
+import { HelpText } from "../../../../../Shareable/HelpText";
 
 import {
   atualizaDietaEspecial,
@@ -406,6 +407,16 @@ export default class FormAutorizaDietaEspecial extends Component {
                         alimentos={alimentos}
                         produtos={produtos}
                       />
+                      <div className="row">
+                        <div className="col-9">
+                          <Field
+                            component={CKEditorField}
+                            label="Descrever características do alimento"
+                            name="caracteristicas_do_alimento"
+                          />
+                          <HelpText helpText="Os produtos (Alimentos) devem ser adquiridos utilizando a verba PTRF ou outro recurso disponível." />
+                        </div>
+                      </div>
                       <div className="row">
                         {dietaEspecial.tipo_solicitacao ===
                         TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
