@@ -2,10 +2,15 @@ import React, { Component } from "react";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
-import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
+import {
+  getDietaEspecial,
+  escolaCancelaSolicitacao
+} from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import "antd/dist/antd.css";
+import { Spin } from "antd";
 
 import Botao from "../../../Shareable/Botao";
 import {
@@ -39,7 +44,7 @@ const BotaoGerarRelatorio = ({ uuid }) => {
   );
 };
 
-const BotaoAutorizaInativacao = ({ showNaoAprovaModal }) => {
+const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
   return (
     <div className="form-group row float-right mt-4">
       <Botao
@@ -47,7 +52,13 @@ const BotaoAutorizaInativacao = ({ showNaoAprovaModal }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         className="ml-3"
-        onClick={() => showNaoAprovaModal("Não")}
+        onClick={() => {
+          setCarregando(true);
+          escolaCancelaSolicitacao(uuid).then(() => {
+            onAutorizar();
+            toastSuccess("Autorização do Cancelamento realizada com sucesso!");
+          });
+        }}
       />
     </div>
   );
@@ -59,7 +70,8 @@ export default class Relatorio extends Component {
     this.state = {
       dietaEspecial: null,
       solicitacoesVigentes: null,
-      uuid: null
+      uuid: null,
+      carregando: false
     };
   }
 
@@ -82,10 +94,12 @@ export default class Relatorio extends Component {
   };
 
   loadSolicitacao = uuid => {
+    this.setCarregando(true);
     getDietaEspecial(uuid).then(responseDietaEspecial => {
       this.setState({
         dietaEspecial: responseDietaEspecial.data
       });
+      this.setCarregando(false);
     });
   };
 
@@ -98,18 +112,24 @@ export default class Relatorio extends Component {
     });
   };
 
+  setCarregando = carregando => {
+    this.setState({ carregando: carregando });
+  };
+
   render() {
     const {
       dietaEspecial,
       showNaoAprovaModal,
-      solicitacoesVigentes
+      solicitacoesVigentes,
+      carregando
     } = this.state;
     const { visao } = this.props;
     if (!dietaEspecial) {
       return <div>Carregando...</div>;
     }
+
     return (
-      <>
+      <Spin tip="Carregando..." spinning={carregando}>
         <span className="page-title">{cabecalhoDieta(dietaEspecial)}</span>
         <div className="card mt-3">
           <div className="card-body">
@@ -142,12 +162,13 @@ export default class Relatorio extends Component {
             {dietaEspecial.status_solicitacao ===
               statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
               visao === CODAE && (
-                <BotaoAutorizaInativacao
+                <BotaoAutorizaCancelamento
                   uuid={dietaEspecial.uuid}
                   showNaoAprovaModal={this.showNaoAprovaModal}
                   onAutorizar={() => {
                     this.loadSolicitacao(dietaEspecial.uuid);
                   }}
+                  setCarregando={this.setCarregando}
                 />
               )}
             {dietaEspecial.status_solicitacao ===
@@ -162,7 +183,7 @@ export default class Relatorio extends Component {
           onNegar={this.props.onAutorizarOuNegar}
           uuid={dietaEspecial.uuid}
         />
-      </>
+      </Spin>
     );
   }
 }
