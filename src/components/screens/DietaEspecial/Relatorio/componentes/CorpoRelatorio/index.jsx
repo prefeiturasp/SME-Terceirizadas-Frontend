@@ -18,6 +18,7 @@ import {
   TIPO_SOLICITACAO_DIETA
 } from "../../../../../../constants/shared";
 import "./styles.scss";
+import AlertaTextoVermelho from "components/Shareable/AlertaTextoVermelho";
 
 export const CorpoRelatorio = props => {
   const {
@@ -38,6 +39,7 @@ export const CorpoRelatorio = props => {
       nome_protocolo,
       substituicoes,
       informacoes_adicionais,
+      caracteristicas_do_alimento,
       registro_funcional_nutricionista,
       data_inicio,
       data_termino,
@@ -362,6 +364,25 @@ export const CorpoRelatorio = props => {
               />
             </div>
           )}
+
+          {caracteristicas_do_alimento &&
+            escola.tipo_gestao.nome !== "TERC TOTAL" && (
+              <>
+                <div className="report-label-value">
+                  <p>Características do Alimento</p>
+                  <div
+                    className="texto-wysiwyg value altura-minima"
+                    dangerouslySetInnerHTML={{
+                      __html: caracteristicas_do_alimento
+                    }}
+                  />
+                </div>
+                <AlertaTextoVermelho>
+                  Os produtos (Alimentos) devem ser adquiridos utilizando a
+                  verba PTRF ou outro recurso disponível.
+                </AlertaTextoVermelho>
+              </>
+            )}
 
           {informacoes_adicionais && (
             <div className="report-label-value">
