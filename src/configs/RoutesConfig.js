@@ -84,7 +84,8 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhLogistica
+  usuarioEhLogistica,
+  usuarioEhDistribuidora
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -118,6 +119,7 @@ import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedi
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import FiltroRequisicaoDilogAvancado from "pages/Logistica/FiltroRequisicaoDilogAvancado";
+import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
 
 const routesConfig = [
   {
@@ -990,6 +992,12 @@ const routesConfig = [
     component: FiltroRequisicaoDilogAvancado,
     exact: true,
     tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
+    component: GestaoRequisicaoEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
   }
 ];
 

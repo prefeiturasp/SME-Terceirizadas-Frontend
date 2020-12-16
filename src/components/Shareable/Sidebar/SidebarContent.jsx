@@ -11,7 +11,8 @@ import {
   usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
   usuarioEhAdministradorGpCODAE,
-  usuarioEhAdministradorNutriSupervisao
+  usuarioEhAdministradorNutriSupervisao,
+  usuarioEhDistribuidora
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -62,12 +63,14 @@ export const SidebarContent = () => {
   const exibirCadastros =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
   const exibirRelatorios = !usuarioEhCoordenadorEscola();
+
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE();
-  const exibirMenuLogistica = usuarioEhLogistica();
+
+  const exibirMenuLogistica = usuarioEhLogistica() || usuarioEhDistribuidora();
 
   const _props = {
     activeMenu,

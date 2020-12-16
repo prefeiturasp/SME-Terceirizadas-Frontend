@@ -10,7 +10,7 @@ export default class Breadcrumb extends Component {
         <div className="col-9">
           <ul className="br-breadcrumb">
             <li>
-              <Link className={`home ${atual && "is-active"}`} to={home}>
+              <Link className={`home ${!atual && "is-active"}`} to={home}>
                 <i className="fas fa-home" />
               </Link>
             </li>
@@ -19,15 +19,15 @@ export default class Breadcrumb extends Component {
               anteriores.map((anterior, key) => {
                 return (
                   <li key={key}>
-                    <Link className="is-active" to={anterior.href}>
-                      {anterior.titulo}
-                    </Link>
+                    <Link to={anterior.href}>{anterior.titulo}</Link>
                   </li>
                 );
               })}
             {atual && (
               <li>
-                <Link to={atual.href}>{atual.titulo}</Link>
+                <Link className="is-active" to={atual.href}>
+                  {atual.titulo}
+                </Link>
               </li>
             )}
           </ul>

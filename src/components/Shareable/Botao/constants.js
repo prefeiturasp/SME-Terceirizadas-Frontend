@@ -4,7 +4,9 @@ export const BUTTON_STYLE = {
   GREEN: "green-button",
   GREEN_OUTLINE: "green-button-outline",
   RED: "red-button",
-  RED_OUTLINE: "red-button-outline"
+  RED_OUTLINE: "red-button-outline",
+  GRAY_OUTLINE: "red-button-outline",
+  DARK_OUTLINE: "dark-button-outline"
 };
 
 export const BUTTON_ICON = {
@@ -20,7 +22,8 @@ export const BUTTON_ICON = {
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
   TIMES_CIRCLE: "fas fa-times-circle",
-  TRASH: "fas fa-trash-alt"
+  TRASH: "fas fa-trash-alt",
+  EYE: "fas fa-eye"
 };
 
 export const BUTTON_TYPE = {

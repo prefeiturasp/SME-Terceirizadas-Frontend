@@ -337,6 +337,12 @@ export const usuarioEhLogistica = () => {
   );
 };
 
+export const usuarioEhDistribuidora = () => {
+  return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$/i.test(
     localStorage.getItem("nome_instituicao")
