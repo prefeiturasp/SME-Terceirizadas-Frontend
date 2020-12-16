@@ -8,6 +8,7 @@ button.general-button {
   height: 38px;
   padding: 0 12px;
   text-align: center;
+  border: 1px solid;
   i.text-and-icon {
     padding-right: 8px;
   }
@@ -113,6 +114,28 @@ button.general-button {
     &:hover {
       color: $white;
       background-color: $redToastError;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+
+  &.dark-button-outline {
+    color: $blackInput;
+    border-color: $blackInput;
+    background-color: transparent;
+
+    i {
+      color: $blackInput;
+    }
+    &:hover {
+      color: $white;
+      background-color: $blackInput;
       i {
         color: $white;
       }

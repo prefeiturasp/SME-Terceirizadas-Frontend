@@ -3,8 +3,10 @@ import { Menu, LeafItem } from "./shared";
 import {
   ENVIO_REQUISICOES_ENTREGA,
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
-  LOGISTICA
+  LOGISTICA,
+  GESTAO_REQUISICAO_ENTREGA
 } from "configs/constants";
+import { usuarioEhDistribuidora, usuarioEhLogistica } from "helpers/utilities";
 
 const MenuLogistica = () => {
   return (
@@ -12,12 +14,22 @@ const MenuLogistica = () => {
       {/* <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
         Disponibilização de solicitações
       </LeafItem> */}
-      <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA}`}>
-        Envio de Requisição de Entrega
-      </LeafItem>
-      <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
-        Consulta de Requisições de entrega
-      </LeafItem>
+      {usuarioEhLogistica() && (
+        <>
+          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA}`}>
+            Envio de Requisição de Entrega
+          </LeafItem>
+          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
+            Consulta de Requisições de entrega
+          </LeafItem>
+        </>
+      )}
+
+      {usuarioEhDistribuidora() && (
+        <LeafItem to={`/${LOGISTICA}/${GESTAO_REQUISICAO_ENTREGA}`}>
+          Gestão de Requisição de Entrega
+        </LeafItem>
+      )}
     </Menu>
   );
 };

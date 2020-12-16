@@ -11,3 +11,8 @@ export const getRequisicoesDoFiltro = async queryparams => {
   if (queryparams) url += "?" + queryparams + "&&param=01/";
   return await axios.get(url);
 };
+
+export const getRequisicoesDistribuidor = async params => {
+  let url = `/solicitacao-remessa/consulta-requisicoes-distribuidor/`;
+  return await axios.get(url, { params });
+};
