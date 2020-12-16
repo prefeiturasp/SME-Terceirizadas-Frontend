@@ -48,7 +48,7 @@ const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
   return (
     <div className="form-group row float-right mt-4">
       <Botao
-        texto="Autorizar Inativação"
+        texto="Autorizar Cancelamento"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         className="ml-3"
