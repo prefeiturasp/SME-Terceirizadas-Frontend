@@ -370,7 +370,7 @@ export const CorpoRelatorio = props => {
             escola.tipo_gestao.nome !== "TERC TOTAL" && (
               <>
                 <div className="report-label-value">
-                  <p>Descrever características do Alimento</p>
+                  <p>Descrever Características do Alimento</p>
                   <div
                     className="texto-wysiwyg value altura-minima"
                     dangerouslySetInnerHTML={{
