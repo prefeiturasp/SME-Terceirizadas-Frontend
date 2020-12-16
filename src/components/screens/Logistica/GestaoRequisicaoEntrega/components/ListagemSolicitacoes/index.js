@@ -110,12 +110,12 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
 
                           <div className="row">
                             <div className="col">
-                              <b>Código EOL U.E</b>
+                              <b>Cód. CODAE UE</b>
                               <br />
                               {guia.codigo_unidade}
                             </div>
                             <div className="col border-left">
-                              <b>Nome da Unidade de Ensino</b>
+                              <b>Nome Unidade Educacional</b>
                               <br />
                               {guia.nome_unidade}
                             </div>
