@@ -1,4 +1,5 @@
 import HTTP_STATUS from "http-status-codes";
+import { get } from "lodash";
 import moment from "moment";
 import React, { Component } from "react";
 import { Form, Field } from "react-final-form";
@@ -416,19 +417,23 @@ export default class FormAutorizaDietaEspecial extends Component {
                         alimentos={alimentos}
                         produtos={produtos}
                       />
-                      <div className="row">
-                        <div className="col-10">
-                          <Field
-                            component={CKEditorField}
-                            label="Descrever características do alimento"
-                            name="caracteristicas_do_alimento"
-                          />
-                          <AlertaTextoVermelho>
-                            Os produtos (Alimentos) devem ser adquiridos
-                            utilizando a verba PTRF ou outro recurso disponível.
-                          </AlertaTextoVermelho>
+                      {get(dietaEspecial, "escola.tipo_gestao.nome") !==
+                        "TERC TOTAL" && (
+                        <div className="row">
+                          <div className="col-10">
+                            <Field
+                              component={CKEditorField}
+                              label="Descrever características do alimento"
+                              name="caracteristicas_do_alimento"
+                            />
+                            <AlertaTextoVermelho>
+                              Os produtos (Alimentos) devem ser adquiridos
+                              utilizando a verba PTRF ou outro recurso
+                              disponível.
+                            </AlertaTextoVermelho>
+                          </div>
                         </div>
-                      </div>
+                      )}
                       <div className="row">
                         {dietaEspecial.tipo_solicitacao ===
                         TIPO_SOLICITACAO_DIETA.ALUNO_NAO_MATRICULADO ? (
