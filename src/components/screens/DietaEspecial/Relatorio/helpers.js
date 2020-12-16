@@ -5,7 +5,8 @@ const DESCRICAO_SOLICITACAO = {
   ESCOLA_SOLICITOU_INATIVACAO: "Solicitação de Cancelamento",
   CODAE_NEGOU_INATIVACAO: "Negada o Cancelamento",
   CODAE_AUTORIZOU_INATIVACAO: "Cancelamento Autorizado",
-  ESCOLA_CANCELOU: "Cancelada pela Unidade Escolar"
+  ESCOLA_CANCELOU: "Cancelada pela Unidade Escolar",
+  TERMINADA_AUTOMATICAMENTE_SISTEMA: "Cancelada por atingir data de término"
 };
 
 export const cabecalhoDieta = dietaEspecial => {

@@ -53,7 +53,8 @@ export const CorpoRelatorio = props => {
   const statusDietaAutorizada = [
     statusEnum.CODAE_AUTORIZADO,
     statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
-    statusEnum.ESCOLA_SOLICITOU_INATIVACAO
+    statusEnum.ESCOLA_SOLICITOU_INATIVACAO,
+    statusEnum.TERMINADA_AUTOMATICAMENTE_SISTEMA
   ];
 
   const exibirDadosAutorizacao = () => {
