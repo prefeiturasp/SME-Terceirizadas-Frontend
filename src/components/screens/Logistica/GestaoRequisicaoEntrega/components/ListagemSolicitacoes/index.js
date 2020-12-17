@@ -16,8 +16,8 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
       <article>
         <div className="grid-table header-table">
           <div />
-          <div>Nº da solicitação</div>
-          <div>Qtde de guias</div>
+          <div>N° da Requisição de Entrega</div>
+          <div>Qtde. de Guias Remessa</div>
           <div>Status</div>
           <div>Data de entrega</div>
           <div>Ações</div>
@@ -66,7 +66,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>
                   {solicitacao.guias[0].data_entrega}
                 </div>
-                <div className={`${bordas}`}>
+                <div>
                   <Button className="acoes confirmar" variant="link">
                     <i className="fas fa-check-circle confirmar" /> Confirmar
                   </Button>

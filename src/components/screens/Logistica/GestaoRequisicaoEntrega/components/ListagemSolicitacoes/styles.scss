@@ -25,13 +25,27 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 3fr;
+      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 2.5fr;
     }
 
     .header-table {
       background: #f5f6f8;
       color: #42474a;
       font-weight: bold;
+      div {
+        text-align: left;
+        display: grid;
+        align-items: center;
+        height: 100%;
+        padding-left: 8px;
+        &:not(:first-child) {
+          border-right: 1px solid #e9eaea;
+        }
+
+        &:last-child {
+          border-right: 0px solid #e9eaea;
+        }
+      }
     }
 
     .body-table {
@@ -65,8 +79,8 @@
         display: flex;
         align-items: center;
         border-bottom: 1px solid #e9eaea;
-
-        justify-content: center;
+        text-align: left;
+        padding-left: 8px;
         &:not(:first-child) {
           border-right: 1px solid #e9eaea;
         }
@@ -97,6 +111,7 @@
     .confirmar {
       color: $green !important;
       display: inline !important;
+      padding-left: 0;
     }
 
     .alterar {
