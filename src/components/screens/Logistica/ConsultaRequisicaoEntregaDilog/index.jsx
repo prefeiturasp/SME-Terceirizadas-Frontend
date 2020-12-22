@@ -45,7 +45,7 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-consulta-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
-          <Filtros setFiltros={setFiltros} />
+          <Filtros setFiltros={setFiltros} setSolicitacoes={setSolicitacoes} />
 
           {solicitacoes && (
             <>

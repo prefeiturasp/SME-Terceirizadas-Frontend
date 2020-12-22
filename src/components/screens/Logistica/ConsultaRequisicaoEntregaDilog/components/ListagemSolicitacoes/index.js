@@ -11,6 +11,7 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
         <div className="grid-table header-table">
           <div>N° da Requisição de Entrega</div>
           <div>Qtde. de Guias Remessa</div>
+          <div>Distribuidor/Fornecedor</div>
           <div>Status</div>
           <div>Data de entrega</div>
           <div />
@@ -33,6 +34,9 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>
                   {solicitacao.guias.length}{" "}
                   {solicitacao.guias.length === 1 ? "guia" : "guias"}
+                </div>
+                <div className={`${bordas}`}>
+                  {solicitacao.distribuidor_nome}
                 </div>
                 <div className={`${bordas}`}>{solicitacao.status}</div>
                 <div className={`${bordas}`}>
