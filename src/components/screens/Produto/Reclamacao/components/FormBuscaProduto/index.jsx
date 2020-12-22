@@ -12,6 +12,9 @@ import {
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
+  getAvaliarReclamacaoNomesProdutos,
+  getAvaliarReclamacaoNomesMarcas,
+  getAvaliarReclamacaoNomesFabricantes,
   getNovaReclamacaoNomesProdutos,
   getNovaReclamacaoNomesMarcas,
   getNovaReclamacaoNomesFabricantes
@@ -43,16 +46,32 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  history,
+  initialValues,
+  formName,
+  novaReclamacao
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function fetchData() {
-      Promise.all([
-        getNovaReclamacaoNomesProdutos(),
-        getNovaReclamacaoNomesMarcas(),
-        getNovaReclamacaoNomesFabricantes()
-      ]).then(([produtos, marcas, fabricantes]) => {
+      let endpoints;
+      if (novaReclamacao) {
+        endpoints = [
+          getNovaReclamacaoNomesProdutos(),
+          getNovaReclamacaoNomesMarcas(),
+          getNovaReclamacaoNomesFabricantes()
+        ];
+      } else {
+        endpoints = [
+          getAvaliarReclamacaoNomesProdutos(),
+          getAvaliarReclamacaoNomesMarcas(),
+          getAvaliarReclamacaoNomesFabricantes()
+        ];
+      }
+      Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
