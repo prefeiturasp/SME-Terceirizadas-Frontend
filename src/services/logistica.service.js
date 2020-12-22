@@ -13,6 +13,16 @@ export const getRequisicoesDoFiltro = async queryparams => {
 };
 
 export const getRequisicoesDistribuidor = async params => {
-  let url = `/solicitacao-remessa/consulta-requisicoes-distribuidor/`;
+  const url = `/solicitacao-remessa/consulta-requisicoes-distribuidor/`;
+  return await axios.get(url, { params });
+};
+
+export const getRequisicoesDilog = async params => {
+  const url = `/solicitacao-remessa/`;
+  return await axios.get(url, { params });
+};
+
+export const getNomesUnidadesEscolares = async params => {
+  const url = "/guias-da-requisicao/unidades-escolares/";
   return await axios.get(url, { params });
 };

@@ -6,11 +6,11 @@ import {
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
   LOGISTICA
 } from "configs/constants";
-import FiltroRequisicaoDilogAvancado from "components/screens/Logistica/FiltroRequisicaoDilogAvancado";
+import ConsultaRequisicaoEntregaDilog from "components/screens/Logistica/ConsultaRequisicaoEntregaDilog";
 
 const atual = {
   href: `/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
-  titulo: "Envio de Requisições de Entrega"
+  titulo: "Consulta de Requisições de entrega"
 };
 
 const anteriores = [
@@ -23,6 +23,6 @@ const anteriores = [
 export default () => (
   <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <FiltroRequisicaoDilogAvancado />
+    <ConsultaRequisicaoEntregaDilog />
   </Page>
 );
