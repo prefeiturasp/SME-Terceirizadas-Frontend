@@ -2,55 +2,31 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_TYPE,
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "components/Shareable/Botao/constants";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
+export default ({ solicitacoes, ativos, setAtivos }) => {
   return (
-    <section className="resultado-busca-requisicao-entrega">
+    <section className="resultado-busca-requisicao-entrega-dilog">
       <header>Veja solicitações disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
-          <div />
           <div>N° da Requisição de Entrega</div>
           <div>Qtde. de Guias Remessa</div>
           <div>Status</div>
           <div>Data de entrega</div>
-          <div>Ações</div>
+          <div />
         </div>
         {solicitacoes.map(solicitacao => {
           const bordas =
             ativos && ativos.includes(solicitacao.uuid)
               ? "desativar-borda"
               : "";
-          const icone =
+          const toggleText =
             ativos && ativos.includes(solicitacao.uuid)
-              ? "angle-up"
-              : "angle-down";
+              ? "Ver menos"
+              : "Ver mais";
           return (
             <>
               <div className="grid-table body-table">
-                <div>
-                  <i
-                    className={`fas fa-${icone}`}
-                    onClick={() => {
-                      ativos && ativos.includes(solicitacao.uuid)
-                        ? setAtivos(
-                            ativos.filter(el => el !== solicitacao.uuid)
-                          )
-                        : setAtivos(
-                            ativos
-                              ? [...ativos, solicitacao.uuid]
-                              : [solicitacao.uuid]
-                          );
-                    }}
-                  />
-                </div>
-
                 <div className={`${bordas}`}>
                   {solicitacao.numero_solicitacao}
                 </div>
@@ -66,18 +42,24 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>
                   {solicitacao.guias[0].data_entrega}
                 </div>
+
                 <div>
-                  <Button className="acoes confirmar" variant="link">
-                    <i className="fas fa-check-circle confirmar" /> Confirmar
-                  </Button>
-                  |
-                  <Button className="acoes alterar" variant="link">
-                    {" "}
-                    <i className="fas fa-sync-alt alterar" /> Alterar
-                  </Button>
-                  |
-                  <Button className="acoes text-dark" variant="link">
-                    <i className="fas fa-print imprimir" /> Imprimir
+                  <Button
+                    className="acoes"
+                    variant="link"
+                    onClick={() => {
+                      ativos && ativos.includes(solicitacao.uuid)
+                        ? setAtivos(
+                            ativos.filter(el => el !== solicitacao.uuid)
+                          )
+                        : setAtivos(
+                            ativos
+                              ? [...ativos, solicitacao.uuid]
+                              : [solicitacao.uuid]
+                          );
+                    }}
+                  >
+                    {toggleText}
                   </Button>
                 </div>
               </div>
@@ -86,23 +68,14 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                 solicitacao.guias.map(guia => {
                   return (
                     <>
-                      <section className="resultado-busca-detalhe pb-3">
+                      <section className="resultado-busca-detalhe pb-3 pt-3">
                         <div className="container-fluid">
                           <div className="row">
-                            <div className="col-md-9 justify-content-center align-self-center">
+                            <div className="col justify-content-center align-self-center">
                               <span>
                                 {" "}
                                 N° da guia: <b>{guia.numero_guia}</b>
                               </span>
-                            </div>
-                            <div className="col-md-3">
-                              <Botao
-                                texto="Imprimir"
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.DARK_OUTLINE}
-                                icon={BUTTON_ICON.PRINT}
-                                className="float-right"
-                              />
                             </div>
                           </div>
 
@@ -110,7 +83,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
 
                           <div className="row">
                             <div className="col">
-                              <b>Cód. CODAE U.E</b>
+                              <b>Cód. CODAE UE</b>
                               <br />
                               {guia.codigo_unidade}
                             </div>
@@ -179,5 +152,3 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
     </section>
   );
 };
-
-export default ListagemSolicitacoes;
