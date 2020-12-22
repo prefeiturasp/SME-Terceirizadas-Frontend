@@ -12,7 +12,7 @@ import {
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
   return (
     <section className="resultado-busca-requisicao-entrega">
-      <header>Veja solicitações disponibilizadas</header>
+      <header>Veja requisições disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
           <div />

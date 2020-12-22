@@ -6,7 +6,7 @@ import "./styles.scss";
 export default ({ solicitacoes, ativos, setAtivos }) => {
   return (
     <section className="resultado-busca-requisicao-entrega-dilog">
-      <header>Veja solicitações disponibilizadas</header>
+      <header>Veja requisições disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
           <div>N° da Requisição de Entrega</div>
@@ -34,11 +34,7 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
                   {solicitacao.guias.length}{" "}
                   {solicitacao.guias.length === 1 ? "guia" : "guias"}
                 </div>
-                <div className={`${bordas}`}>
-                  {solicitacao.status === "Enviada"
-                    ? "Recebida"
-                    : solicitacao.status}
-                </div>
+                <div className={`${bordas}`}>{solicitacao.status}</div>
                 <div className={`${bordas}`}>
                   {solicitacao.guias[0].data_entrega}
                 </div>
