@@ -607,9 +607,10 @@ class AlteracaoCardapio extends Component {
     const periodoChecado = this.state.periodos[indice];
     if (!periodoChecado.checked) return true;
 
-    const motivoSelecionado = this.props.motivos.find(
-      d => d.uuid === this.props.formValues.motivo
-    );
+    const motivoSelecionado =
+      this.props.formValues &&
+      this.props.formValues.motivo &&
+      this.props.motivos.find(d => d.uuid === this.props.formValues.motivo);
 
     if (motivoSelecionado === undefined) return false;
 
