@@ -254,21 +254,22 @@ export class StatusSolicitacoes extends Component {
             });
           break;
         case SOLICITACOES_INATIVAS:
-          this.props
-            .getDietaEspecialInativas(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.data.results,
-                  this.props.logPara
-                ),
-                count: response.data.count,
-                tipoCard: CARD_TYPE_ENUM.CANCELADO,
-                icone: ICON_CARD_TYPE_ENUM.CANCELADO,
-                titulo: "Inativas",
-                urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
+          this.props.getDietaEspecialInativas &&
+            this.props
+              .getDietaEspecialInativas(instituicao.uuid)
+              .then(response => {
+                this.setState({
+                  solicitacoes: ajustarFormatoLog(
+                    response.data.results,
+                    this.props.logPara
+                  ),
+                  count: response.data.count,
+                  tipoCard: CARD_TYPE_ENUM.CANCELADO,
+                  icone: ICON_CARD_TYPE_ENUM.CANCELADO,
+                  titulo: "Inativas",
+                  urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
+                });
               });
-            });
           break;
         default:
           break;
