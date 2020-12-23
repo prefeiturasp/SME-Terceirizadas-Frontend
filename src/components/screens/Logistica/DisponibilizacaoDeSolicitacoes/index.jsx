@@ -152,7 +152,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                     <tr>
                       <th>N° da Requisição de Entrega</th>
                       <th>Qtde. de Guias Remessa</th>
-                      <th>Distribuidor/Fornecedor</th>
+                      <th>Distribuidor</th>
                       <th>Status</th>
                       <th>Data de entrega</th>
                       <th />

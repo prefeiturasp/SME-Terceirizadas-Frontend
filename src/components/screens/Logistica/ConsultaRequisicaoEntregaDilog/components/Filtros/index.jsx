@@ -118,7 +118,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
               <div className="col">
                 <Field
                   component={InputText}
-                  label="Nome distribuidor/fornecedor"
+                  label="Nome distribuidor"
                   name="nome_distribuidor"
                   placeholder="Digite o nome do distribuidor"
                   className="input-busca-produto"

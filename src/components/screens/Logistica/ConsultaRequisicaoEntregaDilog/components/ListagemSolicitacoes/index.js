@@ -11,7 +11,7 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
         <div className="grid-table header-table">
           <div>N° da Requisição de Entrega</div>
           <div>Qtde. de Guias Remessa</div>
-          <div>Distribuidor/Fornecedor</div>
+          <div>Distribuidor</div>
           <div>Status</div>
           <div>Data de entrega</div>
           <div />
@@ -71,10 +71,16 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
                       <section className="resultado-busca-detalhe pb-3 pt-3">
                         <div className="container-fluid">
                           <div className="row">
-                            <div className="col justify-content-center align-self-center">
+                            <div className="col-3 justify-content-center align-self-center">
                               <span>
                                 {" "}
                                 N° da guia: <b>{guia.numero_guia}</b>
+                              </span>
+                            </div>
+                            <div className="col-3 justify-content-center align-self-center">
+                              <span>
+                                {" "}
+                                Status da guia: <b>{guia.status}</b>
                               </span>
                             </div>
                           </div>

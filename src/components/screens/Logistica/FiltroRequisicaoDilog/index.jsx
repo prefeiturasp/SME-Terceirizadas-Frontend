@@ -173,7 +173,7 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
                     <Field
                       component={AutoCompleteField}
                       dataSource={state.distribuidores}
-                      label="Nome do distribuidor/fornecedor"
+                      label="Nome do distribuidor"
                       placeholder="Digite nome do distribuidor/fornecedor"
                       className="input-busca-produto"
                       onSearch={v => onSearch("distribuidores", v)}
