@@ -106,13 +106,14 @@ class DashBoardDietaEspecial extends Component {
       inativasListFiltered !== prevState.inativasListFiltered &&
       !inativasListFiltered
     ) {
-      this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
-        this.setState({
-          inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-            response.data.results
-          )
+      this.props.getDietaEspecialInativas &&
+        this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
+          this.setState({
+            inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            )
+          });
         });
-      });
     }
 
     if (
