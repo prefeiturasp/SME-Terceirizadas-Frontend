@@ -140,7 +140,6 @@ export const DisponibilizacaoDeSolicitacoes = props => {
           <div className="card-body">
             <div className="card-title">Veja requisições disponibilizadas</div>
             {erroAPI && <div>Erro ao carregar dados de solicitações</div>}
-            {!erroAPI && loading && <div>Carregando...</div>}
             {!solicitacoes && !loading && !erroAPI && (
               <div>Não há solicitações.</div>
             )}
