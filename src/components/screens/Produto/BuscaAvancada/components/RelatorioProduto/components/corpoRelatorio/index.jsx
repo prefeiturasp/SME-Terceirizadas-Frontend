@@ -150,20 +150,26 @@ export default class CorpoRelatorio extends Component {
         <article className="flex-botoes-relatorio">
           <div className="row col-12">
             <div className="row col-10 ml-0">
-              <div className="col-6 pl-0">
-                <p className="text-muted">Solicitação de análise sensorial</p>
-              </div>
-              <div className="col-6">
-                <p>
-                  <span className="text-muted">
-                    Protocolo Análise Sensorial:
-                  </span>{" "}
-                  {produto.ultima_homologacao.protocolo_analise_sensorial}
-                </p>
-              </div>
+              {logAnaliseSensorial && (
+                <>
+                  <div className="col-6 pl-0">
+                    <p className="text-muted">
+                      Solicitação de análise sensorial
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p>
+                      <span className="text-muted">
+                        Protocolo Análise Sensorial:
+                      </span>{" "}
+                      {produto.ultima_homologacao.protocolo_analise_sensorial}
+                    </p>
+                  </div>
+                </>
+              )}
 
-              <section className="texto-wysiwyg row col-12 ml-0">
-                {logAnaliseSensorial && (
+              {logAnaliseSensorial && (
+                <section className="texto-wysiwyg row col-12 ml-0">
                   <div className="col-12">
                     <p
                       dangerouslySetInnerHTML={{
@@ -171,8 +177,8 @@ export default class CorpoRelatorio extends Component {
                       }}
                     />
                   </div>
-                )}
-              </section>
+                </section>
+              )}
             </div>
 
             <div className="col-2 d-flex" style={{ alignItems: "flex-end" }}>
