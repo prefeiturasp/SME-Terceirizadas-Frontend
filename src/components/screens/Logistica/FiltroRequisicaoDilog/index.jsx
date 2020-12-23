@@ -211,17 +211,13 @@ const FiltroRequisicaoDilog = ({ initialValues, history }) => {
           />
         </div>
         {filtrado && requisicoesFiltro.length > 0 ? (
-          <DisponibilizacaoDeSolicitacoes requisicoes={requisicoesFiltro} />
+          <>
+            <DisponibilizacaoDeSolicitacoes requisicoes={requisicoesFiltro} />
+          </>
         ) : filtrado && requisicoesFiltro.length === 0 ? (
-          <Fragment>
-            <div className="card">
-              <div className="card-body">
-                <div className="card-title">
-                  Não existe informação para os critérios de busca utilizados
-                </div>
-              </div>
-            </div>
-          </Fragment>
+          <div className="text-center pb-4">
+            Não existe informação para os critérios de busca utilizados
+          </div>
         ) : (
           <Fragment />
         )}

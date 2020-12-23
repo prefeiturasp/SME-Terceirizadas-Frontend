@@ -1,11 +1,20 @@
 @import "styles/variables.scss";
 
 div.disponibilizacao-solicitacoes {
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
   table.solicitacoes {
     font-size: 14px;
     width: 100%;
     border: 1px solid #e9eaea;
     border-radius: 4px;
+
     thead {
       tr {
         color: $blackInput;
@@ -62,5 +71,24 @@ div.disponibilizacao-solicitacoes {
         }
       }
     }
+  }
+}
+
+.resultado-busca-requisicao-envio-dilog {
+  margin-top: 10px;
+
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
   }
 }

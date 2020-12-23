@@ -134,17 +134,19 @@ export const DisponibilizacaoDeSolicitacoes = props => {
   };
 
   return (
-    <div className="disponibilizacao-solicitacoes">
+    <div className="disponibilizacao-solicitacoes container-fluid pb-3">
       {solicitacoes && (
-        <div className="card">
-          <div className="card-body">
-            <div className="card-title">Veja requisições disponibilizadas</div>
-            {erroAPI && <div>Erro ao carregar dados de solicitações</div>}
-            {!solicitacoes && !loading && !erroAPI && (
-              <div>Não há solicitações.</div>
-            )}
-            {solicitacoes && (
-              <>
+        <>
+          <hr /> <br />
+          <br />
+          <header>Veja requisições disponibilizadas</header>
+          {erroAPI && <div>Erro ao carregar dados de solicitações</div>}
+          {!solicitacoes && !loading && !erroAPI && (
+            <div>Não há solicitações.</div>
+          )}
+          {solicitacoes && (
+            <>
+              <div className="resultado-busca-requisicao-envio-dilog">
                 <table className="solicitacoes">
                   <thead>
                     <tr>
@@ -300,10 +302,10 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                     />
                   </div>
                 </div>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </>
+          )}
+        </>
       )}
       <Modal
         show={showModal}
