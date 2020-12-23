@@ -89,7 +89,7 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
 
                           <div className="row">
                             <div className="col">
-                              <b>Cód. CODAE UE</b>
+                              <b>Cód. CODAE da U.E</b>
                               <br />
                               {guia.codigo_unidade}
                             </div>

@@ -159,7 +159,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
               <div className="col-2">
                 <Field
                   component={InputText}
-                  label="Código CODAE U.E"
+                  label="Cód. CODAE da U.E"
                   name="codigo_unidade"
                   placeholder="Digite o código"
                   className="input-busca-produto"

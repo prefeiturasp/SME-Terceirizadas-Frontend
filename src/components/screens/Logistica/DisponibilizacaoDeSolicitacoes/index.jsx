@@ -214,7 +214,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
                                 </td>
                                 <td />
                                 <td>
-                                  Cód. EOL UE <br />
+                                  Cód. CODAE da U.E <br />
                                   <span>{guia.codigo_unidade}</span>
                                 </td>
                                 <td colSpan="4">
