@@ -15,6 +15,7 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
+import { Link } from "react-router-dom";
 
 export default class BuscaProduto extends Component {
   constructor(props) {
@@ -217,15 +218,25 @@ export default class BuscaProduto extends Component {
                           >
                             {produto.fabricante.nome}
                             {produto.ativo ? (
-                              <div className="botoes-produto">
-                                <i className="fas fa-pen editar" />
-                                <i
-                                  className="fas fa-angle-up"
-                                  onClick={() => {
-                                    this.dropDownProduto(indice);
-                                  }}
-                                />
-                              </div>
+                              <>
+                                <div className="botoes-produto">
+                                  <Link
+                                    to={`/gestao-produto/editar?uuid=${
+                                      produto.ultima_homologacao.uuid
+                                    }`}
+                                  >
+                                    <i className="fas fa-pen editar" />
+                                  </Link>
+                                </div>
+                                <div className="botoes-produto">
+                                  <i
+                                    className="fas fa-angle-up"
+                                    onClick={() => {
+                                      this.dropDownProduto(indice);
+                                    }}
+                                  />
+                                </div>
+                              </>
                             ) : (
                               <i
                                 className="fas fa-angle-down"

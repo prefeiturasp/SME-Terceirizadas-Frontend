@@ -99,7 +99,16 @@ export class Login extends Component {
       toastError(erro);
     } else {
       this.setState({ bloquearBotao: true });
-      setUsuario(values).then(response => {
+      const newValues = Object.assign({}, values);
+      if (this.state.tab === TABS.DRE_CODAE) {
+        if (newValues["tipo_email"] === 0 || newValues["tipo_email"] === "0") {
+          newValues["email"] = newValues["email"] + "@sme.prefeitura.sp.gov.br";
+        }
+        if (newValues["tipo_email"] === 1 || newValues["tipo_email"] === "1") {
+          newValues["email"] = newValues["email"] + "@prefeitura.sp.gov.br";
+        }
+      }
+      setUsuario(newValues).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(
             `Cadastro efetuado com sucesso!${
