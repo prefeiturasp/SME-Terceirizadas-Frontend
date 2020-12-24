@@ -16,7 +16,9 @@ const MenuRelatorios = () => {
   const exibirProdutosHomologados =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhCODAEDietaEspecial();
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
