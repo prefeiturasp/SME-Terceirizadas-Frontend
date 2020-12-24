@@ -205,7 +205,7 @@ export default class CorpoRelatorio extends Component {
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
           <div className="label-relatorio">Tipo</div>
-          <div className="label-relatorio">Data</div>
+          <div className="label-relatorio">Data de cadastro</div>
 
           <div className="value-relatorio">{produto.nome}</div>
           <div className="value-relatorio">{produto.marca.nome}</div>
@@ -213,7 +213,7 @@ export default class CorpoRelatorio extends Component {
             {produto.eh_para_alunos_com_dieta ? "DIETA ESPECIAL" : "COMUM"}
           </div>
           <div className="value-relatorio">
-            {produto.criado_em.split(" ")[0]}
+            {produto.ultima_homologacao.data_cadastro}
           </div>
         </header>
         <article>
