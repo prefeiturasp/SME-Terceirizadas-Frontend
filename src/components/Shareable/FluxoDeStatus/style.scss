@@ -45,7 +45,7 @@
         color: #fff;
         border-color: $green !important;
       }
-      + li.active:after {
+      &:after {
         background-color: $green !important;
       }
       + li.disapproved:after {
