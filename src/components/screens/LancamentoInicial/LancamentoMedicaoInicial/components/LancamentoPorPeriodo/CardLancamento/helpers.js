@@ -29,7 +29,11 @@ export const objectFlattener = object => {
   );
 };
 
-export const validateFormLancamento = (formValues, panorama) => {
+export const validateFormLancamento = (
+  formValues,
+  panorama,
+  dadosMatriculados
+) => {
   let erros = {};
   if (
     get(formValues, "convencional.eh_dia_de_sobremesa_doce") === true &&
@@ -65,13 +69,13 @@ export const validateFormLancamento = (formValues, panorama) => {
     const frequencia = formValues[grupo]
       ? parseInt(formValues[grupo].frequencia)
       : 0;
-    if (frequencia > panorama.qtde_alunos) {
+    if (frequencia > dadosMatriculados[grupo]) {
       set(
         erros,
         `${grupo}.frequencia`,
-        `Frequência não pode ser maior que alunos matriculados nesse período (${
-          panorama.qtde_alunos
-        })`
+        `Não é possível informar quantidade superior ao número de Dietas Ativas (${
+          dadosMatriculados[grupo]
+        }).`
       );
     }
     for (let [nomeCampo, nomeAmigavelCampo] of Object.entries(

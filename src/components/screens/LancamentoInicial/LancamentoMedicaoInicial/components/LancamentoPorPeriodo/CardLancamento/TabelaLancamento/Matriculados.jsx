@@ -2,7 +2,7 @@ import React from "react";
 
 export default ({ dadosMatriculados }) => {
   const mostrarDieta =
-    dadosMatriculados.tipoA > 0 || dadosMatriculados.tipoB > 0;
+    dadosMatriculados.grupoA > 0 || dadosMatriculados.grupoB > 0;
   return (
     <div
       className={`tabela-lancamento tabela-frequencia-por-dia ${
@@ -31,8 +31,8 @@ export default ({ dadosMatriculados }) => {
         <div>{dadosMatriculados.convencional}</div>
         {mostrarDieta && (
           <>
-            <div>{dadosMatriculados.tipoA}</div>
-            <div>{dadosMatriculados.tipoB}</div>
+            <div>{dadosMatriculados.grupoA}</div>
+            <div>{dadosMatriculados.grupoB}</div>
           </>
         )}
       </div>
