@@ -14,10 +14,11 @@ import * as constants from "configs/constants";
 const MenuRelatorios = () => {
   const exibirPainel = usuarioEhCODAEGestaoAlimentacao();
   const exibirProdutosHomologados =
-    usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhNutricionistaSupervisao() ||
     usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEGestaoProduto() ||
     usuarioEhEscola() ||
+    usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
