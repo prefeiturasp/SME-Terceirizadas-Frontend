@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import { getRequisicoesDilog } from "../../../../services/logistica.service.js";
+import { getRequisicoesListagem } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
@@ -11,14 +11,13 @@ export default () => {
   const [solicitacoes, setSolicitacoes] = useState();
   const [ativos, setAtivos] = useState([]);
   const [filtros, setFiltros] = useState();
-
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getRequisicoesDilog(params);
+    const response = await getRequisicoesListagem(params);
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
