@@ -120,9 +120,12 @@ export const getRelatorioProduto = ({ uuid, id_externo }) => {
     });
 };
 
-export const getDetalheInversaoCardapio = uuid => {
+export const getDetalheInversaoCardapio = async uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
-  return url;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
 };
 
 export const imprimeRelatorioSuspensaoAlimentacao = async uuid => {
