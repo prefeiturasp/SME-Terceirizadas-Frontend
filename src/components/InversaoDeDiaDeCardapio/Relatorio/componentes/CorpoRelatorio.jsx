@@ -32,7 +32,7 @@ export const CorpoRelatorio = props => {
             style={BUTTON_STYLE.BLUE}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
-            onClick={getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}
+            onClick={() => getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}
           />
         </p>
         <div className="col-2">
