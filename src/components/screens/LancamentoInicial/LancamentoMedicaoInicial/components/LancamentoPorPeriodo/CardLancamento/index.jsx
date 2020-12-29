@@ -199,7 +199,9 @@ export default ({
       onSubmit={onSubmit}
       initialValues={initialValues}
       initialValuesEqual={isequal}
-      validate={formValues => validateFormLancamento(formValues, panorama)}
+      validate={formValues =>
+        validateFormLancamento(formValues, panorama, dadosMatriculados)
+      }
       render={({
         form,
         handleSubmit,
