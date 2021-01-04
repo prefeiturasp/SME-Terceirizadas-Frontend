@@ -161,6 +161,10 @@ export const getMarcasProdutos = async () => {
   return await axios.get(`/marcas/`);
 };
 
+export const getNomeDeProdutosEdital = async () => {
+  return await axios.get(`/nome-de-produtos-edital/`);
+};
+
 export const getFabricantesProdutos = async () => {
   return await axios.get(`/fabricantes/`);
 };
