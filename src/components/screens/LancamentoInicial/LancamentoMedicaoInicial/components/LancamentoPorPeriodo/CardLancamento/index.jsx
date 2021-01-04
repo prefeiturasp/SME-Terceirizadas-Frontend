@@ -34,6 +34,7 @@ import ListagemLancamentos from "./ListagemLancamentos";
 import { Spin } from "antd";
 import ModalConfirmacao from "components/Shareable/ModalConfirmacao";
 import Matriculados from "./TabelaLancamento/Matriculados";
+import { transformaNullsEmUndefined } from "helpers/utilities";
 
 export default ({
   textoCabecalho,
@@ -125,9 +126,11 @@ export default ({
       }
       // remover nulls
       if (initialValues.convencional) {
-        for (let chave of Object.keys(initialValues.convencional)) {
-          if (initialValues.convencional[chave] === null)
-            initialValues.convencional[chave] = undefined;
+        transformaNullsEmUndefined(initialValues.convencional);
+        if (initialValues.convencional.refeicoes) {
+          initialValues.convencional.refeicoes.map(objRefeicoes =>
+            transformaNullsEmUndefined(objRefeicoes)
+          );
         }
       }
       setInitialValues(initialValues);
