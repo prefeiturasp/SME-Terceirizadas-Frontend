@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import { getRequisicoesDistribuidor } from "../../../../services/logistica.service.js";
+import { getRequisicoesListagem } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
@@ -9,17 +9,21 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import Filtros from "./components/Filtros";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
+  const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
-    const response = await getRequisicoesDistribuidor({ page: page });
+    const params = gerarParametrosConsulta({ page: page, ...filtros });
+    const response = await getRequisicoesListagem(params);
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
@@ -30,8 +34,10 @@ export default () => {
   };
 
   useEffect(() => {
-    buscarSolicitacoes(1);
-  }, []);
+    if (filtros) {
+      buscarSolicitacoes(1);
+    }
+  }, [filtros]);
 
   const nextPage = page => {
     buscarSolicitacoes(page);
@@ -42,14 +48,15 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3">
         <div className="card-body gestao-requisicao-entrega">
+          <Filtros setFiltros={setFiltros} setSolicitacoes={setSolicitacoes} />
           {solicitacoes && (
             <>
+              <br /> <hr /> <br />
               <ListagemSolicitacoes
                 solicitacoes={solicitacoes}
                 ativos={ativos}
                 setAtivos={setAtivos}
               />
-
               <div className="row">
                 <div className="col">
                   <Pagination

@@ -12,12 +12,7 @@ export const getRequisicoesDoFiltro = async queryparams => {
   return await axios.get(url);
 };
 
-export const getRequisicoesDistribuidor = async params => {
-  const url = `/solicitacao-remessa/consulta-requisicoes-distribuidor/`;
-  return await axios.get(url, { params });
-};
-
-export const getRequisicoesDilog = async params => {
+export const getRequisicoesListagem = async params => {
   const url = `/solicitacao-remessa/`;
   return await axios.get(url, { params });
 };
