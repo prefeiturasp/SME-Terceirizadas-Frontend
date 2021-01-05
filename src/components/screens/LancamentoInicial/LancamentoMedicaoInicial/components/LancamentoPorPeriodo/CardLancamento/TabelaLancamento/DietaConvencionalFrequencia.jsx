@@ -11,6 +11,8 @@ import BorderlessInput from "../../../BorderlessInput";
 import "./styles.scss";
 import BorderlessTextarea from "../../../BorderlessTextarea";
 
+import { tamanhoMaximoObsDiarias } from "../helpers";
+
 export default ({
   panorama,
   deveDesabilitarRepeticaoSobremesa,
@@ -209,7 +211,11 @@ export default ({
         </>
       )}
       <div>
-        <Field component={BorderlessTextarea} name="convencional.observacoes" />
+        <Field
+          component={BorderlessTextarea}
+          name="convencional.observacoes"
+          validate={tamanhoMaximoObsDiarias}
+        />
       </div>
     </div>
   </div>

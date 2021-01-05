@@ -50,6 +50,12 @@ export default ({ panoramaGeral }) => {
         <div>{dietaEspecialEnteral}</div>
         <div>{dietaEspecialTipoB}</div>
       </div>
+      <div className="row">
+        <p style={{ paddingLeft: "1em" }}>
+          Os números dessa tabela são para a data de hoje, no momento da
+          consulta.
+        </p>
+      </div>
     </div>
   );
 };

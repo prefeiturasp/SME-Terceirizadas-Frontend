@@ -29,6 +29,11 @@ export const objectFlattener = object => {
   );
 };
 
+export const tamanhoMaximoObsDiarias = value =>
+  value && value.length > 90
+    ? `Observações diárias devem ter 90 caracteres ou menos`
+    : undefined;
+
 export const validateFormLancamento = (
   formValues,
   panorama,

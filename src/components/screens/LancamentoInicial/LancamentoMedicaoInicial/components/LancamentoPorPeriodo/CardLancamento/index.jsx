@@ -16,7 +16,11 @@ import ObservacoesDiarias from "./TabelaLancamento/ObservacoesDiarias";
 import DietaEspecial from "./TabelaLancamento/DietaEspecial";
 
 import "./styles.scss";
-import { validateFormLancamento, objectFlattener } from "./helpers";
+import {
+  validateFormLancamento,
+  objectFlattener,
+  tamanhoMaximoObsDiarias
+} from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import RefeicaoEnteralInput from "./TabelaLancamento/RefeicaoEnteralInput";
 import {
@@ -30,6 +34,7 @@ import ListagemLancamentos from "./ListagemLancamentos";
 import { Spin } from "antd";
 import ModalConfirmacao from "components/Shareable/ModalConfirmacao";
 import Matriculados from "./TabelaLancamento/Matriculados";
+import { transformaNullsEmUndefined } from "helpers/utilities";
 
 export default ({
   textoCabecalho,
@@ -121,9 +126,11 @@ export default ({
       }
       // remover nulls
       if (initialValues.convencional) {
-        for (let chave of Object.keys(initialValues.convencional)) {
-          if (initialValues.convencional[chave] === null)
-            initialValues.convencional[chave] = undefined;
+        transformaNullsEmUndefined(initialValues.convencional);
+        if (initialValues.convencional.refeicoes) {
+          initialValues.convencional.refeicoes.map(objRefeicoes =>
+            transformaNullsEmUndefined(objRefeicoes)
+          );
         }
       }
       setInitialValues(initialValues);
@@ -399,6 +406,7 @@ export default ({
                             <ObservacoesDiarias
                               label="Observações diárias"
                               name="grupoA.observacoes"
+                              validate={tamanhoMaximoObsDiarias}
                             />
                           </div>
                         </div>
@@ -425,6 +433,7 @@ export default ({
                             <ObservacoesDiarias
                               label="Observações diárias"
                               name="grupoB.observacoes"
+                              validate={tamanhoMaximoObsDiarias}
                             />
                           </div>
                         </div>

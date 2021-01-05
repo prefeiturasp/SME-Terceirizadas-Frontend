@@ -551,3 +551,9 @@ export const cepMask = createTextMask({
 
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
+
+export const transformaNullsEmUndefined = objeto => {
+  for (let chave of Object.keys(objeto)) {
+    if (objeto[chave] === null) objeto[chave] = undefined;
+  }
+};
