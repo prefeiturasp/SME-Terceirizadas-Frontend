@@ -28,6 +28,7 @@ export default () => {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
     } else {
+      setTotal(response.data.count);
       setSolicitacoes();
     }
     setAtivos([]);
@@ -49,7 +50,11 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3">
         <div className="card-body gestao-requisicao-entrega">
-          <Filtros setFiltros={setFiltros} setSolicitacoes={setSolicitacoes} />
+          <Filtros
+            setFiltros={setFiltros}
+            setSolicitacoes={setSolicitacoes}
+            setTotal={setTotal}
+          />
           {solicitacoes && (
             <>
               <br /> <hr /> <br />

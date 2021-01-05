@@ -16,7 +16,7 @@ import { getNomesUnidadesEscolares } from "services/logistica.service.js";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, setSolicitacoes }) => {
+export default ({ setFiltros, setSolicitacoes, setTotal }) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
@@ -202,6 +202,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                 onClick={() => {
                   form.reset({});
                   setSolicitacoes(undefined);
+                  setTotal(undefined);
                 }}
               />
             </div>
