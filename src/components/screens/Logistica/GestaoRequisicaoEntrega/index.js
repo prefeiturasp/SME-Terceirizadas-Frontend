@@ -30,6 +30,7 @@ export default () => {
     } else {
       setSolicitacoes();
     }
+    setAtivos([]);
     setCarregando(false);
   };
 
@@ -91,6 +92,11 @@ export default () => {
                 </div>
               </div>
             </>
+          )}
+          {total === 0 && (
+            <div className="text-center mt-5">
+              Não existe informação para os critérios de busca utilizados.
+            </div>
           )}
         </div>
       </div>
