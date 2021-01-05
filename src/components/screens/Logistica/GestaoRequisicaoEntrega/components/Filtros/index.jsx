@@ -126,15 +126,6 @@ export default ({ setFiltros, setSolicitacoes }) => {
                   className="input-busca-produto"
                 />
               </div>
-              <div className="col">
-                <Field
-                  component={InputText}
-                  label="Nome distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
-                  className="input-busca-produto"
-                />
-              </div>
             </div>
             <div className="row">
               <div className="col-2">
