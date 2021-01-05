@@ -269,7 +269,7 @@ export default class CorpoRelatorio extends Component {
           </div>
 
           <div className="info-sem-grid">
-            <div className="label-relatorio">Compoentes do produto</div>
+            <div className="label-relatorio">Componentes do produto</div>
             <div className="value-relatorio">{produto.componentes}</div>
           </div>
 
