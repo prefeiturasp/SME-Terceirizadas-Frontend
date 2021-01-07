@@ -8,8 +8,14 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import Confirmar from "../Confirmar";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
+const ListagemSolicitacoes = ({
+  solicitacoes,
+  ativos,
+  setAtivos,
+  updatePage
+}) => {
   return (
     <section className="resultado-busca-requisicao-entrega">
       <header>Veja requisições disponibilizadas</header>
@@ -67,9 +73,11 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                   {solicitacao.guias[0].data_entrega}
                 </div>
                 <div>
-                  <Button className="acoes confirmar" variant="link">
-                    <i className="fas fa-check-circle confirmar" /> Confirmar
-                  </Button>
+                  <Confirmar
+                    className="acoes confirmar"
+                    solicitacao={solicitacao}
+                    updatePage={updatePage}
+                  />
                   |
                   <Button className="acoes alterar" variant="link">
                     {" "}
