@@ -11,6 +11,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import ConfirmaTodos from "./components/ConfirmarTodos";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -18,6 +19,7 @@ export default () => {
   const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
+  const [numEnviadas, setNumEnviadas] = useState();
   const [page, setPage] = useState();
 
   const buscarSolicitacoes = async page => {
@@ -27,6 +29,7 @@ export default () => {
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
+      setNumEnviadas(response.data.num_enviadas);
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -38,12 +41,17 @@ export default () => {
   useEffect(() => {
     if (filtros) {
       buscarSolicitacoes(1);
+      setPage(1);
     }
   }, [filtros]);
 
   const nextPage = page => {
     buscarSolicitacoes(page);
     setPage(page);
+  };
+
+  const updatePage = () => {
+    buscarSolicitacoes(page);
   };
 
   return (
@@ -62,11 +70,12 @@ export default () => {
                 solicitacoes={solicitacoes}
                 ativos={ativos}
                 setAtivos={setAtivos}
+                updatePage={updatePage}
               />
               <div className="row">
                 <div className="col">
                   <Pagination
-                    current={page || 1}
+                    current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
@@ -87,12 +96,9 @@ export default () => {
                     icon={BUTTON_ICON.EYE}
                     className="float-right ml-2 mr-2"
                   />
-                  <Botao
-                    texto="Confirmar todos"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.CHECK_CIRCLE}
-                    className="float-right"
+                  <ConfirmaTodos
+                    updatePage={updatePage}
+                    numEnviadas={numEnviadas}
                   />
                 </div>
               </div>

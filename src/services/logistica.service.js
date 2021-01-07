@@ -21,3 +21,13 @@ export const getNomesUnidadesEscolares = async params => {
   const url = "/guias-da-requisicao/unidades-escolares/";
   return await axios.get(url, { params });
 };
+
+export const distribuidorConfirma = async uuid => {
+  const url = `/solicitacao-remessa/${uuid}/distribuidor-confirma/`;
+  return await axios.patch(url);
+};
+
+export const distribuidorConfirmaTodos = async () => {
+  const url = `/solicitacao-remessa/distribuidor-confirma-todos/`;
+  return await axios.patch(url);
+};
