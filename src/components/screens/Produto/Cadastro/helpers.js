@@ -23,7 +23,7 @@ export const validaFormularioStep1 = async ({
     }
   }
   if (nome === null) {
-    arrayValidacao.push("Informe um nome do produto.");
+    arrayValidacao.push("Informe o nome do produto.");
   }
   if (marca === null) {
     arrayValidacao.push("Informe uma marca do produto.");
