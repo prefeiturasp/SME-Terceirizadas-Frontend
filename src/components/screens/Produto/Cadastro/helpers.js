@@ -5,7 +5,7 @@ import { produtoJaExiste } from "services/produto.service";
 export const validaFormularioStep1 = async ({
   eh_para_alunos_com_dieta,
   protocolos,
-  nome_de_produto_edital,
+  nome,
   marca,
   fabricante,
   componentes,
@@ -21,6 +21,9 @@ export const validaFormularioStep1 = async ({
     if (eh_para_alunos_com_dieta && protocolos.length === 0) {
       arrayValidacao.push("Precisa informar ao menos uma patologia");
     }
+  }
+  if (nome === null) {
+    arrayValidacao.push("Informe um nome do produto.");
   }
   if (marca === null) {
     arrayValidacao.push("Informe uma marca do produto.");
@@ -40,7 +43,7 @@ export const validaFormularioStep1 = async ({
   }
   if (arrayValidacao.length === 0) {
     const resposta = await produtoJaExiste({
-      nome_de_produto_edital,
+      nome,
       marca,
       fabricante
     });
@@ -55,14 +58,9 @@ export const validaFormularioStep1 = async ({
   return arrayValidacao;
 };
 
-export const Step1EstaValido = ({
-  nome_de_produto_edital,
-  marca,
-  fabricante,
-  componentes
-}) => {
+export const Step1EstaValido = ({ nome, marca, fabricante, componentes }) => {
   if (
-    nome_de_produto_edital !== null &&
+    nome !== null &&
     marca !== null &&
     fabricante !== null &&
     componentes !== null
@@ -77,7 +75,7 @@ export const retornaObjetoRequest = ({
   eh_para_alunos_com_dieta,
   protocolos,
   detalhes_da_dieta,
-  nome_de_produto_edital,
+  nome,
   marca,
   fabricante,
   componentes,
@@ -88,7 +86,7 @@ export const retornaObjetoRequest = ({
     eh_para_alunos_com_dieta: eh_para_alunos_com_dieta,
     protocolos: protocolos,
     detalhes_da_dieta: detalhes_da_dieta,
-    nome_de_produto_edital: nome_de_produto_edital,
+    nome: nome,
     marca: marca,
     fabricante: fabricante,
     componentes: componentes,
@@ -104,7 +102,7 @@ export const retornaPayloadDefault = () => {
     fabricante: null,
     imagens: [],
     informacoes_nutricionais: [],
-    nome_de_produto_edital: null,
+    nome: null,
     eh_para_alunos_com_dieta: null,
     detalhes_da_dieta: null,
     componentes: null,

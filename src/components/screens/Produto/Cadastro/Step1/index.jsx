@@ -367,7 +367,7 @@ class Step1 extends Component {
 
   setaNomeProduto = value => {
     let { payloadStep1 } = this.state;
-    payloadStep1.nome = value.toUpperCase();
+    payloadStep1.nome = value.split("+")[0];
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
@@ -499,8 +499,8 @@ class Step1 extends Component {
               component={ASelect}
               className={"select-form-produto"}
               showSearch
-              name="nome_de_produto_edital"
-              onSelect={this.addNomeDeProdutoEdital}
+              name="nome"
+              onSelect={this.setaNomeProduto}
               defaultValue={defaultNomeDeProdutosEditalStep1}
               validate={required}
             >

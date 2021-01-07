@@ -299,7 +299,7 @@ class cadastroProduto extends Component {
 
   onSubmit = values => {
     const { payload } = this.state;
-    payload["nome"] = values.nome_de_produto_edital.split("+")[0];
+    payload["nome"] = values.nome.split("+")[0];
     payload["tipo"] = values.tipo;
     payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;
