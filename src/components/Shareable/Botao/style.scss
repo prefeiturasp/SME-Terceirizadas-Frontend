@@ -68,10 +68,13 @@ button.general-button {
     color: $green;
     border: 1px solid $green;
     background-color: transparent;
-    i {
-      color: $green;
+    &:not(:disabled) {
+      i {
+        color: $green;
+      }
     }
-    &:hover {
+
+    &:hover:not(:disabled) {
       color: $white;
       background-color: $greenButtonHover;
       i {

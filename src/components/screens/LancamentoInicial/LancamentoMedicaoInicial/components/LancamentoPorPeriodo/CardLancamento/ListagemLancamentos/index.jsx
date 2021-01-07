@@ -78,7 +78,9 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
                     <div>{get(lancamento, "refeicoes.1.sob_repet")}</div>
                   </>
                 )}
-                <div>{lancamento && lancamento.observacoes}</div>
+                <div style={{ wordBreak: "break-all" }}>
+                  {lancamento && lancamento.observacoes}
+                </div>
               </div>
             );
           }
@@ -104,7 +106,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
               <div>{get(totaisAbsolutos, "refeicoes.1.sob_repet")}</div>
             </>
           )}
-          <div>{totaisAbsolutos && totaisAbsolutos.observacoes}</div>
+          <div />
         </div>
       </div>
     </div>
