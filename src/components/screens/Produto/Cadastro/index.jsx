@@ -54,6 +54,7 @@ class cadastroProduto extends Component {
       payload: {
         uuid: null,
         protocolos: [],
+        nome_de_produto_edital: null,
         marca: null,
         fabricante: null,
         imagens: [],
@@ -76,6 +77,7 @@ class cadastroProduto extends Component {
       renderizaFormAlergenicos: false,
       arrayErrosStep1: [],
       concluidoStep1: false,
+      defaultNomeDeProdutosEditalStep1: null,
       defaultMarcaStep1: null,
       defaultFabricanteStep1: null,
       informacoesAgrupadas: null,
@@ -87,6 +89,9 @@ class cadastroProduto extends Component {
     this.mostrarFormDieta = this.mostrarFormDieta.bind(this);
     this.mostrarFormAlergenico = this.mostrarFormAlergenico.bind(this);
     this.setArrayErrosStep1 = this.setArrayErrosStep1.bind(this);
+    this.setDefaultNomeDeProdutosEditalStep1 = this.setDefaultNomeDeProdutosEditalStep1.bind(
+      this
+    );
     this.setDefaultMarcaStep1 = this.setDefaultMarcaStep1.bind(this);
     this.setDefaultFabricanteStep1 = this.setDefaultFabricanteStep1.bind(this);
     this.setaValoresStep2 = this.setaValoresStep2.bind(this);
@@ -226,6 +231,12 @@ class cadastroProduto extends Component {
     });
   };
 
+  setDefaultNomeDeProdutosEditalStep1 = value => {
+    this.setState({
+      defaultNomeDeProdutosEditalStep1: value
+    });
+  };
+
   setDefaultMarcaStep1 = value => {
     this.setState({
       defaultMarcaStep1: value
@@ -260,6 +271,7 @@ class cadastroProduto extends Component {
 
   setaAtributosPrimeiroStep = ({
     protocolos,
+    nome_de_produto_edital,
     marca,
     fabricante,
     eh_para_alunos_com_dieta,
@@ -272,6 +284,7 @@ class cadastroProduto extends Component {
     let { payload } = this.state;
 
     payload.protocolos = protocolos;
+    payload.nome_de_produto_edital = nome_de_produto_edital;
     payload.marca = marca;
     payload.fabricante = fabricante;
     payload.eh_para_alunos_com_dieta = eh_para_alunos_com_dieta;
@@ -286,6 +299,7 @@ class cadastroProduto extends Component {
 
   onSubmit = values => {
     const { payload } = this.state;
+    payload["nome"] = values.nome.split("+")[0];
     payload["tipo"] = values.tipo;
     payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;
@@ -311,6 +325,7 @@ class cadastroProduto extends Component {
           renderizaFormDietaEspecial: false,
           arrayErrosStep1: [],
           concluidoStep1: false,
+          defaultNomeDeProdutosEditalStep1: null,
           defaultMarcaStep1: null,
           defaultFabricanteStep1: null,
           renderBuscaProduto: true,
@@ -332,6 +347,7 @@ class cadastroProduto extends Component {
 
   updateOrCreateProduto(values) {
     const { payload, currentStep } = this.state;
+    payload["nome"] = values.nome_de_produto_edital;
     payload["tipo"] = values.tipo;
     payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;
@@ -417,6 +433,7 @@ class cadastroProduto extends Component {
       renderizaFormAlergenicos,
       payload,
       concluidoStep1,
+      defaultNomeDeProdutosEditalStep1,
       defaultMarcaStep1,
       defaultFabricanteStep1,
       rascunhos,
@@ -461,6 +478,12 @@ class cadastroProduto extends Component {
                     setArrayErrosStep1={this.setArrayErrosStep1}
                     payload={payload}
                     concluidoStep1={concluidoStep1}
+                    setDefaultNomeDeProdutosEditalStep1={
+                      this.setDefaultNomeDeProdutosEditalStep1
+                    }
+                    defaultNomeDeProdutosEditalStep1={
+                      defaultNomeDeProdutosEditalStep1
+                    }
                     setDefaultMarcaStep1={this.setDefaultMarcaStep1}
                     defaultMarcaStep1={defaultMarcaStep1}
                     setDefaultFabricanteStep1={this.setDefaultFabricanteStep1}
