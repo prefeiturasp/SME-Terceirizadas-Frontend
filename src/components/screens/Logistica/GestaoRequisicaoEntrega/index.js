@@ -56,7 +56,7 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3">
+      <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
           <Filtros
             setFiltros={setFiltros}
