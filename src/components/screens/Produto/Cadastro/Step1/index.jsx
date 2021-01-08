@@ -388,15 +388,6 @@ class Step1 extends Component {
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  addNomeDeProdutoEdital = value => {
-    this.props.setDefaultNomeDeProdutosEditalStep1(value);
-    let { payloadStep1 } = this.state;
-    const uuid = this.extrairUuidString(value);
-    payloadStep1.nomeDeProdutosEdital = uuid;
-    this.setState({ payloadStep1 });
-    this.props.setaAtributosPrimeiroStep(payloadStep1);
-  };
-
   addFabricante = value => {
     this.props.setDefaultFabricanteStep1(value);
     let { payloadStep1 } = this.state;
