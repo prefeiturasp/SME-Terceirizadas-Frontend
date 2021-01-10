@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
-import { required } from "../../../../../helpers/fieldValidators";
+import { required, maxLength } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -67,12 +67,13 @@ class Step3 extends Component {
               name="embalagem"
               placeholder="Digite os dados"
               required
-              validate={required}
+              validate={[required, maxLength(500)]}
+              helpText={"Limite máximo de 500 caracteres"}
             />
           </div>
         </div>
         <div className="row">
-          <div className="col-12 pt-3">
+          <div className="col-12 pt-5">
             <Field
               component={InputText}
               label="Condições de armazenamento, conservação e prazo máximo para consumo após a abertura da embalagem"
