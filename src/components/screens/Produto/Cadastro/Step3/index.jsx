@@ -35,6 +35,17 @@ class Step3 extends Component {
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
             />
           </div>
+          <div className="col-6 pt-3">
+            <Field
+              component={InputText}
+              label="Prazo de Validade"
+              name="prazo_validade"
+              type="text"
+              placeholder="Digite o prazo da validade"
+              required
+              validate={required}
+            />
+          </div>
         </div>
         <div className="row">
           <div className="col-12 pt-3">
@@ -49,24 +60,12 @@ class Step3 extends Component {
         </div>
 
         <div className="row">
-          <div className="col-6 pt-3">
+          <div className="col-12 pb-5">
             <Field
-              component={InputText}
+              component={TextArea}
               label="Embalagem primária"
               name="embalagem"
-              type="text"
               placeholder="Digite os dados"
-              required
-              validate={required}
-            />
-          </div>
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="Prazo de Validade"
-              name="prazo_validade"
-              type="text"
-              placeholder="Digite o prazo da validade"
               required
               validate={required}
             />
