@@ -20,6 +20,8 @@ class Step3 extends Component {
     return imagens_salvas && imagens_salvas.length > 0;
   };
 
+  validateEmbalagem = [required, maxLength(500)];
+
   render() {
     const { payload } = this.props;
     return (
@@ -67,7 +69,7 @@ class Step3 extends Component {
               name="embalagem"
               placeholder="Digite os dados"
               required
-              validate={[required, maxLength(500)]}
+              validate={this.validateEmbalagem}
               helpText={"Limite máximo de 500 caracteres"}
             />
           </div>
