@@ -491,6 +491,12 @@ class Step1 extends Component {
               className={"select-form-produto"}
               showSearch
               name="nome"
+              filterOption={(inputValue, option) => {
+                return option.props.children
+                  .toString()
+                  .toLowerCase()
+                  .startsWith(inputValue.toLowerCase());
+              }}
               onSelect={this.setaNomeProduto}
               defaultValue={defaultNomeDeProdutosEditalStep1}
               validate={required}
