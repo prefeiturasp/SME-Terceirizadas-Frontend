@@ -347,7 +347,7 @@ class cadastroProduto extends Component {
 
   updateOrCreateProduto(values) {
     const { payload, currentStep } = this.state;
-    payload["nome"] = values.nome_de_produto_edital;
+    payload["nome"] = values.nome.split("+")[0];
     payload["tipo"] = values.tipo;
     payload["embalagem"] = values.embalagem;
     payload["prazo_validade"] = values.prazo_validade;

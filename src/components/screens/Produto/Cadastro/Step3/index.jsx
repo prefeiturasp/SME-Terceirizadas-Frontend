@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
-import { required } from "../../../../../helpers/fieldValidators";
+import { required, maxLength } from "../../../../../helpers/fieldValidators";
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -20,6 +20,8 @@ class Step3 extends Component {
     return imagens_salvas && imagens_salvas.length > 0;
   };
 
+  validateEmbalagem = [required, maxLength(500)];
+
   render() {
     const { payload } = this.props;
     return (
@@ -33,31 +35,6 @@ class Step3 extends Component {
               name="numero_registro"
               type="text"
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 pt-3">
-            <Field
-              component={InputText}
-              label="Tipo"
-              name="tipo"
-              type="text"
-              placeholder="Digite o tipo"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="Embalagem primária"
-              name="embalagem"
-              type="text"
-              placeholder="Digite os dados"
-              required
-              validate={required}
             />
           </div>
           <div className="col-6 pt-3">
@@ -74,6 +51,31 @@ class Step3 extends Component {
         </div>
         <div className="row">
           <div className="col-12 pt-3">
+            <Field
+              component={InputText}
+              label="Tipo"
+              name="tipo"
+              type="text"
+              placeholder="Digite o tipo"
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12 pb-5">
+            <Field
+              component={TextArea}
+              label="Embalagem primária"
+              name="embalagem"
+              placeholder="Digite os dados"
+              required
+              validate={this.validateEmbalagem}
+              helpText={"Limite máximo de 500 caracteres"}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 pt-5">
             <Field
               component={InputText}
               label="Condições de armazenamento, conservação e prazo máximo para consumo após a abertura da embalagem"
