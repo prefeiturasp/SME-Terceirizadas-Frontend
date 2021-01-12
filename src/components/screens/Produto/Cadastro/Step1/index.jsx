@@ -495,7 +495,7 @@ class Step1 extends Component {
                 return option.props.children
                   .toString()
                   .toLowerCase()
-                  .startsWith(inputValue.toLowerCase());
+                  .includes(inputValue.toLowerCase());
               }}
               onSelect={this.setaNomeProduto}
               defaultValue={defaultNomeDeProdutosEditalStep1}
