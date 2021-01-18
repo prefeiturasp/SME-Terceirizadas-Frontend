@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from "react";
 import { withRouter } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import Botao from "components/Shareable/Botao";
 import {
@@ -28,14 +28,6 @@ function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
     case "popularDados":
       return { ...state, dados: payload };
-    case "atualizarFiltro": {
-      if (!payload.searchText.length) {
-        return { ...state, [payload.filtro]: [] };
-      }
-      const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
-      return { ...state, [payload.filtro]: filtrado };
-    }
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
@@ -71,16 +63,6 @@ const FormBuscaProduto = ({
     fetchData();
   }, []);
 
-  const onSearch = (filtro, searchText) => {
-    dispatch({
-      type: "atualizarFiltro",
-      payload: {
-        filtro,
-        searchText
-      }
-    });
-  };
-
   return (
     <Form
       onSubmit={onSubmit}
@@ -89,12 +71,11 @@ const FormBuscaProduto = ({
           <Row>
             <Col>
               <Field
-                component={AutoCompleteField}
-                dataSource={state.produtos}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={state.dados.produtos}
                 label="Nome do Produto"
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </Col>
@@ -102,22 +83,20 @@ const FormBuscaProduto = ({
           <Row gutter={[16, 16]}>
             <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
-                component={AutoCompleteField}
+                component={AutoCompleteFieldUnaccent}
                 dataSource={state.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
-                onSearch={v => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </Col>
             <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
-                component={AutoCompleteField}
+                component={AutoCompleteFieldUnaccent}
                 dataSource={state.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
-                onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </Col>

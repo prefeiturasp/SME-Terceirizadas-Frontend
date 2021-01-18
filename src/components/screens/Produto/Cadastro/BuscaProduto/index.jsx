@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import "./style.scss";
 import { Form, Field } from "react-final-form";
 
@@ -22,11 +22,8 @@ export default class BuscaProduto extends Component {
     super(props);
     this.state = {
       nomesProdutos: null,
-      optionsProdutos: [],
       nomesMarcas: null,
-      optionsMarcas: null,
       nomesFabricantes: null,
-      optionsFabricantes: null,
 
       resultadosProduto: []
     };
@@ -57,42 +54,6 @@ export default class BuscaProduto extends Component {
         nomesFabricantes: this.retornaListaDeNomes(fabricantes.data.results)
       });
     }
-  };
-
-  onSearchProduto = searchText => {
-    const { nomesProdutos } = this.state;
-    let options = !searchText
-      ? []
-      : nomesProdutos.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsProdutos: options
-    });
-  };
-
-  onSearchMarca = searchText => {
-    const { nomesMarcas } = this.state;
-    let options = !searchText
-      ? []
-      : nomesMarcas.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsMarcas: options
-    });
-  };
-
-  onSearchFabricantes = searchText => {
-    const { nomesFabricantes } = this.state;
-    let options = !searchText
-      ? []
-      : nomesFabricantes.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsFabricantes: options
-    });
   };
 
   adicionaResponseAoResultadoProduto = response => {
@@ -129,9 +90,9 @@ export default class BuscaProduto extends Component {
 
   render() {
     const {
-      optionsProdutos,
-      optionsMarcas,
-      optionsFabricantes,
+      nomesProdutos,
+      nomesMarcas,
+      nomesFabricantes,
       resultadosProduto
     } = this.state;
     const { exibeFormularioInicial } = this.props;
@@ -146,12 +107,11 @@ export default class BuscaProduto extends Component {
             <div>
               <label>Nome do Produto</label>
               <Field
-                component={AutoCompleteField}
-                dataSource={optionsProdutos ? optionsProdutos : []}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={nomesProdutos ? nomesProdutos : []}
                 placeholder="Digite o nome do produto"
                 className="input-busca-produto"
                 onSelect={form.submit}
-                onSearch={this.onSearchProduto}
                 name="nome_produto"
                 disabled={submitting}
               />
@@ -160,12 +120,11 @@ export default class BuscaProduto extends Component {
               <div>
                 <label>Marca do Produto</label>
                 <Field
-                  component={AutoCompleteField}
-                  dataSource={optionsMarcas ? optionsMarcas : []}
+                  component={AutoCompleteFieldUnaccent}
+                  dataSource={nomesMarcas ? nomesMarcas : []}
                   placeholder="Digite a marca do produto"
                   className="input-busca-produto"
                   onSelect={form.submit}
-                  onSearch={this.onSearchMarca}
                   name="nome_marca"
                   disabled={submitting}
                 />
@@ -173,12 +132,11 @@ export default class BuscaProduto extends Component {
               <div>
                 <label>Fabricante do Produto</label>
                 <Field
-                  component={AutoCompleteField}
-                  dataSource={optionsFabricantes ? optionsFabricantes : []}
+                  component={AutoCompleteFieldUnaccent}
+                  dataSource={nomesFabricantes ? nomesFabricantes : []}
                   className="input-busca-produto"
                   placeholder="Digite o fabricante do produto"
                   onSelect={form.submit}
-                  onSearch={this.onSearchFabricantes}
                   name="nome_fabricante"
                   disabled={submitting}
                 />
