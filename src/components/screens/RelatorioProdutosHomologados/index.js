@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 
 import Botao from "components/Shareable/Botao";
@@ -18,7 +18,8 @@ import TabelaAgrupadaProdutosMarcas from "./TabelaAgrupadaProdutosMarcas";
 import {
   getProdutosPorTerceirizada,
   getProdutosAgrupadosNomeMarcas,
-  getRelatorioProdutosHomologados
+  getRelatorioProdutosHomologados,
+  getRelatorioProdutosAgrupadosMarcasHomologados
 } from "services/produto.service";
 
 import "./style.scss";
@@ -43,7 +44,7 @@ const TabelaProdutosHomologados = ({ dadosProdutos, filtros }) => {
       </div>
       {dadosProdutos.map((grupo, index) => {
         return (
-          <>
+          <Fragment key={index}>
             {grupo.produtos.map((produto, index2) => {
               return (
                 <div key={index2} className="body-homologados">
@@ -68,7 +69,7 @@ const TabelaProdutosHomologados = ({ dadosProdutos, filtros }) => {
                 <span>{grupo.produtos.length.toString().padStart(2, "0")}</span>
               </span>
             </div>
-          </>
+          </Fragment>
         );
       })}
       <div className="linha-totalizacao linha-totalizacao-geral">
@@ -140,7 +141,18 @@ const RelatorioProdutosHomologados = () => {
           <div className="card-body">
             <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
             <hr />
-            Pagination
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              titulo="imprimir"
+              texto="imprimir"
+              style={BUTTON_STYLE.GREEN}
+              icon={BUTTON_ICON.PRINT}
+              className="float-right ml-3"
+              onClick={() => {
+                const params = gerarParametrosConsulta(filtros);
+                getRelatorioProdutosAgrupadosMarcasHomologados(params);
+              }}
+            />
           </div>
         </div>
       )}

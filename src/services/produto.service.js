@@ -495,6 +495,14 @@ export const getRelatorioProdutosHomologados = async params => {
   saveAs(data, "relatorio_produtos_homologados.pdf");
 };
 
+export const getRelatorioProdutosAgrupadosMarcasHomologados = async params => {
+  const { data } = await axios.get("/produtos/marcas-por-produto/", {
+    params,
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_agrupados_produtos_marcas_homologados.pdf");
+};
+
 export const getProdutosSuspensos = async payload => {
   return await axios.post(
     `/homologacoes-produtos/homologacoes_suspensas/`,
