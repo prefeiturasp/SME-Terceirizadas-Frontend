@@ -128,11 +128,13 @@ const RelatorioProdutosHomologados = () => {
             onAtualizaProdutos={() => {}}
           />
 
-          {dadosProdutos && !dadosProdutos.length && (
-            <div className="text-center mt-5">
-              Não existem dados para filtragem informada.
-            </div>
-          )}
+          {dadosProdutos &&
+            !dadosProdutos.length &&
+            !filtros.agrupado_por_nome_e_marca && (
+              <div className="text-center mt-5">
+                Não existem dados para filtragem informada.
+              </div>
+            )}
         </div>
       </div>
 
