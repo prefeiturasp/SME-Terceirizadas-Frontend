@@ -477,6 +477,13 @@ export const getProdutosPorTerceirizada = async filtro => {
   );
 };
 
+export const getProdutosAgrupadosNomeMarcas = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-nome-marcas/`,
+    filtro
+  );
+};
+
 export const getRelatorioProdutosHomologados = async params => {
   const { data } = await axios.get(
     "/produtos/relatorio-por-parametros-agrupado-terceirizada/",

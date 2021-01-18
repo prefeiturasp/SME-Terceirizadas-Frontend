@@ -112,11 +112,27 @@ export const FormBuscaProduto = ({
             <Row gutter={[16, 16]}>
               <Col md={24} lg={12} xl={16}>
                 <Field
+                  component={"input"}
+                  type="checkbox"
+                  label="Nome da terceirizada"
+                  name="agrupado_por_nome_e_marca"
+                />
+                <span className="checkbox-custom" />
+                <label
+                  htmlFor="agrupado_por_nome_e_marca"
+                  className="checkbox-label"
+                >
+                  Visão agrupada por nome e marca
+                </label>
+              </Col>
+              <Col md={24} lg={12} xl={16}>
+                <Field
                   component={AutoCompleteField}
                   dataSource={state.terceirizadas}
                   label="Nome da terceirizada"
                   onSearch={v => onSearch("terceirizadas", v)}
                   name="nome_terceirizada"
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -131,6 +147,7 @@ export const FormBuscaProduto = ({
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -146,6 +163,7 @@ export const FormBuscaProduto = ({
                       : null
                   }
                   maxDate={moment()._d}
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
             </Row>
@@ -180,6 +198,7 @@ export const FormBuscaProduto = ({
                 label="Fabricante do Produto"
                 onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
+                disabled={values.agrupado_por_nome_e_marca}
               />
             </Col>
             {statusSelect && (

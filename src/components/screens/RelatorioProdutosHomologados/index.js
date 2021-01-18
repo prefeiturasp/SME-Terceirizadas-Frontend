@@ -13,8 +13,11 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 
 import { gerarLabelPorFiltro } from "helpers/produto";
 
+import TabelaAgrupadaProdutosMarcas from "./TabelaAgrupadaProdutosMarcas";
+
 import {
   getProdutosPorTerceirizada,
+  getProdutosAgrupadosNomeMarcas,
   getRelatorioProdutosHomologados
 } from "services/produto.service";
 
@@ -25,8 +28,8 @@ const gerarLabelTotal = filtros => {
   return "";
 };
 
-const TabelaProdutosHomologados = ({ grupos, filtros }) => {
-  if (!grupos) return false;
+const TabelaProdutosHomologados = ({ dadosProdutos, filtros }) => {
+  if (!dadosProdutos) return false;
   return (
     <section className="tabela-produtos-homologados">
       <div className="header-homologados">
@@ -38,7 +41,7 @@ const TabelaProdutosHomologados = ({ grupos, filtros }) => {
         <div>Data de Cadastro</div>
         <div>Data de Homologação</div>
       </div>
-      {grupos.map((grupo, index) => {
+      {dadosProdutos.map((grupo, index) => {
         return (
           <>
             {grupo.produtos.map((produto, index2) => {
@@ -72,7 +75,7 @@ const TabelaProdutosHomologados = ({ grupos, filtros }) => {
         <span>
           {`Total de produtos cadastrados ${gerarLabelTotal(filtros)}:`}
           <span>
-            {grupos
+            {dadosProdutos
               .reduce((acc, v) => {
                 return acc + v.produtos.length;
               }, 0)
@@ -86,7 +89,7 @@ const TabelaProdutosHomologados = ({ grupos, filtros }) => {
 };
 
 const RelatorioProdutosHomologados = () => {
-  const [grupos, setGrupos] = useState(null);
+  const [dadosProdutos, setDadosProdutos] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
@@ -94,19 +97,24 @@ const RelatorioProdutosHomologados = () => {
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
-      const response = await getProdutosPorTerceirizada(filtros);
+      let response;
+      if (filtros.agrupado_por_nome_e_marca) {
+        response = await getProdutosAgrupadosNomeMarcas(filtros);
+      } else {
+        response = await getProdutosPorTerceirizada(filtros);
+      }
       setCarregando(false);
-      setGrupos(response.data);
+      setDadosProdutos(response.data);
     }
     fetchData();
-  }, [filtros, setGrupos]);
+  }, [filtros, setDadosProdutos]);
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
   };
 
   const handleClose = () => {
-    setGrupos(null);
+    setDadosProdutos(null);
     setFiltros(null);
   };
 
@@ -119,7 +127,7 @@ const RelatorioProdutosHomologados = () => {
             onAtualizaProdutos={() => {}}
           />
 
-          {grupos && !grupos.length && (
+          {dadosProdutos && !dadosProdutos.length && (
             <div className="text-center mt-5">
               Não existem dados para filtragem informada.
             </div>
@@ -127,49 +135,64 @@ const RelatorioProdutosHomologados = () => {
         </div>
       </div>
 
-      <Modal
-        dialogClassName="modal-90w"
-        show={Boolean(grupos && grupos.length)}
-        onHide={handleClose}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Relatório de Produtos Homologados</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <section className="m-3">
-            <p className="text-black font-weight-bold mb-1">
-              {filtros && gerarLabelPorFiltro(filtros)}
-            </p>
-            <TabelaProdutosHomologados grupos={grupos} filtros={filtros} />
-          </section>
-        </Modal.Body>
-        <Modal.Footer>
-          <section>
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              texto="imprimir"
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right ml-3"
-              onClick={() => {
-                const params = gerarParametrosConsulta(filtros);
-                getRelatorioProdutosHomologados(params);
-              }}
-            />
+      {filtros && filtros.agrupado_por_nome_e_marca && (
+        <div className="card mt-3">
+          <div className="card-body">
+            <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
+            <hr />
+            Pagination
+          </div>
+        </div>
+      )}
 
-            <Botao
-              texto="voltar"
-              titulo="voltar"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
-              icon={BUTTON_ICON.ARROW_LEFT}
-              onClick={handleClose}
-              className="float-right"
-            />
-          </section>
-        </Modal.Footer>
-      </Modal>
+      {filtros && !filtros.agrupado_por_nome_e_marca && (
+        <Modal
+          dialogClassName="modal-90w"
+          show={Boolean(dadosProdutos && dadosProdutos.length)}
+          onHide={handleClose}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Relatório de Produtos Homologados</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <section className="m-3">
+              <p className="text-black font-weight-bold mb-1">
+                {filtros && gerarLabelPorFiltro(filtros)}
+              </p>
+              <TabelaProdutosHomologados
+                dadosProdutos={dadosProdutos}
+                filtros={filtros}
+              />
+            </section>
+          </Modal.Body>
+          <Modal.Footer>
+            <section>
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                titulo="imprimir"
+                texto="imprimir"
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+                className="float-right ml-3"
+                onClick={() => {
+                  const params = gerarParametrosConsulta(filtros);
+                  getRelatorioProdutosHomologados(params);
+                }}
+              />
+
+              <Botao
+                texto="voltar"
+                titulo="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE_OUTLINE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                onClick={handleClose}
+                className="float-right"
+              />
+            </section>
+          </Modal.Footer>
+        </Modal>
+      )}
     </Spin>
   );
 };
