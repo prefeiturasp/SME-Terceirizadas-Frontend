@@ -9,12 +9,21 @@ export default ({ dataSource, ...props }) => {
       {...props}
       dataSource={resultadoFiltrado}
       onSearch={valor => {
+        // eslint-disable-next-line no-console
+        console.log("onSearch.valor", valor);
         if (!valor.length) {
           setResultadoFiltrado(dataSource);
         }
         const reg = new RegExp(trocaAcentuadasPorSemAcento(valor), "i");
         setResultadoFiltrado(
-          dataSource.filter(el => reg.test(trocaAcentuadasPorSemAcento(el)))
+          dataSource.filter(el => {
+            // eslint-disable-next-line no-console
+            console.log({
+              el,
+              "trocaAcentuadasPorSemAcento(el)": trocaAcentuadasPorSemAcento(el)
+            });
+            return reg.test(trocaAcentuadasPorSemAcento(el));
+          })
         );
       }}
     />
