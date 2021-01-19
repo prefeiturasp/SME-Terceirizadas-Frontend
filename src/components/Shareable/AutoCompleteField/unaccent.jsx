@@ -7,6 +7,8 @@ export default ({ ...props }) => {
     <AutoCompleteField
       {...props}
       filterOption={(inputValue, option) => {
+        // eslint-disable-next-line no-console
+        console.log({ inputValue, option });
         const reg = new RegExp(trocaAcentuadasPorSemAcento(inputValue), "i");
         return reg.test(trocaAcentuadasPorSemAcento(option.key));
       }}
