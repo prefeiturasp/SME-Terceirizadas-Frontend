@@ -10,7 +10,6 @@ import {
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
-import { ToggleSwitch } from "../../../../../Shareable/ToggleSwitch";
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastSuccess,
@@ -210,17 +209,6 @@ export class SolicitacaoVigente extends Component {
                                 className="mr-3"
                               />
                             </div>
-                            {exibirParteInativacao(
-                              solicitacaoVigente,
-                              codigoEol
-                            ) && (
-                              <div className="col-6 text-right">
-                                <ToggleSwitch
-                                  onClick={() => this.toggleSolicitacao(key)}
-                                  texto="Solicitar inativação da Dieta Especial"
-                                />
-                              </div>
-                            )}
                           </div>
                           {exibirParteInativacao(
                             solicitacaoVigente,
