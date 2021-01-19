@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MultiSelect from "./MultiSelect";
 import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
 import Select from "../../../../../../../Shareable/Select";
 import Botao from "../../../../../../../Shareable/Botao";
@@ -32,6 +33,8 @@ const SelectSelecione = props => {
 };
 
 export default class SubstituicoesField extends Component {
+  state = { valorSelecionado: undefined };
+
   render() {
     const {
       alimentos,
@@ -41,6 +44,7 @@ export default class SubstituicoesField extends Component {
       input: { name },
       deveHabilitarApagar
     } = this.props;
+
     return (
       <div className="row">
         <div className="col-3">
@@ -55,6 +59,13 @@ export default class SubstituicoesField extends Component {
             name={`${name}.alimento`}
             validate={required}
           />
+          <OnChange name={`${name}.alimento`}>
+            {value => {
+              this.setState({
+                valorSelecionado: alimentos.find(al => String(al.id) === value)
+              });
+            }}
+          </OnChange>
         </div>
         <div className="col-2">
           <Field
@@ -72,12 +83,20 @@ export default class SubstituicoesField extends Component {
             component={MultiSelect}
             type="select-multi"
             name={`${name}.substitutos`}
-            options={produtos.map(a => {
-              return {
-                value: a.uuid,
-                label: a.nome
-              };
-            })}
+            options={produtos
+              .filter(p => {
+                if (this.state.valorSelecionado === undefined) {
+                  return true;
+                }
+                const alimento = this.state.valorSelecionado;
+                return p.nome !== alimento.nome;
+              })
+              .map(a => {
+                return {
+                  value: a.uuid,
+                  label: a.nome
+                };
+              })}
             validate={required}
           />
         </div>
