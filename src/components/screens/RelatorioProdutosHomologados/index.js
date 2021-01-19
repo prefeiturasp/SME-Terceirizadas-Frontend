@@ -119,6 +119,8 @@ const RelatorioProdutosHomologados = () => {
     setFiltros(null);
   };
 
+  const totalResultados = dadosProdutos && Object.keys(dadosProdutos).length;
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
@@ -128,17 +130,15 @@ const RelatorioProdutosHomologados = () => {
             onAtualizaProdutos={() => {}}
           />
 
-          {dadosProdutos &&
-            !dadosProdutos.length &&
-            !filtros.agrupado_por_nome_e_marca && (
-              <div className="text-center mt-5">
-                Não existem dados para filtragem informada.
-              </div>
-            )}
+          {totalResultados === 0 && (
+            <div className="text-center mt-5">
+              Não existem dados para filtragem informada.
+            </div>
+          )}
         </div>
       </div>
 
-      {filtros && filtros.agrupado_por_nome_e_marca && (
+      {filtros && filtros.agrupado_por_nome_e_marca && totalResultados > 0 && (
         <div className="card mt-3">
           <div className="card-body">
             <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
