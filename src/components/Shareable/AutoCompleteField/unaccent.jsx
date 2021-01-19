@@ -10,7 +10,20 @@ export default ({ ...props }) => {
         // eslint-disable-next-line no-console
         console.log({ inputValue, option });
         const reg = new RegExp(trocaAcentuadasPorSemAcento(inputValue), "i");
-        return reg.test(trocaAcentuadasPorSemAcento(option.key));
+        // eslint-disable-next-line no-console
+        console.log({
+          reg,
+          "trocaAcentuadasPorSemAcento(inputValue)": trocaAcentuadasPorSemAcento(
+            inputValue
+          ),
+          "trocaAcentuadasPorSemAcento(option.props.children)": trocaAcentuadasPorSemAcento(
+            option.props.children
+          ),
+          "reg.test(trocaAcentuadasPorSemAcento(option.props.children))": reg.test(
+            trocaAcentuadasPorSemAcento(option.props.children)
+          )
+        });
+        return reg.test(trocaAcentuadasPorSemAcento(option.props.children));
       }}
     />
   );
