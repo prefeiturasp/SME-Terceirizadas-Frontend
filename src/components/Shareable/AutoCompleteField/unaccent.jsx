@@ -1,30 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import AutoCompleteField from ".";
 import { trocaAcentuadasPorSemAcento } from "./helpers";
 
-export default ({ dataSource, ...props }) => {
-  const [resultadoFiltrado, setResultadoFiltrado] = useState(dataSource);
+export default ({ ...props }) => {
   return (
     <AutoCompleteField
       {...props}
-      dataSource={resultadoFiltrado}
-      onSearch={valor => {
-        // eslint-disable-next-line no-console
-        console.log("onSearch.valor", valor);
-        if (!valor.length) {
-          setResultadoFiltrado(dataSource);
-        }
-        const reg = new RegExp(trocaAcentuadasPorSemAcento(valor), "i");
-        setResultadoFiltrado(
-          dataSource.filter(el => {
-            // eslint-disable-next-line no-console
-            console.log({
-              el,
-              "trocaAcentuadasPorSemAcento(el)": trocaAcentuadasPorSemAcento(el)
-            });
-            return reg.test(trocaAcentuadasPorSemAcento(el));
-          })
-        );
+      filterOption={(inputValue, option) => {
+        const reg = new RegExp(trocaAcentuadasPorSemAcento(inputValue), "i");
+        return reg.test(trocaAcentuadasPorSemAcento(option.key));
       }}
     />
   );
