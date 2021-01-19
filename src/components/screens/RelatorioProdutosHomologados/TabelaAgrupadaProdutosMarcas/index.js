@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Pagination } from "antd";
 
+import "./style.scss";
+
 const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
   const [page, setPage] = useState(1);
 
@@ -19,7 +21,7 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
       <table className="table">
         <thead>
           <tr>
-            <th>Nome do Produto</th>
+            <th className="nome-produto">Nome do Produto</th>
             <th>Marca</th>
           </tr>
         </thead>
