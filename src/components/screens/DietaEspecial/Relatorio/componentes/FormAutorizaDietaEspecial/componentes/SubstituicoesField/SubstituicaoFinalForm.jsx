@@ -33,7 +33,7 @@ const SelectSelecione = props => {
 };
 
 export default class SubstituicoesField extends Component {
-  state = { valorSelecionado: null };
+  state = { valorSelecionado: undefined };
 
   render() {
     const {
@@ -61,7 +61,9 @@ export default class SubstituicoesField extends Component {
           />
           <OnChange name={`${name}.alimento`}>
             {value => {
-              this.setState({ valorSelecionado: value });
+              this.setState({
+                valorSelecionado: alimentos.find(al => String(al.id) === value)
+              });
             }}
           </OnChange>
         </div>
@@ -83,13 +85,11 @@ export default class SubstituicoesField extends Component {
             name={`${name}.substitutos`}
             options={produtos
               .filter(p => {
-                if (this.state.valorSelecionado == null) {
+                if (this.state.valorSelecionado === undefined) {
                   return true;
                 }
-                const alimento = alimentos.find(
-                  al => al.id == this.state.valorSelecionado
-                );
-                return p.nome != alimento.nome;
+                const alimento = this.state.valorSelecionado;
+                return p.nome !== alimento.nome;
               })
               .map(a => {
                 return {
