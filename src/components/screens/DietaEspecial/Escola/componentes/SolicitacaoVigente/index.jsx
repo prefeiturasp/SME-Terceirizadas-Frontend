@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Collapse } from "react-collapse";
-import { Field, reduxForm } from "redux-form";
+import { reduxForm } from "redux-form";
 import { ToggleExpandir } from "../../../../../Shareable/ToggleExpandir";
 import { Botao } from "../../../../../Shareable/Botao";
 import {
@@ -10,17 +10,12 @@ import {
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
-import { ToggleSwitch } from "../../../../../Shareable/ToggleSwitch";
-import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastSuccess,
   toastError
 } from "../../../../../Shareable/Toast/dialogs";
 import { getError } from "../../../../../../helpers/utilities";
 import { escolaInativaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
-import { exibirParteInativacao } from "../../helper";
-import { required } from "helpers/fieldValidators";
-import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 
 export class SolicitacaoVigente extends Component {
   constructor(props) {
@@ -91,8 +86,8 @@ export class SolicitacaoVigente extends Component {
   }
 
   render() {
-    const { solicitacoesVigentes, submitted } = this.state;
-    const { uuid, handleSubmit, codigoEol, titulo } = this.props;
+    const { solicitacoesVigentes } = this.state;
+    const { uuid, handleSubmit, titulo } = this.props;
     return (
       <div className="current-diets">
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
@@ -210,94 +205,7 @@ export class SolicitacaoVigente extends Component {
                                 className="mr-3"
                               />
                             </div>
-                            {exibirParteInativacao(
-                              solicitacaoVigente,
-                              codigoEol
-                            ) && (
-                              <div className="col-6 text-right">
-                                <ToggleSwitch
-                                  onClick={() => this.toggleSolicitacao(key)}
-                                  texto="Solicitar inativação da Dieta Especial"
-                                />
-                              </div>
-                            )}
                           </div>
-                          {exibirParteInativacao(
-                            solicitacaoVigente,
-                            codigoEol
-                          ) && (
-                            <div
-                              className={`card mb-4 ${!solicitacaoVigente.toggled &&
-                                "opaco"}`}
-                            >
-                              <div className="card-body">
-                                <section className="row attachments">
-                                  <div className="col-9">
-                                    <div className="card-title font-weight-bold cinza-escuro mt-4">
-                                      * Laudo
-                                    </div>
-                                    <div className="text">
-                                      Anexe o laudo fornecido pelo profissional
-                                      acima. Sem ele, a solicitação de Dieta
-                                      Especial será negada.
-                                    </div>
-                                    <div className="card-warning mt-2">
-                                      <strong>IMPORTANTE:</strong> Envie um
-                                      arquivo formato .doc, .docx, .pdf, .png,
-                                      .jpg ou .jpeg, com até 10Mb. <br /> O
-                                      Laudo deve ter sido emitido há, no máximo,
-                                      3 meses. Após a data de aprovação no
-                                      sistema, o laudo terá validade de 12 meses
-                                    </div>
-                                  </div>
-                                  <div className="col-3 btn">
-                                    <Field
-                                      component={ManagedInputFileField}
-                                      className="inputfile"
-                                      texto="Anexar"
-                                      required
-                                      validate={required}
-                                      name="anexos"
-                                      accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
-                                      setFiles={this.setFiles}
-                                      removeFile={this.removeFile}
-                                      disabled={!solicitacaoVigente.toggled}
-                                      multiple
-                                    />
-                                  </div>
-                                </section>
-                                <section className="row mt-5 mb-5">
-                                  <div className="col-12">
-                                    <Field
-                                      component={TextAreaWYSIWYG}
-                                      label="Justificativa"
-                                      name="justificativa"
-                                      className="form-control"
-                                      disabled={!solicitacaoVigente.toggled}
-                                    />
-                                  </div>
-                                </section>
-                                <div className="row">
-                                  <div className="col-12 text-right">
-                                    <Botao
-                                      texto="Enviar"
-                                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                                      type={BUTTON_TYPE.SUBMIT}
-                                      onClick={handleSubmit(values =>
-                                        this.onSubmit({
-                                          uuid: solicitacaoVigente.uuid,
-                                          ...values
-                                        })
-                                      )}
-                                      disabled={
-                                        !solicitacaoVigente.toggled || submitted
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </form>
                     </Collapse>
