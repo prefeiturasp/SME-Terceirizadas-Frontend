@@ -128,6 +128,9 @@ const RelatorioProdutosHomologados = () => {
           <FormBuscaProduto
             onSubmit={onSubmitForm}
             onAtualizaProdutos={() => {}}
+            onLimparDados={() => {
+              setDadosProdutos(null);
+            }}
           />
 
           {totalResultados === 0 && (

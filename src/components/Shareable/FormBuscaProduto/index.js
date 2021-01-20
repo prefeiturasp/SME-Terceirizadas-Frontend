@@ -58,7 +58,8 @@ export const FormBuscaProduto = ({
   naoExibirRowTerceirizadas,
   statusSelect,
   exibirBotaoVoltar,
-  naoExibirLimparFiltros
+  naoExibirLimparFiltros,
+  onLimparDados
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -235,7 +236,10 @@ export const FormBuscaProduto = ({
                   type={BUTTON_TYPE.BUTTON}
                   className="mr-3"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  onClick={() => form.reset()}
+                  onClick={() => {
+                    form.reset();
+                    onLimparDados();
+                  }}
                   disabled={submitting}
                 />
               )}
