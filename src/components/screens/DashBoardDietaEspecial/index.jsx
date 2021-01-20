@@ -18,6 +18,13 @@ class DashBoardDietaEspecial extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      autorizadasList: null,
+      autorizadasTemporariamenteList: null,
+      inativasTemporariamenteList: null,
+      pendentesList: null,
+      negadasList: null,
+      canceladasList: null,
+      inativasList: null,
       autorizadasListFiltered: null,
       autorizadasTemporariamenteListFiltered: null,
       inativasTemporariamenteListFiltered: null,
@@ -40,75 +47,71 @@ class DashBoardDietaEspecial extends Component {
 
   componentDidUpdate(prevState) {
     let {
-      autorizadasListFiltered,
-      pendentesListFiltered,
-      negadasListFiltered,
-      canceladasListFiltered,
-      inativasListFiltered,
-      autorizadasTemporariamenteListFiltered,
-      inativasTemporariamenteListFiltered,
+      autorizadasList,
+      pendentesList,
+      negadasList,
+      canceladasList,
+      inativasList,
+      autorizadasTemporariamenteList,
+      inativasTemporariamenteList,
       instituicao
     } = this.state;
 
-    if (
-      autorizadasListFiltered !== prevState.autorizadasListFiltered &&
-      !autorizadasListFiltered
-    ) {
+    if (autorizadasList !== prevState.autorizadasList && !autorizadasList) {
       this.props
         .getDietaEspecialAutorizadas(instituicao.uuid)
         .then(response => {
           this.setState({
+            autorizadasList: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            ),
             autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.results
             )
           });
         });
     }
-    if (
-      pendentesListFiltered !== prevState.pendentesListFiltered &&
-      !pendentesListFiltered
-    ) {
+    if (pendentesList !== prevState.pendentesList && !pendentesList) {
       this.props
         .getDietaEspecialPendenteAutorizacao(instituicao.uuid)
         .then(response => {
           this.setState({
+            pendentesList: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            ),
             pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.results
             )
           });
         });
     }
-    if (
-      negadasListFiltered !== prevState.negadasListFiltered &&
-      !negadasListFiltered
-    ) {
+    if (negadasList !== prevState.negadasList && !negadasList) {
       this.props.getDietaEspecialNegadas(instituicao.uuid).then(response => {
         this.setState({
+          negadasList: ajustaFormatoLogPainelDietaEspecial(response.results),
           negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
             response.results
           )
         });
       });
     }
-    if (
-      canceladasListFiltered !== prevState.canceladasListFiltered &&
-      !canceladasListFiltered
-    ) {
+    if (canceladasList !== prevState.canceladasList && !canceladasList) {
       this.props.getDietaEspecialCanceladas(instituicao.uuid).then(response => {
         this.setState({
+          canceladasList: ajustaFormatoLogPainelDietaEspecial(response.results),
           canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
             response.results
           )
         });
       });
     }
-    if (
-      inativasListFiltered !== prevState.inativasListFiltered &&
-      !inativasListFiltered
-    ) {
+    if (inativasList !== prevState.inativasList && !inativasList) {
       this.props.getDietaEspecialInativas &&
         this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
           this.setState({
+            inativasList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
             inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.data.results
             )
@@ -117,14 +120,17 @@ class DashBoardDietaEspecial extends Component {
     }
 
     if (
-      autorizadasTemporariamenteListFiltered !==
-        prevState.autorizadasTemporariamenteListFiltered &&
-      !autorizadasTemporariamenteListFiltered
+      autorizadasTemporariamenteList !==
+        prevState.autorizadasTemporariamenteList &&
+      !autorizadasTemporariamenteList
     ) {
       this.props
         .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid)
         .then(response => {
           this.setState({
+            autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
             autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.data.results
             )
@@ -132,14 +138,16 @@ class DashBoardDietaEspecial extends Component {
         });
     }
     if (
-      inativasTemporariamenteListFiltered !==
-        prevState.inativasTemporariamenteListFiltered &&
-      !inativasTemporariamenteListFiltered
+      inativasTemporariamenteList !== prevState.inativasTemporariamenteList &&
+      !inativasTemporariamenteList
     ) {
       this.props
         .getDietaEspecialInativasTemporariamente(instituicao.uuid)
         .then(response => {
           this.setState({
+            inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
             inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.data.results
             )
@@ -159,26 +167,26 @@ class DashBoardDietaEspecial extends Component {
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
     let {
-      pendentesListFiltered,
-      autorizadasListFiltered,
-      negadasListFiltered,
-      canceladasListFiltered,
-      autorizadasTemporariamenteListFiltered,
-      inativasTemporariamenteListFiltered,
-      inativasListFiltered
+      pendentesList,
+      autorizadasList,
+      negadasList,
+      canceladasList,
+      autorizadasTemporariamenteList,
+      inativasTemporariamenteList,
+      inativasList
     } = this.state;
 
-    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
-    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
-    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
-    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
-    inativasListFiltered = this.filtrarNome(inativasListFiltered, event);
-    autorizadasTemporariamenteListFiltered = this.filtrarNome(
-      autorizadasTemporariamenteListFiltered,
+    let pendentesListFiltered = this.filtrarNome(pendentesList, event);
+    let autorizadasListFiltered = this.filtrarNome(autorizadasList, event);
+    let negadasListFiltered = this.filtrarNome(negadasList, event);
+    let canceladasListFiltered = this.filtrarNome(canceladasList, event);
+    let inativasListFiltered = this.filtrarNome(inativasList, event);
+    let autorizadasTemporariamenteListFiltered = this.filtrarNome(
+      autorizadasTemporariamenteList,
       event
     );
-    inativasTemporariamenteListFiltered = this.filtrarNome(
-      inativasTemporariamenteListFiltered,
+    let inativasTemporariamenteListFiltered = this.filtrarNome(
+      inativasTemporariamenteList,
       event
     );
 
