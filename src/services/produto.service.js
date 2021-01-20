@@ -76,7 +76,7 @@ export const getNomesFabricantes = async queryparams => {
 };
 
 export const getNomesUnicosFabricantes = async () =>
-  await axios.get("/produtos/lista-nomes-unicos/");
+  await axios.get("/fabricantes/lista-nomes-unicos/");
 
 export const getNovaReclamacaoNomesProdutos = async () =>
   await axios.get("/produtos/lista-nomes-nova-reclamacao/");
