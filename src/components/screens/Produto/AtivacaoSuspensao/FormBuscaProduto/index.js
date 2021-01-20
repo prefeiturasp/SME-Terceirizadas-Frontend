@@ -10,9 +10,9 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes
 } from "services/produto.service";
 import "./style.scss";
 
@@ -46,16 +46,16 @@ const FormBuscaProduto = ({
   useEffect(() => {
     async function fetchData() {
       Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes()
+        getNomesUnicosProdutos(),
+        getNomesUnicosMarcas(),
+        getNomesUnicosFabricantes()
       ]).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome)
+            produtos: produtos.data.results,
+            marcas: marcas.data.results,
+            fabricantes: fabricantes.data.results
           }
         });
       });

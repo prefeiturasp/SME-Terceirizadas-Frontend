@@ -57,17 +57,26 @@ export const getNomesProdutos = async queryparams => {
   return await axios.get(url);
 };
 
+export const getNomesUnicosProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-unicos/");
+
 export const getNomesMarcas = async queryparams => {
   let url = `/marcas/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
 
+export const getNomesUnicosMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-unicos/");
+
 export const getNomesFabricantes = async queryparams => {
   let url = `/fabricantes/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
+
+export const getNomesUnicosFabricantes = async () =>
+  await axios.get("/produtos/lista-nomes-unicos/");
 
 export const getNovaReclamacaoNomesProdutos = async () =>
   await axios.get("/produtos/lista-nomes-nova-reclamacao/");

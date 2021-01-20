@@ -5,9 +5,9 @@ import "./style.scss";
 import { Form, Field } from "react-final-form";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes
 } from "../../../../../services/produto.service";
 import { getProdutosListagem } from "services/produto.service";
 import {
@@ -44,14 +44,14 @@ export default class BuscaProduto extends Component {
       nomesMarcas === null &&
       nomesFabricantes === null
     ) {
-      const produtos = await getNomesProdutos();
-      const marcas = await getNomesMarcas();
-      const fabricantes = await getNomesFabricantes();
+      const produtos = await getNomesUnicosProdutos();
+      const marcas = await getNomesUnicosMarcas();
+      const fabricantes = await getNomesUnicosFabricantes();
 
       this.setState({
-        nomesProdutos: this.retornaListaDeNomes(produtos.data.results),
-        nomesMarcas: this.retornaListaDeNomes(marcas.data.results),
-        nomesFabricantes: this.retornaListaDeNomes(fabricantes.data.results)
+        nomesProdutos: produtos.data.results,
+        nomesMarcas: marcas.data.results,
+        nomesFabricantes: fabricantes.data.results
       });
     }
   };
