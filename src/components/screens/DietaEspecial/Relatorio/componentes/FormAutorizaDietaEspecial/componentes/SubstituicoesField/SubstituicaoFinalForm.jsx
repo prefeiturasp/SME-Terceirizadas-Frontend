@@ -89,7 +89,7 @@ export default class SubstituicoesField extends Component {
                   return true;
                 }
                 const alimento = this.state.valorSelecionado;
-                return p.nome !== alimento.nome;
+                return p.nome.split(" (")[0] !== alimento.nome;
               })
               .map(a => {
                 return {
