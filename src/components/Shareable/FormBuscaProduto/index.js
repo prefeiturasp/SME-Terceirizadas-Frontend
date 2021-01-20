@@ -14,9 +14,9 @@ import "./style.scss";
 import { useHistory } from "react-router-dom";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes,
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
@@ -64,9 +64,9 @@ export const FormBuscaProduto = ({
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
-      getNomesProdutos(),
-      getNomesMarcas(),
-      getNomesFabricantes()
+      getNomesUnicosProdutos(),
+      getNomesUnicosMarcas(),
+      getNomesUnicosFabricantes()
     ];
     if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
@@ -75,9 +75,9 @@ export const FormBuscaProduto = ({
           dispatch({
             type: "popularDados",
             payload: {
-              produtos: produtos.data.results.map(el => el.nome),
-              marcas: marcas.data.results.map(el => el.nome),
-              fabricantes: fabricantes.data.results.map(el => el.nome),
+              produtos: produtos.data.results,
+              marcas: marcas.data.results,
+              fabricantes: fabricantes.data.results,
               terceirizadas:
                 terceirizadas &&
                 terceirizadas.data.results.map(el => el.nome_fantasia),
