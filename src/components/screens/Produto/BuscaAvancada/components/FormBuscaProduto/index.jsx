@@ -17,9 +17,9 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes,
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
 
@@ -64,23 +64,23 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   useEffect(() => {
     async function fetchData() {
       Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes(),
+        getNomesUnicosProdutos(),
+        getNomesUnicosMarcas(),
+        getNomesUnicosFabricantes(),
         getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
+      ]).then(([produtos, marcas, fabricantes, terceirizadas]) =>
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
+            produtos: produtos.data.results,
+            marcas: marcas.data.results,
+            fabricantes: fabricantes.data.results,
             terceirizadas: terceirizadas.data.results.map(
               el => el.nome_fantasia
             )
           }
-        });
-      });
+        })
+      );
     }
     fetchData();
   }, []);

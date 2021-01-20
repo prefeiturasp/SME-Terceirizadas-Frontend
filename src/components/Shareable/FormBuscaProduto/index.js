@@ -14,9 +14,9 @@ import "./style.scss";
 import { useHistory } from "react-router-dom";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes,
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
@@ -58,15 +58,16 @@ export const FormBuscaProduto = ({
   naoExibirRowTerceirizadas,
   statusSelect,
   exibirBotaoVoltar,
-  naoExibirLimparFiltros
+  naoExibirLimparFiltros,
+  onLimparDados
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   useEffect(() => {
     const endpoints = [
-      getNomesProdutos(),
-      getNomesMarcas(),
-      getNomesFabricantes()
+      getNomesUnicosProdutos(),
+      getNomesUnicosMarcas(),
+      getNomesUnicosFabricantes()
     ];
     if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
@@ -75,9 +76,9 @@ export const FormBuscaProduto = ({
           dispatch({
             type: "popularDados",
             payload: {
-              produtos: produtos.data.results.map(el => el.nome),
-              marcas: marcas.data.results.map(el => el.nome),
-              fabricantes: fabricantes.data.results.map(el => el.nome),
+              produtos: produtos.data.results,
+              marcas: marcas.data.results,
+              fabricantes: fabricantes.data.results,
               terceirizadas:
                 terceirizadas &&
                 terceirizadas.data.results.map(el => el.nome_fantasia),
@@ -112,11 +113,27 @@ export const FormBuscaProduto = ({
             <Row gutter={[16, 16]}>
               <Col md={24} lg={12} xl={16}>
                 <Field
+                  component={"input"}
+                  type="checkbox"
+                  label="Nome da terceirizada"
+                  name="agrupado_por_nome_e_marca"
+                />
+                <span className="checkbox-custom" />
+                <label
+                  htmlFor="agrupado_por_nome_e_marca"
+                  className="checkbox-label"
+                >
+                  Visão agrupada por nome e marca
+                </label>
+              </Col>
+              <Col md={24} lg={12} xl={16}>
+                <Field
                   component={AutoCompleteField}
                   dataSource={state.terceirizadas}
                   label="Nome da terceirizada"
                   onSearch={v => onSearch("terceirizadas", v)}
                   name="nome_terceirizada"
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -131,6 +148,7 @@ export const FormBuscaProduto = ({
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -146,6 +164,7 @@ export const FormBuscaProduto = ({
                       : null
                   }
                   maxDate={moment()._d}
+                  disabled={values.agrupado_por_nome_e_marca}
                 />
               </Col>
             </Row>
@@ -180,6 +199,7 @@ export const FormBuscaProduto = ({
                 label="Fabricante do Produto"
                 onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
+                disabled={values.agrupado_por_nome_e_marca}
               />
             </Col>
             {statusSelect && (
@@ -216,7 +236,10 @@ export const FormBuscaProduto = ({
                   type={BUTTON_TYPE.BUTTON}
                   className="mr-3"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
-                  onClick={() => form.reset()}
+                  onClick={() => {
+                    form.reset();
+                    onLimparDados();
+                  }}
                   disabled={submitting}
                 />
               )}

@@ -57,17 +57,26 @@ export const getNomesProdutos = async queryparams => {
   return await axios.get(url);
 };
 
+export const getNomesUnicosProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-unicos/");
+
 export const getNomesMarcas = async queryparams => {
   let url = `/marcas/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
 
+export const getNomesUnicosMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-unicos/");
+
 export const getNomesFabricantes = async queryparams => {
   let url = `/fabricantes/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
+
+export const getNomesUnicosFabricantes = async () =>
+  await axios.get("/produtos/lista-nomes-unicos/");
 
 export const getNovaReclamacaoNomesProdutos = async () =>
   await axios.get("/produtos/lista-nomes-nova-reclamacao/");
@@ -477,6 +486,13 @@ export const getProdutosPorTerceirizada = async filtro => {
   );
 };
 
+export const getProdutosAgrupadosNomeMarcas = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-nome-marcas/`,
+    filtro
+  );
+};
+
 export const getRelatorioProdutosHomologados = async params => {
   const { data } = await axios.get(
     "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
@@ -486,6 +502,14 @@ export const getRelatorioProdutosHomologados = async params => {
     }
   );
   saveAs(data, "relatorio_produtos_homologados.pdf");
+};
+
+export const getRelatorioProdutosAgrupadosMarcasHomologados = async params => {
+  const { data } = await axios.get("/produtos/marcas-por-produto/", {
+    params,
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_agrupados_produtos_marcas_homologados.pdf");
 };
 
 export const getProdutosSuspensos = async payload => {
