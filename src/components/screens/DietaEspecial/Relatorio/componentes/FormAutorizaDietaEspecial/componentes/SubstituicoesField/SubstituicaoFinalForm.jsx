@@ -83,6 +83,7 @@ export default class SubstituicoesField extends Component {
             component={MultiSelect}
             type="select-multi"
             name={`${name}.substitutos`}
+            alimentoSelecionado={this.state.valorSelecionado}
             options={produtos
               .filter(p => {
                 if (this.state.valorSelecionado === undefined) {
