@@ -126,22 +126,62 @@ export default ({ solicitacoes, ativos, setAtivos }) => {
                           {guia.alimentos.map(alimento => {
                             return (
                               <>
-                                <div className="row mt-3">
-                                  <div className="col">
+                                <div className="row mt-3 overflow-auto">
+                                  <div className="col-2">
                                     <b>Nome do produto</b>
                                     <br />
                                     {alimento.nome_alimento}
                                   </div>
-                                  <div className="col border-left">
+
+                                  <div className={"col-2"}>
                                     <b>Quantidade</b>
                                     <br />
-                                    {alimento.qtd_volume}
+                                    {alimento.embalagens[0].qtd_volume}
                                   </div>
-                                  <div className="col border-left">
-                                    <b>Embalagem</b>
+                                  <div className="col">
+                                    <b>
+                                      Embalagem{" "}
+                                      {alimento.embalagens[0].tipo_embalagem}
+                                    </b>
                                     <br />
-                                    {alimento.embalagem}
+                                    {
+                                      alimento.embalagens[0].descricao_embalagem
+                                    }{" "}
+                                    {
+                                      alimento.embalagens[0]
+                                        .capacidade_embalagem
+                                    }{" "}
+                                    {alimento.embalagens[0].unidade_medida}
                                   </div>
+
+                                  {alimento.embalagens.length > 1 && (
+                                    <>
+                                      <div className={"col-2 border-left"}>
+                                        <b>Quantidade</b>
+                                        <br />
+                                        {alimento.embalagens[1].qtd_volume}
+                                      </div>
+                                      <div className="col">
+                                        <b>
+                                          Embalagem{" "}
+                                          {
+                                            alimento.embalagens[1]
+                                              .tipo_embalagem
+                                          }
+                                        </b>
+                                        <br />
+                                        {
+                                          alimento.embalagens[1]
+                                            .descricao_embalagem
+                                        }{" "}
+                                        {
+                                          alimento.embalagens[1]
+                                            .capacidade_embalagem
+                                        }{" "}
+                                        {alimento.embalagens[1].unidade_medida}
+                                      </div>
+                                    </>
+                                  )}
                                 </div>
                               </>
                             );
