@@ -78,6 +78,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
     } else {
       response.status = 500;
     }
+    setLoading(false);
     exibeToastPeloStatus(response.status);
   };
 
@@ -91,7 +92,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
       }
     });
     if (arraySolicitacoes.length) setSolicitacoes(arraySolicitacoes);
-    setSolicitacoes(null);
+    else setSolicitacoes(null);
   };
 
   const enviarSolicitacao = async () => {
@@ -108,6 +109,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
     } else {
       response.status = 500;
     }
+    setLoading(false);
     exibeToastPeloStatus(response.status);
   };
 
