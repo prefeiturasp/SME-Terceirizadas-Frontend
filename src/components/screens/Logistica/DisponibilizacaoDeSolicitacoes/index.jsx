@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getSolicitacoesDisponibilizadas } from "services/disponibilizacaoDeSolicitacoes.service";
 import "./style.scss";
+import { Button } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import { Spin } from "antd";
 import {
@@ -22,10 +23,10 @@ import {
 export const DisponibilizacaoDeSolicitacoes = props => {
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [erroAPI, setErroAPI] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [numeroSolicitacao, setNumeroSolicitacao] = useState(null);
   const [solicitacaoUuid, setSolicitacaoUuid] = useState(null);
+  const [ativos, setAtivos] = useState([]);
 
   useEffect(() => {
     if (props.requisicoes && props.requisicoes.length > 0) {
@@ -43,19 +44,9 @@ export const DisponibilizacaoDeSolicitacoes = props => {
         })
         .catch(() => {
           setLoading(false);
-          setErroAPI(true);
         });
     }
   }, []);
-
-  const [, updateState] = React.useState();
-  const forceUpdate = React.useCallback(() => updateState({}), []);
-
-  const expandir = key => {
-    solicitacoes[key].ativo = !solicitacoes[key].ativo;
-    setSolicitacoes(solicitacoes);
-    forceUpdate();
-  };
 
   const exibeToastPeloStatus = status => {
     if (status === HTTP_STATUS.OK && solicitacaoUuid) {
@@ -68,20 +59,6 @@ export const DisponibilizacaoDeSolicitacoes = props => {
       toastInfo("Nenhuma solicitação a enviar");
     }
   };
-
-  // const atualizaStatusdaSolicitacoes = dataSolicitacoes => {
-  //   let arraySolicitacoes = [];
-  //   dataSolicitacoes.forEach(solicit => {
-  //     solicitacoes.forEach(solicitacao => {
-  //       if (solicit.uuid === solicitacao.uuid) {
-  //         arraySolicitacoes = solicitacoes.filter(
-  //           item => item.uuid !== solicit.uuid
-  //         );
-  //       }
-  //     });
-  //   });
-  //   setSolicitacoes(arraySolicitacoes);
-  // };
 
   const enviarSolicitacoes = async () => {
     const arrayUuidSolicitacoes = [];
@@ -113,7 +90,8 @@ export const DisponibilizacaoDeSolicitacoes = props => {
         );
       }
     });
-    setSolicitacoes(arraySolicitacoes);
+    if (arraySolicitacoes.length) setSolicitacoes(arraySolicitacoes);
+    setSolicitacoes(null);
   };
 
   const enviarSolicitacao = async () => {
@@ -134,222 +112,279 @@ export const DisponibilizacaoDeSolicitacoes = props => {
   };
 
   return (
-    <div className="disponibilizacao-solicitacoes container-fluid pb-3">
-      {solicitacoes && (
-        <>
-          <hr /> <br />
-          <br />
-          <header>Veja requisições disponibilizadas</header>
-          {erroAPI && <div>Erro ao carregar dados de solicitações</div>}
-          {!solicitacoes && !loading && !erroAPI && (
-            <div>Não há solicitações.</div>
-          )}
-          {solicitacoes && (
-            <>
-              <div className="resultado-busca-requisicao-envio-dilog">
-                <table className="solicitacoes">
-                  <thead>
-                    <tr>
-                      <th>N° da Requisição de Entrega</th>
-                      <th>Qtde. de Guias Remessa</th>
-                      <th>Distribuidor</th>
-                      <th>Status</th>
-                      <th>Data de entrega</th>
-                      <th />
-                      <th />
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {solicitacoes.map((solicitacao, key) => {
-                      return [
-                        <tr key={key}>
-                          <td>{solicitacao.numero_solicitacao}</td>
-                          <td>{solicitacao.guias.length}</td>
-                          <td>{solicitacao.distribuidor_nome}</td>
-                          <td>{solicitacao.status}</td>
-                          <td>
-                            {solicitacao.guias &&
-                              solicitacao.guias[0].data_entrega}
-                          </td>
-                          <td onClick={() => expandir(key)} className="link">
-                            {solicitacao.ativo ? "Ver menos" : "Ver mais"}
-                          </td>
-                          {solicitacao.status === "Aguardando envio" ? (
-                            <td
-                              className={`${
-                                solicitacao.status !== "Aguardando envio"
-                                  ? "link-desativo"
-                                  : "link"
-                              }`}
-                              onClick={() => {
-                                setShowModal(true);
-                                setNumeroSolicitacao(
-                                  solicitacao.numero_solicitacao
-                                );
-                                setSolicitacaoUuid(solicitacao.uuid);
-                              }}
-                            >
-                              Enviar
-                            </td>
-                          ) : (
-                            <td
-                              className={`${
-                                solicitacao.status !== "Aguardando envio"
-                                  ? "link-desativo"
-                                  : "link"
-                              }`}
-                              onClick={() => {}}
-                            >
-                              Enviar
-                            </td>
-                          )}
-                        </tr>,
-                        solicitacao.ativo &&
-                          solicitacao.guias.map((guia, keyGuia) => {
-                            return [
-                              <tr className="guia" key={keyGuia}>
-                                <td>
-                                  Nº da guia <br />
-                                  <span>{guia.numero_guia}</span>
-                                </td>
-                                <td />
-                                <td>
-                                  Cód. CODAE da U.E <br />
-                                  <span>{guia.codigo_unidade}</span>
-                                </td>
-                                <td colSpan="4">
-                                  Nome Unidade de Ensino <br />
-                                  <span>{guia.nome_unidade}</span>
-                                </td>
-                              </tr>,
-                              <tr className="guia-alimento" key={keyGuia}>
-                                <td colSpan="2" />
-                                <td colSpan="2">
-                                  Endereço <br />
-                                  <span>{guia.endereco_unidade}</span>
-                                </td>
-                                <td colSpan="3">
-                                  Número <br />
-                                  <span>{guia.numero_unidade}</span>
-                                </td>
-                              </tr>,
-                              <tr className="guia-alimento" key={keyGuia}>
-                                <td colSpan="2" />
-                                <td>
-                                  Bairro <br />
-                                  <span>{guia.bairro_unidade}</span>
-                                </td>
-                                <td>
-                                  CEP <br />
-                                  <span>{guia.cep_unidade}</span>
-                                </td>
-                                <td colSpan="2">
-                                  Estado <br />
-                                  <span>{guia.estado_unidade}</span>
-                                </td>
-                              </tr>,
-                              <tr className="guia-alimento" key={keyGuia}>
-                                <td colSpan="2" />
-                                <td>
-                                  Cidade <br />
-                                  <span>{guia.cidade_unidade}</span>
-                                </td>
-                                <td>
-                                  Contato <br />
-                                  <span>{guia.contato_unidade}</span>
-                                </td>
-                                <td colSpan="2">
-                                  Telefone <br />
-                                  <span>{guia.telefone_unidade}</span>
-                                </td>
-                              </tr>,
-                              guia.alimentos.map((alimento, keyAlimento) => {
-                                return (
-                                  <tr
-                                    className="guia-alimento"
-                                    key={keyAlimento}
-                                  >
-                                    <td colSpan="2" />
-                                    <td>
-                                      Nome do produto <br />
-                                      <span>{alimento.nome_alimento}</span>
-                                    </td>
-                                    <td>
-                                      Qtde. <br />
-                                      <span>{alimento.qtd_volume}</span>
-                                    </td>
-                                    <td colSpan="3">
-                                      Unidade <br />
-                                      <span>{alimento.embalagem}</span>
-                                    </td>
-                                  </tr>
-                                );
-                              })
-                            ];
-                          })
-                      ];
-                    })}
-                  </tbody>
-                </table>
-                <div className="row">
-                  <div className="col-12 text-right pt-3">
-                    <Botao
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      texto="Enviar todos"
-                      onClick={() => {
-                        setShowModal(true);
-                      }}
-                    />
+    solicitacoes && (
+      <section className="resultado-busca-requisicao-envia-dilog container-fluid">
+        <header>Veja requisições disponibilizadas</header>
+        <article>
+          <div className="grid-table header-table">
+            <div>N° da Requisição de Entrega</div>
+            <div>Qtde. de Guias Remessa</div>
+            <div>Distribuidor</div>
+            <div>Status</div>
+            <div>Data de entrega</div>
+            <div />
+            <div />
+          </div>
+          {solicitacoes &&
+            solicitacoes.map(solicitacao => {
+              const bordas =
+                ativos && ativos.includes(solicitacao.uuid)
+                  ? "desativar-borda"
+                  : "";
+              const toggleText =
+                ativos && ativos.includes(solicitacao.uuid)
+                  ? "Ver menos"
+                  : "Ver mais";
+              return (
+                <>
+                  <div className="grid-table body-table">
+                    <div className={`${bordas}`}>
+                      {solicitacao.numero_solicitacao}
+                    </div>
+                    <div className={`${bordas}`}>
+                      {solicitacao.guias.length}{" "}
+                      {solicitacao.guias.length === 1 ? "guia" : "guias"}
+                    </div>
+                    <div className={`${bordas}`}>
+                      {solicitacao.distribuidor_nome}
+                    </div>
+                    <div className={`${bordas}`}>{solicitacao.status}</div>
+                    <div className={`${bordas}`}>
+                      {solicitacao.guias[0].data_entrega}
+                    </div>
+
+                    <div>
+                      <Button
+                        className="acoes"
+                        variant="link"
+                        onClick={() => {
+                          ativos && ativos.includes(solicitacao.uuid)
+                            ? setAtivos(
+                                ativos.filter(el => el !== solicitacao.uuid)
+                              )
+                            : setAtivos(
+                                ativos
+                                  ? [...ativos, solicitacao.uuid]
+                                  : [solicitacao.uuid]
+                              );
+                        }}
+                      >
+                        {toggleText}
+                      </Button>
+                    </div>
+
+                    <div>
+                      <Button
+                        className="acoes"
+                        variant="link"
+                        onClick={() => {
+                          setShowModal(true);
+                          setNumeroSolicitacao(solicitacao.numero_solicitacao);
+                          setSolicitacaoUuid(solicitacao.uuid);
+                        }}
+                      >
+                        enviar
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </>
-          )}
-        </>
-      )}
-      <Modal
-        show={showModal}
-        onHide={() => {
-          setShowModal(false);
-          setNumeroSolicitacao(null);
-          setSolicitacaoUuid(null);
-        }}
-      >
-        <Spin tip="Enviando..." spinning={loading}>
-          <Modal.Header closeButton>
-            <Modal.Title>Atenção</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {!numeroSolicitacao
-              ? `Deseja enviar todas as Solicitações da Grade ?`
-              : `Deseja enviar a Solicitação n° ${numeroSolicitacao} ? `}
-          </Modal.Body>
-          <Modal.Footer>
+                  {ativos &&
+                    ativos.includes(solicitacao.uuid) &&
+                    solicitacao.guias.map(guia => {
+                      return (
+                        <>
+                          <section className="resultado-busca-detalhe pb-3 pt-3">
+                            <div className="container-fluid">
+                              <div className="row">
+                                <div className="col-3 justify-content-center align-self-center">
+                                  <span>
+                                    {" "}
+                                    N° da guia: <b>{guia.numero_guia}</b>
+                                  </span>
+                                </div>
+                                <div className="col-3 justify-content-center align-self-center">
+                                  <span>
+                                    {" "}
+                                    Status da guia: <b>{guia.status}</b>
+                                  </span>
+                                </div>
+                              </div>
+
+                              <hr />
+
+                              <div className="row">
+                                <div className="col">
+                                  <b>Cód. CODAE da U.E</b>
+                                  <br />
+                                  {guia.codigo_unidade}
+                                </div>
+                                <div className="col border-left">
+                                  <b>Nome Unidade Educacional</b>
+                                  <br />
+                                  {guia.nome_unidade}
+                                </div>
+                              </div>
+
+                              <div className="row mt-3">
+                                <div className="col">
+                                  <b>Endereço</b>
+                                  <br />
+                                  {guia.endereco_unidade}, {guia.numero_unidade}{" "}
+                                  - {guia.bairro_unidade} - CEP:{" "}
+                                  {guia.cep_unidade} - {guia.cidade_unidade} -{" "}
+                                  {guia.estado_unidade}
+                                </div>
+                              </div>
+
+                              <div className="row mt-3">
+                                <div className="col">
+                                  <b>Contato de entrega</b>
+                                  <br />
+                                  {guia.contato_unidade}
+                                </div>
+                                <div className="col border-left">
+                                  <b>Telefone</b>
+                                  <br />
+                                  {guia.telefone_unidade}
+                                </div>
+                              </div>
+
+                              {guia.alimentos.map(alimento => {
+                                return (
+                                  <>
+                                    <div className="row mt-3 overflow-auto">
+                                      <div className="col-2">
+                                        <b>Nome do produto</b>
+                                        <br />
+                                        {alimento.nome_alimento}
+                                      </div>
+
+                                      <div className={"col-2"}>
+                                        <b>Quantidade</b>
+                                        <br />
+                                        {alimento.embalagens[0].qtd_volume}
+                                      </div>
+                                      <div className="col">
+                                        <b>
+                                          Embalagem{" "}
+                                          {
+                                            alimento.embalagens[0]
+                                              .tipo_embalagem
+                                          }
+                                        </b>
+                                        <br />
+                                        {
+                                          alimento.embalagens[0]
+                                            .descricao_embalagem
+                                        }{" "}
+                                        {
+                                          alimento.embalagens[0]
+                                            .capacidade_embalagem
+                                        }{" "}
+                                        {alimento.embalagens[0].unidade_medida}
+                                      </div>
+
+                                      {alimento.embalagens.length > 1 && (
+                                        <>
+                                          <div className={"col-2 border-left"}>
+                                            <b>Quantidade</b>
+                                            <br />
+                                            {alimento.embalagens[1].qtd_volume}
+                                          </div>
+                                          <div className="col">
+                                            <b>
+                                              Embalagem{" "}
+                                              {
+                                                alimento.embalagens[1]
+                                                  .tipo_embalagem
+                                              }
+                                            </b>
+                                            <br />
+                                            {
+                                              alimento.embalagens[1]
+                                                .descricao_embalagem
+                                            }{" "}
+                                            {
+                                              alimento.embalagens[1]
+                                                .capacidade_embalagem
+                                            }{" "}
+                                            {
+                                              alimento.embalagens[1]
+                                                .unidade_medida
+                                            }
+                                          </div>
+                                        </>
+                                      )}
+                                    </div>
+                                  </>
+                                );
+                              })}
+                            </div>
+                          </section>
+                        </>
+                      );
+                    })}
+                </>
+              );
+            })}
+
+          <Modal
+            show={showModal}
+            onHide={() => {
+              setShowModal(false);
+              setNumeroSolicitacao(null);
+              setSolicitacaoUuid(null);
+            }}
+          >
+            <Spin tip="Enviando..." spinning={loading}>
+              <Modal.Header closeButton>
+                <Modal.Title>Atenção</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                {!numeroSolicitacao
+                  ? `Deseja enviar todas as Solicitações da Grade ?`
+                  : `Deseja enviar a Solicitação n° ${numeroSolicitacao} ? `}
+              </Modal.Body>
+              <Modal.Footer>
+                <Botao
+                  texto="SIM"
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={() => {
+                    numeroSolicitacao
+                      ? enviarSolicitacao()
+                      : enviarSolicitacoes();
+                    setLoading(true);
+                  }}
+                  style={BUTTON_STYLE.BLUE}
+                  className="ml-3"
+                  disabled={loading}
+                />
+                <Botao
+                  texto="NÃO"
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={() => {
+                    setShowModal(false);
+                    setNumeroSolicitacao(null);
+                    setSolicitacaoUuid(null);
+                  }}
+                  style={BUTTON_STYLE.BLUE}
+                  className="ml-3"
+                />
+              </Modal.Footer>
+            </Spin>
+          </Modal>
+        </article>
+        <div className="row mb-3">
+          <div className="col-12 text-right pt-3">
             <Botao
-              texto="SIM"
-              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              texto="Enviar todos"
               onClick={() => {
-                numeroSolicitacao ? enviarSolicitacao() : enviarSolicitacoes();
-                setLoading(true);
+                setShowModal(true);
               }}
-              style={BUTTON_STYLE.BLUE}
-              className="ml-3"
-              disabled={loading}
             />
-            <Botao
-              texto="NÃO"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={() => {
-                setShowModal(false);
-                setNumeroSolicitacao(null);
-                setSolicitacaoUuid(null);
-              }}
-              style={BUTTON_STYLE.BLUE}
-              className="ml-3"
-            />
-          </Modal.Footer>
-        </Spin>
-      </Modal>
-    </div>
+          </div>
+        </div>
+      </section>
+    )
   );
 };
