@@ -4,6 +4,8 @@ import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/un
 import "./style.scss";
 import { Form, Field } from "react-final-form";
 
+import { podeEditarProduto } from "./helpers";
+
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
@@ -177,23 +179,17 @@ export default class BuscaProduto extends Component {
                             {produto.fabricante.nome}
                             {produto.ativo ? (
                               <>
-                                {produto.ultima_homologacao &&
-                                  produto.ultima_homologacao.status !==
-                                    "CODAE_PENDENTE_HOMOLOGACAO" &&
-                                  produto.ultima_homologacao.status !==
-                                    "CODAE_PEDIU_ANALISE_SENSORIAL" &&
-                                  produto.ultima_homologacao.status !==
-                                    "ESCOLA_OU_NUTRICIONISTA_RECLAMOU" && (
-                                    <div className="botoes-produto">
-                                      <Link
-                                        to={`/gestao-produto/editar?uuid=${
-                                          produto.ultima_homologacao.uuid
-                                        }`}
-                                      >
-                                        <i className="fas fa-pen editar" />
-                                      </Link>
-                                    </div>
-                                  )}
+                                {podeEditarProduto(produto) && (
+                                  <div className="botoes-produto">
+                                    <Link
+                                      to={`/gestao-produto/editar?uuid=${
+                                        produto.ultima_homologacao.uuid
+                                      }`}
+                                    >
+                                      <i className="fas fa-pen editar" />
+                                    </Link>
+                                  </div>
+                                )}
                                 <div className="botoes-produto">
                                   <i
                                     className="fas fa-angle-up"
@@ -282,7 +278,7 @@ export default class BuscaProduto extends Component {
 
             <div className="botoes-busca">
               <Botao
-                texto={"Cancelar"}
+                texto={"Limpar Filtros"}
                 className="mr-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -292,7 +288,7 @@ export default class BuscaProduto extends Component {
                 }}
               />
               <Botao
-                texto={"Cadastrar Alimentos"}
+                texto={"Cadastrar Produtos"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 onClick={() => {
