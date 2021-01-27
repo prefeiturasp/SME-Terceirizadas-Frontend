@@ -29,6 +29,7 @@ import {
   getDietasEspeciaisVigentesDeUmAluno,
   getSolicitacoesDietaEspecial
 } from "../../../../services/dietaEspecial.service";
+import { getAlunoPertenceAEscola} from "../../../../services/aluno.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
@@ -59,6 +60,7 @@ class solicitacaoDietaEspecial extends Component {
     window.momentjs = moment;
     this.state = {
       quantidadeAlunos: "...",
+      codigo_eol_escola: null,
       files: null,
       submitted: false,
       resumo: null,
@@ -72,9 +74,7 @@ class solicitacaoDietaEspecial extends Component {
 
   componentDidMount() {
     meusDados().then(meusDados => {
-      this.setState({
-        quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos
-      });
+      this.setState({quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos, codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol});
     });
     const { history, loadSolicitacoesVigentes, reset } = this.props;
     if (history && history.action === "PUSH") {
@@ -95,6 +95,7 @@ class solicitacaoDietaEspecial extends Component {
 
   onEolBlur = async event => {
     const { change } = this.props;
+    const { codigo_eol_escola } = this.state;
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
     if (event.target.value.length !== 7) return;
@@ -102,21 +103,26 @@ class solicitacaoDietaEspecial extends Component {
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
     if (!resposta) return;
     if (resposta.status === 400) {
-      toastError("Aluno não encontrado no EOL.");
-    } else {
-      change("aluno_json.nome", resposta.detail.nm_aluno);
-      change(
-        "aluno_json.data_nascimento",
-        moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
-      );
-      getDietasEspeciaisVigentesDeUmAluno(
-        event.target.value.padStart(6, "0")
-      ).then(response => {
-        this.props.loadSolicitacoesVigentes(
-          formatarSolicitacoesVigentes(response.data.results)
-        );
-      });
+      toastError("Aluno não encontrado no EOL."); return
     }
+
+    change("aluno_json.nome", resposta.detail.nm_aluno);
+    change(
+      "aluno_json.data_nascimento",
+      moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
+    );
+    // aqui
+    getDietasEspeciaisVigentesDeUmAluno(
+      event.target.value.padStart(6, "0")
+    ).then(response => {
+      this.props.loadSolicitacoesVigentes(
+        formatarSolicitacoesVigentes(response.data.results)
+      );
+    });
+
+    // getAlunoPertenceAEscola(event.target.value, meusDados.vinculo_atual.instituicao.codigo_eol)
+    console.log(event.target.value, codigo_eol_escola)  // AQUI
+    // console.log(event.target.value, meusDados.vinculo_atual.instituicao.codigo_eol)
   };
 
   getEscolaPorEOL = async () => {
@@ -208,6 +214,7 @@ class solicitacaoDietaEspecial extends Component {
         this.resetForm();
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        console.log(response.data);
         toastError(getError(response.data));
         reject();
       } else {
