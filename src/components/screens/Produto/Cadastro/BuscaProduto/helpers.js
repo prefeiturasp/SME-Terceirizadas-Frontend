@@ -5,7 +5,8 @@ export const podeEditarProduto = produto => {
     "CODAE_PENDENTE_HOMOLOGACAO",
     "CODAE_PEDIU_ANALISE_SENSORIAL",
     "CODAE_PEDIU_ANALISE_RECLAMACAO",
-    "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+    "ESCOLA_OU_NUTRICIONISTA_RECLAMOU",
+    "TERCEIRIZADA_RESPONDEU_RECLAMACAO"
   ].includes(get(produto, "ultima_homologacao.status"));
   return !status;
 };
