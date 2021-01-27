@@ -4,7 +4,8 @@ export const podeEditarProduto = produto => {
   const status = [
     "CODAE_PENDENTE_HOMOLOGACAO",
     "CODAE_PEDIU_ANALISE_SENSORIAL",
-    "CODAE_PEDIU_ANALISE_RECLAMACAO"
+    "CODAE_PEDIU_ANALISE_RECLAMACAO",
+    "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
   ].includes(get(produto, "ultima_homologacao.status"));
   return !status;
 };
