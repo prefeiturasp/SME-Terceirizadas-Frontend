@@ -338,7 +338,7 @@ class solicitacaoDietaEspecial extends Component {
 
               <hr />
 
-              <Laudo />
+              <Laudo pertence_a_escola={this.state.pertence_a_escola} />
             </>
           )}
           {this.state.aluno_nao_matriculado && (
@@ -457,6 +457,7 @@ class solicitacaoDietaEspecial extends Component {
                 this.props.reset();
                 this.props.loadSolicitacoesVigentes(null);
                 this.setState({ aluno_nao_matriculado: false });
+                this.setState({ pertence_a_escola: null });
               }}
               disabled={pristine || submitting}
               style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -470,6 +471,7 @@ class solicitacaoDietaEspecial extends Component {
                 })
               )}
               style={BUTTON_STYLE.GREEN}
+              disabled={this.state.pertence_a_escola !== true}
             />
           </article>
         </div>

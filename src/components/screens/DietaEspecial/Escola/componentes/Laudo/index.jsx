@@ -4,7 +4,7 @@ import ManagedInputFileField from "../../../../../Shareable/Input/InputFile/Mana
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import { required } from "helpers/fieldValidators";
 
-export default () => {
+export default ({ pertence_a_escola }) => {
   return (
     <>
       <section className="row attachments">
@@ -33,6 +33,7 @@ export default () => {
             accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
             validate={[required]}
             toastSuccessMessage={"Laudo incluído com sucesso"}
+            disabled={pertence_a_escola !== true}
           />
         </div>
       </section>
@@ -43,6 +44,7 @@ export default () => {
             label="Observações"
             name="observacoes"
             className="form-control"
+            disabled={pertence_a_escola !== true}
           />
         </div>
       </section>
