@@ -21,7 +21,8 @@ const MenuDietaEspecial = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
-    usuarioEhEscola();
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||

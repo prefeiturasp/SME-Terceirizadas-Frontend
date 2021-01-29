@@ -84,7 +84,7 @@ const FormBuscaProduto = ({
             <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
                 component={AutoCompleteFieldUnaccent}
-                dataSource={state.marcas}
+                dataSource={state.dados.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
@@ -94,7 +94,7 @@ const FormBuscaProduto = ({
             <Col md={24} lg={exibirStatus ? 9 : 12}>
               <Field
                 component={AutoCompleteFieldUnaccent}
-                dataSource={state.fabricantes}
+                dataSource={state.dados.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
                 name="nome_fabricante"
