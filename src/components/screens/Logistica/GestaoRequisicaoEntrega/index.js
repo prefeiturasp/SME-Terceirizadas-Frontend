@@ -80,21 +80,23 @@ export default () => {
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left"
+                    className="float-left mb-2"
                   />
+                </div>
+                <div className="d-flex align-items-end">
                   <Botao
                     texto="Imprimir todos"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.PRINT}
-                    className="float-right"
+                    className=""
                   />
                   <Botao
                     texto="Posição Consolidada de Entrega"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.EYE}
-                    className="float-right ml-2 mr-2"
+                    className="ml-2 mr-2"
                   />
                   <ConfirmaTodos
                     updatePage={updatePage}

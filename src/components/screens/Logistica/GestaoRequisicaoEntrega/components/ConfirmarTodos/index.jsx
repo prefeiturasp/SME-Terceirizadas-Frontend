@@ -38,7 +38,6 @@ export default ({ updatePage, numEnviadas }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
         icon={BUTTON_ICON.CHECK_CIRCLE}
-        className="float-right"
         disabled={numEnviadas === 0}
         onClick={handleShow}
       />
