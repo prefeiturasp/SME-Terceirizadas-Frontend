@@ -15,6 +15,7 @@ import { distribuidorAltera } from "services/logistica.service";
 import ConfirmarEnvio from "./ConfirmarEnvio";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import moment from "moment";
 import "./styles.scss";
 
 export default ({ solicitacao, updatePage }) => {
@@ -34,10 +35,31 @@ export default ({ solicitacao, updatePage }) => {
     });
   };
 
+  const getDiferencaDiasUteis = dataEntrega => {
+    const firstDay = moment(new Date(), "DD/MM/YYYY");
+    const lastDay = moment(dataEntrega, "DD/MM/YYYY");
+
+    let calcDias =
+      1 +
+      (lastDay.diff(firstDay, "days") * 5 -
+        (firstDay.day() - lastDay.day()) * 2) /
+        7;
+
+    if (lastDay.day() === 6) calcDias--;
+    if (firstDay.day() === 0) calcDias--;
+
+    return calcDias;
+  };
+
   const isDisabled = () => {
-    if (solicitacao.status === "Enviada" || solicitacao.status === "Confirmada")
-      return false;
-    return true;
+    const dataEntrega = solicitacao.guias[0].data_entrega;
+    const diasUteis = getDiferencaDiasUteis(dataEntrega);
+    const statusEnable = ["Enviada", "Confirmada"];
+
+    if (diasUteis <= 3) return true;
+    else if (!statusEnable.includes(solicitacao.status)) return true;
+
+    return false;
   };
 
   const onSubmit = async values => {
