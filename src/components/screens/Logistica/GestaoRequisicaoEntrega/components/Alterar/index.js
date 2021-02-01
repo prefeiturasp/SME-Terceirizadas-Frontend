@@ -11,10 +11,8 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { distribuidorAltera } from "services/logistica.service";
 import ConfirmarEnvio from "./ConfirmarEnvio";
 import { Spin } from "antd";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import "./styles.scss";
 
 export default ({ solicitacao, updatePage }) => {
@@ -40,18 +38,8 @@ export default ({ solicitacao, updatePage }) => {
     return true;
   };
 
-  const onSubmit = async values => {
-    const payload = { ...values };
-    payload.requisicao = solicitacao.uuid;
-    const res = await distribuidorAltera(payload);
-    if (res.status === 201) {
-      setShowConfirmarEnvio(false);
-      handleClose();
-      toastSuccess("Solicitação enviada para análise da CODAE.");
-      updatePage();
-    } else {
-      toastError("Houve um erro ao solicitar a alteração de requisição.");
-    }
+  const onSubmit = async () => {
+    setShowConfirmarEnvio(true);
   };
 
   return (
@@ -192,6 +180,10 @@ export default ({ solicitacao, updatePage }) => {
                           show={showConfirmarEnvio}
                           setShow={setShowConfirmarEnvio}
                           form={form}
+                          updatePage={updatePage}
+                          handleCloseAll={handleClose}
+                          solicitacao={solicitacao}
+                          values={values}
                         />
                         <Botao
                           texto="Voltar"
