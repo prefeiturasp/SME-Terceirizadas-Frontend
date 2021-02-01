@@ -5,18 +5,41 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import { distribuidorAltera } from "services/logistica.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
-export default ({ show, setShow, form }) => {
+export default ({
+  show,
+  setShow,
+  form,
+  handleCloseAll,
+  updatePage,
+  solicitacao,
+  values
+}) => {
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
+  const enviarSolicitacao = async () => {
+    const payload = { ...values };
+    payload.requisicao = solicitacao.uuid;
+    const res = await distribuidorAltera(payload);
+    if (res.status === 201) {
+      setShow(false);
+      handleCloseAll();
+      toastSuccess("Solicitação enviada para análise da CODAE.");
+      updatePage();
+    } else {
+      toastError("Houve um erro ao solicitar a alteração de requisição.");
+    }
+  };
 
   return (
     <>
       <Botao
         texto="Enviar"
         type={BUTTON_TYPE.BUTTON}
-        onClick={handleShow}
         style={BUTTON_STYLE.GREEN}
+        onClick={form.submit}
         className="float-right ml-3"
       />
       <Modal show={show} onHide={handleClose}>
@@ -31,7 +54,7 @@ export default ({ show, setShow, form }) => {
             texto="Sim"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.BLUE}
-            onClick={form.submit}
+            onClick={enviarSolicitacao}
             className="ml-3"
           />
           <Botao
