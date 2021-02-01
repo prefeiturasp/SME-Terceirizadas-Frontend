@@ -133,6 +133,8 @@ class solicitacaoDietaEspecial extends Component {
           } else {
             change("aluno_json.nome", "");
             change("aluno_json.data_nascimento", "");
+            change("nome_completo_pescritor", "");
+            change("registro_funcional_pescritor", "");
           }
         } else {
           this.setState({ pertence_a_escola: null });
