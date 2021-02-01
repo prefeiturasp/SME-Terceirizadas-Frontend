@@ -31,3 +31,13 @@ export const distribuidorConfirmaTodos = async () => {
   const url = `/solicitacao-remessa/distribuidor-confirma-todos/`;
   return await axios.patch(url);
 };
+
+export const getConsolidadoAlimentos = async uuid => {
+  const url = `/solicitacao-remessa/${uuid}/consolidado-alimentos/`;
+  return await axios.get(url);
+};
+
+export const distribuidorAltera = async payload => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/`;
+  return await axios.post(url, payload);
+};

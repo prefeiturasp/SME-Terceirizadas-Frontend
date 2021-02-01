@@ -9,6 +9,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import Confirmar from "../Confirmar";
+import Alterar from "../Alterar";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -78,11 +79,12 @@ const ListagemSolicitacoes = ({
                     solicitacao={solicitacao}
                     updatePage={updatePage}
                   />
-                  |
-                  <Button className="acoes alterar" variant="link">
-                    {" "}
-                    <i className="fas fa-sync-alt alterar" /> Alterar
-                  </Button>
+                  |&nbsp;
+                  <Alterar
+                    className="acoes alterar"
+                    solicitacao={solicitacao}
+                    updatePage={updatePage}
+                  />
                   |
                   <Button className="acoes text-dark" variant="link">
                     <i className="fas fa-print imprimir" /> Imprimir
