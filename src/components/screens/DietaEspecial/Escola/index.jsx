@@ -112,11 +112,6 @@ class solicitacaoDietaEspecial extends Component {
       return;
     }
 
-    change("aluno_json.nome", resposta.detail.nm_aluno);
-    change(
-      "aluno_json.data_nascimento",
-      moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
-    );
     getDietasEspeciaisVigentesDeUmAluno(
       event.target.value.padStart(6, "0")
     ).then(response => {
@@ -129,6 +124,16 @@ class solicitacaoDietaEspecial extends Component {
       response => {
         if (response.status === 200) {
           this.setState({ pertence_a_escola: response.data.pertence_a_escola });
+          if (this.state.pertence_a_escola) {
+            change("aluno_json.nome", resposta.detail.nm_aluno);
+            change(
+              "aluno_json.data_nascimento",
+              moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
+            );
+          } else {
+            change("aluno_json.nome", "");
+            change("aluno_json.data_nascimento", "");
+          }
         } else {
           this.setState({ pertence_a_escola: null });
         }
