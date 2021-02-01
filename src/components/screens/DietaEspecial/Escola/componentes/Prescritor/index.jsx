@@ -10,7 +10,7 @@ import {
 } from "helpers/fieldValidators";
 
 const minLength6 = minLength(6);
-export default () => {
+export default ({ pertence_a_escola }) => {
   return (
     <section className="row">
       <div className="col-7">
@@ -23,6 +23,7 @@ export default () => {
           required
           validate={[required, minLength6]}
           helpText={"Mínimo 6 caracteres"}
+          disabled={pertence_a_escola !== true}
         />
       </div>
       <div className="col-5">
@@ -33,6 +34,7 @@ export default () => {
           required
           className="form-control"
           helpText={"Tamanho: 4 a 7 caracteres"}
+          disabled={pertence_a_escola !== true}
           validate={[required, numericInteger, maxLength(7), minLength(4)]}
         />
       </div>

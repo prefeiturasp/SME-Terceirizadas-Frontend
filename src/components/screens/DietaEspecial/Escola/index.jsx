@@ -29,6 +29,7 @@ import {
   getDietasEspeciaisVigentesDeUmAluno,
   getSolicitacoesDietaEspecial
 } from "../../../../services/dietaEspecial.service";
+import { getAlunoPertenceAEscola } from "../../../../services/aluno.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
@@ -59,10 +60,12 @@ class solicitacaoDietaEspecial extends Component {
     window.momentjs = moment;
     this.state = {
       quantidadeAlunos: "...",
+      codigo_eol_escola: null,
       files: null,
       submitted: false,
       resumo: null,
-      aluno_nao_matriculado: false
+      aluno_nao_matriculado: false,
+      pertence_a_escola: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -73,7 +76,8 @@ class solicitacaoDietaEspecial extends Component {
   componentDidMount() {
     meusDados().then(meusDados => {
       this.setState({
-        quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos
+        quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos,
+        codigo_eol_escola: meusDados.vinculo_atual.instituicao.codigo_eol
       });
     });
     const { history, loadSolicitacoesVigentes, reset } = this.props;
@@ -95,6 +99,7 @@ class solicitacaoDietaEspecial extends Component {
 
   onEolBlur = async event => {
     const { change } = this.props;
+    const { codigo_eol_escola } = this.state;
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
     if (event.target.value.length !== 7) return;
@@ -102,21 +107,38 @@ class solicitacaoDietaEspecial extends Component {
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
     if (!resposta) return;
     if (resposta.status === 400) {
+      this.setState({ pertence_a_escola: null });
       toastError("Aluno não encontrado no EOL.");
-    } else {
-      change("aluno_json.nome", resposta.detail.nm_aluno);
-      change(
-        "aluno_json.data_nascimento",
-        moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
-      );
-      getDietasEspeciaisVigentesDeUmAluno(
-        event.target.value.padStart(6, "0")
-      ).then(response => {
-        this.props.loadSolicitacoesVigentes(
-          formatarSolicitacoesVigentes(response.data.results)
-        );
-      });
+      return;
     }
+
+    getDietasEspeciaisVigentesDeUmAluno(
+      event.target.value.padStart(6, "0")
+    ).then(response => {
+      this.props.loadSolicitacoesVigentes(
+        formatarSolicitacoesVigentes(response.data.results)
+      );
+    });
+
+    getAlunoPertenceAEscola(event.target.value, codigo_eol_escola).then(
+      response => {
+        if (response.status === 200) {
+          this.setState({ pertence_a_escola: response.data.pertence_a_escola });
+          if (this.state.pertence_a_escola) {
+            change("aluno_json.nome", resposta.detail.nm_aluno);
+            change(
+              "aluno_json.data_nascimento",
+              moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
+            );
+          } else {
+            change("aluno_json.nome", "");
+            change("aluno_json.data_nascimento", "");
+          }
+        } else {
+          this.setState({ pertence_a_escola: null });
+        }
+      }
+    );
   };
 
   getEscolaPorEOL = async () => {
@@ -292,7 +314,7 @@ class solicitacaoDietaEspecial extends Component {
                       component={InputComData}
                       label="Data de Nascimento"
                       name="data_nascimento"
-                      className="form-control"
+                      className="form-control color-disabled"
                       minDate={dateDelta(-360 * 99)}
                       maxDate={dateDelta(-1)}
                       showMonthDropdown
@@ -303,17 +325,25 @@ class solicitacaoDietaEspecial extends Component {
                   </div>
                 </div>
               </FormSection>
-              {solicitacoesVigentes && (
-                <SolicitacaoVigente
-                  solicitacoesVigentes={solicitacoesVigentes}
-                />
+              {this.state.pertence_a_escola === false && (
+                <div className="current-diets">
+                  <div className="pt-2 no-diets">
+                    Aluno não pertence a unidade educacional.
+                  </div>
+                </div>
               )}
+              {this.state.pertence_a_escola === true &&
+                solicitacoesVigentes && (
+                  <SolicitacaoVigente
+                    solicitacoesVigentes={solicitacoesVigentes}
+                  />
+                )}
 
-              <Prescritor />
+              <Prescritor pertence_a_escola={this.state.pertence_a_escola} />
 
               <hr />
 
-              <Laudo />
+              <Laudo pertence_a_escola={this.state.pertence_a_escola} />
             </>
           )}
           {this.state.aluno_nao_matriculado && (
@@ -432,6 +462,7 @@ class solicitacaoDietaEspecial extends Component {
                 this.props.reset();
                 this.props.loadSolicitacoesVigentes(null);
                 this.setState({ aluno_nao_matriculado: false });
+                this.setState({ pertence_a_escola: null });
               }}
               disabled={pristine || submitting}
               style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -445,6 +476,7 @@ class solicitacaoDietaEspecial extends Component {
                 })
               )}
               style={BUTTON_STYLE.GREEN}
+              disabled={this.state.pertence_a_escola !== true}
             />
           </article>
         </div>

@@ -105,7 +105,7 @@ export class TextAreaWYSIWYG extends Component {
             required && input.value === "<p></p>\n" && talvezBordaVermelha
               ? "border-red"
               : "border"
-          } rounded`}
+          } rounded ${disabled ? "wrapper-class-disabled" : ""}`}
           editorClassName="ml-2"
           readOnly={disabled}
           className="form-control"
@@ -123,6 +123,7 @@ export class TextAreaWYSIWYG extends Component {
             },
             list: { inDropdown: false, options: ["unordered", "ordered"] }
           }}
+          toolbarClassName={`${disabled ? "wrapper-class-hidden" : ""}`}
           toolbarCustomButtons={
             temOpcoesCustomizadas && [
               <OpcoesCustomizadas
