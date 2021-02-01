@@ -4,7 +4,6 @@ import "moment/locale/pt-br";
 import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { TIPO_PERFIL } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
-import process from "process";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
 //       Dá pra separar por tipo de helper:
@@ -465,7 +464,10 @@ export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
 
 export const corrigeLinkAnexo = url => {
-  if (process.env.NODE_ENV === "production" && url.startsWith("http://")) {
+  if (
+    window.location.href.startsWith("https://") &&
+    url.startsWith("http://")
+  ) {
     return url.replace(/^http:\/\//, "https://");
   }
   return url;
