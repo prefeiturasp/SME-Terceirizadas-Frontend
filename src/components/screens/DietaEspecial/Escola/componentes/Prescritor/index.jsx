@@ -23,6 +23,7 @@ export default ({ pertence_a_escola }) => {
           required
           validate={[required, minLength6]}
           helpText={"Mínimo 6 caracteres"}
+          tabindex="2"
           disabled={pertence_a_escola !== true}
         />
       </div>

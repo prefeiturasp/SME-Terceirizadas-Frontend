@@ -13,7 +13,8 @@ export const Botao = props => {
     style,
     titulo,
     texto,
-    type
+    type,
+    tabindex
   } = props;
   return (
     <button
@@ -24,6 +25,7 @@ export const Botao = props => {
       onClick={onClick}
       disabled={disabled}
       accept={accept}
+      tabIndex={tabindex}
     >
       {icon && <i className={`${icon} ${texto && "text-and-icon"}`} />}
       {texto}
