@@ -78,6 +78,13 @@ export const CorpoRelatorio = props => {
 
   const escola = getEscola();
 
+  const getEscolaOrigem = () => {
+    const { escola } = props.dietaEspecial;
+    return escola;
+  };
+
+  const escolaOrigem = getEscolaOrigem();
+
   return (
     <div>
       {tem_solicitacao_cadastro_produto && (
@@ -109,7 +116,7 @@ export const CorpoRelatorio = props => {
           <span className="dre-name">{escola && escola.nome}</span>
         </div>
         {tipo_solicitacao !== TIPO_SOLICITACAO_DIETA.COMUM && (
-          <div className="col-4">
+          <div className="col-2">
             <span className="requester">Tipo da Solicitação</span>
             <br />
             {tipo_solicitacao ===
@@ -118,6 +125,13 @@ export const CorpoRelatorio = props => {
             ) : (
               <span className="dre-name">ALTERAÇÃO DE U.E</span>
             )}
+          </div>
+        )}
+        {tipo_solicitacao !== TIPO_SOLICITACAO_DIETA.COMUM && (
+          <div className="col-2">
+            <span className="requester">Dieta Especial de Origem</span>
+            <br />
+            <span className="dre-name">{escolaOrigem.nome}</span>
           </div>
         )}
         <div className="col">

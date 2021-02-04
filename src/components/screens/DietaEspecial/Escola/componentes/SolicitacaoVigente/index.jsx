@@ -161,6 +161,7 @@ export class SolicitacaoVigente extends Component {
                                         target="_blank"
                                         href={anexo.arquivo}
                                         className="link"
+                                        tabIndex="-1"
                                       >
                                         {`Anexo ${key + 1}`}
                                       </a>
@@ -191,6 +192,7 @@ export class SolicitacaoVigente extends Component {
                           <div className="row pb-3">
                             <div className="col-6">
                               <Botao
+                                tabindex="-1"
                                 onClick={() =>
                                   this.props.history.push(
                                     `/dieta-especial/relatorio?uuid=${

@@ -102,6 +102,7 @@ class solicitacaoDietaEspecial extends Component {
     const { codigo_eol_escola } = this.state;
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
+
     if (event.target.value.length !== 7) return;
 
     const resposta = await obtemDadosAlunoPeloEOL(event.target.value);
@@ -133,6 +134,8 @@ class solicitacaoDietaEspecial extends Component {
           } else {
             change("aluno_json.nome", "");
             change("aluno_json.data_nascimento", "");
+            change("nome_completo_pescritor", "");
+            change("registro_funcional_pescritor", "");
           }
         } else {
           this.setState({ pertence_a_escola: null });
@@ -295,8 +298,9 @@ class solicitacaoDietaEspecial extends Component {
                       className="form-control"
                       type="number"
                       required
+                      tabindex="1"
                       validate={[required, length7]}
-                      onBlur={this.onEolBlur}
+                      onChange={this.onEolBlur}
                     />
                   </div>
                   <div className="col-md-6">
@@ -306,6 +310,7 @@ class solicitacaoDietaEspecial extends Component {
                       label="Nome completo do Aluno"
                       className="form-control"
                       disabled
+                      tabindex="-1"
                       validate={[required, minLength6]}
                     />
                   </div>
@@ -320,6 +325,7 @@ class solicitacaoDietaEspecial extends Component {
                       showMonthDropdown
                       showYearDropdown
                       disabled
+                      tabindex="-1"
                       validate={required}
                     />
                   </div>
