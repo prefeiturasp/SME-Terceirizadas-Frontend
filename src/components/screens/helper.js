@@ -35,9 +35,19 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
   return logs.map(log => {
     let tamanhoString = 53;
     let descricao = log.descricao;
+    let texto = truncarString(descricao, tamanhoString);
+    // Faz uma abreviação no texto quando tiver data com hora pra não quebrar o layout.
+    if (
+      log.data_log.length > 10 &&
+      texto
+        .split("-")
+        .pop()
+        .trim() === "Alteração U.E"
+    ) {
+      texto = texto.slice(0, tamanhoString - 16) + "Alt. U.E";
+    }
     return {
-      text:
-        truncarString(descricao, tamanhoString) + " - " + log.codigo_eol_aluno,
+      text: texto + " - " + log.codigo_eol_aluno,
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
