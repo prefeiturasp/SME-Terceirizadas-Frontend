@@ -36,7 +36,8 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
     let tamanhoString = 53;
     let descricao = log.descricao;
     return {
-      text: truncarString(descricao, tamanhoString),
+      text:
+        truncarString(descricao, tamanhoString) + " - " + log.codigo_eol_aluno,
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
