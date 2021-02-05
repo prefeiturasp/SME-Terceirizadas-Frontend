@@ -44,7 +44,7 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
         .pop()
         .trim() === "Alteração U.E"
     ) {
-      texto = texto.slice(0, tamanhoString - 16) + "Alt. U.E";
+      texto = texto.replace("Alteração", "Alt.");
     }
     return {
       text: texto + " - " + log.codigo_eol_aluno,
