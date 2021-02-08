@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
+import { Spin } from "antd";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import {
+  gerarPDFDistribuidorSolicitacao,
+  gerarPDFDistribuidorGuia
+} from "services/logistica.service";
 import Confirmar from "../Confirmar";
 import Alterar from "../Alterar";
 
@@ -17,6 +22,8 @@ const ListagemSolicitacoes = ({
   setAtivos,
   updatePage
 }) => {
+  const [carregandoPDFSolicitacao, setCarregandoPDFSolicitacao] = useState([]);
+  const [carregandoPDFGuia, setCarregandoPDFGuia] = useState([]);
   return (
     <section className="resultado-busca-requisicao-entrega">
       <header>Veja requisições disponibilizadas</header>
@@ -86,9 +93,36 @@ const ListagemSolicitacoes = ({
                     updatePage={updatePage}
                   />
                   |
-                  <Button className="acoes text-dark" variant="link">
-                    <i className="fas fa-print imprimir" /> Imprimir
-                  </Button>
+                  <Spin
+                    size="small"
+                    spinning={carregandoPDFSolicitacao.includes(
+                      solicitacao.uuid
+                    )}
+                  >
+                    <Button
+                      className="acoes text-dark"
+                      variant="link"
+                      onClick={() => {
+                        setCarregandoPDFSolicitacao([
+                          ...carregandoPDFSolicitacao,
+                          solicitacao.uuid
+                        ]);
+                        gerarPDFDistribuidorSolicitacao(solicitacao.uuid).then(
+                          () => {
+                            const index = carregandoPDFSolicitacao.indexOf(
+                              solicitacao.uuid
+                            );
+                            setCarregandoPDFSolicitacao(
+                              carregandoPDFSolicitacao.splice(index, 1)
+                            );
+                          }
+                        );
+                      }}
+                      disabled={solicitacao.status !== "Confirmada"}
+                    >
+                      <i className="fas fa-print imprimir" /> Imprimir
+                    </Button>
+                  </Spin>
                 </div>
               </div>
               {ativos &&
@@ -99,20 +133,45 @@ const ListagemSolicitacoes = ({
                       <section className="resultado-busca-detalhe pb-3">
                         <div className="container-fluid">
                           <div className="row">
-                            <div className="col-md-9 justify-content-center align-self-center">
+                            <div className="col-md-10 justify-content-center align-self-center">
                               <span>
                                 {" "}
                                 N° da guia: <b>{guia.numero_guia}</b>
                               </span>
                             </div>
-                            <div className="col-md-3">
-                              <Botao
-                                texto="Imprimir"
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.DARK_OUTLINE}
-                                icon={BUTTON_ICON.PRINT}
-                                className="float-right"
-                              />
+                            <div className="col text-center">
+                              <Spin
+                                size="small"
+                                spinning={carregandoPDFGuia.includes(guia.uuid)}
+                              >
+                                <div>
+                                  <Botao
+                                    texto="Imprimir"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.DARK_OUTLINE}
+                                    icon={BUTTON_ICON.PRINT}
+                                    disabled={
+                                      solicitacao.status !== "Confirmada"
+                                    }
+                                    onClick={() => {
+                                      setCarregandoPDFGuia([
+                                        ...carregandoPDFGuia,
+                                        guia.uuid
+                                      ]);
+                                      gerarPDFDistribuidorGuia(guia.uuid).then(
+                                        () => {
+                                          const index = carregandoPDFGuia.indexOf(
+                                            guia.uuid
+                                          );
+                                          setCarregandoPDFGuia(
+                                            carregandoPDFGuia.splice(index, 1)
+                                          );
+                                        }
+                                      );
+                                    }}
+                                  />
+                                </div>
+                              </Spin>
                             </div>
                           </div>
 

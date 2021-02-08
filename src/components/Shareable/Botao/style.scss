@@ -133,10 +133,12 @@ button.general-button {
     border-color: $blackInput;
     background-color: transparent;
 
-    i {
-      color: $blackInput;
+    &:not(:disabled) {
+      i {
+        color: $blackInput;
+      }
     }
-    &:hover {
+    &:hover:not(:disabled) {
       color: $white;
       background-color: $blackInput;
       i {

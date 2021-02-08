@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import { getRequisicoesListagem } from "../../../../services/logistica.service.js";
+import {
+  getRequisicoesListagem,
+  gerarPDFDistribuidorSolicitacoes
+} from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
@@ -15,6 +18,9 @@ import ConfirmaTodos from "./components/ConfirmarTodos";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
+  const [carregandoPDFConfirmados, setCarregandoPDFConfirmados] = useState(
+    false
+  );
   const [solicitacoes, setSolicitacoes] = useState();
   const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
@@ -84,13 +90,22 @@ export default () => {
                   />
                 </div>
                 <div className="d-flex align-items-end">
-                  <Botao
-                    texto="Imprimir todos"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.PRINT}
-                    className=""
-                  />
+                  <Spin size="small" spinning={carregandoPDFConfirmados}>
+                    <Botao
+                      texto="Imprimir requisições confirmadas"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.PRINT}
+                      onClick={() => {
+                        setCarregandoPDFConfirmados(true);
+                        gerarPDFDistribuidorSolicitacoes({ ...filtros }).then(
+                          () => {
+                            setCarregandoPDFConfirmados(false);
+                          }
+                        );
+                      }}
+                    />
+                  </Spin>
                   <Botao
                     texto="Posição Consolidada de Entrega"
                     type={BUTTON_TYPE.BUTTON}
