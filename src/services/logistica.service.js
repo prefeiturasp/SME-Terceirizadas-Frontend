@@ -1,4 +1,5 @@
 import axios from "./_base";
+import { saveAs } from "file-saver";
 
 export const getNomesDistribuidores = async () =>
   await axios.get("/terceirizadas/lista-nomes-distribuidores/");
@@ -40,4 +41,22 @@ export const getConsolidadoAlimentos = async uuid => {
 export const distribuidorAltera = async payload => {
   const url = `/solicitacao-de-alteracao-de-requisicao/`;
   return await axios.post(url, payload);
+};
+
+export const gerarPDFDistribuidorSolicitacao = async uuid => {
+  const url = `/solicitacao-remessa/${uuid}/gerar-pdf-distribuidor/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guia_de_remessa.pdf");
+};
+
+export const gerarPDFDistribuidorSolicitacoes = async params => {
+  const url = `/solicitacao-remessa/gerar-pdf-distribuidor-geral/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "guia_de_remessa.pdf");
+};
+
+export const gerarPDFDistribuidorGuia = async uuid => {
+  const url = `/guias-da-requisicao/${uuid}/gerar-pdf-distribuidor/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guia_de_remessa.pdf");
 };
