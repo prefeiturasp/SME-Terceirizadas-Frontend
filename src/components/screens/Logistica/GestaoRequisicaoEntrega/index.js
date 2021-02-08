@@ -26,6 +26,7 @@ export default () => {
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [numEnviadas, setNumEnviadas] = useState();
+  const [numConfirmadas, setNumConfirmadas] = useState();
   const [page, setPage] = useState();
 
   const buscarSolicitacoes = async page => {
@@ -36,6 +37,7 @@ export default () => {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
       setNumEnviadas(response.data.num_enviadas);
+      setNumConfirmadas(response.data.num_confirmadas);
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -104,6 +106,7 @@ export default () => {
                           }
                         );
                       }}
+                      disabled={numConfirmadas === 0}
                     />
                   </Spin>
                   <Botao
