@@ -113,7 +113,7 @@ export default ({ solicitacao, updatePage }) => {
                         {item.total_embalagens.map(item => (
                           <>
                             {item.qtd_volume} {item.descricao_embalagem}.{" "}
-                            {item.peso_embalagem}
+                            {item.capacidade_embalagem}
                             {item.unidade_medida}
                             <br />
                           </>
