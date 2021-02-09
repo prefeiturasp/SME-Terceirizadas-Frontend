@@ -77,7 +77,7 @@ export class ModalPadrao extends Component {
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <div className="row mt-5">
+                <div className="row">
                   <div className="col-12">
                     <Botao
                       texto="Cancelar"
