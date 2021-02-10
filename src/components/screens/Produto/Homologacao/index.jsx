@@ -323,6 +323,12 @@ class HomologacaoProduto extends Component {
                 </Fragment>
               )}
               <div className="row">
+                <div className="col-12 report-label-value">
+                  <p>Nome do Produto</p>
+                  <p className="value">{produto.nome}</p>
+                </div>
+              </div>
+              <div className="row">
                 <div className="col-6 report-label-value">
                   <p>Marca</p>
                   <p className="value">
