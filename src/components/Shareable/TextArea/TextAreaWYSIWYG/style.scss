@@ -10,8 +10,12 @@
 
 .DraftEditor-root {
   color: $blackInput;
-  overflow-y: hidden;
+  overflow-y: auto;
   z-index: 0;
+}
+
+.rdw-editor-main {
+  height: 94%;
 }
 
 .rdw-editor-toolbar {
@@ -40,7 +44,7 @@
 
 .wrapper-class {
   display: flex;
-  height: 110px;
+  height: 300px;
   overflow-y: hidden;
   flex-direction: column-reverse;
   &:focus {
