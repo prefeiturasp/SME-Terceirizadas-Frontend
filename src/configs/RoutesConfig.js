@@ -120,6 +120,7 @@ import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/Disponibilizacao
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
 import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
+import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
 
 const routesConfig = [
   {
@@ -998,6 +999,12 @@ const routesConfig = [
     component: GestaoRequisicaoEntregaPage,
     exact: true,
     tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
+    component: GestaoSolicitacaoAlteracaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 

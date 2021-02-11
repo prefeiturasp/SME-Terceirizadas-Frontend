@@ -60,3 +60,8 @@ export const gerarPDFDistribuidorGuia = async uuid => {
   const { data } = await axios.get(url, { responseType: "blob" });
   saveAs(data, "guia_de_remessa.pdf");
 };
+
+export const getListagemSolicitacaoAlteracao = async params => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/`;
+  return await axios.get(url, { params });
+};
