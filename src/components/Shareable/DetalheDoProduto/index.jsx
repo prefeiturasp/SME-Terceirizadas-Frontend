@@ -229,7 +229,9 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
                             <td className="col-4">
                               <div className="row">
                                 <div className="col-8">
-                                  {informacaoNutricional.valor_diario} %
+                                  {informacaoNutricional.valor_diario
+                                    ? `${informacaoNutricional.valor_diario} %`
+                                    : ""}
                                 </div>
                               </div>
                             </td>

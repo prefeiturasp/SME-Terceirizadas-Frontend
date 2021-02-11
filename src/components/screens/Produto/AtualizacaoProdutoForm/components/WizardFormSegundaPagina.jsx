@@ -25,8 +25,10 @@ class WizardFormSegundaPagina extends React.Component {
     const { valuesForm } = this.props;
     let arrayIncorretos = [];
     informacoes.forEach(informacao => {
-      const objeto = valuesForm[`${informacao}`];
-      Object.entries(objeto).length !== 2 && arrayIncorretos.push(objeto);
+      const objeto = valuesForm[informacao];
+      objeto.porcao === undefined &&
+        objeto.valor_diario !== undefined &&
+        arrayIncorretos.push(objeto);
     });
     return arrayIncorretos.length === 0;
   };
