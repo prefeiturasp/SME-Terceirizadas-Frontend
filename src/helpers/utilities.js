@@ -557,3 +557,13 @@ export const transformaNullsEmUndefined = objeto => {
     if (objeto[chave] === null) objeto[chave] = undefined;
   }
 };
+
+export const corrigeLinkAnexo = url => {
+  if (
+    window.location.href.startsWith("https://") &&
+    url.startsWith("http://")
+  ) {
+    return url.replace(/^http:\/\//, "https://");
+  }
+  return url;
+};

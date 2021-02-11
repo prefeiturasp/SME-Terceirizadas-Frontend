@@ -29,6 +29,7 @@ import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 import {
+  corrigeLinkAnexo,
   stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto
 } from "../../../../helpers/utilities";
@@ -285,15 +286,21 @@ class HomologacaoProduto extends Component {
               <div className="row">
                 <div className="col-4 report-label-value">
                   <p>Empresa solicitante (Terceirizada)</p>
-                  <p className="value">{terceirizada.nome_fantasia}</p>
+                  <p className="value">
+                    {terceirizada && terceirizada.nome_fantasia}
+                  </p>
                 </div>
                 <div className="col-4 report-label-value">
                   <p>Telefone</p>
-                  <p className="value">{terceirizada.contatos[0].telefone}</p>
+                  <p className="value">
+                    {terceirizada && terceirizada.contatos[0].telefone}
+                  </p>
                 </div>
                 <div className="col-4 report-label-value">
                   <p>E-mail</p>
-                  <p className="value">{terceirizada.contatos[0].email}</p>
+                  <p className="value">
+                    {terceirizada && terceirizada.contatos[0].email}
+                  </p>
                 </div>
               </div>
 
@@ -522,7 +529,7 @@ class HomologacaoProduto extends Component {
                     return (
                       <div key={key}>
                         <a
-                          href={anexo.arquivo}
+                          href={corrigeLinkAnexo(anexo.arquivo)}
                           className="value-important link"
                           rel="noopener noreferrer"
                           target="_blank"
