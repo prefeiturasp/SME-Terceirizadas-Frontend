@@ -33,7 +33,7 @@ export default ({ setFiltros, setSolicitacoes, setTotal }) => {
                   component={InputText}
                   label="Nº da Solicitação de Alteração"
                   name="numero_solicitacao"
-                  placeholder="Digite o número da guia"
+                  placeholder="Digite o número da solicitação"
                   className="input-busca-produto"
                 />
               </div>
