@@ -132,6 +132,7 @@ export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
 export const ENVIO_REQUISICOES_ENTREGA_AVANCADO =
   "envio-requisicoes-entrega-completo";
 export const GESTAO_REQUISICAO_ENTREGA = "gestao-requisicao-entrega";
+export const GESTAO_SOLICITACAO_ALTERACAO = "gestao-solicitacao-alteracao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
