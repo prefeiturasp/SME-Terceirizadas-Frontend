@@ -8,16 +8,14 @@
   textarea::placeholder {
     text-align: left;
   }
-}
-
-.numero-protocolo {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 1em;
-  font-weight: bold;
-  color: #000000;
-}
-
-div.textarea {
-  height: 340px;
+  div.textarea {
+    height: 340px;
+  }
+  .numero-protocolo {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1em;
+    font-weight: bold;
+    color: #000000;
+  }
 }
