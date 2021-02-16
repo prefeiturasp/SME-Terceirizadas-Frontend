@@ -68,8 +68,7 @@ class Step2 extends Component {
     informacoesAgrupadas.forEach(item => {
       item.informacoes_nutricionais.forEach(informacao => {
         const temPorcao = values.hasOwnProperty(`porcao=${informacao.uuid}`);
-        const temVd = values.hasOwnProperty(`vd=${informacao.uuid}`);
-        if (temPorcao && temVd) {
+        if (temPorcao) {
           let inf_nutr_atualizada = payload.informacoes_nutricionais.find(
             inf_nutr => inf_nutr.informacao_nutricional === informacao.uuid
           );
