@@ -80,7 +80,9 @@ export default class FormAutorizaDietaEspecial extends Component {
         ? await (await getSubstitutos()).data.results
         : alimentos.data.map(alimento =>
             Object.assign({}, alimento, {
-              nome: `${alimento.nome} (${alimento.marca.nome})`
+              nome: alimento.marca
+                ? `${alimento.nome} (${alimento.marca.nome})`
+                : `${alimento.nome}`
             })
           );
     const protocolosDietaEspecial = await getProtocolosDietaEspecial();
