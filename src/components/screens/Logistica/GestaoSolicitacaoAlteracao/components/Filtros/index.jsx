@@ -17,6 +17,9 @@ const FORM_NAME = "buscaSolicitacaoAlteracao";
 export default ({ setFiltros, setSolicitacoes, setTotal }) => {
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (filtros.motivos) {
+      filtros.motivos = filtros.motivos.toString();
+    }
     setFiltros({ ...filtros });
   };
 
