@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import MultiSelect from "./MultiSelect";
 import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
 import Select from "../../../../../../../Shareable/Select";
 import { Icon, Select as SelectAntd } from "antd";
@@ -67,6 +68,13 @@ export default class SubstituicoesField extends Component {
               return <Option key={a.id.toString()}>{a.nome}</Option>;
             })}
           </Field>
+          <OnChange name={`${name}.alimento`}>
+            {value => {
+              this.setState({
+                valorSelecionado: alimentos.find(al => String(al.id) === value)
+              });
+            }}
+          </OnChange>
         </div>
         <div className="col-2">
           <Field
