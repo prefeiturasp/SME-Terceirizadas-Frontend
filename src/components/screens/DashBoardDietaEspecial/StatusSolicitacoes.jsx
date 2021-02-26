@@ -36,6 +36,7 @@ import { ajustarFormatoLog } from "../helper";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { Paginacao } from "../../Shareable/Paginacao";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -157,7 +158,7 @@ export class StatusSolicitacoes extends Component {
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.PENDENTE,
                 icone: ICON_CARD_TYPE_ENUM.PENDENTE,
-                titulo: "Aguardando Autorização",
+                titulo: getNomeCardAguardandoAutorizacao(),
                 urlPaginacao: this.retornaUrlPaginacao(visao, PENDENTES_DIETA)
               });
             });

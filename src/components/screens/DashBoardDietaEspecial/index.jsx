@@ -11,6 +11,7 @@ import CardAtalho from "../../Shareable/CardAtalho";
 import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
 
 import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const TEXTO_ATALHO_DIETA = `Quando houver necessidade de incluir Dieta Especial para os alunos matriculados na unidade.`;
 
@@ -231,7 +232,7 @@ class DashBoardDietaEspecial extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Autorização"}
+                    cardTitle={getNomeCardAguardandoAutorizacao()}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={
                       pendentesListFiltered ? pendentesListFiltered : []

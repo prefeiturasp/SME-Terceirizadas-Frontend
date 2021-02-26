@@ -11,6 +11,8 @@ import {
   getDiretoriaregionalSimplissimaAxios
 } from "services/diretoriaRegional.service";
 
+import { usuarioEhCODAEDietaEspecial } from "./utilities";
+
 export const formFiltrosObtemDreEEscolas = async (
   setEscolas,
   setDiretoriasRegionais,
@@ -156,4 +158,8 @@ export const getStatusSolicitacoesInativas = () => {
     "CODAE_AUTORIZOU_INATIVACAO",
     "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
   ];
+};
+
+export const getNomeCardAguardandoAutorizacao = () => {
+  return usuarioEhCODAEDietaEspecial() ? "Recebidas" : "Aguardando Autorização";
 };
