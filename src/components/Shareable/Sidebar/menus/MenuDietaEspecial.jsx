@@ -15,6 +15,7 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAEGestaoAlimentacao
 } from "helpers/utilities";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const MenuDietaEspecial = () => {
   const exibePainelInicial =
@@ -56,7 +57,7 @@ const MenuDietaEspecial = () => {
       )}
       {exibeAtivasInativas && (
         <LeafItem to={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}>
-          Aguardando autorização
+          {getNomeCardAguardandoAutorizacao()}
         </LeafItem>
       )}
       {exibeAvaliarSolicitacaoCadastroProduto && (

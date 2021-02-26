@@ -1,3 +1,4 @@
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import React, { Component } from "react";
 //import { reduxForm } from "redux-form";
 import {
@@ -94,7 +95,7 @@ export default class DashboardNutricionista extends Component {
           <div className="row">
             <div className="col-6">
               <CardStatusDeSolicitacao
-                cardTitle={"Aguardando Autorização"}
+                cardTitle={getNomeCardAguardandoAutorizacao()}
                 cardType={CARD_TYPE_ENUM.PENDENTE}
                 solicitations={pendentesListFiltered}
                 icon={ICON_CARD_TYPE_ENUM.PENDENTE}

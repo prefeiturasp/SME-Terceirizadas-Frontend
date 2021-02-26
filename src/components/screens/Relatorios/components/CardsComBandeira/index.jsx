@@ -1,3 +1,4 @@
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import React, { Component } from "react";
 import {
   ESCOLA,
@@ -46,7 +47,7 @@ function CardTotalSolicitacaoPorStatus(props) {
       cardClass = "card-denied";
       break;
     case TIPO_CARD.PENDENTE:
-      texto = "Aguardando Autorização";
+      texto = getNomeCardAguardandoAutorizacao();
       icon = ICON_CARD_TYPE_ENUM.PENDENTE;
       cardClass = "card-pending";
       break;
