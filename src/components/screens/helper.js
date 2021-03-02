@@ -10,6 +10,7 @@ import {
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { usuarioEhEscola } from "../../helpers/utilities";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
@@ -36,6 +37,9 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
     let tamanhoString = 53;
     let descricao = log.descricao;
     let texto = truncarString(descricao, tamanhoString);
+    let nomeAluno = log.nome_aluno;
+    let textoDieta = log.codigo_eol_aluno + " - " + nomeAluno;
+    let serie = log.serie ? log.serie : "";
     // Faz uma abreviação no texto quando tiver data com hora pra não quebrar o layout.
     if (
       log.data_log.length > 10 &&
@@ -47,7 +51,9 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
       texto = texto.replace("Alteração", "Alt.");
     }
     return {
-      text: texto + " - " + log.codigo_eol_aluno,
+      text: usuarioEhEscola()
+        ? truncarString(textoDieta + " - " + serie, 41)
+        : truncarString(textoDieta, 41),
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
@@ -122,7 +128,10 @@ export const ajustarFormatoLog = logs => {
         break;
     }
     return {
-      text: truncarString(descricao, tamanhoString),
+      text: usuarioEhEscola()
+        ? truncarString(descricao, tamanhoString) +
+          (log.serie ? " - " + log.serie : "")
+        : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
