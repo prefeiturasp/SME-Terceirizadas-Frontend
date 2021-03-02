@@ -51,9 +51,10 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
       texto = texto.replace("Alteração", "Alt.");
     }
     return {
-      text: usuarioEhEscola()
-        ? truncarString(textoDieta + " - " + serie, 41)
-        : truncarString(textoDieta, 41),
+      text: truncarString(
+        `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
+        41
+      ),
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
