@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
-  gerarPDFDistribuidorSolicitacoes
+  gerarPDFDistribuidorSolicitacoes,
+  gerarExcelSolicitacoes
 } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
@@ -19,6 +20,9 @@ import ConfirmaTodos from "./components/ConfirmarTodos";
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [carregandoPDFConfirmados, setCarregandoPDFConfirmados] = useState(
+    false
+  );
+  const [carregandoExcelConfirmados, setCarregandoExcelConfirmados] = useState(
     false
   );
   const [solicitacoes, setSolicitacoes] = useState();
@@ -109,13 +113,21 @@ export default () => {
                       disabled={numConfirmadas === 0}
                     />
                   </Spin>
-                  <Botao
-                    texto="Posição Consolidada de Entrega"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.EYE}
-                    className="ml-2 mr-2"
-                  />
+                  <Spin size="small" spinning={carregandoExcelConfirmados}>
+                    <Botao
+                      texto="Exportar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.EYE}
+                      className="ml-2 mr-2"
+                      onClick={() => {
+                        setCarregandoExcelConfirmados(true);
+                        gerarExcelSolicitacoes({ ...filtros }).then(() => {
+                          setCarregandoExcelConfirmados(false);
+                        });
+                      }}
+                    />
+                  </Spin>
                   <ConfirmaTodos
                     updatePage={updatePage}
                     numEnviadas={numEnviadas}
