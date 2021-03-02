@@ -104,11 +104,10 @@ export default () => {
                       icon={BUTTON_ICON.PRINT}
                       onClick={() => {
                         setCarregandoPDFConfirmados(true);
-                        gerarPDFDistribuidorSolicitacoes({ ...filtros }).then(
-                          () => {
-                            setCarregandoPDFConfirmados(false);
-                          }
-                        );
+                        const params = gerarParametrosConsulta({ ...filtros });
+                        gerarPDFDistribuidorSolicitacoes(params).then(() => {
+                          setCarregandoPDFConfirmados(false);
+                        });
                       }}
                       disabled={numConfirmadas === 0}
                     />
@@ -122,7 +121,8 @@ export default () => {
                       className="ml-2 mr-2"
                       onClick={() => {
                         setCarregandoExcelConfirmados(true);
-                        gerarExcelSolicitacoes({ ...filtros }).then(() => {
+                        const params = gerarParametrosConsulta({ ...filtros });
+                        gerarExcelSolicitacoes(params).then(() => {
                           setCarregandoExcelConfirmados(false);
                         });
                       }}
