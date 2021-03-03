@@ -21,6 +21,7 @@ import {
   getDietaEspecialAutorizadasTerceirizada,
   getDietaEspecialNegadasTerceirizada,
   getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialAutorizadasTemporariamenteTerceirizada,
   getDietaEspecialAutorizadasTemporariamenteCODAE,
   getDietaEspecialAutorizadasTemporariamenteDRE,
   getDietaEspecialAutorizadasTemporariamenteEscola,
@@ -134,5 +135,8 @@ export const SolicitacoesDietaEspecialTerceirizada = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteTerceirizada
+    }
   />
 );
