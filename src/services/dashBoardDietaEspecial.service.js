@@ -1,3 +1,4 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { fetchGet } from "./_fetch";
@@ -303,6 +304,16 @@ export const getDietaEspecialCanceladasTerceirizada = uuid => {
       console.log(error);
     });
 };
+
+export const getDietaEspecialAutorizadasTemporariamenteTerceirizada = async uuid =>
+  axios.get(
+    `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteTerceirizada = async uuid =>
+  axios.get(
+    `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
 
 export const getPaginacaoSolicitacoesDietaEspecial = (
   urlPaginacao,
