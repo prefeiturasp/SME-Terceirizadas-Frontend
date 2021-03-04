@@ -53,9 +53,14 @@ export const FluxoDeStatus = props => {
                       cloneListaDeStatus[key].usuario.tipo_usuario ===
                         "terceirizada"
                         ? `CPF: ${novoStatus.usuario.cpf}`
-                        : `RF: ${novoStatus.usuario.registro_funcional}`}
+                        : status.status_evento_explicacao !==
+                            "Cancelado por alteração de U.E." &&
+                          `RF: ${novoStatus.usuario.registro_funcional}`}
                       <br />
-                      {novoStatus.usuario && novoStatus.usuario.nome}
+                      {novoStatus.usuario &&
+                        status.status_evento_explicacao !==
+                          "Cancelado por alteração de U.E." &&
+                        novoStatus.usuario.nome}
                     </span>
                   )}
                 </li>
