@@ -7,9 +7,10 @@ const DESCRICAO_SOLICITACAO = {
   CODAE_AUTORIZOU_INATIVACAO: "Cancelamento Autorizado",
   ESCOLA_CANCELOU: "Cancelada pela Unidade Escolar",
   TERMINADA_AUTOMATICAMENTE_SISTEMA: "Cancelada por atingir data de término",
-  CANCELADO_ALUNO_MUDOU_ESCOLA: "Cancelado por alteração de U.E.",
+  CANCELADO_ALUNO_MUDOU_ESCOLA:
+    "Cancelamento por alteração de unidade educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
-    "Cancelado porque aluno não está matriculado na rede municipal"
+    "Cancelamento para aluno não matriculado na rede municipal"
 };
 
 export const cabecalhoDieta = dietaEspecial => {
