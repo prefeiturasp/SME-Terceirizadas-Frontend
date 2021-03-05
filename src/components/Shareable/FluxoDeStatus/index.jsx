@@ -55,11 +55,15 @@ export const FluxoDeStatus = props => {
                         ? `CPF: ${novoStatus.usuario.cpf}`
                         : status.status_evento_explicacao !==
                             "Cancelado por alteração de U.E." &&
+                          status.status_evento_explicacao !==
+                            "Cancelado porque aluno não está matriculado na rede municipal" &&
                           `RF: ${novoStatus.usuario.registro_funcional}`}
                       <br />
                       {novoStatus.usuario &&
-                        status.status_evento_explicacao !==
+                        (status.status_evento_explicacao !==
                           "Cancelado por alteração de U.E." &&
+                          status.status_evento_explicacao !==
+                            "Cancelado porque aluno não está matriculado na rede municipal") &&
                         novoStatus.usuario.nome}
                     </span>
                   )}
