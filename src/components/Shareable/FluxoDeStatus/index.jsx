@@ -53,9 +53,18 @@ export const FluxoDeStatus = props => {
                       cloneListaDeStatus[key].usuario.tipo_usuario ===
                         "terceirizada"
                         ? `CPF: ${novoStatus.usuario.cpf}`
-                        : `RF: ${novoStatus.usuario.registro_funcional}`}
+                        : status.status_evento_explicacao !==
+                            "Cancelamento por alteração de unidade educacional" &&
+                          status.status_evento_explicacao !==
+                            "Cancelamento para aluno não matriculado na rede municipal" &&
+                          `RF: ${novoStatus.usuario.registro_funcional}`}
                       <br />
-                      {novoStatus.usuario && novoStatus.usuario.nome}
+                      {novoStatus.usuario &&
+                        (status.status_evento_explicacao !==
+                          "Cancelamento por alteração de unidade educacional" &&
+                          status.status_evento_explicacao !==
+                            "Cancelamento para aluno não matriculado na rede municipal") &&
+                        novoStatus.usuario.nome}
                     </span>
                   )}
                 </li>
