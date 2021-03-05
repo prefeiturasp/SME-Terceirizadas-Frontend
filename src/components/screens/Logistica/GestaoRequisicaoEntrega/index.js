@@ -22,9 +22,7 @@ export default () => {
   const [carregandoPDFConfirmados, setCarregandoPDFConfirmados] = useState(
     false
   );
-  const [carregandoExcelConfirmados, setCarregandoExcelConfirmados] = useState(
-    false
-  );
+  const [carregandoExcel, setCarregandoExcel] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
   const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
@@ -112,7 +110,7 @@ export default () => {
                       disabled={numConfirmadas === 0}
                     />
                   </Spin>
-                  <Spin size="small" spinning={carregandoExcelConfirmados}>
+                  <Spin size="small" spinning={carregandoExcel}>
                     <Botao
                       texto="Exportar"
                       type={BUTTON_TYPE.BUTTON}
@@ -120,10 +118,10 @@ export default () => {
                       icon={BUTTON_ICON.EYE}
                       className="ml-2 mr-2"
                       onClick={() => {
-                        setCarregandoExcelConfirmados(true);
+                        setCarregandoExcel(true);
                         const params = gerarParametrosConsulta({ ...filtros });
                         gerarExcelSolicitacoes(params).then(() => {
-                          setCarregandoExcelConfirmados(false);
+                          setCarregandoExcel(false);
                         });
                       }}
                     />
