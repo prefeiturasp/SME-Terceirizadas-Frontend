@@ -54,16 +54,16 @@ export const FluxoDeStatus = props => {
                         "terceirizada"
                         ? `CPF: ${novoStatus.usuario.cpf}`
                         : status.status_evento_explicacao !==
-                            "Cancelado por alteração de U.E." &&
+                            "Cancelamento por alteração de unidade educacional" &&
                           status.status_evento_explicacao !==
-                            "Cancelado porque aluno não está matriculado na rede municipal" &&
+                            "Cancelamento para aluno não matriculado na rede municipal" &&
                           `RF: ${novoStatus.usuario.registro_funcional}`}
                       <br />
                       {novoStatus.usuario &&
                         (status.status_evento_explicacao !==
-                          "Cancelado por alteração de U.E." &&
+                          "Cancelamento por alteração de unidade educacional" &&
                           status.status_evento_explicacao !==
-                            "Cancelado porque aluno não está matriculado na rede municipal") &&
+                            "Cancelamento para aluno não matriculado na rede municipal") &&
                         novoStatus.usuario.nome}
                     </span>
                   )}
