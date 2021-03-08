@@ -16,7 +16,21 @@ import {
   getDietaEspecialAutorizadasCODAE,
   getDietaEspecialAutorizadasDRE,
   getDietaEspecialAutorizadasEscola,
+  getDietaEspecialAutorizadasTemporariamenteCODAE,
+  getDietaEspecialAutorizadasTemporariamenteDRE,
+  getDietaEspecialAutorizadasTemporariamenteEscola,
   getDietaEspecialAutorizadasTerceirizada,
+  getDietaEspecialCanceladasCODAE,
+  getDietaEspecialCanceladasDRE,
+  getDietaEspecialCanceladasEscola,
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialInativasCODAE,
+  getDietaEspecialInativasDRE,
+  getDietaEspecialInativasEscola,
+  getDietaEspecialInativasTemporariamenteCODAE,
+  getDietaEspecialInativasTemporariamenteDRE,
+  getDietaEspecialInativasTemporariamenteEscola,
+  getDietaEspecialInativasTerceirizada,
   getDietaEspecialNegadasCODAE,
   getDietaEspecialNegadasDRE,
   getDietaEspecialNegadasEscola,
@@ -24,20 +38,7 @@ import {
   getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialPendenteAutorizacaoTerceirizada,
-  getDietaEspecialCanceladasCODAE,
-  getDietaEspecialCanceladasDRE,
-  getDietaEspecialCanceladasTerceirizada,
-  getDietaEspecialCanceladasEscola,
-  getDietaEspecialAutorizadasTemporariamenteCODAE,
-  getDietaEspecialAutorizadasTemporariamenteDRE,
-  getDietaEspecialAutorizadasTemporariamenteEscola,
-  getDietaEspecialInativasTemporariamenteCODAE,
-  getDietaEspecialInativasTemporariamenteDRE,
-  getDietaEspecialInativasTemporariamenteEscola,
-  getDietaEspecialInativasCODAE,
-  getDietaEspecialInativasDRE,
-  getDietaEspecialInativasEscola
+  getDietaEspecialPendenteAutorizacaoTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -125,7 +126,7 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialAutorizadasTemporariamente={
       getDietaEspecialAutorizadasTemporariamenteCODAE
     }
-    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
+    getDietaEspecialInativas={getDietaEspecialInativasTerceirizada}
   />
 );
 
