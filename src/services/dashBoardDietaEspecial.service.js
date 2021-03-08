@@ -315,6 +315,9 @@ export const getDietaEspecialInativasTemporariamenteTerceirizada = async uuid =>
     `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
 
+export const getDietaEspecialInativasTerceirizada = async uuid =>
+  axios.get(`/terceirizada-solicitacoes/inativas-dieta/${uuid}/`);
+
 export const getPaginacaoSolicitacoesDietaEspecial = (
   urlPaginacao,
   uuidInstituicao,

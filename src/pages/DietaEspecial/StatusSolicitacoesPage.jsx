@@ -5,33 +5,34 @@ import Page from "../../components/Shareable/Page/Page";
 import { ESCOLA, CODAE, TERCEIRIZADA, DRE } from "../../configs/constants";
 
 import {
-  getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialAutorizadasEscola,
-  getDietaEspecialNegadasEscola,
-  getDietaEspecialCanceladasEscola,
-  getDietaEspecialPendenteAutorizacaoDRE,
-  getDietaEspecialAutorizadasDRE,
-  getDietaEspecialNegadasDRE,
-  getDietaEspecialCanceladasDRE,
-  getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialAutorizadasCODAE,
-  getDietaEspecialNegadasCODAE,
-  getDietaEspecialCanceladasCODAE,
-  getDietaEspecialPendenteAutorizacaoTerceirizada,
-  getDietaEspecialAutorizadasTerceirizada,
-  getDietaEspecialNegadasTerceirizada,
-  getDietaEspecialCanceladasTerceirizada,
-  getDietaEspecialAutorizadasTemporariamenteTerceirizada,
-  getDietaEspecialInativasTemporariamenteTerceirizada,
+  getDietaEspecialAutorizadasDRE,
+  getDietaEspecialAutorizadasEscola,
   getDietaEspecialAutorizadasTemporariamenteCODAE,
   getDietaEspecialAutorizadasTemporariamenteDRE,
   getDietaEspecialAutorizadasTemporariamenteEscola,
+  getDietaEspecialAutorizadasTemporariamenteTerceirizada,
+  getDietaEspecialAutorizadasTerceirizada,
+  getDietaEspecialCanceladasCODAE,
+  getDietaEspecialCanceladasDRE,
+  getDietaEspecialCanceladasEscola,
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialInativasCODAE,
+  getDietaEspecialInativasDRE,
+  getDietaEspecialInativasEscola,
   getDietaEspecialInativasTemporariamenteCODAE,
   getDietaEspecialInativasTemporariamenteDRE,
   getDietaEspecialInativasTemporariamenteEscola,
-  getDietaEspecialInativasCODAE,
-  getDietaEspecialInativasDRE,
-  getDietaEspecialInativasEscola
+  getDietaEspecialInativasTemporariamenteTerceirizada,
+  getDietaEspecialInativasTerceirizada,
+  getDietaEspecialNegadasCODAE,
+  getDietaEspecialNegadasDRE,
+  getDietaEspecialNegadasEscola,
+  getDietaEspecialNegadasTerceirizada,
+  getDietaEspecialPendenteAutorizacaoCODAE,
+  getDietaEspecialPendenteAutorizacaoDRE,
+  getDietaEspecialPendenteAutorizacaoEscola,
+  getDietaEspecialPendenteAutorizacaoTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -142,5 +143,6 @@ export const SolicitacoesDietaEspecialTerceirizada = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteTerceirizada
     }
+    getDietaEspecialInativas={getDietaEspecialInativasTerceirizada}
   />
 );
