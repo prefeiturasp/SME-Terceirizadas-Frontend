@@ -142,5 +142,6 @@ export const SolicitacoesDietaEspecialTerceirizada = () => (
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteTerceirizada
     }
+    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
   />
 );
