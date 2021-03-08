@@ -125,6 +125,7 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialAutorizadasTemporariamente={
       getDietaEspecialAutorizadasTemporariamenteCODAE
     }
+    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
   />
 );
 
