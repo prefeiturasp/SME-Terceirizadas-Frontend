@@ -50,6 +50,8 @@ class AlteracaoCardapio extends Component {
       periodos: [],
       loading: true,
       alteracaoCardapioList: [],
+      motivo: {},
+      alimentacaoDe: {},
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
       id: null,
@@ -329,16 +331,14 @@ class AlteracaoCardapio extends Component {
 
   resetForm() {
     let { periodos } = this.state;
-
     this.props.loadAlteracaoCardapio(null);
-    this.props.change("alterar_dia", null);
-    this.props.change("data_inicial", null);
-    this.props.change("data_final", null);
-    this.props.change("motivo", null);
-    this.props.change("observacao", "<p><p/>\n");
+    this.props.reset();
+
     periodos.forEach(periodo => {
       periodo.checked = false;
     });
+
+    this.props.change("periodos", false);
     this.setState({
       status: "SEM STATUS",
       title: "Nova Alteração de Cardápio",
@@ -346,7 +346,9 @@ class AlteracaoCardapio extends Component {
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
       dataInicial: null,
-      periodos
+      periodos,
+      motivo: {},
+      alimentacaoDe: {}
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
@@ -480,7 +482,7 @@ class AlteracaoCardapio extends Component {
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       ).then(
         statusCode => {
-          if (statusCode === HTTP_STATUS.NO_CONTENT) {
+          if (statusCode.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
             this.refresh();
           } else {
@@ -529,13 +531,98 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  mudaRefeicao(
+    alimentacaoDe,
+    indice,
+    periodoNome,
+    nomeAlimentacaoDe,
+    nomeAlimentacaoPara
+  ) {
+    const refeicao = alimentacaoDe.tipos_alimentacao.find(
+      v => v.nome === nomeAlimentacaoDe
+    );
+    if (refeicao !== undefined) {
+      // Define o valor no campo
+      this.props.change(
+        `substituicoes_${periodoNome}.tipo_alimentacao_de`,
+        refeicao.uuid
+      );
+
+      this.selectSubstituicoesAlimentacaoAPartirDe(refeicao.uuid, indice);
+      const alimentacaoPara = this.state.substituicoesAlimentacao[
+        indice
+      ].substituicoes.find(v => v.nome === nomeAlimentacaoPara);
+
+      if (alimentacaoPara !== undefined) {
+        // Define o valor no campo
+        this.props.change(
+          `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+          alimentacaoPara.uuid
+        );
+      }
+
+      this.setState({ alimentacaoDe: refeicao });
+    }
+  }
+
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
+    // Procura refeição em alimentacaoDe.
+    if (!periodos[indice].checked) {
+      const alimentacaoDe = this.state.periodos.find(
+        d => d.nome === periodoNome
+      );
+      if (
+        this.state.motivo.nome === "Medição Inicial - RPL - Refeição por lanche"
+      ) {
+        this.mudaRefeicao(
+          alimentacaoDe,
+          indice,
+          periodoNome,
+          "refeição",
+          "lanche"
+        );
+      }
+      if (
+        this.state.motivo.nome === "Medição Inicial - LPR - Lanche por refeição"
+      ) {
+        this.mudaRefeicao(
+          alimentacaoDe,
+          indice,
+          periodoNome,
+          "lanche",
+          "refeição"
+        );
+      }
+    }
+
     this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
+
     periodos[indice].checked = !periodos[indice].checked;
     this.props.change(input, periodos[indice].checked);
     this.setState({ periodos });
   }
+
+  deveDesabilitarSeletorDeAlimentacao = indice => {
+    const periodoChecado = this.state.periodos[indice];
+    if (!periodoChecado.checked) return true;
+
+    const motivoSelecionado =
+      this.props.formValues &&
+      this.props.formValues.motivo &&
+      this.props.motivos.find(d => d.uuid === this.props.formValues.motivo);
+
+    if (motivoSelecionado === undefined) return false;
+
+    if (
+      motivoSelecionado.nome ===
+        "Medição Inicial - RPL - Refeição por lanche" ||
+      motivoSelecionado.nome === "Medição Inicial - LPR - Lanche por refeição"
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
     let periodos = this.state.periodos;
@@ -585,6 +672,39 @@ class AlteracaoCardapio extends Component {
       values["eh_alteracao_com_lanche_repetida"] = false;
       this.onSubmit(values);
     }
+  };
+
+  onChangeMotivo = uuidMotivo => {
+    // passar periodos
+    const motivo = this.props.motivos.find(d => d.uuid === uuidMotivo);
+    this.setState({ motivo });
+
+    this.state.periodos.forEach((periodo, indice) => {
+      const periodoChecado = this.props.formValues[
+        `substituicoes_${periodo.nome}`
+      ];
+
+      if (periodoChecado && periodoChecado.check) {
+        if (motivo.nome === "Medição Inicial - RPL - Refeição por lanche") {
+          this.mudaRefeicao(
+            periodo,
+            indice,
+            periodo.nome,
+            "refeição",
+            "lanche"
+          );
+        }
+        if (motivo.nome === "Medição Inicial - LPR - Lanche por refeição") {
+          this.mudaRefeicao(
+            periodo,
+            indice,
+            periodo.nome,
+            "lanche",
+            "refeição"
+          );
+        }
+      }
+    });
   };
 
   render() {
@@ -687,6 +807,9 @@ class AlteracaoCardapio extends Component {
                     options={motivos}
                     validate={required}
                     required
+                    onChange={evt => {
+                      this.onChangeMotivo(evt.target.value);
+                    }}
                   />
                 </section>
               </div>
@@ -741,7 +864,9 @@ class AlteracaoCardapio extends Component {
                         component={Select}
                         name="tipo_alimentacao_de"
                         options={agregarDefault(periodo.tipos_alimentacao)}
-                        disabled={!periodo.checked}
+                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                          indice
+                        )}
                         onChange={event => {
                           this.resetAlteracaoDoPeriodo(
                             event.target.value,
@@ -760,7 +885,9 @@ class AlteracaoCardapio extends Component {
                       <Field
                         component={Select}
                         name="tipo_alimentacao_para"
-                        disabled={!periodo.checked}
+                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                          indice
+                        )}
                         options={agregarDefault(
                           substituicoesAlimentacao.length > 0
                             ? substituicoesAlimentacao[indice].substituicoes
@@ -846,6 +973,8 @@ const selector = formValueSelector("alteracaoCardapio");
 
 const mapStateToProps = state => {
   return {
+    formValues:
+      state.form.alteracaoCardapio && state.form.alteracaoCardapio.values,
     initialValues: state.alteracaoCardapio.data,
     data_inicial: selector(state, "data_inicial"),
     data_final: selector(state, "data_final"),

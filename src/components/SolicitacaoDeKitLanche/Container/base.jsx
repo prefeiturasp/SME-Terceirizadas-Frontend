@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 
-import { PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
+import { TIPO_SOLICITACAO } from "../../../constants/shared";
 import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
   maxValue,
@@ -17,7 +17,10 @@ import {
   validateFormKitLanchePasseio,
   validateFormKitLanchePasseioCei
 } from "./validators";
-import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
+import {
+  converterDDMMYYYYparaYYYYMMDD,
+  escolaEhCei
+} from "../../../helpers/utilities";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   getError
@@ -54,7 +57,7 @@ const ENTER = 13;
 export class SolicitacaoDeKitLanche extends Component {
   constructor(props) {
     super(props);
-    const ehCei = localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI;
+    const ehCei = escolaEhCei();
     this.state = {
       ehCei,
       tipoSolicitacao: ehCei ? SOLICITACAO_CEI : SOLICITACAO_NORMAL,
@@ -663,7 +666,7 @@ SolicitacaoDeKitLanche = reduxForm({
   destroyOnUnmount: false,
   onChange: async (values, dispatch, props, previousValues) => {
     if (
-      localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI &&
+      escolaEhCei() &&
       values.evento_data &&
       (previousValues.evento_data === undefined ||
         previousValues.evento_data !== values.evento_data)

@@ -17,10 +17,16 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
   AUTORIZADOS_DIETA,
+  AUTORIZADAS_TEMPORARIAMENTE_DIETA,
   CANCELADOS_DIETA,
   PENDENTES_DIETA,
   NEGADOS_DIETA,
-  DIETA_ESPECIAL_SOLICITACOES
+  DIETA_ESPECIAL_SOLICITACOES,
+  SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE,
+  SOLICITACOES_INATIVAS_TEMPORARIAMENTE,
+  INATIVAS_TEMPORARIAMENTE_DIETA,
+  SOLICITACOES_INATIVAS,
+  INATIVAS_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -30,6 +36,7 @@ import { ajustarFormatoLog } from "../helper";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { Paginacao } from "../../Shareable/Paginacao";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -151,7 +158,7 @@ export class StatusSolicitacoes extends Component {
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.PENDENTE,
                 icone: ICON_CARD_TYPE_ENUM.PENDENTE,
-                titulo: "Aguardando Autorização",
+                titulo: getNomeCardAguardandoAutorizacao(),
                 urlPaginacao: this.retornaUrlPaginacao(visao, PENDENTES_DIETA)
               });
             });
@@ -206,6 +213,64 @@ export class StatusSolicitacoes extends Component {
                 urlPaginacao: this.retornaUrlPaginacao(visao, CANCELADOS_DIETA)
               });
             });
+          break;
+        case SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE:
+          this.props
+            .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  this.props.logPara
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
+                icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
+                titulo: "Autorizadas Temporariamente",
+                urlPaginacao: this.retornaUrlPaginacao(
+                  visao,
+                  AUTORIZADAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          break;
+        case SOLICITACOES_INATIVAS_TEMPORARIAMENTE:
+          this.props
+            .getDietaEspecialInativasTemporariamente(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  this.props.logPara
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                titulo: "Inativas Temporariamente",
+                urlPaginacao: this.retornaUrlPaginacao(
+                  visao,
+                  INATIVAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          break;
+        case SOLICITACOES_INATIVAS:
+          this.props.getDietaEspecialInativas &&
+            this.props
+              .getDietaEspecialInativas(instituicao.uuid)
+              .then(response => {
+                this.setState({
+                  solicitacoes: ajustarFormatoLog(
+                    response.data.results,
+                    this.props.logPara
+                  ),
+                  count: response.data.count,
+                  tipoCard: CARD_TYPE_ENUM.CANCELADO,
+                  icone: ICON_CARD_TYPE_ENUM.CANCELADO,
+                  titulo: "Inativas",
+                  urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
+                });
+              });
           break;
         default:
           break;

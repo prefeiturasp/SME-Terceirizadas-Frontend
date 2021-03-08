@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import "./style.scss";
 import { Form, Field } from "react-final-form";
 
+import { podeEditarProduto } from "./helpers";
+
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes
 } from "../../../../../services/produto.service";
 import { getProdutosListagem } from "services/produto.service";
 import {
@@ -15,17 +17,15 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
+import { Link } from "react-router-dom";
 
 export default class BuscaProduto extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nomesProdutos: null,
-      optionsProdutos: [],
       nomesMarcas: null,
-      optionsMarcas: null,
       nomesFabricantes: null,
-      optionsFabricantes: null,
 
       resultadosProduto: []
     };
@@ -46,52 +46,16 @@ export default class BuscaProduto extends Component {
       nomesMarcas === null &&
       nomesFabricantes === null
     ) {
-      const produtos = await getNomesProdutos();
-      const marcas = await getNomesMarcas();
-      const fabricantes = await getNomesFabricantes();
+      const produtos = await getNomesUnicosProdutos();
+      const marcas = await getNomesUnicosMarcas();
+      const fabricantes = await getNomesUnicosFabricantes();
 
       this.setState({
-        nomesProdutos: this.retornaListaDeNomes(produtos.data.results),
-        nomesMarcas: this.retornaListaDeNomes(marcas.data.results),
-        nomesFabricantes: this.retornaListaDeNomes(fabricantes.data.results)
+        nomesProdutos: produtos.data.results,
+        nomesMarcas: marcas.data.results,
+        nomesFabricantes: fabricantes.data.results
       });
     }
-  };
-
-  onSearchProduto = searchText => {
-    const { nomesProdutos } = this.state;
-    let options = !searchText
-      ? []
-      : nomesProdutos.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsProdutos: options
-    });
-  };
-
-  onSearchMarca = searchText => {
-    const { nomesMarcas } = this.state;
-    let options = !searchText
-      ? []
-      : nomesMarcas.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsMarcas: options
-    });
-  };
-
-  onSearchFabricantes = searchText => {
-    const { nomesFabricantes } = this.state;
-    let options = !searchText
-      ? []
-      : nomesFabricantes.filter(element =>
-          element.toUpperCase().includes(searchText.toUpperCase())
-        );
-    this.setState({
-      optionsFabricantes: options
-    });
   };
 
   adicionaResponseAoResultadoProduto = response => {
@@ -128,9 +92,9 @@ export default class BuscaProduto extends Component {
 
   render() {
     const {
-      optionsProdutos,
-      optionsMarcas,
-      optionsFabricantes,
+      nomesProdutos,
+      nomesMarcas,
+      nomesFabricantes,
       resultadosProduto
     } = this.state;
     const { exibeFormularioInicial } = this.props;
@@ -145,12 +109,11 @@ export default class BuscaProduto extends Component {
             <div>
               <label>Nome do Produto</label>
               <Field
-                component={AutoCompleteField}
-                dataSource={optionsProdutos ? optionsProdutos : []}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={nomesProdutos ? nomesProdutos : []}
                 placeholder="Digite o nome do produto"
                 className="input-busca-produto"
                 onSelect={form.submit}
-                onSearch={this.onSearchProduto}
                 name="nome_produto"
                 disabled={submitting}
               />
@@ -159,12 +122,11 @@ export default class BuscaProduto extends Component {
               <div>
                 <label>Marca do Produto</label>
                 <Field
-                  component={AutoCompleteField}
-                  dataSource={optionsMarcas ? optionsMarcas : []}
+                  component={AutoCompleteFieldUnaccent}
+                  dataSource={nomesMarcas ? nomesMarcas : []}
                   placeholder="Digite a marca do produto"
                   className="input-busca-produto"
                   onSelect={form.submit}
-                  onSearch={this.onSearchMarca}
                   name="nome_marca"
                   disabled={submitting}
                 />
@@ -172,12 +134,11 @@ export default class BuscaProduto extends Component {
               <div>
                 <label>Fabricante do Produto</label>
                 <Field
-                  component={AutoCompleteField}
-                  dataSource={optionsFabricantes ? optionsFabricantes : []}
+                  component={AutoCompleteFieldUnaccent}
+                  dataSource={nomesFabricantes ? nomesFabricantes : []}
                   className="input-busca-produto"
                   placeholder="Digite o fabricante do produto"
                   onSelect={form.submit}
-                  onSearch={this.onSearchFabricantes}
                   name="nome_fabricante"
                   disabled={submitting}
                 />
@@ -217,15 +178,27 @@ export default class BuscaProduto extends Component {
                           >
                             {produto.fabricante.nome}
                             {produto.ativo ? (
-                              <div className="botoes-produto">
-                                <i className="fas fa-pen editar" />
-                                <i
-                                  className="fas fa-angle-up"
-                                  onClick={() => {
-                                    this.dropDownProduto(indice);
-                                  }}
-                                />
-                              </div>
+                              <>
+                                {podeEditarProduto(produto) && (
+                                  <div className="botoes-produto">
+                                    <Link
+                                      to={`/gestao-produto/editar?uuid=${
+                                        produto.ultima_homologacao.uuid
+                                      }`}
+                                    >
+                                      <i className="fas fa-pen editar" />
+                                    </Link>
+                                  </div>
+                                )}
+                                <div className="botoes-produto">
+                                  <i
+                                    className="fas fa-angle-up"
+                                    onClick={() => {
+                                      this.dropDownProduto(indice);
+                                    }}
+                                  />
+                                </div>
+                              </>
                             ) : (
                               <i
                                 className="fas fa-angle-down"
@@ -305,7 +278,7 @@ export default class BuscaProduto extends Component {
 
             <div className="botoes-busca">
               <Botao
-                texto={"Cancelar"}
+                texto={"Limpar Filtros"}
                 className="mr-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -315,7 +288,7 @@ export default class BuscaProduto extends Component {
                 }}
               />
               <Botao
-                texto={"Cadastrar Alimentos"}
+                texto={"Cadastrar Produtos"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 onClick={() => {

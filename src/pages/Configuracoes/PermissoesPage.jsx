@@ -19,7 +19,13 @@ import {
   finalizarVinculoTerceirizadas,
   criarEquipeAdministradoraDietaEspecial,
   getEquipeAdministradoraDietaEspecial,
-  finalizarVinculoDietaEspecial
+  finalizarVinculoDietaEspecial,
+  criarEquipeAdministradoraGestaoProdutos,
+  getEquipeAdministradoraGestaoProdutos,
+  finalizarVinculoGestaoProdutos,
+  criarEquipeAdministradoraSupervisaoNutricao,
+  getEquipeAdministradoraSupervisaoNutricao,
+  finalizarVinculoSupervisaoNutricao
 } from "../../services/permissoes.service";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 
@@ -82,6 +88,26 @@ export const PermissoesCODAEGestaoDietaEspecial = () => (
     criarEquipeAdministradora={criarEquipeAdministradoraDietaEspecial}
     getEquipeAdministradora={getEquipeAdministradoraDietaEspecial}
     finalizarVinculo={finalizarVinculoDietaEspecial}
+    visao={CODAE}
+  />
+);
+
+// CODAE - Gestão de Produtos
+export const PermissoesCODAEGestaoProdutos = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraGestaoProdutos}
+    getEquipeAdministradora={getEquipeAdministradoraGestaoProdutos}
+    finalizarVinculo={finalizarVinculoGestaoProdutos}
+    visao={CODAE}
+  />
+);
+
+// CODAE - Supervisão Nutrição
+export const PermissoesCODAESupervisaoNutricao = () => (
+  <PermissoesBase
+    criarEquipeAdministradora={criarEquipeAdministradoraSupervisaoNutricao}
+    getEquipeAdministradora={getEquipeAdministradoraSupervisaoNutricao}
+    finalizarVinculo={finalizarVinculoSupervisaoNutricao}
     visao={CODAE}
   />
 );

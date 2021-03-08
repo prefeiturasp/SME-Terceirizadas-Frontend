@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
-import { CODAE } from "../../configs/constants";
+import { CODAE, DRE } from "../../configs/constants";
 import { TAMANHO_RF } from "../../constants/shared";
 import { stringSeparadaPorVirgulas, getError } from "../../helpers/utilities";
 import { meusDados } from "../../services/perfil.service";
@@ -24,7 +24,8 @@ class Permissoes extends Component {
       perfisEOL: null,
       registroFuncional: null,
       equipeAdministradora: [],
-      bloquearBotao: false
+      bloquearBotao: false,
+      ativos: []
     };
     this.permitir = this.permitir.bind(this);
   }
@@ -88,7 +89,7 @@ class Permissoes extends Component {
         break;
       }
     }
-    if (visao === CODAE || mesmaInstituicao) {
+    if (visao === CODAE || visao === DRE || mesmaInstituicao) {
       this.setState({ bloquearBotao: true });
       criarEquipeAdministradora(minhaInstituicao.uuid, registroFuncional)
         .then(response => {
@@ -140,7 +141,8 @@ class Permissoes extends Component {
       equipeAdministradora,
       perfisEOL,
       registroFuncional,
-      bloquearBotao
+      bloquearBotao,
+      ativos
     } = this.state;
     const { handleSubmit } = this.props;
     return (
@@ -186,26 +188,67 @@ class Permissoes extends Component {
               )}
               <div className="table-users">
                 <div className="row titles">
-                  <div className="col-3">Código RF</div>
-                  <div className="col-9">Nome</div>
+                  <div className="col-2">Código RF</div>
+                  <div className="col-5">Nome</div>
+                  <div className="col-3">Cargo</div>
                 </div>
                 {equipeAdministradora.length > 0 &&
                   equipeAdministradora.map((vinculo, key) => {
+                    const icone =
+                      ativos && ativos.includes(vinculo.uuid)
+                        ? "chevron-up"
+                        : "chevron-down";
                     return (
                       <div key={key} className="row values">
-                        <div className="col-3">
+                        <div className="col-2">
                           {vinculo.usuario.registro_funcional}
                         </div>
-                        <div className="col-8">{vinculo.usuario.nome}</div>
+                        <div className="col-5">{vinculo.usuario.nome}</div>
+                        <div className="col-3">{vinculo.usuario.cargo}</div>
+                        <div className="col-1">
+                          <i
+                            className={`fas fa-${icone}`}
+                            onClick={() => {
+                              ativos && ativos.includes(vinculo.uuid)
+                                ? this.setState({
+                                    ativos: ativos.filter(
+                                      el => el !== vinculo.uuid
+                                    )
+                                  })
+                                : this.setState({
+                                    ativos: ativos
+                                      ? [...ativos, vinculo.uuid]
+                                      : [vinculo.uuid]
+                                  });
+                            }}
+                          />
+                        </div>
                         <div className="col-1 trash">
                           <i
                             onClick={() => this.excluir(vinculo.uuid)}
                             className="fas fa-trash"
                           />
                         </div>
+                        {ativos && ativos.includes(vinculo.uuid) && (
+                          <>
+                            <div className="col-2">
+                              <div className="text-muted">CPF</div>
+                              <div>{vinculo.usuario.cpf}</div>
+                            </div>
+                            <div className="col-4">
+                              <div className="text-muted">E-mail</div>
+                              <div>{vinculo.usuario.email}</div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     );
                   })}
+                {equipeAdministradora.length === 0 && (
+                  <div className="text-center mt-5">
+                    Não existem usuários autorizados.
+                  </div>
+                )}
               </div>
             </div>
           </div>

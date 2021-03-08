@@ -9,7 +9,6 @@ import {
 } from "../../../Shareable/Botao/constants";
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
-import { Link } from "react-router-dom";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
@@ -27,22 +26,14 @@ export const CorpoRelatorio = props => {
           )}`}
         >
           {prazoDoPedidoMensagem}
-          <Link
-            to="route"
-            target="_blank"
-            onClick={event => {
-              event.preventDefault();
-              window.open(getDetalheInversaoCardapio(inversaoDiaCardapio.uuid));
-            }}
-          >
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              style={BUTTON_STYLE.BLUE}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right"
-            />
-          </Link>
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            titulo="imprimir"
+            style={BUTTON_STYLE.BLUE}
+            icon={BUTTON_ICON.PRINT}
+            className="float-right"
+            onClick={() => getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}
+          />
         </p>
         <div className="col-2">
           <span className="badge-sme badge-secondary-sme">

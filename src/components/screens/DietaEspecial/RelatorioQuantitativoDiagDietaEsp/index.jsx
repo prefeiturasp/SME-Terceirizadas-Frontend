@@ -63,7 +63,9 @@ export default () => {
           )}
           {!loading && dadosRelatorio && dadosRelatorio.length !== 0 && (
             <>
-              <div className="row">{getCabecalhoPorFiltros(formValues)}</div>
+              <div className="row">
+                <div className="col">{getCabecalhoPorFiltros(formValues)}</div>
+              </div>
               <TabelaRelatorio
                 dadosRelatorio={dadosRelatorio}
                 filtros={formValues}

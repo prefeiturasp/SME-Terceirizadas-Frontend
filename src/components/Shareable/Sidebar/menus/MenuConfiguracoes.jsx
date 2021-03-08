@@ -4,21 +4,23 @@ import { CONFIGURACOES, PERMISSOES, MENSAGEM } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhEscola,
   usuarioEhTerceirizada,
-  usuarioEhNutricionistaSupervisao,
+  usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDRE,
-  usuarioEhCODAEGestaoProduto
+  usuarioEhCoordenadorEscola,
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCoordenadorCODAE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = () => {
   const exibirPermissoes =
-    usuarioEhCODAEDietaEspecial() ||
-    usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhCoordenadorNutriCODAE() ||
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCoordenadorCODAE() ||
     usuarioEhDRE() ||
-    usuarioEhEscola() ||
-    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhCoordenadorEscola() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||

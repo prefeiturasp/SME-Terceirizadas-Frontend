@@ -131,7 +131,7 @@ export const tipoDeStatus = status => {
       return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":
-    case "Terminada por atingir data de término":
+    case "Cancelada por atingir data de término":
       return "cancelado";
     case "DRE não validou":
     case "CODAE negou":

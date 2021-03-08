@@ -11,6 +11,8 @@ import {
   getDiretoriaregionalSimplissimaAxios
 } from "services/diretoriaRegional.service";
 
+import { usuarioEhCODAEDietaEspecial } from "./utilities";
+
 export const formFiltrosObtemDreEEscolas = async (
   setEscolas,
   setDiretoriasRegionais,
@@ -122,15 +124,19 @@ export const getCabecalhoPorFiltros = filtros => {
 };
 
 export const validateFormDreEscola = formValues => {
+  const error = {};
   if (
     (formValues.dre === undefined || formValues.dre.length === 0) &&
     (formValues.escola === undefined || formValues.escola.length === 0)
   ) {
-    return {
-      dre: "Ao menos uma DRE ou uma Escola deve ser selecionada",
-      escola: "Ao menos uma DRE ou uma Escola deve ser selecionada"
-    };
+    error.dre = "Ao menos uma DRE ou uma Escola deve ser selecionada";
+    error.escola = "Ao menos uma DRE ou uma Escola deve ser selecionada";
   }
+  if (!formValues.somente_dietas_ativas) {
+    if (!formValues.data_inicial) error.data_inicial = "Campo obrigatório";
+    if (!formValues.data_final) error.data_final = "Campo obrigatório";
+  }
+  return error;
 };
 
 export const getStatusSolicitacoesVigentes = () => {
@@ -142,4 +148,18 @@ export const getStatusSolicitacoesVigentes = () => {
     "CODAE_AUTORIZOU_INATIVACAO",
     "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
   ];
+};
+
+export const getStatusSolicitacoesInativas = () => {
+  return [
+    "CODAE_AUTORIZADO",
+    "CODAE_NEGOU_PEDIDO",
+    "ESCOLA_CANCELOU",
+    "CODAE_AUTORIZOU_INATIVACAO",
+    "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO"
+  ];
+};
+
+export const getNomeCardAguardandoAutorizacao = () => {
+  return usuarioEhCODAEDietaEspecial() ? "Recebidas" : "Aguardando Autorização";
 };

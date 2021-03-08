@@ -11,6 +11,7 @@ import CardAtalho from "../../Shareable/CardAtalho";
 import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
 
 import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const TEXTO_ATALHO_DIETA = `Quando houver necessidade de incluir Dieta Especial para os alunos matriculados na unidade.`;
 
@@ -18,10 +19,20 @@ class DashBoardDietaEspecial extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      autorizadasList: null,
+      autorizadasTemporariamenteList: null,
+      inativasTemporariamenteList: null,
+      pendentesList: null,
+      negadasList: null,
+      canceladasList: null,
+      inativasList: null,
       autorizadasListFiltered: null,
+      autorizadasTemporariamenteListFiltered: null,
+      inativasTemporariamenteListFiltered: null,
       pendentesListFiltered: null,
       negadasListFiltered: null,
       canceladasListFiltered: null,
+      inativasListFiltered: null,
       instituicao: null
     };
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -37,64 +48,112 @@ class DashBoardDietaEspecial extends Component {
 
   componentDidUpdate(prevState) {
     let {
-      autorizadasListFiltered,
-      pendentesListFiltered,
-      negadasListFiltered,
-      canceladasListFiltered,
+      autorizadasList,
+      pendentesList,
+      negadasList,
+      canceladasList,
+      inativasList,
+      autorizadasTemporariamenteList,
+      inativasTemporariamenteList,
       instituicao
     } = this.state;
 
-    if (
-      autorizadasListFiltered !== prevState.autorizadasListFiltered &&
-      !autorizadasListFiltered
-    ) {
+    if (autorizadasList !== prevState.autorizadasList && !autorizadasList) {
       this.props
         .getDietaEspecialAutorizadas(instituicao.uuid)
         .then(response => {
           this.setState({
+            autorizadasList: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            ),
             autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.results
             )
           });
         });
     }
-    if (
-      pendentesListFiltered !== prevState.pendentesListFiltered &&
-      !pendentesListFiltered
-    ) {
+    if (pendentesList !== prevState.pendentesList && !pendentesList) {
       this.props
         .getDietaEspecialPendenteAutorizacao(instituicao.uuid)
         .then(response => {
           this.setState({
+            pendentesList: ajustaFormatoLogPainelDietaEspecial(
+              response.results
+            ),
             pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.results
             )
           });
         });
     }
-    if (
-      negadasListFiltered !== prevState.negadasListFiltered &&
-      !negadasListFiltered
-    ) {
+    if (negadasList !== prevState.negadasList && !negadasList) {
       this.props.getDietaEspecialNegadas(instituicao.uuid).then(response => {
         this.setState({
+          negadasList: ajustaFormatoLogPainelDietaEspecial(response.results),
           negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
             response.results
           )
         });
       });
     }
-    if (
-      canceladasListFiltered !== prevState.canceladasListFiltered &&
-      !canceladasListFiltered
-    ) {
+    if (canceladasList !== prevState.canceladasList && !canceladasList) {
       this.props.getDietaEspecialCanceladas(instituicao.uuid).then(response => {
         this.setState({
+          canceladasList: ajustaFormatoLogPainelDietaEspecial(response.results),
           canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
             response.results
           )
         });
       });
+    }
+    if (inativasList !== prevState.inativasList && !inativasList) {
+      this.props.getDietaEspecialInativas &&
+        this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
+          this.setState({
+            inativasList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
+            inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            )
+          });
+        });
+    }
+
+    if (
+      autorizadasTemporariamenteList !==
+        prevState.autorizadasTemporariamenteList &&
+      !autorizadasTemporariamenteList
+    ) {
+      this.props
+        .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid)
+        .then(response => {
+          this.setState({
+            autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
+            autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            )
+          });
+        });
+    }
+    if (
+      inativasTemporariamenteList !== prevState.inativasTemporariamenteList &&
+      !inativasTemporariamenteList
+    ) {
+      this.props
+        .getDietaEspecialInativasTemporariamente(instituicao.uuid)
+        .then(response => {
+          this.setState({
+            inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
+            inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            )
+          });
+        });
     }
   }
 
@@ -109,22 +168,37 @@ class DashBoardDietaEspecial extends Component {
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
     let {
-      pendentesListFiltered,
-      autorizadasListFiltered,
-      negadasListFiltered,
-      canceladasListFiltered
+      pendentesList,
+      autorizadasList,
+      negadasList,
+      canceladasList,
+      autorizadasTemporariamenteList,
+      inativasTemporariamenteList,
+      inativasList
     } = this.state;
 
-    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
-    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
-    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
-    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+    let pendentesListFiltered = this.filtrarNome(pendentesList, event);
+    let autorizadasListFiltered = this.filtrarNome(autorizadasList, event);
+    let negadasListFiltered = this.filtrarNome(negadasList, event);
+    let canceladasListFiltered = this.filtrarNome(canceladasList, event);
+    let inativasListFiltered = this.filtrarNome(inativasList, event);
+    let autorizadasTemporariamenteListFiltered = this.filtrarNome(
+      autorizadasTemporariamenteList,
+      event
+    );
+    let inativasTemporariamenteListFiltered = this.filtrarNome(
+      inativasTemporariamenteList,
+      event
+    );
 
     this.setState({
       autorizadasListFiltered,
       pendentesListFiltered,
       negadasListFiltered,
-      canceladasListFiltered
+      canceladasListFiltered,
+      autorizadasTemporariamenteListFiltered,
+      inativasTemporariamenteListFiltered,
+      inativasListFiltered
     });
   }
 
@@ -134,6 +208,9 @@ class DashBoardDietaEspecial extends Component {
       pendentesListFiltered,
       negadasListFiltered,
       canceladasListFiltered,
+      autorizadasTemporariamenteListFiltered,
+      inativasTemporariamenteListFiltered,
+      inativasListFiltered,
       instituicao
     } = this.state;
 
@@ -155,7 +232,7 @@ class DashBoardDietaEspecial extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Autorização"}
+                    cardTitle={getNomeCardAguardandoAutorizacao()}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={
                       pendentesListFiltered ? pendentesListFiltered : []
@@ -197,6 +274,47 @@ class DashBoardDietaEspecial extends Component {
                     }
                     icon={ICON_CARD_TYPE_ENUM.CANCELADO}
                     href={`/solicitacoes-dieta-especial/solicitacoes-canceladas`}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Inativas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={
+                      inativasListFiltered ? inativasListFiltered : []
+                    }
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-inativas`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizados Temporariamente"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={
+                      autorizadasTemporariamenteListFiltered
+                        ? autorizadasTemporariamenteListFiltered
+                        : []
+                    }
+                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas-temporariamente`}
+                  />
+                </div>
+              </div>
+              <div className="row pt-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Inativas Temporariamente"}
+                    cardType={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                    solicitations={
+                      inativasTemporariamenteListFiltered
+                        ? inativasTemporariamenteListFiltered
+                        : []
+                    }
+                    icon={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                    href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
               </div>

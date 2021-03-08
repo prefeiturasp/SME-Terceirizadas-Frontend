@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Field } from "redux-form";
 import "./style.scss";
 import InputErroMensagem from "../../Input/InputErroMensagem";
-import { PERFIL } from "../../../../constants/shared";
+import { escolaEhCei } from "helpers/utilities";
 
 export class TempoPasseio extends Component {
   render() {
@@ -12,7 +12,7 @@ export class TempoPasseio extends Component {
       onTempoPasseioChanged,
       meta
     } = this.props;
-    const ehCei = localStorage.getItem("perfil") === PERFIL.DIRETOR_CEI;
+    const ehCei = escolaEhCei();
     return (
       <div className="tour-time">
         <p className="label">Tempo previsto do passeio</p>

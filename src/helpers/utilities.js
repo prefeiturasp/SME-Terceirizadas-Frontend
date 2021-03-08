@@ -2,7 +2,7 @@ import moment from "moment";
 import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
 import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
-import { TIPO_PERFIL } from "../constants/shared";
+import { PERFIL, TIPO_PERFIL } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
@@ -291,18 +291,101 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
+export const usuarioEhCoordenadorEscola = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
+};
+
+export const usuarioEhCoordenadorGpCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_GESTAO_PRODUTO;
+};
+
+export const usuarioEhAdministradorGpCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_GESTAO_PRODUTO;
+};
+
+export const usuarioEhCoordenadorNutriCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DIETA_ESPECIAL;
+};
+
+export const usuarioEhAdministradorNutriCODAE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DIETA_ESPECIAL;
+};
+
+export const usuarioEhCoordenadorNutriSupervisao = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+  );
+};
+
+export const usuarioEhAdministradorNutriSupervisao = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_SUPERVISAO_NUTRICAO
+  );
+};
+
 export const usuarioEhEscola = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA;
+  return [
+    PERFIL.ADMINISTRADOR_ESCOLA,
+    PERFIL.DIRETOR,
+    PERFIL.DIRETOR_CEI
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhLogistica = () => {
+  return [PERFIL.COORDENADOR_LOGISTICA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
+export const usuarioEhDistribuidora = () => {
+  return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
+export const escolaEhCei = () => {
+  return /^"?cei|\scei\s|\scei$/i.test(
+    localStorage.getItem("nome_instituicao")
+  );
 };
 
 export const usuarioEhDRE = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };
 
+export const usuarioEhCoordenadorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
+};
+
+export const usuarioEhAdministradorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+};
+
 export const usuarioEhCODAEGestaoAlimentacao = () => {
+  /*
+   * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
+   * Para se adaptar ao perfil da CODAE. (Segundo o Fabricio)
+   * Inicialmente a regra é que o perfil DILOG tenha os mesmo acessos de CODAE.
+   * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
+   */
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
   return (
-    localStorage.getItem("tipo_perfil") ===
-    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
+    tipoPerfil === TIPO_PERFIL.LOGISTICA
+  );
+};
+
+export const usuarioEhCoordenadorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
+  );
+};
+
+export const usuarioEhAdministradorCODAE = () => {
+  return (
+    localStorage.getItem("perfil") ===
+    PERFIL.ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA
   );
 };
 
@@ -460,8 +543,20 @@ export const cpfMask = createTextMask({
   guide: false
 });
 
+export const cepMask = createTextMask({
+  pattern: "99999-999",
+  allowEmpty: false,
+  guide: true
+});
+
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
+
+export const transformaNullsEmUndefined = objeto => {
+  for (let chave of Object.keys(objeto)) {
+    if (objeto[chave] === null) objeto[chave] = undefined;
+  }
+};
 
 export const corrigeLinkAnexo = url => {
   if (

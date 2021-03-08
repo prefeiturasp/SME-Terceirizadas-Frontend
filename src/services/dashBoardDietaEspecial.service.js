@@ -1,5 +1,7 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { fetchGet } from "./_fetch";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -71,6 +73,19 @@ export const getDietaEspecialCanceladasEscola = uuid => {
     });
 };
 
+export const getDietaEspecialAutorizadasTemporariamenteEscola = uuid =>
+  fetchGet(
+    `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteEscola = uuid =>
+  fetchGet(
+    `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasEscola = uuid =>
+  fetchGet(`${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`);
+
 // DRE
 export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
   const url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -135,6 +150,21 @@ export const getDietaEspecialCanceladasDRE = uuid => {
       console.log(error);
     });
 };
+
+export const getDietaEspecialAutorizadasTemporariamenteDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasDRE = uuid =>
+  fetchGet(
+    `${API_URL}/diretoria-regional-solicitacoes/inativas-dieta/${uuid}/`
+  );
 
 // CODAE
 export const getDietaEspecialPendenteAutorizacaoCODAE = () => {
@@ -201,6 +231,15 @@ export const getDietaEspecialCanceladasCODAE = () => {
     });
 };
 
+export const getDietaEspecialAutorizadasTemporariamenteCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`);
+
+export const getDietaEspecialInativasTemporariamenteCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`);
+
+export const getDietaEspecialInativasCODAE = () =>
+  fetchGet(`${API_URL}/codae-solicitacoes/inativas-dieta/`);
+
 // TERCEIRIZADA
 export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {
   const url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
@@ -265,6 +304,16 @@ export const getDietaEspecialCanceladasTerceirizada = uuid => {
       console.log(error);
     });
 };
+
+export const getDietaEspecialAutorizadasTemporariamenteTerceirizada = async uuid =>
+  axios.get(
+    `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
+  );
+
+export const getDietaEspecialInativasTemporariamenteTerceirizada = async uuid =>
+  axios.get(
+    `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
+  );
 
 export const getPaginacaoSolicitacoesDietaEspecial = (
   urlPaginacao,

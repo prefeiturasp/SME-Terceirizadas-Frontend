@@ -120,14 +120,20 @@ export const getRelatorioProduto = ({ uuid, id_externo }) => {
     });
 };
 
-export const getDetalheInversaoCardapio = uuid => {
+export const getDetalheInversaoCardapio = async uuid => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/relatorio/`;
-  return url;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
 };
 
-export const getDetalheSuspensaoAlimentacao = uuid => {
-  const url = `${API_URL}/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
-  return url;
+export const imprimeRelatorioSuspensaoAlimentacao = async uuid => {
+  const url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_suspensao_alimentacao.pdf");
 };
 
 export const getRelatorioFiltroPorPeriodo = (filtro, visao) => {
@@ -286,13 +292,11 @@ export const imprimeRelatorioQuantitativoClassificacaoDietaEsp = async payload =
 };
 
 export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
-  const { data } = await axios.post(
-    `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`,
-    payload,
-    {
-      responseType: "blob"
-    }
-  );
+  let url = `/${SOLICITACOES_DIETA_ESPECIAL}/imprime-${RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP}/`;
+  if (payload.somente_dietas_ativas) {
+    url += "somente-dietas-ativas/";
+  }
+  const { data } = await axios.post(url, payload, { responseType: "blob" });
   saveAs(data, "relatorio_quantitativo_diagnostico_dieta_especial.pdf");
 };
 

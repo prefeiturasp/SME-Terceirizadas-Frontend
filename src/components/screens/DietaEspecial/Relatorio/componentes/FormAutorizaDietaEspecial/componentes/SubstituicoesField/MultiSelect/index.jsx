@@ -11,6 +11,33 @@ export default class MultiSelect extends React.Component {
       selected: props.input.value
     };
   }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (!nextProps.alimentoSelecionado) {
+      return;
+    }
+
+    if (!this.state.selected.length) {
+      return;
+    }
+
+    const selectedProdutos = this.props.options.filter(p => {
+      return this.state.selected.includes(p.value);
+    });
+
+    const selected = selectedProdutos.find(
+      p => p.label.split(" (")[0] === nextProps.alimentoSelecionado.nome
+    );
+
+    if (!selected) {
+      return;
+    }
+
+    this.setState({
+      selected: this.state.selected.filter(p => p !== selected.value)
+    });
+  }
+
   render() {
     const {
       helpText,

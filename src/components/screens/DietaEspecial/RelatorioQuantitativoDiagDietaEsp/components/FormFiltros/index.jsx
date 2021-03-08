@@ -22,7 +22,6 @@ import {
   getDadosIniciais,
   validateFormDreEscola
 } from "helpers/dietaEspecial";
-import { required } from "helpers/fieldValidators";
 
 import { getAlergiasIntoleranciasAxios } from "services/dietaEspecial.service";
 
@@ -105,6 +104,38 @@ export default ({ onSubmit, loading, setLoading }) => {
               <OnChange name="dre">{() => form.change("escola", [])}</OnChange>
             )}
             <div className="row">
+              <div className="col-6">
+                <Field
+                  component={"input"}
+                  type="checkbox"
+                  name="somente_dietas_ativas"
+                />
+                <OnChange name="somente_dietas_ativas">
+                  {value => {
+                    if (value) {
+                      form.change("dre", diretoriasRegionais.map(v => v.value));
+                      form.change("status", "ativas");
+                    } else {
+                      if (
+                        tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+                        tipoUsuario !== TIPO_PERFIL.DIRETORIA_REGIONAL
+                      ) {
+                        form.change("dre", undefined);
+                        form.change("status", undefined);
+                      }
+                    }
+                  }}
+                </OnChange>
+                <span className="checkbox-custom" />
+                <label
+                  htmlFor="somente_dietas_ativas"
+                  className="checkbox-label"
+                >
+                  Visualizar somente diagnóstico ativo
+                </label>
+              </div>
+            </div>
+            <div className="row">
               <div className="col-5">
                 <Field
                   label="Diretoria Regional de Educação"
@@ -114,6 +145,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     (values.escola && values.escola.length > 0) ||
                     tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA
@@ -137,6 +169,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   disableSearch
                   disabled={
                     loading ||
+                    values.somente_dietas_ativas ||
                     tipoUsuario === TIPO_PERFIL.ESCOLA ||
                     (values.dre && values.dre.length > 1)
                   }
@@ -170,6 +203,7 @@ export default ({ onSubmit, loading, setLoading }) => {
                   label="Status"
                   component={Select}
                   name="status"
+                  disabled={values.somente_dietas_ativas}
                   options={[
                     { uuid: "", nome: "Todos" },
                     { uuid: "ativas", nome: "Ativa" },
@@ -181,6 +215,7 @@ export default ({ onSubmit, loading, setLoading }) => {
               </div>
               <div className="col-3">
                 <Field
+                  key={values.somente_dietas_ativas ? 1 : 0}
                   component={InputComData}
                   label="Data da solicitação"
                   name="data_inicial"
@@ -192,12 +227,12 @@ export default ({ onSubmit, loading, setLoading }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : moment()._d
                   }
-                  required
-                  validate={required}
+                  required={!values.somente_dietas_ativas}
                 />
               </div>
               <div className="col-3">
                 <Field
+                  key={values.somente_dietas_ativas ? 3 : 2}
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
@@ -209,7 +244,6 @@ export default ({ onSubmit, loading, setLoading }) => {
                       : null
                   }
                   maxDate={moment()._d}
-                  validate={required}
                 />
               </div>
             </div>

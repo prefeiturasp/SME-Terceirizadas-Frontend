@@ -86,66 +86,138 @@ export const retornArrayTerceirizadas = response => {
       ativo: false,
       endereco: resp.endereco,
       cep: resp.cep,
+      contatos: resp.contatos.map(contato => {
+        return {
+          telefone: contato.telefone,
+          email: contato.email
+        };
+      }),
+      eh_distribuidor: resp.eh_distribuidor,
       telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
       email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
-
       representante: resp.representante_legal,
       telefonefax: resp.representante_telefone,
       email_representante: resp.representante_email,
       nutricionistas: retornaNutricionistas(resp.nutricionistas),
       editais: retornaEditais(resp.contratos),
-      lotes: retornaLotes(resp.lotes)
+      lotes: retornaLotes(resp.lotes),
+      bairro: resp.bairro,
+      cidade: resp.cidade,
+      estado: resp.estado,
+      numero: resp.numero,
+      tipo: resp.eh_distribuidor ? "Distribuidor" : "Terceirizada",
+      complemento: resp.complemento,
+      responsavel_nome: resp.responsavel_nome,
+      responsavel_email: resp.responsavel_email,
+      responsavel_cpf: resp.responsavel_cpf,
+      responsavel_telefone: resp.responsavel_telefone,
+      responsavel_cargo: resp.responsavel_cargo
     };
   });
   return listaTerceirizadas;
 };
 
-export const validarSubmissao = state => {
-  let erro = false;
-  if (state.contatosNutricionista.length > 1) {
-    let aoMenosUmAdministrador = false;
-    state.contatosNutricionista.forEach(contato => {
-      if (contato.super_admin_terceirizadas) {
-        aoMenosUmAdministrador = true;
-      }
-    });
-    if (!aoMenosUmAdministrador) {
-      erro = "É necessário selecionar ao menos um administrador";
-    }
-  }
-  return erro;
-};
-
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
-  let contatosNutri = [];
-  valoresState.contatosNutricionista.forEach(nutri => {
-    contatosNutri.push({
-      nome: nutri.responsavel,
-      crn_numero: nutri.crn,
-      super_admin_terceirizadas:
-        valoresState.contatosNutricionista.length === 1
-          ? true
-          : nutri.super_admin_terceirizadas,
-      contatos: [
-        {
-          telefone: nutri.telefone,
-          email: nutri.email
-        }
-      ]
-    });
-  });
+  const { ehDistribuidor } = valoresState;
 
-  return {
-    nome_fantasia: valoresForm.nome_fantasia,
-    razao_social: valoresForm.razao_social,
-    cnpj: valoresForm.cnpj,
-    representante_legal: valoresForm.representante_legal,
-    representante_telefone: valoresForm.telefone_representante,
-    representante_email: valoresForm.email_representante_legal,
-    endereco: valoresForm.endereco,
-    cep: valoresForm.cep,
-    contatos: valoresState.contatosEmpresa,
-    nutricionistas: contatosNutri,
-    lotes: valoresState.lotesSelecionados
-  };
+  if (valoresState.ehDistribuidor) {
+    const contatosNutri = [
+      {
+        nome: "nome",
+        crn_numero: "numero",
+        super_admin_terceirizadas: false,
+        contatos: [
+          {
+            telefone: "0000000000000",
+            email: "email@email.com"
+          }
+        ]
+      }
+    ];
+    const contatosEmpresa = valoresState.contatosEmpresa.map(item => {
+      return {
+        telefone: item.telefone,
+        email: item.email
+      };
+    });
+    return {
+      nome_fantasia: valoresForm.nome_fantasia,
+      razao_social: valoresForm.razao_social,
+      cnpj: valoresForm.cnpj,
+      endereco: valoresForm.endereco,
+      cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
+      contatos: contatosEmpresa,
+      nutricionistas: contatosNutri,
+      bairro: valoresForm.bairro,
+      cidade: valoresForm.cidade,
+      complemento: valoresForm.complemento,
+      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
+      estado: valoresForm.estado,
+      numero: valoresForm.numero,
+      responsavel_cargo: valoresForm.responsavel_cargo,
+      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_nome: valoresForm.responsavel_nome,
+      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_email: valoresForm.responsavel_email,
+      lotes: [],
+      super_admin: {
+        nome: "xxx",
+        cpf: "00000000000",
+        email: "xxx@xxx.com",
+        contatos: [
+          {
+            email: "xxx@xxx.com",
+            telefone: "000000000"
+          }
+        ]
+      }
+    };
+  } else {
+    let contatosNutri = [];
+    valoresState.contatosNutricionista.forEach(nutri => {
+      contatosNutri.push({
+        nome: nutri.responsavel,
+        crn_numero: nutri.crn,
+        super_admin_terceirizadas:
+          valoresState.contatosNutricionista.length === 1
+            ? true
+            : nutri.super_admin_terceirizadas,
+        contatos: [
+          {
+            telefone: nutri.telefone,
+            email: nutri.email
+          }
+        ]
+      });
+    });
+    const super_admin = { ...valoresForm.super_admin };
+    super_admin.contatos = [
+      { email: super_admin.email, telefone: super_admin.telefone }
+    ];
+    return {
+      nome_fantasia: valoresForm.nome_fantasia,
+      razao_social: valoresForm.razao_social,
+      cnpj: valoresForm.cnpj,
+      representante_legal: valoresForm.representante_legal,
+      representante_telefone: valoresForm.telefone_representante,
+      representante_email: valoresForm.email_representante_legal,
+      endereco: valoresForm.endereco,
+      cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
+      contatos: valoresState.contatosEmpresa,
+      nutricionistas: contatosNutri,
+      bairro: valoresForm.bairro,
+      cidade: valoresForm.cidade,
+      complemento: valoresForm.complemento,
+      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
+      estado: valoresForm.estado,
+      numero: valoresForm.numero,
+      responsavel_cargo: valoresForm.responsavel_cargo,
+      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_nome: valoresForm.responsavel_nome,
+      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_email: valoresForm.responsavel_email,
+      lotes: valoresState.lotesSelecionados,
+      super_admin: super_admin
+    };
+  }
 };

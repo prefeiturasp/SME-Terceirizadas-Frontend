@@ -29,21 +29,21 @@ pipeline {
 
                 sh 'npm install -g jshint'
                 sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
-                checkstyle canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle-jshint.xml', unHealthy: ''
+                
 
             }
         }
 
        stage('Analise codigo') {
           when {
-              branch 'development'
+              branch 'homolog'
             }
             steps {
                 sh 'sonar-scanner \
                     -Dsonar.projectKey=SME-Terceirizadas-Front \
                     -Dsonar.sources=src \
                     -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
-                    -Dsonar.login=c7cbf75fc22122f6c4a4cad32f625978a738cd18'
+                    -Dsonar.login=76f6f13b7ddd912a474ada1041044db3b7c88522'
             }
         }
 
@@ -136,7 +136,7 @@ pipeline {
         steps {
           timeout(time: 24, unit: "HOURS") {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'marcos_nastri, calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter, rodolfo_lima, regis_santos'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'calvin_rossinhole, ollyver_ottoboni, kelwy_oliveira, pedro_walter, rodolfo_lima, regis_santos'
           }
          sh 'echo Deploying ambiente homologacao'
 

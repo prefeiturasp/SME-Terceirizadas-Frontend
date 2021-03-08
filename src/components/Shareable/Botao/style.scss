@@ -8,6 +8,7 @@ button.general-button {
   height: 38px;
   padding: 0 12px;
   text-align: center;
+  border: 1px solid;
   i.text-and-icon {
     padding-right: 8px;
   }
@@ -67,10 +68,13 @@ button.general-button {
     color: $green;
     border: 1px solid $green;
     background-color: transparent;
-    i {
-      color: $green;
+    &:not(:disabled) {
+      i {
+        color: $green;
+      }
     }
-    &:hover {
+
+    &:hover:not(:disabled) {
       color: $white;
       background-color: $greenButtonHover;
       i {
@@ -113,6 +117,30 @@ button.general-button {
     &:hover {
       color: $white;
       background-color: $redToastError;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+
+  &.dark-button-outline {
+    color: $blackInput;
+    border-color: $blackInput;
+    background-color: transparent;
+
+    &:not(:disabled) {
+      i {
+        color: $blackInput;
+      }
+    }
+    &:hover:not(:disabled) {
+      color: $white;
+      background-color: $blackInput;
       i {
         color: $white;
       }

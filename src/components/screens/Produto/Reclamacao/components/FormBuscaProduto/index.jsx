@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -12,9 +12,12 @@ import {
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes
+  getAvaliarReclamacaoNomesProdutos,
+  getAvaliarReclamacaoNomesMarcas,
+  getAvaliarReclamacaoNomesFabricantes,
+  getNovaReclamacaoNomesProdutos,
+  getNovaReclamacaoNomesMarcas,
+  getNovaReclamacaoNomesFabricantes
 } from "services/produto.service";
 
 const initialState = {
@@ -28,14 +31,6 @@ function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
     case "popularDados":
       return { ...state, dados: payload };
-    case "atualizarFiltro": {
-      if (!payload.searchText.length) {
-        return { ...state, [payload.filtro]: [] };
-      }
-      const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
-      return { ...state, [payload.filtro]: filtrado };
-    }
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
@@ -43,16 +38,32 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
+const FormBuscaProduto = ({
+  onSubmit,
+  history,
+  initialValues,
+  formName,
+  novaReclamacao
+}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     async function fetchData() {
-      Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes()
-      ]).then(([produtos, marcas, fabricantes]) => {
+      let endpoints;
+      if (novaReclamacao) {
+        endpoints = [
+          getNovaReclamacaoNomesProdutos(),
+          getNovaReclamacaoNomesMarcas(),
+          getNovaReclamacaoNomesFabricantes()
+        ];
+      } else {
+        endpoints = [
+          getAvaliarReclamacaoNomesProdutos(),
+          getAvaliarReclamacaoNomesMarcas(),
+          getAvaliarReclamacaoNomesFabricantes()
+        ];
+      }
+      Promise.all(endpoints).then(([produtos, marcas, fabricantes]) => {
         dispatch({
           type: "popularDados",
           payload: {
@@ -66,16 +77,6 @@ const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
     fetchData();
   }, []);
 
-  const onSearch = (filtro, searchText) => {
-    dispatch({
-      type: "atualizarFiltro",
-      payload: {
-        filtro,
-        searchText
-      }
-    });
-  };
-
   return (
     <Form
       onSubmit={onSubmit}
@@ -84,26 +85,23 @@ const FormBuscaProduto = ({ onSubmit, history, initialValues, formName }) => {
         <form onSubmit={handleSubmit} className="busca-produtos-formulario">
           <FinalFormToRedux form={formName} />
           <Field
-            component={AutoCompleteField}
-            dataSource={state.produtos}
+            component={AutoCompleteFieldUnaccent}
+            dataSource={state.dados.produtos}
             label="Nome do Produto"
             className="input-busca-produto"
-            onSearch={v => onSearch("produtos", v)}
             name="nome_produto"
           />
           <div className="marca-fabricante-inputs">
             <Field
-              component={AutoCompleteField}
-              dataSource={state.marcas}
+              component={AutoCompleteFieldUnaccent}
+              dataSource={state.dados.marcas}
               label="Marca do Produto"
-              onSearch={v => onSearch("marcas", v)}
               name="nome_marca"
             />
             <Field
-              component={AutoCompleteField}
-              dataSource={state.fabricantes}
+              component={AutoCompleteFieldUnaccent}
+              dataSource={state.dados.fabricantes}
               label="Fabricante do Produto"
-              onSearch={v => onSearch("fabricantes", v)}
               name="nome_fabricante"
             />
           </div>

@@ -1,14 +1,24 @@
 import React from "react";
 import { Field } from "react-final-form";
 
-import { numericInteger } from "helpers/fieldValidators";
+import {
+  nonRequiredNumericInteger,
+  numericInteger
+} from "helpers/fieldValidators";
 
 import BorderlessInput from "../../../BorderlessInput";
 
 import "./styles.scss";
 import BorderlessTextarea from "../../../BorderlessTextarea";
 
-export default ({ panorama }) => (
+import { tamanhoMaximoObsDiarias } from "../helpers";
+
+export default ({
+  panorama,
+  deveDesabilitarRepeticaoSobremesa,
+  desabilitarLanche,
+  desabilitarRefeicao
+}) => (
   <div className="tabela-lancamento tabela-dieta-convencional-frequencia">
     <div className="cabecalho-tabela">
       <div>
@@ -111,7 +121,12 @@ export default ({ panorama }) => (
           <Field
             component={BorderlessInput}
             name="convencional.lanche_4h"
-            validate={numericInteger}
+            validate={
+              panorama.horas_atendimento === 4
+                ? nonRequiredNumericInteger
+                : numericInteger
+            }
+            disabled={desabilitarLanche}
           />
         </div>
       )}
@@ -121,6 +136,7 @@ export default ({ panorama }) => (
             component={BorderlessInput}
             name="convencional.lanche_5h"
             validate={numericInteger}
+            disabled={desabilitarLanche}
           />
         </div>
       )}
@@ -128,14 +144,20 @@ export default ({ panorama }) => (
         <Field
           component={BorderlessInput}
           name="convencional.refeicoes.0.ref_oferta"
-          validate={numericInteger}
+          validate={
+            panorama.horas_atendimento === 4
+              ? nonRequiredNumericInteger
+              : numericInteger
+          }
+          disabled={desabilitarRefeicao}
         />
       </div>
       <div>
         <Field
           component={BorderlessInput}
           name="convencional.refeicoes.0.ref_repet"
-          validate={numericInteger}
+          validate={nonRequiredNumericInteger}
+          disabled={desabilitarRefeicao}
         />
       </div>
       <div>
@@ -149,7 +171,8 @@ export default ({ panorama }) => (
         <Field
           component={BorderlessInput}
           name="convencional.refeicoes.0.sob_repet"
-          validate={numericInteger}
+          validate={nonRequiredNumericInteger}
+          disabled={deveDesabilitarRepeticaoSobremesa}
         />
       </div>
       {panorama.periodo === "INTEGRAL" && (
@@ -159,6 +182,7 @@ export default ({ panorama }) => (
               component={BorderlessInput}
               name="convencional.refeicoes.1.ref_oferta"
               validate={numericInteger}
+              disabled={desabilitarRefeicao}
             />
           </div>
           <div>
@@ -166,6 +190,7 @@ export default ({ panorama }) => (
               component={BorderlessInput}
               name="convencional.refeicoes.1.ref_repet"
               validate={numericInteger}
+              disabled={desabilitarRefeicao}
             />
           </div>
           <div>
@@ -179,13 +204,18 @@ export default ({ panorama }) => (
             <Field
               component={BorderlessInput}
               name="convencional.refeicoes.1.sob_repet"
-              validate={numericInteger}
+              validate={nonRequiredNumericInteger}
+              disabled={deveDesabilitarRepeticaoSobremesa}
             />
           </div>
         </>
       )}
       <div>
-        <Field component={BorderlessTextarea} name="convencional.observacoes" />
+        <Field
+          component={BorderlessTextarea}
+          name="convencional.observacoes"
+          validate={tamanhoMaximoObsDiarias}
+        />
       </div>
     </div>
   </div>

@@ -4,6 +4,7 @@ import InputText from "../../../../Shareable/Input/InputText";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import { Select } from "antd";
 import {
+  getNomeDeProdutosEdital,
   getMarcasProdutos,
   getFabricantesProdutos,
   criarMarcaProduto,
@@ -34,6 +35,7 @@ class Step1 extends Component {
     this.state = {
       loading: true,
       protocolosDieta: [],
+      nomeDeProdutosEditalArray: [],
       marcasArray: [],
       fabricantesArray: [],
       showModalMarca: false,
@@ -44,13 +46,13 @@ class Step1 extends Component {
         protocolos: [],
         detalhes_da_dieta: null,
         nome: null,
+        nomeDeProdutosEdital: null,
         marca: null,
         fabricante: null,
         componentes: null,
         tem_aditivos_alergenicos: null,
         aditivos: null
       },
-
       dafaultArrayProtocolo: [],
       retornadoAoStep: false,
       marcaDefault: null,
@@ -216,11 +218,20 @@ class Step1 extends Component {
       });
     }
 
+    let listaNomeDeProdutosEdital = [];
     let listaMarcas = [];
     let listaFabricantes = [];
     if (marcasArray.length === 0 && fabricantesArray.length === 0) {
+      const responseNomeDeProdutosEdital = await getNomeDeProdutosEdital();
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
+      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+        listaNomeDeProdutosEdital.push(
+          <Option key={`${produtoEdital.nome}+${produtoEdital.uuid}`}>
+            {produtoEdital.nome}
+          </Option>
+        );
+      });
       responseMarcas.data.results.forEach(marca => {
         listaMarcas.push(
           <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
@@ -234,6 +245,7 @@ class Step1 extends Component {
         );
       });
       this.setState({
+        nomeDeProdutosEditalArray: listaNomeDeProdutosEdital,
         marcasArray: listaMarcas,
         fabricantesArray: listaFabricantes,
         loading: false,
@@ -253,6 +265,7 @@ class Step1 extends Component {
       retornadoAoStep
     } = this.state;
     let listaProtocolos = [];
+    let listaNomeDeProdutosEdital = [];
     let listaMarcas = [];
     let listaFabricantes = [];
     if (Step1EstaValido(payload) && concluidoStep1 && !retornadoAoStep) {
@@ -271,8 +284,18 @@ class Step1 extends Component {
       });
     }
     if (marcasArray.length === 0 && loading && fabricantesArray.length === 0) {
+      const responseNomeDeProdutosEdital = await getNomeDeProdutosEdital();
       const responseMarcas = await getMarcasProdutos();
       const responseFabricantes = await getFabricantesProdutos();
+
+      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+        listaNomeDeProdutosEdital.push(
+          <Option key={`${produtoEdital.nome}+${produtoEdital.uuid}`}>
+            {produtoEdital.nome}
+          </Option>
+        );
+      });
+
       responseMarcas.data.results.forEach(marca => {
         listaMarcas.push(
           <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
@@ -286,6 +309,7 @@ class Step1 extends Component {
         );
       });
       this.setState({
+        nomeDeProdutosEditalArray: listaNomeDeProdutosEdital,
         marcasArray: listaMarcas,
         fabricantesArray: listaFabricantes,
         loading: false
@@ -343,7 +367,7 @@ class Step1 extends Component {
 
   setaNomeProduto = value => {
     let { payloadStep1 } = this.state;
-    payloadStep1.nome = value.toUpperCase();
+    payloadStep1.nome = value.split("+")[0];
     this.setState({ payloadStep1 });
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
@@ -376,6 +400,7 @@ class Step1 extends Component {
   render() {
     const {
       protocolosDieta,
+      nomeDeProdutosEditalArray,
       marcasArray,
       fabricantesArray,
       showModalMarca,
@@ -386,6 +411,7 @@ class Step1 extends Component {
     const {
       renderizaFormDietaEspecial,
       renderizaFormAlergenicos,
+      defaultNomeDeProdutosEditalStep1,
       defaultMarcaStep1,
       defaultFabricanteStep1
     } = this.props;
@@ -457,18 +483,26 @@ class Step1 extends Component {
 
         <div className="row">
           <div className="col-12 pt-3">
+            <label className="label-formulario-produto">
+              <nav>*</nav>Nome do produto
+            </label>
             <Field
-              component={InputText}
-              label="Nome do produto"
+              component={ASelect}
+              className={"select-form-produto"}
+              showSearch
               name="nome"
-              type="text"
-              placeholder="Digite o nome do produto"
-              onChange={event => {
-                this.setaNomeProduto(event.target.value);
+              filterOption={(inputValue, option) => {
+                return option.props.children
+                  .toString()
+                  .toLowerCase()
+                  .includes(inputValue.toLowerCase());
               }}
-              required
+              onSelect={this.setaNomeProduto}
+              defaultValue={defaultNomeDeProdutosEditalStep1}
               validate={required}
-            />
+            >
+              {nomeDeProdutosEditalArray}
+            </Field>
           </div>
         </div>
         <div className="row pt-3">

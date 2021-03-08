@@ -19,8 +19,9 @@ import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
 import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/StatusSolicitacoesPage";
 
-import { PERFIL, TIPO_PERFIL } from "../constants/shared";
+import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
+import { escolaEhCei } from "helpers/utilities";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -39,6 +40,10 @@ export const permissoes = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIETA_ESPECIAL:
       return PermissoesPage.PermissoesCODAEGestaoDietaEspecial;
+    case TIPO_PERFIL.GESTAO_PRODUTO:
+      return PermissoesPage.PermissoesCODAEGestaoProdutos;
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
+      return PermissoesPage.PermissoesCODAESupervisaoNutricao;
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return PermissoesPage.PermissoesDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
@@ -160,6 +165,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialDRE;
     case TIPO_PERFIL.DIETA_ESPECIAL:
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return StatusSolicitacoesDietaEspecialPage.SolicitacoesDietaEspecialCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
@@ -180,7 +186,7 @@ export const painelInicial = () => {
 
 export const inclusaoCardapio = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return InclusaoDeAlimentacaoCEIPage;
     default:
       return InclusaoDeAlimentacaoPage;
@@ -189,7 +195,7 @@ export const inclusaoCardapio = () => {
 
 export const alteracaoCardapio = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return AlteracaoDeCardapioCEIPage;
     default:
       return AlteracaoDeCardapioPage;
@@ -198,7 +204,7 @@ export const alteracaoCardapio = () => {
 
 export const suspensaoAlimentacao = () => {
   switch (localStorage.getItem("perfil")) {
-    case PERFIL.DIRETOR_CEI:
+    case escolaEhCei():
       return SuspensaoDeAlimentacaoDeCEI;
     default:
       return SuspensaoDeAlimentacaoPage;

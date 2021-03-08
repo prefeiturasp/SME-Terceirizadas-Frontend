@@ -1,3 +1,4 @@
+import { memoize } from "lodash";
 import axios from "../_base";
 import { FLUXO, AUTH_TOKEN, TIPO_SOLICITACAO } from "services/constants";
 import { ENDPOINT } from "constants/shared";
@@ -93,7 +94,7 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
 
   if (tipoSolicitacao) {
-    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`);
+    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
   }
 
   return fetch(url, {
@@ -154,25 +155,24 @@ export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
 };
 
 // FIXME: Revisar nome do método
-export const getAlteracoesComLancheDoMesCorrente = (
-  escola_uuid,
-  tipoSolicitacao
-) => {
-  const url = `${getPath(
-    tipoSolicitacao
-  )}/com-lanche-do-mes-corrente/${escola_uuid}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
+export const getAlteracoesComLancheDoMesCorrente = memoize(
+  (escola_uuid, tipoSolicitacao) => {
+    const url = `${getPath(
+      tipoSolicitacao
+    )}/com-lanche-do-mes-corrente/${escola_uuid}/`;
+    const OBJ_REQUEST = {
+      headers: AUTH_TOKEN,
+      method: "GET"
+    };
+    return fetch(url, OBJ_REQUEST)
+      .then(result => {
+        return result.json();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+);
 
 // FIXME: Revisar nome do método
 export const getAlunosPorFaixaEtariaNumaData = async (

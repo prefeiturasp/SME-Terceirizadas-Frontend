@@ -12,6 +12,11 @@ class Step3 extends Component {
     this.state = {};
   }
 
+  maxLengthCaracteres = max => value =>
+    value && value.length > max
+      ? `Limite máximo de ${max} caracteres`
+      : undefined;
+
   ehRascunho = ({ ultima_homologacao }) => {
     return ultima_homologacao && ultima_homologacao.status === "RASCUNHO";
   };
@@ -19,6 +24,8 @@ class Step3 extends Component {
   temImagensSalvas = ({ imagens_salvas }) => {
     return imagens_salvas && imagens_salvas.length > 0;
   };
+
+  validateEmbalagem = [required, this.maxLengthCaracteres(500)];
 
   render() {
     const { payload } = this.props;
@@ -35,31 +42,6 @@ class Step3 extends Component {
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
             />
           </div>
-        </div>
-        <div className="row">
-          <div className="col-12 pt-3">
-            <Field
-              component={InputText}
-              label="Tipo"
-              name="tipo"
-              type="text"
-              placeholder="Digite o tipo"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="Embalagem primária"
-              name="embalagem"
-              type="text"
-              placeholder="Digite os dados"
-              required
-              validate={required}
-            />
-          </div>
           <div className="col-6 pt-3">
             <Field
               component={InputText}
@@ -74,6 +56,30 @@ class Step3 extends Component {
         </div>
         <div className="row">
           <div className="col-12 pt-3">
+            <Field
+              component={InputText}
+              label="Tipo"
+              name="tipo"
+              type="text"
+              placeholder="Digite o tipo"
+            />
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-12 pb-5">
+            <Field
+              component={TextArea}
+              label="Embalagem primária"
+              name="embalagem"
+              placeholder="Digite os dados"
+              required
+              validate={this.validateEmbalagem}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-12 pt-5">
             <Field
               component={InputText}
               label="Condições de armazenamento, conservação e prazo máximo para consumo após a abertura da embalagem"

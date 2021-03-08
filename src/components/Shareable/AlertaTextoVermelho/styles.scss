@@ -1,0 +1,10 @@
+@import "styles/variables.scss";
+
+.alerta-texto-vermelho {
+  color: $redAlert;
+  font-weight: bold;
+  font-size: 14px;
+}
+.altura-minima {
+  min-height: 5rem;
+}

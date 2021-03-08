@@ -35,10 +35,10 @@ export const validaFormularioStep1 = async ({
     arrayValidacao.push("Informe os componentes do produto.");
   }
   if (tem_aditivos_alergenicos === null) {
-    arrayValidacao.push("Informe se produto possui aditivos alergenicos.");
+    arrayValidacao.push("Informe se produto possui aditivos alergênicos.");
   } else if (tem_aditivos_alergenicos !== null) {
     if (tem_aditivos_alergenicos && aditivos === null) {
-      arrayValidacao.push("Informe os aditivos alergenicos.");
+      arrayValidacao.push("Informe os aditivos alergênicos.");
     }
   }
   if (arrayValidacao.length === 0) {

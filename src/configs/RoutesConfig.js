@@ -83,7 +83,9 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhLogistica,
+  usuarioEhDistribuidora
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -112,7 +114,13 @@ import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/Relatori
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
+import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
+import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
+import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
+import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
+import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
 
 const routesConfig = [
   {
@@ -159,6 +167,12 @@ const routesConfig = [
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialEscolaPage,
+    exact: false,
+    tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.CANCELAMENTO}`,
+    component: CancelamentoDietaPage,
     exact: false,
     tipoUsuario: usuarioEhEscola()
   },
@@ -562,6 +576,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -575,6 +590,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -588,11 +604,36 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
       constants.SOLICITACOES_CANCELADAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_INATIVAS
+    }`,
+    component: StatusSolicitacoesDietaEspecial(),
+    exact: true,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
+      constants.SOLICITACOES_INATIVAS_TEMPORARIAMENTE
     }`,
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
@@ -930,6 +971,40 @@ const routesConfig = [
     component: LancamentoMedicaoInicialPage,
     exact: true,
     tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${
+      constants.DISPONIBILIZACAO_DE_SOLICITACOES
+    }`,
+    component: DisponibilizacaoDeSolicitacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENVIO_REQUISICOES_ENTREGA}`,
+    component: FiltroRequisicaoDilog,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${
+      constants.ENVIO_REQUISICOES_ENTREGA_AVANCADO
+    }`,
+    component: ConsultaRequisicaoEntregaDilog,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
+    component: GestaoRequisicaoEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
+    component: GestaoSolicitacaoAlteracaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 

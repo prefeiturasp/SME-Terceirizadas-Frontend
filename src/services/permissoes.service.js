@@ -134,13 +134,10 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
     }
   );
 
-export const criarEquipeAdministradoraTerceirizadas = (
-  uuid,
-  registro_funcional
-) =>
+export const criarEquipeAdministradoraTerceirizadas = (uuid, payload) =>
   fetchPost(
     `${API_URL}/vinculos-terceirizadas/${uuid}/criar_equipe_administradora/`,
-    { registro_funcional }
+    payload
   );
 
 export const getEquipeAdministradoraTerceirizadas = uuid =>
@@ -170,6 +167,50 @@ export const getEquipeAdministradoraDietaEspecial = uuid =>
 export const finalizarVinculoDietaEspecial = (uuid, vinculo_uuid) =>
   fetchPatch(
     `${API_URL}/vinculos-codae-gestao-dieta-especial/${uuid}/finalizar_vinculo/`,
+    {
+      vinculo_uuid
+    }
+  );
+
+export const criarEquipeAdministradoraGestaoProdutos = (
+  uuid,
+  registro_funcional
+) =>
+  fetchPost(
+    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/criar_equipe_administradora/`,
+    { registro_funcional }
+  );
+
+export const getEquipeAdministradoraGestaoProdutos = uuid =>
+  fetchGet(
+    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/get_equipe_administradora/`
+  );
+
+export const finalizarVinculoGestaoProdutos = (uuid, vinculo_uuid) =>
+  fetchPatch(
+    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/finalizar_vinculo/`,
+    {
+      vinculo_uuid
+    }
+  );
+
+export const criarEquipeAdministradoraSupervisaoNutricao = (
+  uuid,
+  registro_funcional
+) =>
+  fetchPost(
+    `${API_URL}/vinculos-codae-supervisao-nutricao/${uuid}/criar_equipe_administradora/`,
+    { registro_funcional }
+  );
+
+export const getEquipeAdministradoraSupervisaoNutricao = uuid =>
+  fetchGet(
+    `${API_URL}/vinculos-codae-supervisao-nutricao/${uuid}/get_equipe_administradora/`
+  );
+
+export const finalizarVinculoSupervisaoNutricao = (uuid, vinculo_uuid) =>
+  fetchPatch(
+    `${API_URL}/vinculos-codae-supervisao-nutricao/${uuid}/finalizar_vinculo/`,
     {
       vinculo_uuid
     }

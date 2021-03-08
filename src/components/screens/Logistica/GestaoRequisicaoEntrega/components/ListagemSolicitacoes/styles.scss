@@ -1,0 +1,126 @@
+@import "styles/variables.scss";
+
+.resultado-busca-requisicao-entrega {
+  margin-top: 10px;
+
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-table {
+      height: 48px;
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 2.5fr;
+    }
+
+    .header-table {
+      background: #f5f6f8;
+      color: #42474a;
+      font-weight: bold;
+      div {
+        text-align: left;
+        display: grid;
+        align-items: center;
+        height: 100%;
+        padding-left: 8px;
+        &:not(:first-child) {
+          border-right: 1px solid #e9eaea;
+        }
+
+        &:last-child {
+          border-right: 0px solid #e9eaea;
+        }
+      }
+    }
+
+    .body-table {
+      font-weight: 500;
+      color: #686868;
+
+      .desativar-borda {
+        border-left: 0px solid #e9eaea;
+        color: #42474a;
+        font-weight: 900;
+      }
+
+      .fas {
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 16px;
+        line-height: 18px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        letter-spacing: 0.01em;
+        font-size: 12px !important;
+
+        /* $neutral/dark */
+
+        color: #42474a;
+      }
+
+      div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e9eaea;
+        text-align: left;
+        padding-left: 8px;
+        &:not(:first-child) {
+          border-right: 1px solid #e9eaea;
+        }
+      }
+
+      div:first-child {
+        border-right: 0px solid #e9eaea;
+      }
+
+      div:last-child {
+        border-right: 0px solid #e9eaea;
+      }
+    }
+
+    .resultado-busca-detalhe {
+      font-size: 14px;
+      color: #686868;
+      font-style: normal;
+      font-weight: normal;
+      border-bottom: 1px solid #e9eaea;
+    }
+
+    .acoes {
+      font-size: 14px !important;
+      display: inline-block;
+    }
+
+    .confirmar {
+      color: $green !important;
+      display: inline !important;
+      padding-left: 0;
+    }
+
+    .alterar {
+      color: $blue !important;
+      display: inline !important;
+    }
+
+    .imprimir {
+      display: inline !important;
+    }
+  }
+}

@@ -82,6 +82,9 @@ export const email = value =>
     ? "Email inválido"
     : undefined;
 
+export const cep = value =>
+  value && /^[\d]{5}-[\d]{3}/.test(value) ? undefined : "Cep inválido";
+
 export const prefeituraEmail = value =>
   value && /.+@\prefeitura.sp.gov.br/.test(value)
     ? undefined
@@ -95,6 +98,12 @@ export const alphaNumeric = value =>
 export const numericInteger = value =>
   // value && /[^0-9 ]/i.test(value) ? "Somente números" : undefined;
   value && !/\D/.test(value) ? undefined : "Somente números";
+
+export const nonRequiredNumericInteger = value => {
+  if (value !== undefined && !/^[0-9]+$/.test(value)) {
+    return "Somente números";
+  }
+};
 
 export const phoneNumber = value =>
   value && !/^(0|[1-9][0-9]{9})$/i.test(value)

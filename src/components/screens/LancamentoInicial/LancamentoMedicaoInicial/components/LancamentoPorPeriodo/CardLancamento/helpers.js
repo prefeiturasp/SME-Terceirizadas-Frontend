@@ -29,21 +29,58 @@ export const objectFlattener = object => {
   );
 };
 
-export const validateFormLancamento = (formValues, totalMatriculados) => {
-  let erros = {};
+export const tamanhoMaximoObsDiarias = value =>
+  value && value.length > 90
+    ? `Observações diárias devem ter 90 caracteres ou menos`
+    : undefined;
 
+export const validateFormLancamento = (
+  formValues,
+  panorama,
+  dadosMatriculados
+) => {
+  let erros = {};
+  if (
+    get(formValues, "convencional.eh_dia_de_sobremesa_doce") === true &&
+    get(formValues, "convencional.tem_sobremesa_doce_na_semana") === true &&
+    get(formValues, "convencional.observacoes") === undefined
+  ) {
+    set(
+      erros,
+      `convencional.observacoes`,
+      "Deve preencher observações diárias"
+    );
+  }
   for (let grupo of Object.keys(grupos)) {
     if (formValues[grupo] === undefined) continue;
+    if (grupo === "convencional" && panorama.horas_atendimento === 4) {
+      if (
+        (get(formValues, "convencional.lanche_4h") !== undefined &&
+          get(formValues, "convencional.refeicoes.0.ref_oferta") !==
+            undefined) ||
+        (get(formValues, "convencional.lanche_4h") === undefined &&
+          get(formValues, "convencional.refeicoes.0.ref_oferta") === undefined)
+      ) {
+        const msgErro =
+          'O atendimento dessa escola nesse período é de apenas 4 horas. Preencha OU "Lanche 4h" OU "Refeição 1ª oferta"';
+        set(erros, `convencional.lanche_4h`, msgErro);
+        set(erros, `convencional.refeicoes.0.ref_oferta`, msgErro);
+      }
+    }
+    if (formValues[grupo].frequencia === undefined) {
+      set(erros, `${grupo}.frequencia`, "Deve preencher a frequência");
+      continue;
+    }
     const frequencia = formValues[grupo]
       ? parseInt(formValues[grupo].frequencia)
       : 0;
-    if (frequencia <= 0) {
-      set(erros, `${grupo}.frequencia`, "Deve preencher a frequência");
-    } else if (frequencia > totalMatriculados) {
+    if (frequencia > dadosMatriculados[grupo]) {
       set(
         erros,
         `${grupo}.frequencia`,
-        `Frequência não pode ser maior que alunos matriculados nesse período (${totalMatriculados})`
+        `Não é possível informar quantidade superior ao número de Dietas Ativas (${
+          dadosMatriculados[grupo]
+        }).`
       );
     }
     for (let [nomeCampo, nomeAmigavelCampo] of Object.entries(

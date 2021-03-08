@@ -12,11 +12,13 @@ import {
 import * as constants from "configs/constants";
 
 const MenuRelatorios = () => {
-  const exibirPainel = usuarioEhCODAEGestaoAlimentacao();
   const exibirProdutosHomologados =
+    usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhEscola() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhCODAEDietaEspecial();
+    usuarioEhTerceirizada();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -37,7 +39,6 @@ const MenuRelatorios = () => {
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
-      {exibirPainel && <LeafItem to="/relatorios">Painel</LeafItem>}
       {exibirProdutosHomologados && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorios/produtos-homologados`}

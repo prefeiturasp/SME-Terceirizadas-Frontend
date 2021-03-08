@@ -124,12 +124,17 @@ export const listarCardsPermitidos = () => {
       cardAguardandoAnaliseReclamacao
     ];
   } else if ([TIPO_PERFIL.TERCEIRIZADA].includes(perfil)) {
-    const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
-    cardHomologados.incluir_status.push(
-      ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+    const cardAguardandoAnaliseReclamacao = Object.assign(
+      {},
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO
+    );
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
       TERCEIRIZADA_RESPONDEU_RECLAMACAO
     );
 
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    );
     return [
       CARD_RECLAMACAO_DE_PRODUTO,
       CARD_PRODUTOS_SUSPENSOS,

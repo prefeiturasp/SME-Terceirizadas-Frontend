@@ -109,6 +109,7 @@ export class InputFileManaged extends Component {
           onClick={() => this.inputRef.click()}
           texto={texto}
           style={BUTTON_STYLE.BLUE_OUTLINE}
+          disabled={disabled}
           icon={icone}
           type={BUTTON_TYPE.BUTTON}
         />

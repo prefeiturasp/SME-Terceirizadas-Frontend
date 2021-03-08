@@ -57,17 +57,53 @@ export const getNomesProdutos = async queryparams => {
   return await axios.get(url);
 };
 
+export const getNomesUnicosProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-unicos/");
+
 export const getNomesMarcas = async queryparams => {
   let url = `/marcas/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
 
+export const getNomesUnicosMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-unicos/");
+
 export const getNomesFabricantes = async queryparams => {
   let url = `/fabricantes/lista-nomes/`;
   if (queryparams) url += queryparams + "/";
   return await axios.get(url);
 };
+
+export const getNomesUnicosFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-unicos/");
+
+export const getNovaReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-nova-reclamacao/");
+
+export const getNovaReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-nova-reclamacao/");
+
+export const getNovaReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-nova-reclamacao/");
+
+export const getAvaliarReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-avaliar-reclamacao/");
+
+export const getAvaliarReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-avaliar-reclamacao/");
+
+export const getAvaliarReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-avaliar-reclamacao/");
+
+export const getResponderReclamacaoNomesProdutos = async () =>
+  await axios.get("/produtos/lista-nomes-responder-reclamacao/");
+
+export const getResponderReclamacaoNomesMarcas = async () =>
+  await axios.get("/marcas/lista-nomes-responder-reclamacao/");
+
+export const getResponderReclamacaoNomesFabricantes = async () =>
+  await axios.get("/fabricantes/lista-nomes-responder-reclamacao/");
 
 export const getNomesTerceirizadas = async () => {
   return await axios.get(`/terceirizadas/lista-nomes/`);
@@ -132,6 +168,10 @@ export const getProtocolosDietaEspecial = async () => {
 
 export const getMarcasProdutos = async () => {
   return await axios.get(`/marcas/`);
+};
+
+export const getNomeDeProdutosEdital = async () => {
+  return await axios.get(`/nome-de-produtos-edital/`);
 };
 
 export const getFabricantesProdutos = async () => {
@@ -446,6 +486,13 @@ export const getProdutosPorTerceirizada = async filtro => {
   );
 };
 
+export const getProdutosAgrupadosNomeMarcas = async filtro => {
+  return await axios.post(
+    `/produtos/filtro-por-parametros-agrupado-nome-marcas/`,
+    filtro
+  );
+};
+
 export const getRelatorioProdutosHomologados = async params => {
   const { data } = await axios.get(
     "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
@@ -455,6 +502,14 @@ export const getRelatorioProdutosHomologados = async params => {
     }
   );
   saveAs(data, "relatorio_produtos_homologados.pdf");
+};
+
+export const getRelatorioProdutosAgrupadosMarcasHomologados = async params => {
+  const { data } = await axios.get("/produtos/marcas-por-produto/", {
+    params,
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_agrupados_produtos_marcas_homologados.pdf");
 };
 
 export const getProdutosSuspensos = async payload => {
@@ -484,6 +539,10 @@ export const solicitarCadastroProdutoDieta = async payload => {
 
 export const getNomeProdutosHomologados = async () => {
   return await axios.get(`/produtos/lista-nomes-homologados/`);
+};
+
+export const getSubstitutos = async () => {
+  return await axios.get(`/produtos/lista-substitutos/`);
 };
 
 export const getNomesProdutosSolicitacaoInclusao = async () =>

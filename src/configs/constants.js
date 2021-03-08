@@ -11,11 +11,13 @@ export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 
 export const DIETA_ESPECIAL = "dieta-especial";
+export const CANCELAMENTO = "cancelamento";
 export const DIETA_ESPECIAL_ALTERACAO_UE = "dieta-especial-alteracao-ue";
 export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const ATIVAS_ANATIVAS = "ativas-inativas";
 export const GESTAO_PRODUTO = "gestao-produto";
 export const LANCAMENTO_INICIAL = "lancamento-inicial";
+export const LOGISTICA = "logistica";
 
 export const CODAE = "codae";
 export const TERCEIRIZADA = "terceirizada";
@@ -27,6 +29,11 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE =
+  "solicitacoes-autorizadas-temporariamente";
+export const SOLICITACOES_INATIVAS_TEMPORARIAMENTE =
+  "solicitacoes-inativas-temporariamente";
+export const SOLICITACOES_INATIVAS = "solicitacoes-inativas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
@@ -43,9 +50,13 @@ export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
 };
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
+export const AUTORIZADAS_TEMPORARIAMENTE_DIETA =
+  "autorizadas-temporariamente-dieta";
 export const PENDENTES_DIETA = "pendentes-autorizacao-dieta";
 export const NEGADOS_DIETA = "negados-dieta";
 export const CANCELADOS_DIETA = "cancelados-dieta";
+export const INATIVAS_TEMPORARIAMENTE_DIETA = "inativas-temporariamente-dieta";
+export const INATIVAS_DIETA = "inativas-dieta";
 
 export const DIETA_ESPECIAL_SOLICITACOES = {
   CODAE: "codae-solicitacoes",
@@ -115,6 +126,13 @@ export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
 export const TIPO_ALIMENTACAO_UNIDADE_ESCOLAR =
   "tipo-alimentacao-unidade-escolar";
 export const TIPOS_ALIMENTACAO = "tipos-alimentacao";
+export const DISPONIBILIZACAO_DE_SOLICITACOES =
+  "disponibilizacao-de-solicitacoes";
+export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
+export const ENVIO_REQUISICOES_ENTREGA_AVANCADO =
+  "envio-requisicoes-entrega-completo";
+export const GESTAO_REQUISICAO_ENTREGA = "gestao-requisicao-entrega";
+export const GESTAO_SOLICITACAO_ALTERACAO = "gestao-solicitacao-alteracao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 

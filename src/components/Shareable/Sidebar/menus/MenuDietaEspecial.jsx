@@ -3,7 +3,9 @@ import { Menu, LeafItem } from "./shared";
 import {
   GESTAO_PRODUTO,
   AVALIAR_SOLICITACAO_CADASTRO_PRODUTO,
-  ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO
+  ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO,
+  DIETA_ESPECIAL,
+  CANCELAMENTO
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -13,18 +15,22 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAEGestaoAlimentacao
 } from "helpers/utilities";
+import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const MenuDietaEspecial = () => {
   const exibePainelInicial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhEscola();
+    usuarioEhDRE() ||
+    usuarioEhEscola() ||
+    usuarioEhTerceirizada();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas =
     usuarioEhCODAEDietaEspecial() || usuarioEhNutricionistaSupervisao();
@@ -51,7 +57,7 @@ const MenuDietaEspecial = () => {
       )}
       {exibeAtivasInativas && (
         <LeafItem to={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}>
-          Aguardando autorização
+          {getNomeCardAguardandoAutorizacao()}
         </LeafItem>
       )}
       {exibeAvaliarSolicitacaoCadastroProduto && (
@@ -66,6 +72,11 @@ const MenuDietaEspecial = () => {
           to={`/${GESTAO_PRODUTO}/${ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO}`}
         >
           Acompanhar solic. novos produtos
+        </LeafItem>
+      )}
+      {usuarioEhEscola() && (
+        <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
+          Cancel. Dieta Especial
         </LeafItem>
       )}
     </Menu>

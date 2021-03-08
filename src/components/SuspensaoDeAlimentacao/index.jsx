@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -15,7 +15,8 @@ import {
 import {
   geradorUUID,
   formatarParaMultiselect,
-  getError
+  getError,
+  deepCopy
 } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -328,7 +329,7 @@ class FoodSuspensionEditor extends Component {
   }
 
   onSubmit(values) {
-    values.dias_razoes = this.state.dias_razoes;
+    values.dias_razoes = deepCopy(this.state.dias_razoes);
     values.dias_razoes.forEach(value => {
       const idx = values.dias_razoes.findIndex(
         value2 => value2.id === value.id
@@ -591,8 +592,8 @@ class FoodSuspensionEditor extends Component {
                             }
                           >
                             <Field
-                              component={StatefulMultiSelect}
-                              name=".tipo_de_refeicao"
+                              component={MultiSelect}
+                              name="tipo_de_refeicao"
                               selected={options[period.nome] || []}
                               options={formatarParaMultiselect(
                                 period.tipos_alimentacao
@@ -607,6 +608,9 @@ class FoodSuspensionEditor extends Component {
                                   "Todos os itens estão selecionados",
                                 selectAll: "Todos"
                               }}
+                              nomeDoItemNoPlural="Tipos de alimentação"
+                              required
+                              validate={period.validador}
                             />
                           </div>
                         </div>

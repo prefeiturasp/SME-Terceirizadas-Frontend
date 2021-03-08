@@ -1,4 +1,8 @@
 .tabela-relatorio-quant-diag-dieta-esp {
+  .grid-somente-ativas {
+    grid-template-columns: 50% 50%;
+  }
+
   .grid-nutri-todos {
     grid-template-columns: 20% 15% 18% 10% 15% 10% 12%;
   }

@@ -136,7 +136,7 @@ export default ({ onSubmit, setCarregando }) => {
     if (resposta.status !== 200) {
       setDesabilitarAluno(false);
       setDadosIniciais({ ...values, nome_aluno: "" });
-      toastError("Não há aluno para o código EOL informado.");
+      toastError("Não há dieta especial para o aluno informado.");
     } else if (resposta.status === 200) {
       if (
         tipoUsuario === TIPO_PERFIL.ESCOLA &&
@@ -166,7 +166,7 @@ export default ({ onSubmit, setCarregando }) => {
     } else if (tipoUsuario === TIPO_PERFIL.ESCOLA) {
       form.reset({ dre: values.dre, escola: values.escola });
     } else {
-      form.reset({ codigo_eol_aluno: undefined });
+      form.restart({});
     }
   };
 

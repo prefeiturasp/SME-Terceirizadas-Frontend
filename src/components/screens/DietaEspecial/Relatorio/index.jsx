@@ -2,10 +2,15 @@ import React, { Component } from "react";
 
 import { ESCOLA, CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
-import { getDietaEspecial } from "../../../../services/dietaEspecial.service";
+import {
+  getDietaEspecial,
+  escolaCancelaSolicitacao
+} from "../../../../services/dietaEspecial.service";
 import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
 
 import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import "antd/dist/antd.css";
+import { Spin } from "antd";
 
 import Botao from "../../../Shareable/Botao";
 import {
@@ -20,6 +25,7 @@ import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 
 import "./style.scss";
+import { cabecalhoDieta } from "./helpers";
 
 const BotaoGerarRelatorio = ({ uuid }) => {
   return (
@@ -38,15 +44,21 @@ const BotaoGerarRelatorio = ({ uuid }) => {
   );
 };
 
-const BotaoAutorizaInativacao = ({ showNaoAprovaModal }) => {
+const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
   return (
     <div className="form-group row float-right mt-4">
       <Botao
-        texto="Autorizar Inativação"
+        texto="Autorizar Cancelamento"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         className="ml-3"
-        onClick={() => showNaoAprovaModal("Não")}
+        onClick={() => {
+          setCarregando(true);
+          escolaCancelaSolicitacao(uuid).then(() => {
+            onAutorizar();
+            toastSuccess("Autorização do Cancelamento realizada com sucesso!");
+          });
+        }}
       />
     </div>
   );
@@ -58,7 +70,8 @@ export default class Relatorio extends Component {
     this.state = {
       dietaEspecial: null,
       solicitacoesVigentes: null,
-      uuid: null
+      uuid: null,
+      carregando: false
     };
   }
 
@@ -81,10 +94,12 @@ export default class Relatorio extends Component {
   };
 
   loadSolicitacao = uuid => {
+    this.setCarregando(true);
     getDietaEspecial(uuid).then(responseDietaEspecial => {
       this.setState({
         dietaEspecial: responseDietaEspecial.data
       });
+      this.setCarregando(false);
     });
   };
 
@@ -97,21 +112,25 @@ export default class Relatorio extends Component {
     });
   };
 
+  setCarregando = carregando => {
+    this.setState({ carregando: carregando });
+  };
+
   render() {
     const {
       dietaEspecial,
       showNaoAprovaModal,
-      solicitacoesVigentes
+      solicitacoesVigentes,
+      carregando
     } = this.state;
     const { visao } = this.props;
     if (!dietaEspecial) {
       return <div>Carregando...</div>;
     }
+
     return (
-      <>
-        <span className="page-title">{`Dieta Especial - Solicitação # ${
-          dietaEspecial.id_externo
-        }`}</span>
+      <Spin tip="Carregando..." spinning={carregando}>
+        <span className="page-title">{cabecalhoDieta(dietaEspecial)}</span>
         <div className="card mt-3">
           <div className="card-body">
             <CorpoRelatorio
@@ -143,12 +162,13 @@ export default class Relatorio extends Component {
             {dietaEspecial.status_solicitacao ===
               statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
               visao === CODAE && (
-                <BotaoAutorizaInativacao
+                <BotaoAutorizaCancelamento
                   uuid={dietaEspecial.uuid}
                   showNaoAprovaModal={this.showNaoAprovaModal}
                   onAutorizar={() => {
                     this.loadSolicitacao(dietaEspecial.uuid);
                   }}
+                  setCarregando={this.setCarregando}
                 />
               )}
             {dietaEspecial.status_solicitacao ===
@@ -163,7 +183,7 @@ export default class Relatorio extends Component {
           onNegar={this.props.onAutorizarOuNegar}
           uuid={dietaEspecial.uuid}
         />
-      </>
+      </Spin>
     );
   }
 }

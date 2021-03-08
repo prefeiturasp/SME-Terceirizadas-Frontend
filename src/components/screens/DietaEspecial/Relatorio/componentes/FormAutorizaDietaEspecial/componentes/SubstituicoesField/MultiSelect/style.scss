@@ -11,4 +11,12 @@ div.multi-select {
     span {
     color: #5d515b !important;
   }
+
+  .dropdown .dropdown-heading .dropdown-heading-value span {
+    float: left;
+    max-width: 16rem;
+    padding: 0 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

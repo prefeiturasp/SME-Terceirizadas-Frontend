@@ -5,7 +5,7 @@ import { FieldArray } from "react-final-form-arrays";
 import Substituicao from "./SubstituicaoFinalForm";
 
 import "./style.scss";
-import { validateSubstituicao } from "../../../FormAutorizaDietaEspecial/helper";
+import { required } from "../../../../../../../../helpers/fieldValidators";
 
 export default class SubstituicoesField extends Component {
   render() {
@@ -31,8 +31,9 @@ export default class SubstituicoesField extends Component {
                   fields.swap(index, fields.length - 1);
                   fields.pop();
                 }}
-                validate={validateSubstituicao}
+                validate={required}
                 deveHabilitarApagar={fields.length > 1}
+                required
               />
             ))
           }

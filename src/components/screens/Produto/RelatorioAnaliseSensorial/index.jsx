@@ -96,22 +96,54 @@ class RelatorioAnaliseSensorial extends Component {
       <div className="card">
         <div className="card-body">
           {homologacao !== null && (
-            <article className="botoes-header">
-              <Botao
-                type={BUTTON_TYPE.BUTTON}
-                titulo="imprimir"
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.PRINT}
-                onClick={() => {
-                  getRelatorioProdutoAnaliseSensorial(homologacao.produto);
-                }}
-              />
-              <Botao
-                texto={"Responder"}
-                type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.GREEN}
-                onClick={() => this.showModal()}
-              />
+            <article>
+              <div className="row">
+                <div className="row col-10 ml-0">
+                  <div className="col-6 pl-0">
+                    <p className="text-muted">
+                      Solicitação de análise sensorial
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p>
+                      <span className="text-muted">
+                        Protocolo Análise Sensorial:
+                      </span>{" "}
+                      {homologacao.protocolo_analise_sensorial}
+                    </p>
+                  </div>
+
+                  <section className="texto-wysiwyg row col-12 ml-0">
+                    <div className="col-12">
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: justificativa
+                        }}
+                      />
+                    </div>
+                  </section>
+                </div>
+
+                <div className="col-2 a-flex">
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    titulo="imprimir"
+                    style={BUTTON_STYLE.BLUE}
+                    icon={BUTTON_ICON.PRINT}
+                    onClick={() => {
+                      getRelatorioProdutoAnaliseSensorial(homologacao.produto);
+                    }}
+                  />
+                  <Botao
+                    texto={"Responder"}
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    onClick={() => this.showModal()}
+                    className="ml-2"
+                  />
+                </div>
+              </div>
+              <hr />
             </article>
           )}
 
@@ -392,26 +424,6 @@ class RelatorioAnaliseSensorial extends Component {
                         );
                       })}
                     </div>
-                  </div>
-                </section>
-              </article>
-
-              <hr />
-
-              <article>
-                <section className="duas-colunas">
-                  <div>
-                    <label>Solicitação de análise sensorial</label>
-                    <p
-                      dangerouslySetInnerHTML={{
-                        __html: justificativa
-                      }}
-                    />
-                  </div>
-
-                  <div>
-                    <label>Protocolo de Análise sensorial</label>
-                    <p>{homologacao.protocolo_analise_sensorial}</p>
                   </div>
                 </section>
               </article>

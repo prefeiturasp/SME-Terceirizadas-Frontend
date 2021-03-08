@@ -6,7 +6,13 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhAdministradorDRE,
+  usuarioEhCoordenadorEscola,
+  usuarioEhLogistica,
+  usuarioEhAdministradorGpCODAE,
+  usuarioEhAdministradorNutriSupervisao,
+  usuarioEhDistribuidora
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -16,7 +22,8 @@ import {
   MenuConfiguracoes,
   MenuGestaoDeProduto,
   MenuLancamentoInicial,
-  MenuRelatorios
+  MenuRelatorios,
+  MenuLogistica
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -32,6 +39,7 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
+  const exibirPainelInicial = !usuarioEhCoordenadorEscola();
   const exibirGestaoAlimentacao =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhDRE() ||
@@ -54,6 +62,15 @@ export const SidebarContent = () => {
   const exibirLancamentoInicial = usuarioEhEscola();
   const exibirCadastros =
     usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
+  const exibirRelatorios = !usuarioEhCoordenadorEscola();
+
+  const exibirConfiguracoes =
+    !usuarioEhEscola() &&
+    !usuarioEhAdministradorGpCODAE() &&
+    !usuarioEhAdministradorNutriSupervisao() &&
+    !usuarioEhAdministradorDRE();
+
+  const exibirMenuLogistica = usuarioEhLogistica() || usuarioEhDistribuidora();
 
   const _props = {
     activeMenu,
@@ -61,15 +78,18 @@ export const SidebarContent = () => {
   };
 
   return [
-    <ListItem key={0} icon="fa-file-alt" to={"/"}>
-      Painel Inicial
-    </ListItem>,
+    exibirPainelInicial && (
+      <ListItem key={0} icon="fa-file-alt" to={"/"}>
+        Painel Inicial
+      </ListItem>
+    ),
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
     exibirDietaEspecial && <MenuDietaEspecial key={2} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
-    exibirLancamentoInicial && <MenuLancamentoInicial key={7} />,
-    <MenuRelatorios key={6} />,
-    <MenuConfiguracoes key={8} />
+    exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
+    exibirMenuLogistica && <MenuLogistica key={7} />,
+    exibirRelatorios && <MenuRelatorios key={8} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={9} />
   ];
 };

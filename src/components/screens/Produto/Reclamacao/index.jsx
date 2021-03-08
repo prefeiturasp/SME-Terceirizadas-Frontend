@@ -90,6 +90,7 @@ class ReclamacaoProduto extends Component {
         <div className="card mt-3 page-reclamacao-produto">
           <div className="card-body">
             <FormBuscaProduto
+              novaReclamacao
               formName="reclamacao"
               onSubmit={this.onSubmitFormBuscaProduto}
               onAtualizaProdutos={produtos => setProdutos(produtos)}

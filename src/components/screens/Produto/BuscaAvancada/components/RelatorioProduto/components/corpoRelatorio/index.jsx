@@ -126,6 +126,15 @@ export default class CorpoRelatorio extends Component {
     const { produto, historico } = this.props;
     const { informacoes, logs, logSelecionado } = this.state;
     const status = produto.ultima_homologacao.status;
+    const logsAnaliseSensorial =
+      produto.ultima_homologacao.logs &&
+      produto.ultima_homologacao.logs.filter(
+        log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
+      );
+    const logAnaliseSensorial =
+      logsAnaliseSensorial &&
+      logsAnaliseSensorial.length > 0 &&
+      logsAnaliseSensorial[logsAnaliseSensorial.length - 1];
     return (
       <section className="corpo-reatorio-produto">
         {!!logs.length && (
@@ -139,27 +148,64 @@ export default class CorpoRelatorio extends Component {
           <InformativoReclamacao homologacao={produto.ultima_homologacao} />
         )}
         <article className="flex-botoes-relatorio">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
-            icon={BUTTON_ICON.PRINT}
-            onClick={() => {
-              getRelatorioProduto(produto);
-            }}
-            className="mr-2"
-          />
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            texto="Histórico"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={this.showModal}
-          />
+          <div className="row col-12">
+            <div className="row col-10 ml-0">
+              {logAnaliseSensorial && (
+                <>
+                  <div className="col-6 pl-0">
+                    <p className="text-muted">
+                      Solicitação de análise sensorial
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p>
+                      <span className="text-muted">
+                        Protocolo Análise Sensorial:
+                      </span>{" "}
+                      {produto.ultima_homologacao.protocolo_analise_sensorial}
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {logAnaliseSensorial && (
+                <section className="texto-wysiwyg row col-12 ml-0">
+                  <div className="col-12">
+                    <p
+                      dangerouslySetInnerHTML={{
+                        __html: logAnaliseSensorial.justificativa
+                      }}
+                    />
+                  </div>
+                </section>
+              )}
+            </div>
+
+            <div className="col-2 d-flex" style={{ alignItems: "flex-end" }}>
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.PRINT}
+                onClick={() => {
+                  getRelatorioProduto(produto);
+                }}
+                className="mr-2"
+              />
+              <Botao
+                type={BUTTON_TYPE.BUTTON}
+                texto="Histórico"
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={this.showModal}
+              />
+            </div>
+          </div>
+          <hr />
         </article>
         <header>
           <div className="label-relatorio">Nome do produto</div>
           <div className="label-relatorio">Marca</div>
           <div className="label-relatorio">Tipo</div>
-          <div className="label-relatorio">Data</div>
+          <div className="label-relatorio">Data de cadastro</div>
 
           <div className="value-relatorio">{produto.nome}</div>
           <div className="value-relatorio">{produto.marca.nome}</div>
@@ -167,7 +213,7 @@ export default class CorpoRelatorio extends Component {
             {produto.eh_para_alunos_com_dieta ? "DIETA ESPECIAL" : "COMUM"}
           </div>
           <div className="value-relatorio">
-            {produto.criado_em.split(" ")[0]}
+            {produto.ultima_homologacao.data_cadastro}
           </div>
         </header>
         <article>
@@ -223,7 +269,7 @@ export default class CorpoRelatorio extends Component {
           </div>
 
           <div className="info-sem-grid">
-            <div className="label-relatorio">Compoentes do produto</div>
+            <div className="label-relatorio">Componentes do produto</div>
             <div className="value-relatorio">{produto.componentes}</div>
           </div>
 

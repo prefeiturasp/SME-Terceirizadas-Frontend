@@ -4,7 +4,7 @@ import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
-import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import CheckboxField from "components/Shareable/Checkbox/Field";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -17,9 +17,9 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 
 import {
-  getNomesProdutos,
-  getNomesMarcas,
-  getNomesFabricantes,
+  getNomesUnicosProdutos,
+  getNomesUnicosMarcas,
+  getNomesUnicosFabricantes,
   getNomesTerceirizadas
 } from "services/produto.service";
 
@@ -46,15 +46,6 @@ function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
     case "popularDados":
       return { ...state, dados: payload };
-    case "atualizarFiltro": {
-      if (!payload.searchText.length) {
-        return { ...state, [payload.filtro]: [] };
-      }
-      const reg = new RegExp(payload.searchText, "i");
-      const filtrado = state.dados[payload.filtro].filter(el => reg.test(el));
-      return { ...state, [payload.filtro]: filtrado };
-    }
-
     case "resetar":
       return { ...initialState, dados: state.dados };
     default:
@@ -73,36 +64,26 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
   useEffect(() => {
     async function fetchData() {
       Promise.all([
-        getNomesProdutos(),
-        getNomesMarcas(),
-        getNomesFabricantes(),
+        getNomesUnicosProdutos(),
+        getNomesUnicosMarcas(),
+        getNomesUnicosFabricantes(),
         getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
+      ]).then(([produtos, marcas, fabricantes, terceirizadas]) =>
         dispatch({
           type: "popularDados",
           payload: {
-            produtos: produtos.data.results.map(el => el.nome),
-            marcas: marcas.data.results.map(el => el.nome),
-            fabricantes: fabricantes.data.results.map(el => el.nome),
+            produtos: produtos.data.results,
+            marcas: marcas.data.results,
+            fabricantes: fabricantes.data.results,
             terceirizadas: terceirizadas.data.results.map(
               el => el.nome_fantasia
             )
           }
-        });
-      });
+        })
+      );
     }
     fetchData();
   }, []);
-
-  const onSearch = (filtro, searchText) => {
-    dispatch({
-      type: "atualizarFiltro",
-      payload: {
-        filtro,
-        searchText
-      }
-    });
-  };
 
   const onSelectStatus = value => {
     if (value === "Todos") {
@@ -272,12 +253,11 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
           <div className="form-row">
             <div className="col-md-12 col-xl-12">
               <Field
-                component={AutoCompleteField}
-                dataSource={state.produtos}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={state.dados.produtos}
                 label="Nome do Produto"
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
-                onSearch={v => onSearch("produtos", v)}
                 name="nome_produto"
               />
             </div>
@@ -285,22 +265,20 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
           <div className="form-row">
             <div className="col-md-6 col-xl-6">
               <Field
-                component={AutoCompleteField}
-                dataSource={state.marcas}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={state.dados.marcas}
                 className="input-busca-produto"
                 label="Marca do Produto"
                 placeholder="Digite marca do produto"
-                onSearch={v => onSearch("marcas", v)}
                 name="nome_marca"
               />
             </div>
             <div className="col-md-6 col-xl-6">
               <Field
-                component={AutoCompleteField}
-                dataSource={state.fabricantes}
+                component={AutoCompleteFieldUnaccent}
+                dataSource={state.dados.fabricantes}
                 label="Fabricante do Produto"
                 placeholder="Digite fabricante do produto"
-                onSearch={v => onSearch("fabricantes", v)}
                 name="nome_fabricante"
               />
             </div>

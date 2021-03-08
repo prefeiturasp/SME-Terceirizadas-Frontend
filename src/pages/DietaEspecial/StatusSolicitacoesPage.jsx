@@ -20,7 +20,18 @@ import {
   getDietaEspecialPendenteAutorizacaoTerceirizada,
   getDietaEspecialAutorizadasTerceirizada,
   getDietaEspecialNegadasTerceirizada,
-  getDietaEspecialCanceladasTerceirizada
+  getDietaEspecialCanceladasTerceirizada,
+  getDietaEspecialAutorizadasTemporariamenteTerceirizada,
+  getDietaEspecialInativasTemporariamenteTerceirizada,
+  getDietaEspecialAutorizadasTemporariamenteCODAE,
+  getDietaEspecialAutorizadasTemporariamenteDRE,
+  getDietaEspecialAutorizadasTemporariamenteEscola,
+  getDietaEspecialInativasTemporariamenteCODAE,
+  getDietaEspecialInativasTemporariamenteDRE,
+  getDietaEspecialInativasTemporariamenteEscola,
+  getDietaEspecialInativasCODAE,
+  getDietaEspecialInativasDRE,
+  getDietaEspecialInativasEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -64,6 +75,13 @@ export const SolicitacoesDietaEspecialEscola = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasEscola}
     getDietaEspecialNegadas={getDietaEspecialNegadasEscola}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasEscola}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteEscola
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteEscola
+    }
+    getDietaEspecialInativas={getDietaEspecialInativasEscola}
   />
 );
 
@@ -76,6 +94,13 @@ export const SolicitacoesDietaEspecialDRE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasDRE}
     getDietaEspecialNegadas={getDietaEspecialNegadasDRE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasDRE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteDRE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteDRE
+    }
+    getDietaEspecialInativas={getDietaEspecialInativasDRE}
   />
 );
 
@@ -90,6 +115,13 @@ export const SolicitacoesDietaEspecialCODAE = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasCODAE}
     getDietaEspecialNegadas={getDietaEspecialNegadasCODAE}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasCODAE}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteCODAE
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteCODAE
+    }
+    getDietaEspecialInativas={getDietaEspecialInativasCODAE}
   />
 );
 
@@ -104,5 +136,11 @@ export const SolicitacoesDietaEspecialTerceirizada = () => (
     getDietaEspecialAutorizadas={getDietaEspecialAutorizadasTerceirizada}
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
+    getDietaEspecialAutorizadasTemporariamente={
+      getDietaEspecialAutorizadasTemporariamenteTerceirizada
+    }
+    getDietaEspecialInativasTemporariamente={
+      getDietaEspecialInativasTemporariamenteTerceirizada
+    }
   />
 );
