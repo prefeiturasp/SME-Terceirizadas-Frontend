@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
+import Aceitar from "../Aceitar";
 
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
   return (
@@ -81,6 +82,14 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                     </div>
                     <div>
                       <AlimentosConsolidado solicitacao={solicitacao} />
+
+                      <div className="d-flex justify-content-end">
+                        <Aceitar
+                          className=""
+                          solicitacao={solicitacao}
+                          // updatePage={updatePage}
+                        />
+                      </div>
                     </div>
                   </div>
                 </section>
