@@ -6,7 +6,8 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { Field, Form } from "react-final-form";
 import { getConsolidadoAlimentos } from "services/logistica.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import { requiredMultiselectKhan } from "helpers/fieldValidators";
+import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado"
+import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
@@ -96,38 +97,7 @@ export default ({ solicitacao, updatePage }) => {
             />
           </div>
           {alimentosConsolidado && (
-            <table className="table table-bordered table-consolidado-alimentos mt-3">
-              <thead>
-                <tr>
-                  <th scope="col">Alimento</th>
-                  <th scope="col">Total de embalagens</th>
-                  <th scope="col">Peso total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {alimentosConsolidado.map(item => (
-                  <>
-                    <tr>
-                      <td>{item.nome_alimento}</td>
-                      <td>
-                        {item.total_embalagens.map(item => (
-                          <>
-                            {item.qtd_volume} {item.descricao_embalagem}.{" "}
-                            {item.capacidade_embalagem}
-                            {item.unidade_medida}
-                            <br />
-                          </>
-                        ))}
-                      </td>
-                      <td>
-                        {item.peso_total}
-                        {item.total_embalagens[0].unidade_medida}
-                      </td>
-                    </tr>
-                  </>
-                ))}
-              </tbody>
-            </table>
+            <TabelaAlimentoConsolidado alimentosConsolidado={alimentosConsolidado}/>
           )}
           <Form
             onSubmit={onSubmit}
@@ -186,11 +156,8 @@ export default ({ solicitacao, updatePage }) => {
                           component={TextArea}
                           label="Justificativa"
                           name="justificativa"
-                          required={
-                            values.motivo && values.motivo.includes("OUTROS")
-                              ? true
-                              : false
-                          }
+                          required
+                          validate={required}
                         />
                       </div>
                     </div>
