@@ -1,7 +1,6 @@
-import React from 'react'
+import React from "react";
 
-export default ({alimentosConsolidado, className}) => {
-
+export default ({ alimentosConsolidado, className }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
     const embalagensFiltradas = embalagens.filter(value => {
       return value.tipo_embalagem === tipo;
@@ -11,17 +10,23 @@ export default ({alimentosConsolidado, className}) => {
   };
 
   return (
-    <table className={`table table-bordered table-consolidado-alimentos mt-3 ${className}`}>
+    <table
+      className={`table table-bordered table-consolidado-alimentos mt-3 ${className}`}
+    >
       <thead>
         <tr>
-          <th scope="col" rowSpan="2" className="align-middle">Alimento</th>
+          <th scope="col" rowSpan="2" className="align-middle">
+            Alimento
+          </th>
           <th scope="col" colSpan="2" className="text-center">
             Embalagem Fechada
           </th>
           <th scope="col" colSpan="2" className="text-center">
             Embalagem Fracionada
           </th>
-          <th scope="col" rowSpan="2" className="align-middle">Peso total</th>
+          <th scope="col" rowSpan="2" className="align-middle">
+            Peso total
+          </th>
         </tr>
         <tr>
           <th scope="col">Qtde</th>
@@ -74,10 +79,9 @@ export default ({alimentosConsolidado, className}) => {
                 </td>
               </tr>
             </>
-          )
-        }
-        )}
+          );
+        })}
       </tbody>
     </table>
-  )
-}
+  );
+};

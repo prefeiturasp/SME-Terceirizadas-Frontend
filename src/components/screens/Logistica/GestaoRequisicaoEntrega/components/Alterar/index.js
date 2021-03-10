@@ -6,7 +6,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { Field, Form } from "react-final-form";
 import { getConsolidadoAlimentos } from "services/logistica.service";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado"
+import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
 import { required, requiredMultiselectKhan } from "helpers/fieldValidators";
 import {
   BUTTON_TYPE,
@@ -97,7 +97,9 @@ export default ({ solicitacao, updatePage }) => {
             />
           </div>
           {alimentosConsolidado && (
-            <TabelaAlimentoConsolidado alimentosConsolidado={alimentosConsolidado}/>
+            <TabelaAlimentoConsolidado
+              alimentosConsolidado={alimentosConsolidado}
+            />
           )}
           <Form
             onSubmit={onSubmit}

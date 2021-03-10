@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Spin } from "antd";
 import { getConsolidadoAlimentos } from "services/logistica.service";
-import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado"
+import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
 
 export default ({ solicitacao }) => {
   const [alimentosConsolidado, setAlimentosConsolidado] = useState();
@@ -24,7 +24,10 @@ export default ({ solicitacao }) => {
         <Spin tip="Carregando alimentos..." spinning={!alimentosConsolidado} />
       </div>
       {alimentosConsolidado && (
-        <TabelaAlimentoConsolidado className="table-sm" alimentosConsolidado={alimentosConsolidado}/>
+        <TabelaAlimentoConsolidado
+          className="table-sm"
+          alimentosConsolidado={alimentosConsolidado}
+        />
       )}
     </>
   );
