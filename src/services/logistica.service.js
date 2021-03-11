@@ -71,3 +71,8 @@ export const getListagemSolicitacaoAlteracao = async params => {
   const url = `/solicitacao-de-alteracao-de-requisicao/`;
   return await axios.get(url, { params });
 };
+
+export const dilogAceitaAlteracao = async (uuid, params) => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/${uuid}/dilog-aceita-alteracao/`;
+  return await axios.patch(url, params);
+};

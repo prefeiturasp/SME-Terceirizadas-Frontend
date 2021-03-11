@@ -7,18 +7,18 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import ConfirmarEnvio from "./ConfirmarEnvio";
+import ConfirmarAceite from "./ConfirmarAceite";
 import "./styles.scss";
 
 export default ({ solicitacao, updatePage }) => {
   const [show, setShow] = useState(false);
-  const [showConfirmarEnvio, setShowConfirmarEnvio] = useState(false);
+  const [showConfirmarAceite, setShowConfirmarAceite] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const onSubmit = async () => {
-    setShowConfirmarEnvio(true);
+    setShowConfirmarAceite(true);
   };
 
   return (
@@ -29,6 +29,7 @@ export default ({ solicitacao, updatePage }) => {
         style={BUTTON_STYLE.GREEN}
         onClick={handleShow}
         className="float-right ml-3"
+        disabled={solicitacao.status !== "EM_ANALISE"}
       />
 
       <Modal
@@ -48,8 +49,8 @@ export default ({ solicitacao, updatePage }) => {
             subscription={{ submitting: true, values: true }}
             validate={values => {
               const errors = {};
-              if (!values.justificativa) {
-                errors.justificativa = "Campo obrigatório";
+              if (!values.justificativa_aceite) {
+                errors.justificativa_aceite = "Campo obrigatório";
               }
               return errors;
             }}
@@ -65,7 +66,7 @@ export default ({ solicitacao, updatePage }) => {
                         <Field
                           component={TextArea}
                           label="Justificativa de aceite"
-                          name="justificativa"
+                          name="justificativa_aceite"
                           required={true}
                         />
                       </div>
@@ -74,9 +75,9 @@ export default ({ solicitacao, updatePage }) => {
 
                     <div className="row mb-3">
                       <div className="col">
-                        <ConfirmarEnvio
-                          show={showConfirmarEnvio}
-                          setShow={setShowConfirmarEnvio}
+                        <ConfirmarAceite
+                          show={showConfirmarAceite}
+                          setShow={setShowConfirmarAceite}
                           form={form}
                           updatePage={updatePage}
                           handleCloseAll={handleClose}
