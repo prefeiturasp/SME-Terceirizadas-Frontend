@@ -34,9 +34,9 @@ export default () => {
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const codigo = urlParams.get("id_alteracao");
+      const codigo = urlParams.get("numero_solicitacao");
       const filtro = {
-        numero_requisicao: codigo
+        numero_solicitacao: codigo
       };
       setFiltros({ ...filtro });
     }
