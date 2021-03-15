@@ -54,6 +54,10 @@ export default () => {
     setPage(page);
   };
 
+  const updatePage = () => {
+    buscarSolicitacoes(page);
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-gestao-solicitacao-alteracao">
@@ -74,6 +78,7 @@ export default () => {
                 solicitacoes={solicitacoes}
                 ativos={ativos}
                 setAtivos={setAtivos}
+                updatePage={updatePage}
               />
               <div className="row">
                 <div className="col">
