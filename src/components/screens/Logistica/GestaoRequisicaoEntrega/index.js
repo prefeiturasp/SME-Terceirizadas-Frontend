@@ -53,7 +53,7 @@ export default () => {
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const codigo = urlParams.get("id_requisicao");
+      const codigo = urlParams.get("numero_requisicao");
       const filtro = {
         numero_requisicao: codigo
       };
