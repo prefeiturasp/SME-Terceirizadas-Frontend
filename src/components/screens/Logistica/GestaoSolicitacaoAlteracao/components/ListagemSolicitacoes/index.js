@@ -3,8 +3,14 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
+import Aceitar from "../Aceitar";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
+const ListagemSolicitacoes = ({
+  solicitacoes,
+  ativos,
+  setAtivos,
+  updatePage
+}) => {
   return (
     <section className="resultado-busca-solicitacao-alteracao">
       <header>Veja solicitações disponibilizadas</header>
@@ -75,12 +81,29 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                     </div>
                     <div className="row mt-2">
                       <div className="col">
-                        <b>Justificativa</b> <br />
+                        <b>Justificativa da solicitação</b> <br />
                         {solicitacao.justificativa}
                       </div>
                     </div>
+                    {solicitacao.justificativa_aceite && (
+                      <div className="row mt-2">
+                        <div className="col">
+                          <b>Justificativa de aceite</b> <br />
+                          {solicitacao.justificativa_aceite}
+                        </div>
+                      </div>
+                    )}
+
                     <div>
                       <AlimentosConsolidado solicitacao={solicitacao} />
+
+                      <div className="d-flex justify-content-end">
+                        <Aceitar
+                          className=""
+                          solicitacao={solicitacao}
+                          updatePage={updatePage}
+                        />
+                      </div>
                     </div>
                   </div>
                 </section>

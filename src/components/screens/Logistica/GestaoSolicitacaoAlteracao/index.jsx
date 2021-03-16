@@ -30,6 +30,19 @@ export default () => {
   };
 
   useEffect(() => {
+    const queryString = window.location.search;
+
+    if (queryString) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codigo = urlParams.get("numero_solicitacao");
+      const filtro = {
+        numero_solicitacao: codigo
+      };
+      setFiltros({ ...filtro });
+    }
+  }, []);
+
+  useEffect(() => {
     if (filtros) {
       buscarSolicitacoes(1);
       setPage(1);
@@ -39,6 +52,10 @@ export default () => {
   const nextPage = page => {
     buscarSolicitacoes(page);
     setPage(page);
+  };
+
+  const updatePage = () => {
+    buscarSolicitacoes(page);
   };
 
   return (
@@ -61,6 +78,7 @@ export default () => {
                 solicitacoes={solicitacoes}
                 ativos={ativos}
                 setAtivos={setAtivos}
+                updatePage={updatePage}
               />
               <div className="row">
                 <div className="col">
