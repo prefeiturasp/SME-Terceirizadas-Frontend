@@ -4,6 +4,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
 import Aceitar from "../Aceitar";
+import Negar from "../Negar";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -93,12 +94,25 @@ const ListagemSolicitacoes = ({
                         </div>
                       </div>
                     )}
+                    {solicitacao.justificativa_negacao && (
+                      <div className="row mt-2">
+                        <div className="col">
+                          <b>Justificativa de negação</b> <br />
+                          {solicitacao.justificativa_negacao}
+                        </div>
+                      </div>
+                    )}
 
                     <div>
                       <AlimentosConsolidado solicitacao={solicitacao} />
 
                       <div className="d-flex justify-content-end">
                         <Aceitar
+                          className=""
+                          solicitacao={solicitacao}
+                          updatePage={updatePage}
+                        />
+                        <Negar
                           className=""
                           solicitacao={solicitacao}
                           updatePage={updatePage}

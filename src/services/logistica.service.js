@@ -76,3 +76,8 @@ export const dilogAceitaAlteracao = async (uuid, params) => {
   const url = `/solicitacao-de-alteracao-de-requisicao/${uuid}/dilog-aceita-alteracao/`;
   return await axios.patch(url, params);
 };
+
+export const dilogNegaAlteracao = async (uuid, params) => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/${uuid}/dilog-nega-alteracao/`;
+  return await axios.patch(url, params);
+};
