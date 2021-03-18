@@ -7,24 +7,27 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import ConfirmarAceite from "./ConfirmarAceite";
+import ConfirmarAlteracao from "./ConfirmarAlteracao";
 import "./styles.scss";
+import { BOTAO_ACEITAR } from "../../constans";
 
-export default ({ solicitacao, updatePage }) => {
+export default ({ solicitacao, updatePage, acao }) => {
   const [show, setShow] = useState(false);
-  const [showConfirmarAceite, setShowConfirmarAceite] = useState(false);
+  const [showConfirmarAlteracao, setShowConfirmarAlteracao] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const onSubmit = async () => {
-    setShowConfirmarAceite(true);
+    setShowConfirmarAlteracao(true);
   };
+
+  const aceiteText = acao === BOTAO_ACEITAR ? "Aceitar" : "Negar";
 
   return (
     <>
       <Botao
-        texto="Aceitar"
+        texto={aceiteText}
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         onClick={handleShow}
@@ -38,7 +41,7 @@ export default ({ solicitacao, updatePage }) => {
         dialogClassName="custom-modal-size"
       >
         <Modal.Header closeButton>
-          <Modal.Title> Aceitar solicitação de alteração </Modal.Title>
+          <Modal.Title> {aceiteText} solicitação de alteração </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Solicitação de alteração número:{" "}
@@ -49,8 +52,8 @@ export default ({ solicitacao, updatePage }) => {
             subscription={{ submitting: true, values: true }}
             validate={values => {
               const errors = {};
-              if (!values.justificativa_aceite) {
-                errors.justificativa_aceite = "Campo obrigatório";
+              if (!values.justificativa) {
+                errors.justificativa = "Campo obrigatório";
               }
               return errors;
             }}
@@ -65,8 +68,12 @@ export default ({ solicitacao, updatePage }) => {
                       <div className="col">
                         <Field
                           component={TextArea}
-                          label="Justificativa de aceite"
-                          name="justificativa_aceite"
+                          label={
+                            acao === BOTAO_ACEITAR
+                              ? "Justificativa de aceite"
+                              : "Justificativa de negação"
+                          }
+                          name="justificativa"
                           required={true}
                         />
                       </div>
@@ -75,14 +82,15 @@ export default ({ solicitacao, updatePage }) => {
 
                     <div className="row mb-3">
                       <div className="col">
-                        <ConfirmarAceite
-                          show={showConfirmarAceite}
-                          setShow={setShowConfirmarAceite}
+                        <ConfirmarAlteracao
+                          show={showConfirmarAlteracao}
+                          setShow={setShowConfirmarAlteracao}
                           form={form}
                           updatePage={updatePage}
                           handleCloseAll={handleClose}
                           solicitacao={solicitacao}
                           values={values}
+                          acao={acao}
                         />
                         <Botao
                           texto="Voltar"
