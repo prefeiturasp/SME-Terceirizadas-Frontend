@@ -2,11 +2,7 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { ASelect } from "../../../../Shareable/MakeField";
 import InputText from "components/Shareable/Input/InputText";
-import {
-  maxLength,
-  required,
-  requiredMultiselect
-} from "helpers/fieldValidators";
+import { required, requiredMultiselect } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -15,8 +11,6 @@ import {
 
 import "./styles.scss";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
-
-const maxLength5000 = maxLength(5000);
 
 class WizardFormPrimeiraPagina extends React.Component {
   constructor(props) {
@@ -258,11 +252,10 @@ class WizardFormPrimeiraPagina extends React.Component {
 
           <div className="componentes-do-produto">
             <Field
-              component={TextArea}
+              component={InputText}
               label="Nome dos componentes do produto"
               name="componentes"
               type="text"
-              validate={[required, maxLength5000]}
               required
             />
           </div>
