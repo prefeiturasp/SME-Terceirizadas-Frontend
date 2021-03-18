@@ -41,25 +41,37 @@ export default ({
   const aceitarSolicitacao = async val => {
     const payload = { ...val };
     const res = await dilogAceitaAlteracao(solicitacao.uuid, payload);
-    if (res.status === 200) {
+    try {
+      if (res.status === 200) {
+        setShow(false);
+        handleCloseAll();
+        toastSuccess("Solicitação de alteração aceita");
+        updatePage();
+      } else {
+        toastError("Houve um erro ao aceitar a solicitação de alteração.");
+      }
+    } catch (e) {
       setShow(false);
       handleCloseAll();
-      toastSuccess("Solicitação de alteração aceita");
-      updatePage();
-    } else {
-      toastError("Houve um erro ao aceitar a solicitação de alteração.");
+      toastError("Houve um erro ao negar a solicitação de alteração.");
     }
   };
 
   const negarSolicitacao = async val => {
     const payload = { ...val };
-    const res = await dilogNegaAlteracao(solicitacao.uuid, payload);
-    if (res.status === 200) {
+    try {
+      const res = await dilogNegaAlteracao(solicitacao.uuid, payload);
+      if (res.status === 200) {
+        setShow(false);
+        handleCloseAll();
+        toastSuccess("Solicitação de alteração negada");
+        updatePage();
+      } else {
+        toastError("Houve um erro ao aceitar a solicitação de alteração.");
+      }
+    } catch (e) {
       setShow(false);
       handleCloseAll();
-      toastSuccess("Solicitação de alteração negada");
-      updatePage();
-    } else {
       toastError("Houve um erro ao negar a solicitação de alteração.");
     }
   };
