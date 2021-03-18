@@ -9,6 +9,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ConfirmarAlteracao from "./ConfirmarAlteracao";
 import "./styles.scss";
+import { BOTAO_ACEITAR } from "../../constans";
 
 export default ({ solicitacao, updatePage, acao }) => {
   const [show, setShow] = useState(false);
@@ -21,7 +22,7 @@ export default ({ solicitacao, updatePage, acao }) => {
     setShowConfirmarAlteracao(true);
   };
 
-  const aceiteText = acao === "aceitar" ? "Aceitar" : "Negar";
+  const aceiteText = acao === BOTAO_ACEITAR ? "Aceitar" : "Negar";
 
   return (
     <>
@@ -68,7 +69,7 @@ export default ({ solicitacao, updatePage, acao }) => {
                         <Field
                           component={TextArea}
                           label={
-                            acao === "aceitar"
+                            acao === BOTAO_ACEITAR
                               ? "Justificativa de aceite"
                               : "Justificativa de negação"
                           }

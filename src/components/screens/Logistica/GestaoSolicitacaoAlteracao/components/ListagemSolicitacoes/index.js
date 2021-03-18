@@ -4,6 +4,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
 import Alterar from "../Alterar";
+import { BOTAO_ACEITAR, BOTAO_NEGAR } from "../../constans";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -107,13 +108,13 @@ const ListagemSolicitacoes = ({
 
                       <div className="d-flex justify-content-end">
                         <Alterar
-                          acao="aceitar"
+                          acao={BOTAO_ACEITAR}
                           className=""
                           solicitacao={solicitacao}
                           updatePage={updatePage}
                         />
                         <Alterar
-                          acao="negar"
+                          acao={BOTAO_NEGAR}
                           className=""
                           solicitacao={solicitacao}
                           updatePage={updatePage}

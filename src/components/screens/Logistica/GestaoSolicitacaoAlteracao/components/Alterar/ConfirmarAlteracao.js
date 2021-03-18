@@ -10,6 +10,7 @@ import {
   dilogNegaAlteracao
 } from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { BOTAO_ACEITAR, BOTAO_NEGAR } from "../../constans";
 
 export default ({
   show,
@@ -24,12 +25,12 @@ export default ({
   const handleClose = () => setShow(false);
 
   const responderSolicitacao = () => {
-    if (acao === "aceitar") {
+    if (acao === BOTAO_ACEITAR) {
       const newValues = {
         justificativa_aceite: values.justificativa
       };
       aceitarSolicitacao(newValues);
-    } else if (acao === "negar") {
+    } else if (acao === BOTAO_NEGAR) {
       const newValues = {
         justificativa_negacao: values.justificativa
       };
@@ -64,8 +65,8 @@ export default ({
   };
 
   const titleText =
-    acao === "aceitar" ? "Confirmar Aceite" : "Confirmar Negação";
-  const bodyText = acao === "aceitar" ? "aceitar" : "negar";
+    acao === BOTAO_ACEITAR ? "Confirmar Aceite" : "Confirmar Negação";
+  const bodyText = acao === BOTAO_ACEITAR ? "aceitar" : "negar";
 
   return (
     <>
