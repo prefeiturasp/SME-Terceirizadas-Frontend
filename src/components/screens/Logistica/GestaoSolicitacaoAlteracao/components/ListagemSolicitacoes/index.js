@@ -3,8 +3,7 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
-import Aceitar from "../Aceitar";
-import Negar from "../Negar";
+import Alterar from "../Alterar";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -107,12 +106,14 @@ const ListagemSolicitacoes = ({
                       <AlimentosConsolidado solicitacao={solicitacao} />
 
                       <div className="d-flex justify-content-end">
-                        <Aceitar
+                        <Alterar
+                          acao="aceitar"
                           className=""
                           solicitacao={solicitacao}
                           updatePage={updatePage}
                         />
-                        <Negar
+                        <Alterar
+                          acao="negar"
                           className=""
                           solicitacao={solicitacao}
                           updatePage={updatePage}

@@ -5,7 +5,10 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { dilogNegaAlteracao } from "services/logistica.service";
+import {
+  dilogAceitaAlteracao,
+  dilogNegaAlteracao
+} from "services/logistica.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({
@@ -15,12 +18,40 @@ export default ({
   handleCloseAll,
   updatePage,
   solicitacao,
+  acao,
   values
 }) => {
   const handleClose = () => setShow(false);
 
-  const negarSolicitacao = async () => {
-    const payload = { ...values };
+  const responderSolicitacao = () => {
+    if (acao === "aceitar") {
+      const newValues = {
+        justificativa_aceite: values.justificativa
+      };
+      aceitarSolicitacao(newValues);
+    } else if (acao === "negar") {
+      const newValues = {
+        justificativa_negacao: values.justificativa
+      };
+      negarSolicitacao(newValues);
+    }
+  };
+
+  const aceitarSolicitacao = async val => {
+    const payload = { ...val };
+    const res = await dilogAceitaAlteracao(solicitacao.uuid, payload);
+    if (res.status === 200) {
+      setShow(false);
+      handleCloseAll();
+      toastSuccess("Solicitação de alteração aceita");
+      updatePage();
+    } else {
+      toastError("Houve um erro ao aceitar a solicitação de alteração.");
+    }
+  };
+
+  const negarSolicitacao = async val => {
+    const payload = { ...val };
     const res = await dilogNegaAlteracao(solicitacao.uuid, payload);
     if (res.status === 200) {
       setShow(false);
@@ -31,6 +62,10 @@ export default ({
       toastError("Houve um erro ao negar a solicitação de alteração.");
     }
   };
+
+  const titleText =
+    acao === "aceitar" ? "Confirmar Aceite" : "Confirmar Negação";
+  const bodyText = acao === "aceitar" ? "aceitar" : "negar";
 
   return (
     <>
@@ -43,15 +78,15 @@ export default ({
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title> Confirmar Aceite</Modal.Title>
+          <Modal.Title> {titleText}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Deseja negar a solicitação de alteração?</Modal.Body>
+        <Modal.Body>Deseja {bodyText} a solicitação de alteração?</Modal.Body>
         <Modal.Footer>
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.SUBMIT}
             style={BUTTON_STYLE.BLUE}
-            onClick={negarSolicitacao}
+            onClick={responderSolicitacao}
             className="ml-3"
           />
           <Botao
