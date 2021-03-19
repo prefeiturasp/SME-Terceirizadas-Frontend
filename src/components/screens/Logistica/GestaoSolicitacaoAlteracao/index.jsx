@@ -13,11 +13,15 @@ export default () => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
   const [ativos, setAtivos] = useState([]);
+  const [buscaPorParametro, setBuscaPorParametro] = useState(false);
+  const [numeroSolicitacaoInicial, setNumeroSolicitacaoInicial] = useState("");
+  const queryString = window.location.search;
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getListagemSolicitacaoAlteracao(params);
+    setAtivos([]);
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
@@ -26,18 +30,21 @@ export default () => {
       setSolicitacoes();
     }
     setCarregando(false);
-    setAtivos([]);
+    if (response.data.count === 1 && buscaPorParametro) {
+      setBuscaPorParametro(false);
+      setAtivos([response.data.results[0].uuid]);
+    }
   };
 
   useEffect(() => {
-    const queryString = window.location.search;
-
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
       const codigo = urlParams.get("numero_solicitacao");
       const filtro = {
         numero_solicitacao: codigo
       };
+      setBuscaPorParametro(true);
+      setNumeroSolicitacaoInicial(codigo);
       setFiltros({ ...filtro });
     }
   }, []);
@@ -67,6 +74,7 @@ export default () => {
             setSolicitacoes={setSolicitacoes}
             setTotal={setTotal}
             solicitacoes={solicitacoes}
+            numeroSolicitacaoInicial={numeroSolicitacaoInicial}
             page={page}
           />
           {solicitacoes && (
