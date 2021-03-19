@@ -560,6 +560,10 @@ class cadastroProduto extends Component {
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                           onClick={() => this.validarFormulario()}
+                          disabled={
+                            payload.componentes &&
+                            payload.componentes.length > 5000
+                          }
                         />
                       ))}
 
