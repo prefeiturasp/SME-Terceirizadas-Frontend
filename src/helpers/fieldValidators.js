@@ -51,6 +51,11 @@ export const maxLength = max => value =>
     ? `Deve ter ${max} caracteres(s) ou menos`
     : undefined;
 
+export const maxLengthProduto = max => value =>
+  value && value.length > max
+    ? `Limite máximo de ${max} caracteres`
+    : undefined;
+
 export const minLength = min => value =>
   value && value.length < min
     ? `Deve ter ao menos ${min} caracteres(s)`
