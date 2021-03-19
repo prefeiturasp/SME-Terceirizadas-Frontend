@@ -567,6 +567,7 @@ class Step1 extends Component {
               name="componentes"
               type="text"
               validate={[required, maxLength5000]}
+              maxLength={5001}
               required
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);
