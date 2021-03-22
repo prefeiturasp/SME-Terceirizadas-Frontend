@@ -999,7 +999,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
     component: GestaoRequisicaoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
@@ -1011,7 +1011,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
     component: ConsultaSolicitacaoAlteracaoPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhDistribuidora()
   }
 ];
 
