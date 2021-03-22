@@ -34,6 +34,11 @@ export const validaFormularioStep1 = async ({
   if (componentes === null) {
     arrayValidacao.push("Informe os componentes do produto.");
   }
+  if (componentes && componentes.length > 5000) {
+    arrayValidacao.push(
+      "Sistema não permite campo nome dos componentes do produto com mais de 5000 caracteres."
+    );
+  }
   if (tem_aditivos_alergenicos === null) {
     arrayValidacao.push("Informe se produto possui aditivos alergênicos.");
   } else if (tem_aditivos_alergenicos !== null) {
