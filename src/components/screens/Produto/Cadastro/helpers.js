@@ -36,7 +36,7 @@ export const validaFormularioStep1 = async ({
   }
   if (componentes && componentes.length > 5000) {
     arrayValidacao.push(
-      "Sistema não permite campo nome dos componentes do produto com mais de 5000 caracteres."
+      'Sistema não permite campo "Nome dos componentes do produto" com mais de 5000 caracteres.'
     );
   }
   if (tem_aditivos_alergenicos === null) {
