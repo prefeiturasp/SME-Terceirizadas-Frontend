@@ -91,7 +91,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
 export const ordenaPorLogMaisRecente = (a, b) => {
   const data_a = parseDataHoraBrToMoment(a.log_mais_recente);
   const data_b = parseDataHoraBrToMoment(b.log_mais_recente);
-  return comparaObjetosMoment(data_a, data_b);
+  return comparaObjetosMoment(data_b, data_a);
 };
 
 const getText = item => {
