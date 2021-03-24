@@ -341,6 +341,15 @@ class DashBoardDietaEspecial extends Component {
                 href={"/escola/dieta-especial-alteracao-ue"}
               />
             </div>
+            <div className="col-3">
+              <CardAtalho
+                titulo={"Cancelar Dieta Especial"}
+                nome="card-cancelar"
+                texto={`Quando houver necessidade de cancelamento de dieta devido a existência de laudo de alta.`}
+                textoLink={"Cancelar Dieta"}
+                href={"/dieta-especial/cancelamento"}
+              />
+            </div>
           </div>
         )}
       </div>
