@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { Spin, Pagination } from "antd";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
@@ -20,16 +21,11 @@ export default () => {
     const response = await getListagemSolicitacaoAlteracao(params);
     setAtivos([]);
 
-    const toDate = dateStr => {
-      const [day, month, year] = dateStr.split("/");
-      return new Date(year, month - 1, day);
-    };
-
     if (response.data.count) {
       let x = response.data.results;
       x.sort((a, b) => {
-        const data1 = new Date(toDate(a.data_entrega));
-        const data2 = new Date(toDate(b.data_entrega));
+        const data1 = moment(a.data_entrega, "DD/MM/YYYY").toDate();
+        const data2 = moment(b.data_entrega, "DD/MM/YYYY").toDate();
         return data2 - data1;
       });
 
