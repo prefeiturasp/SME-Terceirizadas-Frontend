@@ -37,12 +37,21 @@ export default ({
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
             <div className="row">
-              <div className="col-6">
+              <div className="col-3">
                 <Field
                   component={InputText}
                   label="Nº da Solicitação de Alteração"
                   name="numero_solicitacao"
                   placeholder="Digite o número da solicitação"
+                  className="input-busca-produto"
+                />
+              </div>
+              <div className="col-3">
+                <Field
+                  component={InputText}
+                  label="Nº da Requisição de Entrega"
+                  name="numero_requisicao"
+                  placeholder="Digite o número da requisição"
                   className="input-busca-produto"
                 />
               </div>

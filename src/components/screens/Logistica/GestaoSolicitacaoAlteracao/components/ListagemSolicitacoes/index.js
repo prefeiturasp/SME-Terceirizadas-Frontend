@@ -18,6 +18,7 @@ const ListagemSolicitacoes = ({
       <article>
         <div className="grid-table header-table">
           <div>N° da Solicitação de Alteração</div>
+          <div>Nº da Requisição de Entrega</div>
           <div>Qtde. de Guias Remessa</div>
           <div>Nome do Distribuidor</div>
           <div>Status</div>
@@ -38,6 +39,9 @@ const ListagemSolicitacoes = ({
               <div className="grid-table body-table">
                 <div className={`${bordas}`}>
                   {solicitacao.numero_solicitacao}
+                </div>
+                <div className={`${bordas}`}>
+                  {solicitacao.requisicao.numero_solicitacao}
                 </div>
                 <div className={`${bordas}`}>{solicitacao.qtd_guias}</div>
                 <div className={`${bordas}`}>
