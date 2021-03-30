@@ -85,7 +85,7 @@ export default ({ solicitacao, updatePage }) => {
           <Modal.Title> Alterar </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Confira a visão geral da solicitação:{" "}
+          Confira a visão geral da Requisição de Entrega:{" "}
           <b>{solicitacao.numero_solicitacao}</b>.
           <label className="float-right">
             Data de entrega: <b>{solicitacao.guias[0].data_entrega}</b>
