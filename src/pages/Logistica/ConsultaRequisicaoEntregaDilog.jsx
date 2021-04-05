@@ -16,7 +16,7 @@ const atual = {
 const anteriores = [
   {
     href: `/`,
-    titulo: "Logística"
+    titulo: "Abastecimento"
   }
 ];
 
