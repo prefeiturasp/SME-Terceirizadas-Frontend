@@ -12,7 +12,7 @@ import { usuarioEhDistribuidora, usuarioEhLogistica } from "helpers/utilities";
 
 const MenuLogistica = () => {
   return (
-    <Menu id="Logistica" icon="fa-truck" title="Logística">
+    <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
       {/* <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
         Disponibilização de solicitações
       </LeafItem> */}
