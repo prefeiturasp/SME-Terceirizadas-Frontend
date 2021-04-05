@@ -96,6 +96,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                     { uuid: "DILOG_ENVIA", nome: "Enviada" },
                     { uuid: "CANCELADA", nome: "Cancelada" },
                     { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
+                    { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },
                     {
                       uuid: "DISTRIBUIDOR_SOLICITA_ALTERACAO",
                       nome: "Em análise"
