@@ -128,23 +128,3 @@ export const formataCards = (items, apontaParaEdicao) => {
     link: gerarLinkDoItem(item, apontaParaEdicao)
   }));
 };
-
-export const slugify = str => {
-  // Function from https://gist.github.com/marcelo-ribeiro/abd651b889e4a20e0bab558a05d38d77
-  const map = {
-    "-": "_",
-    a: "á|à|ã|â|ä|À|Á|Ã|Â|Ä",
-    e: "é|è|ê|ë|É|È|Ê|Ë",
-    i: "í|ì|î|ï|Í|Ì|Î|Ï",
-    o: "ó|ò|ô|õ|ö|Ó|Ò|Ô|Õ|Ö",
-    u: "ú|ù|û|ü|Ú|Ù|Û|Ü",
-    c: "ç|Ç",
-    n: "ñ|Ñ"
-  };
-
-  for (const pattern in map) {
-    str = str.replace(new RegExp(map[pattern], "g"), pattern);
-  }
-
-  return str;
-};
