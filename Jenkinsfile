@@ -136,7 +136,7 @@ pipeline {
         steps {
           timeout(time: 24, unit: "HOURS") {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
-            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'ollyver_ottoboni, kelwy_oliveira, rodolfo_lima, anderson_morais'
+            input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'ollyver_ottoboni, kelwy_oliveira, rodolfo_lima, anderson_morais, luis_zimmermann'
           }
          sh 'echo Deploying ambiente homologacao'
 
