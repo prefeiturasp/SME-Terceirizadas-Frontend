@@ -1,6 +1,6 @@
 import moment from "moment";
 
-import { ordenaPorLogMaisRecente } from "../helper";
+import { ordenaPorLogMaisRecente, slugify } from "../helper";
 
 describe("test ordenaPorLogMaisRecente", () => {
   test("a < b only date", () => {
@@ -30,5 +30,13 @@ describe("test ordenaPorLogMaisRecente", () => {
   test("a = b date & time", () => {
     const log = { log_mais_recente: moment("2020-09-23 08:10") };
     expect(ordenaPorLogMaisRecente(log, log)).toEqual(0);
+  });
+});
+
+describe("Teste slugfy", () => {
+  it("test slugfy strings", () => {
+    expect(slugify("Macarrão".toLocaleLowerCase())).toEqual(
+      slugify("macaRRao".toLocaleLowerCase())
+    );
   });
 });
