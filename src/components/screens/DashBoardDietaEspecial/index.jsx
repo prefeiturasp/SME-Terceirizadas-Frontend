@@ -10,7 +10,7 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
 import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
 
-import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
+import { ajustaFormatoLogPainelDietaEspecial, slugify } from "../helper";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const TEXTO_ATALHO_DIETA = `Quando houver necessidade de incluir Dieta Especial para os alunos matriculados na unidade.`;
@@ -159,8 +159,8 @@ class DashBoardDietaEspecial extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }

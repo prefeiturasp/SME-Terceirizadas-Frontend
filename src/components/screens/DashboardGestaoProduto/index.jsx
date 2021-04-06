@@ -4,6 +4,7 @@ import CardStatusDeSolicitacao from "components/Shareable/CardStatusDeSolicitaca
 import CardBody from "components/Shareable/CardBody";
 import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
+import { slugify } from "../helper";
 import { dataAtual, deepCopy } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import { getDashboardGestaoProdutos } from "services/produto.service";
@@ -62,12 +63,13 @@ export default class DashboardGestaoProduto extends Component {
   };
 
   filtrarNome = (listaFiltro, event) => {
-    const wordToFilter = event.target.value.toLowerCase();
+    const wordToFilter = slugify(event.target.value.toLowerCase());
     return listaFiltro.map(card => {
       card.items = card.items.filter(
         item =>
-          item.nome_produto.toLowerCase().search(wordToFilter) !== -1 ||
-          item.id_externo.toLowerCase().search(wordToFilter) !== -1
+          slugify(item.nome_produto.toLowerCase()).search(wordToFilter) !==
+            -1 ||
+          slugify(item.id_externo.toLowerCase()).search(wordToFilter) !== -1
       );
       return card;
     });
