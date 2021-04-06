@@ -16,6 +16,7 @@ import {
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardAtalho from "../../Shareable/CardAtalho";
+import { slugify } from "../helper";
 import "./style.scss";
 
 export class DashboardEscola extends Component {
@@ -79,8 +80,8 @@ export class DashboardEscola extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }

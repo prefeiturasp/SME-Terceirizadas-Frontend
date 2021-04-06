@@ -19,7 +19,7 @@ import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { ajustarFormatoLog } from "../helper";
+import { ajustarFormatoLog, slugify } from "../helper";
 import Select from "../../Shareable/Select";
 import { toastError } from "../../Shareable/Toast/dialogs";
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
@@ -66,8 +66,8 @@ class DashboardDRE extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }
