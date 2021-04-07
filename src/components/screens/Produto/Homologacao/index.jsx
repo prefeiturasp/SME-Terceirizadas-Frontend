@@ -8,6 +8,7 @@ import {
 } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
+import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
@@ -49,6 +50,7 @@ class HomologacaoProduto extends Component {
       status: null,
       reclamacaoProduto: null,
       verificado: false,
+      visible: false,
       logs: []
     };
     this.closeModal = this.closeModal.bind(this);
@@ -56,6 +58,24 @@ class HomologacaoProduto extends Component {
 
   closeModal = () => {
     this.setState({ showModal: false });
+  };
+
+  showModalHistorico = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false
+    });
   };
 
   componentDidMount = async () => {
@@ -277,8 +297,24 @@ class HomologacaoProduto extends Component {
                   </div>
                 </div>
               )}
-
+              <div className="row">
+                <div className="col-12" style={{ alignItems: "flex-end" }}>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    texto="Histórico"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={this.showModalHistorico}
+                    className="float-right"
+                  />
+                </div>
+              </div>
               <hr />
+              <ModalHistorico
+                visible={this.state.visible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                logs={logs}
+              />
               {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
