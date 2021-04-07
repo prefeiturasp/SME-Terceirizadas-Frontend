@@ -32,12 +32,14 @@ import CardMatriculados from "../Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { InputComData } from "../Shareable/DatePicker";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
+import "./style.scss";
 
 const ENTER = 13;
 class FoodSuspensionEditor extends Component {
@@ -57,6 +59,7 @@ class FoodSuspensionEditor extends Component {
           outroMotivo: false
         }
       ],
+      acimaDoLimite: [],
       options: {
         MANHA: [],
         TARDE: [],
@@ -73,6 +76,7 @@ class FoodSuspensionEditor extends Component {
 
   handleField(field, value, key) {
     let dias_razoes = this.state.dias_razoes;
+    let acimaDoLimite = this.state.acimaDoLimite;
     dias_razoes[key][field] = value;
     if (field === `motivo${key}`) {
       const indiceMotivo = this.props.motivos.findIndex(
@@ -81,6 +85,19 @@ class FoodSuspensionEditor extends Component {
       dias_razoes[key]["outroMotivo"] = this.props.motivos[
         indiceMotivo
       ].nome.includes("Outro");
+    }
+    if (field === "outro_motivo" + key) {
+      if (value.length > 500) {
+        const index = acimaDoLimite.indexOf(key);
+        if (index === -1) {
+          acimaDoLimite.push(key);
+        }
+      } else {
+        const index = acimaDoLimite.indexOf(key);
+        if (index > -1) {
+          acimaDoLimite.splice(index, 1);
+        }
+      }
     }
     this.setState({ dias_razoes });
   }
@@ -521,9 +538,9 @@ class FoodSuspensionEditor extends Component {
                       </div>
                       {dia_motivo.outroMotivo && (
                         <div className="form-row">
-                          <div className="form-group col-sm-8 offset-sm-3">
+                          <div className="form-group col-sm-12">
                             <Field
-                              component={InputText}
+                              component={TextArea}
                               label="Qual o motivo?"
                               onChange={event =>
                                 this.handleField(
@@ -537,6 +554,11 @@ class FoodSuspensionEditor extends Component {
                               className="form-control"
                               validate={required}
                             />
+                            {this.state.acimaDoLimite.includes(key) && (
+                              <div className="error-msg">
+                                Limite máximo de 500 caracteres
+                              </div>
+                            )}
                           </div>
                         </div>
                       )}
