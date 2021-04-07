@@ -59,7 +59,12 @@
 
     .grid-outro-motivo {
       display: grid;
-      grid-template-columns: 60% 40%;
+      grid-template-columns: 100%;
+
+      .error-msg {
+        color: #a50e05;
+        font-size: 12px;
+      }
 
       div {
         padding: 0 !important;

@@ -32,6 +32,7 @@ import {
 import CardMatriculados from "../Shareable/CardMatriculados";
 import { InputComData } from "../Shareable/DatePicker";
 import { InputText } from "../Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
@@ -81,7 +82,8 @@ class InclusaoDeAlimentacao extends Component {
           data_final: null,
           dias_semana: []
         }
-      ]
+      ],
+      acimaDoLimite: []
     };
     this.carregarRascunho = this.carregarRascunho.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
@@ -98,6 +100,7 @@ class InclusaoDeAlimentacao extends Component {
       dia_motivo => dia_motivo.id === id
     );
     let inclusoes = this.state.inclusoes;
+    let acimaDoLimite = this.state.acimaDoLimite;
     if (field === "motivo") {
       const indiceMotivoContinuo = this.props.motivos_continuos.findIndex(
         motivo => motivo.uuid === value
@@ -118,10 +121,26 @@ class InclusaoDeAlimentacao extends Component {
           this.props.motivos_simples[indiceMotivoSimples].nome === "Outro";
       }
     }
-    if (field === "outro_motivo") value = value.target.value;
+    if (field === "outro_motivo") {
+      value = value.target.value;
+      if (value.length > 500) {
+        const index = acimaDoLimite.indexOf(id);
+        if (index === -1) {
+          acimaDoLimite.push(id);
+        }
+      } else {
+        const index = acimaDoLimite.indexOf(id);
+        if (index > -1) {
+          acimaDoLimite.splice(index, 1);
+        }
+      }
+    }
     inclusoes[indiceDiaMotivo][field] = value;
     this.setState({
       inclusoes
+    });
+    this.setState({
+      acimaDoLimite
     });
   }
 
@@ -697,6 +716,7 @@ class InclusaoDeAlimentacao extends Component {
     const primeiroEhMotivoContinuo =
       inclusoes[0].motivo && inclusoes[0].motivoContinuo;
     const dataInicialContinua = inclusoes[0].data_inicial;
+
     return (
       <div>
         {loading ? (
@@ -788,7 +808,7 @@ class InclusaoDeAlimentacao extends Component {
                         {diaMotivo.outroMotivo && (
                           <div className="grid-outro-motivo pb-2">
                             <Field
-                              component={InputText}
+                              component={TextArea}
                               label="Qual o motivo?"
                               onChange={event =>
                                 this.handleField(
@@ -801,6 +821,13 @@ class InclusaoDeAlimentacao extends Component {
                               required
                               validate={required}
                             />
+                            {this.state.acimaDoLimite.includes(
+                              diaMotivo.id
+                            ) && (
+                              <div className="error-msg">
+                                Limite máximo de 500 caracteres
+                              </div>
+                            )}
                           </div>
                         )}
                         {ehMotivoContinuo && (
