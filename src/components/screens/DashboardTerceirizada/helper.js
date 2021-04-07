@@ -28,5 +28,5 @@ export const filtrarTotalSolicitacoes = pedidos => {
 export const ordenaPorDate = (a, b) => {
   const data_a = parseDataHoraBrToMoment(a.date);
   const data_b = parseDataHoraBrToMoment(b.date);
-  return comparaObjetosMoment(data_a, data_b);
+  return comparaObjetosMoment(data_b, data_a);
 };
