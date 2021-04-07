@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import { Select, Spin } from "antd";
+import Botao from "../../../Shareable/Botao";
+import ModalHistorico from "../../../Shareable/ModalHistorico";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import {
@@ -58,6 +61,7 @@ class AtualizacaoProdutoForm extends Component {
       valoresterceiroForm: null,
       reclamacaoProduto: null,
       verificado: false,
+      visible: false,
       wizardSteps: [
         {
           step: {
@@ -119,6 +123,24 @@ class AtualizacaoProdutoForm extends Component {
       optionsArray.push(<Option key={option.uuid}>{`${option.nome}`}</Option>);
     });
     return optionsArray;
+  };
+
+  showModalHistorico = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false
+    });
   };
 
   componentDidMount = async () => {
@@ -248,6 +270,23 @@ class AtualizacaoProdutoForm extends Component {
                     <MotivoHomologacao logs={logs} />
                   </Fragment>
                 )}
+              <div className="row mb-2">
+                <div className="col-12" style={{ alignItems: "flex-end" }}>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    texto="Histórico"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={this.showModalHistorico}
+                    className="float-right"
+                  />
+                </div>
+              </div>
+              <ModalHistorico
+                visible={this.state.visible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                logs={logs}
+              />
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}
