@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import moment from "moment";
 import { Spin, Pagination } from "antd";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
@@ -22,14 +21,7 @@ export default () => {
     setAtivos([]);
 
     if (response.data.count) {
-      let x = response.data.results;
-      x.sort((a, b) => {
-        const data1 = moment(a.data_entrega, "DD/MM/YYYY").toDate();
-        const data2 = moment(b.data_entrega, "DD/MM/YYYY").toDate();
-        return data2 - data1;
-      });
-
-      setSolicitacoes(x);
+      setSolicitacoes(response.data.results);
       setTotal(response.data.count);
     } else {
       setTotal(response.data.count);
