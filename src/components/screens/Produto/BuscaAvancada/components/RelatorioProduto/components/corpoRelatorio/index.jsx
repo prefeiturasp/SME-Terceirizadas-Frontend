@@ -71,17 +71,12 @@ export default class CorpoRelatorio extends Component {
               medida: `${prodInfo.quantidade_porcao} ${info.medida}`,
               valor: `${prodInfo.valor_diario} %`
             });
-          } else {
-            dict.informacoes.push({
-              nome: info.nome,
-              uuid: info.uuid,
-              medida: `**** ${info.medida}`,
-              valor: `**** %`
-            });
           }
         });
       });
-      informacoesFormatadas.push(dict);
+      if (dict.informacoes.length > 0) {
+        informacoesFormatadas.push(dict);
+      }
     });
 
     if (informacoes.length === 0) {
