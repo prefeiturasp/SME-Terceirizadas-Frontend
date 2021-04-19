@@ -122,6 +122,7 @@ import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEn
 import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
 import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
 import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
+import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 
 const routesConfig = [
   {
@@ -1012,6 +1013,12 @@ const routesConfig = [
     component: ConsultaSolicitacaoAlteracaoPage,
     exact: true,
     tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
+    component: ConferenciaInconsistenciasPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 
