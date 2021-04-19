@@ -48,7 +48,7 @@ const MenuLogistica = () => {
 
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`}>
-          Conferência de Inconsistencias
+          Conferência de Inconsistências
         </LeafItem>
       )}
     </Menu>
