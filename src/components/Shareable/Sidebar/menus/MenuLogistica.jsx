@@ -6,7 +6,8 @@ import {
   LOGISTICA,
   GESTAO_REQUISICAO_ENTREGA,
   GESTAO_SOLICITACAO_ALTERACAO,
-  CONSULTA_SOLICITACAO_ALTERACAO
+  CONSULTA_SOLICITACAO_ALTERACAO,
+  CONFERENCIA_INCONSISTENCIAS
 } from "configs/constants";
 import { usuarioEhDistribuidora, usuarioEhLogistica } from "helpers/utilities";
 
@@ -42,6 +43,12 @@ const MenuLogistica = () => {
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
           Solicitação de Alteração
+        </LeafItem>
+      )}
+
+      {usuarioEhLogistica() && (
+        <LeafItem to={`/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`}>
+          Conferência de Inconsistencias
         </LeafItem>
       )}
     </Menu>
