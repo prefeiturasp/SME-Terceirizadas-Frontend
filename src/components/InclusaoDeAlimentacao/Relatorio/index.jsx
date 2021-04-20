@@ -108,7 +108,7 @@ class Relatorio extends Component {
             toastError(toastAprovaMensagemErro);
           }
         },
-        function () {
+        function() {
           toastError(toastAprovaMensagemErro);
         }
       );
@@ -202,7 +202,7 @@ class Relatorio extends Component {
         {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit || (() => { })}>
+          <form onSubmit={this.props.handleSubmit || (() => {})}>
             {endpointAprovaSolicitacao && (
               <ModalAutorizarAposQuestionamento
                 showModal={showAutorizarModal}
@@ -214,8 +214,9 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${inclusaoDeAlimentacao.id_externo
-              }`}</span>
+            <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
+              inclusaoDeAlimentacao.id_externo
+            }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -241,11 +242,15 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova !== "Ciente" && (
-                        visao === CODAE && inclusaoDeAlimentacao.logs.filter((log) => log.status_evento_explicacao === "Terceirizada respondeu questionamento" && !log.resposta_sim_nao).length > 0 ?
-                          null
-                          :
-                          (<Botao
+                      (textoBotaoAprova !== "Ciente" &&
+                        (visao === CODAE &&
+                        inclusaoDeAlimentacao.logs.filter(
+                          log =>
+                            log.status_evento_explicacao ===
+                              "Terceirizada respondeu questionamento" &&
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
+                          <Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.BUTTON}
                             onClick={() =>
@@ -255,13 +260,13 @@ class Relatorio extends Component {
                             }
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
-                          />)
-                      ))}
+                          />
+                        )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
                           tipoPerfil ===
-                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
                             ? "Questionar"
                             : "Sim"
                         }
