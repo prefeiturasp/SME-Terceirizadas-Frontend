@@ -131,7 +131,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -237,9 +237,8 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
-            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
-              inversaoDiaCardapio.id_externo
-            }`}</span>
+            <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${inversaoDiaCardapio.id_externo
+              }`}</span>
             <Link to={`/`}>
               <Botao
                 texto="voltar"
@@ -276,23 +275,26 @@ class Relatorio extends Component {
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
                       (textoBotaoAprova !== "Ciente" && (
-                        <Botao
-                          texto={textoBotaoAprova}
-                          type={BUTTON_TYPE.SUBMIT}
-                          onClick={() =>
-                            EXIBIR_MODAL_AUTORIZACAO
-                              ? this.showAutorizarModal()
-                              : this.handleSubmit()
-                          }
-                          style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
-                        />
+                        visao === CODAE && inversaoDiaCardapio.logs.filter((log) => log.status_evento_explicacao === "Terceirizada respondeu questionamento" && !log.resposta_sim_nao).length > 0 ?
+                          null
+                          :
+                          (<Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() =>
+                              EXIBIR_MODAL_AUTORIZACAO
+                                ? this.showAutorizarModal()
+                                : this.handleSubmit()
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />)
                       ))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
                           tipoPerfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
                             ? "Questionar"
                             : "Sim"
                         }

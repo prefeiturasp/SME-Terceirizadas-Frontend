@@ -119,7 +119,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function() {
+      function () {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -228,9 +228,8 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
-              alteracaoDeCardapio.id_externo
-            }`}</span>
+            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${alteracaoDeCardapio.id_externo
+              }`}</span>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -279,8 +278,9 @@ class Relatorio extends Component {
                               className="ml-3"
                             />
                           )
-                        ) : (
-                          <Botao
+                        ) : (visao === CODAE && alteracaoDeCardapio.logs.filter((log) => log.status_evento_explicacao === "Terceirizada respondeu questionamento" && !log.resposta_sim_nao).length > 0 ?
+                          null
+                          : (<Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.SUBMIT}
                             onClick={() =>
@@ -290,13 +290,13 @@ class Relatorio extends Component {
                             }
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
-                          />
+                          />)
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
                           tipoPerfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
                             ? "Questionar"
                             : "Sim"
                         }
