@@ -327,8 +327,15 @@ export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
     PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI
+    PERFIL.DIRETOR_CEI,
+    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO
   ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhEscolaAbastecimento = () => {
+  return [PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEhLogistica = () => {
