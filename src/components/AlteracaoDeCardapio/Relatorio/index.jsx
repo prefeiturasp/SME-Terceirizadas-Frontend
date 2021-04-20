@@ -279,7 +279,13 @@ class Relatorio extends Component {
                               className="ml-3"
                             />
                           )
-                        ) : (
+                        ) : visao === CODAE &&
+                          alteracaoDeCardapio.logs.filter(
+                            log =>
+                              log.status_evento_explicacao ===
+                                "Terceirizada respondeu questionamento" &&
+                              !log.resposta_sim_nao
+                          ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.SUBMIT}

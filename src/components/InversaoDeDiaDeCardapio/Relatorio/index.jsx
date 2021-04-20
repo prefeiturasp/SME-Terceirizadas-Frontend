@@ -275,19 +275,26 @@ class Relatorio extends Component {
                       />
                     )}
                     {EXIBIR_BOTAO_APROVAR &&
-                      (textoBotaoAprova !== "Ciente" && (
-                        <Botao
-                          texto={textoBotaoAprova}
-                          type={BUTTON_TYPE.SUBMIT}
-                          onClick={() =>
-                            EXIBIR_MODAL_AUTORIZACAO
-                              ? this.showAutorizarModal()
-                              : this.handleSubmit()
-                          }
-                          style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
-                        />
-                      ))}
+                      (textoBotaoAprova !== "Ciente" &&
+                        (visao === CODAE &&
+                        inversaoDiaCardapio.logs.filter(
+                          log =>
+                            log.status_evento_explicacao ===
+                              "Terceirizada respondeu questionamento" &&
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() =>
+                              EXIBIR_MODAL_AUTORIZACAO
+                                ? this.showAutorizarModal()
+                                : this.handleSubmit()
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />
+                        )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
                       <Botao
                         texto={
