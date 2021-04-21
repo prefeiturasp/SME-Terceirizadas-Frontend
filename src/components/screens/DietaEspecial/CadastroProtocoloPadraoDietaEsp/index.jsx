@@ -49,6 +49,11 @@ export default () => {
     };
   }
 
+  async function resetForm(form) {
+    await form.reset({});
+    await form.reset(getInitialValues());
+  }
+
   const onSubmit = async values => {
     try {
       const response = await cadastraProtocoloPadraoDietaEspecial(values);
@@ -77,7 +82,7 @@ export default () => {
             <form
               onSubmit={async event => {
                 await handleSubmit(event);
-                form.reset();
+                resetForm(form);
               }}
             >
               <FinalFormToRedux form={FORM_NAME} />
@@ -154,7 +159,7 @@ export default () => {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right ml-3"
                   onClick={() => {
-                    form.reset({});
+                    resetForm(form);
                   }}
                 />
               </div>
