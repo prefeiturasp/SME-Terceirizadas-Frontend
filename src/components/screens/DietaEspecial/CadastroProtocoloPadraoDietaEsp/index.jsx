@@ -43,10 +43,16 @@ export default () => {
 
   function getInitialValues() {
     return {
-      nome_protocolo: undefined,
-      orientacoes_gerais: undefined,
+      nome_protocolo: "",
+      orientacoes_gerais: "",
+      status: "",
       substituicoes: [{}]
     };
+  }
+
+  async function resetForm(form) {
+    await form.reset({});
+    await form.reset(getInitialValues());
   }
 
   const onSubmit = async values => {
@@ -75,9 +81,13 @@ export default () => {
           mutators={{ ...arrayMutators }}
           render={({ form, handleSubmit, submitting }) => (
             <form
-              onSubmit={async event => {
-                await handleSubmit(event);
-                form.reset();
+              onSubmit={event => {
+                const promise = handleSubmit(event);
+                promise &&
+                  promise.then(() => {
+                    resetForm(form);
+                  });
+                return promise;
               }}
             >
               <FinalFormToRedux form={FORM_NAME} />
@@ -154,7 +164,7 @@ export default () => {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right ml-3"
                   onClick={() => {
-                    form.reset({});
+                    resetForm(form);
                   }}
                 />
               </div>
