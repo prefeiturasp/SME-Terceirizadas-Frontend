@@ -43,9 +43,9 @@ export default () => {
 
   function getInitialValues() {
     return {
-      nome_protocolo: "",
-      orientacoes_gerais: "",
-      status: "",
+      nome_protocolo: undefined,
+      orientacoes_gerais: undefined,
+      status: undefined,
       substituicoes: [{}]
     };
   }
@@ -53,6 +53,7 @@ export default () => {
   async function resetForm(form) {
     await form.reset({});
     await form.reset(getInitialValues());
+    await form.restart();
   }
 
   const onSubmit = async values => {
