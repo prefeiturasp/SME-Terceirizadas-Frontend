@@ -22,6 +22,7 @@ import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
+import ProtocoloPaadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPaadraoDietaEspecialPage.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -965,6 +966,12 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
+    component: ProtocoloPaadraoDietaEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${

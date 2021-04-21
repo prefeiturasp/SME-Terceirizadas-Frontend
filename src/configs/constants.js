@@ -37,6 +37,7 @@ export const SOLICITACOES_INATIVAS = "solicitacoes-inativas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+export const PROTOCOLO_PADRAO_DIETA = "protocolo-padrao-dieta";
 
 export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
   RECLAMACAO_DE_PRODUTO: "reclamacao-de-produto",
