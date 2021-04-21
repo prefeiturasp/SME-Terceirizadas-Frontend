@@ -1,0 +1,29 @@
+@import "../../../../styles/variables.scss";
+
+.card-cadastro-protocolo-padrao {
+  margin-bottom: 15em !important;
+}
+
+div.titulo-substituicoes {
+  label {
+    font-size: 14px;
+    font-weight: 700;
+    color: $green;
+  }
+}
+
+.ck-editor__editable {
+  min-height: 173px;
+}
+
+.ck .ck-editor__main .ck-editor__editable.ck-rounded-corners {
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar {
+  border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
