@@ -43,8 +43,9 @@ export default () => {
 
   function getInitialValues() {
     return {
-      nome_protocolo: undefined,
-      orientacoes_gerais: undefined,
+      nome_protocolo: "",
+      orientacoes_gerais: "",
+      status: "",
       substituicoes: [{}]
     };
   }
@@ -80,9 +81,13 @@ export default () => {
           mutators={{ ...arrayMutators }}
           render={({ form, handleSubmit, submitting }) => (
             <form
-              onSubmit={async event => {
-                await handleSubmit(event);
-                resetForm(form);
+              onSubmit={event => {
+                const promise = handleSubmit(event);
+                promise &&
+                  promise.then(() => {
+                    resetForm(form);
+                  });
+                return promise;
               }}
             >
               <FinalFormToRedux form={FORM_NAME} />
