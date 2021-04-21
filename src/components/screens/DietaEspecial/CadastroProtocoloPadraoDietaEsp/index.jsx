@@ -83,9 +83,12 @@ export default () => {
               <FinalFormToRedux form={FORM_NAME} />
               <div className="row">
                 <div className="col-12">
+                  <div className="mb-2 input title">
+                    <span className="required-asterisk">*</span>
+                    <label>Nome do protocolo</label>
+                  </div>
                   <Field
                     component={InputText}
-                    label="Nome do protocolo"
                     name="nome_protocolo"
                     validate={required}
                   />
