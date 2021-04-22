@@ -145,7 +145,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       solicitacaoUnificada &&
-      solicitacaoUnificada.foi_solicitado_fora_do_prazo &&
+      (solicitacaoUnificada.foi_solicitado_fora_do_prazo || visao === CODAE) &&
       [statusEnum.CODAE_A_AUTORIZAR, statusEnum.CODAE_QUESTIONADO].includes(
         solicitacaoUnificada.status
       );

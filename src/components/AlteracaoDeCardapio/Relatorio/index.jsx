@@ -174,7 +174,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       alteracaoDeCardapio &&
-      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      (alteracaoDeCardapio.foi_solicitado_fora_do_prazo || visao === CODAE) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         alteracaoDeCardapio.status
       );
