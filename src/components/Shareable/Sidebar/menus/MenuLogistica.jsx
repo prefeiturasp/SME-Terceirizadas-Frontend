@@ -7,7 +7,8 @@ import {
   GESTAO_REQUISICAO_ENTREGA,
   GESTAO_SOLICITACAO_ALTERACAO,
   CONSULTA_SOLICITACAO_ALTERACAO,
-  CONFERENCIA_INCONSISTENCIAS
+  CONFERENCIA_INCONSISTENCIAS,
+  INSUCESSO_ENTREGA
 } from "configs/constants";
 import { usuarioEhDistribuidora, usuarioEhLogistica } from "helpers/utilities";
 
@@ -31,6 +32,12 @@ const MenuLogistica = () => {
       {usuarioEhDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_REQUISICAO_ENTREGA}`}>
           Gestão de Requisição de Entrega
+        </LeafItem>
+      )}
+
+      {usuarioEhDistribuidora() && (
+        <LeafItem to={`/${LOGISTICA}/${INSUCESSO_ENTREGA}`}>
+          Insucesso de Entrega
         </LeafItem>
       )}
 
