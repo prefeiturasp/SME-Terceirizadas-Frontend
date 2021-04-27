@@ -123,6 +123,7 @@ import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEn
 import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
 import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
 import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
+import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 
 const routesConfig = [
@@ -1018,6 +1019,12 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
     component: ConsultaSolicitacaoAlteracaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.INSUCESSO_ENTREGA}`,
+    component: InsucessoEntregaPage,
     exact: true,
     tipoUsuario: usuarioEhDistribuidora()
   },
