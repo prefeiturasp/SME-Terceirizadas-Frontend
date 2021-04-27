@@ -82,6 +82,11 @@ export const dilogNegaAlteracao = async (uuid, params) => {
   return await axios.patch(url, params);
 };
 
+export const getGuiasRemessa = async params => {
+  const url = `/guias-da-requisicao/`;
+  return await axios.get(url, { params });
+};
+
 export const getGuiasInconsistencias = async params => {
   const url = `/guias-da-requisicao/inconsistencias/`;
   return await axios.get(url, { params });

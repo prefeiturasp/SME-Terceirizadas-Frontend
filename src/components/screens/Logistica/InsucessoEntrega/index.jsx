@@ -4,11 +4,12 @@ import { getRequisicoesListagem } from "../../../../services/logistica.service.j
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import Filtros from "./components/Filtros";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
-  const [filtros] = useState();
+  const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
@@ -29,10 +30,10 @@ export default () => {
   };
 
   useEffect(() => {
-    //if (!filtros) {
-    buscarSolicitacoes(1);
-    setPage(1);
-    //}
+    if (filtros) {
+      buscarSolicitacoes(1);
+      setPage(1);
+    }
   }, [filtros]);
 
   const nextPage = page => {
@@ -48,11 +49,11 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
-          {/* <Filtros
+          <Filtros
             setFiltros={setFiltros}
             setSolicitacoes={setSolicitacoes}
             setTotal={setTotal}
-          /> */}
+          />
           {solicitacoes && (
             <>
               <br /> <hr /> <br />
