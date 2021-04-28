@@ -243,7 +243,7 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizados"}
+                    cardTitle={"Autorizadas"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasListFiltered ? autorizadasListFiltered : []
@@ -291,7 +291,7 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizados Temporariamente"}
+                    cardTitle={"Autorizadas Temporariamente"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasTemporariamenteListFiltered
