@@ -46,9 +46,12 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                   <div className={`${bordas}`}>{guia.data_entrega}</div>
                   <div className={`${bordas}`}>{guia.status}</div>
                   <div className={`${bordas}`}>
-                    <span className="link-insucesso">
-                      <i className="fas fa-thumbs-down" /> Insucesso de Entrega
-                    </span>
+                    {guia.status === "Pendente" && (
+                      <span className="link-insucesso">
+                        <i className="fas fa-thumbs-down" /> Insucesso de
+                        Entrega
+                      </span>
+                    )}
                   </div>
                 </div>
                 {ativos && ativos.includes(guia.uuid) && (
