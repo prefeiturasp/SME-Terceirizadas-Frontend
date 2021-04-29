@@ -78,6 +78,7 @@ import {
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
   usuarioEhEscola,
+  usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhTerceirizada,
@@ -125,6 +126,7 @@ import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlt
 import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
 import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
+import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
 
 const routesConfig = [
   {
@@ -1033,6 +1035,12 @@ const routesConfig = [
     component: ConferenciaInconsistenciasPage,
     exact: true,
     tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
+    component: ConferirEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
   }
 ];
 
