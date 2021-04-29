@@ -207,6 +207,7 @@ class HomologacaoProduto extends Component {
   };
 
   render() {
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
       produto,
       informacoesNutricionais,
@@ -336,17 +337,6 @@ class HomologacaoProduto extends Component {
               )}
               <div className="row">
                 <div className="col-12" style={{ alignItems: "flex-end" }}>
-                  {ativo === true && (
-                    <Botao
-                      texto={"Suspender"}
-                      className="mr-3"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      onClick={() =>
-                        this.setState({ ...this.state, acao: "suspensão" })
-                      }
-                    />
-                  )}
                   <Botao
                     type={BUTTON_TYPE.BUTTON}
                     texto="Histórico"
@@ -354,6 +344,18 @@ class HomologacaoProduto extends Component {
                     onClick={this.showModalHistorico}
                     className="float-right"
                   />
+                  {ativo === true &&
+                    tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO && (
+                      <Botao
+                        texto={"Suspender"}
+                        className="mr-2 float-right"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() =>
+                          this.setState({ ...this.state, acao: "suspensão" })
+                        }
+                      />
+                    )}
                 </div>
               </div>
               <hr />
