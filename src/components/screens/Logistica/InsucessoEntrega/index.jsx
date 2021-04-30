@@ -1,63 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import { getRequisicoesListagem } from "../../../../services/logistica.service.js";
-import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
+import { getGuiasRemessaParaInsucesso } from "../../../../services/logistica.service.js";
+import ListagemGuias from "./components/ListagemGuias";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import Filtros from "./components/Filtros";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [solicitacoes, setSolicitacoes] = useState();
-  const [filtros] = useState();
+  const [guias, setGuias] = useState();
+  const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
-  const buscarSolicitacoes = async page => {
+  const buscarGuias = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getRequisicoesListagem(params);
+    const response = await getGuiasRemessaParaInsucesso(params);
     if (response.data.count) {
-      setSolicitacoes(response.data.results);
+      setGuias(response.data.results);
       setTotal(response.data.count);
     } else {
       setTotal(response.data.count);
-      setSolicitacoes();
+      setGuias();
     }
     setAtivos([]);
     setCarregando(false);
   };
 
   useEffect(() => {
-    //if (!filtros) {
-    buscarSolicitacoes(1);
-    setPage(1);
-    //}
+    if (filtros) {
+      buscarGuias(1);
+      setPage(1);
+    }
   }, [filtros]);
 
   const nextPage = page => {
-    buscarSolicitacoes(page);
+    buscarGuias(page);
     setPage(page);
   };
 
   const updatePage = () => {
-    buscarSolicitacoes(page);
+    buscarGuias(page);
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
-          {/* <Filtros
+          <Filtros
             setFiltros={setFiltros}
-            setSolicitacoes={setSolicitacoes}
+            setGuias={setGuias}
             setTotal={setTotal}
-          /> */}
-          {solicitacoes && (
+          />
+          {guias && (
             <>
               <br /> <hr /> <br />
-              <ListagemSolicitacoes
-                solicitacoes={solicitacoes}
+              <ListagemGuias
+                guias={guias}
                 ativos={ativos}
                 setAtivos={setAtivos}
                 updatePage={updatePage}
