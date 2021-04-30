@@ -2,10 +2,9 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 
-const ListagemSolicitacoes = ({ guias, ativos, setAtivos }) => {
+const ListagemGuias = ({ guias, ativos, setAtivos }) => {
   return (
     <section className="resultado-insucesso-entrega">
-      <header>Veja requisições disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
           <div />
@@ -169,4 +168,4 @@ const ListagemSolicitacoes = ({ guias, ativos, setAtivos }) => {
   );
 };
 
-export default ListagemSolicitacoes;
+export default ListagemGuias;

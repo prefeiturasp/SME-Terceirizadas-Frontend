@@ -5,6 +5,7 @@ import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
 import { InputText } from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
+import { trocaAcentuadasPorSemAcento } from "helpers/utilities.js";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
@@ -18,6 +19,8 @@ export default ({ setFiltros, setGuias, setTotal }) => {
 
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (filtros.nome_unidade)
+      filtros.nome_unidade = trocaAcentuadasPorSemAcento(filtros.nome_unidade);
     setFiltros({ ...filtros });
   };
 
