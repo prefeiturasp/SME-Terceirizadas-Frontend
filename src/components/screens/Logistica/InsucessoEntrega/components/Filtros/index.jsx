@@ -13,7 +13,7 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, setSolicitacoes, setTotal }) => {
+export default ({ setFiltros, setGuias, setTotal }) => {
   const [initialValues] = useState({});
 
   const onSubmit = async values => {
@@ -107,7 +107,7 @@ export default ({ setFiltros, setSolicitacoes, setTotal }) => {
                 className="float-right ml-3"
                 onClick={() => {
                   form.reset({});
-                  setSolicitacoes(undefined);
+                  setGuias(undefined);
                   setTotal(undefined);
                 }}
               />

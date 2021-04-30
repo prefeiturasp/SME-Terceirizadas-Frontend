@@ -87,6 +87,11 @@ export const getGuiasRemessa = async params => {
   return await axios.get(url, { params });
 };
 
+export const getGuiasRemessaParaInsucesso = async params => {
+  const url = `/guias-da-requisicao/lista-guias-para-insucesso/`;
+  return await axios.get(url, { params });
+};
+
 export const getGuiasInconsistencias = async params => {
   const url = `/guias-da-requisicao/inconsistencias/`;
   return await axios.get(url, { params });
