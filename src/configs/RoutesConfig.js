@@ -18,6 +18,7 @@ import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/
 import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
+import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
@@ -310,6 +311,12 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesCODAEPage,
+    exact: false,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_COM_QUESTIONAMENTO}`,
+    component: StatusSolicitacoesComQuestionamentosCODAEPage,
     exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
