@@ -5,7 +5,8 @@ import {
   getSolicitacoesAutorizadasCodae,
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
-  getSolicitacoesPendentesAutorizacaoCodae
+  getSolicitacoesPendentesAutorizacaoCodae,
+  getSolicitacoesComQuestionamentoCodae
 } from "../../../services/painelCODAE.service";
 import CardLegendas from "../../Shareable/CardLegendas";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
@@ -96,6 +97,13 @@ export class StatusSolicitacoes extends Component {
         solicitacoes = await getSolicitacoesPendentesAutorizacaoCodae(
           FILTRO.SEM_FILTRO
         );
+        break;
+
+      case STATUS.QUESTIONADAS:
+        tipoCard = CARD_TYPE_ENUM.PENDENTE;
+        icone = ICON_CARD_TYPE_ENUM.PENDENTE;
+        titulo = "Aguardando resposta da Empresa";
+        solicitacoes = await getSolicitacoesComQuestionamentoCodae();
         break;
 
       case STATUS.CANCELADAS:
