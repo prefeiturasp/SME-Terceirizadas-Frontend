@@ -316,7 +316,7 @@ class DashboardCODAE extends Component {
               </div>
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando resposta da Empresa"}
+                  cardTitle={"Aguardando Resposta da Empresa"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={questionamentosListFiltered}
                   icon={"fa-exclamation-triangle"}
