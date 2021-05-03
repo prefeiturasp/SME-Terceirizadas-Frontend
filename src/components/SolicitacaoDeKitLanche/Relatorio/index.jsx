@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getDetalheKitLancheAvulsa } from "../../../services/kitLanche";
@@ -105,7 +109,7 @@ class Relatorio extends Component {
             toastError(toastAprovaMensagemErro);
           }
         },
-        function () {
+        function() {
           toastError(toastAprovaMensagemErro);
         }
       );
@@ -211,8 +215,9 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${solicitacaoKitLanche.id_externo
-              }`}</span>
+            <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
+              solicitacaoKitLanche.id_externo
+            }`}</span>
             <Link to={`/`}>
               <Botao
                 texto="voltar"
@@ -251,12 +256,12 @@ class Relatorio extends Component {
                     {EXIBIR_BOTAO_APROVAR &&
                       (textoBotaoAprova !== "Ciente" &&
                         (visao === CODAE &&
-                          solicitacaoKitLanche.logs.filter(
-                            log =>
-                              log.status_evento_explicacao ===
+                        solicitacaoKitLanche.logs.filter(
+                          log =>
+                            log.status_evento_explicacao ===
                               "Terceirizada respondeu questionamento" &&
-                              !log.resposta_sim_nao
-                          ).length > 0 ? null : (
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.SUBMIT}
@@ -273,7 +278,7 @@ class Relatorio extends Component {
                       <Botao
                         texto={
                           tipoPerfil ===
-                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
                             ? "Questionar"
                             : "Sim"
                         }

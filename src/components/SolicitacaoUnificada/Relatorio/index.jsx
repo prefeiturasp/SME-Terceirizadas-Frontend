@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getSolicitacaoUnificada } from "../../../services/solicitacaoUnificada.service";
@@ -93,7 +97,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function () {
+      function() {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -195,8 +199,9 @@ class Relatorio extends Component {
                 uuid={uuid}
               />
             )}
-            <span className="page-title">{`Solicitação Unificada - Solicitação # ${solicitacaoUnificada.id_externo
-              }`}</span>
+            <span className="page-title">{`Solicitação Unificada - Solicitação # ${
+              solicitacaoUnificada.id_externo
+            }`}</span>
             <Link to={`/`}>
               <Botao
                 texto="voltar"
@@ -222,53 +227,53 @@ class Relatorio extends Component {
                 {visualizaBotoesDoFluxoSolicitacaoUnificada(
                   solicitacaoUnificada
                 ) && (
-                    <div className="form-group row float-right mt-4">
-                      {EXIBIR_BOTAO_NAO_APROVAR && (
-                        <Botao
-                          texto={textoBotaoNaoAprova}
-                          className="ml-3"
-                          onClick={() => this.showNaoAprovaModal("Não")}
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                      )}
-                      {EXIBIR_BOTAO_APROVAR &&
-                        (textoBotaoAprova !== "Ciente" &&
-                          (visao === CODAE &&
-                            solicitacaoUnificada.logs.filter(
-                              log =>
-                                log.status_evento_explicacao ===
-                                "Terceirizada respondeu questionamento" &&
-                                !log.resposta_sim_nao
-                            ).length > 0 ? null : (
-                            <Botao
-                              texto={textoBotaoAprova}
-                              type={BUTTON_TYPE.SUBMIT}
-                              onClick={() =>
-                                EXIBIR_MODAL_AUTORIZACAO
-                                  ? this.showAutorizarModal()
-                                  : this.handleSubmit()
-                              }
-                              style={BUTTON_STYLE.GREEN}
-                              className="ml-3"
-                            />
-                          )))}
-                      {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                        <Botao
-                          texto={
-                            tipoPerfil ===
-                              TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                              ? "Questionar"
-                              : "Sim"
-                          }
-                          type={BUTTON_TYPE.SUBMIT}
-                          onClick={() => this.showQuestionamentoModal("Sim")}
-                          style={BUTTON_STYLE.GREEN}
-                          className="ml-3"
-                        />
-                      )}
-                    </div>
-                  )}
+                  <div className="form-group row float-right mt-4">
+                    {EXIBIR_BOTAO_NAO_APROVAR && (
+                      <Botao
+                        texto={textoBotaoNaoAprova}
+                        className="ml-3"
+                        onClick={() => this.showNaoAprovaModal("Não")}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    )}
+                    {EXIBIR_BOTAO_APROVAR &&
+                      (textoBotaoAprova !== "Ciente" &&
+                        (visao === CODAE &&
+                        solicitacaoUnificada.logs.filter(
+                          log =>
+                            log.status_evento_explicacao ===
+                              "Terceirizada respondeu questionamento" &&
+                            !log.resposta_sim_nao
+                        ).length > 0 ? null : (
+                          <Botao
+                            texto={textoBotaoAprova}
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() =>
+                              EXIBIR_MODAL_AUTORIZACAO
+                                ? this.showAutorizarModal()
+                                : this.handleSubmit()
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="ml-3"
+                          />
+                        )))}
+                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                      <Botao
+                        texto={
+                          tipoPerfil ===
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                            ? "Questionar"
+                            : "Sim"
+                        }
+                        type={BUTTON_TYPE.SUBMIT}
+                        onClick={() => this.showQuestionamentoModal("Sim")}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </form>

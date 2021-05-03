@@ -1,8 +1,12 @@
 import React, { Component } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE, BUTTON_ICON } from "../../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
@@ -120,7 +124,7 @@ class Relatorio extends Component {
           toastError(toastAprovaMensagemErro);
         }
       },
-      function () {
+      function() {
         toastError(toastAprovaMensagemErro);
       }
     );
@@ -229,8 +233,9 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${alteracaoDeCardapio.id_externo
-              }`}</span>
+            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
+              alteracaoDeCardapio.id_externo
+            }`}</span>
             <Link to={`/`}>
               <Botao
                 texto="voltar"
@@ -293,7 +298,7 @@ class Relatorio extends Component {
                           alteracaoDeCardapio.logs.filter(
                             log =>
                               log.status_evento_explicacao ===
-                              "Terceirizada respondeu questionamento" &&
+                                "Terceirizada respondeu questionamento" &&
                               !log.resposta_sim_nao
                           ).length > 0 ? null : (
                           <Botao
@@ -312,7 +317,7 @@ class Relatorio extends Component {
                       <Botao
                         texto={
                           tipoPerfil ===
-                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
                             ? "Questionar"
                             : "Sim"
                         }
