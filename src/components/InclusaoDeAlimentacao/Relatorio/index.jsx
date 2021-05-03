@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
+import { Link } from "react-router-dom";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
@@ -217,6 +222,16 @@ class Relatorio extends Component {
             <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
               inclusaoDeAlimentacao.id_externo
             }`}</span>
+            <Link to={`/`}>
+              <Botao
+                texto="voltar"
+                titulo="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio

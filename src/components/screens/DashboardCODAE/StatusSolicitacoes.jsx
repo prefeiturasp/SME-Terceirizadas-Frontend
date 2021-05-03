@@ -102,7 +102,7 @@ export class StatusSolicitacoes extends Component {
       case STATUS.QUESTIONADAS:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
-        titulo = "Aguardando resposta da Empresa";
+        titulo = "Aguardando Resposta da Empresa";
         solicitacoes = await getSolicitacoesComQuestionamentoCodae();
         break;
 
