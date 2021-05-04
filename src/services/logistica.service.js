@@ -96,3 +96,8 @@ export const vinculaGuiasComEscolas = async params => {
   const url = `/guias-da-requisicao/vincula-guias/`;
   return await axios.patch(url, { params });
 };
+
+export const getGuiasEscola = async params => {
+  const url = `/guias-da-requisicao/guias-escola/`;
+  return await axios.get(url, { params });
+};
