@@ -4,7 +4,7 @@ import "./styles.scss";
 
 const ListagemSolicitacoes = ({ guias }) => {
   return (
-    <section className="resultado-insucesso-entrega">
+    <section className="resultado-conferir-entrega">
       <article>
         <div className="grid-table header-table">
           <div>Número da Guia</div>
