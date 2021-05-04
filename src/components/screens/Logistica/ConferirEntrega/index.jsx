@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { getGuiasEscola } from "../../../../services/logistica.service.js";
-import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
+import ListagemGuias from "./components/ListagemGuias";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [solicitacoes, setSolicitacoes] = useState();
+  const [guias, setGuias] = useState();
   const [filtros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
-  const buscarSolicitacoes = async page => {
+  const buscarGuias = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getGuiasEscola(params);
     if (response.data.count) {
-      setSolicitacoes(response.data.results);
+      setGuias(response.data.results);
       setTotal(response.data.count);
     } else {
       setTotal(response.data.count);
-      setSolicitacoes();
+      setGuias();
     }
     setAtivos([]);
     setCarregando(false);
@@ -30,18 +30,18 @@ export default () => {
 
   useEffect(() => {
     //if (!filtros) {
-    buscarSolicitacoes(1);
+    buscarGuias(1);
     setPage(1);
     //}
   }, [filtros]);
 
   const nextPage = page => {
-    buscarSolicitacoes(page);
+    buscarGuias(page);
     setPage(page);
   };
 
   const updatePage = () => {
-    buscarSolicitacoes(page);
+    buscarGuias(page);
   };
 
   return (
@@ -50,14 +50,14 @@ export default () => {
         <div className="card-body gestao-requisicao-entrega">
           {/* <Filtros
             setFiltros={setFiltros}
-            setSolicitacoes={setSolicitacoes}
+            setGuias={setGuias}
             setTotal={setTotal}
           /> */}
-          {solicitacoes && (
+          {guias && (
             <>
               <br /> <hr /> <br />
-              <ListagemSolicitacoes
-                solicitacoes={solicitacoes}
+              <ListagemGuias
+                guias={guias}
                 ativos={ativos}
                 setAtivos={setAtivos}
                 updatePage={updatePage}

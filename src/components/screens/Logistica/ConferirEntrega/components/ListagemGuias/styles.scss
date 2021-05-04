@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.2fr 0.8fr 1fr 2fr 1fr 1fr 1.5fr;
+      grid-template-columns: 0.6fr 1.2fr 0.8fr 0.8fr 1.2fr;
     }
 
     .header-table {
@@ -56,15 +56,21 @@
         font-weight: 900;
       }
 
-      .link-insucesso {
+      .link-acoes {
         cursor: pointer;
-        color: $green;
         text-decoration: underline;
+        padding-right: 4px;
 
         .fas {
-          text-decoration: underline;
+          text-decoration: none;
           font-size: 12px;
+          padding-right: 4px;
+          padding-left: 4px;
         }
+      }
+
+      .green {
+        color: $green;
       }
 
       div:first-child {
