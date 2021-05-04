@@ -3,6 +3,7 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
+  usuarioEhEscolaAbastecimento,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
@@ -70,7 +71,10 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE();
 
-  const exibirMenuLogistica = usuarioEhLogistica() || usuarioEhDistribuidora();
+  const exibirMenuLogistica =
+    usuarioEhLogistica() ||
+    usuarioEhDistribuidora() ||
+    usuarioEhEscolaAbastecimento();
 
   const _props = {
     activeMenu,

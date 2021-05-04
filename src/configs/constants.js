@@ -137,6 +137,7 @@ export const INSUCESSO_ENTREGA = "insucesso-entrega";
 export const GESTAO_SOLICITACAO_ALTERACAO = "gestao-solicitacao-alteracao";
 export const CONSULTA_SOLICITACAO_ALTERACAO = "consulta-solicitacao-alteracao";
 export const CONFERENCIA_INCONSISTENCIAS = "conferencia-inconsistencias";
+export const CONFERIR_ENTREGA = "conferir-entrega";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
