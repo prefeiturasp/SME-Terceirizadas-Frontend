@@ -119,6 +119,9 @@ const TabelaProdutos = ({
                           setProdutos={setProdutos}
                           produtos={produtos}
                           setCarregando={setCarregando}
+                          rastro_terceirizada={
+                            produto.ultima_homologacao.rastro_terceirizada
+                          }
                         />,
                         deveMostrarBarraHorizontal && <hr />
                       ];
