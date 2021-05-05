@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { getGuiasEscola } from "../../../../services/logistica.service.js";
 import ListagemGuias from "./components/ListagemGuias";
+import Filtros from "./components/Filtros";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [guias, setGuias] = useState();
-  const [filtros] = useState();
+  const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
@@ -29,10 +30,15 @@ export default () => {
   };
 
   useEffect(() => {
-    //if (!filtros) {
-    buscarGuias(1);
-    setPage(1);
-    //}
+    if (filtros) {
+      buscarGuias(1);
+      setPage(1);
+    } else {
+      const filtro = {
+        status: ["PENDENTE_DE_CONFERENCIA"]
+      };
+      setFiltros({ ...filtro });
+    }
   }, [filtros]);
 
   const nextPage = page => {
@@ -48,11 +54,7 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
-          {/* <Filtros
-            setFiltros={setFiltros}
-            setGuias={setGuias}
-            setTotal={setTotal}
-          /> */}
+          <Filtros setFiltros={setFiltros} />
           {guias && (
             <>
               <br /> <hr /> <br />
