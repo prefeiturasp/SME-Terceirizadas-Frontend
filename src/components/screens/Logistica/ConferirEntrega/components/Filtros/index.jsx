@@ -33,7 +33,7 @@ export default ({ setFiltros }) => {
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
             <div className="row">
-              <div className="col-3">
+              <div className="col-6">
                 <Field
                   component={InputText}
                   label="Nº da guia de remessa"
@@ -42,37 +42,8 @@ export default ({ setFiltros }) => {
                   className="input-busca-produto"
                 />
               </div>
-              <div className="col-3">
-                <Field
-                  component={InputComData}
-                  label="Período de Entrega"
-                  name="data_inicial"
-                  className="data-inicial"
-                  placeholder="De"
-                  minDate={null}
-                  maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
-                      : null
-                  }
-                />
-              </div>
-              <div className="col-3">
-                <Field
-                  component={InputComData}
-                  label="&nbsp;"
-                  name="data_final"
-                  popperPlacement="bottom-end"
-                  placeholder="Até"
-                  minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
-                  }
-                  maxDate={null}
-                />
-              </div>
-              <div className="col-3">
+
+              <div className="col-6">
                 <Field
                   label="Status"
                   component={MultiSelect}
@@ -110,6 +81,38 @@ export default ({ setFiltros }) => {
                       label: "Reposição total"
                     }
                   ]}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-3">
+                <Field
+                  component={InputComData}
+                  label="Período de Entrega"
+                  name="data_inicial"
+                  className="data-inicial"
+                  placeholder="De"
+                  minDate={null}
+                  maxDate={
+                    values.data_final
+                      ? moment(values.data_final, "DD/MM/YYYY")._d
+                      : null
+                  }
+                />
+              </div>
+              <div className="col-3">
+                <Field
+                  component={InputComData}
+                  label="&nbsp;"
+                  name="data_final"
+                  popperPlacement="bottom-end"
+                  placeholder="Até"
+                  minDate={
+                    values.data_inicial
+                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                      : null
+                  }
+                  maxDate={null}
                 />
               </div>
             </div>
