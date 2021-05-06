@@ -100,6 +100,19 @@ class RelatorioAnaliseSensorial extends Component {
     });
   };
 
+  responder_deve_aparecer = rastro_terceirizada => {
+    if (rastro_terceirizada === null) {
+      return true;
+    } else if (
+      `"${rastro_terceirizada.nome_fantasia}"` !==
+      localStorage.getItem("nome_instituicao")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const { homologacao, informacoes, showModal } = this.state;
     const justificativa =
@@ -152,6 +165,9 @@ class RelatorioAnaliseSensorial extends Component {
                       texto={"Responder"}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
+                      disabled={this.responder_deve_aparecer(
+                        homologacao.rastro_terceirizada
+                      )}
                       onClick={() => this.showModal()}
                       className="ml-1"
                     />
