@@ -497,7 +497,7 @@ export const CorpoRelatorio = props => {
         <div className="row">
           <div className="col-12 report-label-value">
             <p>
-              Período de Vigência: Início:
+              Período de Vigência Autorização: Início:
               <span className="value-sp">
                 {data_inicio || "Sem data de início"}
               </span>{" "}
