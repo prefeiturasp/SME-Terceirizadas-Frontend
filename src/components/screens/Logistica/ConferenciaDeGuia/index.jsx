@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { getGuiaPorUuid } from "../../../../services/logistica.service.js";
+import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -9,6 +9,7 @@ import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { required, maxLength } from "../../../../helpers/fieldValidators";
 import { composeValidators } from "../../../../helpers/utilities";
 import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -35,16 +36,22 @@ export default () => {
   const [initialValues, setInitialValues] = useState({});
 
   const carregarGuia = async uuid => {
-    setCarregando(true);
-    const params = gerarParametrosConsulta({ uuid: uuid });
-    const response = await getGuiaPorUuid(params);
-    setGuia(response.data);
-    setInitialValues({
-      numero_guia: response.data.numero_guia,
-      data_entrega: response.data.data_entrega,
-      hora_entrega: "00:00"
-    });
-    setCarregando(false);
+    let response;
+    try {
+      setCarregando(true);
+      const params = gerarParametrosConsulta({ uuid: uuid });
+      response = await getGuiaParaConferencia(params);
+      setGuia(response.data);
+      setInitialValues({
+        numero_guia: response.data.numero_guia,
+        data_entrega: response.data.data_entrega,
+        hora_entrega: "00:00"
+      });
+      setCarregando(false);
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
   };
 
   const escolherHora = hora => {
