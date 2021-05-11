@@ -105,6 +105,11 @@ class DashboardCODAE extends Component {
       filtroPorVencimento,
       visao
     );
+
+    // TODO melhorar essas duas linhas abaixo
+    resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
+    delete resumo["Kit Lanche Passeio Unificado"];
+
     const correcaoOk = corrigeResumo(resumo);
     if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
     this.setState({
