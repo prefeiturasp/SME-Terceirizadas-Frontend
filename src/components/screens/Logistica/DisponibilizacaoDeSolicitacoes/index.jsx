@@ -50,13 +50,13 @@ export const DisponibilizacaoDeSolicitacoes = props => {
 
   const exibeToastPeloStatus = status => {
     if (status === HTTP_STATUS.OK && solicitacaoUuid) {
-      toastSuccess("Solicitação enviada com sucesso");
+      toastSuccess("Requisição de entrega enviada com sucesso");
     } else if (status === HTTP_STATUS.OK && !solicitacaoUuid) {
-      toastSuccess("Solicitações enviadas com sucesso");
+      toastSuccess("Requisições de entrega enviadas com sucesso");
     } else if (status === HTTP_STATUS.BAD_REQUEST) {
       toastError("Erro de transição de estado");
     } else {
-      toastInfo("Nenhuma solicitação a enviar");
+      toastInfo("Nenhuma requisição de entrega a enviar");
     }
   };
 
@@ -344,7 +344,7 @@ export const DisponibilizacaoDeSolicitacoes = props => {
               <Modal.Body>
                 {!numeroSolicitacao
                   ? `Deseja enviar todas as Solicitações da Grade ?`
-                  : `Deseja enviar a Solicitação n° ${numeroSolicitacao} ? `}
+                  : `Deseja enviar a Requisição de Entrega n° ${numeroSolicitacao} ? `}
               </Modal.Body>
               <Modal.Footer>
                 <Botao

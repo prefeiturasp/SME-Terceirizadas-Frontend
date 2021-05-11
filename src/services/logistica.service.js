@@ -71,3 +71,33 @@ export const getListagemSolicitacaoAlteracao = async params => {
   const url = `/solicitacao-de-alteracao-de-requisicao/`;
   return await axios.get(url, { params });
 };
+
+export const dilogAceitaAlteracao = async (uuid, params) => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/${uuid}/dilog-aceita-alteracao/`;
+  return await axios.patch(url, params);
+};
+
+export const dilogNegaAlteracao = async (uuid, params) => {
+  const url = `/solicitacao-de-alteracao-de-requisicao/${uuid}/dilog-nega-alteracao/`;
+  return await axios.patch(url, params);
+};
+
+export const getGuiasRemessaParaInsucesso = async params => {
+  const url = `/guias-da-requisicao/lista-guias-para-insucesso/`;
+  return await axios.get(url, { params });
+};
+
+export const getGuiasInconsistencias = async params => {
+  const url = `/guias-da-requisicao/inconsistencias/`;
+  return await axios.get(url, { params });
+};
+
+export const vinculaGuiasComEscolas = async params => {
+  const url = `/guias-da-requisicao/vincula-guias/`;
+  return await axios.patch(url, { params });
+};
+
+export const getGuiasEscola = async params => {
+  const url = `/guias-da-requisicao/guias-escola/`;
+  return await axios.get(url, { params });
+};

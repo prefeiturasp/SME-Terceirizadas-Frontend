@@ -10,7 +10,7 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
 import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
 
-import { ajustaFormatoLogPainelDietaEspecial } from "../helper";
+import { ajustaFormatoLogPainelDietaEspecial, slugify } from "../helper";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const TEXTO_ATALHO_DIETA = `Quando houver necessidade de incluir Dieta Especial para os alunos matriculados na unidade.`;
@@ -159,8 +159,8 @@ class DashBoardDietaEspecial extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }
@@ -243,7 +243,7 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizados"}
+                    cardTitle={"Autorizadas"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasListFiltered ? autorizadasListFiltered : []
@@ -291,7 +291,7 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizados Temporariamente"}
+                    cardTitle={"Autorizadas Temporariamente"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasTemporariamenteListFiltered
@@ -339,6 +339,15 @@ class DashBoardDietaEspecial extends Component {
                         do aluno para os programas Polo e Recreio nas Férias.`}
                 textoLink={"Alterar U.E"}
                 href={"/escola/dieta-especial-alteracao-ue"}
+              />
+            </div>
+            <div className="col-3">
+              <CardAtalho
+                titulo={"Cancelar Dieta Especial"}
+                nome="card-cancelar"
+                texto={`Quando houver necessidade de cancelamento de dieta devido a existência de laudo de alta.`}
+                textoLink={"Cancelar Dieta"}
+                href={"/dieta-especial/cancelamento"}
               />
             </div>
           </div>

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import {
   getHomologacao,
-  getInformacoesGrupo
+  getInformacoesGrupo,
+  flegarHomologacaoPDF
 } from "../../../../services/produto.service";
 import {
   BUTTON_TYPE,
@@ -12,7 +13,10 @@ import Botao from "components/Shareable/Botao";
 import "./styles.scss";
 import { Fragment } from "react";
 import ModalResponderAnaliseSensorial from "../BuscaProdutoAnaliseSensorial/components/ModalResponderAnaliseSensorial";
-import { getRelatorioProdutoAnaliseSensorial } from "services/relatorios";
+import {
+  getRelatorioProdutoAnaliseSensorial,
+  getRelatorioProdutoAnaliseSensorialRecebimento
+} from "services/relatorios";
 
 class RelatorioAnaliseSensorial extends Component {
   constructor(props) {
@@ -87,6 +91,28 @@ class RelatorioAnaliseSensorial extends Component {
     );
   };
 
+  pdfGerado = async ({ uuid }) => {
+    await flegarHomologacaoPDF(uuid);
+    let homolog = this.state.homologacao;
+    homolog.pdf_gerado = true;
+    this.setState({
+      homologacao: homolog
+    });
+  };
+
+  responder_deve_aparecer = rastro_terceirizada => {
+    if (rastro_terceirizada === null) {
+      return true;
+    } else if (
+      `"${rastro_terceirizada.nome_fantasia}"` !==
+      localStorage.getItem("nome_instituicao")
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   render() {
     const { homologacao, informacoes, showModal } = this.state;
     const justificativa =
@@ -98,7 +124,7 @@ class RelatorioAnaliseSensorial extends Component {
           {homologacao !== null && (
             <article>
               <div className="row">
-                <div className="row col-10 ml-0">
+                <div className="row col-12 ml-0">
                   <div className="col-6 pl-0">
                     <p className="text-muted">
                       Solicitação de análise sensorial
@@ -113,8 +139,8 @@ class RelatorioAnaliseSensorial extends Component {
                     </p>
                   </div>
 
-                  <section className="texto-wysiwyg row col-12 ml-0">
-                    <div className="col-12">
+                  <section className="texto-wysiwyg row col-7 ml-0">
+                    <div className="col-7">
                       <p
                         dangerouslySetInnerHTML={{
                           __html: justificativa
@@ -122,25 +148,42 @@ class RelatorioAnaliseSensorial extends Component {
                       />
                     </div>
                   </section>
-                </div>
-
-                <div className="col-2 a-flex">
-                  <Botao
-                    type={BUTTON_TYPE.BUTTON}
-                    titulo="imprimir"
-                    style={BUTTON_STYLE.BLUE}
-                    icon={BUTTON_ICON.PRINT}
-                    onClick={() => {
-                      getRelatorioProdutoAnaliseSensorial(homologacao.produto);
-                    }}
-                  />
-                  <Botao
-                    texto={"Responder"}
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    onClick={() => this.showModal()}
-                    className="ml-2"
-                  />
+                  <div className="col-5 a-flex">
+                    <Botao
+                      texto={"Documento de entrega"}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() => {
+                        this.pdfGerado(homologacao);
+                        getRelatorioProdutoAnaliseSensorialRecebimento(
+                          homologacao.produto
+                        );
+                      }}
+                      className="ml-1"
+                    />
+                    <Botao
+                      texto={"Responder"}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      disabled={this.responder_deve_aparecer(
+                        homologacao.rastro_terceirizada
+                      )}
+                      onClick={() => this.showModal()}
+                      className="ml-1"
+                    />
+                    <Botao
+                      type={BUTTON_TYPE.BUTTON}
+                      titulo="imprimir"
+                      style={BUTTON_STYLE.BLUE}
+                      icon={BUTTON_ICON.PRINT}
+                      onClick={() => {
+                        getRelatorioProdutoAnaliseSensorial(
+                          homologacao.produto
+                        );
+                      }}
+                      className="ml-1"
+                    />
+                  </div>
                 </div>
               </div>
               <hr />

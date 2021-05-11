@@ -74,9 +74,12 @@ export const RelatorioHistoricoQuestionamento = props => {
                     <div className="is-it-possible">
                       <div className="title">Negou</div>
                       {log.justificativa && (
-                        <div className="obs">
-                          Observação da CODAE: {log.justificativa}
-                        </div>
+                        <div
+                          className="obs"
+                          dangerouslySetInnerHTML={{
+                            __html: `Observação da CODAE: ${log.justificativa}`
+                          }}
+                        />
                       )}
                     </div>
                   )}

@@ -49,6 +49,19 @@ export default () => {
   };
 
   useEffect(() => {
+    const queryString = window.location.search;
+
+    if (queryString) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codigo = urlParams.get("numero_requisicao");
+      const filtro = {
+        numero_requisicao: codigo
+      };
+      setFiltros({ ...filtro });
+    }
+  }, []);
+
+  useEffect(() => {
     if (filtros) {
       buscarSolicitacoes(1);
       setPage(1);

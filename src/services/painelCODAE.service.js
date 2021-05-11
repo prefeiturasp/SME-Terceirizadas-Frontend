@@ -76,6 +76,24 @@ export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
   }
 };
 
+export const getSolicitacoesComQuestionamentoCodae = async () => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
+    SOLICITACOES.QUESTIONAMENTOS
+  }/`;
+
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
   filtroAplicado,
   tipoVisao

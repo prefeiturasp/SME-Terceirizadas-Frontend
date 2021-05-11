@@ -37,6 +37,7 @@ export const SOLICITACOES_INATIVAS = "solicitacoes-inativas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+export const PROTOCOLO_PADRAO_DIETA = "protocolo-padrao-dieta";
 
 export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
   RECLAMACAO_DE_PRODUTO: "reclamacao-de-produto",
@@ -132,7 +133,11 @@ export const ENVIO_REQUISICOES_ENTREGA = "envio-requisicoes-entrega";
 export const ENVIO_REQUISICOES_ENTREGA_AVANCADO =
   "envio-requisicoes-entrega-completo";
 export const GESTAO_REQUISICAO_ENTREGA = "gestao-requisicao-entrega";
+export const INSUCESSO_ENTREGA = "insucesso-entrega";
 export const GESTAO_SOLICITACAO_ALTERACAO = "gestao-solicitacao-alteracao";
+export const CONSULTA_SOLICITACAO_ALTERACAO = "consulta-solicitacao-alteracao";
+export const CONFERENCIA_INCONSISTENCIAS = "conferencia-inconsistencias";
+export const CONFERIR_ENTREGA = "conferir-entrega";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 

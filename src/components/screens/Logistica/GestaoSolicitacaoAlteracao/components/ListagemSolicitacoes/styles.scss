@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.6fr 0.6fr 0.8fr 0.7fr 0.5fr 0.5fr;
+      grid-template-columns: 0.6fr 0.6fr 0.6fr 0.8fr 0.7fr 0.5fr 0.5fr;
     }
 
     .header-table {
@@ -102,21 +102,6 @@
     .acoes {
       font-size: 14px !important;
       display: inline-block;
-    }
-
-    .confirmar {
-      color: $green !important;
-      display: inline !important;
-      padding-left: 0;
-    }
-
-    .alterar {
-      color: $blue !important;
-      display: inline !important;
-    }
-
-    .imprimir {
-      display: inline !important;
     }
   }
 }

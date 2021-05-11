@@ -18,10 +18,12 @@ import StatusSolicitacoesAutorizadasCODAEPage from "../pages/CODAE/Solicitacoes/
 import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesCanceladasCODAEPage";
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
+import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
+import ProtocoloPaadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPaadraoDietaEspecialPage.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -77,6 +79,7 @@ import {
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
   usuarioEhEscola,
+  usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhTerceirizada,
@@ -121,6 +124,10 @@ import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
 import GestaoRequisicaoEntregaPage from "pages/Logistica/GestaoRequisicaoEntregaPage";
 import GestaoSolicitacaoAlteracaoPage from "pages/Logistica/GestaoSolicitacaoAlteracaoPage";
+import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitacaoAlteracaoPage";
+import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
+import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
+import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
 
 const routesConfig = [
   {
@@ -306,6 +313,12 @@ const routesConfig = [
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesCODAEPage,
+    exact: false,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CODAE}/${constants.SOLICITACOES_COM_QUESTIONAMENTO}`,
+    component: StatusSolicitacoesComQuestionamentosCODAEPage,
     exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
@@ -965,6 +978,12 @@ const routesConfig = [
       usuarioEhEscola()
   },
   {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
+    component: ProtocoloPaadraoDietaEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
     path: `/${constants.LANCAMENTO_INICIAL}/${
       constants.LANCAMENTO_MEDICAO_INICIAL
     }`,
@@ -998,13 +1017,37 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
     component: GestaoRequisicaoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
     component: GestaoSolicitacaoAlteracaoPage,
     exact: true,
     tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
+    component: ConsultaSolicitacaoAlteracaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.INSUCESSO_ENTREGA}`,
+    component: InsucessoEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
+    component: ConferenciaInconsistenciasPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
+    component: ConferirEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
   }
 ];
 

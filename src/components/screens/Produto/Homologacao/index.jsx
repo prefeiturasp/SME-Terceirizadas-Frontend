@@ -8,6 +8,7 @@ import {
 } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
+import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
@@ -23,6 +24,7 @@ import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
 import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
+import ModalAtivacaoSuspensaoProduto from "../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
@@ -36,6 +38,12 @@ import {
 import { TIPO_PERFIL } from "../../../../constants/shared";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
+import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
+
+const {
+  CODAE_HOMOLOGADO,
+  ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+} = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 class HomologacaoProduto extends Component {
   constructor(props) {
@@ -49,13 +57,41 @@ class HomologacaoProduto extends Component {
       status: null,
       reclamacaoProduto: null,
       verificado: false,
-      logs: []
+      visible: false,
+      logs: [],
+      ativo: false,
+      acao: null
     };
     this.closeModal = this.closeModal.bind(this);
   }
 
   closeModal = () => {
     this.setState({ showModal: false });
+  };
+
+  showModalHistorico = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
+  checaStatus = obj => {
+    return (
+      obj.status === CODAE_HOMOLOGADO.toUpperCase() ||
+      obj.status === ESCOLA_OU_NUTRICIONISTA_RECLAMOU.toUpperCase()
+    );
   };
 
   componentDidMount = async () => {
@@ -70,7 +106,8 @@ class HomologacaoProduto extends Component {
         status: response.data.status,
         terceirizada: response.data.rastro_terceirizada,
         uuid,
-        logs: response.data.logs
+        logs: response.data.logs,
+        ativo: this.checaStatus(response.data)
       });
     });
   };
@@ -91,7 +128,25 @@ class HomologacaoProduto extends Component {
         informacoesNutricionais: formataInformacoesNutricionais(
           response.data.produto
         ),
-        status: response.data.status
+        status: response.data.status,
+        ativo: this.checaStatus(response.data),
+        acao: null
+      });
+    });
+  };
+
+  carregaHomologacao = () => {
+    const { uuid } = this.state;
+    getHomologacaoProduto(uuid).then(response => {
+      this.setState({
+        produto: response.data.produto,
+        informacoesNutricionais: formataInformacoesNutricionais(
+          response.data.produto
+        ),
+        status: response.data.status,
+        logs: response.data.logs,
+        ativo: this.checaStatus(response.data),
+        acao: null
       });
     });
   };
@@ -152,6 +207,7 @@ class HomologacaoProduto extends Component {
   };
 
   render() {
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
       produto,
       informacoesNutricionais,
@@ -161,7 +217,9 @@ class HomologacaoProduto extends Component {
       status,
       terceirizada,
       protocoloAnalise,
-      logs
+      logs,
+      ativo,
+      acao
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -277,8 +335,46 @@ class HomologacaoProduto extends Component {
                   </div>
                 </div>
               )}
-
+              <div className="row">
+                <div className="col-12" style={{ alignItems: "flex-end" }}>
+                  <Botao
+                    type={BUTTON_TYPE.BUTTON}
+                    texto="Histórico"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={this.showModalHistorico}
+                    className="float-right"
+                  />
+                  {ativo === true &&
+                    tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO && (
+                      <Botao
+                        texto={"Suspender"}
+                        className="mr-2 float-right"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() =>
+                          this.setState({ ...this.state, acao: "suspensão" })
+                        }
+                      />
+                    )}
+                </div>
+              </div>
               <hr />
+              {!!logs.length && (
+                <ModalHistorico
+                  visible={this.state.visible}
+                  onOk={this.handleOk}
+                  onCancel={this.handleCancel}
+                  logs={logs}
+                />
+              )}
+              <ModalAtivacaoSuspensaoProduto
+                showModal={!!acao}
+                closeModal={() => this.setState({ ...this.state, acao: null })}
+                acao={acao}
+                produto={produto || {}}
+                idHomologacao={uuid}
+                atualizarDados={this.carregaHomologacao}
+              />
               {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)

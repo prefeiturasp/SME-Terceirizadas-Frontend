@@ -59,7 +59,8 @@ const Reclamacao = ({
   setAtivos,
   produtos,
   setProdutos,
-  setCarregando
+  setCarregando,
+  rastro_terceirizada
 }) => {
   const [exibirModal, setExibirModal] = useState(null);
 
@@ -78,6 +79,23 @@ const Reclamacao = ({
       setCarregando(false);
     }
     fetchData();
+  };
+
+  const responder_deve_aparecer = reclamacao_status => {
+    if (rastro_terceirizada === null) {
+      return true;
+    } else if (
+      `"${rastro_terceirizada.nome_fantasia}"` !==
+      localStorage.getItem("nome_instituicao")
+    ) {
+      return true;
+    } else if (
+      reclamacao_status !== STATUS_RECLAMACAO.AGUARDANDO_RESPOSTA_TERCEIRIZADA
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   return (
@@ -150,10 +168,7 @@ const Reclamacao = ({
           style={BUTTON_STYLE.GREEN}
           onClick={() => setExibirModal(true)}
           className="ml-3 mr-3"
-          disabled={
-            reclamacao.status !==
-            STATUS_RECLAMACAO.AGUARDANDO_RESPOSTA_TERCEIRIZADA
-          }
+          disabled={responder_deve_aparecer(reclamacao.status)}
         />
       </div>
     </Fragment>

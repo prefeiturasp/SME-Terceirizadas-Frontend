@@ -25,7 +25,7 @@ import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { ajustarFormatoLog, LOG_PARA } from "../helper";
+import { ajustarFormatoLog, LOG_PARA, slugify } from "../helper";
 import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
 import { FILTRO } from "../const";
 
@@ -64,8 +64,8 @@ class DashboardTerceirizada extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }

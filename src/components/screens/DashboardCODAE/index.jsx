@@ -7,7 +7,8 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_COM_QUESTIONAMENTO
 } from "../../../configs/constants";
 import { FILTRO_VISAO } from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
@@ -19,7 +20,7 @@ import CardStatusDeSolicitacao, {
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
-import { ajustarFormatoLog } from "../helper";
+import { ajustarFormatoLog, slugify } from "../helper";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
 import "./style.scss";
@@ -28,7 +29,8 @@ import {
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
   getSolicitacoesAutorizadasCodae,
-  getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias
+  getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias,
+  getSolicitacoesComQuestionamentoCodae
 } from "../../../services/painelCODAE.service";
 import { toastError } from "../../Shareable/Toast/dialogs";
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
@@ -38,6 +40,7 @@ class DashboardCODAE extends Component {
     super(props);
     this.state = {
       cards: this.props.cards,
+      pendentesAutorizacaoListFiltered: [],
       questionamentosListFiltered: [],
       canceladasListFiltered: [],
       negadasListFiltered: [],
@@ -47,6 +50,7 @@ class DashboardCODAE extends Component {
       resumo: [],
 
       collapsed: true,
+      pendentesAutorizacaoListSolicitacao: [],
       questionamentosListSolicitacao: [],
       canceladasListSolicitacao: [],
       loadingPainelSolicitacoes: true,
@@ -64,8 +68,8 @@ class DashboardCODAE extends Component {
 
   filtrarNome(listaFiltro, event) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
+      const wordToFilter = slugify(event.target.value.toLowerCase());
+      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
   }
@@ -113,10 +117,10 @@ class DashboardCODAE extends Component {
     this.carregaResumoPendencias();
 
     getSolicitacoesPendentesAutorizacaoCodae("sem_filtro").then(response => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(response);
+      let pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(response);
       this.setState({
-        questionamentosListSolicitacao,
-        questionamentosListFiltered: questionamentosListSolicitacao
+        pendentesAutorizacaoListSolicitacao,
+        pendentesAutorizacaoListFiltered: pendentesAutorizacaoListSolicitacao
       });
     });
 
@@ -143,24 +147,37 @@ class DashboardCODAE extends Component {
         autorizadasListFiltered: autorizadasListSolicitacao
       });
     });
+
+    getSolicitacoesComQuestionamentoCodae().then(response => {
+      let questionamentosListSolicitacao = ajustarFormatoLog(response);
+      this.setState({
+        questionamentosListSolicitacao: questionamentosListSolicitacao,
+        questionamentosListFiltered: questionamentosListSolicitacao
+      });
+    });
   }
 
   onPesquisaChanged(event) {
     if (event === undefined) event = { target: { value: "" } };
     const {
       questionamentosListSolicitacao,
+      pendentesAutorizacaoListSolicitacao,
       canceladasListSolicitacao,
       autorizadasListSolicitacao,
       negadasListSolicitacao
     } = this.state;
 
     this.setState({
-      questionamentosListFiltered: this.filtrarNome(
-        questionamentosListSolicitacao,
+      pendentesAutorizacaoListFiltered: this.filtrarNome(
+        pendentesAutorizacaoListSolicitacao,
         event
       ),
       autorizadasListFiltered: this.filtrarNome(
         autorizadasListSolicitacao,
+        event
+      ),
+      questionamentosListFiltered: this.filtrarNome(
+        questionamentosListSolicitacao,
         event
       ),
       negadasListFiltered: this.filtrarNome(negadasListSolicitacao, event),
@@ -181,6 +198,7 @@ class DashboardCODAE extends Component {
       collapsed,
       visao,
       questionamentosListFiltered,
+      pendentesAutorizacaoListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
       autorizadasListFiltered,
@@ -291,11 +309,22 @@ class DashboardCODAE extends Component {
                 <CardStatusDeSolicitacao
                   cardTitle={"Pendentes Autorização"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={questionamentosListFiltered}
+                  solicitations={pendentesAutorizacaoListFiltered}
                   icon={"fa-exclamation-triangle"}
                   href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
                 />
               </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Aguardando Resposta da Empresa"}
+                  cardType={CARD_TYPE_ENUM.PENDENTE}
+                  solicitations={questionamentosListFiltered}
+                  icon={"fa-exclamation-triangle"}
+                  href={`/${CODAE}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
+                />
+              </div>
+            </div>
+            <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Autorizadas"}
@@ -305,8 +334,6 @@ class DashboardCODAE extends Component {
                   href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
                 />
               </div>
-            </div>
-            <div className="row">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Negadas"}
@@ -316,6 +343,8 @@ class DashboardCODAE extends Component {
                   href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
                 />
               </div>
+            </div>
+            <div className="row">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Canceladas"}

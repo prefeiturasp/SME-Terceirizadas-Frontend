@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { Field } from "redux-form";
-import InputText from "../../../../Shareable/Input/InputText";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import { Select } from "antd";
 import {
@@ -23,11 +22,12 @@ import ModalMarca from "./ModalMarca";
 import ModalFabricante from "./ModalFabricante";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
-import { required } from "helpers/fieldValidators";
+import { required, maxLengthProduto } from "helpers/fieldValidators";
 import { ASelect } from "components/Shareable/MakeField";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 const { Option } = Select;
+const maxLength5000 = maxLengthProduto(5000);
 
 class Step1 extends Component {
   constructor(props) {
@@ -562,11 +562,12 @@ class Step1 extends Component {
         <div className="row">
           <div className="col-12 pt-3">
             <Field
-              component={InputText}
+              component={TextArea}
               label="Nome dos componentes do produto"
               name="componentes"
               type="text"
-              placeholder="Digite o nome dos componentes"
+              validate={[required, maxLength5000]}
+              maxLength={5001}
               required
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);

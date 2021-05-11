@@ -1,7 +1,12 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
@@ -174,7 +179,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       alteracaoDeCardapio &&
-      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      (alteracaoDeCardapio.foi_solicitado_fora_do_prazo || visao === CODAE) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         alteracaoDeCardapio.status
       );
@@ -231,6 +236,16 @@ class Relatorio extends Component {
             <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
+            <Link to={`/`}>
+              <Botao
+                texto="voltar"
+                titulo="voltar"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.BLUE}
+                icon={BUTTON_ICON.ARROW_LEFT}
+                className="float-right"
+              />
+            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -279,7 +294,13 @@ class Relatorio extends Component {
                               className="ml-3"
                             />
                           )
-                        ) : (
+                        ) : visao === CODAE &&
+                          alteracaoDeCardapio.logs.filter(
+                            log =>
+                              log.status_evento_explicacao ===
+                                "Terceirizada respondeu questionamento" &&
+                              !log.resposta_sim_nao
+                          ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.SUBMIT}

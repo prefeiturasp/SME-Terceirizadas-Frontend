@@ -327,8 +327,15 @@ export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
     PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI
+    PERFIL.DIRETOR_CEI,
+    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO
   ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhEscolaAbastecimento = () => {
+  return [PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEhLogistica = () => {
@@ -567,3 +574,6 @@ export const corrigeLinkAnexo = url => {
   }
   return url;
 };
+
+export const trocaAcentuadasPorSemAcento = texto =>
+  texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");

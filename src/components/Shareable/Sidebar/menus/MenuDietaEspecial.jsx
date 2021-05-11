@@ -5,7 +5,8 @@ import {
   AVALIAR_SOLICITACAO_CADASTRO_PRODUTO,
   ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO,
   DIETA_ESPECIAL,
-  CANCELAMENTO
+  CANCELAMENTO,
+  PROTOCOLO_PADRAO_DIETA
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -77,6 +78,11 @@ const MenuDietaEspecial = () => {
       {usuarioEhEscola() && (
         <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
           Cancel. Dieta Especial
+        </LeafItem>
+      )}
+      {usuarioEhCODAEDietaEspecial() && (
+        <LeafItem to={`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`}>
+          Cadastro de Protocolo Padrão
         </LeafItem>
       )}
     </Menu>
