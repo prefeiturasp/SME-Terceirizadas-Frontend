@@ -1,6 +1,8 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
+import { CONFERENCIA_GUIA, LOGISTICA } from "configs/constants";
+import { NavLink } from "react-router-dom";
 
 const ListagemSolicitacoes = ({ guias }) => {
   return (
@@ -22,10 +24,15 @@ const ListagemSolicitacoes = ({ guias }) => {
                 <div>{guia.data_entrega}</div>
                 <div>{guia.status}</div>
                 <div>
-                  <span className="link-acoes green">
-                    <i className="fas fa-eye" />
-                    Conferir
-                  </span>
+                  <NavLink
+                    className="float-left"
+                    to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
+                  >
+                    <span className="link-acoes green">
+                      <i className="fas fa-eye" />
+                      Conferir
+                    </span>
+                  </NavLink>
                   |
                   <span className="link-acoes">
                     <i className="fas fa-print" />
