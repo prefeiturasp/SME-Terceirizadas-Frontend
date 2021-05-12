@@ -1,5 +1,24 @@
+@import "../../../../styles/variables.scss";
+
 .input-horario {
   height: 32px;
+
+  span.required-asterisk {
+    color: $red;
+    padding-right: 5px;
+  }
+
+  .invalid-field {
+    input:not(:focus) {
+      box-shadow: none;
+      border-color: $red;
+    }
+  }
+
+  .col-form-label {
+    font-size: 14px;
+  }
+
   .ant-time-picker {
     width: 100%;
 

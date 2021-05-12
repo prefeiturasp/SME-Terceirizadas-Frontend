@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { dateDelta } from "../../../helpers/utilities";
 import "./style.scss";
 import { HelpText } from "../HelpText";
+import TooltipIcone from "../TooltipIcone";
 import InputErroMensagem from "../Input/InputErroMensagem";
 
 export class InputComData extends Component {
@@ -25,6 +26,7 @@ export class InputComData extends Component {
     placeholder: PropTypes.string,
     label: PropTypes.string,
     dateFormat: PropTypes.string,
+    tooltipText: PropTypes.string,
     minDate: PropTypes.instanceOf(Date),
     maxDate: PropTypes.instanceOf(Date)
   };
@@ -88,6 +90,7 @@ export class InputComData extends Component {
       showYearDropdown,
       textoLabel,
       popperPlacement,
+      tooltipText,
       visitedError
     } = this.props;
     return (
@@ -102,6 +105,7 @@ export class InputComData extends Component {
             {label}
           </label>
         ]}
+        {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
         <div
           className={
             activeCalendar

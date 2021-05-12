@@ -101,3 +101,8 @@ export const getGuiasEscola = async params => {
   const url = `/guias-da-requisicao/guias-escola/`;
   return await axios.get(url, { params });
 };
+
+export const getGuiaParaConferencia = async params => {
+  const url = `/guias-da-requisicao/guia-para-conferencia/`;
+  return await axios.get(url, { params });
+};

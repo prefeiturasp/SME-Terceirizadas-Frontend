@@ -128,6 +128,7 @@ import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitaca
 import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
+import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
 
 const routesConfig = [
   {
@@ -1046,6 +1047,12 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
     component: ConferirEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA}`,
+    component: ConferenciaDeGuiaPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
   }
