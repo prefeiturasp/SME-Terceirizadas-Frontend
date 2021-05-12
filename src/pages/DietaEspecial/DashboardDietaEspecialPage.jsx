@@ -19,6 +19,7 @@ import {
   getDietaEspecialAutorizadasTemporariamenteCODAE,
   getDietaEspecialAutorizadasTemporariamenteDRE,
   getDietaEspecialAutorizadasTemporariamenteEscola,
+  getDietaEspecialAutorizadasTemporariamenteTerceirizada,
   getDietaEspecialAutorizadasTerceirizada,
   getDietaEspecialCanceladasCODAE,
   getDietaEspecialCanceladasDRE,
@@ -30,6 +31,7 @@ import {
   getDietaEspecialInativasTemporariamenteCODAE,
   getDietaEspecialInativasTemporariamenteDRE,
   getDietaEspecialInativasTemporariamenteEscola,
+  getDietaEspecialInativasTemporariamenteTerceirizada,
   getDietaEspecialInativasTerceirizada,
   getDietaEspecialNegadasCODAE,
   getDietaEspecialNegadasDRE,
@@ -121,10 +123,10 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialNegadas={getDietaEspecialNegadasTerceirizada}
     getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
     getDietaEspecialInativasTemporariamente={
-      getDietaEspecialInativasTemporariamenteCODAE
+      getDietaEspecialInativasTemporariamenteTerceirizada
     }
     getDietaEspecialAutorizadasTemporariamente={
-      getDietaEspecialAutorizadasTemporariamenteCODAE
+      getDietaEspecialAutorizadasTemporariamenteTerceirizada
     }
     getDietaEspecialInativas={getDietaEspecialInativasTerceirizada}
   />
