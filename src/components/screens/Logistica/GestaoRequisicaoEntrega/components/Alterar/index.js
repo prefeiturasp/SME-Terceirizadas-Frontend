@@ -99,6 +99,7 @@ export default ({ solicitacao, updatePage }) => {
           {alimentosConsolidado && (
             <TabelaAlimentoConsolidado
               alimentosConsolidado={alimentosConsolidado}
+              mostrarPesoTotal={true}
             />
           )}
           <Form

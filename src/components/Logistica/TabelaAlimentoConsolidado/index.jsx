@@ -1,9 +1,9 @@
 import React from "react";
 
-export default ({ alimentosConsolidado, className }) => {
+export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
     const embalagensFiltradas = embalagens.filter(value => {
-      return value.tipo_embalagem === tipo;
+      return value.tipo_embalagem.toUpperCase() === tipo;
     });
     if (embalagensFiltradas.length) return embalagensFiltradas[0];
     else return false;
@@ -24,9 +24,11 @@ export default ({ alimentosConsolidado, className }) => {
           <th scope="col" colSpan="2" className="text-center">
             Embalagem Fracionada
           </th>
-          <th scope="col" rowSpan="2" className="align-middle">
-            Peso total
-          </th>
+          {mostrarPesoTotal && (
+            <th scope="col" rowSpan="2" className="align-middle">
+              Peso total
+            </th>
+          )}
         </tr>
         <tr>
           <th scope="col">Qtde</th>
@@ -37,19 +39,16 @@ export default ({ alimentosConsolidado, className }) => {
       </thead>
       <tbody>
         {alimentosConsolidado.map(item => {
-          const fracionada = filtraEmbalagemPorTipo(
-            item.total_embalagens,
-            "FRACIONADA"
-          );
-          const fechada = filtraEmbalagemPorTipo(
-            item.total_embalagens,
-            "FECHADA"
-          );
+          const embalagens = item.total_embalagens
+            ? item.total_embalagens
+            : item.embalagens;
+          const fracionada = filtraEmbalagemPorTipo(embalagens, "FRACIONADA");
+          const fechada = filtraEmbalagemPorTipo(embalagens, "FECHADA");
           return (
             <>
               <tr>
                 <td>{item.nome_alimento}</td>
-                <td>{fechada && fechada.qtd_volume}</td>
+                <td>{fechada ? fechada.qtd_volume : "--"}</td>
                 <td>
                   {fechada ? (
                     <>
@@ -58,10 +57,10 @@ export default ({ alimentosConsolidado, className }) => {
                       {fechada.unidade_medida}
                     </>
                   ) : (
-                    ""
+                    "--"
                   )}
                 </td>
-                <td>{fracionada && fracionada.qtd_volume}</td>
+                <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
                 <td>
                   {fracionada ? (
                     <>
@@ -70,13 +69,15 @@ export default ({ alimentosConsolidado, className }) => {
                       {fracionada.unidade_medida}
                     </>
                   ) : (
-                    ""
+                    "--"
                   )}
                 </td>
-                <td>
-                  {item.peso_total}
-                  {item.total_embalagens[0].unidade_medida}
-                </td>
+                {mostrarPesoTotal && (
+                  <td>
+                    {item.peso_total}
+                    {item.total_embalagens[0].unidade_medida}
+                  </td>
+                )}
               </tr>
             </>
           );

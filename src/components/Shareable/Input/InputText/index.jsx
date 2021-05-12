@@ -3,6 +3,7 @@ import React from "react";
 import { InputErroMensagem } from "../InputErroMensagem";
 import { HelpText } from "../../../Shareable/HelpText";
 import "../style.scss";
+import TooltipIcone from "../../TooltipIcone";
 
 export const InputText = props => {
   const {
@@ -23,6 +24,7 @@ export const InputText = props => {
     type,
     inputType,
     title,
+    tooltipText,
     maxlength,
     pattern,
     icone
@@ -43,6 +45,7 @@ export const InputText = props => {
           {label}
         </label>
       ]}
+      {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
       <input
         {...input}
         className={`form-control ${className} ${meta &&
