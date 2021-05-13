@@ -79,6 +79,7 @@ export default () => {
   };
 
   const validaDataEntrega = value => {
+    if (value === null) return "Digite uma data válida";
     if (guia.status === "Insucesso de entrega") return undefined;
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
     let dataReal = moment(value, "DD/MM/YYYY");
