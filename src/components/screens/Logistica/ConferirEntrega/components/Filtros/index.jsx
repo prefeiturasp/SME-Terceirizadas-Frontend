@@ -14,10 +14,14 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros }) => {
-  const [initialValues] = useState({
+export default ({ setFiltros, initialValuesProp }) => {
+  const [initialValuesDefault] = useState({
     status: ["PENDENTE_DE_CONFERENCIA"]
   });
+
+  const initialValues = initialValuesProp
+    ? initialValuesProp
+    : initialValuesDefault;
 
   const onSubmit = async values => {
     const filtros = { ...values };
