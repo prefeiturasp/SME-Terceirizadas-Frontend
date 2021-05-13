@@ -95,9 +95,17 @@ export const prefeituraEmail = value =>
     ? undefined
     : "Somente emails da prefeitura de São Paulo";
 
+export const peloMenosUmNumeroEUmaLetra = value =>
+  value && /^(?=.*[0-9])(?=.*[a-zA-Z])/i.test(value)
+    ? undefined
+    : "Precisa conter letras e números";
+
 export const alphaNumeric = value =>
-  value && /[^a-zA-Z0-9 ]/i.test(value)
-    ? "Only alphanumeric characters"
+  value && /[^a-zA-Z0-9]/i.test(value) ? "Apenas letras e números" : undefined;
+
+export const apenasLetras = value =>
+  value && /[^a-zA-Z ]/i.test(value)
+    ? "Não digite números ou caracteres especiais"
     : undefined;
 
 export const numericInteger = value =>
