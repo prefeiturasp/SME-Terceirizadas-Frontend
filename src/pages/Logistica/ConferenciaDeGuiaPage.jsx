@@ -26,7 +26,11 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
+  <Page
+    botaoVoltar
+    voltarPara={`/${LOGISTICA}/${CONFERIR_ENTREGA}`}
+    titulo={atual.titulo}
+  >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <ConferenciaDeGuia />
   </Page>

@@ -6,7 +6,13 @@ import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputText } from "components/Shareable/Input/InputText";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
-import { required, maxLength } from "../../../../helpers/fieldValidators";
+import {
+  required,
+  maxLength,
+  apenasLetras,
+  alphaNumeric,
+  peloMenosUmNumeroEUmaLetra
+} from "../../../../helpers/fieldValidators";
 import { composeValidators } from "../../../../helpers/utilities";
 import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -67,6 +73,9 @@ export default () => {
 
   const onSubmit = async values => {
     values.hora_entrega = horaEntrega;
+    values.data_entrega_real = moment(values.data_entrega_real).format(
+      "DD/MM/YYYY"
+    );
   };
 
   const validaDataEntrega = value => {
@@ -133,6 +142,8 @@ export default () => {
                       validate={composeValidators(required, validaDataEntrega)}
                       minDate={null}
                       maxDate={null}
+                      required
+                      writable
                     />
                   </div>
                 </div>
@@ -145,7 +156,11 @@ export default () => {
                       name="nome_motorista"
                       className="input-busca-produto"
                       tooltipText={TOOLTIP_NOME}
-                      validate={composeValidators(required, maxLength(100))}
+                      validate={composeValidators(
+                        required,
+                        maxLength(100),
+                        apenasLetras
+                      )}
                       required
                     />
                   </div>
@@ -156,7 +171,12 @@ export default () => {
                       name="placa_veiculo"
                       className="input-busca-produto"
                       tooltipText={TOOLTIP_PLACA}
-                      validate={composeValidators(required, maxLength(7))}
+                      validate={composeValidators(
+                        required,
+                        maxLength(7),
+                        alphaNumeric,
+                        peloMenosUmNumeroEUmaLetra
+                      )}
                       required
                     />
                   </div>
