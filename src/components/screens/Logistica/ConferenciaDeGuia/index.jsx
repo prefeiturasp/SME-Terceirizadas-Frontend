@@ -21,6 +21,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import ReceberSemOcorrencia from "./components/ReceberSemOcorrencia";
 import moment from "moment";
 import "./styles.scss";
 
@@ -36,9 +37,10 @@ const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimento
 
 export default () => {
   const [guia, setGuia] = useState({});
+  const [uuid, setUuid] = useState();
   const [carregando, setCarregando] = useState(false);
-  const [horaEntrega, setHoraEntrega] = useState("00:00");
-  const [horaEntregaAlterada, setHoraEntregaAlterada] = useState(false);
+  const [HoraRecebimento, setHoraRecebimento] = useState("00:00");
+  const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
   const carregarGuia = async uuid => {
@@ -51,7 +53,7 @@ export default () => {
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_entrega: "00:00"
+        hora_recebimento: "00:00"
       });
       setCarregando(false);
     } catch (e) {
@@ -63,19 +65,20 @@ export default () => {
   const escolherHora = hora => {
     if (hora) {
       const horario = moment(hora).format("HH:mm");
-      setHoraEntrega(horario);
-      setHoraEntregaAlterada(true);
+      setHoraRecebimento(horario);
+      setHoraRecebimentoAlterada(true);
     } else {
-      setHoraEntrega("00:00");
-      setHoraEntregaAlterada(false);
+      setHoraRecebimento("00:00");
+      setHoraRecebimentoAlterada(false);
     }
   };
 
   const onSubmit = async values => {
-    values.hora_entrega = horaEntrega;
-    values.data_entrega_real = moment(values.data_entrega_real).format(
+    values.hora_recebimento = HoraRecebimento;
+    values.data_recebimento = moment(values.data_entrega_real).format(
       "DD/MM/YYYY"
     );
+    values.guia = uuid;
   };
 
   const validaDataEntrega = value => {
@@ -88,8 +91,8 @@ export default () => {
     else return undefined;
   };
 
-  const validaHoraEntrega = value => {
-    value = horaEntregaAlterada ? horaEntrega : undefined;
+  const validaHoraRecebimento = value => {
+    value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
   };
 
@@ -98,8 +101,9 @@ export default () => {
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const uuid = urlParams.get("uuid");
-      carregarGuia(uuid);
+      const param = urlParams.get("uuid");
+      setUuid(param);
+      carregarGuia(param);
     }
   }, []);
 
@@ -111,7 +115,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, errors }) => (
+            render={({ form, handleSubmit, submitting, errors, values }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <div className="row">
@@ -185,15 +189,15 @@ export default () => {
                     <Field
                       component={InputHorario}
                       label="Hora da Entrega"
-                      name="hora_entrega"
+                      name="hora_recebimento"
                       placeholder="Selecione a Hora"
-                      horaAtual={horaEntrega}
+                      horaAtual={HoraRecebimento}
                       onChangeFunction={data => {
                         escolherHora(data);
                       }}
                       className="input-busca-produto"
                       tooltipText={TOOLTIP_HORA}
-                      validate={validaHoraEntrega}
+                      validate={validaHoraRecebimento}
                       required
                       functionComponent
                     />
@@ -224,11 +228,8 @@ export default () => {
                     disabled={submitting}
                   />
 
-                  <Botao
-                    texto="Sim"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
+                  <ReceberSemOcorrencia
+                    values={values}
                     disabled={Object.keys(errors).length > 0 || submitting}
                   />
                 </div>

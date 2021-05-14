@@ -104,7 +104,7 @@ export const alphaNumeric = value =>
   value && /[^a-zA-Z0-9]/i.test(value) ? "Apenas letras e números" : undefined;
 
 export const apenasLetras = value =>
-  value && /[^a-zA-Z ]/i.test(value)
+  value && /[^a-zA-Zà-úÀ-Ú ]/i.test(value)
     ? "Não digite números ou caracteres especiais"
     : undefined;
 
