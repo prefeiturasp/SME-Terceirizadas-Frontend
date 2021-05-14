@@ -801,7 +801,11 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
