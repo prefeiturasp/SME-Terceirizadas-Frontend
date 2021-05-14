@@ -106,3 +106,8 @@ export const getGuiaParaConferencia = async params => {
   const url = `/guias-da-requisicao/guia-para-conferencia/`;
   return await axios.get(url, { params });
 };
+
+export const recebeGuiaSemOcorrencia = async params => {
+  const url = `/conferencia-da-guia/`;
+  return await axios.post(url, params);
+};
