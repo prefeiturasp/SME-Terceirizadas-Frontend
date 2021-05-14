@@ -3,7 +3,6 @@ import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constant
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS as CARD_ID } from "configs/constants";
 const {
-  CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_SUSPENDEU,
   CODAE_QUESTIONADO,
   CODAE_PEDIU_ANALISE_SENSORIAL,
@@ -15,14 +14,6 @@ const {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
-const CARD_RECLAMACAO_DE_PRODUTO = {
-  id: CARD_ID.RECLAMACAO_DE_PRODUTO,
-  titulo: "Reclamações de produtos",
-  icon: "fa-bullhorn",
-  style: "card-complained",
-  rota: ROTA.RECLAMACAO_DE_PRODUTO,
-  incluir_status: [CODAE_AUTORIZOU_RECLAMACAO]
-};
 const CARD_PRODUTOS_SUSPENSOS = {
   id: CARD_ID.PRODUTOS_SUSPENSOS,
   titulo: "Produtos suspensos",
@@ -84,7 +75,6 @@ const CARD_CORRECAO_DE_PRODUTO = {
 };
 
 export const TODOS_OS_CARDS = [
-  CARD_RECLAMACAO_DE_PRODUTO,
   CARD_PRODUTOS_SUSPENSOS,
   CARD_CORRECAO_DE_PRODUTO,
   CARD_AGUARDANDO_ANALISE_RECLAMACAO,
@@ -115,7 +105,6 @@ export const listarCardsPermitidos = () => {
     );
     return [
       cardPendenteHomologacao,
-      CARD_RECLAMACAO_DE_PRODUTO,
       CARD_CORRECAO_DE_PRODUTO,
       CARD_AGUARDANDO_ANALISE_SENSORIAL,
       CARD_PRODUTOS_SUSPENSOS,
@@ -136,7 +125,6 @@ export const listarCardsPermitidos = () => {
       ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
     return [
-      CARD_RECLAMACAO_DE_PRODUTO,
       CARD_PRODUTOS_SUSPENSOS,
       CARD_CORRECAO_DE_PRODUTO,
       CARD_AGUARDANDO_ANALISE_RECLAMACAO,
@@ -144,6 +132,28 @@ export const listarCardsPermitidos = () => {
       CARD_PENDENTE_HOMOLOGACAO,
       CARD_HOMOLOGADOS,
       CARD_NAO_HOMOLOGADOS
+    ];
+  } else if (
+    [TIPO_PERFIL.SUPERVISAO_NUTRICAO, TIPO_PERFIL.ESCOLA].includes(perfil)
+  ) {
+    const cardAguardandoAnaliseReclamacao = Object.assign(
+      {},
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO
+    );
+
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      TERCEIRIZADA_RESPONDEU_RECLAMACAO
+    );
+
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    );
+
+    return [
+      cardAguardandoAnaliseReclamacao,
+      CARD_PRODUTOS_SUSPENSOS,
+      CARD_NAO_HOMOLOGADOS,
+      CARD_HOMOLOGADOS
     ];
   }
 
@@ -153,10 +163,5 @@ export const listarCardsPermitidos = () => {
     CODAE_PEDIU_ANALISE_RECLAMACAO,
     TERCEIRIZADA_RESPONDEU_RECLAMACAO
   );
-  return [
-    CARD_RECLAMACAO_DE_PRODUTO,
-    CARD_PRODUTOS_SUSPENSOS,
-    CARD_NAO_HOMOLOGADOS,
-    cardHomologados
-  ];
+  return [CARD_PRODUTOS_SUSPENSOS, CARD_NAO_HOMOLOGADOS, cardHomologados];
 };
