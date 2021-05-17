@@ -1,0 +1,23 @@
+@import "../../../../styles/variables.scss";
+
+.card-conferencia-guia-ocorrencia {
+  .conferencia-guia-ocorrencia {
+    .subtitulo {
+      font-weight: 500;
+      font-size: 20px;
+      color: #42474a;
+    }
+    .header-alimento {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-content: space-between;
+      background: $greenDark;
+      border-radius: 4px;
+      color: white;
+      padding: 6px;
+      font-size: 18px;
+      line-height: 21px;
+    }
+  }
+}
