@@ -78,11 +78,13 @@ export default () => {
   const validaDataEntrega = value => {
     if (value === null) return "Digite uma data válida";
     if (guia.status === "Insucesso de entrega") return undefined;
+  };
+
+  const comparaDataEntrega = value => {
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
     let dataReal = moment(value, "DD/MM/YYYY");
-    if (moment(dataReal).isAfter(dataPrevista))
-      return "Data posterior à data prevista na guia!";
-    else return undefined;
+    if (moment(dataReal).isAfter(dataPrevista)) return true;
+    else return false;
   };
 
   const validaHoraRecebimento = value => {
@@ -117,7 +119,12 @@ export default () => {
                 </span>
                 <hr />
                 <div className="card mt-3 header-alimento">
-                  <span>Alimento:</span>
+                  {guia.alimentos && (
+                    <span>{`Alimento: ${
+                      guia.alimentos[0].nome_alimento
+                    }`}</span>
+                  )}
+
                   <span>{`Guia número: ${guia.numero_guia}`}</span>
                 </div>
                 <div className="row mt-2">
@@ -143,6 +150,11 @@ export default () => {
                       required
                       writable
                     />
+                    {comparaDataEntrega(values.data_entrega_real) && (
+                      <span className="info-field">
+                        Data posterior à prevista na guia!
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -170,6 +182,7 @@ export default () => {
                       label="Nome do Motorista"
                       name="nome_motorista"
                       className="input-busca-produto"
+                      contador={100}
                       tooltipText={TOOLTIP_NOME}
                       validate={composeValidators(
                         required,
@@ -185,6 +198,7 @@ export default () => {
                       label="Placa do Veículo"
                       name="placa_veiculo"
                       className="input-busca-produto"
+                      contador={7}
                       tooltipText={TOOLTIP_PLACA}
                       validate={composeValidators(
                         required,
@@ -192,6 +206,7 @@ export default () => {
                         alphaNumeric,
                         peloMenosUmNumeroEUmaLetra
                       )}
+                      toUppercaseActive
                       required
                     />
                   </div>
