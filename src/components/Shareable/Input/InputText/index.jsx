@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { InputErroMensagem } from "../InputErroMensagem";
 import { HelpText } from "../../../Shareable/HelpText";
+import { ContadorCaracteres } from "../../ContadorCaracteres";
 import "../style.scss";
 import TooltipIcone from "../../TooltipIcone";
 
@@ -27,7 +28,8 @@ export const InputText = props => {
     tooltipText,
     maxlength,
     pattern,
-    icone
+    icone,
+    contador
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -72,6 +74,9 @@ export const InputText = props => {
         </div>
       )}
       {icone && <i className={icone} />}
+      {contador && (
+        <ContadorCaracteres atual={input.value.length} max={contador} />
+      )}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>
@@ -90,7 +95,8 @@ InputText.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  type: PropTypes.string
+  type: PropTypes.string,
+  contador: PropTypes.number
 };
 
 InputText.defaultProps = {

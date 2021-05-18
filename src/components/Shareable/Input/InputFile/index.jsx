@@ -132,9 +132,10 @@ export class InputFile extends Component {
           onClick={() => this.inputRef.click()}
           htmlFor={name}
           texto={texto}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ATTACH}
           type={BUTTON_TYPE.BUTTON}
+          disabled={disabled}
         />
         {files.map((file, key) => {
           return (

@@ -129,6 +129,7 @@ import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
 import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
+import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
 
 const routesConfig = [
   {
@@ -1059,6 +1060,12 @@ const routesConfig = [
     component: ConferenciaDeGuiaPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REGISTRAR_INSUCESSO}`,
+    component: RegistrarInsucessoEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
   }
 ];
 
