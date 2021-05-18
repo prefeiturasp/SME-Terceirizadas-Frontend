@@ -27,7 +27,8 @@ export const InputText = props => {
     tooltipText,
     maxlength,
     pattern,
-    icone
+    icone,
+    toUppercaseActive
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -63,6 +64,11 @@ export const InputText = props => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
+        onInput={e => {
+          e.target.value = toUppercaseActive
+            ? e.target.value.toUpperCase()
+            : e.target.value;
+        }}
       />
       {acrescentarAppend && (
         <div className="input-group-append">
