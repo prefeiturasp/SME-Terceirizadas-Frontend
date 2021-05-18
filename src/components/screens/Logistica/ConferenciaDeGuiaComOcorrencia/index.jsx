@@ -14,7 +14,6 @@ import {
   peloMenosUmNumeroEUmaLetra
 } from "../../../../helpers/fieldValidators";
 import { composeValidators } from "../../../../helpers/utilities";
-import TabelaAlimentoConsolidado from "components/Logistica/TabelaAlimentoConsolidado";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import moment from "moment";
 import "./styles.scss";
@@ -111,7 +110,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, errors, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <span className="subtitulo">
