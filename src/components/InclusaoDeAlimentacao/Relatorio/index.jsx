@@ -167,7 +167,8 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       inclusaoDeAlimentacao &&
-      (inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo || visao === CODAE) &&
+      (inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo ||
+        (visao === CODAE && inclusaoDeAlimentacao.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         inclusaoDeAlimentacao.status
       );

@@ -186,7 +186,8 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       inversaoDiaCardapio &&
-      (inversaoDiaCardapio.foi_solicitado_fora_do_prazo || visao === CODAE) &&
+      (inversaoDiaCardapio.foi_solicitado_fora_do_prazo ||
+        (visao === CODAE && inversaoDiaCardapio.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         inversaoDiaCardapio.status
       );
