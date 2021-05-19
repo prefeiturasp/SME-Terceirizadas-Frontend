@@ -8,7 +8,7 @@ import {
   SOLICITACOES_COM_QUESTIONAMENTO,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
-  ALTERACAO_CARDAPIO,
+  ALTERACAO_TIPO_ALIMENTACAO,
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
@@ -54,8 +54,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
               <LeafItem to={`/${ESCOLA}/${INCLUSAO_ALIMENTACAO}`}>
                 Inclusão de Alimentação
               </LeafItem>
-              <LeafItem to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}>
-                Alteração de Cardápio
+              <LeafItem to={`/${ESCOLA}/${ALTERACAO_TIPO_ALIMENTACAO}`}>
+                Alteração do Tipo de Alimentação
               </LeafItem>
               <LeafItem to={`/${ESCOLA}/${SOLICITACAO_KIT_LANCHE}`}>
                 Kit Lanche Passeio

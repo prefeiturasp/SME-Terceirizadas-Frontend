@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar } from "../../../helpers/utilities";
 import "../style.scss";
-import { ALTERACAO_CARDAPIO, RELATORIO, DRE } from "../../../configs/constants";
+import {
+  ALTERACAO_TIPO_ALIMENTACAO,
+  RELATORIO,
+  DRE
+} from "../../../configs/constants";
 import { ToggleExpandir } from "../ToggleExpandir";
 
 export class CardPendenteAcao extends Component {
@@ -105,7 +109,7 @@ export class CardPendenteAcao extends Component {
                   return (
                     <Link
                       key={key}
-                      to={`/${DRE}/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${
+                      to={`/${DRE}/${ALTERACAO_TIPO_ALIMENTACAO}/${RELATORIO}?uuid=${
                         pedido.uuid
                       }&ehInclusaoContinua=${pedido.data_inicial !==
                         undefined}`}

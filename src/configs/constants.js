@@ -1,11 +1,12 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
 export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
-export const ALTERACAO_CARDAPIO_CEI = "alteracao-de-cardapio-de-cei";
+export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
+  "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
-export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
+export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";

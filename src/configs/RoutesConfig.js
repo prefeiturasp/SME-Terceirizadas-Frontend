@@ -228,7 +228,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEscola()
   },
   {
-    path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     exact: false,
     tipoUsuario: usuarioEhEscola()
@@ -343,7 +343,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
-    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.CODAE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
@@ -391,7 +391,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhTerceirizada()
   },
   {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
@@ -507,7 +507,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
-    path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosAlteracaoDeCardapio(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
@@ -563,7 +563,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
