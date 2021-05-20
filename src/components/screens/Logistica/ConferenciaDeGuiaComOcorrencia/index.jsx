@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputText } from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import InputFile from "components/Shareable/Input/InputFile";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 import {
   required,
   maxLength,
@@ -13,6 +17,11 @@ import {
   alphaNumeric,
   peloMenosUmNumeroEUmaLetra
 } from "../../../../helpers/fieldValidators";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE
+} from "components/Shareable/Botao/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import moment from "moment";
@@ -27,6 +36,9 @@ const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente re
 const TOOLTIP_HORA = `Preencher com a hora em que o alimento foi entregue na Unidade Educacional.`;
 const TOOLTIP_PLACA = `Preencher com o registro da placa do veículo que transportou os alimentos à Unidade Educacional.`;
 const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimentos na Unidade Educacional.`;
+const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
+                          Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
+                          será aberta ocorrência a ser detalhada pelo usuário.`;
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -35,6 +47,13 @@ export default () => {
   const [HoraRecebimento, setHoraRecebimento] = useState("00:00");
   const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
+  const [alimentoAtual, setAlimentoAtual] = useState(0);
+  const [valoresForm, setValoresForm] = useState([]);
+  const [arquivoAtual, setArquivoAtual] = useState([]);
+  const [fechada, setFechada] = useState({});
+  const [fracionada, setFracionada] = useState({});
+  const [status, setStatus] = useState({});
+  const inputFile = useRef(null);
 
   const carregarGuia = async uuid => {
     let response;
@@ -79,6 +98,30 @@ export default () => {
     if (guia.status === "Insucesso de entrega") return undefined;
   };
 
+  const validaOcorrencias = value => {
+    if (status === "Recebido") return undefined;
+    if (!value || value.length === 0) return "Selecione uma ocorrência";
+  };
+
+  const validaObservacoes = values => value => {
+    if (!values.ocorrencias || !values.ocorrencias.length) return undefined;
+    if (value === undefined)
+      return "Campo obrigatório caso existam uma ou mais ocorrências";
+  };
+
+  const checaAtraso = values => {
+    if (comparaDataEntrega(values.data_entrega_real)) {
+      if (!values.ocorrencias) {
+        values.ocorrencias = ["ATRASO_ENTREGA"];
+      } else if (
+        values.ocorrencias.length &&
+        !values.ocorrencias.includes("ATRASO_ENTREGA")
+      ) {
+        values.ocorrencias = [...values.ocorrencias, "ATRASO_ENTREGA"];
+      }
+    }
+  };
+
   const comparaDataEntrega = value => {
     let dataPrevista = moment(guia.data_entrega, "DD/MM/YYYY");
     let dataReal = moment(value, "DD/MM/YYYY");
@@ -89,6 +132,82 @@ export default () => {
   const validaHoraRecebimento = value => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
+  };
+
+  const filtraEmbalagemPorTipo = (embalagens, tipo) => {
+    const embalagensFiltradas = embalagens.filter(value => {
+      return value.tipo_embalagem.toUpperCase() === tipo;
+    });
+    if (embalagensFiltradas.length) return embalagensFiltradas[0];
+    else return false;
+  };
+
+  const removeFile = () => {
+    setArquivoAtual([]);
+  };
+
+  const setFiles = files => {
+    let arquivos = arquivoAtual;
+    arquivos = files;
+    setArquivoAtual(arquivos);
+  };
+
+  const changePage = (values, change) => {
+    let newValoresForm = valoresForm;
+    let newAlimento = alimentoAtual + change;
+    values.arquivo = arquivoAtual;
+    newValoresForm[alimentoAtual] = Object.assign({}, values);
+    setValoresForm(newValoresForm);
+
+    values.recebidos_fechada = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].recebidos_fechada
+      : undefined;
+    values.recebidos_fracionada = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].recebidos_fracionada
+      : undefined;
+    values.status = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].status
+      : undefined;
+    values.ocorrencias = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].ocorrencias
+      : undefined;
+    values.observacoes = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].observacoes
+      : undefined;
+    let newArquivo = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].arquivo
+      : [];
+    setArquivoAtual(newArquivo);
+    if (newArquivo) {
+      inputFile.current.setState({ files: newArquivo });
+    }
+    setAlimentoAtual(newAlimento);
+  };
+
+  const validaStatus = values => {
+    let recebidos_fechada = parseInt(values.recebidos_fechada);
+    let recebidos_fracionada = parseInt(values.recebidos_fracionada);
+    let dataEhDepois = comparaDataEntrega(values.data_entrega_real);
+    if (guia.status === "Insucesso de entrega") dataEhDepois = false;
+    let alimentoParcial =
+      recebidos_fechada < fechada.qtd_volume ||
+      recebidos_fracionada < fracionada.qtd_volume;
+    let alimentoFaltante =
+      recebidos_fechada === 0 || recebidos_fracionada === 0;
+
+    if (dataEhDepois || alimentoParcial) values.status = "Parcial";
+
+    if (alimentoFaltante) values.status = "Não Recebido";
+
+    if (
+      values.data_entrega_real &&
+      !dataEhDepois &&
+      !alimentoParcial &&
+      !alimentoFaltante
+    )
+      values.status = "Recebido";
+
+    setStatus(values.status);
   };
 
   useEffect(() => {
@@ -110,7 +229,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit, values }) => (
+            render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <span className="subtitulo">
@@ -120,7 +239,7 @@ export default () => {
                 <div className="card mt-3 header-alimento">
                   {guia.alimentos && (
                     <span>{`Alimento: ${
-                      guia.alimentos[0].nome_alimento
+                      guia.alimentos[alimentoAtual].nome_alimento
                     }`}</span>
                   )}
 
@@ -148,6 +267,7 @@ export default () => {
                       maxDate={null}
                       required
                       writable
+                      onChange={validaStatus(values)}
                     />
                     {comparaDataEntrega(values.data_entrega_real) && (
                       <span className="info-field">
@@ -209,6 +329,285 @@ export default () => {
                       required
                     />
                   </div>
+                </div>
+
+                <hr />
+
+                <table className={`table table-bordered table-conferencia`}>
+                  <thead>
+                    <tr>
+                      <th scope="col" colSpan="3" className="text-center">
+                        EMBALAGEM FECHADA
+                      </th>
+                      <th scope="col" colSpan="3" className="text-center">
+                        EMBALAGEM FRACIONADA
+                      </th>
+                    </tr>
+                    <tr>
+                      <th scope="col" colSpan="2" className="text-center">
+                        Previsto
+                      </th>
+                      <th scope="col" className="th-recebido">
+                        Recebido <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
+                      </th>
+                      <th scope="col" colSpan="2" className="text-center">
+                        Previsto
+                      </th>
+                      <th scope="col" className="th-recebido">
+                        Recebido <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
+                      </th>
+                    </tr>
+                    <tr>
+                      <th scope="col">Quantidade</th>
+                      <th scope="col">Capacidade</th>
+                      <th scope="col" className="th-recebido">
+                        Quantidade de Embalagens
+                      </th>
+                      <th scope="col">Quantidade</th>
+                      <th scope="col">Capacidade</th>
+                      <th scope="col" className="th-recebido">
+                        Quantidade de Embalagens
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(() => {
+                      if (!guia.alimentos) return;
+                      const item = guia.alimentos[alimentoAtual];
+                      const embalagens = item.total_embalagens
+                        ? item.total_embalagens
+                        : item.embalagens;
+                      const fracionada = filtraEmbalagemPorTipo(
+                        embalagens,
+                        "FRACIONADA"
+                      );
+                      const fechada = filtraEmbalagemPorTipo(
+                        embalagens,
+                        "FECHADA"
+                      );
+                      setFracionada(fracionada);
+                      setFechada(fechada);
+                      return (
+                        <>
+                          <tr>
+                            <td>{fechada ? fechada.qtd_volume : "--"}</td>
+                            <td>
+                              {fechada ? (
+                                <>
+                                  {fechada.descricao_embalagem}.{" "}
+                                  {fechada.capacidade_embalagem}
+                                  {fechada.unidade_medida}
+                                </>
+                              ) : (
+                                "--"
+                              )}
+                            </td>
+                            <td>
+                              {fechada ? (
+                                <div className="form-tabela">
+                                  <Field
+                                    component={InputText}
+                                    name="recebidos_fechada"
+                                    className="input-busca-produto"
+                                    validate={composeValidators(
+                                      required,
+                                      maxLength(100)
+                                    )}
+                                  />
+                                </div>
+                              ) : (
+                                "--"
+                              )}
+                            </td>
+                            <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
+                            <td>
+                              {fracionada ? (
+                                <>
+                                  {fracionada.descricao_embalagem}.{" "}
+                                  {fracionada.capacidade_embalagem}
+                                  {fracionada.unidade_medida}
+                                </>
+                              ) : (
+                                "--"
+                              )}
+                            </td>
+                            <td>
+                              {fracionada ? (
+                                <div className="form-tabela">
+                                  <Field
+                                    component={InputText}
+                                    name="recebidos_fracionada"
+                                    className="input-busca-produto"
+                                    validate={composeValidators(
+                                      required,
+                                      maxLength(100)
+                                    )}
+                                  />
+                                </div>
+                              ) : (
+                                "--"
+                              )}
+                            </td>
+                          </tr>
+                        </>
+                      );
+                    })()}
+                  </tbody>
+                </table>
+
+                <div className="row">
+                  <div className="col-6">
+                    <Field
+                      component={InputText}
+                      label="Status de recebimento de alimento"
+                      name="status"
+                      className="input-busca-produto"
+                      placeholder="---"
+                      validate={composeValidators(required, maxLength(100))}
+                      disabled
+                    />
+                  </div>
+
+                  <div className="col-6">
+                    <Field
+                      component={MultiSelect}
+                      label="Ocorrências"
+                      name="ocorrencias"
+                      disableSearch
+                      multiple
+                      nomeDoItemNoPlural="ocorrências"
+                      options={[
+                        {
+                          value: "QTD_MENOR",
+                          label: "Quantidade menor que a prevista"
+                        },
+                        {
+                          value: "PROBLEMA_QUALIDADE",
+                          label: "Problema de qualidade do produto"
+                        },
+                        {
+                          value: "ALIMENTO_DIFERENTE",
+                          label: "Alimento diferente do previsto"
+                        },
+                        {
+                          value: "EMBALAGEM_DANIFICADA",
+                          label: "Embalagem danificada"
+                        },
+                        {
+                          value: "EMBALAGEM_VIOLADA",
+                          label: "Embalagem violada"
+                        },
+                        {
+                          value: "VALIDADE_EXPIRADA",
+                          label: "Prazo de validade expirado"
+                        },
+                        {
+                          value: "ATRASO_ENTREGA",
+                          label: "Atraso na entrega"
+                        },
+                        {
+                          value: "AUSENCIA_PRODUTO",
+                          label: "Ausência do produto"
+                        }
+                      ]}
+                      className="input-busca-produto"
+                      validate={validaOcorrencias}
+                      onChange={checaAtraso(values)}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <Field
+                      component={TextArea}
+                      label="Observações"
+                      name="observacoes"
+                      placeholder="Digite seus comentários aqui..."
+                      required
+                      contador={500}
+                      validate={composeValidators(
+                        validaObservacoes(values),
+                        maxLength(500)
+                      )}
+                      disabled={
+                        !values.ocorrencias || !values.ocorrencias.length
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4 mb-4">
+                  <div className="row pt-3 pb-3">
+                    <article className="col-9 produto">
+                      <label>Imagem do Produto</label>
+                      <label className="explicacao pt-2">
+                        Anexe uma imagem do produto
+                      </label>
+                    </article>
+                    <div className="col-3 btn">
+                      <InputFile
+                        ref={inputFile}
+                        className="inputfile"
+                        texto="Anexar"
+                        name="files"
+                        accept=".png, .pdf, .jpeg, .jpg"
+                        setFiles={setFiles}
+                        removeFile={removeFile}
+                        toastSuccess={
+                          "Anexo do documento incluído com sucesso!"
+                        }
+                        disabled={arquivoAtual.length > 0}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <hr />
+                <div>
+                  <Botao
+                    texto="< Item Anterior"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    disabled={alimentoAtual === 0}
+                    onClick={() => {
+                      changePage(values, -1);
+                    }}
+                  />
+
+                  <Botao
+                    texto="Próximo Item >"
+                    className="ml-3"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    disabled={
+                      Object.keys(errors).length > 0 ||
+                      !guia.alimentos ||
+                      alimentoAtual === guia.alimentos.length - 1
+                    }
+                    onClick={() => {
+                      changePage(values, 1);
+                    }}
+                  />
+
+                  <span className="float-right tooltip-botao">
+                    <Botao
+                      texto="Próximo Item >"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      disabled={
+                        Object.keys(errors).length > 0 ||
+                        !guia.alimentos ||
+                        alimentoAtual !== guia.alimentos.length - 1
+                      }
+                      onClick={() => {}}
+                    />
+                    <span className="tooltiptext">
+                      Para finalizar, preencha todos os campos de conferência de
+                      alimentos, com suas respectivas datas de entrega e
+                      quantidades.
+                    </span>
+                  </span>
                 </div>
               </form>
             )}
