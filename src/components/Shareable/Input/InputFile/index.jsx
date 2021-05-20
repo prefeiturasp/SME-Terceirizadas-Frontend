@@ -38,6 +38,10 @@ export class InputFile extends Component {
     }
   }
 
+  setStateFiles(files) {
+    this.setState({ files });
+  }
+
   deleteFile(index) {
     let files = this.state.files;
     files.splice(index, 1);
@@ -132,7 +136,7 @@ export class InputFile extends Component {
           onClick={() => this.inputRef.click()}
           htmlFor={name}
           texto={texto}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ATTACH}
           type={BUTTON_TYPE.BUTTON}
         />
