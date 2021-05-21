@@ -112,12 +112,16 @@ export default () => {
   const checaAtraso = values => {
     if (comparaDataEntrega(values.data_entrega_real)) {
       if (!values.ocorrencias) {
-        values.ocorrencias = ["ATRASO_ENTREGA"];
+        values.ocorrencias = [];
+        values.ocorrencias.push("ATRASO_ENTREGA");
       } else if (
         values.ocorrencias.length &&
         !values.ocorrencias.includes("ATRASO_ENTREGA")
       ) {
-        values.ocorrencias = [...values.ocorrencias, "ATRASO_ENTREGA"];
+        values.ocorrencias.push("ATRASO_ENTREGA");
+      }
+      if (values.ocorrencias.length === 0) {
+        values.ocorrencias.push("ATRASO_ENTREGA");
       }
     }
   };
