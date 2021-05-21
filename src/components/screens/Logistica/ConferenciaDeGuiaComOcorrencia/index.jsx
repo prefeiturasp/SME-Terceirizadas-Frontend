@@ -15,7 +15,8 @@ import {
   maxLength,
   apenasLetras,
   alphaNumeric,
-  peloMenosUmNumeroEUmaLetra
+  peloMenosUmNumeroEUmaLetra,
+  numericInteger
 } from "../../../../helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
@@ -110,6 +111,7 @@ export default () => {
   };
 
   const checaAtraso = values => {
+    if (guia.status === "Insucesso de entrega") return;
     if (comparaDataEntrega(values.data_entrega_real)) {
       if (!values.ocorrencias) {
         values.ocorrencias = [];
@@ -210,6 +212,15 @@ export default () => {
       !alimentoFaltante
     )
       values.status = "Recebido";
+
+    if (
+      values.recebidos_fechada === undefined &&
+      values.recebidos_fracionada === undefined &&
+      !dataEhDepois
+    )
+      values.status = undefined;
+
+    if (!values.data_entrega_real) values.status = undefined;
 
     setStatus(values.status);
   };
@@ -413,10 +424,7 @@ export default () => {
                                     component={InputText}
                                     name="recebidos_fechada"
                                     className="input-busca-produto"
-                                    validate={composeValidators(
-                                      required,
-                                      maxLength(100)
-                                    )}
+                                    validate={numericInteger}
                                   />
                                 </div>
                               ) : (
@@ -442,10 +450,7 @@ export default () => {
                                     component={InputText}
                                     name="recebidos_fracionada"
                                     className="input-busca-produto"
-                                    validate={composeValidators(
-                                      required,
-                                      maxLength(100)
-                                    )}
+                                    validate={numericInteger}
                                   />
                                 </div>
                               ) : (
@@ -596,7 +601,7 @@ export default () => {
 
                   <span className="float-right tooltip-botao">
                     <Botao
-                      texto="Próximo Item >"
+                      texto="Finalizar Conferência"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={
