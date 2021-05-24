@@ -8,6 +8,7 @@ import {
 import { CONFERIR_ENTREGA, LOGISTICA } from "configs/constants";
 import { recebeGuiaSemOcorrencia } from "services/logistica.service";
 import { Spin } from "antd";
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -63,7 +64,9 @@ export default ({ values, disabled }) => {
           <Modal.Body>
             <p>Deseja realizar o registro de sua conferência?</p>
             <strong>
-              <i>Data de conferência: {values.data_recebimento}</i>
+              <i>
+                Data de conferência: {moment(new Date()).format("DD/MM/YYYY")}
+              </i>
             </strong>
           </Modal.Body>
           <Modal.Footer>
