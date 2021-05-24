@@ -424,7 +424,10 @@ export default () => {
                                     component={InputText}
                                     name="recebidos_fechada"
                                     className="input-busca-produto"
-                                    validate={numericInteger}
+                                    validate={composeValidators(
+                                      required,
+                                      numericInteger
+                                    )}
                                   />
                                 </div>
                               ) : (
