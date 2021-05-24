@@ -64,7 +64,9 @@ class Relatorio extends Component {
           toastError(getError(response.data));
         } else {
           this.setState({ erro: true });
-          toastError("Erro ao carregar relatório de Alteração de Cardápio");
+          toastError(
+            "Erro ao carregar relatório de Alteração do Tipo de Alimentação"
+          );
         }
       });
     }
@@ -234,7 +236,7 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
+            <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
             <Link to={`/`}>

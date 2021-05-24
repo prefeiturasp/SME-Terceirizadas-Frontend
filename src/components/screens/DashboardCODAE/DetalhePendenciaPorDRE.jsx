@@ -105,7 +105,7 @@ class DetalhePendenciaPorDRE extends Component {
             <div className="row pt-3">
               <div className="col-6">
                 <CardPendencia
-                  cardTitle={"Alteração de Cardápio"}
+                  cardTitle={"Alteração do Tipo de Alimentação"}
                   totalOfOrders={13}
                   priorityOrders={2}
                   onLimitOrders={6}
