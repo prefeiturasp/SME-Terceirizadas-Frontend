@@ -179,6 +179,7 @@ export default () => {
                       ]}
                       className="input-busca-produto"
                       validate={required}
+                      required
                     />
                   </div>
                 </div>
@@ -190,7 +191,7 @@ export default () => {
                       name="justificativa"
                       required
                       contador={500}
-                      validate={(required, maxLength(500))}
+                      validate={composeValidators(required, maxLength(500))}
                     />
                   </div>
                 </div>
