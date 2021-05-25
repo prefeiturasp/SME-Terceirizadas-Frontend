@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
-import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
+import { getGuiaParaInsucesso } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import Select from "components/Shareable/Select";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -46,12 +46,14 @@ export default () => {
     try {
       setCarregando(true);
       const params = gerarParametrosConsulta({ uuid: uuid });
-      response = await getGuiaParaConferencia(params);
+      response = await getGuiaParaInsucesso(params);
 
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00"
+        nome_unidade: response.data.nome_unidade,
+        numero_requisicao: response.data.numero_requisicao,
+        hora_tentativa: "00:00"
       });
       setCarregando(false);
     } catch (e) {
@@ -82,12 +84,9 @@ export default () => {
   };
 
   const onSubmit = async values => {
-    values.hora_recebimento = HoraRecebimento;
-    values.data_recebimento = moment(values.data_entrega_real).format(
-      "DD/MM/YYYY"
-    );
+    values.hora_tentativa = HoraRecebimento;
     values.guia = uuid;
-    values.imagem = arquivo;
+    values.arquivo = arquivo[0].arquivo;
   };
 
   const validaHoraRecebimento = value => {
@@ -202,7 +201,6 @@ export default () => {
                       label="Nome do Motorista"
                       name="nome_motorista"
                       className="input-busca-produto"
-                      //tooltipText={TOOLTIP_NOME}
                       contador={100}
                       validate={composeValidators(
                         required,
@@ -218,7 +216,6 @@ export default () => {
                       label="Placa do Veículo"
                       name="placa_veiculo"
                       className="input-busca-produto"
-                      //tooltipText={TOOLTIP_PLACA}
                       contador={7}
                       validate={composeValidators(
                         required,
@@ -233,14 +230,13 @@ export default () => {
                     <Field
                       component={InputHorario}
                       label="Hora da Entrega"
-                      name="hora_recebimento"
+                      name="hora_tentativa"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
                       onChangeFunction={data => {
                         escolherHora(data);
                       }}
                       className="input-busca-produto"
-                      //tooltipText={TOOLTIP_HORA}
                       validate={validaHoraRecebimento}
                       required
                       functionComponent

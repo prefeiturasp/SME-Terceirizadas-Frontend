@@ -6,7 +6,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { INSUCESSO_ENTREGA, LOGISTICA } from "configs/constants";
-import { recebeGuiaSemOcorrencia } from "services/logistica.service";
+import { registraInsucessoDeEntrega } from "services/logistica.service";
 import { Spin } from "antd";
 import { useHistory } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -26,9 +26,9 @@ export default ({ values, disabled }) => {
     delete payload.numero_guia;
     delete payload.data_entrega_real;
 
-    recebeGuiaSemOcorrencia(payload)
+    registraInsucessoDeEntrega(payload)
       .then(() => {
-        toastSuccess("Guia de remessa recebida com sucesso");
+        toastSuccess("Insucesso de entrega registrado.");
         setShow(false);
         setLoading(false);
         goToInsucesso();
