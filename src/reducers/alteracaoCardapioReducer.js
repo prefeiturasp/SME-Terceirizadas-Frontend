@@ -1,9 +1,10 @@
-const LOAD_ALTERACAO_CARDAPIO = "LOAD_ALTERACAO_CARDAPIO";
-const LOAD_ALTERACAO_CARDAPIO_CEI = "LOAD_ALTERACAO_CARDAPIO_CEI";
+const LOAD_ALTERACAO_TIPO_ALIMENTACAO = "LOAD_ALTERACAO_TIPO_ALIMENTACAO";
+const LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI =
+  "LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI";
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
-    case LOAD_ALTERACAO_CARDAPIO:
+    case LOAD_ALTERACAO_TIPO_ALIMENTACAO:
       if (action.data !== null) {
         if (action.data.data_inicial === action.data.data_final) {
           action.data.alterar_dia = action.data.data_final;
@@ -25,7 +26,7 @@ export default function reducer(state = {}, action) {
           ...action.data
         }
       };
-    case LOAD_ALTERACAO_CARDAPIO_CEI:
+    case LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI:
       if (action.data !== null) {
         const { uuid, observacao, motivo, data, substituicoes } = action.data;
         const dadosRetornados = {
@@ -70,7 +71,7 @@ export default function reducer(state = {}, action) {
 }
 
 export const loadAlteracaoCardapio = data => dispatch =>
-  dispatch({ type: LOAD_ALTERACAO_CARDAPIO, data });
+  dispatch({ type: LOAD_ALTERACAO_TIPO_ALIMENTACAO, data });
 
 export const loadAlteracaoCardapioCei = data => dispatch =>
-  dispatch({ type: LOAD_ALTERACAO_CARDAPIO_CEI, data });
+  dispatch({ type: LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI, data });

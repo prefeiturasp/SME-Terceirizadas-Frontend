@@ -166,7 +166,7 @@ export class DashboardEscola extends Component {
           </div>
           <div className="col-3">
             <CardAtalho
-              titulo={"Alteração de Cardápio"}
+              titulo={"Alteração do Tipo de Alimentação"}
               nome="card-alteracao"
               texto={
                 "Quando houver necessidade de alteração do cardápio dentro da unidade, " +
@@ -174,7 +174,7 @@ export class DashboardEscola extends Component {
                 "por lanche; alteração de refeição e lanche por merenda seca)"
               }
               textoLink={"Novo pedido"}
-              href={"/escola/alteracao-de-cardapio"}
+              href={"/escola/alteracao-do-tipo-de-alimentacao"}
             />
           </div>
           <div className="col-3">

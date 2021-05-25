@@ -1,5 +1,5 @@
 import {
-  ALTERACAO_CARDAPIO,
+  ALTERACAO_TIPO_ALIMENTACAO,
   DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
@@ -71,7 +71,7 @@ export const ajustarFormatoLog = logs => {
     let tipo = "";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
-        solicitacao = ALTERACAO_CARDAPIO;
+        solicitacao = ALTERACAO_TIPO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
@@ -115,7 +115,7 @@ export const ajustarFormatoLog = logs => {
         break;
 
       case ALT_CARDAPIO_CEI:
-        solicitacao = ALTERACAO_CARDAPIO;
+        solicitacao = ALTERACAO_TIPO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
         break;
 
