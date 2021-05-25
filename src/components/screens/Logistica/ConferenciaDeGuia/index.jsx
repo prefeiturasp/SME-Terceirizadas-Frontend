@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { Spin } from "antd";
 import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
@@ -23,6 +24,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ReceberSemOcorrencia from "./components/ReceberSemOcorrencia";
 import moment from "moment";
+import { CONFERENCIA_GUIA_COM_OCORRENCIA, LOGISTICA } from "configs/constants";
 import "./styles.scss";
 
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -219,14 +221,19 @@ export default () => {
                     qualidade para consumo?
                   </div>
 
-                  <Botao
-                    texto="Não"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  <NavLink
                     className="float-right ml-3"
-                    onClick={() => {}}
-                    disabled={submitting}
-                  />
+                    to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
+                      guia.uuid
+                    }`}
+                  >
+                    <Botao
+                      texto="Não"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      disabled={submitting}
+                    />
+                  </NavLink>
 
                   <ReceberSemOcorrencia
                     values={values}

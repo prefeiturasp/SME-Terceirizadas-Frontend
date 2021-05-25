@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
-  ALTERACAO_CARDAPIO,
+  ALTERACAO_TIPO_ALIMENTACAO,
   DIETA_ESPECIAL,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
@@ -93,9 +93,9 @@ export class SidebarContentEscola extends Component {
                 <NavLink
                   activeClassName="active"
                   className="collapse-item"
-                  to={`/${ESCOLA}/${ALTERACAO_CARDAPIO}`}
+                  to={`/${ESCOLA}/${ALTERACAO_TIPO_ALIMENTACAO}`}
                 >
-                  Alteração de Cardápio
+                  Alteração do Tipo de Alimentação
                 </NavLink>
                 <NavLink
                   activeClassName="active"

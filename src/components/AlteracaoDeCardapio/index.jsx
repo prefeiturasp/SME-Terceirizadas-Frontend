@@ -53,7 +53,7 @@ class AlteracaoCardapio extends Component {
       motivo: {},
       alimentacaoDe: {},
       status: "SEM STATUS",
-      title: "Nova Alteração de Cardápio",
+      title: "Nova Alteração do Tipo de Alimentação",
       id: null,
       showModal: false,
       showModalConfirm: false,
@@ -303,7 +303,9 @@ class AlteracaoCardapio extends Component {
     this.setState({
       dataInicial,
       status: param.alteracaoDeCardapio.status,
-      title: `Alteração de Cardápio # ${param.alteracaoDeCardapio.id_externo}`,
+      title: `Alteração do Tipo de Alimentação # ${
+        param.alteracaoDeCardapio.id_externo
+      }`,
       salvarAtualizarLbl: "Atualizar",
       id: param.alteracaoDeCardapio.id_externo,
       substituicoesAlimentacao,
@@ -341,7 +343,7 @@ class AlteracaoCardapio extends Component {
     this.props.change("periodos", false);
     this.setState({
       status: "SEM STATUS",
-      title: "Nova Alteração de Cardápio",
+      title: "Nova Alteração do Tipo de Alimentação",
       id: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -365,19 +367,21 @@ class AlteracaoCardapio extends Component {
     ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio enviada com sucesso");
+          toastSuccess("Alteração do Tipo de Alimentação enviada com sucesso");
           this.refresh();
           this.resetForm("alteracaoCardapio");
         } else {
           toastError(
-            `Houve um erro ao enviar a Alteração de Cardápio: ${getError(
+            `Houve um erro ao enviar a Alteração do Tipo de Alimentação: ${getError(
               res.data
             )}`
           );
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+        toastError(
+          "Houve um erro ao enviar a Alteração do Tipo de Alimentação"
+        );
       }
     );
   }
@@ -400,7 +404,9 @@ class AlteracaoCardapio extends Component {
                 if (status === STATUS_DRE_A_VALIDAR) {
                   await this.enviaAlteracaoCardapio(response.data.uuid);
                 } else {
-                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  toastSuccess(
+                    "Alteração do Tipo de Alimentação salva com sucesso"
+                  );
                   this.refresh();
                   this.resetForm("alteracaoCardapio");
                 }
@@ -424,20 +430,24 @@ class AlteracaoCardapio extends Component {
                   await this.enviaAlteracaoCardapio(res.data.uuid);
                   this.refresh();
                 } else {
-                  toastSuccess("Alteração de Cardápio salva com sucesso");
+                  toastSuccess(
+                    "Alteração do Tipo de Alimentação salva com sucesso"
+                  );
                   this.refresh();
                   this.resetForm("alteracaoCardapio");
                 }
               } else {
                 toastError(
-                  `Houve um erro ao enviar ao salvar alteração de cardápio: ${getError(
+                  `Houve um erro ao enviar ao salvar alteração do tipo de alimentação: ${getError(
                     res.data
                   )}`
                 );
               }
             },
             function() {
-              toastError("Houve um erro ao salvar a Alteração de Cardápio");
+              toastError(
+                "Houve um erro ao salvar a Alteração do Tipo de Alimentação"
+              );
             }
           );
         }

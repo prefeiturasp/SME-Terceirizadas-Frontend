@@ -5,8 +5,8 @@ import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "./constants";
 
 const atual = {
-  href: "/escola/alteracao-de-cardapio",
-  titulo: "Alteração de Cardápio"
+  href: "/escola/alteracao-do-tipo-de-alimentacao",
+  titulo: "Alteração do Tipo de Alimentação"
 };
 
 export default () => (

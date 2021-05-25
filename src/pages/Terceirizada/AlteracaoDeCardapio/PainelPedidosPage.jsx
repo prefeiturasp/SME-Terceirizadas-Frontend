@@ -3,11 +3,14 @@ import Breadcrumb from "../../../components/Shareable/Breadcrumb";
 import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/AlteracaoDeCardapio/Terceirizada/PainelPedidos/Container";
 import { HOME } from "../constants";
-import { ALTERACAO_CARDAPIO, TERCEIRIZADA } from "../../../configs/constants";
+import {
+  ALTERACAO_TIPO_ALIMENTACAO,
+  TERCEIRIZADA
+} from "../../../configs/constants";
 
 const atual = {
-  href: `/${TERCEIRIZADA}/${ALTERACAO_CARDAPIO}`,
-  titulo: "Alteração de Cardápio - Pendente Ciência"
+  href: `/${TERCEIRIZADA}/${ALTERACAO_TIPO_ALIMENTACAO}`,
+  titulo: "Alteração do Tipo de Alimentação - Pendente Ciência"
 };
 
 export default () => (

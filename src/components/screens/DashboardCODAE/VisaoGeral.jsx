@@ -1,11 +1,11 @@
-/* 
+/*
 
 // TODO: Remover arquivo pq nao está mais em uso
 
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import {
-  ALTERACAO_CARDAPIO,
+  ALTERACAO_TIPO_ALIMENTACAO,
   CODAE,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
@@ -150,9 +150,9 @@ class VisaoGeral extends Component {
             </Link>
           </div>
           <div className="col-6">
-            <Link to={`/${CODAE}/${ALTERACAO_CARDAPIO}`}>
+            <Link to={`/${CODAE}/${ALTERACAO_TIPO_ALIMENTACAO}`}>
               <CardPendencia
-                cardTitle={"Alteração de Cardápio"}
+                cardTitle={"Alteração do Tipo de Alimentação"}
                 totalOfOrders={resumoPendenciasAlteracaoCardapio.total}
                 priorityOrders={resumoPendenciasAlteracaoCardapio.prioritario}
                 onLimitOrders={resumoPendenciasAlteracaoCardapio.limite}

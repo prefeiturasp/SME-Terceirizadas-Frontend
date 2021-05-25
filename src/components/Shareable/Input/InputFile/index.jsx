@@ -38,6 +38,10 @@ export class InputFile extends Component {
     }
   }
 
+  setStateFiles(files) {
+    this.setState({ files });
+  }
+
   deleteFile(index) {
     let files = this.state.files;
     files.splice(index, 1);

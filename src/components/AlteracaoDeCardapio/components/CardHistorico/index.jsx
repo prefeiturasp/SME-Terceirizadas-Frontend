@@ -6,7 +6,10 @@ import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Redirect } from "react-router-dom";
 import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
 import "./style.scss";
-import { ALTERACAO_CARDAPIO, RELATORIO } from "../../../../configs/constants";
+import {
+  ALTERACAO_TIPO_ALIMENTACAO,
+  RELATORIO
+} from "../../../../configs/constants";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -56,7 +59,7 @@ export class CardHistorico extends Component {
     if (this.state.redirect) {
       return (
         <Redirect
-          to={`/${ALTERACAO_CARDAPIO}/${RELATORIO}?uuid=${pedido.uuid}`}
+          to={`/${ALTERACAO_TIPO_ALIMENTACAO}/${RELATORIO}?uuid=${pedido.uuid}`}
         />
       );
     }
