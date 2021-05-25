@@ -65,7 +65,7 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
 
 export const ajustarFormatoLog = logs => {
   return logs.map(log => {
-    let tamanhoString = 48;
+    let tamanhoString = 52;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
     let tipo = "";
