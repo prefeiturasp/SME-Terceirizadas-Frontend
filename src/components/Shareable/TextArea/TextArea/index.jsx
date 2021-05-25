@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import InputErroMensagem from "../../Input/InputErroMensagem";
+import { ContadorCaracteres } from "../../ContadorCaracteres";
 import "../style.scss";
 
 export const TextArea = props => {
@@ -14,7 +15,8 @@ export const TextArea = props => {
     name,
     placeholder,
     required,
-    maxLength
+    maxLength,
+    contador
   } = props;
   return (
     <div className="textarea">
@@ -39,6 +41,9 @@ export const TextArea = props => {
         maxLength={maxLength}
         required={required}
       />
+      {contador && (
+        <ContadorCaracteres atual={input.value.length} max={contador} />
+      )}
       <div className="help-text">{helpText}</div>
       <InputErroMensagem meta={meta} />
     </div>
@@ -54,7 +59,8 @@ TextArea.propTypes = {
   meta: PropTypes.object,
   name: PropTypes.string,
   placeholder: PropTypes.string,
-  required: PropTypes.bool
+  required: PropTypes.bool,
+  contador: PropTypes.number
 };
 
 TextArea.defaultProps = {
