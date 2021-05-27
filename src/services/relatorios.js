@@ -48,7 +48,7 @@ export const getRelatorioAlteracaoCardapio = (uuid, tipoSolicitacao) => {
       let a = document.createElement("a");
       const fileURL = URL.createObjectURL(data);
       a.href = fileURL;
-      a.download = `alteracao_cardapio.pdf`;
+      a.download = `alteracao_do_tipo_de_alimentacao.pdf`;
       a.click();
     });
 };
