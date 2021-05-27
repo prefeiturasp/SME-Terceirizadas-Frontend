@@ -23,8 +23,10 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import { CONFERENCIA_GUIA_RESUMO_FINAL, LOGISTICA } from "configs/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -55,6 +57,7 @@ export default () => {
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
   const inputFile = useRef(null);
+  const history = useHistory();
 
   const carregarGuia = async uuid => {
     let response;
@@ -91,7 +94,16 @@ export default () => {
     values.data_recebimento = moment(values.data_entrega_real).format(
       "DD/MM/YYYY"
     );
+
+    let newValoresForm = valoresForm;
+    values.arquivo = arquivoAtual;
     values.guia = uuid;
+    newValoresForm[alimentoAtual] = Object.assign({}, values);
+    setValoresForm(newValoresForm);
+
+    localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
+    localStorage.setItem("guiaConferencia", JSON.stringify(guia));
+    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}`);
   };
 
   const validaDataEntrega = value => {
@@ -612,7 +624,7 @@ export default () => {
                         !guia.alimentos ||
                         alimentoAtual !== guia.alimentos.length - 1
                       }
-                      onClick={() => {}}
+                      onClick={() => onSubmit(values)}
                     />
                     <span className="tooltiptext">
                       Para finalizar, preencha todos os campos de conferência de
