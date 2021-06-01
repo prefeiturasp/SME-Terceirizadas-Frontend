@@ -143,6 +143,7 @@ export const CONFERIR_ENTREGA = "conferir-entrega";
 export const CONFERENCIA_GUIA = "conferencia-guia";
 export const CONFERENCIA_GUIA_COM_OCORRENCIA =
   "conferencia-guia-com-ocorrencia";
+export const REPOSICAO_GUIA = "reposicao-guia";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
