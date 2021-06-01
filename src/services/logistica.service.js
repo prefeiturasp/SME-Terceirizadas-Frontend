@@ -116,7 +116,13 @@ export const registraInsucessoDeEntrega = async params => {
   const url = `/insucesso-de-entrega/`;
   return await axios.post(url, params);
 };
+
 export const getGuiaParaInsucesso = async params => {
   const url = `/guias-da-requisicao/guia-para-insucesso/`;
+  return await axios.get(url, { params });
+};
+
+export const getEntregasDilog = async params => {
+  const url = `/solicitacao-remessa/lista-requisicoes-confirmadas/`;
   return await axios.get(url, { params });
 };
