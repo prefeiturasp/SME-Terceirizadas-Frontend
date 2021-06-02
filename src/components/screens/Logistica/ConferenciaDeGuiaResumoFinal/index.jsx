@@ -87,7 +87,7 @@ export default () => {
           <table className={`table table-bordered table-resumo-final`}>
             <thead>
               <tr>
-                <th scope="col" rowSpan="3" className="text-center">
+                <th scope="col" rowSpan="3" colSpan="2" className="text-center">
                   Nome do Alimento
                 </th>
                 <th scope="col" colSpan="3" className="text-center">
@@ -136,11 +136,25 @@ export default () => {
                     embalagens,
                     "FRACIONADA"
                   );
+                  const arquivoExiste = valoresForm[index].arquivo.length > 0;
                   const fechada = filtraEmbalagemPorTipo(embalagens, "FECHADA");
                   return (
                     <>
                       <tr>
-                        <td className="nome-alimento">{item.nome_alimento}</td>
+                        {arquivoExiste > 0 && (
+                          <td className="icone-arquivo">
+                            <div className="icon-arquivo">
+                              <i className="fas fa-paperclip green" />
+                            </div>
+                          </td>
+                        )}
+
+                        <td
+                          colSpan={arquivoExiste ? "1" : "2"}
+                          className="nome-alimento"
+                        >
+                          {item.nome_alimento}
+                        </td>
                         <td className="embalagem">
                           {fechada ? fechada.qtd_volume : "--"}
                         </td>
