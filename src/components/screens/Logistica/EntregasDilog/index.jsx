@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { getEntregasDilog } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
+import Filtros from "./components/Filtros";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
@@ -59,8 +60,14 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-entregas-dilog">
         <div className="card-body entregas-dilog">
+          <Filtros
+            setFiltros={setFiltros}
+            setSolicitacoes={setSolicitacoes}
+            setTotal={setTotal}
+          />
           {solicitacoes && (
             <>
+              <br /> <hr /> <br />
               <ListagemSolicitacoes
                 solicitacoes={solicitacoes}
                 ativos={ativos}
