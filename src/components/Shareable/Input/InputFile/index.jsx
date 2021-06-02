@@ -101,6 +101,7 @@ export class InputFile extends Component {
     const { files } = this.state;
     const {
       accept,
+      alignLeft,
       className,
       disabled,
       helpText,
@@ -114,7 +115,10 @@ export class InputFile extends Component {
       texto
     } = this.props;
     return (
-      <div className={`input input-file ${icone && "icon"}`}>
+      <div
+        className={`input input-file ${alignLeft && "align-left"} ${icone &&
+          "icon"}`}
+      >
         <input
           {...input}
           accept={accept}
@@ -143,17 +147,15 @@ export class InputFile extends Component {
         />
         {files.map((file, key) => {
           return (
-            <div className="file-div row" key={key}>
-              <div
-                className="file-name col-8"
-                onClick={() => this.openFile(file)}
-              >
-                {truncarString(file.nome, 20)}
-              </div>
-              <div className="col-4 exclude-icon">
+            <div className="file-div" key={key}>
+              <div className="file-name-container">
+                <i className="fas fa-paperclip" />
+                <span onClick={() => this.openFile(file)} className="file-name">
+                  {truncarString(file.nome, 40)}
+                </span>
                 <i
                   onClick={() => this.deleteFile(key)}
-                  className="fas fa-times"
+                  className="fas fa-trash-alt exclude-icon"
                 />
               </div>
             </div>
@@ -167,6 +169,7 @@ export class InputFile extends Component {
 }
 
 InputFile.propTypes = {
+  alignLeft: PropTypes.bool,
   className: PropTypes.string,
   concatenarNovosArquivos: PropTypes.bool,
   disabled: PropTypes.bool,

@@ -529,6 +529,29 @@ export default () => {
                   </div>
                 </div>
 
+                <div className="mt-4 mb-4">
+                  <div className="row">
+                    <article className="col-9 produto">
+                      <label className="mb-3">
+                        Se possível, insira uma foto que demonstre a ocorrência
+                        apontada.
+                      </label>
+                      <Field
+                        component={InputFile}
+                        className="inputfile"
+                        texto="Inserir Imagem"
+                        name="files"
+                        accept=".png, .jpeg, .jpg"
+                        setFiles={setFiles}
+                        removeFile={removeFile}
+                        toastSuccess={"Imagem incluída com sucesso!"}
+                        alignLeft
+                        disabled={arquivoAtual.length > 0}
+                      />
+                    </article>
+                  </div>
+                </div>
+
                 <div className="row">
                   <div className="col-12">
                     <Field
@@ -546,32 +569,6 @@ export default () => {
                         !values.ocorrencias || !values.ocorrencias.length
                       }
                     />
-                  </div>
-                </div>
-
-                <div className="mt-4 mb-4">
-                  <div className="row pt-3 pb-3">
-                    <article className="col-9 produto">
-                      <label>Imagem do Produto</label>
-                      <label className="explicacao pt-2">
-                        Anexe uma imagem do produto
-                      </label>
-                    </article>
-                    <div className="col-3 btn">
-                      <InputFile
-                        ref={inputFile}
-                        className="inputfile"
-                        texto="Anexar"
-                        name="files"
-                        accept=".png, .pdf, .jpeg, .jpg"
-                        setFiles={setFiles}
-                        removeFile={removeFile}
-                        toastSuccess={
-                          "Anexo do documento incluído com sucesso!"
-                        }
-                        disabled={arquivoAtual.length > 0}
-                      />
-                    </div>
                   </div>
                 </div>
 
