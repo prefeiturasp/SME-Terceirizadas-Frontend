@@ -33,8 +33,7 @@ const MenuDietaEspecial = () => {
     usuarioEhEscola() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
-  const exibeAtivasInativas =
-    usuarioEhCODAEDietaEspecial() || usuarioEhNutricionistaSupervisao();
+  const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeAvaliarSolicitacaoCadastroProduto = usuarioEhTerceirizada();
   const exibeAcompanharSolicitacaoCadastroProduto = usuarioEhCODAEDietaEspecial();
 
