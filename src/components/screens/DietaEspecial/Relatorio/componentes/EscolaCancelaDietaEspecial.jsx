@@ -6,9 +6,7 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 import ModalCancelaDietaEspecial from "./ModalCancelaDietaEspecial";
-import {
-  usuarioEhNutricionistaSupervisao,
-} from "helpers/utilities";
+import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 
 export default class EscolaCancelaDietaEspecial extends Component {
   constructor(props) {
@@ -40,7 +38,7 @@ export default class EscolaCancelaDietaEspecial extends Component {
           }}
           {...this.props}
         />
-        { !usuarioEhNutricionistaSupervisao() && (
+        {!usuarioEhNutricionistaSupervisao() && (
           <div className="form-group row float-right mt-4">
             <Botao
               texto="Cancelar"
@@ -50,7 +48,7 @@ export default class EscolaCancelaDietaEspecial extends Component {
               style={BUTTON_STYLE.GREEN_OUTLINE}
             />
           </div>
-        )} 
+        )}
       </>
     );
   }
