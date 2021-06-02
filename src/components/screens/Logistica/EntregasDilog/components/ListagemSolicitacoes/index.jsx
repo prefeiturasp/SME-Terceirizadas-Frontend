@@ -5,7 +5,6 @@ import "./styles.scss";
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
   return (
     <section className="resultado-busca-entregas">
-      <header>Veja requisições disponibilizadas</header>
       <article>
         <div className="grid-table header-table top-header">
           <div className="colspan-4"> </div>
