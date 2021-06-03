@@ -208,18 +208,15 @@ export default () => {
                     return (
                       <>
                         <tr>
-                          {arquivoExiste > 0 && (
-                            <td className="icone-arquivo">
+                          <td className="icone-arquivo">
+                            {arquivoExiste > 0 && (
                               <div className="icon-arquivo">
                                 <i className="fas fa-paperclip green" />
                               </div>
-                            </td>
-                          )}
+                            )}
+                          </td>
 
-                          <td
-                            colSpan={arquivoExiste ? "1" : "2"}
-                            className="nome-alimento"
-                          >
+                          <td className="nome-alimento">
                             {item.nome_alimento}
                           </td>
                           <td className="embalagem">
