@@ -11,12 +11,29 @@
     z-index: -1;
   }
   .file-div {
-    .file-name {
-      padding-top: 5px;
-      font-size: 10px;
-      &:hover {
-        color: $blue;
-        text-decoration: underline;
+    margin: 0;
+
+    .file-name-container {
+      font-size: 14px;
+      margin-top: 6px;
+      height: 24px;
+      color: $blue;
+      background: #f3f3f3;
+      width: auto;
+      display: inline-block;
+
+      .file-name {
+        margin-left: 6px;
+        margin-right: 36px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .fas {
+        color: #6f777c;
+        font-size: 16px;
+        padding-top: 4px;
       }
     }
     .exclude-icon {
@@ -27,4 +44,8 @@
       }
     }
   }
+}
+
+.align-left {
+  text-align: left;
 }

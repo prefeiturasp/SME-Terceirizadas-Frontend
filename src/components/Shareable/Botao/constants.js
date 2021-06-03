@@ -11,7 +11,7 @@ export const BUTTON_STYLE = {
 
 export const BUTTON_ICON = {
   ARROW_LEFT: "fas fa-arrow-left",
-  ATTACH: "fas fa-paperclip",
+  ATTACH: "fas fa-file-upload",
   CHART_LINE: "fas fa-chart-line",
   CHECK_CIRCLE: "fas fa-check-circle",
   FILE_PDF: "far fa-file-pdf",

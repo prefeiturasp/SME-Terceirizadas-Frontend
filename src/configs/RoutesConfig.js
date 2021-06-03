@@ -132,6 +132,7 @@ import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
 import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
 import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
 import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
+import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
 
 const routesConfig = [
   {
@@ -1082,6 +1083,12 @@ const routesConfig = [
     component: ConferenciaDeGuiaResumoFinalPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
+    component: EntregasDilogPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 
