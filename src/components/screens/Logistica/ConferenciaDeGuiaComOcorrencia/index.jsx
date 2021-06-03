@@ -40,6 +40,7 @@ const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimento
 const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
                           Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
                           será aberta ocorrência a ser detalhada pelo usuário.`;
+const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -535,13 +536,19 @@ export default () => {
                       <label className="mb-3">
                         Se possível, insira uma foto que demonstre a ocorrência
                         apontada.
+                        <TooltipIcone
+                          tooltipText={
+                            "Os formatos de imagem aceitos são: " +
+                            FORMATOS_IMAGEM
+                          }
+                        />
                       </label>
                       <Field
                         component={InputFile}
                         className="inputfile"
                         texto="Inserir Imagem"
                         name="files"
-                        accept=".png, .jpeg, .jpg"
+                        accept={FORMATOS_IMAGEM}
                         setFiles={setFiles}
                         removeFile={removeFile}
                         toastSuccess={"Imagem incluída com sucesso!"}
