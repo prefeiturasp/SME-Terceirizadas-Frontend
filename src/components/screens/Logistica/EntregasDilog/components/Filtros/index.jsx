@@ -39,6 +39,18 @@ export default ({ setFiltros, setSolicitacoes, setTotal }) => {
                   className="input-busca-produto"
                 />
               </div>
+
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Nome do Distribuidor"
+                  name="nome_distribuidor"
+                  placeholder="Digite o nome do distribuidor"
+                  className="input-busca-produto"
+                />
+              </div>
+            </div>
+            <div className="row">
               <div className="col-3">
                 <Field
                   component={InputComData}
@@ -67,17 +79,6 @@ export default ({ setFiltros, setSolicitacoes, setTotal }) => {
                       : null
                   }
                   maxDate={null}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-6">
-                <Field
-                  component={InputText}
-                  label="Nome do Distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
-                  className="input-busca-produto"
                 />
               </div>
             </div>
