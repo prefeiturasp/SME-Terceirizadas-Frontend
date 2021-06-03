@@ -14,6 +14,7 @@ div.textarea {
     }
     &::placeholder {
       color: $grayPlaceholder;
+      text-align: left;
     }
     &.invalid-field:not(:focus):invalid {
       box-shadow: none;

@@ -122,6 +122,11 @@ export const getGuiaParaInsucesso = async params => {
   return await axios.get(url, { params });
 };
 
+export const recebeGuiaComOcorrencia = async params => {
+  const url = `/conferencia-da-guia-com-ocorrencia/`;
+  return await axios.post(url, params);
+};
+
 export const getEntregasDilog = async params => {
   const url = `/solicitacao-remessa/lista-requisicoes-confirmadas/`;
   return await axios.get(url, { params });
