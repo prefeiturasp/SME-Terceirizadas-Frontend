@@ -555,8 +555,8 @@ export default () => {
                           }
                         />
                       </label>
-                      <Field
-                        component={InputFile}
+                      <InputFile
+                        ref={inputFile}
                         className="inputfile"
                         texto="Inserir Imagem"
                         name="files"
