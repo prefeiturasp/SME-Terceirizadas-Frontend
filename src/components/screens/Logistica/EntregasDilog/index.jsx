@@ -43,8 +43,10 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    buscarSolicitacoes(1);
-    setPage(1);
+    if (filtros) {
+      buscarSolicitacoes(1);
+      setPage(1);
+    }
   }, [filtros]);
 
   const nextPage = page => {
