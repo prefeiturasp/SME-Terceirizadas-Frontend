@@ -122,9 +122,7 @@ export default () => {
       <div className="card mt-3 card-conferencia-guia-resumo-final">
         {!conferenciaInvalida && (
           <div className="card-body conferencia-guia-resumo-final">
-            <span className="subtitulo">
-              Conferência individual dos itens da guia
-            </span>
+            <span className="subtitulo">Resumo da conferência</span>
             <span className="numero-guia float-right">
               Guia número:{" "}
               <strong>
@@ -291,7 +289,7 @@ export default () => {
                   }}
                 />
                 <Botao
-                  texto="Finalizar Conferência"
+                  texto="Registrar Conferência"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={onSubmit}
