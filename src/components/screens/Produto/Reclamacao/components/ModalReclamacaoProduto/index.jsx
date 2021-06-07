@@ -5,6 +5,9 @@ import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import InputText from "components/Shareable/Input/InputText";
+import { InputComData }  from "components/Shareable/DatePicker";
+import { OnChange } from "react-final-form-listeners";
+import moment from "moment";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
@@ -85,7 +88,7 @@ export default class ModalReclamacaoProduto extends Component {
   };
 
   render() {
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, produto} = this.props;
     const { meusDados, escolas } = this.state;
     const escola = meusDados ? meusDados.vinculo_atual.instituicao : undefined;
     const deveEscolherUmaEscola =
@@ -102,7 +105,7 @@ export default class ModalReclamacaoProduto extends Component {
         <Form
           onSubmit={this.onSubmit}
           initialValues={this.getDadosIniciais()}
-          render={({ handleSubmit, submitting }) => (
+          render={({ handleSubmit, submitting, form }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
                 <div className="form-row">
@@ -171,6 +174,64 @@ export default class ModalReclamacaoProduto extends Component {
                     </div>
                   </div>
                 )}
+                <div className="form-row">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nome do produto"
+                      name="produto_nome"
+                      defaultValue={produto.nome}
+                      disabled={true}
+                      required
+                      validate={required}
+                    />
+                  </div>
+                  <div className="col-8">
+                    <Field
+                      component={InputText}
+                      label="Marca"
+                      name="produto_marca"
+                      defaultValue={produto.marca.nome}
+                      disabled={true}
+                      required
+                      validate={required}
+                    />
+                  </div>
+                </div>
+                <div className="form-row">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Lote"
+                      name="produto_lote"
+                      tooltipText="Inserir o lote do produto conforme especificação contida no rótulo."
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputComData}
+                      label="Data de fabricação"
+                      name="produto_data_fabricacao"
+                      minDate={null}
+                      maxDate={moment().toDate()}
+                    />
+                    <OnChange name="produto_data_fabricacao">
+                      {value => {
+                        form.change("produto_data_validade", undefined);
+                        this.setState({ ...this.state, fabricacao: value});
+                      }}
+                    </OnChange>
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputComData}
+                      label="Data de validade"
+                      name="produto_data_validade"
+                      minDate={this.state.fabricacao ? moment(this.state.fabricacao, "DD/MM/YYYY").toDate() : null}
+                      maxDate={null}
+                    />
+                  </div>
+                </div>
                 <div className="form-row row-reclamacao">
                   <div className="col-12">
                     <Field
