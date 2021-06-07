@@ -47,6 +47,7 @@ export class InputFile extends Component {
     files.splice(index, 1);
     this.props.removeFile(index);
     this.setState({ files });
+    this.inputRef.value = "";
   }
 
   async onInputChange(event) {
