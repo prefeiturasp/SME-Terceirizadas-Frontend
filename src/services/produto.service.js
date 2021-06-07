@@ -565,3 +565,9 @@ export const getProdutosAvaliacaoReclamacao = async params =>
 
 export const produtoJaExiste = async params =>
   await axios.get("/produtos/ja-existe/", { params });
+
+export const cancelaHomologacao = async (uuid, payload) =>
+  await axios.patch(
+    `/homologacoes-produtos/${uuid}/cancela-solicitacao-homologacao/`,
+    payload
+  );
