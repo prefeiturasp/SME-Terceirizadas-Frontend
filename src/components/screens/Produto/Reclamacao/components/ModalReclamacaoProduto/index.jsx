@@ -5,7 +5,7 @@ import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import InputText from "components/Shareable/Input/InputText";
-import { InputComData }  from "components/Shareable/DatePicker";
+import { InputComData } from "components/Shareable/DatePicker";
 import { OnChange } from "react-final-form-listeners";
 import moment from "moment";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -88,7 +88,7 @@ export default class ModalReclamacaoProduto extends Component {
   };
 
   render() {
-    const { showModal, closeModal, produto} = this.props;
+    const { showModal, closeModal, produto } = this.props;
     const { meusDados, escolas } = this.state;
     const escola = meusDados ? meusDados.vinculo_atual.instituicao : undefined;
     const deveEscolherUmaEscola =
@@ -218,7 +218,7 @@ export default class ModalReclamacaoProduto extends Component {
                     <OnChange name="produto_data_fabricacao">
                       {value => {
                         form.change("produto_data_validade", undefined);
-                        this.setState({ ...this.state, fabricacao: value});
+                        this.setState({ ...this.state, fabricacao: value });
                       }}
                     </OnChange>
                   </div>
@@ -227,7 +227,11 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputComData}
                       label="Data de validade"
                       name="produto_data_validade"
-                      minDate={this.state.fabricacao ? moment(this.state.fabricacao, "DD/MM/YYYY").toDate() : null}
+                      minDate={
+                        this.state.fabricacao
+                          ? moment(this.state.fabricacao, "DD/MM/YYYY").toDate()
+                          : null
+                      }
                       maxDate={null}
                     />
                   </div>
