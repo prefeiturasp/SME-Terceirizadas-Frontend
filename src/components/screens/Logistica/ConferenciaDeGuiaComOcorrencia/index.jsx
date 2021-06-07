@@ -238,14 +238,31 @@ export default () => {
     setStatus(values.status);
   };
 
+  const carregarLocalStorage = () => {
+    setCarregando(true);
+    let valoresConf = JSON.parse(localStorage.getItem("valoresConferencia"));
+    let guiaConf = JSON.parse(localStorage.getItem("guiaConferencia"));
+    //setInitialValues(valoresConf[0])
+    setValoresForm(valoresConf);
+    setGuia(guiaConf);
+    setCarregando(false);
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const param = urlParams.get("uuid");
-      setUuid(param);
-      carregarGuia(param);
+
+      let param2 = urlParams.get("autofill");
+
+      if (param2) {
+        carregarLocalStorage();
+      } else {
+        const param = urlParams.get("uuid");
+        setUuid(param);
+        carregarGuia(param);
+      }
     }
   }, []);
 

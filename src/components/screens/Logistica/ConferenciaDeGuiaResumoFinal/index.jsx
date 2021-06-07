@@ -100,10 +100,10 @@ export default () => {
 
   const cancelarConferencia = () => {
     let uuid = guia.uuid;
-    localStorage.removeItem("valoresConferencia");
-    localStorage.removeItem("guiaConferencia");
+    //localStorage.removeItem("valoresConferencia");
+    //localStorage.removeItem("guiaConferencia");
     history.push(
-      `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}/?uuid=${uuid}`
+      `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}/?uuid=${uuid}&autofill=true`
     );
   };
 
