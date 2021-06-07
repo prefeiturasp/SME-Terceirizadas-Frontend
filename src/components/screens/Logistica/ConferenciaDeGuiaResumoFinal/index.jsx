@@ -30,7 +30,7 @@ export default () => {
     let payload = {};
     let ultimoItem = valoresForm[valoresForm.length - 1];
 
-    payload.guia = ultimoItem.guia;
+    payload.guia = guia.uuid;
     payload.nome_motorista = ultimoItem.nome_motorista;
     payload.placa_veiculo = ultimoItem.placa_veiculo;
     payload.data_recebimento = ultimoItem.data_recebimento;
