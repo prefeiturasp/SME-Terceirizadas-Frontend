@@ -23,8 +23,10 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import { CONFERENCIA_GUIA_RESUMO_FINAL, LOGISTICA } from "configs/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -40,6 +42,7 @@ const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimento
 const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
                           Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
                           será aberta ocorrência a ser detalhada pelo usuário.`;
+const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -55,6 +58,7 @@ export default () => {
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
   const inputFile = useRef(null);
+  const history = useHistory();
 
   const carregarGuia = async uuid => {
     let response;
@@ -91,7 +95,16 @@ export default () => {
     values.data_recebimento = moment(values.data_entrega_real).format(
       "DD/MM/YYYY"
     );
+
+    let newValoresForm = valoresForm;
+    values.arquivo = arquivoAtual;
     values.guia = uuid;
+    newValoresForm[alimentoAtual] = Object.assign({}, values);
+    setValoresForm(newValoresForm);
+
+    localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
+    localStorage.setItem("guiaConferencia", JSON.stringify(guia));
+    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}`);
   };
 
   const validaDataEntrega = value => {
@@ -529,6 +542,35 @@ export default () => {
                   </div>
                 </div>
 
+                <div className="mt-4 mb-4">
+                  <div className="row">
+                    <article className="col-9 produto">
+                      <label className="mb-3">
+                        Se possível, insira uma foto que demonstre a ocorrência
+                        apontada.
+                        <TooltipIcone
+                          tooltipText={
+                            "Os formatos de imagem aceitos são: " +
+                            FORMATOS_IMAGEM
+                          }
+                        />
+                      </label>
+                      <InputFile
+                        ref={inputFile}
+                        className="inputfile"
+                        texto="Inserir Imagem"
+                        name="files"
+                        accept={FORMATOS_IMAGEM}
+                        setFiles={setFiles}
+                        removeFile={removeFile}
+                        toastSuccess={"Imagem incluída com sucesso!"}
+                        alignLeft
+                        disabled={arquivoAtual.length > 0}
+                      />
+                    </article>
+                  </div>
+                </div>
+
                 <div className="row">
                   <div className="col-12">
                     <Field
@@ -546,32 +588,6 @@ export default () => {
                         !values.ocorrencias || !values.ocorrencias.length
                       }
                     />
-                  </div>
-                </div>
-
-                <div className="mt-4 mb-4">
-                  <div className="row pt-3 pb-3">
-                    <article className="col-9 produto">
-                      <label>Imagem do Produto</label>
-                      <label className="explicacao pt-2">
-                        Anexe uma imagem do produto
-                      </label>
-                    </article>
-                    <div className="col-3 btn">
-                      <InputFile
-                        ref={inputFile}
-                        className="inputfile"
-                        texto="Anexar"
-                        name="files"
-                        accept=".png, .pdf, .jpeg, .jpg"
-                        setFiles={setFiles}
-                        removeFile={removeFile}
-                        toastSuccess={
-                          "Anexo do documento incluído com sucesso!"
-                        }
-                        disabled={arquivoAtual.length > 0}
-                      />
-                    </div>
                   </div>
                 </div>
 
@@ -612,7 +628,7 @@ export default () => {
                         !guia.alimentos ||
                         alimentoAtual !== guia.alimentos.length - 1
                       }
-                      onClick={() => {}}
+                      onClick={() => onSubmit(values)}
                     />
                     <span className="tooltiptext">
                       Para finalizar, preencha todos os campos de conferência de

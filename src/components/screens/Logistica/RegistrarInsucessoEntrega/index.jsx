@@ -4,6 +4,7 @@ import { getGuiaParaInsucesso } from "../../../../services/logistica.service.js"
 import { Form, Field } from "react-final-form";
 import Select from "components/Shareable/Select";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 import { InputText } from "components/Shareable/Input/InputText";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -31,6 +32,7 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "registrarInsucessoEntrega";
+const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
 export default () => {
   const [uuid, setUuid] = useState();
@@ -135,7 +137,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Número da requisição"
+                      label="Nº da Requisição de Entrega"
                       name="numero_requisicao"
                       className="input-busca-produto"
                       disabled
@@ -144,7 +146,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Número da guia"
+                      label="Nº da Guia de Remessa"
                       name="numero_guia"
                       className="input-busca-produto"
                       disabled
@@ -247,28 +249,31 @@ export default () => {
 
                 <hr />
                 <div className="mt-4 mb-4">
-                  <div className="row pt-3 pb-3">
+                  <div className="row pb-3">
                     <article className="col-9 produto">
-                      <label>Imagem do Produto</label>
-                      <label className="explicacao pt-2">
-                        Anexe uma imagem do produto
+                      <label className="mb-3">
+                        Se possível, insira uma foto que demonstre o motivo do
+                        insucesso de entrega.
+                        <TooltipIcone
+                          tooltipText={
+                            "Os formatos de imagem aceitos são: " +
+                            FORMATOS_IMAGEM
+                          }
+                        />
                       </label>
-                    </article>
-                    <div className="col-3 btn">
                       <Field
                         component={InputFile}
                         className="inputfile"
-                        texto="Anexar"
+                        texto="Inserir Imagem"
                         name="files"
-                        accept=".png, .pdf, .jpeg, .jpg"
+                        accept={FORMATOS_IMAGEM}
                         setFiles={setFiles}
                         removeFile={removeFile}
-                        toastSuccess={
-                          "Anexo do documento incluído com sucesso!"
-                        }
+                        toastSuccess={"Imagem incluída com sucesso!"}
+                        alignLeft
                         disabled={arquivo.length > 0}
                       />
-                    </div>
+                    </article>
                   </div>
 
                   <ModalInsucesso

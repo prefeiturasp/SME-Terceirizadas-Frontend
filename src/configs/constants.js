@@ -143,7 +143,9 @@ export const CONFERIR_ENTREGA = "conferir-entrega";
 export const CONFERENCIA_GUIA = "conferencia-guia";
 export const CONFERENCIA_GUIA_COM_OCORRENCIA =
   "conferencia-guia-com-ocorrencia";
+export const CONFERENCIA_GUIA_RESUMO_FINAL = "conferencia-guia-resumo-final";
 export const REPOSICAO_GUIA = "reposicao-guia";
+export const ENTREGAS_DILOG = "entregas-dilog";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
@@ -158,6 +160,8 @@ export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
 export const STATUS_CODAE_SUSPENDEU = "CODAE_SUSPENDEU";
 export const STATUS_CODAE_QUESTIONADO = "CODAE_QUESTIONADO";
 export const STATUS_CODAE_AUTORIZOU_RECLAMACAO = "CODAE_AUTORIZOU_RECLAMACAO";
+export const STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO =
+  "TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";

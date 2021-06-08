@@ -23,8 +23,11 @@ import { TIPO_SOLICITACAO_DIETA } from "../../../../../../constants/shared";
 import { required } from "../../../../../../helpers/fieldValidators";
 import {
   obtemIdentificacaoNutricionista,
-  gerarParametrosConsulta
-} from "../../../../../../helpers/utilities";
+  gerarParametrosConsulta,
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCODAEDietaEspecial,
+  usuarioEhTerceirizada
+} from "helpers/utilities";
 
 import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 
@@ -342,6 +345,10 @@ export default class FormAutorizaDietaEspecial extends Component {
       showAutorizarAlteracaoUEModal
     } = this.state;
     const { dietaEspecial, setTemSolicitacaoCadastroProduto } = this.props;
+    const exibeBotaoSolicitarProduto =
+      !usuarioEhCoordenadorNutriCODAE() &&
+      !usuarioEhTerceirizada() &&
+      !usuarioEhCODAEDietaEspecial();
     return (
       <div>
         <Form
@@ -496,14 +503,18 @@ export default class FormAutorizaDietaEspecial extends Component {
                 {dietaEspecial.tipo_solicitacao !==
                   TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
                   <>
-                    <Botao
-                      texto="Solicitar Novo Produto"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
-                      onClick={() => this.showModalSolicitacaoCadastroProduto()}
-                      className="ml-3"
-                      disabled={submitting}
-                    />
+                    {exibeBotaoSolicitarProduto && (
+                      <Botao
+                        texto="Solicitar Novo Produto"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                        onClick={() =>
+                          this.showModalSolicitacaoCadastroProduto()
+                        }
+                        className="ml-3"
+                        disabled={submitting}
+                      />
+                    )}
                     <Botao
                       texto="Salvar Rascunho"
                       type={BUTTON_TYPE.BUTTON}

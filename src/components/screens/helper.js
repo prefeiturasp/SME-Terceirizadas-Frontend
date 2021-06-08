@@ -11,6 +11,7 @@ import {
 import { truncarString } from "../../helpers/utilities";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { usuarioEhEscola } from "../../helpers/utilities";
+import { STATUS_ALIMENTO } from "./const";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
@@ -171,4 +172,10 @@ export const slugify = str => {
   }
 
   return str;
+};
+
+export const mapeiaStatusAlimento = str => {
+  if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;
+  if (str === "Parcial") return STATUS_ALIMENTO.PARCIAL;
+  if (str === "Não Recebido") return STATUS_ALIMENTO.NAO_RECEBIDO;
 };

@@ -1,9 +1,6 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
-  GESTAO_PRODUTO,
-  AVALIAR_SOLICITACAO_CADASTRO_PRODUTO,
-  ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO,
   DIETA_ESPECIAL,
   CANCELAMENTO,
   PROTOCOLO_PADRAO_DIETA
@@ -33,10 +30,7 @@ const MenuDietaEspecial = () => {
     usuarioEhEscola() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
-  const exibeAtivasInativas =
-    usuarioEhCODAEDietaEspecial() || usuarioEhNutricionistaSupervisao();
-  const exibeAvaliarSolicitacaoCadastroProduto = usuarioEhTerceirizada();
-  const exibeAcompanharSolicitacaoCadastroProduto = usuarioEhCODAEDietaEspecial();
+  const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
@@ -59,20 +53,6 @@ const MenuDietaEspecial = () => {
       {exibeAtivasInativas && (
         <LeafItem to={`/solicitacoes-dieta-especial/solicitacoes-pendentes`}>
           {getNomeCardAguardandoAutorizacao()}
-        </LeafItem>
-      )}
-      {exibeAvaliarSolicitacaoCadastroProduto && (
-        <LeafItem
-          to={`/${GESTAO_PRODUTO}/${AVALIAR_SOLICITACAO_CADASTRO_PRODUTO}`}
-        >
-          Avaliar solic. cad. produto
-        </LeafItem>
-      )}
-      {exibeAcompanharSolicitacaoCadastroProduto && (
-        <LeafItem
-          to={`/${GESTAO_PRODUTO}/${ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO}`}
-        >
-          Acompanhar solic. novos produtos
         </LeafItem>
       )}
       {usuarioEhEscola() && (
