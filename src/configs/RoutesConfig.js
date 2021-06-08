@@ -1085,7 +1085,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
   },
-    {
+  {
     path: `/${constants.LOGISTICA}/${constants.REPOSICAO_GUIA}`,
     component: ReposicaoDeGuiaPage,
     exact: true,
