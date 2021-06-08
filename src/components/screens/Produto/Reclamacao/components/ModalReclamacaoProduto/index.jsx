@@ -2,7 +2,11 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
+import {
+  peloMenosUmCaractere,
+  alphaNumeric,
+  required
+} from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import InputText from "components/Shareable/Input/InputText";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -202,9 +206,15 @@ export default class ModalReclamacaoProduto extends Component {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Lote"
+                      label="Lote do produto"
                       name="produto_lote"
                       tooltipText="Inserir o lote do produto conforme especificação contida no rótulo."
+                      validate={value => {
+                        for (let validator of [alphaNumeric]) {
+                          const erro = validator(value);
+                          if (erro) return erro;
+                        }
+                      }}
                     />
                   </div>
                   <div className="col-4">
