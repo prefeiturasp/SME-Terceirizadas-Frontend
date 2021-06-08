@@ -1,10 +1,15 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import { CONFERENCIA_GUIA, LOGISTICA } from "configs/constants";
+import { CONFERENCIA_GUIA, LOGISTICA, REPOSICAO_GUIA } from "configs/constants";
 import { NavLink } from "react-router-dom";
 
 const ListagemSolicitacoes = ({ guias }) => {
+  function ehReposicao(value) {
+    let statusReposicao = ["Recebimento parcial", "Não recebida"];
+    return statusReposicao.includes(value);
+  }
+
   return (
     <section className="resultado-conferir-entrega">
       <article>
@@ -24,15 +29,27 @@ const ListagemSolicitacoes = ({ guias }) => {
                 <div>{guia.data_entrega}</div>
                 <div>{guia.status}</div>
                 <div>
-                  <NavLink
-                    className="float-left"
-                    to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
-                  >
-                    <span className="link-acoes green">
-                      <i className="fas fa-eye" />
-                      Conferir
-                    </span>
-                  </NavLink>
+                  {ehReposicao(guia.status) ? (
+                    <NavLink
+                      className="float-left"
+                      to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
+                    >
+                      <span className="link-acoes green">
+                        <i className="fas fa-redo" />
+                        Repor
+                      </span>
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      className="float-left"
+                      to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
+                    >
+                      <span className="link-acoes green">
+                        <i className="fas fa-eye" />
+                        Conferir
+                      </span>
+                    </NavLink>
+                  )}
                   |
                   <span className="link-acoes">
                     <i className="fas fa-print" />

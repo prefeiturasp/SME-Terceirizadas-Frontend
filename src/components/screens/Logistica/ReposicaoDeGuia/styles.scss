@@ -1,0 +1,99 @@
+@import "../../../../styles/variables.scss";
+
+.card-conferencia-guia-reposicao {
+  .conferencia-guia-reposicao {
+    .subtitulo {
+      font-weight: 500;
+      font-size: 20px;
+      color: #42474a;
+    }
+    .header-alimento {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-content: space-between;
+      background: $greenDark;
+      border-radius: 4px;
+      color: white;
+      padding: 6px;
+      font-size: 18px;
+      line-height: 21px;
+    }
+    .info-field {
+      font-style: italic;
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    .table-reposicao {
+      th {
+        background-color: $greenLight;
+        color: $white;
+        padding: 6px 4px 6px 8px;
+        font-size: 14px;
+
+        .text-center {
+          padding: 6px 0px;
+        }
+      }
+
+      td {
+        width: 12.5%;
+        font-size: 14px;
+      }
+
+      .form-tabela {
+        width: 100%;
+      }
+
+      .th-recebido {
+        background-color: #198459;
+      }
+    }
+
+    .tooltip-botao {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip-botao .tooltiptext {
+      visibility: hidden;
+      width: 150%;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: #fff;
+
+      border-radius: 4px;
+      padding: 6px 8px;
+      position: absolute;
+      z-index: 1000;
+      bottom: 125%;
+      left: -25%;
+      opacity: 0;
+      transition: opacity 0.1s;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.5;
+      list-style: none;
+      text-decoration: none;
+      word-wrap: break-word;
+      -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .tooltip-botao .tooltiptext::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent;
+    }
+
+    .tooltip-botao:hover button:disabled + .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
