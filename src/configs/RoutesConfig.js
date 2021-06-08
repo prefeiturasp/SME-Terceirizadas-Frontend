@@ -129,6 +129,7 @@ import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
 import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
+import ReposicaoDeGuiaPage from "pages/Logistica/ReposicaoDeGuiaPage";
 import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
 import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
 
@@ -1073,6 +1074,12 @@ const routesConfig = [
       constants.CONFERENCIA_GUIA_COM_OCORRENCIA
     }`,
     component: ConferenciaDeGuiaComOcorrenciaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REPOSICAO_GUIA}`,
+    component: ReposicaoDeGuiaPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
   }
