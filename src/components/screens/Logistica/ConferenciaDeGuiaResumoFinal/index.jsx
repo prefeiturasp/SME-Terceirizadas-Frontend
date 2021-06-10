@@ -30,7 +30,7 @@ export default () => {
     let payload = {};
     let ultimoItem = valoresForm[valoresForm.length - 1];
 
-    payload.guia = ultimoItem.guia;
+    payload.guia = guia.uuid;
     payload.nome_motorista = ultimoItem.nome_motorista;
     payload.placa_veiculo = ultimoItem.placa_veiculo;
     payload.data_recebimento = ultimoItem.data_recebimento;
@@ -100,10 +100,10 @@ export default () => {
 
   const cancelarConferencia = () => {
     let uuid = guia.uuid;
-    localStorage.removeItem("valoresConferencia");
-    localStorage.removeItem("guiaConferencia");
+    //localStorage.removeItem("valoresConferencia");
+    //localStorage.removeItem("guiaConferencia");
     history.push(
-      `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}/?uuid=${uuid}`
+      `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}/?uuid=${uuid}&autofill=true`
     );
   };
 
@@ -208,18 +208,15 @@ export default () => {
                     return (
                       <>
                         <tr>
-                          {arquivoExiste > 0 && (
-                            <td className="icone-arquivo">
+                          <td className="icone-arquivo">
+                            {arquivoExiste > 0 && (
                               <div className="icon-arquivo">
                                 <i className="fas fa-paperclip green" />
                               </div>
-                            </td>
-                          )}
+                            )}
+                          </td>
 
-                          <td
-                            colSpan={arquivoExiste ? "1" : "2"}
-                            className="nome-alimento"
-                          >
+                          <td className="nome-alimento">
                             {item.nome_alimento}
                           </td>
                           <td className="embalagem">

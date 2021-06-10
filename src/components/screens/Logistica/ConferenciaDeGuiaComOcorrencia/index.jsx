@@ -58,6 +58,7 @@ export default () => {
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
   const inputFile = useRef(null);
+  const autoFillButton = useRef(null);
   const history = useHistory();
 
   const carregarGuia = async uuid => {
@@ -238,14 +239,57 @@ export default () => {
     setStatus(values.status);
   };
 
+  const carregarLocalStorage = values => {
+    setCarregando(true);
+
+    let valoresConf = JSON.parse(localStorage.getItem("valoresConferencia"));
+    let guiaConf = JSON.parse(localStorage.getItem("guiaConferencia"));
+    let primeiroItem = valoresConf[0];
+    let ultimoItem = valoresConf[valoresConf.length - 1];
+
+    values.recebidos_fechada = primeiroItem.recebidos_fechada;
+    values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
+    values.status = primeiroItem.status;
+    values.ocorrencias = primeiroItem.ocorrencias;
+    values.observacoes = primeiroItem.observacoes;
+
+    values.data_entrega = ultimoItem.data_entrega;
+    values.nome_motorista = ultimoItem.nome_motorista;
+    values.hora_recebimento = ultimoItem.hora_recebimento;
+    values.placa_veiculo = ultimoItem.placa_veiculo;
+    values.data_entrega_real = moment(ultimoItem.data_entrega_real);
+
+    let newArquivo = primeiroItem.arquivo;
+    setArquivoAtual(newArquivo);
+    if (newArquivo) {
+      inputFile.current.setState({ files: newArquivo });
+    }
+
+    setHoraRecebimento(ultimoItem.hora_recebimento);
+    setHoraRecebimentoAlterada(true);
+
+    setValoresForm(valoresConf);
+    setGuia(guiaConf);
+
+    setCarregando(false);
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const param = urlParams.get("uuid");
-      setUuid(param);
-      carregarGuia(param);
+
+      let param2 = urlParams.get("autofill");
+
+      if (param2) {
+        //carregarLocalStorage();
+        autoFillButton.current.click();
+      } else {
+        const param = urlParams.get("uuid");
+        setUuid(param);
+        carregarGuia(param);
+      }
     }
   }, []);
 
@@ -593,6 +637,15 @@ export default () => {
 
                 <hr />
                 <div>
+                  <button
+                    onClick={event => {
+                      event.preventDefault();
+                      carregarLocalStorage(values);
+                    }}
+                    style={{ display: "none" }}
+                    ref={autoFillButton}
+                  />
+
                   <Botao
                     texto="< Item Anterior"
                     type={BUTTON_TYPE.BUTTON}
