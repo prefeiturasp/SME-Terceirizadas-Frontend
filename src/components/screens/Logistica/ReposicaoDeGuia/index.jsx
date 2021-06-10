@@ -35,9 +35,9 @@ const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente re
 const TOOLTIP_HORA = `Preencher com a hora em que o alimento foi entregue na Unidade Educacional.`;
 const TOOLTIP_PLACA = `Preencher com o registro da placa do veículo que transportou os alimentos à Unidade Educacional.`;
 const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimentos na Unidade Educacional.`;
-const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
-                          Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
-                          será aberta ocorrência a ser detalhada pelo usuário.`;
+const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente
+                          recebeu como reposição aos alimentos faltantes. Se ainda restarem alimentos a receber, será
+                          aberta ocorrência a ser detalhada pelo usuário.`;
 const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimento faltantes (isto é, que o fornecedor deixou de entregar
                           na Unidade Educacional) em relação à quantidade prevista na Guia de Remessa.`;
 
@@ -455,7 +455,10 @@ export default () => {
                                     component={InputText}
                                     name="recebidos_fracionada"
                                     className="input-busca-produto"
-                                    validate={numericInteger}
+                                    validate={composeValidators(
+                                      required,
+                                      numericInteger
+                                    )}
                                   />
                                 </div>
                               ) : (
@@ -580,7 +583,7 @@ export default () => {
 
                   <span className="float-right tooltip-botao">
                     <Botao
-                      texto="Finalizar Conferência"
+                      texto="Finalizar reposição"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={
