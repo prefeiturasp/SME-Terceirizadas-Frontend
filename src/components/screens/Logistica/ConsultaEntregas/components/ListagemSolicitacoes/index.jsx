@@ -2,19 +2,21 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
+const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
   return (
-    <section className="resultado-busca-entregas">
+    <section
+      className={`resultado-busca-entregas ${dilog ? "dilog" : "distribuidor"}`}
+    >
       <article>
-        <div className="grid-table header-table top-header">
-          <div className="colspan-4"> </div>
+        <div className={`grid-table header-table top-header`}>
+          <div className={dilog ? "colspan-4" : "colspan-3"} />
           <div className="colspan-4">Guias de Remessa</div>
           <div className="colspan-2">Exportar</div>
         </div>
         <div className="grid-table header-table">
           <div />
           <div>Requisição</div>
-          <div>Distribuidor</div>
+          {dilog && <div>Distribuidor</div>}
           <div>Data de entrega</div>
           <div>Qtde.</div>
           <div>Conferidas</div>
@@ -55,9 +57,11 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>
                   {solicitacao.numero_solicitacao}
                 </div>
-                <div className={`${bordas}`}>
-                  {solicitacao.distribuidor_nome}
-                </div>
+                {dilog && (
+                  <div className={`${bordas}`}>
+                    {solicitacao.distribuidor_nome}
+                  </div>
+                )}
                 <div className={`${bordas}`}>{solicitacao.data_entrega}</div>
                 <div className={`${bordas}`}>{solicitacao.qtd_guias}</div>
                 <div className={`${bordas}`}>
