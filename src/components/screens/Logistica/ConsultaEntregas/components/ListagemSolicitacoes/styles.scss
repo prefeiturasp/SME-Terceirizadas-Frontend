@@ -25,7 +25,6 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.3fr 1.2fr 2.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
     }
 
     .header-table {
@@ -47,6 +46,11 @@
 
       .colspan-4 {
         grid-column: span 4;
+        text-align: center;
+      }
+
+      .colspan-3 {
+        grid-column: span 3;
         text-align: center;
       }
 
@@ -184,5 +188,17 @@
       box-sizing: border-box;
       border-radius: 4px;
     }
+  }
+}
+
+.dilog {
+  .grid-table {
+    grid-template-columns: 0.3fr 1.2fr 2.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  }
+}
+
+.distribuidor {
+  .grid-table {
+    grid-template-columns: 0.3fr 1.2fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
   }
 }
