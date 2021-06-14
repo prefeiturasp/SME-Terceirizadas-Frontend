@@ -24,6 +24,7 @@ import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 import ProtocoloPaadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPaadraoDietaEspecialPage.jsx";
+import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -991,6 +992,14 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
     component: ProtocoloPaadraoDietaEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.CONSULTA_PROTOCOLO_PADRAO_DIETA
+    }`,
+    component: ConsultaProtocoloPadraoDietaEspecial,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
