@@ -299,3 +299,12 @@ export const getMotivosAlteracaoUE = async params => {
 export const createSolicitacaoAlteracaoUE = async payload => {
   return axios.post(`/${SOLICITACOES_DIETA_ESPECIAL}/alteracao-ue/`, payload);
 };
+
+export const getNomesProtocolos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/nomes/");
+
+export const getStatusProtocolos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/lista-status/");
+
+export const consultaProtocoloPadrao = async params =>
+  axios.get(`/protocolo-padrao-dieta-especial/`, { params });
