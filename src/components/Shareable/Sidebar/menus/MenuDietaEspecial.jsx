@@ -3,7 +3,7 @@ import { Menu, LeafItem } from "./shared";
 import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
-  PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -61,8 +61,8 @@ const MenuDietaEspecial = () => {
         </LeafItem>
       )}
       {usuarioEhCODAEDietaEspecial() && (
-        <LeafItem to={`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`}>
-          Cadastro de Protocolo Padrão
+        <LeafItem to={`/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`}>
+          Consultar Protocolo Padrão
         </LeafItem>
       )}
     </Menu>

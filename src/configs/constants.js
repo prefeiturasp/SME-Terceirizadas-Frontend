@@ -38,6 +38,8 @@ export const SOLICITACOES_INATIVAS = "solicitacoes-inativas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+export const CONSULTA_PROTOCOLO_PADRAO_DIETA =
+  "consultar-protocolo-padrao-dieta";
 export const PROTOCOLO_PADRAO_DIETA = "protocolo-padrao-dieta";
 
 export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
@@ -146,6 +148,7 @@ export const CONFERENCIA_GUIA_COM_OCORRENCIA =
 export const CONFERENCIA_GUIA_RESUMO_FINAL = "conferencia-guia-resumo-final";
 export const REPOSICAO_GUIA = "reposicao-guia";
 export const ENTREGAS_DILOG = "entregas-dilog";
+export const ENTREGAS_DISTRIBUIDOR = "entregas-distribuidor";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
