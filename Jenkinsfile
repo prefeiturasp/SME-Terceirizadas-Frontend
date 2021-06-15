@@ -39,11 +39,11 @@ pipeline {
               branch 'homolog'
             }
             steps {
-                sh 'sonar-scanner \
-                    -Dsonar.projectKey=SME-Terceirizadas-Front \
-                    -Dsonar.sources=src \
-                    -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
-                    -Dsonar.login=76f6f13b7ddd912a474ada1041044db3b7c88522'
+                sh 'echo "[ INFO ] Iniciando analise Sonar..." && sonar-scanner \
+                  -Dsonar.projectKey=SME-Terceirizadas-Frontend \
+                  -Dsonar.sources=. \
+                  -Dsonar.host.url=http://sonar.sme.prefeitura.sp.gov.br \
+                  -Dsonar.login=21c54ade26c141f3e561a40dacad9f21c2a666a2'
             }
         }
 
