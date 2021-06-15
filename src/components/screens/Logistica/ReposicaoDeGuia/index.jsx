@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
@@ -8,6 +8,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
+import { REPOSICAO_RESUMO_FINAL, LOGISTICA } from "configs/constants";
 import TooltipIcone from "components/Shareable/TooltipIcone";
 import {
   required,
@@ -24,6 +25,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
 import "./styles.scss";
 
@@ -53,6 +55,8 @@ export default () => {
   const [fechada, setFechada] = useState({});
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
+  const autoFillButton = useRef(null);
+  const history = useHistory();
 
   const carregarGuia = async uuid => {
     let response;
@@ -61,8 +65,7 @@ export default () => {
       const params = gerarParametrosConsulta({ uuid: uuid });
       response = await getGuiaParaConferencia(params);
       const guiaResponse = response.data;
-      let conferencias =
-        guiaResponse.conferencias[guiaResponse.conferencias.length - 1];
+      let conferencias = guiaResponse.conferencias[0];
       conferencias.conferencia_dos_alimentos.map(conferencia => {
         if (
           conferencia.status_alimento === "Recebido" ||
@@ -103,6 +106,14 @@ export default () => {
       "DD/MM/YYYY"
     );
     values.guia = uuid;
+
+    let newValoresForm = valoresForm;
+    newValoresForm[alimentoAtual] = Object.assign({}, values);
+    setValoresForm(newValoresForm);
+
+    localStorage.setItem("valoresReposicao", JSON.stringify(valoresForm));
+    localStorage.setItem("guiaReposicao", JSON.stringify(guia));
+    history.push(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}`);
   };
 
   const comparaDataEntrega = value => {
@@ -216,14 +227,50 @@ export default () => {
     setStatus(values.status);
   };
 
+  const carregarLocalStorage = values => {
+    setCarregando(true);
+
+    let valoresConf = JSON.parse(localStorage.getItem("valoresReposicao"));
+    let guiaConf = JSON.parse(localStorage.getItem("guiaReposicao"));
+    let primeiroItem = valoresConf[0];
+    let ultimoItem = valoresConf[valoresConf.length - 1];
+
+    values.recebidos_fechada = primeiroItem.recebidos_fechada;
+    values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
+    values.status = primeiroItem.status;
+    values.ocorrencias = primeiroItem.ocorrencias;
+    values.observacoes = primeiroItem.observacoes;
+
+    values.data_entrega = ultimoItem.data_entrega;
+    values.nome_motorista = ultimoItem.nome_motorista;
+    values.hora_recebimento = ultimoItem.hora_recebimento;
+    values.placa_veiculo = ultimoItem.placa_veiculo;
+    values.data_entrega_real = moment(ultimoItem.data_entrega_real);
+
+    setHoraRecebimento(ultimoItem.hora_recebimento);
+    setHoraRecebimentoAlterada(true);
+
+    setValoresForm(valoresConf);
+    setGuia(guiaConf);
+
+    setCarregando(false);
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const param = urlParams.get("uuid");
-      setUuid(param);
-      carregarGuia(param);
+
+      let param2 = urlParams.get("autofill");
+
+      if (param2) {
+        autoFillButton.current.click();
+      } else {
+        const param = urlParams.get("uuid");
+        setUuid(param);
+        carregarGuia(param);
+      }
     }
   }, []);
 
@@ -556,6 +603,15 @@ export default () => {
 
                 <hr />
                 <div>
+                  <button
+                    onClick={event => {
+                      event.preventDefault();
+                      carregarLocalStorage(values);
+                    }}
+                    style={{ display: "none" }}
+                    ref={autoFillButton}
+                  />
+
                   <Botao
                     texto="< Item Anterior"
                     type={BUTTON_TYPE.BUTTON}
@@ -591,7 +647,7 @@ export default () => {
                         !guia.alimentos ||
                         alimentoAtual !== guia.alimentos.length - 1
                       }
-                      onClick={() => {}}
+                      onClick={() => onSubmit(values)}
                     />
                     <span className="tooltiptext">
                       Para finalizar, preencha todos os campos de conferência de
