@@ -312,7 +312,7 @@ class DashboardCODAE extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Pendentes Autorização"}
+                  cardTitle={"Aguardando Autorização"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={pendentesAutorizacaoListFiltered}
                   icon={"fa-exclamation-triangle"}
