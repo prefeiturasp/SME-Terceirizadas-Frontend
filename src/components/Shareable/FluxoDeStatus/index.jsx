@@ -15,6 +15,19 @@ export const FluxoDeStatus = props => {
     cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
   const fluxoUtilizado =
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
+
+  const getTitulo = log => {
+    if (log) {
+      if (
+        log.justificativa &&
+        log.justificativa === "A solicitação não foi validada em tempo hábil"
+      ) {
+        return log.justificativa;
+      } else {
+        return log.status_evento_explicacao;
+      }
+    }
+  };
   return (
     <div className="w-100">
       <div className="row">
@@ -24,7 +37,7 @@ export const FluxoDeStatus = props => {
               return (
                 <li key={key}>
                   {cloneListaDeStatus[key]
-                    ? cloneListaDeStatus[key].status_evento_explicacao
+                    ? getTitulo(cloneListaDeStatus[key])
                     : status.titulo}
                 </li>
               );
