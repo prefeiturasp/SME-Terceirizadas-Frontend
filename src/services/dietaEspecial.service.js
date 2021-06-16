@@ -308,3 +308,13 @@ export const getStatusProtocolos = async () =>
 
 export const consultaProtocoloPadrao = async params =>
   axios.get(`/protocolo-padrao-dieta-especial/`, { params });
+
+export const getProtocoloPadrao = async params =>
+  axios.get(`/protocolo-padrao-dieta-especial/${params}/`);
+
+export const editaProtocoloPadraoDietaEspecial = async payload => {
+  return await axios.put(
+    `/protocolo-padrao-dieta-especial/${payload.uuid}/`,
+    payload
+  );
+};
