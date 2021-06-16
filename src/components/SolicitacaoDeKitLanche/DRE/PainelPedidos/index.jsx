@@ -107,7 +107,7 @@ class PainelPedidos extends Component {
                       }
                       tipoDeCard={TIPODECARD.PRIORIDADE}
                       pedidos={pedidosPrioritarios}
-                      ultimaColunaLabel={"Data da Solicitação"}
+                      ultimaColunaLabel={"Data do Evento"}
                     />
                   </div>
                 </div>
@@ -118,7 +118,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo limite"}
                         tipoDeCard={TIPODECARD.NO_LIMITE}
                         pedidos={pedidosNoPrazoLimite}
-                        ultimaColunaLabel={"Data da Solicitação"}
+                        ultimaColunaLabel={"Data do Evento"}
                       />
                     </div>
                   </div>
@@ -130,7 +130,7 @@ class PainelPedidos extends Component {
                         titulo={"Solicitações no prazo regular"}
                         tipoDeCard={TIPODECARD.REGULAR}
                         pedidos={pedidosNoPrazoRegular}
-                        ultimaColunaLabel={"Data da Solicitação"}
+                        ultimaColunaLabel={"Data do Evento"}
                       />
                     </div>
                   </div>
