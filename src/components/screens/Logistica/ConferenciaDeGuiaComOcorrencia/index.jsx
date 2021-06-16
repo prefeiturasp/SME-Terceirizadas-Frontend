@@ -283,7 +283,6 @@ export default () => {
       let param2 = urlParams.get("autofill");
 
       if (param2) {
-        //carregarLocalStorage();
         autoFillButton.current.click();
       } else {
         const param = urlParams.get("uuid");

@@ -9,7 +9,8 @@ import {
 import {
   CONFERENCIA_GUIA_COM_OCORRENCIA,
   LOGISTICA,
-  CONFERIR_ENTREGA
+  CONFERIR_ENTREGA,
+  REPOSICAO_GUIA
 } from "configs/constants";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
@@ -17,12 +18,16 @@ import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import "./styles.scss";
 
-export default () => {
+export default ({ reposicao }) => {
   const [guia, setGuia] = useState({});
   const [valoresForm, setValoresForm] = useState([]);
   const [conferenciaInvalida, setConferenciaInvalida] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [reposicaoInvalida, setReposicaoInvalida] = useState(false);
   const history = useHistory();
+
+  const chaveValores = reposicao ? "valoresReposicao" : "valoresConferencia";
+  const chaveGuia = reposicao ? "guiaReposicao" : "guiaConferencia";
 
   const onSubmit = async () => {
     setLoading(true);
@@ -31,6 +36,7 @@ export default () => {
     let ultimoItem = valoresForm[valoresForm.length - 1];
 
     payload.guia = guia.uuid;
+    if (reposicao) payload.eh_reposicao = true;
     payload.nome_motorista = ultimoItem.nome_motorista;
     payload.placa_veiculo = ultimoItem.placa_veiculo;
     payload.data_recebimento = ultimoItem.data_recebimento;
@@ -53,14 +59,17 @@ export default () => {
       conferencia.status_alimento = mapeiaStatusAlimento(item.status);
       if (item.ocorrencias) conferencia.ocorrencia = item.ocorrencias;
       if (item.observacoes) conferencia.observacao = item.observacoes;
-      if (item.arquivo[0]) conferencia.arquivo = item.arquivo[0].arquivo;
+      if (item.arquivo && item.arquivo[0])
+        conferencia.arquivo = item.arquivo[0].arquivo;
 
       payload.conferencia_dos_alimentos.push(conferencia);
     });
 
     recebeGuiaComOcorrencia(payload)
       .then(() => {
-        let toastMsg = flagOcorrencia
+        let toastMsg = reposicao
+          ? "Reposição de alimentos faltantes registrada com sucesso"
+          : flagOcorrencia
           ? "Guia de Remessa registrada com ocorrência"
           : "Guia de Remessa recebida com sucesso";
         toastSuccess(toastMsg);
@@ -100,29 +109,52 @@ export default () => {
 
   const cancelarConferencia = () => {
     let uuid = guia.uuid;
-    //localStorage.removeItem("valoresConferencia");
-    //localStorage.removeItem("guiaConferencia");
     history.push(
-      `/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}/?uuid=${uuid}&autofill=true`
+      `/${LOGISTICA}/${
+        reposicao ? REPOSICAO_GUIA : CONFERENCIA_GUIA_COM_OCORRENCIA
+      }/?uuid=${uuid}&autofill=true`
     );
   };
 
+  const validaReposicao = valores => {
+    const alimentosValidos = valores.filter(alim => {
+      return alim.status !== "Não Recebido";
+    });
+    if (alimentosValidos.length) {
+      setReposicaoInvalida(false);
+    } else {
+      setReposicaoInvalida(true);
+    }
+  };
+
   useEffect(() => {
-    let valoresConf = JSON.parse(localStorage.getItem("valoresConferencia"));
-    let guiaConf = JSON.parse(localStorage.getItem("guiaConferencia"));
+    let valoresConf = JSON.parse(localStorage.getItem(chaveValores));
+    let guiaConf = JSON.parse(localStorage.getItem(chaveGuia));
     if (!valoresConf) {
       setConferenciaInvalida(true);
     }
     setGuia(guiaConf);
     setValoresForm(valoresConf);
+
+    if (reposicao) validaReposicao(valoresConf);
   }, []);
+
+  const subtitulo = reposicao
+    ? "Resumo da reposição de alimentos faltantes"
+    : "Resumo da conferência";
+  const pergunta = reposicao
+    ? "Deseja realizar o registro da reposição dos itens abaixo?"
+    : "Deseja realizar o registro de conferência dos itens abaixo?";
+  const dataConferencia = reposicao
+    ? "Data de registro da reposição:"
+    : "Data de conferência:";
 
   return (
     <Spin tip="Carregando..." spinning={loading}>
       <div className="card mt-3 card-conferencia-guia-resumo-final">
         {!conferenciaInvalida && (
           <div className="card-body conferencia-guia-resumo-final">
-            <span className="subtitulo">Resumo da conferência</span>
+            <span className="subtitulo">{subtitulo}</span>
             <span className="numero-guia float-right">
               Guia número:{" "}
               <strong>
@@ -131,14 +163,12 @@ export default () => {
             </span>
             <hr />
 
-            <div className="mb-2">
-              Deseja realizar o registro de conferência dos itens abaixo?
-            </div>
+            <div className="mb-2">{pergunta}</div>
 
             <div className="mb-3">
               <strong>
                 <i>
-                  Data de conferência: {moment(new Date()).format("DD/MM/YYYY")}
+                  {dataConferencia} {moment(new Date()).format("DD/MM/YYYY")}
                 </i>
               </strong>
             </div>
@@ -154,10 +184,18 @@ export default () => {
                   >
                     Nome do Alimento
                   </th>
-                  <th scope="col" colSpan="3" className="text-center">
+                  <th
+                    scope="col"
+                    colSpan={reposicao ? "4" : "3"}
+                    className="text-center"
+                  >
                     Embalagem Fechada
                   </th>
-                  <th scope="col" colSpan="3" className="text-center">
+                  <th
+                    scope="col"
+                    colSpan={reposicao ? "4" : "3"}
+                    className="text-center"
+                  >
                     Embalagem Fracionada
                   </th>
                   <th scope="col" colSpan="2" className="text-center">
@@ -168,10 +206,12 @@ export default () => {
                   <th scope="col" colSpan="2" className="text-center">
                     Previsto
                   </th>
+                  {reposicao && <th scope="col">A receber</th>}
                   <th scope="col">Recebido</th>
                   <th scope="col" colSpan="2" className="text-center">
                     Previsto
                   </th>
+                  {reposicao && <th scope="col">A receber</th>}
                   <th scope="col">Recebido</th>
                   <th scope="col" rowSpan="2" className="text-center">
                     Status
@@ -184,9 +224,11 @@ export default () => {
                   <th scope="col">Quant.</th>
                   <th scope="col">Capac.</th>
                   <th scope="col">Quant.</th>
+                  {reposicao && <th scope="col">Quant.</th>}
                   <th scope="col">Quant.</th>
                   <th scope="col">Capac.</th>
                   <th scope="col">Quant.</th>
+                  {reposicao && <th scope="col">Quant.</th>}
                 </tr>
               </thead>
               <tbody>
@@ -200,7 +242,9 @@ export default () => {
                       embalagens,
                       "FRACIONADA"
                     );
-                    const arquivoExiste = valoresForm[index].arquivo.length > 0;
+                    const arquivoExiste = valoresForm[index].arquivo
+                      ? valoresForm[index].arquivo.length > 0
+                      : false;
                     const fechada = filtraEmbalagemPorTipo(
                       embalagens,
                       "FECHADA"
@@ -233,9 +277,16 @@ export default () => {
                               "--"
                             )}
                           </td>
+                          {reposicao && (
+                            <td className="embalagem">
+                              {fechada ? fechada.qtd_a_receber : "--"}
+                            </td>
+                          )}
                           <td className="embalagem">
                             <strong>
-                              {valoresForm[index].recebidos_fechada}
+                              {fechada
+                                ? valoresForm[index].recebidos_fechada
+                                : "--"}
                             </strong>
                           </td>
                           <td className="embalagem">
@@ -252,8 +303,17 @@ export default () => {
                               "--"
                             )}
                           </td>
+                          {reposicao && (
+                            <td className="embalagem">
+                              {fracionada ? fracionada.qtd_a_receber : "--"}
+                            </td>
+                          )}
                           <td className="embalagem">
-                            {valoresForm[index].recebidos_fechada}
+                            <strong>
+                              {fracionada
+                                ? valoresForm[index].recebidos_fracionada
+                                : "--"}
+                            </strong>
                           </td>
                           <td
                             className={`recebimento ${getClassStatus(
@@ -274,6 +334,12 @@ export default () => {
                   })}
               </tbody>
             </table>
+            {reposicao && reposicaoInvalida && (
+              <div className="mb-3 mt-3">
+                Caro usuário, considerando que nenhum alimento faltante foi
+                reposto, favor cancelar este registro de reposição de alimentos.
+              </div>
+            )}
             <div>
               <span className="float-right">
                 <Botao
@@ -286,9 +352,12 @@ export default () => {
                   }}
                 />
                 <Botao
-                  texto="Registrar Conferência"
+                  texto={
+                    "Registrar " + (reposicao ? "Reposição" : "Conferência")
+                  }
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
+                  disabled={reposicaoInvalida}
                   onClick={onSubmit}
                 />
               </span>

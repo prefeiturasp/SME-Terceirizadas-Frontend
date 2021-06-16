@@ -147,6 +147,7 @@ export const CONFERENCIA_GUIA_COM_OCORRENCIA =
   "conferencia-guia-com-ocorrencia";
 export const CONFERENCIA_GUIA_RESUMO_FINAL = "conferencia-guia-resumo-final";
 export const REPOSICAO_GUIA = "reposicao-guia";
+export const REPOSICAO_RESUMO_FINAL = "reposicao-guia-resumo-final";
 export const ENTREGAS_DILOG = "entregas-dilog";
 export const ENTREGAS_DISTRIBUIDOR = "entregas-distribuidor";
 
