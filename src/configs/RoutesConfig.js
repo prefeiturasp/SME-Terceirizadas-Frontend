@@ -136,6 +136,7 @@ import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGui
 import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
 import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
 import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
+import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 
 const routesConfig = [
   {
@@ -1098,6 +1099,12 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.REPOSICAO_GUIA}`,
     component: ReposicaoDeGuiaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REPOSICAO_RESUMO_FINAL}`,
+    component: ReposicaoResumoFinalPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
   },
