@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import {
-  getNomesProtocolos,
-  getStatusProtocolos
-} from "services/dietaEspecial.service";
+import { getNomesProtocolos } from "services/dietaEspecial.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import { consultaProtocoloPadrao } from "services/dietaEspecial.service";
@@ -22,9 +19,11 @@ export default () => {
 
   async function fetchData() {
     const respNomes = await getNomesProtocolos();
-    const respStatus = await getStatusProtocolos();
+    const respProtocolo = await consultaProtocoloPadrao({});
     setNomes(respNomes.data.results);
-    setStatus(respStatus.data.results);
+    setStatus(["Liberado", "Não liberado"]);
+    setResultado(respProtocolo.data);
+    setTotal(respProtocolo.data.count);
     setCarregando(false);
   }
 
@@ -41,11 +40,11 @@ export default () => {
       if (response.status === HTTP_STATUS.OK) {
         setResultado(response.data);
         setTotal(response.data.count);
-        setCarregando(false);
       }
     } catch (e) {
       toastError("Houve um erro ao tentar trocar página");
     }
+    setCarregando(false);
   };
 
   return (
