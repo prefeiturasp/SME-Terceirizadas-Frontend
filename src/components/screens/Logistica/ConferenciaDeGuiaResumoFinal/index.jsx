@@ -352,7 +352,9 @@ export default ({ reposicao }) => {
                   }}
                 />
                 <Botao
-                  texto="Registrar Conferência"
+                  texto={
+                    "Registrar " + (reposicao ? "Reposição" : "Conferência")
+                  }
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   disabled={reposicaoInvalida}
