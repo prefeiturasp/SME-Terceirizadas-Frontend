@@ -39,7 +39,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
               <tr className="table-head-alimentacao">
                 <th>Alimento</th>
                 <th>Tipo</th>
-                <th>Isenlções/Substituições</th>
+                <th>Isenções/Substituições</th>
               </tr>
             </thead>
             <tbody>
