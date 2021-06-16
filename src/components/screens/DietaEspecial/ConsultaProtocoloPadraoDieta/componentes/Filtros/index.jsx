@@ -39,19 +39,33 @@ export default ({
     return [];
   };
 
+  const formatStatus = status => {
+    if (status === "Liberado") {
+      return "LIBERADO";
+    }
+    if (status === "Não liberado") {
+      return "NAO_LIBERADO";
+    }
+    return status;
+  };
+
   const onSubmit = async formValues => {
     try {
       setCarregando(true);
-      const response = await consultaProtocoloPadrao(formValues);
+      const payload = {
+        nome_protocolo: formValues.nome_protocolo,
+        status: formatStatus(formValues.status)
+      };
+      const response = await consultaProtocoloPadrao(payload);
       if (response.status === HTTP_STATUS.OK) {
         setResultado(response.data);
         setTotal(response.data.count);
-        setFiltros(formValues);
-        setCarregando(false);
+        setFiltros(payload);
       }
     } catch (e) {
       toastError("Houve um erro ao tentar filtrar os Protocolos");
     }
+    setCarregando(false);
   };
 
   return (
@@ -73,7 +87,7 @@ export default ({
             </div>
             <div className="col-6">
               <Field
-                label="Nome do Protocolo Padrão"
+                label="Status do Protocolo Padrão"
                 component={AutoCompleteField}
                 dataSource={getStatusProtocolosFiltrado(values.status)}
                 name="status"
