@@ -66,6 +66,7 @@ export default ({ dilog }) => {
             setFiltros={setFiltros}
             setSolicitacoes={setSolicitacoes}
             setTotal={setTotal}
+            dilog={dilog}
           />
           {solicitacoes && (
             <>

@@ -13,7 +13,7 @@ import "./styles.scss";
 
 const FORM_NAME = "entregasDilog";
 
-export default ({ setFiltros, setSolicitacoes, setTotal }) => {
+export default ({ setFiltros, setSolicitacoes, setTotal, dilog }) => {
   const [initialValues] = useState({});
 
   const onSubmit = async values => {
@@ -40,17 +40,17 @@ export default ({ setFiltros, setSolicitacoes, setTotal }) => {
                 />
               </div>
 
-              <div className="col-6">
-                <Field
-                  component={InputText}
-                  label="Nome do Distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
-                  className="input-busca-produto"
-                />
-              </div>
-            </div>
-            <div className="row">
+              {dilog && (
+                <div className="col-6">
+                  <Field
+                    component={InputText}
+                    label="Nome do Distribuidor"
+                    name="nome_distribuidor"
+                    placeholder="Digite o nome do distribuidor"
+                    className="input-busca-produto"
+                  />
+                </div>
+              )}
               <div className="col-3">
                 <Field
                   component={InputComData}
