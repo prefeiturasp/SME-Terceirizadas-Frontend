@@ -67,7 +67,9 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                 <div className={`${bordas}`}>
                   {solicitacao.guias_parciais +
                     solicitacao.guias_recebidas +
-                    solicitacao.guias_nao_recebidas}
+                    solicitacao.guias_nao_recebidas +
+                    solicitacao.guias_reposicao_parcial +
+                    solicitacao.guias_reposicao_total}
                 </div>
                 <div className={`${bordas}`}>{solicitacao.guias_insucesso}</div>
                 <div className={`${bordas}`}>{solicitacao.guias_pendentes}</div>
