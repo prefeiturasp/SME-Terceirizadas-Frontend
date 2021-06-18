@@ -5,10 +5,39 @@ import { CONFERENCIA_GUIA, LOGISTICA, REPOSICAO_GUIA } from "configs/constants";
 import { NavLink } from "react-router-dom";
 
 const ListagemSolicitacoes = ({ guias }) => {
-  function ehReposicao(value) {
-    let statusReposicao = ["Recebimento parcial", "Não recebida"];
-    return statusReposicao.includes(value);
-  }
+  const retornaBotaoAcao = guia => {
+    if (["Recebimento parcial", "Não recebida"].includes(guia.status)) {
+      return (
+        <>
+          <NavLink
+            className="float-left"
+            to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
+          >
+            <span className="link-acoes green">
+              <i className="fas fa-redo" />
+              Repor
+            </span>
+          </NavLink>
+          |
+        </>
+      );
+    } else if (guia.status === "Pendente de conferência") {
+      return (
+        <>
+          <NavLink
+            className="float-left"
+            to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
+          >
+            <span className="link-acoes green">
+              <i className="fas fa-eye" />
+              Conferir
+            </span>
+          </NavLink>
+          |
+        </>
+      );
+    }
+  };
 
   return (
     <section className="resultado-conferir-entrega">
@@ -29,28 +58,8 @@ const ListagemSolicitacoes = ({ guias }) => {
                 <div>{guia.data_entrega}</div>
                 <div>{guia.status}</div>
                 <div>
-                  {ehReposicao(guia.status) ? (
-                    <NavLink
-                      className="float-left"
-                      to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
-                    >
-                      <span className="link-acoes green">
-                        <i className="fas fa-redo" />
-                        Repor
-                      </span>
-                    </NavLink>
-                  ) : (
-                    <NavLink
-                      className="float-left"
-                      to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
-                    >
-                      <span className="link-acoes green">
-                        <i className="fas fa-eye" />
-                        Conferir
-                      </span>
-                    </NavLink>
-                  )}
-                  |
+                  {retornaBotaoAcao(guia)}
+
                   <span className="link-acoes">
                     <i className="fas fa-print" />
                     Imprimir
