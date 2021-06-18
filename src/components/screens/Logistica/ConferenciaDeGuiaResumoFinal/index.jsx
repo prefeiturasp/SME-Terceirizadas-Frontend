@@ -156,10 +156,7 @@ export default ({ reposicao }) => {
           <div className="card-body conferencia-guia-resumo-final">
             <span className="subtitulo">{subtitulo}</span>
             <span className="numero-guia float-right">
-              Guia número:{" "}
-              <strong>
-                {parseInt(guia.numero_guia).toLocaleString("pt-BR")}
-              </strong>
+              Guia número: <strong>{parseInt(guia.numero_guia)}</strong>
             </span>
             <hr />
 
