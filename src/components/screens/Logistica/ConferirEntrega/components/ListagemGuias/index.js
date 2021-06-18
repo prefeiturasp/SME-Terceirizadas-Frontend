@@ -21,7 +21,9 @@ const ListagemSolicitacoes = ({ guias }) => {
           |
         </>
       );
-    } else if (guia.status === "Pendente de conferência") {
+    } else if (
+      ["Pendente de conferência", "Insucesso de entrega"].includes(guia.status)
+    ) {
       return (
         <>
           <NavLink
