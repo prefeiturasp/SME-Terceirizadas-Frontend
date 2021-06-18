@@ -61,6 +61,9 @@ export default () => {
   const autoFillButton = useRef(null);
   const history = useHistory();
 
+  let flagAtraso = false;
+  let flagAlimento = false;
+
   const carregarGuia = async uuid => {
     let response;
     try {
@@ -116,6 +119,8 @@ export default () => {
   const validaOcorrencias = value => {
     if (status === "Recebido") return undefined;
     if (!value || value.length === 0) return "Selecione uma ocorrência";
+    if (flagAtraso && flagAlimento && value.length === 1)
+      return "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
   const validaObservacoes = values => value => {
@@ -215,6 +220,9 @@ export default () => {
     let alimentoFaltante =
       recebidos_fechada === 0 || recebidos_fracionada === 0;
 
+    flagAlimento = alimentoFaltante || alimentoParcial;
+    flagAtraso = dataEhDepois;
+
     if (dataEhDepois || alimentoParcial) values.status = "Parcial";
 
     if (alimentoFaltante) values.status = "Não Recebido";
@@ -224,8 +232,10 @@ export default () => {
       !dataEhDepois &&
       !alimentoParcial &&
       !alimentoFaltante
-    )
+    ) {
       values.status = "Recebido";
+      values.ocorrencias = [];
+    }
 
     if (
       values.recebidos_fechada === undefined &&
@@ -584,6 +594,7 @@ export default () => {
                       className="input-busca-produto"
                       validate={validaOcorrencias}
                       onChange={checaAtraso(values)}
+                      disabled={!["Parcial", "Não Recebido"].includes(status)}
                     />
                   </div>
                 </div>
@@ -611,7 +622,10 @@ export default () => {
                         removeFile={removeFile}
                         toastSuccess={"Imagem incluída com sucesso!"}
                         alignLeft
-                        disabled={arquivoAtual.length > 0}
+                        disabled={
+                          arquivoAtual.length > 0 ||
+                          !["Parcial", "Não Recebido"].includes(status)
+                        }
                       />
                     </article>
                   </div>
