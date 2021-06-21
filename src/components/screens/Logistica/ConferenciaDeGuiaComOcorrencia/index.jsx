@@ -61,8 +61,8 @@ export default () => {
   const autoFillButton = useRef(null);
   const history = useHistory();
 
-  let flagAtraso = false;
-  let flagAlimento = false;
+  let [flagAtraso, setFlagAtraso] = useState(false);
+  let [flagAlimento, setFlagAlimento] = useState(false);
 
   const carregarGuia = async uuid => {
     let response;
@@ -220,8 +220,8 @@ export default () => {
     let alimentoFaltante =
       recebidos_fechada === 0 || recebidos_fracionada === 0;
 
-    flagAlimento = alimentoFaltante || alimentoParcial;
-    flagAtraso = dataEhDepois;
+    setFlagAlimento(alimentoFaltante || alimentoParcial);
+    setFlagAtraso(dataEhDepois);
 
     if (dataEhDepois || alimentoParcial) values.status = "Parcial";
 
