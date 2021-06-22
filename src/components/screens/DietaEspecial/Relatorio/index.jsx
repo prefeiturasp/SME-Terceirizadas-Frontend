@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-
-import { ESCOLA, CODAE } from "../../../../configs/constants";
+// import { ESCOLA } from "../../../../configs/constants";
+import { CODAE } from "../../../../configs/constants";
 import { statusEnum } from "constants/shared";
 import {
   getDietaEspecial,
@@ -20,7 +20,7 @@ import {
 } from "../../../Shareable/Botao/constants";
 
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
+// import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 
@@ -138,14 +138,14 @@ export default class Relatorio extends Component {
               solicitacoesVigentes={solicitacoesVigentes}
               dietaEspecial={dietaEspecial}
             />
-            {dietaEspecial.status_solicitacao ===
+            {/* {dietaEspecial.status_solicitacao ===
               statusEnum.CODAE_A_AUTORIZAR &&
               visao === ESCOLA && (
                 <EscolaCancelaDietaEspecial
                   uuid={dietaEspecial.uuid}
                   onCancelar={() => this.loadSolicitacao(dietaEspecial.uuid)}
                 />
-              )}
+              )} */}
             {dietaEspecial.status_solicitacao ===
               statusEnum.CODAE_A_AUTORIZAR &&
               visao === CODAE && (
