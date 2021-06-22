@@ -134,7 +134,6 @@ export default () => {
   const checaAtraso = values => {
     if (guia.status === "Insucesso de entrega") return;
     if (comparaDataEntrega(values.data_entrega_real)) {
-      console.log("apagando");
       if (!values.ocorrencias) {
         values.ocorrencias = [];
         values.ocorrencias.push("ATRASO_ENTREGA");
@@ -185,10 +184,6 @@ export default () => {
     let newAlimento = alimentoAtual + change;
     values.arquivo = arquivoAtual;
     newValoresForm[alimentoAtual] = Object.assign({}, values);
-    console.log(newValoresForm);
-    console.log(
-      valoresForm[newAlimento] ? valoresForm[newAlimento].ocorrencias : ""
-    );
     setValoresForm(newValoresForm);
 
     values.recebidos_fechada = valoresForm[newAlimento]
@@ -210,7 +205,6 @@ export default () => {
       ? valoresForm[newAlimento].arquivo
       : [];
 
-    console.log(values.ocorrencias);
     setArquivoAtual(newArquivo);
     if (newArquivo) {
       inputFile.current.setState({ files: newArquivo });
@@ -243,7 +237,6 @@ export default () => {
       !alimentoFaltante
     ) {
       values.status = "Recebido";
-      console.log("apagando");
       if (values.ocorrencias && values.ocorrencias.length)
         ocorrenciasApagadas = [...ocorrenciasApagadas, ...values.ocorrencias];
       values.ocorrencias = [];
