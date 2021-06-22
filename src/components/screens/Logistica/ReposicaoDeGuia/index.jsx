@@ -309,7 +309,7 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={InputComData}
-                      label="Data de recebimento da UE"
+                      label="Data de recebimento na Unidade Educacional"
                       name="data_entrega_real"
                       className="data-inicial"
                       tooltipText={TOOLTIP_DATA}
