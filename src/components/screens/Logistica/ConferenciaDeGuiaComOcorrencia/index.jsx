@@ -44,6 +44,8 @@ const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento q
                           será aberta ocorrência a ser detalhada pelo usuário.`;
 const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
+let ocorrenciasApagadas = [];
+
 export default () => {
   const [guia, setGuia] = useState({});
   const [uuid, setUuid] = useState();
@@ -61,8 +63,8 @@ export default () => {
   const autoFillButton = useRef(null);
   const history = useHistory();
 
-  let [flagAtraso, setFlagAtraso] = useState(false);
-  let [flagAlimento, setFlagAlimento] = useState(false);
+  const [flagAtraso, setFlagAtraso] = useState(false);
+  const [flagAlimento, setFlagAlimento] = useState(false);
 
   const carregarGuia = async uuid => {
     let response;
@@ -202,6 +204,7 @@ export default () => {
     let newArquivo = valoresForm[newAlimento]
       ? valoresForm[newAlimento].arquivo
       : [];
+
     setArquivoAtual(newArquivo);
     if (newArquivo) {
       inputFile.current.setState({ files: newArquivo });
@@ -234,7 +237,12 @@ export default () => {
       !alimentoFaltante
     ) {
       values.status = "Recebido";
+      if (values.ocorrencias && values.ocorrencias.length)
+        ocorrenciasApagadas = [...ocorrenciasApagadas, ...values.ocorrencias];
       values.ocorrencias = [];
+    } else if (ocorrenciasApagadas.length) {
+      values.ocorrencias = ocorrenciasApagadas;
+      ocorrenciasApagadas = [];
     }
 
     if (
