@@ -5,8 +5,18 @@ import { CONFERENCIA_GUIA, LOGISTICA, REPOSICAO_GUIA } from "configs/constants";
 import { NavLink } from "react-router-dom";
 
 const ListagemSolicitacoes = ({ guias }) => {
+  const checaReposicao = guia => {
+    let alimentosPendentes = guia.alimentos.filter(
+      alimento => alimento.embalagens[0].qtd_a_receber > 0
+    );
+    return alimentosPendentes.length > 0;
+  };
+
   const retornaBotaoAcao = guia => {
-    if (["Recebimento parcial", "Não recebida"].includes(guia.status)) {
+    if (
+      ["Recebimento parcial", "Não recebida"].includes(guia.status) &&
+      checaReposicao(guia)
+    ) {
       return (
         <>
           <NavLink
