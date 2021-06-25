@@ -18,12 +18,16 @@ class RelatorioBase extends React.Component {
   render() {
     const atual = {
       href: "#",
-      titulo: "Relatório"
+      titulo: this.props.tituloPagina
     };
     const anteriores = [
       {
-        href: `/`,
-        titulo: ""
+        href: `/painel-dieta-especial`,
+        titulo: "Dieta Especial"
+      },
+      {
+        href: `/solicitacoes-dieta-especial/solicitacoes-pendentes`,
+        titulo: "Recebidas"
       }
     ];
 
@@ -39,6 +43,7 @@ class RelatorioBase extends React.Component {
 // Escola
 export const RelatorioEscola = () => (
   <RelatorioBase
+    tituloPagina="Relatório"
     visao={ESCOLA}
     ModalNaoAprova={ModalCancelaDietaEspecial}
     endpointNaoAprovaSolicitacao={escolaCancelaSolicitacao}
@@ -50,6 +55,7 @@ export const RelatorioEscola = () => (
 // CODAE
 export const RelatorioCODAE = () => (
   <RelatorioBase
+    tituloPagina="Dieta Especial - Solicitação de Inclusão"
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
@@ -65,6 +71,7 @@ export const RelatorioCODAE = () => (
 // Terceirizada
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
+    tituloPagina="Relatório"
     visao={TERCEIRIZADA}
     toastAprovaMensagem={"Ciência da Dieta Especial enviado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao tomar ciência da Dieta Especial"}
