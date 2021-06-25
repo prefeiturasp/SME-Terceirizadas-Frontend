@@ -1,3 +1,27 @@
 .tem-solicitacao-cadastro-produto {
   color: #198459 !important;
 }
+
+.sectionName {
+  color: #198459;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: Roboto;
+  font-style: normal;
+}
+
+.form-control {
+  font-weight: bold !important;
+}
+
+.observacoes {
+  background: #dadada;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+  padding: 1.5%;
+  min-height: 38px;
+  p {
+    color: #42474a;
+    font-weight: 900;
+  }
+}
