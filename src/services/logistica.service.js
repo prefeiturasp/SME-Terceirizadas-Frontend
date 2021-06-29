@@ -131,3 +131,9 @@ export const getEntregasDilog = async params => {
   const url = `/solicitacao-remessa/lista-requisicoes-confirmadas/`;
   return await axios.get(url, { params });
 };
+
+export const gerarExcelEntregas = async params => {
+  const url = `/solicitacao-remessa/exporta-excel-visao-entregas/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_entregas.xlsx");
+};
