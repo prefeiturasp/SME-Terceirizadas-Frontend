@@ -28,24 +28,22 @@ const DadosDietaEspecial = ({ values }) => {
     />
   );
 
-  const anexos = values.anexos
-    .filter(anexo => anexo.eh_laudo_alta)
-    .map((anexo, key) => {
-      return (
-        <div className="col-2 mb-3" key={key}>
-          <p>
-            <b>Anexo {key + 1}</b>
-          </p>
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            icon={BUTTON_ICON.ATTACH}
-            className="w-100"
-            onClick={() => downloadAnexo(anexo.arquivo)}
-          />
-        </div>
-      );
-    });
+  const anexos = values.anexos.map((anexo, key) => {
+    return (
+      <div className="col-2 mb-3" key={key}>
+        <p>
+          <b>Anexo {key + 1}</b>
+        </p>
+        <Botao
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          icon={BUTTON_ICON.ATTACH}
+          className="w-100"
+          onClick={() => downloadAnexo(anexo.arquivo)}
+        />
+      </div>
+    );
+  });
 
   return (
     <div className="row mb-3">
