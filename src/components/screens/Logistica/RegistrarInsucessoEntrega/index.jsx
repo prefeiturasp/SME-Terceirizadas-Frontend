@@ -88,7 +88,7 @@ export default () => {
   const onSubmit = async values => {
     values.hora_tentativa = HoraRecebimento;
     values.guia = uuid;
-    values.arquivo = arquivo[0].arquivo;
+    if (arquivo[0]) values.arquivo = arquivo[0].arquivo;
   };
 
   const validaHoraRecebimento = value => {
@@ -174,7 +174,7 @@ export default () => {
                       options={[
                         { uuid: "", nome: "Selecione" },
                         {
-                          uuid: "UE_FECHADA",
+                          uuid: "UNIDADE_FECHADA",
                           nome: "Unidade Educacional Fechada"
                         },
                         { uuid: "OUTROS", nome: "Outros" }
