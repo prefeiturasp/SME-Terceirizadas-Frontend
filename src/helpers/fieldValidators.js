@@ -146,9 +146,7 @@ export const numeroInteiro = value =>
   value ? (!/\D/.test(value) ? undefined : "Somente números") : [];
 
 export const validaCPF = value => {
-  if (value === undefined) {
-    return undefined;
-  }
+  if (!value) return undefined;
   let cpf = value.replace(/[^\d]+/g, "");
 
   if (cpf === "") return false;
