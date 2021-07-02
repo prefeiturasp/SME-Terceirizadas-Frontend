@@ -22,6 +22,8 @@ pipeline {
 
        stage('Testes') {
           steps {
+                sh 'npm cache clean --force'
+                sh 'rf node_modules'
                 sh 'npm install'
                 sh 'npm run-script coverage'
                 sh 'npm run-script eslint'
