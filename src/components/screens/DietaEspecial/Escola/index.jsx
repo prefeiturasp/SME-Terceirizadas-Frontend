@@ -444,18 +444,13 @@ class solicitacaoDietaEspecial extends Component {
                   </div>
                 </FormSection>
               </FormSection>
-              {solicitacoesVigentes && (
-                <SolicitacaoVigente
-                  solicitacoesVigentes={solicitacoesVigentes}
-                />
-              )}
               <hr />
 
-              <Prescritor />
+              <Prescritor pertence_a_escola={!this.state.pertence_a_escola} />
 
               <hr />
 
-              <Laudo />
+              <Laudo pertence_a_escola={!this.state.pertence_a_escola} />
             </>
           )}
 
@@ -482,7 +477,10 @@ class solicitacaoDietaEspecial extends Component {
                 })
               )}
               style={BUTTON_STYLE.GREEN}
-              disabled={this.state.pertence_a_escola !== true}
+              disabled={
+                this.state.pertence_a_escola !== true &&
+                this.state.aluno_nao_matriculado !== true
+              }
             />
           </article>
         </div>
