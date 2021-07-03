@@ -32,8 +32,6 @@ pipeline {
 
                 sh 'npm install -g jshint'
                 sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
-                
-
             }
         }
 
@@ -62,7 +60,6 @@ pipeline {
                 dockerImage.push('dev')
             }
           }
-          sh 'echo build docker image desenvolvimento'
           sh "docker rmi $imagename:dev"
         }
        }
@@ -78,7 +75,6 @@ pipeline {
           sed -e "s/\\${RANCHER_URL}/$RANCHER_URL_DEV/" -e "s/\\${RANCHER_TOKEN}/$RANCHER_TOKEN_DEV/" $HOME/config_template > $HOME/.kube/config
           set -x
           '''
-          sh 'kubectl get nodes'
           sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
           sh 'rm -f $HOME/.kube/config'
         }
@@ -89,24 +85,14 @@ pipeline {
            branch 'homolog'
          }
         steps {
-
-
+          sh 'echo build docker image homologação'
           script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "296be01b-2eab-415b-b6f2-bce1f7e35839",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
+            dockerImage = docker.build imagename
+            docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
+                dockerImage.push('homolog')
+            }
           }
+          sh "docker rmi $imagename:homolog"
         }
        }
 
@@ -119,28 +105,14 @@ pipeline {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
             input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'ollyver_ottoboni, kelwy_oliveira, rodolfo_lima, anderson_morais, luis_zimmermann, rodolpho_azeredo'
           }
-         sh 'echo Deploying ambiente homologacao'
-
-
-
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-
-              //JOB DE BUILD
-              jobId: "a38d1b78-9461-4ed2-a3cb-a316e3cb5b04",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
+          sh 'echo Deploying ambiente homologacao'
+          sh '''
+          set +x
+          sed -e "s/\\${RANCHER_URL}/$RANCHER_URL_HOM/" -e "s/\\${RANCHER_TOKEN}/$RANCHER_TOKEN_HOM/" $HOME/config_template > $HOME/.kube/config
+          set -x
+          '''
+          sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
+          sh 'rm -f $HOME/.kube/config'                   
         }
        }
 
@@ -150,23 +122,14 @@ pipeline {
            branch 'master'
          }
         steps {
-
+          sh 'echo build docker image produção'
           script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "bd4866f7-7b67-4860-bce2-68106775e3e4",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-              //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
+            dockerImage = docker.build imagename
+            docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
+                dockerImage.push()
+            }
           }
+          sh "docker rmi $imagename:dev"
         }
        }
 
@@ -179,27 +142,14 @@ pipeline {
           // telegramSend("${JOB_NAME}...O Build ${BUILD_DISPLAY_NAME} - Requer uma aprovação para deploy !!!\n Consulte o log para detalhes -> [Job logs](${env.BUILD_URL}console)\n")
             input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'ollyver_ottoboni, kelwy_oliveira, rodolfo_lima, anderson_morais'
           }
-            sh 'echo Build image docker Produção'
-
-
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-
-              //JOB DE DEPLOY
-              jobId: "71be6128-4100-4d65-b0a5-b4dd45d91a14",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
+          sh 'echo Deploying ambiente produção'
+          sh '''
+          set +x
+          sed -e "s/\\${RANCHER_URL}/$RANCHER_URL_PRD/" -e "s/\\${RANCHER_TOKEN}/$RANCHER_TOKEN_PRD/" $HOME/config_template > $HOME/.kube/config
+          set -x
+          '''
+          sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
+          sh 'rm -f $HOME/.kube/config'  
         }
        }
     }
