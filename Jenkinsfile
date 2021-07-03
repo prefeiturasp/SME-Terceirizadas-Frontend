@@ -4,7 +4,6 @@ pipeline {
       registryCredential = 'regsme'
       dockerImage = ''
     }
-
     agent {
       node {
         label 'node-10-rc'
@@ -18,6 +17,12 @@ pipeline {
     }
 
     stages {
+      
+       stage('CheckOut') {
+        steps {
+          checkout scm
+        }
+       }
       
        stage('Testes') {
           steps {
