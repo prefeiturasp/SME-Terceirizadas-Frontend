@@ -24,7 +24,6 @@ pipeline {
           steps {
                 sh 'id -un'
                 sh 'npm install'
-                #sh 'npm run-script coverage'
                 sh 'npm run-script eslint'
                 sh 'npm run-script prettier'
 
