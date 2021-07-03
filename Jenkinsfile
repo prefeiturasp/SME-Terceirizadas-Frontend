@@ -25,6 +25,7 @@ pipeline {
       
        stage('Testes') {
           steps {
+                sh '''sed -e "s/\\${RANCHER_URL}/$RANCHER_URL_DEV/" -e "s/\\${RANCHER_TOKEN}/$RANCHER_TOKEN_DEV/" $HOME/config_template > $HOME/.kube/config'''
                 sh 'id -un'
                 sh 'npm install'
                 sh 'npm run-script eslint'
