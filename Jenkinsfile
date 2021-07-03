@@ -1,4 +1,10 @@
 pipeline {
+    environment {
+      imagename = "registry.sme.prefeitura.sp.gov.br/sigpae/sme-sigpae-frontend"
+      registryCredential = 'regsme'
+      dockerImage = ''
+    }
+
     agent {
       node {
         label 'node-10-rc'
@@ -12,14 +18,7 @@ pipeline {
     }
 
     stages {
-
-
-       stage('CheckOut') {
-        steps {
-          checkout scm
-        }
-       }
-
+      
        stage('Testes') {
           steps {
                 sh 'id -un'
@@ -53,15 +52,14 @@ pipeline {
          }
         steps {
           sh 'echo build docker image desenvolvimento'
-          sh 'docker build -t registry.sme.prefeitura.sp.gov.br/sigpae/sme-sigpae-frontend:dev .'
-
           script {
-            docker.withRegistry( 'registry.sme.prefeitura.sp.gov.br', regsme ) {
+            dockerImage = docker.build imagename
+            docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
                 dockerImage.push('dev')
             }
           }
           sh 'echo build docker image desenvolvimento'
-          sh "docker rmi $imagename:latest"
+          sh "docker rmi $imagename:dev"
         }
        }
 
@@ -69,31 +67,13 @@ pipeline {
          when {
            branch 'development'
          }
-        steps {
-
-
-
+        steps {          
           sh 'echo Deploy ambiente desenvolvimento'
-          script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "810baebb-1855-4911-ab1b-d8a19d7e4011",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-          }
+          sh 'sed -e "s/\${RANCHER_URL}/$RANCHER_URL_DEV/" -e "s/\${RANCHER_TOKEN}/$RANCHER_TOKEN_DEV/" $HOME/config_template > $HOME/.kube/config'
+          sh 'kubectl get nodes'
+          sh 'rm -f $HOME/.kube/config'
         }
        }
-
-
 
         stage('Build HOM') {
          when {
