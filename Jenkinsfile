@@ -1,7 +1,7 @@
 pipeline {
     agent {
       node {
-        label 'sme-nodes10'
+        label 'node-10-rc'
 	    }
     }
 
@@ -53,23 +53,15 @@ pipeline {
          }
         steps {
           sh 'echo build docker image desenvolvimento'
+          sh 'docker build -t registry.sme.prefeitura.sp.gov.br/sigpae/sme-sigpae-frontend:dev .'
 
           script {
-            step([$class: "RundeckNotifier",
-              includeRundeckLogs: true,
-              jobId: "8330ae17-d4e0-4ef1-9318-870559991170",
-              nodeFilters: "",
-              //options: """
-              //     PARAM_1=value1
-               //    PARAM_2=value2
-              //     PARAM_3=
-              //     """,
-              rundeckInstance: "Rundeck-SME",
-              shouldFailTheBuild: true,
-              shouldWaitForRundeckJob: true,
-              tags: "",
-              tailLog: true])
-           }
+            docker.withRegistry( 'registry.sme.prefeitura.sp.gov.br', regsme ) {
+                dockerImage.push('dev')
+            }
+          }
+          sh 'echo build docker image desenvolvimento'
+          sh "docker rmi $imagename:latest"
         }
        }
 
