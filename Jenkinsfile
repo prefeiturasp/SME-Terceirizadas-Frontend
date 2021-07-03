@@ -58,9 +58,9 @@ pipeline {
         steps {
           sh 'echo build docker image desenvolvimento'
           script {
-            dockerImage = docker.build imagename
+            dockerImage = docker.build env.imagename + ":dev"
             docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
-                dockerImage.push('dev')
+                dockerImage.push()
             }
           }
           sh 'echo build docker image desenvolvimento'
