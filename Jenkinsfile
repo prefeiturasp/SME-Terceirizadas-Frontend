@@ -22,12 +22,11 @@ pipeline {
 
        stage('Testes') {
           steps {
-                sh 'npm cache clean --force'
-                sh 'rm -rf node_modules'
+                sh 'id -un'
                 sh 'npm install'
+                sh 'npm run-script coverage'
                 sh 'npm run-script eslint'
                 sh 'npm run-script prettier'
-                sh 'npm run-script coverage'
 
                 sh 'npm install -g jshint'
                 sh 'jshint --verbose --reporter=checkstyle src > checkstyle-jshint.xml || exit 0'
