@@ -2,7 +2,6 @@ pipeline {
     environment {
       imagename = "registry.sme.prefeitura.sp.gov.br/sigpae/sme-sigpae-frontend"
       registryCredential = 'regsme'
-      dockerImage = ''
     }
     agent {
       node {
@@ -58,9 +57,9 @@ pipeline {
         steps {
           sh 'echo build docker image desenvolvimento'
           script {
-            dockerImage = docker.build env.imagename + ":dev"
+            dockerImage = docker.build imagename
             docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
-                dockerImage.push()
+                dockerImage.push('dev')
             }
           }
           sh 'echo build docker image desenvolvimento'
