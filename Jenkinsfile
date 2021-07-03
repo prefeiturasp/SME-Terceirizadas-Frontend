@@ -73,7 +73,7 @@ pipeline {
          }
         steps {          
           sh 'echo Deploy ambiente desenvolvimento'
-          sh 'sed -e "s/\${RANCHER_URL}/$RANCHER_URL_DEV/" -e "s/\${RANCHER_TOKEN}/$RANCHER_TOKEN_DEV/" $HOME/config_template > $HOME/.kube/config'
+          sh '''sed -e "s/\${RANCHER_URL}/$RANCHER_URL_DEV/" -e "s/\${RANCHER_TOKEN}/$RANCHER_TOKEN_DEV/" $HOME/config_template > $HOME/.kube/config'''
           sh 'kubectl get nodes'
           sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
           sh 'rm -f $HOME/.kube/config'
