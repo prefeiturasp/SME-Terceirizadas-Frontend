@@ -1,75 +1,61 @@
-import "./style.scss";
+import React from "react";
+import { Field } from "react-final-form";
+import Multiselect from "multiselect-react-dropdown";
 
-import React, { Component } from "react";
+const Diagnosticos = ({
+  diagnosticos,
+  setDiagnosticosSelecionados,
+  selectedValues,
+  alergiasError,
+  setAlergiasError
+}) => {
+  const onSelect = values => {
+    if (alergiasError) {
+      setAlergiasError(false);
+    }
+    setDiagnosticosSelecionados(formatarDiagnostico(values));
+  };
 
-import Select from "../../../../../../../Shareable/Select";
-import Botao from "../../../../../../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_ICON
-} from "../../../../../../../Shareable/Botao/constants";
+  const onRemove = values => {
+    setDiagnosticosSelecionados(formatarDiagnostico(values));
+  };
 
-export default class Diagnosticos extends Component {
-  render() {
-    const { selecionados, diagnosticos } = this.props;
-    return (
-      <div>
-        {selecionados.map((opcao, key) => {
-          const options =
-            opcao === ""
-              ? [{ uuid: "", nome: "Selecione" }].concat(diagnosticos)
-              : diagnosticos;
-          return (
-            <div key={key} className="row" id="diagnosticos">
-              <div className="col-8">
-                <div className="input title">
-                  <span className="required-asterisk">*</span>
-                  <label className="col-form-label title">
-                    Relação por Diagnóstico
-                  </label>
-                  <Select
-                    naoDesabilitarPrimeiraOpcao
-                    onChange={event =>
-                      this.props.onSelect(key, event.target.value)
-                    }
-                    options={options}
-                    input={{
-                      value: opcao,
-                      onChange: event =>
-                        this.props.onSelect(key, event.target.value)
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="col-2">
-                {opcao === "" || key < selecionados.length - 1 ? (
-                  ""
-                ) : (
-                  <Botao
-                    texto="Adicionar"
-                    icon={BUTTON_ICON.PLUS}
-                    onClick={() => this.props.addOption()}
-                    style={BUTTON_STYLE.BLUE_OUTLINE}
-                  />
-                )}
-              </div>
-              <div className="col-2">
-                {opcao === "" ? (
-                  ""
-                ) : (
-                  <Botao
-                    texto="Excluir"
-                    icon={BUTTON_ICON.TRASH}
-                    onClick={() => this.props.removeOption(key)}
-                    style={BUTTON_STYLE.BLUE}
-                    className="float-right"
-                  />
-                )}
-              </div>
-            </div>
-          );
-        })}
+  const formatarDiagnostico = values => {
+    return values.map(value => value.uuid);
+  };
+
+  return (
+    <div className="row">
+      <div className="col-12 pt-2 input title">
+        <span className="required-asterisk">*</span>
+        <label>Relação por Diagnóstico</label>
       </div>
-    );
-  }
-}
+      <div className="col-12">
+        <Field
+          component={Multiselect}
+          name="alergias_intolerancias"
+          options={diagnosticos}
+          onSelect={onSelect}
+          onRemove={onRemove}
+          selectedValues={selectedValues}
+          displayValue="nome"
+          showArrow={true}
+          closeIcon="close"
+          showCheckbox
+          placeholder=""
+          closeOnSelect={false}
+          avoidHighlightFirstOption={true}
+          caseSensitiveSearch={true}
+          emptyRecordMsg="Nenhuma opção encontrada"
+        />
+        {alergiasError && (
+          <p className="mt-2" style={{ color: "#a50e05", fontSize: "12px" }}>
+            Campo obrigatório
+          </p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Diagnosticos;
