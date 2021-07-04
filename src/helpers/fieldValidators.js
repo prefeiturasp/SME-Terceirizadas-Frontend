@@ -33,6 +33,12 @@ export const peloMenosUmCaractere = value => {
     : "Pelo menos um caractere deve ser digitado";
 };
 
+export const selectValidate = value => {
+  let valorLimpo = strip_tags(value);
+  valorLimpo = valorLimpo.replace(/&nbsp;/g, "");
+  return /[a-zA-Z0-9]/i.test(valorLimpo) ? undefined : "Campo obrigatório";
+};
+
 export const textAreaRequiredAndAtLeastOneCharacter = value => {
   let result = textAreaRequired(value);
   if (result !== undefined) {

@@ -1,8 +1,8 @@
 import React from "react";
 import StatefuMultiSelect from "./StatefuMultiSelect";
 import "./style.scss";
-import { HelpText } from "../../../../../../../../Shareable/HelpText";
-import InputErroMensagem from "../../../../../../../../Shareable/Input/InputErroMensagem";
+import { HelpText } from "components/Shareable/HelpText";
+import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
 
 export default class MultiSelect extends React.Component {
   constructor(props) {
