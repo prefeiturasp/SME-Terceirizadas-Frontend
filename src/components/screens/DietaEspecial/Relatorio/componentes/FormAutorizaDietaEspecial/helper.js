@@ -12,3 +12,39 @@ export const validateSubstituicao = substituicao => {
     ? undefined
     : `Falta preencher ${camposNaoPreenchidos.join(", ")}`;
 };
+
+export const formataOpcoesClassificacaoDieta = classificacoesDieta => {
+  const opcoes = classificacoesDieta.map(classificacao => {
+    return { nome: classificacao.nome, uuid: classificacao.id.toString() };
+  });
+  return opcoes;
+};
+
+export const formataSubstituicoes = dietaEspecial => {
+  if (dietaEspecial.substituicoes.length) {
+    const substituicoes = dietaEspecial.substituicoes.map(substituicao => {
+      const substitutos = substituicao.alimentos_substitutos.map(
+        alimento => alimento.uuid
+      );
+      return {
+        alimento: String(substituicao.alimento.id),
+        tipo: substituicao.tipo === "Substituir" ? "S" : "I",
+        substitutos: substitutos
+      };
+    });
+    return substituicoes;
+  }
+  return [{}];
+};
+
+export const formataAlergias = dietaEspecial => {
+  const alergias = dietaEspecial.alergias_intolerancias.map(alergia => {
+    const id = alergia.id.toString();
+    return {
+      uuid: id,
+      nome: alergia.descricao
+    };
+  });
+
+  return alergias;
+};
