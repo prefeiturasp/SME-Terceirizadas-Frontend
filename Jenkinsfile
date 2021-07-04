@@ -129,7 +129,7 @@ pipeline {
                 dockerImage.push()
             }
           }
-          sh "docker rmi $imagename:dev"
+          sh "docker rmi $imagename:latest"
         }
        }
 
