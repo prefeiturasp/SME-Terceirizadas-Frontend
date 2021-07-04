@@ -49,9 +49,13 @@ export default class ModalNegarSolicitacao extends Component {
 
   render() {
     const { motivosNegacao } = this.state;
-    const { showModal, closeModal } = this.props;
+    const { showModalNegaDieta, closeModal } = this.props;
     return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+      <Modal
+        dialogClassName="modal-90w"
+        show={showModalNegaDieta}
+        onHide={closeModal}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
         </Modal.Header>

@@ -303,6 +303,9 @@ export const createSolicitacaoAlteracaoUE = async payload => {
 export const getNomesProtocolos = async () =>
   axios.get("/protocolo-padrao-dieta-especial/nomes/");
 
+export const getNomesProtocolosValidos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/lista-protocolos-liberados/");
+
 export const getStatusProtocolos = async () =>
   axios.get("/protocolo-padrao-dieta-especial/lista-status/");
 
@@ -317,4 +320,8 @@ export const editaProtocoloPadraoDietaEspecial = async payload => {
     `/protocolo-padrao-dieta-especial/${payload.uuid}/`,
     payload
   );
+};
+
+export const consultaHistoricoProtocoloPadrao = async uuid => {
+  return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
 };
