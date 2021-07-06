@@ -1,12 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Botao from "components/Shareable/Botao";
+import ModalHistoricoProtocoloPadrao from "components/Shareable/ModalHistoricoProtocoloPadrao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+
 export default ({ protocoloPadrao, idx, selecionado }) => {
   const history = useHistory();
+  const [visible, setVisible] = useState(false);
+  const [historico, setHistorico] = useState([]);
+
+  const visualizarModal = () => {
+    setHistorico(protocoloPadrao.historico);
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
 
   return (
     <>
@@ -17,10 +30,18 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             className="float-right mt-3 mb-3 ml-3"
-            onClick={() => {}}
+            onClick={visualizarModal}
           />
         </td>
       </tr>
+      {historico && (
+        <ModalHistoricoProtocoloPadrao
+          visible={visible}
+          onOk={handleCancel}
+          onCancel={handleCancel}
+          history={historico}
+        />
+      )}
       <tr className={selecionado === idx ? "" : "d-none"}>
         <td colSpan="2">
           <p className="data-title">Orientações Gerais</p>
