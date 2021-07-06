@@ -18,12 +18,16 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
         setProtocoloPadrao(respProtocoloPadrao.data);
         const substituicoes = respProtocoloPadrao.data.substituicoes.map(
           substituicao => {
+            const alimentos_substitutos = substituicao.alimentos_substitutos.map(
+              alimento => alimento.uuid
+            );
+            const substitutos = substituicao.substitutos.map(
+              alimento => alimento.uuid
+            );
             return {
               alimento: String(substituicao.alimento.id),
               tipo: substituicao.tipo === "Substituir" ? "S" : "I",
-              substitutos: substituicao.alimentos_substitutos.map(
-                alimento => alimento.uuid
-              )
+              substitutos: alimentos_substitutos.concat(substitutos)
             };
           }
         );

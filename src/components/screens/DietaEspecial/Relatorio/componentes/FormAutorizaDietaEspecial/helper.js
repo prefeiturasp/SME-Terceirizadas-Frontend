@@ -23,13 +23,16 @@ export const formataOpcoesClassificacaoDieta = classificacoesDieta => {
 export const formataSubstituicoes = dietaEspecial => {
   if (dietaEspecial.substituicoes.length) {
     const substituicoes = dietaEspecial.substituicoes.map(substituicao => {
-      const substitutos = substituicao.alimentos_substitutos.map(
+      const alimentos_substitutos = substituicao.alimentos_substitutos.map(
+        alimento => alimento.uuid
+      );
+      const substitutos = substituicao.substitutos.map(
         alimento => alimento.uuid
       );
       return {
         alimento: String(substituicao.alimento.id),
         tipo: substituicao.tipo === "Substituir" ? "S" : "I",
-        substitutos: substitutos
+        substitutos: substitutos.concat(alimentos_substitutos)
       };
     });
     return substituicoes;

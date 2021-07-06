@@ -57,13 +57,16 @@ export default ({ uuid }) => {
   function getInitialValues() {
     if (protocoloPadrao) {
       const substituicoes = protocoloPadrao.substituicoes.map(substituicao => {
-        const substitutos = substituicao.alimentos_substitutos.map(
+        const alimentos_substitutos = substituicao.alimentos_substitutos.map(
+          alimento => alimento.uuid
+        );
+        const substitutos = substituicao.substitutos.map(
           alimento => alimento.uuid
         );
         return {
           alimento: String(substituicao.alimento.id),
           tipo: substituicao.tipo === "Substituir" ? "S" : "I",
-          substitutos: substitutos
+          substitutos: substitutos.concat(alimentos_substitutos)
         };
       });
       return {
