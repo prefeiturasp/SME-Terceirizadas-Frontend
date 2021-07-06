@@ -59,6 +59,11 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
                               return <li key={idxAlimento}>{alimento.nome}</li>;
                             }
                           )}
+                          {substituicao.substitutos.map(
+                            (alimento, idxAlimento) => {
+                              return <li key={idxAlimento}>{alimento.nome}</li>;
+                            }
+                          )}
                         </ul>
                       </td>
                     </tr>
