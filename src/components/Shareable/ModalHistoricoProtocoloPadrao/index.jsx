@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import React, { Component } from "react";
 
 import "antd/dist/antd.css";
+import moment from "moment";
 
 export default class ModalHistoricoProtocoloPadrao extends Component {
   constructor(props) {
@@ -67,6 +68,23 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return { changes: [] };
   };
 
+  ajusta_nome = campo => {
+    if (campo === "nome_protocolo") {
+      return "Nome Protocolo";
+    } else if (campo === "status") {
+      return "Status";
+    } else if (campo === "orientacoes_gerais") {
+      return "Orientações Gerais";
+    }
+  };
+
+  ajusta_valor = (campo, valor_campo) => {
+    if (campo === "status" && valor_campo === "NAO_LIBERADO") {
+      return "NÃO LIBERADO";
+    }
+    return valor_campo;
+  };
+
   render() {
     const { visible, onOk, onCancel, history } = this.props;
     const { histSelecionado } = this.state;
@@ -112,20 +130,36 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                         {hist.updated_at !== undefined && (
                           <>
                             <div className="hora">
-                              {hist.updated_at.split(" ")[0]}
+                              {
+                                moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
                             </div>
                             <div className="hora">
-                              {hist.updated_at.split(" ")[1]}
+                              {
+                                moment(hist.updated_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
                             </div>
                           </>
                         )}
                         {hist.created_at !== undefined && (
                           <>
                             <div className="hora">
-                              {hist.created_at.split(" ")[0]}
+                              {
+                                moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
                             </div>
                             <div className="hora">
-                              {hist.created_at.split(" ")[1]}
+                              {
+                                moment(hist.created_at, "YYYY-MM-DD HH:mm:ss")
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
                             </div>
                           </>
                         )}
@@ -156,20 +190,48 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                         {histSelecionado.updated_at !== undefined && (
                           <>
                             <div className="hora">
-                              {histSelecionado.updated_at.split(" ")[0]}
+                              {
+                                moment(
+                                  histSelecionado.updated_at,
+                                  "YYYY-MM-DD HH:mm:ss"
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
                             </div>
                             <div className="hora">
-                              {histSelecionado.updated_at.split(" ")[1]}
+                              {
+                                moment(
+                                  histSelecionado.updated_at,
+                                  "YYYY-MM-DD HH:mm:ss"
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
                             </div>
                           </>
                         )}
                         {histSelecionado.created_at !== undefined && (
                           <>
                             <div className="hora">
-                              {histSelecionado.created_at.split(" ")[0]}
+                              {
+                                moment(
+                                  histSelecionado.created_at,
+                                  "YYYY-MM-DD HH:mm:ss"
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[0]
+                              }
                             </div>
                             <div className="hora">
-                              {histSelecionado.created_at.split(" ")[1]}
+                              {
+                                moment(
+                                  histSelecionado.created_at,
+                                  "YYYY-MM-DD HH:mm:ss"
+                                )
+                                  .format("DD/MM/YYYY HH:mm:ss")
+                                  .split(" ")[1]
+                              }
                             </div>
                           </>
                         )}
@@ -179,6 +241,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                       this.filterFieldsProtocolos(histSelecionado).length >
                         0 && (
                         <table className="table table-bordered table-alimentacao">
+                          <col style={{ width: "30%" }} />
+                          <col style={{ width: "30%" }} />
+                          <col style={{ width: "40%" }} />
                           <thead>
                             <tr className="table-head-alimentacao">
                               <th>Campo</th>
@@ -195,18 +260,24 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                     key={`${index}_${change.field}`}
                                     className="table-body-alimentacao"
                                   >
-                                    <td>{change.field}</td>
+                                    <td>{this.ajusta_nome(change.field)}</td>
                                     <td>
                                       <div
                                         dangerouslySetInnerHTML={{
-                                          __html: change.from
+                                          __html: this.ajusta_valor(
+                                            change.field,
+                                            change.from
+                                          )
                                         }}
                                       />
                                     </td>
                                     <td>
                                       <div
                                         dangerouslySetInnerHTML={{
-                                          __html: change.to
+                                          __html: this.ajusta_valor(
+                                            change.field,
+                                            change.to
+                                          )
                                         }}
                                       />
                                     </td>
@@ -236,10 +307,13 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                       key={`${index}_table`}
                                       className="table table-bordered table-alimentacao"
                                     >
+                                      <col style={{ width: "30%" }} />
+                                      <col style={{ width: "30%" }} />
+                                      <col style={{ width: "40%" }} />
                                       <thead>
                                         <tr
                                           key={`${index}_header`}
-                                          className="table-head-alimentacao"
+                                          className="table-head-alimentacao "
                                         >
                                           <th>Campo</th>
                                           <th>De</th>
@@ -252,7 +326,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             key={`${index}_tipo`}
                                             className="table-body-alimentacao"
                                           >
-                                            <td>tipo</td>
+                                            <td>Tipo</td>
                                             <td>
                                               <div
                                                 dangerouslySetInnerHTML={{
