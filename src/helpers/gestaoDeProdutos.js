@@ -53,7 +53,7 @@ const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
 };
 const CARD_AGUARDANDO_ANALISE_SENSORIAL = {
   id: CARD_ID.AGUARDANDO_ANALISE_SENSORIAL,
-  titulo: "Aguardando análise sensoriais",
+  titulo: "Aguardando amostra para análise sensorial",
   titulo_menu: "Ag. análise sensoriais",
   icon: "fa-search",
   style: "card-awaiting-sensory",
