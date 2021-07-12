@@ -118,6 +118,7 @@ const TabelaProdutos = ({
                           setAtivos={setAtivos}
                           setProdutos={setProdutos}
                           produtos={produtos}
+                          produto={produto}
                           setCarregando={setCarregando}
                           rastro_terceirizada={
                             produto.ultima_homologacao.rastro_terceirizada

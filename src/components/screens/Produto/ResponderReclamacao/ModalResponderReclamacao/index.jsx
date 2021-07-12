@@ -4,6 +4,7 @@ import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import { InputText } from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
@@ -44,7 +45,7 @@ export default class ModalResponderReclamacao extends Component {
   };
 
   render() {
-    const { showModal, closeModal } = this.props;
+    const { showModal, closeModal, produto } = this.props;
     return (
       <Modal
         dialogClassName="modal-responder-reclamacao modal-90w"
@@ -54,6 +55,42 @@ export default class ModalResponderReclamacao extends Component {
         <Modal.Header className="border-0">
           <Modal.Title>Responder reclamação de produto</Modal.Title>
         </Modal.Header>
+        <Modal.Body>
+          <Form
+            onSubmit={this.onSubmit}
+            initialValues={produto}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="form-row row-filds-produto">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nome do Produto"
+                      name="nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Marca"
+                      name="marca.nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Fabricante"
+                      name="fabricante.nome"
+                      disabled={true}
+                    />
+                  </div>
+                </div>
+              </form>
+            )}
+          />
+        </Modal.Body>
         <Form
           onSubmit={this.onSubmit}
           initialValues={{}}
