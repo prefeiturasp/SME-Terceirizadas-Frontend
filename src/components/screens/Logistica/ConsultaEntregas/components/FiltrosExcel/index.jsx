@@ -12,6 +12,7 @@ import { Switch, Checkbox } from "antd";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { STATUS_GUIA } from "../../../../const.js";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export default ({ solicitacao }) => {
   const [show, setShow] = useState(false);
@@ -30,10 +31,15 @@ export default ({ solicitacao }) => {
     let uuid = solicitacao.uuid;
     let payload = montaPayload(uuid);
     const params = gerarParametrosConsulta(payload);
-    gerarExcelEntregas(params).then(() => {
-      setLoading(false);
-      handleClose();
-    });
+    gerarExcelEntregas(params)
+      .then(() => {
+        setLoading(false);
+        handleClose();
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setLoading(false);
+      });
   };
 
   const montaPayload = uuid => {
