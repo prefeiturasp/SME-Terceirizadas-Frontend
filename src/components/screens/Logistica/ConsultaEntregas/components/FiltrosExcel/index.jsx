@@ -49,16 +49,18 @@ export default ({ solicitacao }) => {
     if (repoTotal) status_guia.push(STATUS_GUIA.REPOSICAO_TOTAL);
 
     // Caso especifico para onde o usuário não marca nenhuma opção
-    if (!tem_insucesso && !tem_conferencia) tem_insucesso = true;
-    tem_conferencia = true;
-    status_guia = [
-      STATUS_GUIA.PENDENTE,
-      STATUS_GUIA.RECEBIDA,
-      STATUS_GUIA.PARCIAL,
-      STATUS_GUIA.NAO_RECEBIDO,
-      STATUS_GUIA.REPOSICAO_TOTAL,
-      STATUS_GUIA.REPOSICAO_PARCIAL
-    ];
+    if (!tem_insucesso && !tem_conferencia) {
+      tem_insucesso = true;
+      tem_conferencia = true;
+      status_guia = [
+        STATUS_GUIA.PENDENTE,
+        STATUS_GUIA.RECEBIDA,
+        STATUS_GUIA.PARCIAL,
+        STATUS_GUIA.NAO_RECEBIDO,
+        STATUS_GUIA.REPOSICAO_TOTAL,
+        STATUS_GUIA.REPOSICAO_PARCIAL
+      ];
+    }
 
     return { uuid, status_guia, tem_conferencia, tem_insucesso };
   };
