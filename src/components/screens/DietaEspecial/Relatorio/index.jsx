@@ -20,6 +20,7 @@ import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
+import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
 
@@ -28,6 +29,8 @@ const Relatorio = ({ visao }) => {
   const [carregando, setCarregando] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [status, setStatus] = useState(undefined);
+  const [mostrarHistorico, setMostrarHistorico] = useState(false);
+  const [historico, setHistorico] = useState([]);
 
   const fetchData = uuid => {
     loadSolicitacao(uuid);
@@ -39,6 +42,7 @@ const Relatorio = ({ visao }) => {
     if (responseDietaEspecial.status === HTTP_STATUS.OK) {
       setDietaEspecial(responseDietaEspecial.data);
       setStatus(responseDietaEspecial.data.status_solicitacao);
+      setHistorico(responseDietaEspecial.data.logs);
       setCarregando(false);
     } else {
       toastError("Houve um erro ao carregar Solicitação");
@@ -83,18 +87,30 @@ const Relatorio = ({ visao }) => {
 
   const BotaoGerarRelatorio = ({ uuid }) => {
     return (
-      <div className="row">
-        <div className="col-12">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
-            className="ml-3 float-right mt-4"
-            onClick={() => gerarProtocolo(uuid)}
-          />
-        </div>
-      </div>
+      <Botao
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN}
+        icon={BUTTON_ICON.PRINT}
+        className="float-right"
+        onClick={() => gerarProtocolo(uuid)}
+      />
     );
+  };
+
+  const getHistorico = () => {
+    return historico;
+  };
+
+  const showModalHistorico = () => {
+    setMostrarHistorico(true);
+  };
+
+  const handleOk = () => {
+    setMostrarHistorico(false);
+  };
+
+  const handleCancel = () => {
+    setMostrarHistorico(false);
   };
 
   return (
@@ -104,9 +120,34 @@ const Relatorio = ({ visao }) => {
       )}
       <div className="card mt-3">
         <div className="card-body">
-          {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
-            <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+          <div className="row">
+            <div className="col-12" style={{ alignItems: "flex-end" }}>
+              {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
+                <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+              )}
+              {dietaEspecial && historico && (
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto="Histórico"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={showModalHistorico}
+                  className="mr-2 float-right"
+                />
+              )}
+            </div>
+          </div>
+          {historico.length > 0 && (
+            <>
+              <ModalHistorico
+                visible={mostrarHistorico}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                logs={historico}
+                getHistorico={getHistorico}
+              />
+            </>
           )}
+          <hr />
           {dietaEspecial && (
             <>
               <CorpoRelatorio dietaEspecial={dietaEspecial} />

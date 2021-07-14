@@ -299,6 +299,7 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
                 {diagnosticos && (
                   <Diagnosticos
                     diagnosticos={diagnosticos}
+                    setDiagnosticos={setDiagnosticos}
                     setDiagnosticosSelecionados={setDiagnosticosSelecionados}
                     selectedValues={alergias}
                     alergiasError={alergiasError}
