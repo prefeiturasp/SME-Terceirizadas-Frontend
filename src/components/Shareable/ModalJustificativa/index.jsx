@@ -3,6 +3,7 @@ import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import { InputText } from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,6 +19,7 @@ const ModalJustificativa = ({
   closeModal,
   onSubmit,
   titulo,
+  state,
   comAnexo = false,
   labelJustificativa = "Justificativa"
 }) => {
@@ -30,9 +32,45 @@ const ModalJustificativa = ({
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
+      <Modal.Body>
+        <Form
+          onSubmit={onSubmit}
+          initialValues={state.produto}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <div className="form-row row-filds-produto">
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    label="Nome do Produto"
+                    name="nome"
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    label="Marca"
+                    name="marca.nome"
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    label="Fabricante"
+                    name="fabricante.nome"
+                    disabled={true}
+                  />
+                </div>
+              </div>
+            </form>
+          )}
+        />
+      </Modal.Body>
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, submitting }) => (
+        render={({ handleSubmit, submitting, form }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
               <div className="form-row row-modal">
@@ -86,13 +124,40 @@ const ModalJustificativa = ({
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="ml-3"
                   />
-                  <Botao
-                    texto="Enviar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
-                    disabled={submitting}
-                  />
+                  {state.acao === "responder" ? (
+                    <>
+                      <Botao
+                        texto="Finalizar reclamação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          state.tipo_resposta = "rejeitar";
+                          form.submit();
+                        }}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                        disabled={submitting}
+                      />
+                      <Botao
+                        texto="Suspender produto"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          state.tipo_resposta = "aceitar";
+                          form.submit();
+                        }}
+                        style={BUTTON_STYLE.RED_OUTLINE}
+                        className="ml-3"
+                        disabled={submitting}
+                      />
+                    </>
+                  ) : (
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                      disabled={submitting}
+                    />
+                  )}
                 </div>
               </div>
             </Modal.Footer>

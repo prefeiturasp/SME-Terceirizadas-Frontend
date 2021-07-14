@@ -115,6 +115,7 @@ export const AvaliarReclamacaoProduto = ({
                     atualizar={() => onSubmit(formValues)}
                     indiceProdutoAtivo={indiceProdutoAtivo}
                     setIndiceProdutoAtivo={setIndiceProdutoAtivo}
+                    setLoading={setLoading}
                   />
                   <Pagination
                     current={page || 1}
