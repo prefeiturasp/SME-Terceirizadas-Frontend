@@ -6,6 +6,7 @@ import { slugify } from "../../../../../../helper";
 
 const Diagnosticos = ({
   diagnosticos,
+  setDiagnosticos,
   setDiagnosticosSelecionados,
   selectedValues,
   alergiasError,
