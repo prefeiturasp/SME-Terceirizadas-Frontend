@@ -6,7 +6,6 @@ import { slugify } from "../../../../../../helper";
 
 const Diagnosticos = ({
   diagnosticos,
-  setDiagnosticos,
   setDiagnosticosSelecionados,
   selectedValues,
   alergiasError,
@@ -22,18 +21,14 @@ const Diagnosticos = ({
 
   useEffect(() => {
     // Retirada do negrito dos diagnóticos
-    var lis = $(`.optionContainer li:nth-child(-n+${values.length + 1})`);
+    let lis = $(`.optionContainer li:nth-child(-n+${values.length + 1})`);
     $(lis).each((_, element) => {
       $(element).css("font-weight", "");
     });
 
     // Negrito colocado só nos que estão selecionados
-    var lis = $(`.optionContainer li:nth-child(-n+${values.length})`);
+    lis = $(`.optionContainer li:nth-child(-n+${values.length})`);
     $(lis).each((index, element) => {
-      console.log($(element).text());
-      console.log(values[index]);
-      console.log(options.map(o => o.nome).includes($(element).text()));
-      console.log(options.map(o => o.nome).includes(values[index].nome));
       if (values.map(o => o.nome).includes(options[index].nome)) {
         $(element).css("font-weight", "900");
       }
@@ -83,8 +78,6 @@ const Diagnosticos = ({
       .filter(
         item => slugify(item.nome.toLowerCase()).search(wordToFilter) !== -1
       );
-    console.log("search", value);
-    console.log("result", diagnosticos_filtrados);
     setDiags(diagnosticos_filtrados);
   };
 
