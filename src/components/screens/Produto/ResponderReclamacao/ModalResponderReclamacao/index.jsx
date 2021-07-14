@@ -31,7 +31,7 @@ export default class ModalResponderReclamacao extends Component {
         values
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Resposta de reclamação enviada com sucesso.");
+        toastSuccess("Resposta enviada com Sucesso!");
         this.props.atualizarProduto();
         this.props.closeModal();
       } else {
