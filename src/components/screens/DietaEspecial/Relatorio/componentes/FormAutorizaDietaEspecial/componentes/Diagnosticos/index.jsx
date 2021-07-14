@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Field } from "react-final-form";
 import Multiselect from "multiselect-react-dropdown";
 import $ from "jquery";
+import { slugify } from "../../../../../../helper";
 
 const Diagnosticos = ({
   diagnosticos,
@@ -12,11 +13,12 @@ const Diagnosticos = ({
   setAlergiasError
 }) => {
   const [values, setValues] = useState([]);
+  const [diags, setDiags] = useState(diagnosticos);
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    setOptions(diagnosticos);
-  }, [diagnosticos]);
+    setOptions(diags);
+  }, [diags]);
 
   useEffect(() => {
     // Retirada do negrito dos diagnóticos
@@ -27,8 +29,10 @@ const Diagnosticos = ({
 
     // Negrito colocado só nos que estão selecionados
     lis = $(`.optionContainer li:nth-child(-n+${values.length})`);
-    $(lis).each((_, element) => {
-      $(element).css("font-weight", "900");
+    $(lis).each((index, element) => {
+      if (values.map(o => o.nome).includes(options[index].nome)) {
+        $(element).css("font-weight", "900");
+      }
     });
   }, [options]);
 
@@ -45,7 +49,7 @@ const Diagnosticos = ({
       op => !values.find(o => o.uuid === op.uuid)
     );
     const orderedNewOptions = values.sort(compare);
-    setDiagnosticos(orderedNewOptions.concat(stateOptions.sort(compare)));
+    setDiags(orderedNewOptions.concat(stateOptions.sort(compare)));
     setValues(orderedNewOptions);
   };
 
@@ -55,12 +59,27 @@ const Diagnosticos = ({
       op => !values.find(o => o.uuid === op.uuid)
     );
     const orderedNewOptions = values.sort(compare);
-    setDiagnosticos(orderedNewOptions.concat(stateOptions.sort(compare)));
+    setDiags(orderedNewOptions.concat(stateOptions.sort(compare)));
     setValues(orderedNewOptions);
   };
 
   const formatarDiagnostico = values => {
     return values.map(value => value.uuid);
+  };
+
+  const search = value => {
+    const wordToFilter = slugify(value.toLowerCase());
+    const stateOptions = diagnosticos.filter(
+      op => !values.find(o => o.uuid === op.uuid)
+    );
+    const orderedNewOptions = values.sort(compare);
+
+    const diagnosticos_filtrados = orderedNewOptions
+      .concat(stateOptions.sort(compare))
+      .filter(
+        item => slugify(item.nome.toLowerCase()).search(wordToFilter) !== -1
+      );
+    setDiags(diagnosticos_filtrados);
   };
 
   return (
@@ -76,6 +95,7 @@ const Diagnosticos = ({
           options={options}
           onSelect={onSelect}
           onRemove={onRemove}
+          onSearch={search}
           selectedValues={selectedValues}
           displayValue="nome"
           showArrow={true}
