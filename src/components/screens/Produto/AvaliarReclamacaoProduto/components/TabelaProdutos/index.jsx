@@ -16,16 +16,14 @@ import { RECLAMACAO_PRODUTO_STATUS } from "constants/shared";
 import {
   CODAEAceitaReclamacao,
   CODAERecusaReclamacao,
-  CODAEQuestionaTerceirizada,
-  CODAERespondeReclamante
+  CODAEQuestionaTerceirizada
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
 
 const {
   AGUARDANDO_AVALIACAO,
   CODAE_ACEITOU,
-  CODAE_RESPONDEU,
-  RESPONDIDO_TERCEIRIZADA
+  CODAE_RECUSOU
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -35,7 +33,8 @@ export default class TabelaProdutos extends Component {
       mostraModalReclamacao: false,
       uuidReclamacao: undefined,
       acao: undefined,
-      mostraModalJustificativa: false
+      mostraModalJustificativa: false,
+      tipo_resposta: undefined
     };
   }
 
@@ -46,10 +45,6 @@ export default class TabelaProdutos extends Component {
 
   defineTitulo = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return "Aceitar reclamação de produto";
-      case this.RECUSAR_RECLAMACAO:
-        return "Recusar reclamação de produto";
       case this.QUESTIONAR:
         return "Questionar terceirizada sobre reclamação de produto";
       case this.RESPONDER:
@@ -61,13 +56,10 @@ export default class TabelaProdutos extends Component {
 
   defineLabelJustificativa = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-      case this.RECUSAR_RECLAMACAO:
-        return "Justificativa";
       case this.QUESTIONAR:
         return "Questionamento";
       case this.RESPONDER:
-        return "Resposta";
+        return "Justificativa";
       default:
         return "";
     }
@@ -75,14 +67,16 @@ export default class TabelaProdutos extends Component {
 
   defineEndpoint = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return CODAEAceitaReclamacao;
-      case this.RECUSAR_RECLAMACAO:
-        return CODAERecusaReclamacao;
       case this.QUESTIONAR:
         return CODAEQuestionaTerceirizada;
       case this.RESPONDER:
-        return CODAERespondeReclamante;
+        if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+          return CODAEAceitaReclamacao;
+        }
+        if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
+          return CODAERecusaReclamacao;
+        }
+        break;
       default:
         throw new Error("acao não informada");
     }
@@ -90,30 +84,33 @@ export default class TabelaProdutos extends Component {
 
   mostraToastSucesso = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return toastSuccess(
-          "Aceite de reclamação de produto enviado com sucesso"
-        );
-      case this.RECUSAR_RECLAMACAO:
-        return toastSuccess(
-          "Recusa de reclamação de produto enviado com sucesso"
-        );
       case this.QUESTIONAR:
         return toastSuccess(
           "Questionamento enviado a terceirizada com sucesso"
         );
       case this.RESPONDER:
-        return toastSuccess("Reclamação respondida com sucesso");
+        if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+          return toastSuccess(
+            "Aceite de reclamação de produto enviado com sucesso"
+          );
+        }
+        if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
+          return toastSuccess(
+            "Recusa de reclamação de produto enviado com sucesso"
+          );
+        }
+        break;
       default:
         return toastSuccess("Solicitação enviada com sucesso");
     }
   };
 
-  abreModalJustificativa = (acao, uuidReclamacao) => {
+  abreModalJustificativa = (acao, uuidReclamacao, produto) => {
     this.setState({
       mostraModalJustificativa: true,
       acao,
-      uuidReclamacao
+      uuidReclamacao,
+      produto
     });
   };
 
@@ -135,6 +132,7 @@ export default class TabelaProdutos extends Component {
         toastError(response.errors);
         reject(response.errors);
       }
+      this.props.setLoading(false);
     });
 
   render() {
@@ -206,18 +204,14 @@ export default class TabelaProdutos extends Component {
                   {produto.ultima_homologacao.reclamacoes
                     .sort(ordenaPorCriadoEm)
                     .map((reclamacao, indice) => {
-                      const desabilitaAceitarReclamar =
-                        produtoTemReclacaoAceita ||
-                        (reclamacao.status !== AGUARDANDO_AVALIACAO &&
-                          reclamacao.status !== RESPONDIDO_TERCEIRIZADA);
                       const desabilitaQuestionar =
                         produtoTemReclacaoAceita ||
                         reclamacao.status !== AGUARDANDO_AVALIACAO;
                       const desabilitaResponder =
-                        !produtoTemReclacaoAceita ||
-                        reclamacao.status === CODAE_RESPONDEU ||
-                        (reclamacao.status !== AGUARDANDO_AVALIACAO &&
-                          reclamacao.status !== RESPONDIDO_TERCEIRIZADA);
+                        produtoTemReclacaoAceita ||
+                        reclamacao.status === CODAE_ACEITOU ||
+                        reclamacao.status === CODAE_RECUSOU;
+
                       const deveMostrarBarraHorizontal =
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
@@ -233,7 +227,8 @@ export default class TabelaProdutos extends Component {
                             onClick={() =>
                               this.abreModalJustificativa(
                                 this.RESPONDER,
-                                reclamacao.uuid
+                                reclamacao.uuid,
+                                produto
                               )
                             }
                           />
@@ -246,35 +241,10 @@ export default class TabelaProdutos extends Component {
                             onClick={() =>
                               this.abreModalJustificativa(
                                 this.QUESTIONAR,
-                                reclamacao.uuid
+                                reclamacao.uuid,
+                                produto
                               )
                             }
-                          />
-                          <Botao
-                            texto="Recusar"
-                            className="ml-3"
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.RECUSAR_RECLAMACAO,
-                                reclamacao.uuid
-                              )
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaAceitarReclamar}
-                          />
-                          <Botao
-                            texto="Aceitar"
-                            className="ml-3"
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.ACEITAR_RECLAMACAO,
-                                reclamacao.uuid
-                              )
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaAceitarReclamar}
                           />
                         </div>,
                         deveMostrarBarraHorizontal && <hr />
@@ -291,10 +261,8 @@ export default class TabelaProdutos extends Component {
           showModal={mostraModalJustificativa}
           closeModal={this.fechaModalJustificativa}
           onSubmit={this.onModalJustificativaSubmit}
-          comAnexo={
-            this.state.acao === this.ACEITAR_RECLAMACAO ||
-            this.state.acao === this.RECUSAR_RECLAMACAO
-          }
+          state={this.state}
+          comAnexo={this.state.acao === this.RESPONDER}
         />
       </section>
     );
