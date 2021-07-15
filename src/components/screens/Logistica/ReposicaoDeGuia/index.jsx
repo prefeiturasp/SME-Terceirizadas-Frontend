@@ -10,6 +10,7 @@ import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { REPOSICAO_RESUMO_FINAL, LOGISTICA } from "configs/constants";
 import TooltipIcone from "components/Shareable/TooltipIcone";
+import InputFile from "components/Shareable/Input/InputFile";
 import {
   required,
   maxLength,
@@ -42,6 +43,7 @@ const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento q
                           aberta ocorrência a ser detalhada pelo usuário.`;
 const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimento faltantes (isto é, que o fornecedor deixou de entregar
                           na Unidade Educacional) em relação à quantidade prevista na Guia de Remessa.`;
+const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -55,6 +57,8 @@ export default () => {
   const [fechada, setFechada] = useState({});
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
+  const [arquivoAtual, setArquivoAtual] = useState([]);
+  const inputFile = useRef(null);
   const autoFillButton = useRef(null);
   const history = useHistory();
 
@@ -89,6 +93,16 @@ export default () => {
     }
   };
 
+  const setFiles = files => {
+    let arquivos = arquivoAtual;
+    arquivos = files;
+    setArquivoAtual(arquivos);
+  };
+
+  const removeFile = () => {
+    setArquivoAtual([]);
+  };
+
   const escolherHora = hora => {
     if (hora) {
       const horario = moment(hora).format("HH:mm");
@@ -106,6 +120,7 @@ export default () => {
       "DD/MM/YYYY"
     );
     values.guia = uuid;
+    values.arquivo = arquivoAtual;
 
     let newValoresForm = valoresForm;
     newValoresForm[alimentoAtual] = Object.assign({}, values);
@@ -176,6 +191,7 @@ export default () => {
   const changePage = (values, change) => {
     let newValoresForm = valoresForm;
     let newAlimento = alimentoAtual + change;
+    values.arquivo = arquivoAtual;
     newValoresForm[alimentoAtual] = Object.assign({}, values);
     setValoresForm(newValoresForm);
 
@@ -194,6 +210,14 @@ export default () => {
     values.observacoes = valoresForm[newAlimento]
       ? valoresForm[newAlimento].observacoes
       : undefined;
+    let newArquivo = valoresForm[newAlimento]
+      ? valoresForm[newAlimento].arquivo
+      : [];
+
+    setArquivoAtual(newArquivo);
+    if (newArquivo) {
+      inputFile.current.setState({ files: newArquivo });
+    }
     setAlimentoAtual(newAlimento);
   };
 
@@ -246,6 +270,12 @@ export default () => {
     values.hora_recebimento = ultimoItem.hora_recebimento;
     values.placa_veiculo = ultimoItem.placa_veiculo;
     values.data_entrega_real = moment(ultimoItem.data_entrega_real);
+
+    let newArquivo = primeiroItem.arquivo;
+    setArquivoAtual(newArquivo);
+    if (newArquivo) {
+      inputFile.current.setState({ files: newArquivo });
+    }
 
     setHoraRecebimento(ultimoItem.hora_recebimento);
     setHoraRecebimentoAlterada(true);
@@ -578,6 +608,35 @@ export default () => {
                       validate={validaOcorrencias}
                       onChange={checaAtraso(values)}
                     />
+                  </div>
+                </div>
+
+                <div className="mt-4 mb-4">
+                  <div className="row">
+                    <article className="col-9 produto">
+                      <label className="mb-3">
+                        Se possível, insira uma foto que demonstre a ocorrência
+                        apontada.
+                        <TooltipIcone
+                          tooltipText={
+                            "Os formatos de imagem aceitos são: " +
+                            FORMATOS_IMAGEM
+                          }
+                        />
+                      </label>
+                      <InputFile
+                        ref={inputFile}
+                        className="inputfile"
+                        texto="Inserir Imagem"
+                        name="files"
+                        accept={FORMATOS_IMAGEM}
+                        setFiles={setFiles}
+                        removeFile={removeFile}
+                        toastSuccess={"Imagem incluída com sucesso!"}
+                        alignLeft
+                        disabled={arquivoAtual.length > 0}
+                      />
+                    </article>
                   </div>
                 </div>
 
