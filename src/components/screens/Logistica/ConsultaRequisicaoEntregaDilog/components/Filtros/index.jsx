@@ -110,16 +110,16 @@ export default ({ setFiltros, setSolicitacoes }) => {
               <div className="col">
                 <Field
                   component={InputText}
-                  label="Nome do produto"
+                  label="Nome do Alimento"
                   name="nome_produto"
-                  placeholder="Digite o nome do produto"
+                  placeholder="Digite o nome do alimento"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col">
                 <Field
                   component={InputText}
-                  label="Nome distribuidor"
+                  label="Nome do Distribuidor"
                   name="nome_distribuidor"
                   placeholder="Digite o nome do distribuidor"
                   className="input-busca-produto"
