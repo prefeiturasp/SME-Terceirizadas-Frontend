@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
-  ENVIO_REQUISICOES_ENTREGA,
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
   LOGISTICA,
   GESTAO_REQUISICAO_ENTREGA,
@@ -26,14 +25,9 @@ const MenuLogistica = () => {
         Disponibilização de solicitações
       </LeafItem> */}
       {usuarioEhLogistica() && (
-        <>
-          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA}`}>
-            Envio de Requisição de Entrega
-          </LeafItem>
-          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
-            Consulta de Requisições de entrega
-          </LeafItem>
-        </>
+        <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
+          Requisições de Entrega
+        </LeafItem>
       )}
 
       {usuarioEhDistribuidora() && (
