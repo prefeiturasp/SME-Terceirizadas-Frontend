@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
@@ -14,15 +15,25 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import { enviaSolicitacoesDaGrade } from "../../../../services/disponibilizacaoDeSolicitacoes.service";
+import {
+  toastError,
+  toastInfo,
+  toastSuccess
+} from "components/Shareable/Toast/dialogs";
+import { Modal } from "react-bootstrap";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
+  const [carregandoModal, setCarregandoModal] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
   const [ativos, setAtivos] = useState([]);
   const [filtros, setFiltros] = useState();
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
   const [carregandoExcel, setCarregandoExcel] = useState(false);
+  const [selecionados, setSelecionados] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
@@ -37,6 +48,45 @@ export default () => {
     }
     setAtivos([]);
     setCarregando(false);
+  };
+
+  const enviarSolicitacoesMarcadas = async () => {
+    setCarregandoModal(true);
+    let payload = selecionados.map(x => x.uuid);
+    const response = await enviaSolicitacoesDaGrade(payload);
+    if (response.status === HTTP_STATUS.OK && response.data.length === 0) {
+      buscarSolicitacoes(page ? page : 1);
+      //setShowModal(false);
+      response.status = 500;
+    } else if (response.status === HTTP_STATUS.OK && response.data.length > 0) {
+      buscarSolicitacoes(page ? page : 1);
+      //setShowModal(false);
+    } else {
+      response.status = 500;
+    }
+    setCarregandoModal(false);
+
+    exibeToastPeloStatus(response.status);
+  };
+
+  const exibeToastPeloStatus = status => {
+    if (status === HTTP_STATUS.OK) {
+      toastSuccess("Requisições de entrega enviadas com sucesso");
+    } else if (status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Erro de transição de estado");
+    } else {
+      toastInfo("Nenhuma requisição de entrega a enviar");
+    }
+  };
+
+  const confereSolicitacoesSelecionadas = () => {
+    let desabilitar = false;
+    selecionados.map(solicitacao => {
+      if (solicitacao.status !== "Aguardando envio") {
+        desabilitar = true;
+      }
+    });
+    return desabilitar;
   };
 
   useEffect(() => {
@@ -61,6 +111,8 @@ export default () => {
               <br /> <hr /> <br />
               <ListagemSolicitacoes
                 solicitacoes={solicitacoes}
+                selecionados={selecionados}
+                setSelecionados={setSelecionados}
                 ativos={ativos}
                 setAtivos={setAtivos}
               />
@@ -76,9 +128,19 @@ export default () => {
                   />
                 </div>
                 <div className="d-flex align-items-end">
+                  <Botao
+                    texto="Enviar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="ml-2 mr-2"
+                    onClick={() => {
+                      setShowModal(true);
+                    }}
+                    disabled={confereSolicitacoesSelecionadas()}
+                  />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Exportar"
+                      texto="Exportar Relatório"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.EYE}
@@ -104,6 +166,49 @@ export default () => {
           )}
         </div>
       </div>
+
+      <Modal
+        show={showModal}
+        onHide={() => {
+          setShowModal(false);
+        }}
+      >
+        <Spin tip="Enviando..." spinning={carregandoModal}>
+          <Modal.Header closeButton>
+            <Modal.Title>Atenção</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selecionados.length === 1
+              ? `Deseja enviar a Requisição de Entrega n° ${
+                  selecionados[0].numero_solicitacao
+                } ? `
+              : `Deseja enviar as seguintes Requisições de Entrega n° ${selecionados
+                  .map(x => x.numero_solicitacao)
+                  .join("; ")} ? `}
+          </Modal.Body>
+          <Modal.Footer>
+            <Botao
+              texto="SIM"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                enviarSolicitacoesMarcadas();
+              }}
+              style={BUTTON_STYLE.GREEN}
+              className="ml-3"
+              disabled={carregandoModal}
+            />
+            <Botao
+              texto="NÃO"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                setShowModal(false);
+              }}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Spin>
+      </Modal>
     </Spin>
   );
 };
