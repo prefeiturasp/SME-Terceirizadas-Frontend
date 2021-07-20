@@ -59,10 +59,24 @@
       .link-insucesso {
         cursor: pointer;
         color: $green;
-        text-decoration: underline;
 
         .fas {
+          font-size: 12px;
+        }
+      }
+
+      .link-insucesso:hover {
+        text-decoration: underline;
+        .fas {
           text-decoration: underline;
+        }
+      }
+
+      .link-insucesso-desativado {
+        color: $green;
+        opacity: 0.65;
+
+        .fas {
           font-size: 12px;
         }
       }
