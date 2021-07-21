@@ -3,7 +3,9 @@ import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
-  gerarExcelSolicitacoes
+  gerarExcelSolicitacoes,
+  arquivaGuias,
+  desarquivaGuias
 } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
@@ -55,12 +57,12 @@ export default () => {
     let payload = selecionados.map(x => x.uuid);
     const response = await enviaSolicitacoesDaGrade(payload);
     if (response.status === HTTP_STATUS.OK && response.data.length === 0) {
-      buscarSolicitacoes(page ? page : 1);
-      //setShowModal(false);
+      atualizaTabela();
+      setShowModal(false);
       response.status = 500;
     } else if (response.status === HTTP_STATUS.OK && response.data.length > 0) {
-      buscarSolicitacoes(page ? page : 1);
-      //setShowModal(false);
+      atualizaTabela();
+      setShowModal(false);
     } else {
       response.status = 500;
     }
@@ -79,6 +81,10 @@ export default () => {
     }
   };
 
+  const atualizaTabela = () => {
+    buscarSolicitacoes(page ? page : 1);
+  };
+
   const confereSolicitacoesSelecionadas = () => {
     let desabilitar = false;
     selecionados.map(solicitacao => {
@@ -87,6 +93,34 @@ export default () => {
       }
     });
     return desabilitar;
+  };
+
+  const arquivaDesarquivaGuias = async (
+    selecionadas,
+    numero_requisicao,
+    situacao,
+    setModal,
+    setCarregando
+  ) => {
+    setCarregando(true);
+    let guias = selecionadas.map(x => x.numero_guia);
+    const payload = { guias, numero_requisicao };
+    let textoToast =
+      situacao === "ATIVA"
+        ? "Guia(s) de Remessa arquivada(s) com sucesso"
+        : "Guia(s) de Remessa desarquivada(s) com sucesso";
+    let response =
+      situacao === "ATIVA"
+        ? await arquivaGuias(payload)
+        : await desarquivaGuias(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      atualizaTabela();
+      toastSuccess(textoToast);
+      setModal(false);
+    } else {
+      toastError("Erro ao arquivar a guia");
+    }
+    setCarregando(false);
   };
 
   useEffect(() => {
@@ -115,6 +149,7 @@ export default () => {
                 setSelecionados={setSelecionados}
                 ativos={ativos}
                 setAtivos={setAtivos}
+                arquivaDesarquivaGuias={arquivaDesarquivaGuias}
               />
               <div className="row">
                 <div className="col">
