@@ -137,3 +137,13 @@ export const gerarExcelEntregas = async params => {
   const { data } = await axios.get(url, { params, responseType: "blob" });
   saveAs(data, "relatorio_entregas.xlsx");
 };
+
+export const arquivaGuias = async payload => {
+  const url = `/solicitacao-remessa/arquivar/`;
+  return await axios.post(url, payload);
+};
+
+export const desarquivaGuias = async payload => {
+  const url = `/solicitacao-remessa/desarquivar/`;
+  return await axios.post(url, payload);
+};
