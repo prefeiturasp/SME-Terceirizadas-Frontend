@@ -15,7 +15,8 @@ const ListagemSolicitacoes = ({ guias }) => {
   const retornaBotaoAcao = guia => {
     if (
       ["Recebimento parcial", "Não recebida"].includes(guia.status) &&
-      checaReposicao(guia)
+      checaReposicao(guia) &&
+      guia.situacao === "ATIVA"
     ) {
       return (
         <>
@@ -32,7 +33,10 @@ const ListagemSolicitacoes = ({ guias }) => {
         </>
       );
     } else if (
-      ["Pendente de conferência", "Insucesso de entrega"].includes(guia.status)
+      ["Pendente de conferência", "Insucesso de entrega"].includes(
+        guia.status
+      ) &&
+      guia.situacao === "ATIVA"
     ) {
       return (
         <>
