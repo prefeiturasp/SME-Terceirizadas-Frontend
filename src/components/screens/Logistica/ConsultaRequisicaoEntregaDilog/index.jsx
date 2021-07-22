@@ -92,7 +92,7 @@ export default () => {
         desabilitar = true;
       }
     });
-    return desabilitar;
+    return desabilitar || selecionados.length === 0;
   };
 
   const arquivaDesarquivaGuias = async (
