@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Spin } from "antd";
 import "antd/dist/antd.css";
+import "./styles.scss";
 import { Checkbox } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -13,6 +14,8 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [selecionados, setSelecionados] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModalGuia, setShowModalGuia] = useState(false);
+  const [guiaAtual, setGuiaAtual] = useState({});
   const [carregandoModal, setCarregandoModal] = useState(false);
 
   const guias = solicitacao.guias.filter(x => x.situacao === situacao);
@@ -55,6 +58,11 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
     return invalidas.length > 0;
   };
 
+  const abrirModalGuia = guia => {
+    setGuiaAtual(guia);
+    setShowModalGuia(true);
+  };
+
   return (
     <>
       {guias.length > 0 && (
@@ -72,7 +80,10 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
             {guias.map(guia => {
               return (
                 <>
-                  <div className="grid-table body-table">
+                  <div
+                    className="grid-table body-table"
+                    onClick={() => abrirModalGuia(guia)}
+                  >
                     <div>
                       <Checkbox
                         checked={guia.checked}
@@ -100,6 +111,106 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
           </div>
         </section>
       )}
+
+      <Modal
+        show={showModalGuia}
+        onHide={() => {
+          setShowModalGuia(false);
+        }}
+        dialogClassName="modal-guia-remessa-info"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Nº da Guia de Remessa: {guiaAtual.numero_guia}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <>
+            <section className="resultado-busca-detalhe pb-3 pt-3">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col">
+                    <b>Cód. CODAE da U.E</b>
+                    <br />
+                    {guiaAtual.codigo_unidade}
+                  </div>
+                  <div className="col border-left">
+                    <b>Nome Unidade Educacional</b>
+                    <br />
+                    {guiaAtual.nome_unidade}
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col">
+                    <b>Endereço</b>
+                    <br />
+                    {guiaAtual.endereco_unidade}, {guiaAtual.numero_unidade} -{" "}
+                    {guiaAtual.bairro_unidade} - CEP: {guiaAtual.cep_unidade} -{" "}
+                    {guiaAtual.cidade_unidade} - {guiaAtual.estado_unidade}
+                  </div>
+                </div>
+
+                <div className="row mt-3">
+                  <div className="col">
+                    <b>Contato de entrega</b>
+                    <br />
+                    {guiaAtual.contato_unidade}
+                  </div>
+                  <div className="col border-left">
+                    <b>Telefone</b>
+                    <br />
+                    {guiaAtual.telefone_unidade}
+                  </div>
+                </div>
+
+                <hr />
+
+                <b>Lista de Produtos</b>
+
+                <article>
+                  <div className="grid-table header-table">
+                    <div>Nome do Produto</div>
+                    <div>Quantidade</div>
+                    <div>Tipo de Embalagem</div>
+                    <div>Capacidade</div>
+                  </div>
+
+                  {guiaAtual.alimentos &&
+                    guiaAtual.alimentos.map(alimento => {
+                      return (
+                        <>
+                          <div className="grid-table body-table">
+                            <div>{alimento.nome_alimento}</div>
+                            <div>{alimento.embalagens[0].qtd_volume}</div>
+                            <div>{alimento.embalagens[0].tipo_embalagem}</div>
+                            <div>
+                              {alimento.embalagens[0].descricao_embalagem}{" "}
+                              {alimento.embalagens[0].capacidade_embalagem}{" "}
+                              {alimento.embalagens[0].unidade_medida}
+                            </div>
+                          </div>
+                        </>
+                      );
+                    })}
+                </article>
+              </div>
+            </section>
+          </>
+        </Modal.Body>
+        <Modal.Footer>
+          <Botao
+            texto="Cancelar"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() => {
+              setShowModalGuia(false);
+            }}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="ml-3"
+          />
+        </Modal.Footer>
+      </Modal>
+
       <Modal
         show={showModal}
         onHide={() => {
