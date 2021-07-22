@@ -151,6 +151,8 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
     values.alergias_intolerancias = diagnosticosSelecionados;
     if (protocoloPadrao) {
       values.nome_protocolo = protocoloPadrao.nome_protocolo;
+    } else {
+      values.nome_protocolo = dietaEspecial.nome_protocolo;
     }
     if (!values.protocolo_padrao) {
       delete values["protocolo_padrao"];
@@ -175,7 +177,11 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
     if (!diagnosticosSelecionados.length) {
       return;
     }
-    values.nome_protocolo = protocoloPadrao.nome_protocolo;
+    if (protocoloPadrao) {
+      values.nome_protocolo = protocoloPadrao.nome_protocolo;
+    } else {
+      values.nome_protocolo = dietaEspecial.nome_protocolo;
+    }
     if (
       dietaEspecial.tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
       !showAutorizarAlteracaoUEModal
