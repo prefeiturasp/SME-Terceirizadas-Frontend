@@ -80,19 +80,22 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
             {guias.map(guia => {
               return (
                 <>
-                  <div
-                    className="grid-table body-table"
-                    onClick={() => abrirModalGuia(guia)}
-                  >
+                  <div className="grid-table body-table">
                     <div>
                       <Checkbox
                         checked={guia.checked}
                         onChange={() => checkSolicitacao(guia)}
                       />
                     </div>
-                    <div>{guia.numero_guia}</div>
-                    <div>{guia.nome_unidade}</div>
-                    <div>{guia.status}</div>
+                    <div onClick={() => abrirModalGuia(guia)}>
+                      {guia.numero_guia}
+                    </div>
+                    <div onClick={() => abrirModalGuia(guia)}>
+                      {guia.nome_unidade}
+                    </div>
+                    <div onClick={() => abrirModalGuia(guia)}>
+                      {guia.status}
+                    </div>
                   </div>
                 </>
               );
