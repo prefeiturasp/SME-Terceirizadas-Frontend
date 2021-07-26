@@ -390,6 +390,7 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
                   showModal={showAutorizarAlteracaoUEModal}
                   dietaEspecial={dietaEspecial}
                   handleSubmit={form.submit}
+                  submitting={submitting}
                 />
               </div>
             </div>
