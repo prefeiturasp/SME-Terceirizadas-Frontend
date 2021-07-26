@@ -226,8 +226,8 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
           </Modal.Header>
           <Modal.Body>
             {situacao === "ATIVA"
-              ? `Arquivar Guia(s) de Remessa selecionada(s)?`
-              : `Desarquivar Guia(s) de Remessa selecionada(s)`}
+              ? `Arquivar Guia(s) de Remessa selecionada(s)? Ao confirmar essa ação, funcionalidades desta(s) Guia(s) serão desativadas.`
+              : `Desarquivar Guia(s) de Remessa selecionada(s)? Ao confirmar essa ação, todas as funcionalidades desta(s) Guia(s) serão reativadas.`}
           </Modal.Body>
           <Modal.Footer>
             <Botao
