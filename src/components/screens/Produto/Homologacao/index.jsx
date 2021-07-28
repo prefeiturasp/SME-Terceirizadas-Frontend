@@ -14,6 +14,7 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
   getNumeroProtocoloAnaliseSensorial,
+  getNomesTerceirizadas,
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
@@ -65,7 +66,8 @@ class HomologacaoProduto extends Component {
       logs: [],
       ativo: false,
       acao: null,
-      mostraModalCancelar: false
+      mostraModalCancelar: false,
+      terceirizadas: null
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -115,6 +117,10 @@ class HomologacaoProduto extends Component {
         ativo: this.checaStatus(response.data)
       });
     });
+
+    getNomesTerceirizadas().then(response => {
+      this.setState({ terceirizadas: response.data.results });
+    });
   };
 
   componentDidUpdate = async () => {
@@ -134,6 +140,7 @@ class HomologacaoProduto extends Component {
           response.data.produto
         ),
         status: response.data.status,
+        logs: response.data.logs,
         ativo: this.checaStatus(response.data),
         acao: null
       });
@@ -211,6 +218,10 @@ class HomologacaoProduto extends Component {
     }
   };
 
+  getHistorico = () => {
+    return this.state.logs;
+  };
+
   render() {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
@@ -224,7 +235,8 @@ class HomologacaoProduto extends Component {
       protocoloAnalise,
       logs,
       ativo,
-      acao
+      acao,
+      terceirizadas
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -282,6 +294,10 @@ class HomologacaoProduto extends Component {
                     ? "Solicitamos que seja informado a quantidade e descrição para análise sensorial"
                     : undefined
                 }
+                eAnalise={qualModal === "analise" ? true : false}
+                terceirizadas={terceirizadas}
+                status={status}
+                terceirizada={terceirizada}
               />
               {!!status && status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
                 <InformativoReclamacao homologacao={ultima_homologacao} />
@@ -368,6 +384,21 @@ class HomologacaoProduto extends Component {
                         }
                       />
                     )}
+                  {usuarioEhCODAEGestaoProduto() &&
+                    status === "CODAE_HOMOLOGADO" && (
+                      <Botao
+                        texto={"Solicitar análise sensorial"}
+                        className="mr-2 float-right"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          this.setState({
+                            qualModal: "analise",
+                            showModal: true
+                          })
+                        }
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    )}
                 </div>
               </div>
               <hr />
@@ -377,6 +408,7 @@ class HomologacaoProduto extends Component {
                   onOk={this.handleOk}
                   onCancel={this.handleCancel}
                   logs={logs}
+                  getHistorico={this.getHistorico}
                 />
               )}
               <ModalAtivacaoSuspensaoProduto
@@ -701,7 +733,7 @@ class HomologacaoProduto extends Component {
                   <div className="row">
                     <div className="col-12 text-right pt-3">
                       <Botao
-                        texto={"Análise"}
+                        texto={"Solicitar análise sensorial"}
                         className="mr-3"
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() =>
