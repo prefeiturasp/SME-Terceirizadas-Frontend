@@ -7,24 +7,163 @@ const {
   CODAE_RECUSOU_RECLAMACAO,
   CODAE_QUESTIONOU_TERCEIRIZADA,
   CODAE_RESPONDEU_RECLAMACAO,
-  TERCEIRIZADA_RESPONDEU_RECLAMACAO
+  TERCEIRIZADA_RESPONDEU_RECLAMACAO,
+  AGUARDANDO_ANALISE_SENSORIAL,
+  ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
 
 const Reclamacao = ({ reclamacao }) => {
-  const logQuestionamentoCodae = reclamacao.logs.find(
-    log => log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA
-  );
-  const logRespostaTerceirizada = reclamacao.logs.find(
-    log => log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO
-  );
-  const logAceiteOuRecusa = reclamacao.logs.find(
-    log =>
+  const blocoQuestionamentoCodae = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">Data quest. CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">Questionamento CODAE</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaTerceirizada = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">Data resposta terc.</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">Resposta terceirizada</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoAceiteOuRecusa = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">Data avaliação CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">Justificativa avaliação CODAE</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaCodae = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">Data resposta CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">Resposta CODAE</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoCodaePediuAnalise = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">
+            Data da solicitação da Análise Sensorial
+          </div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">
+            Solicitação de Análise Sensorial CODAE
+          </div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaAnalise = log => {
+    return (
+      <div className="linha linha-3">
+        <div />
+        <div className="item">
+          <div className="label-item">Data resposta terc.</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="item">
+          <div className="label-item">Resposta Análise Sensorial</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoMensagem = log => {
+    if (log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA) {
+      return blocoQuestionamentoCodae(log);
+    } else if (
+      log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO
+    ) {
+      return blocoRespostaTerceirizada(log);
+    } else if (
       log.status_evento_explicacao === CODAE_AUTORIZOU_RECLAMACAO ||
       log.status_evento_explicacao === CODAE_RECUSOU_RECLAMACAO
-  );
-  const logRespostaCodae = reclamacao.logs.find(
-    log => log.status_evento_explicacao === CODAE_RESPONDEU_RECLAMACAO
-  );
+    ) {
+      return blocoAceiteOuRecusa(log);
+    } else if (log.status_evento_explicacao === CODAE_RESPONDEU_RECLAMACAO) {
+      return blocoRespostaCodae(log);
+    } else if (log.status_evento_explicacao === AGUARDANDO_ANALISE_SENSORIAL) {
+      return blocoCodaePediuAnalise(log);
+    } else if (log.status_evento_explicacao === ANALISE_SENSORIAL_RESPONDIDA) {
+      return blocoRespostaAnalise(log);
+    }
+  };
+
   return (
     <div className="detalhes-reclamacao">
       <div className="linha linha-1">
@@ -70,86 +209,9 @@ const Reclamacao = ({ reclamacao }) => {
           />
         </div>
       </div>
-      {logQuestionamentoCodae && (
-        <div className="linha linha-3">
-          <div />
-          <div className="item">
-            <div className="label-item">Data quest. CODAE</div>
-            <div className="value-item">
-              {logQuestionamentoCodae.criado_em.split(" ")[0]}
-            </div>
-          </div>
-          <div className="item">
-            <div className="label-item">Questionamento CODAE</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: logQuestionamentoCodae.justificativa
-              }}
-            />
-          </div>
-        </div>
-      )}
-      {logRespostaTerceirizada && (
-        <div className="linha linha-3">
-          <div />
-          <div className="item">
-            <div className="label-item">Data resposta terc.</div>
-            <div className="value-item">
-              {logRespostaTerceirizada.criado_em.split(" ")[0]}
-            </div>
-          </div>
-          <div className="item">
-            <div className="label-item">Resposta terceirizada</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: logRespostaTerceirizada.justificativa
-              }}
-            />
-          </div>
-        </div>
-      )}
-      {logAceiteOuRecusa && (
-        <div className="linha linha-3">
-          <div />
-          <div className="item">
-            <div className="label-item">Data avaliação CODAE</div>
-            <div className="value-item">
-              {logAceiteOuRecusa.criado_em.split(" ")[0]}
-            </div>
-          </div>
-          <div className="item">
-            <div className="label-item">Justificativa avaliação CODAE</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: logAceiteOuRecusa.justificativa
-              }}
-            />
-          </div>
-        </div>
-      )}
-      {logRespostaCodae && (
-        <div className="linha linha-3">
-          <div />
-          <div className="item">
-            <div className="label-item">Data resposta CODAE</div>
-            <div className="value-item">
-              {logRespostaCodae.criado_em.split(" ")[0]}
-            </div>
-          </div>
-          <div className="item">
-            <div className="label-item">Resposta CODAE</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: logRespostaCodae.justificativa
-              }}
-            />
-          </div>
-        </div>
-      )}
+      {reclamacao.logs.map(log => {
+        return blocoMensagem(log);
+      })}
     </div>
   );
 };

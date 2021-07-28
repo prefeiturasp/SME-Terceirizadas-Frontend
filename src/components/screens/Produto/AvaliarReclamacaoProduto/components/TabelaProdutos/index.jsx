@@ -9,8 +9,12 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import ModalJustificativa from "components/Shareable/ModalJustificativa";
+import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Reclamacao from "components/screens/Produto/Reclamacao/components/Reclamacao";
+import { getNumeroProtocoloAnaliseSensorial } from "../../../../../../services/produto.service";
+
+import { CODAEPedeAnaliseSensorialProdutoReclamacao } from "../../../../../../services/reclamacaoProduto.service";
 
 import { RECLAMACAO_PRODUTO_STATUS } from "constants/shared";
 import {
@@ -23,7 +27,9 @@ import { ordenaPorCriadoEm } from "./helpers";
 const {
   AGUARDANDO_AVALIACAO,
   CODAE_ACEITOU,
-  CODAE_RECUSOU
+  CODAE_RECUSOU,
+  RESPONDIDO_TERCEIRIZADA,
+  ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -34,7 +40,9 @@ export default class TabelaProdutos extends Component {
       uuidReclamacao: undefined,
       acao: undefined,
       mostraModalJustificativa: false,
-      tipo_resposta: undefined
+      showModalAnalise: false,
+      tipo_resposta: undefined,
+      protocoloAnalise: null
     };
   }
 
@@ -118,6 +126,19 @@ export default class TabelaProdutos extends Component {
     this.setState({ mostraModalJustificativa: false });
   };
 
+  abreModalAnalise = async uuidReclamacao => {
+    let response = await getNumeroProtocoloAnaliseSensorial();
+    this.setState({
+      showModalAnalise: true,
+      protocoloAnalise: response.data,
+      uuidReclamacao: uuidReclamacao
+    });
+  };
+
+  closeModalAnalise = () => {
+    this.setState({ showModalAnalise: false });
+  };
+
   onModalJustificativaSubmit = formValues =>
     new Promise(async (resolve, reject) => {
       const { uuidReclamacao } = this.state;
@@ -139,9 +160,14 @@ export default class TabelaProdutos extends Component {
     const {
       listaProdutos,
       indiceProdutoAtivo,
-      setIndiceProdutoAtivo
+      setIndiceProdutoAtivo,
+      terceirizadas
     } = this.props;
-    const { mostraModalJustificativa } = this.state;
+    const {
+      mostraModalJustificativa,
+      showModalAnalise,
+      protocoloAnalise
+    } = this.state;
     return (
       <section className="resultados-busca-produtos mb-3">
         <section>
@@ -211,6 +237,13 @@ export default class TabelaProdutos extends Component {
                         produtoTemReclacaoAceita ||
                         reclamacao.status === CODAE_ACEITOU ||
                         reclamacao.status === CODAE_RECUSOU;
+                      const desabilitarAnalise =
+                        produtoTemReclacaoAceita ||
+                        ![
+                          AGUARDANDO_AVALIACAO,
+                          RESPONDIDO_TERCEIRIZADA,
+                          ANALISE_SENSORIAL_RESPONDIDA
+                        ].includes(reclamacao.status);
 
                       const deveMostrarBarraHorizontal =
                         indice <
@@ -218,6 +251,16 @@ export default class TabelaProdutos extends Component {
                       return [
                         <Reclamacao key={0} reclamacao={reclamacao} />,
                         <div key={1} className="botao-reclamacao mt-4">
+                          <Botao
+                            texto="Solicitar análise sensorial"
+                            className="mr-3"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() =>
+                              this.abreModalAnalise(reclamacao.uuid)
+                            }
+                            disabled={desabilitarAnalise}
+                          />
                           <Botao
                             texto="Responder"
                             className="ml-3"
@@ -263,6 +306,20 @@ export default class TabelaProdutos extends Component {
           onSubmit={this.onModalJustificativaSubmit}
           state={this.state}
           comAnexo={this.state.acao === this.RESPONDER}
+        />
+        <ModalPadrao
+          showModal={showModalAnalise}
+          closeModal={this.closeModalAnalise}
+          toastSuccessMessage="Solicitação de análise sensorial enviada com sucesso"
+          modalTitle="Deseja solicitar a análise sensorial do produto?"
+          endpoint={CODAEPedeAnaliseSensorialProdutoReclamacao}
+          uuid={this.state.uuidReclamacao}
+          protocoloAnalise={protocoloAnalise}
+          loadSolicitacao={() => this.props.atualizar()}
+          terceirizadas={terceirizadas}
+          eAnalise={true}
+          labelJustificativa="Informações Adicionais"
+          helpText="Solicitamos que seja informado a quantidade e descrição para análise sensorial"
         />
       </section>
     );

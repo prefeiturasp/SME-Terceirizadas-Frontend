@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
 
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
@@ -23,7 +24,15 @@ export class ModalPadrao extends Component {
   enviarJustificativa = async formValues => {
     const { justificativa } = formValues;
     const { uuid, toastSuccessMessage } = this.props;
-    const resp = await this.props.endpoint(uuid, justificativa);
+    let resp = undefined;
+    if (this.props.eAnalise !== undefined && this.props.eAnalise) {
+      const terceirizada = this.props.terceirizadas.find(
+        t => t.nome_fantasia === formValues.nome_terceirizada
+      );
+      resp = await this.props.endpoint(uuid, justificativa, terceirizada.uuid);
+    } else {
+      resp = await this.props.endpoint(uuid, justificativa);
+    }
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
@@ -31,6 +40,29 @@ export class ModalPadrao extends Component {
     } else {
       toastError(resp.data.detail);
     }
+  };
+
+  getTerceirizadasFiltrado = t => {
+    const { terceirizadas } = this.props;
+    if (t) {
+      const reg = new RegExp(t, "i");
+      return terceirizadas.map(t => t.nome_fantasia).filter(a => reg.test(a));
+    }
+    return terceirizadas.map(t => t.nome_fantasia);
+  };
+
+  getTerceirizadas = () => {
+    const { terceirizadas } = this.props;
+    return terceirizadas.map(t => t.nome_fantasia);
+  };
+
+  getSelectedItem = terceirizada => {
+    const { terceirizadas } = this.props;
+    const item = terceirizadas.find(opt => {
+      if (opt.nome_fantasia === terceirizada.nome_fantasia)
+        return opt.nome_fantasia;
+    });
+    return item || {};
   };
 
   render() {
@@ -41,6 +73,8 @@ export class ModalPadrao extends Component {
       modalTitle,
       textAreaPlaceholder,
       protocoloAnalise,
+      status,
+      terceirizada,
       ...textAreaProps
     } = this.props;
     return (
@@ -51,7 +85,7 @@ export class ModalPadrao extends Component {
       >
         <Form
           onSubmit={this.enviarJustificativa}
-          render={({ handleSubmit }) => (
+          render={({ handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Header closeButton>
                 <Modal.Title>{modalTitle}</Modal.Title>
@@ -60,6 +94,33 @@ export class ModalPadrao extends Component {
                 {protocoloAnalise !== null && (
                   <div className="numero-protocolo">
                     <div>Número Protocolo: {protocoloAnalise}</div>
+                  </div>
+                )}
+                {this.props.eAnalise !== undefined && this.props.eAnalise && (
+                  <div className="row">
+                    <div className="col-12">
+                      <Field
+                        component={AutoCompleteField}
+                        dataSource={this.getTerceirizadasFiltrado(
+                          values.nome_terceirizada
+                        )}
+                        label="Nome da empresa solicitante (Terceirizada)"
+                        placeholder="Digite nome da terceirizada"
+                        name="nome_terceirizada"
+                        validate={value =>
+                          !value ? "Campo obrigatório" : undefined
+                        }
+                        required
+                        defaultValue={
+                          status === "CODAE_PENDENTE_HOMOLOGACAO"
+                            ? terceirizada.nome_fantasia
+                            : null
+                        }
+                        disabled={
+                          status === "CODAE_PENDENTE_HOMOLOGACAO" ? true : false
+                        }
+                      />
+                    </div>
                   </div>
                 )}
                 <div className="row">
