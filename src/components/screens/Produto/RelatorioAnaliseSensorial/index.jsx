@@ -100,11 +100,13 @@ class RelatorioAnaliseSensorial extends Component {
     });
   };
 
-  responder_deve_aparecer = rastro_terceirizada => {
-    if (rastro_terceirizada === null) {
+  responder_deve_aparecer = analise_sensorial => {
+    if (analise_sensorial === null) {
+      return true;
+    } else if (analise_sensorial.status !== "AGUARDANDO_RESPOSTA") {
       return true;
     } else if (
-      `"${rastro_terceirizada.nome_fantasia}"` !==
+      `"${analise_sensorial.terceirizada.nome_fantasia}"` !==
       localStorage.getItem("nome_instituicao")
     ) {
       return true;
@@ -166,7 +168,7 @@ class RelatorioAnaliseSensorial extends Component {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       disabled={this.responder_deve_aparecer(
-                        homologacao.rastro_terceirizada
+                        homologacao.ultima_analise
                       )}
                       onClick={() => this.showModal()}
                       className="ml-1"
@@ -478,6 +480,7 @@ class RelatorioAnaliseSensorial extends Component {
             showModal={showModal}
             closeModal={this.closeModal}
             homologacao={homologacao}
+            onSend={e => e}
           />
         </div>
       </div>

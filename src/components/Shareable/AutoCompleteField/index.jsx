@@ -13,11 +13,21 @@ export default class AutoCompleteField extends Component {
       onSearch,
       input,
       name,
+      required,
       ...props
     } = this.props;
     return (
       <div className="input">
-        <label className="mb-1">{label}</label>
+        {label && [
+          required && (
+            <span key={0} className="required-asterisk">
+              *
+            </span>
+          ),
+          <label key={1} htmlFor={name} className="col-form-label">
+            {label}
+          </label>
+        ]}
         <AutoComplete {...props} {...input} onSearch={onSearch}>
           <Input.Search
             {...input}
