@@ -199,8 +199,9 @@ export default class TabelaProdutos extends Component {
                   {produto.criado_em.split(" ")[0]}
                   <div className="botoes-produto">
                     <i
-                      className={`fas fa-angle-${isProdutoAtivo ? "up" : "down"
-                        }`}
+                      className={`fas fa-angle-${
+                        isProdutoAtivo ? "up" : "down"
+                      }`}
                       onClick={() => {
                         setIndiceProdutoAtivo(
                           indice === indiceProdutoAtivo ? undefined : indice
@@ -214,8 +215,9 @@ export default class TabelaProdutos extends Component {
                 <>
                   <div className="botao-reclamacao mt-4">
                     <Link
-                      to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid
-                        }`}
+                      to={`/gestao-produto/relatorio?uuid=${
+                        produto.ultima_homologacao.uuid
+                      }`}
                     >
                       <Botao
                         texto="Ver produto"
