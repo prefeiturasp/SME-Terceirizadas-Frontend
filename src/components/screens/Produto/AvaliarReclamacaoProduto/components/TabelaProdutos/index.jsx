@@ -29,7 +29,8 @@ const {
   CODAE_ACEITOU,
   CODAE_RECUSOU,
   RESPONDIDO_TERCEIRIZADA,
-  ANALISE_SENSORIAL_RESPONDIDA
+  ANALISE_SENSORIAL_RESPONDIDA,
+  AGUARDANDO_ANALISE_SENSORIAL
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -198,9 +199,8 @@ export default class TabelaProdutos extends Component {
                   {produto.criado_em.split(" ")[0]}
                   <div className="botoes-produto">
                     <i
-                      className={`fas fa-angle-${
-                        isProdutoAtivo ? "up" : "down"
-                      }`}
+                      className={`fas fa-angle-${isProdutoAtivo ? "up" : "down"
+                        }`}
                       onClick={() => {
                         setIndiceProdutoAtivo(
                           indice === indiceProdutoAtivo ? undefined : indice
@@ -214,9 +214,8 @@ export default class TabelaProdutos extends Component {
                 <>
                   <div className="botao-reclamacao mt-4">
                     <Link
-                      to={`/gestao-produto/relatorio?uuid=${
-                        produto.ultima_homologacao.uuid
-                      }`}
+                      to={`/gestao-produto/relatorio?uuid=${produto.ultima_homologacao.uuid
+                        }`}
                     >
                       <Botao
                         texto="Ver produto"
@@ -235,8 +234,11 @@ export default class TabelaProdutos extends Component {
                         reclamacao.status !== AGUARDANDO_AVALIACAO;
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
-                        reclamacao.status === CODAE_ACEITOU ||
-                        reclamacao.status === CODAE_RECUSOU;
+                        [
+                          CODAE_ACEITOU,
+                          CODAE_RECUSOU,
+                          AGUARDANDO_ANALISE_SENSORIAL
+                        ].includes(reclamacao.status);
                       const desabilitarAnalise =
                         produtoTemReclacaoAceita ||
                         ![
