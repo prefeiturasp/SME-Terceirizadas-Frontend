@@ -215,6 +215,10 @@ class AtualizacaoProdutoForm extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
+  getHistorico = () => {
+    return this.state.logs;
+  };
+
   render() {
     const { onSubmit, values } = this.props;
     const {
@@ -295,6 +299,7 @@ class AtualizacaoProdutoForm extends Component {
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 logs={logs}
+                getHistorico={this.getHistorico}
               />
               <Wizard
                 arrayOfObjects={wizardSteps}

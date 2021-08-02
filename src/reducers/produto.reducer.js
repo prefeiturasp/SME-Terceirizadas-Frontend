@@ -12,8 +12,10 @@ export default function reducer(state = {}, action) {
           .tem_aditivos_alergenicos
           ? "1"
           : "0";
-        action.data.marca = action.data.marca.nome;
-        action.data.fabricante = action.data.fabricante.nome;
+        action.data.marca =
+          action.data.marca !== null ? action.data.marca.nome : "";
+        action.data.fabricante =
+          action.data.fabricante !== null ? action.data.fabricante.nome : "";
         let protocolos = [];
         action.data.protocolos.forEach(protocolo => {
           protocolos.push(protocolo.nome);
