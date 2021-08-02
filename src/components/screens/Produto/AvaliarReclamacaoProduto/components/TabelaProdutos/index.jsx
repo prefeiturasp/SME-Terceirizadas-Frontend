@@ -29,7 +29,8 @@ const {
   CODAE_ACEITOU,
   CODAE_RECUSOU,
   RESPONDIDO_TERCEIRIZADA,
-  ANALISE_SENSORIAL_RESPONDIDA
+  ANALISE_SENSORIAL_RESPONDIDA,
+  AGUARDANDO_ANALISE_SENSORIAL
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -235,8 +236,11 @@ export default class TabelaProdutos extends Component {
                         reclamacao.status !== AGUARDANDO_AVALIACAO;
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
-                        reclamacao.status === CODAE_ACEITOU ||
-                        reclamacao.status === CODAE_RECUSOU;
+                        [
+                          CODAE_ACEITOU,
+                          CODAE_RECUSOU,
+                          AGUARDANDO_ANALISE_SENSORIAL
+                        ].includes(reclamacao.status);
                       const desabilitarAnalise =
                         produtoTemReclacaoAceita ||
                         ![
