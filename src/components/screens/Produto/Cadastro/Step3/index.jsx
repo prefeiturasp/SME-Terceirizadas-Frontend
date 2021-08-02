@@ -123,13 +123,7 @@ class Step3 extends Component {
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
-              validate={
-                payload &&
-                this.ehRascunho(payload) &&
-                this.temImagensSalvas(payload)
-                  ? []
-                  : [required]
-              }
+              validate={payload && this.ehRascunho(payload) ? [] : [required]}
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
             />
           </div>

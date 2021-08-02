@@ -17,7 +17,8 @@ import {
   updateProduto,
   getRascunhosDeProduto,
   excluirRascunhoDeProduto,
-  excluirImagemDoProduto
+  excluirImagemDoProduto,
+  produtoJaExiste
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
 
@@ -60,9 +61,9 @@ class cadastroProduto extends Component {
         imagens: [],
         informacoes_nutricionais: [],
         nome: null,
-        eh_para_alunos_com_dieta: null,
-        componentes: null,
-        tem_aditivos_alergenicos: null,
+        eh_para_alunos_com_dieta: false,
+        componentes: "",
+        tem_aditivos_alergenicos: false,
         aditivos: null,
         tipo: null,
         embalagem: null,
@@ -157,8 +158,9 @@ class cadastroProduto extends Component {
     this.props.loadProduto(produto);
     produto.eh_para_alunos_com_dieta = produtoRaw.eh_para_alunos_com_dieta;
     produto.tem_aditivos_alergenicos = produtoRaw.tem_aditivos_alergenicos;
-    produto.marca = produtoRaw.marca.uuid;
-    produto.fabricante = produtoRaw.fabricante.uuid;
+    produto.marca = produtoRaw.marca !== null ? produtoRaw.marca.uuid : null;
+    produto.fabricante =
+      produtoRaw.fabricante !== null ? produtoRaw.fabricante.uuid : null;
     let protocolos = [];
     produtoRaw.protocolos.forEach(protocolo => {
       protocolos.push(protocolo.uuid);
@@ -345,15 +347,17 @@ class cadastroProduto extends Component {
     });
   };
 
-  updateOrCreateProduto(values) {
+  updateOrCreateProduto = async values => {
     const { payload, currentStep } = this.state;
-    payload["nome"] = values.nome.split("+")[0];
-    payload["tipo"] = values.tipo;
-    payload["embalagem"] = values.embalagem;
-    payload["prazo_validade"] = values.prazo_validade;
-    payload["info_armazenamento"] = values.info_armazenamento;
-    payload["outras_informacoes"] = values.outras_informacoes;
-    payload["numero_registro"] = values.numero_registro;
+
+    payload["nome"] =
+      values !== undefined && values.nome ? values.nome.split("+")[0] : "";
+    payload["tipo"] = values ? values.tipo : null;
+    payload["embalagem"] = values ? values.embalagem : null;
+    payload["prazo_validade"] = values ? values.prazo_validade : null;
+    payload["info_armazenamento"] = values ? values.info_armazenamento : null;
+    payload["outras_informacoes"] = values ? values.outras_informacoes : null;
+    payload["numero_registro"] = values ? values.numero_registro : null;
     if (!payload["porcao"]) {
       delete payload["porcao"];
     }
@@ -363,12 +367,29 @@ class cadastroProduto extends Component {
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
-    let erros = [];
-    if (currentStep === 0) {
-      erros = validaFormularioStep1(payload);
+    let erro = null;
+
+    if (
+      currentStep === 0 &&
+      payload["nome"] !== null &&
+      payload["marca"] !== null &&
+      payload["fabricante"] !== null
+    ) {
+      const resposta = await produtoJaExiste(
+        payload["nome"],
+        payload["marca"],
+        payload["fabricante"]
+      );
+
+      if (resposta.status !== HTTP_STATUS.OK) {
+        erro = "Erro ao consultar se produto já existe.";
+      } else if (resposta.data.produto_existe) {
+        erro = "Produto já existente, não é permitido cadastro em duplicidade.";
+      }
     }
-    if (erros.length > 0) {
-      toastError(erros[0]);
+
+    if (erro !== null) {
+      toastError(erro);
     } else {
       if (!payload.uuid) {
         submitProduto(payload).then(response => {
@@ -400,7 +421,7 @@ class cadastroProduto extends Component {
         });
       }
     }
-  }
+  };
 
   resetModal = () => {
     this.props.change("nome_marca", null);

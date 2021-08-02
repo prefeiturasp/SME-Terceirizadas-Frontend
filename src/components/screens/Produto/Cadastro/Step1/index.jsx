@@ -301,6 +301,7 @@ class Step1 extends Component {
           <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
         );
       });
+
       responseFabricantes.data.results.forEach(fabricante => {
         listaFabricantes.push(
           <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
@@ -566,9 +567,8 @@ class Step1 extends Component {
               label="Nome dos componentes do produto"
               name="componentes"
               type="text"
-              validate={[required, maxLength5000]}
+              validate={[maxLength5000]}
               maxLength={5001}
-              required
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);
               }}
