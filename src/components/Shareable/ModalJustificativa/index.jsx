@@ -2,7 +2,7 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { InputText } from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import Botao from "components/Shareable/Botao";
@@ -21,7 +21,8 @@ const ModalJustificativa = ({
   titulo,
   state,
   comAnexo = false,
-  labelJustificativa = "Justificativa"
+  labelJustificativa = "Justificativa",
+  terceirizada
 }) => {
   return (
     <Modal
@@ -32,51 +33,64 @@ const ModalJustificativa = ({
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={state.produto}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <div className="form-row row-filds-produto">
-                <div className="col-4">
-                  <Field
-                    component={InputText}
-                    label="Nome do Produto"
-                    name="nome"
-                    disabled={true}
-                  />
+      {state.acao === "responder" && (
+        <Modal.Body>
+          <Form
+            onSubmit={onSubmit}
+            initialValues={state.produto}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="form-row row-filds-produto">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nome do Produto"
+                      name="nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Marca"
+                      name="marca.nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Fabricante"
+                      name="fabricante.nome"
+                      disabled={true}
+                    />
+                  </div>
                 </div>
-                <div className="col-4">
-                  <Field
-                    component={InputText}
-                    label="Marca"
-                    name="marca.nome"
-                    disabled={true}
-                  />
-                </div>
-                <div className="col-4">
-                  <Field
-                    component={InputText}
-                    label="Fabricante"
-                    name="fabricante.nome"
-                    disabled={true}
-                  />
-                </div>
-              </div>
-            </form>
-          )}
-        />
-      </Modal.Body>
+              </form>
+            )}
+          />
+        </Modal.Body>
+      )}
       <Form
         onSubmit={onSubmit}
         render={({ handleSubmit, submitting, form }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
-              <div className="form-row row-modal">
+              <div className="form-row">
                 <div className="col-12">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={InputText}
+                    label="Terceirizada"
+                    name="nome_terceirizada"
+                    disabled={true}
+                    defaultValue={terceirizada.nome_fantasia}
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="col-12">
+                  <Field
+                    component={CKEditorField}
                     label={labelJustificativa}
                     name="justificativa"
                     required

@@ -46,7 +46,8 @@ export default class TabelaProdutos extends Component {
       mostraModalJustificativa: false,
       showModalAnalise: false,
       tipo_resposta: undefined,
-      protocoloAnalise: null
+      protocoloAnalise: null,
+      terceirizada: null
     };
   }
 
@@ -128,12 +129,18 @@ export default class TabelaProdutos extends Component {
     }
   };
 
-  abreModalJustificativa = (acao, uuidReclamacao, produto) => {
+  abreModalJustificativa = (
+    acao,
+    uuidReclamacao,
+    produto,
+    terceirizada = null
+  ) => {
     this.setState({
       mostraModalJustificativa: true,
       acao,
       uuidReclamacao,
-      produto
+      produto,
+      terceirizada: terceirizada
     });
   };
 
@@ -181,7 +188,8 @@ export default class TabelaProdutos extends Component {
     const {
       mostraModalJustificativa,
       showModalAnalise,
-      protocoloAnalise
+      protocoloAnalise,
+      terceirizada
     } = this.state;
     return (
       <section className="resultados-busca-produtos mb-3">
@@ -247,7 +255,11 @@ export default class TabelaProdutos extends Component {
                     .map((reclamacao, indice) => {
                       const desabilitaQuestionar =
                         produtoTemReclacaoAceita ||
-                        reclamacao.status !== AGUARDANDO_AVALIACAO;
+                        ![
+                          AGUARDANDO_AVALIACAO,
+                          RESPONDIDO_TERCEIRIZADA,
+                          ANALISE_SENSORIAL_RESPONDIDA
+                        ].includes(reclamacao.status);
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
                         [
@@ -289,7 +301,10 @@ export default class TabelaProdutos extends Component {
                               this.abreModalJustificativa(
                                 this.QUESTIONAR_TERCEIRIZADA,
                                 reclamacao.uuid,
-                                produto
+                                produto,
+                                reclamacao.escola.lote
+                                  ? reclamacao.escola.lote.terceirizada
+                                  : null
                               )
                             }
                           />
@@ -355,6 +370,7 @@ export default class TabelaProdutos extends Component {
           onSubmit={this.onModalJustificativaSubmit}
           state={this.state}
           comAnexo={this.state.acao === this.RESPONDER}
+          terceirizada={terceirizada}
         />
         <ModalPadrao
           showModal={showModalAnalise}
