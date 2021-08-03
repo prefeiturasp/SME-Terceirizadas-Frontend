@@ -20,7 +20,8 @@ import { RECLAMACAO_PRODUTO_STATUS } from "constants/shared";
 import {
   CODAEAceitaReclamacao,
   CODAERecusaReclamacao,
-  CODAEQuestionaTerceirizada
+  CODAEQuestionaTerceirizada,
+  CODAEQuestionaUE
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
 
@@ -28,9 +29,11 @@ const {
   AGUARDANDO_AVALIACAO,
   CODAE_ACEITOU,
   CODAE_RECUSOU,
+  AGUARDANDO_RESPOSTA_UE,
+  AGUARDANDO_ANALISE_SENSORIAL,
+  AGUARDANDO_RESPOSTA_TERCEIRIZADA,
   RESPONDIDO_TERCEIRIZADA,
-  ANALISE_SENSORIAL_RESPONDIDA,
-  AGUARDANDO_ANALISE_SENSORIAL
+  ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -49,13 +52,16 @@ export default class TabelaProdutos extends Component {
 
   ACEITAR_RECLAMACAO = "aceitar";
   RECUSAR_RECLAMACAO = "rejeitar";
-  QUESTIONAR = "questionar";
+  QUESTIONAR_TERCEIRIZADA = "questionar_terceirizada";
+  QUESTIONAR_UE = "questionar_ue";
   RESPONDER = "responder";
 
   defineTitulo = () => {
     switch (this.state.acao) {
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return "Questionar terceirizada sobre reclamação de produto";
+      case this.QUESTIONAR_UE:
+        return "Questionar Unidade Escolar sobre reclamação de produto";
       case this.RESPONDER:
         return "Responder reclamação de produto";
       default:
@@ -65,7 +71,9 @@ export default class TabelaProdutos extends Component {
 
   defineLabelJustificativa = () => {
     switch (this.state.acao) {
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
+        return "Questionamento";
+      case this.QUESTIONAR_UE:
         return "Questionamento";
       case this.RESPONDER:
         return "Justificativa";
@@ -76,8 +84,10 @@ export default class TabelaProdutos extends Component {
 
   defineEndpoint = () => {
     switch (this.state.acao) {
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return CODAEQuestionaTerceirizada;
+      case this.QUESTIONAR_UE:
+        return CODAEQuestionaUE;
       case this.RESPONDER:
         if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
           return CODAEAceitaReclamacao;
@@ -93,9 +103,13 @@ export default class TabelaProdutos extends Component {
 
   mostraToastSucesso = () => {
     switch (this.state.acao) {
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return toastSuccess(
           "Questionamento enviado a terceirizada com sucesso"
+        );
+      case this.QUESTIONAR_UE:
+        return toastSuccess(
+          "Questionamento enviado a unidade escolar com sucesso"
         );
       case this.RESPONDER:
         if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
@@ -212,8 +226,8 @@ export default class TabelaProdutos extends Component {
                 </div>
               </div>
               {isProdutoAtivo && (
-                <>
-                  <div className="botao-reclamacao mt-4">
+                <div className="container">
+                  <div className="botao-ver-produto mt-4">
                     <Link
                       to={`/gestao-produto/relatorio?uuid=${
                         produto.ultima_homologacao.uuid
@@ -248,18 +262,63 @@ export default class TabelaProdutos extends Component {
                           RESPONDIDO_TERCEIRIZADA,
                           ANALISE_SENSORIAL_RESPONDIDA
                         ].includes(reclamacao.status);
-
+                      const desabilitaQuestionarUE =
+                        produtoTemReclacaoAceita ||
+                        reclamacao.status ===
+                          AGUARDANDO_RESPOSTA_TERCEIRIZADA ||
+                        reclamacao.status === AGUARDANDO_RESPOSTA_UE ||
+                        reclamacao.status === AGUARDANDO_ANALISE_SENSORIAL ||
+                        reclamacao.status === CODAE_RECUSOU;
                       const deveMostrarBarraHorizontal =
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
                         <Reclamacao key={0} reclamacao={reclamacao} />,
-                        <div key={1} className="botao-reclamacao mt-4">
+                        <div key={1}>
+                          <p className="botao-reclamacao-title">
+                            Questionamentos
+                          </p>
+                        </div>,
+                        <div key={2} className="botao-reclamacao mt-4">
+                          <Botao
+                            texto="Questionar Terceirizada"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            disabled={desabilitaQuestionar}
+                            onClick={() =>
+                              this.abreModalJustificativa(
+                                this.QUESTIONAR_TERCEIRIZADA,
+                                reclamacao.uuid,
+                                produto
+                              )
+                            }
+                          />
+                          <Botao
+                            texto="Questionar U.E"
+                            className="ml-3"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            disabled={desabilitaQuestionarUE}
+                            onClick={() =>
+                              this.abreModalJustificativa(
+                                this.QUESTIONAR_UE,
+                                reclamacao.uuid,
+                                produto
+                              )
+                            }
+                          />
+                        </div>,
+                        <div key={3}>
+                          <p className="botao-reclamacao-title">
+                            Solicitar análise e resposta
+                          </p>
+                        </div>,
+                        <div key={4} className="botao-reclamacao mt-4">
                           <Botao
                             texto="Solicitar análise sensorial"
                             className="mr-3"
                             type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() =>
                               this.abreModalAnalise(reclamacao.uuid)
                             }
@@ -269,7 +328,7 @@ export default class TabelaProdutos extends Component {
                             texto="Responder"
                             className="ml-3"
                             type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
                             disabled={desabilitaResponder}
                             onClick={() =>
                               this.abreModalJustificativa(
@@ -279,25 +338,11 @@ export default class TabelaProdutos extends Component {
                               )
                             }
                           />
-                          <Botao
-                            texto="Questionar Terceirizada"
-                            className="ml-3"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaQuestionar}
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.QUESTIONAR,
-                                reclamacao.uuid,
-                                produto
-                              )
-                            }
-                          />
                         </div>,
                         deveMostrarBarraHorizontal && <hr />
                       ];
                     })}
-                </>
+                </div>
               )}
             </div>
           );

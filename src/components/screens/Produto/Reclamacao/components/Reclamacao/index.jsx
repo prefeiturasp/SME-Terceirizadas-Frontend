@@ -6,8 +6,10 @@ const {
   CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_RECUSOU_RECLAMACAO,
   CODAE_QUESTIONOU_TERCEIRIZADA,
+  CODAE_QUESTIONOU_UE,
   CODAE_RESPONDEU_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
+  UE_RESPONDEU_RECLAMACAO,
   AGUARDANDO_ANALISE_SENSORIAL,
   ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
@@ -15,13 +17,12 @@ const {
 const Reclamacao = ({ reclamacao }) => {
   const blocoQuestionamentoCodae = log => {
     return (
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <div className="row">
+        <div className="col-4">
           <div className="label-item">Data quest. CODAE</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Questionamento CODAE</div>
           <div
             className="value-item value-uppercase"
@@ -36,14 +37,33 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaTerceirizada = log => {
     return (
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <div className="row">
+        <div className="col-4">
           <div className="label-item">Data resposta terc.</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Resposta terceirizada</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaUE = log => {
+    return (
+      <div className="row">
+        <div className="col-4">
+          <div className="label-item">Data resposta U.E.</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="col-8">
+          <div className="label-item">Resposta U.E.</div>
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
@@ -57,13 +77,12 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoAceiteOuRecusa = log => {
     return (
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <div className="row">
+        <div className="col-4">
           <div className="label-item">Data avaliação CODAE</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Justificativa avaliação CODAE</div>
           <div
             className="value-item value-uppercase"
@@ -78,13 +97,13 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaCodae = log => {
     return (
-      <div className="linha linha-3">
+      <div className="row">
         <div />
-        <div className="item">
+        <div className="col-4">
           <div className="label-item">Data resposta CODAE</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Resposta CODAE</div>
           <div
             className="value-item value-uppercase"
@@ -99,15 +118,14 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoCodaePediuAnalise = log => {
     return (
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <div className="row">
+        <div className="col-4">
           <div className="label-item">
             Data da solicitação da Análise Sensorial
           </div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">
             Solicitação de Análise Sensorial CODAE
           </div>
@@ -124,13 +142,12 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaAnalise = log => {
     return (
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <div className="row">
+        <div className="col-4">
           <div className="label-item">Data resposta terc.</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Resposta Análise Sensorial</div>
           <div
             className="value-item value-uppercase"
@@ -144,7 +161,10 @@ const Reclamacao = ({ reclamacao }) => {
   };
 
   const blocoMensagem = log => {
-    if (log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA) {
+    if (
+      log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA ||
+      log.status_evento_explicacao === CODAE_QUESTIONOU_UE
+    ) {
       return blocoQuestionamentoCodae(log);
     } else if (
       log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO
@@ -161,47 +181,53 @@ const Reclamacao = ({ reclamacao }) => {
       return blocoCodaePediuAnalise(log);
     } else if (log.status_evento_explicacao === ANALISE_SENSORIAL_RESPONDIDA) {
       return blocoRespostaAnalise(log);
+    } else if (log.status_evento_explicacao === UE_RESPONDEU_RECLAMACAO) {
+      return blocoRespostaUE(log);
     }
   };
 
   return (
-    <div className="detalhes-reclamacao">
-      <div className="linha linha-1">
-        <div className="item">
+    <>
+      <div className="row">
+        <div className="col-6">
           <div className="label-item">Reclamação #{reclamacao.id_externo}</div>
         </div>
-        <div className="item item-horizontal">
-          <div className="label-item">Status Reclamação:</div>
-          <div className="value-item">{reclamacao.status_titulo}</div>
+        <div className="col-6">
+          <div className="label-item">
+            Status Reclamação: <b>{reclamacao.status_titulo}</b>
+          </div>
         </div>
       </div>
-      <div className="linha linha-2">
-        <div className="item">
+      <div className="row item-horizontal">
+        <div className="col-4">
           <div className="label-item">Nome Reclamante</div>
           <div className="value-item">{reclamacao.reclamante_nome}</div>
         </div>
-        <div className="item">
+        <div className="col-2">
           <div className="label-item">RF</div>
           <div className="value-item">
             {reclamacao.reclamante_registro_funcional}
           </div>
         </div>
-        <div className="item">
+        <div className="col-4">
           <div className="label-item">Nome Escola</div>
           <div className="value-item">{reclamacao.escola.nome}</div>
         </div>
-        <div className="item">
+        <div className="col-2">
           <div className="label-item">Cód. EOL</div>
           <div className="value-item">{reclamacao.escola.codigo_eol}</div>
         </div>
       </div>
-      <div className="linha linha-3">
-        <div />
-        <div className="item">
+      <hr />
+      <div className="row">
+        <div className="col-12">
+          <p className="reclamacao-title">Reclamação</p>
+        </div>
+        <div className="col-4">
           <div className="label-item">Data reclamação</div>
           <div className="value-item">{reclamacao.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="item">
+        <div className="col-8">
           <div className="label-item">Justificativa reclamação</div>
           <div
             className="value-item value-uppercase"
@@ -212,7 +238,7 @@ const Reclamacao = ({ reclamacao }) => {
       {reclamacao.logs.map(log => {
         return blocoMensagem(log);
       })}
-    </div>
+    </>
   );
 };
 
