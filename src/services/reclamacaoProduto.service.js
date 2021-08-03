@@ -7,7 +7,16 @@ export const CODAERecusaReclamacao = async (uuid, params) =>
   await axios.patch(`/reclamacoes-produtos/${uuid}/codae-recusa/`, params);
 
 export const CODAEQuestionaTerceirizada = async (uuid, params) =>
-  await axios.patch(`/reclamacoes-produtos/${uuid}/codae-questiona/`, params);
+  await axios.patch(
+    `/reclamacoes-produtos/${uuid}/codae-questiona-terceirizada/`,
+    params
+  );
+
+export const CODAEQuestionaUE = async (uuid, params) =>
+  await axios.patch(
+    `/reclamacoes-produtos/${uuid}/codae-questiona-ue/`,
+    params
+  );
 
 export const CODAERespondeReclamante = async (uuid, params) =>
   await axios.patch(`/reclamacoes-produtos/${uuid}/codae-responde/`, params);
