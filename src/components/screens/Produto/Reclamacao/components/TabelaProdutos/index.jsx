@@ -69,7 +69,7 @@ export default class TabelaProdutos extends Component {
                 </div>
               </div>
               {isProdutoAtivo && (
-                <>
+                <div className="container mt-3">
                   {produto.ultima_homologacao.reclamacoes.map(
                     (reclamacao, indice) => {
                       const deveMostrarBarraHorizontal =
@@ -102,7 +102,7 @@ export default class TabelaProdutos extends Component {
                       style={BUTTON_STYLE.GREEN}
                     />
                   </div>
-                </>
+                </div>
               )}
             </div>
           );

@@ -111,10 +111,25 @@
 
   .botao-reclamacao {
     display: flex;
-    padding-right: 1em;
-    padding-left: 1em;
+    margin-bottom: 2em;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .botao-ver-produto {
+    display: flex;
     margin-bottom: 2em;
     justify-content: flex-end;
     align-items: center;
+  }
+  .botao-reclamacao-title {
+    color: #198459;
+    font-family: Roboto;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0em;
+    text-align: left;
   }
 }
