@@ -17,29 +17,42 @@ const {
 const Reclamacao = ({ reclamacao }) => {
   const blocoQuestionamentoCodae = log => {
     return (
-      <div className="row">
-        <div className="col-4">
-          <div className="label-item">Data quest. CODAE</div>
-          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+      <>
+        <div className="row">
+          <div className="col-4">
+            <div className="label-item">Data questionamento CODAE</div>
+            <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+          </div>
+          <div className="col-8">
+            <div className="label-item">Questionamento CODAE</div>
+            <div
+              className="value-item value-uppercase"
+              dangerouslySetInnerHTML={{
+                __html: log.justificativa
+              }}
+            />
+          </div>
         </div>
-        <div className="col-8">
-          <div className="label-item">Questionamento CODAE</div>
-          <div
-            className="value-item value-uppercase"
-            dangerouslySetInnerHTML={{
-              __html: log.justificativa
-            }}
-          />
+        <div className="row mb-4">
+          <div className="col-4" />
+          <div className="col-8">
+            <div className="label-item">Empresa Questionada</div>
+            <div className="value-item">
+              {reclamacao.escola.lote
+                ? reclamacao.escola.lote.terceirizada.nome_fantasia
+                : "Escola sem lote Vinculado."}
+            </div>
+          </div>
         </div>
-      </div>
+      </>
     );
   };
 
   const blocoRespostaTerceirizada = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-4">
-          <div className="label-item">Data resposta terc.</div>
+          <div className="label-item">Data resposta Terceirizada</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
         <div className="col-8">
@@ -57,7 +70,7 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaUE = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-4">
           <div className="label-item">Data resposta U.E.</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
@@ -77,7 +90,7 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoAceiteOuRecusa = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-4">
           <div className="label-item">Data avaliação CODAE</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
@@ -97,7 +110,7 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaCodae = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div />
         <div className="col-4">
           <div className="label-item">Data resposta CODAE</div>
@@ -118,7 +131,7 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoCodaePediuAnalise = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-4">
           <div className="label-item">
             Data da solicitação da Análise Sensorial
@@ -142,7 +155,7 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaAnalise = log => {
     return (
-      <div className="row">
+      <div className="row mb-4">
         <div className="col-4">
           <div className="label-item">Data resposta terc.</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
