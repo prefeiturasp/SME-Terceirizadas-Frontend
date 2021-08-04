@@ -38,7 +38,7 @@ const Reclamacao = ({ reclamacao }) => {
           <div className="col-8">
             <div className="label-item">Empresa Questionada</div>
             <div className="value-item">
-              {reclamacao.escola.lote
+              {reclamacao.escola.lote && reclamacao.escola.lote.terceirizada
                 ? reclamacao.escola.lote.terceirizada.nome_fantasia
                 : "Escola sem lote Vinculado."}
             </div>

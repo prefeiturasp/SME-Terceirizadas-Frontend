@@ -76,17 +76,21 @@ const ModalJustificativa = ({
         render={({ handleSubmit, submitting, form }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
-              <div className="form-row">
-                <div className="col-12">
-                  <Field
-                    component={InputText}
-                    label="Terceirizada"
-                    name="nome_terceirizada"
-                    disabled={true}
-                    defaultValue={terceirizada.nome_fantasia}
-                  />
+              {state.acao === "questionar_terceirizada" && (
+                <div className="form-row">
+                  <div className="col-12">
+                    <Field
+                      component={InputText}
+                      label="Terceirizada"
+                      name="nome_terceirizada"
+                      disabled={true}
+                      defaultValue={
+                        terceirizada ? terceirizada.nome_fantasia : null
+                      }
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="form-row">
                 <div className="col-12">
                   <Field
