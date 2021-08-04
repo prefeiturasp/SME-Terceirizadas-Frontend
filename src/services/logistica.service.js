@@ -147,3 +147,9 @@ export const desarquivaGuias = async payload => {
   const url = `/solicitacao-remessa/desarquivar/`;
   return await axios.post(url, payload);
 };
+
+export const imprimirGuiaRemessa = async uuid => {
+  const url = `/guias-da-requisicao/${uuid}/relatorio-guia-remessa/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guia_de_remessa.pdf");
+};
