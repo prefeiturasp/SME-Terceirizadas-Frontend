@@ -274,7 +274,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "escola_ou_nutricionista_reclamou",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "terceirizada_respondeu_reclamacao",
   TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO:
-    "terceirizada_cancelou_solicitacao_homologacao"
+    "terceirizada_cancelou_solicitacao_homologacao",
+  CODAE_QUESTIONOU_UE: "codae_questionou_ue"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
