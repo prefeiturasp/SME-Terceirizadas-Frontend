@@ -61,8 +61,13 @@ const ModalJustificativa = ({
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Fabricante"
-                      name="fabricante.nome"
+                      label="Tipo"
+                      name="tipo"
+                      defaultValue={
+                        state.produto.eh_para_alunos_com_dieta
+                          ? "D. Especial"
+                          : "Comum"
+                      }
                       disabled={true}
                     />
                   </div>
