@@ -47,7 +47,8 @@ export default class TabelaProdutos extends Component {
       showModalAnalise: false,
       tipo_resposta: undefined,
       protocoloAnalise: null,
-      terceirizada: null
+      terceirizada: null,
+      escola: null
     };
   }
 
@@ -133,14 +134,16 @@ export default class TabelaProdutos extends Component {
     acao,
     uuidReclamacao,
     produto,
-    terceirizada = null
+    terceirizada = null,
+    escola = null
   ) => {
     this.setState({
       mostraModalJustificativa: true,
       acao,
       uuidReclamacao,
       produto,
-      terceirizada: terceirizada
+      terceirizada: terceirizada,
+      escola: escola
     });
   };
 
@@ -189,6 +192,7 @@ export default class TabelaProdutos extends Component {
       mostraModalJustificativa,
       showModalAnalise,
       protocoloAnalise,
+      escola,
       terceirizada
     } = this.state;
     return (
@@ -318,7 +322,9 @@ export default class TabelaProdutos extends Component {
                               this.abreModalJustificativa(
                                 this.QUESTIONAR_UE,
                                 reclamacao.uuid,
-                                produto
+                                produto,
+                                null,
+                                reclamacao.escola
                               )
                             }
                           />
@@ -371,6 +377,7 @@ export default class TabelaProdutos extends Component {
           state={this.state}
           comAnexo={this.state.acao === this.RESPONDER}
           terceirizada={terceirizada}
+          escola={escola}
         />
         <ModalPadrao
           showModal={showModalAnalise}

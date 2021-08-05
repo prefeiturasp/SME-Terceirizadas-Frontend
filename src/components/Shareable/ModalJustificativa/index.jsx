@@ -22,6 +22,7 @@ const ModalJustificativa = ({
   state,
   comAnexo = false,
   labelJustificativa = "Justificativa",
+  escola,
   terceirizada
 }) => {
   return (
@@ -33,7 +34,7 @@ const ModalJustificativa = ({
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
-      {state.acao === "responder" && (
+      {(state.acao === "responder" || state.acao === "questionar_ue") && (
         <Modal.Body>
           <Form
             onSubmit={onSubmit}
@@ -65,6 +66,17 @@ const ModalJustificativa = ({
                       disabled={true}
                     />
                   </div>
+                  {state.acao === "questionar_ue" && (
+                    <div className="col-12">
+                      <Field
+                        component={InputText}
+                        label="Unidade Educacional"
+                        name="escola"
+                        disabled={true}
+                        defaultValue={escola ? escola.nome : null}
+                      />
+                    </div>
+                  )}
                 </div>
               </form>
             )}
