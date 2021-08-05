@@ -63,7 +63,7 @@ export default class TabelaProdutos extends Component {
       case this.QUESTIONAR_TERCEIRIZADA:
         return "Questionar terceirizada sobre reclamação de produto";
       case this.QUESTIONAR_UE:
-        return "Questionar Unidade Escolar sobre reclamação de produto";
+        return "Questionar Unidade Educacional sobre reclamação de produto";
       case this.RESPONDER:
         return "Responder reclamação de produto";
       default:
@@ -111,7 +111,7 @@ export default class TabelaProdutos extends Component {
         );
       case this.QUESTIONAR_UE:
         return toastSuccess(
-          "Questionamento enviado a unidade escolar com sucesso"
+          "Questionamento enviado a unidade educacional com sucesso"
         );
       case this.RESPONDER:
         if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
