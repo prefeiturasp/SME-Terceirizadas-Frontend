@@ -48,6 +48,35 @@ const Reclamacao = ({ reclamacao }) => {
     );
   };
 
+  const blocoQuestionamentoUE = log => {
+    return (
+      <>
+        <div className="row">
+          <div className="col-4">
+            <div className="label-item">Data questionamento CODAE</div>
+            <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+          </div>
+          <div className="col-8">
+            <div className="label-item">Questionamento CODAE</div>
+            <div
+              className="value-item value-uppercase"
+              dangerouslySetInnerHTML={{
+                __html: log.justificativa
+              }}
+            />
+          </div>
+        </div>
+        <div className="row mb-4">
+          <div className="col-4" />
+          <div className="col-8">
+            <div className="label-item">Escola questionada</div>
+            <div className="value-item">{reclamacao.escola.nome}</div>
+          </div>
+        </div>
+      </>
+    );
+  };
+
   const blocoRespostaTerceirizada = log => {
     return (
       <div className="row mb-4">
@@ -174,11 +203,10 @@ const Reclamacao = ({ reclamacao }) => {
   };
 
   const blocoMensagem = log => {
-    if (
-      log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA ||
-      log.status_evento_explicacao === CODAE_QUESTIONOU_UE
-    ) {
+    if (log.status_evento_explicacao === CODAE_QUESTIONOU_TERCEIRIZADA) {
       return blocoQuestionamentoCodae(log);
+    } else if (log.status_evento_explicacao === CODAE_QUESTIONOU_UE) {
+      return blocoQuestionamentoUE(log);
     } else if (
       log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO
     ) {
