@@ -73,9 +73,7 @@ const ModalJustificativa = ({
                         label="Unidade Educacional"
                         name="escola"
                         disabled={true}
-                        defaultValue={
-                          escola ? escola.nome : null
-                        }
+                        defaultValue={escola ? escola.nome : null}
                       />
                     </div>
                   )}
