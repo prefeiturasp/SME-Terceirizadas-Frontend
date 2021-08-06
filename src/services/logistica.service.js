@@ -153,3 +153,9 @@ export const imprimirGuiaRemessa = async uuid => {
   const { data } = await axios.get(url, { responseType: "blob" });
   saveAs(data, "guia_de_remessa.pdf");
 };
+
+export const imprimirGuiasDaSolicitacao = async uuid => {
+  const url = `/solicitacao-remessa/${uuid}/relatorio-guias-da-requisicao/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guias_da_requisicao.pdf");
+};
