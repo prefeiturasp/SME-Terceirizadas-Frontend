@@ -347,9 +347,9 @@ export default class TabelaProdutos extends Component {
                           />
                           <Botao
                             texto="Responder"
-                            className="ml-3"
+                            className="ml-3 botaoResponder"
                             type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            style={BUTTON_STYLE.GREEN}
                             disabled={desabilitaResponder}
                             onClick={() =>
                               this.abreModalJustificativa(
