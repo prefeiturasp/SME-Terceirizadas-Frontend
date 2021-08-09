@@ -46,7 +46,7 @@ const TabelaProdutos = ({
           <div className="tabela-produto-ue tabela-header-produto-ue">
             <div>Nome do Produto</div>
             <div>Marca</div>
-            <div>Fabircante</div>
+            <div>Fabricante</div>
             <div>Qtde. Reclamações</div>
             <div>Data de cadastro</div>
           </div>
@@ -96,6 +96,8 @@ const TabelaProdutos = ({
                       {produto.ultima_homologacao.reclamacoes
                         .sort(ordenaPorCriadoEm)
                         .map(reclamacao => {
+                          const desabilitarResponder =
+                            reclamacao.status === "RESPONDIDO_UE";
                           return (
                             <div key={reclamacao.uuid}>
                               <Reclamacao reclamacao={reclamacao} />
@@ -111,6 +113,7 @@ const TabelaProdutos = ({
                                         setProdutoSelecionado(produto);
                                         setExibirModal(true);
                                       }}
+                                      disabled={desabilitarResponder}
                                     />
                                   </div>
                                 </div>

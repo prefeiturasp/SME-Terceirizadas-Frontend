@@ -19,10 +19,16 @@ const ResponderQuestionamentoUE = () => {
   const changePage = async page => {
     try {
       setCarregando(true);
-      const data = await filtrarReclamacoesEscola(`${filtros}&page=${page}`);
-      setPage(page);
-      setProdutos(data.results);
-      setTotal(data.total);
+      const response = await filtrarReclamacoesEscola(
+        `${filtros}&page=${page}`
+      );
+      if (response.count > 0) {
+        setPage(page);
+        setProdutos(response.results);
+        setShowBuscaVazia(false);
+      } else {
+        setShowBuscaVazia(true);
+      }
     } catch (e) {
       toastError("Houve um erro ao tentar trocar página");
     }
