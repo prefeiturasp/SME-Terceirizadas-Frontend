@@ -48,18 +48,22 @@ const Filtros = ({
   };
 
   const onSubmit = async formValues => {
+    let params = "";
+    setProdutos(undefined);
+    setCarregando(true);
     if (Object.keys(formValues).length > 0) {
-      setShowBuscaVazia(false);
-      const params = formataPayload(formValues);
-      setCarregando(true);
-      const data = await filtrarReclamacoesEscola(params);
-      setProdutos(data.results);
-      setTotal(data.count);
+      params = formataPayload(formValues);
+    }
+    const response = await filtrarReclamacoesEscola(params);
+    if (response.count > 0) {
+      setProdutos(response.results);
+      setTotal(response.count);
       setFiltros(params);
-      setCarregando(false);
+      setShowBuscaVazia(false);
     } else {
       setShowBuscaVazia(true);
     }
+    setCarregando(false);
   };
 
   useEffect(() => {
