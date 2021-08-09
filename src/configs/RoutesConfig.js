@@ -110,7 +110,8 @@ import {
   AtivacaoDeProdutoPage,
   ConsultaResponderReclamacaoPage,
   ResponderReclamacaoPage,
-  RelatorioQuantitativoPorTerceirizadaPage
+  RelatorioQuantitativoPorTerceirizadaPage,
+  ResponderQuestionamentoUEPage
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
@@ -746,6 +747,12 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
+    component: ResponderQuestionamentoUEPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${

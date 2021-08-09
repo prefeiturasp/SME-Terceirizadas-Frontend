@@ -4,6 +4,7 @@ import ReclamacaoProduto from "components/screens/Produto/Reclamacao";
 import AtivacaoSuspensaoDetalheProduto from "components/screens/Produto/AtivacaoSuspensao/AtivacaoSuspensaoDetalheProduto";
 import AtivacaoSuspensao from "components/screens/Produto/AtivacaoSuspensao";
 import ResponderReclamacaoDetalheProduto from "components/screens/Produto/ResponderReclamacao/ResponderReclamacaoDetalheProduto";
+import ResponderQuestionamentoUE from "components/screens/Produto/ResponderQuestionamentoUE";
 import ResponderReclamacao from "components/screens/Produto/ResponderReclamacao";
 import RelatorioQuantitativoPorTerceirizada from "components/screens/Produto/RelatorioQuantitativoPorTerceirizada";
 
@@ -85,12 +86,26 @@ export const ResponderReclamacaoPage = () => {
   );
 };
 
-const atual = {
-  href: `/${GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
-  titulo: "Relatório quantitativo de produtos por terceirizadas"
+export const ResponderQuestionamentoUEPage = () => {
+  const atual = {
+    href: `/${GESTAO_PRODUTO}/responder-questionamento-ue`,
+    titulo: "Responder Questionamento"
+  };
+
+  return (
+    <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
+      <Breadcrumb home={"/"} atual={atual} />
+      <ResponderQuestionamentoUE />
+    </Page>
+  );
 };
 
 export const RelatorioQuantitativoPorTerceirizadaPage = () => {
+  const atual = {
+    href: `/${GESTAO_PRODUTO}/relatorios/quantitativo-por-terceirizada`,
+    titulo: "Relatório quantitativo de produtos por terceirizadas"
+  };
+
   return (
     <Page
       botaoVoltar

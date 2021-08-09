@@ -1,4 +1,11 @@
 import axios from "./_base";
+import { API_URL } from "../constants/config";
+import authService from "./auth";
+
+const authToken = {
+  Authorization: `JWT ${authService.getToken()}`,
+  "Content-Type": "application/json"
+};
 
 export const CODAEAceitaReclamacao = async (uuid, params) =>
   await axios.patch(`/reclamacoes-produtos/${uuid}/codae-aceita/`, params);
@@ -42,3 +49,30 @@ export const CODAEPedeAnaliseSensorialProdutoReclamacao = (
       return error;
     });
 };
+
+export const getNomesProdutos = async () =>
+  await axios.get(`/produtos/lista-nomes-responder-reclamacao-escola/`);
+
+export const getMarcas = async () =>
+  await axios.get(`/marcas/lista-nomes-responder-reclamacao-escola/`);
+
+export const getFabricantes = async () =>
+  await axios.get(`/fabricantes/lista-nomes-responder-reclamacao-escola/`);
+
+export const filtrarReclamacoesEscola = async params => {
+  const url = `${API_URL}/produtos/filtro-reclamacoes-escola/${params}`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "GET"
+  };
+  return fetch(url, OBJ_REQUEST)
+    .then(result => {
+      return result.json();
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const responderQuestionamentoUE = (params, uuid) =>
+  axios.patch(`/reclamacoes-produtos/${uuid}/escola-responde/`, params);

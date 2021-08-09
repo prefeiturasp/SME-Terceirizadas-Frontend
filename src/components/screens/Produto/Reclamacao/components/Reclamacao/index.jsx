@@ -229,17 +229,17 @@ const Reclamacao = ({ reclamacao }) => {
 
   return (
     <>
-      <div className="row">
+      <div className="row mt-3 mb-3">
         <div className="col-6">
           <div className="label-item">Reclamação #{reclamacao.id_externo}</div>
         </div>
         <div className="col-6">
-          <div className="label-item">
+          <div className="label-item right">
             Status Reclamação: <b>{reclamacao.status_titulo}</b>
           </div>
         </div>
       </div>
-      <div className="row item-horizontal">
+      <div className="row item-horizontal mt-3 mb-3">
         <div className="col-4">
           <div className="label-item">Nome Reclamante</div>
           <div className="value-item">{reclamacao.reclamante_nome}</div>
@@ -255,12 +255,18 @@ const Reclamacao = ({ reclamacao }) => {
           <div className="value-item">{reclamacao.escola.nome}</div>
         </div>
         <div className="col-2">
-          <div className="label-item">Cód. EOL</div>
-          <div className="value-item">{reclamacao.escola.codigo_eol}</div>
+          <div className="col-12">
+            <label className=" label-item right">Cód. EOL</label>
+          </div>
+          <div className="col-12">
+            <label className="value-item right m-1">
+              {reclamacao.escola.codigo_eol}
+            </label>
+          </div>
         </div>
       </div>
       <hr />
-      <div className="row">
+      <div className="row  mt-3 mb-3">
         <div className="col-12">
           <p className="reclamacao-title">Reclamação</p>
         </div>
