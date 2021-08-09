@@ -34,7 +34,9 @@ const ModalJustificativa = ({
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
-      {(state.acao === "responder" || state.acao === "questionar_ue") && (
+      {(state.acao === "responder" ||
+        state.acao === "questionar_ue" ||
+        state.acao === "resposta_ue") && (
         <Modal.Body>
           <Form
             onSubmit={onSubmit}
@@ -62,7 +64,7 @@ const ModalJustificativa = ({
                     <Field
                       component={InputText}
                       label="Tipo"
-                      name="tipo"
+                      name="tipo_dieta"
                       defaultValue={
                         state.produto.eh_para_alunos_com_dieta
                           ? "D. Especial"

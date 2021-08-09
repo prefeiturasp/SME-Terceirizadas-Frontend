@@ -53,6 +53,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           Reclamação de Produto
         </LeafItem>
       )}
+      {exibirReclamacao && (
+        <LeafItem to={`/${GESTAO_PRODUTO}/responder-questionamento-ue`}>
+          Responder Questionamento
+        </LeafItem>
+      )}
       {exibirAvaliarReclamacao && (
         <LeafItem to={`/${GESTAO_PRODUTO}/${AVALIAR_RECLAMACAO_PRODUTO}`}>
           Avaliar Reclamação de Produto
