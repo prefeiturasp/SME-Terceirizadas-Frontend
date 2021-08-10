@@ -15,12 +15,13 @@ const ResponderQuestionamentoUE = () => {
   const [filtros, setFiltros] = useState();
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
+  const PAGE_SIZE = 10;
 
   const changePage = async page => {
     try {
       setCarregando(true);
       const response = await filtrarReclamacoesEscola(
-        `${filtros}&page=${page}`
+        `${filtros}&page=${page}&page_size=${PAGE_SIZE}`
       );
       if (response.count > 0) {
         setPage(page);
@@ -46,6 +47,7 @@ const ResponderQuestionamentoUE = () => {
               setShowBuscaVazia={setShowBuscaVazia}
               setTotal={setTotal}
               setPage={setPage}
+              PAGE_SIZE={PAGE_SIZE}
               setFiltros={setFiltros}
             />
             {showBuscaVazia && (

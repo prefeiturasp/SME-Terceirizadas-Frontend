@@ -25,7 +25,8 @@ const Filtros = ({
   setShowBuscaVazia,
   setTotal,
   setFiltros,
-  setPage
+  setPage,
+  PAGE_SIZE
 }) => {
   const [opcoesNomesProdutos, setOpcoesNomesProdutos] = useState();
   const [opcoesMarcas, setOpcoesMarcas] = useState();
@@ -51,10 +52,10 @@ const Filtros = ({
     let params = "";
     setProdutos(undefined);
     setCarregando(true);
-    if (Object.keys(formValues).length > 0) {
-      params = formataPayload(formValues);
-    }
-    const response = await filtrarReclamacoesEscola(params);
+    params = formataPayload(formValues);
+    const response = await filtrarReclamacoesEscola(
+      `${params}&page=1&page_size=${PAGE_SIZE}`
+    );
     if (response.count > 0) {
       setProdutos(response.results);
       setTotal(response.count);
