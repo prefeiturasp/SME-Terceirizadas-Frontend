@@ -9,23 +9,31 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import ModalJustificativa from "components/Shareable/ModalJustificativa";
+import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Reclamacao from "components/screens/Produto/Reclamacao/components/Reclamacao";
+import { getNumeroProtocoloAnaliseSensorial } from "../../../../../../services/produto.service";
+
+import { CODAEPedeAnaliseSensorialProdutoReclamacao } from "../../../../../../services/reclamacaoProduto.service";
 
 import { RECLAMACAO_PRODUTO_STATUS } from "constants/shared";
 import {
   CODAEAceitaReclamacao,
   CODAERecusaReclamacao,
   CODAEQuestionaTerceirizada,
-  CODAERespondeReclamante
+  CODAEQuestionaUE
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
 
 const {
   AGUARDANDO_AVALIACAO,
   CODAE_ACEITOU,
-  CODAE_RESPONDEU,
-  RESPONDIDO_TERCEIRIZADA
+  CODAE_RECUSOU,
+  AGUARDANDO_RESPOSTA_UE,
+  AGUARDANDO_ANALISE_SENSORIAL,
+  AGUARDANDO_RESPOSTA_TERCEIRIZADA,
+  RESPONDIDO_TERCEIRIZADA,
+  ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -35,23 +43,27 @@ export default class TabelaProdutos extends Component {
       mostraModalReclamacao: false,
       uuidReclamacao: undefined,
       acao: undefined,
-      mostraModalJustificativa: false
+      mostraModalJustificativa: false,
+      showModalAnalise: false,
+      tipo_resposta: undefined,
+      protocoloAnalise: null,
+      terceirizada: null,
+      escola: null
     };
   }
 
   ACEITAR_RECLAMACAO = "aceitar";
   RECUSAR_RECLAMACAO = "rejeitar";
-  QUESTIONAR = "questionar";
+  QUESTIONAR_TERCEIRIZADA = "questionar_terceirizada";
+  QUESTIONAR_UE = "questionar_ue";
   RESPONDER = "responder";
 
   defineTitulo = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return "Aceitar reclamação de produto";
-      case this.RECUSAR_RECLAMACAO:
-        return "Recusar reclamação de produto";
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return "Questionar terceirizada sobre reclamação de produto";
+      case this.QUESTIONAR_UE:
+        return "Questionar Unidade Educacional sobre reclamação de produto";
       case this.RESPONDER:
         return "Responder reclamação de produto";
       default:
@@ -61,13 +73,12 @@ export default class TabelaProdutos extends Component {
 
   defineLabelJustificativa = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-      case this.RECUSAR_RECLAMACAO:
-        return "Justificativa";
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
+        return "Questionamento";
+      case this.QUESTIONAR_UE:
         return "Questionamento";
       case this.RESPONDER:
-        return "Resposta";
+        return "Justificativa";
       default:
         return "";
     }
@@ -75,14 +86,18 @@ export default class TabelaProdutos extends Component {
 
   defineEndpoint = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return CODAEAceitaReclamacao;
-      case this.RECUSAR_RECLAMACAO:
-        return CODAERecusaReclamacao;
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return CODAEQuestionaTerceirizada;
+      case this.QUESTIONAR_UE:
+        return CODAEQuestionaUE;
       case this.RESPONDER:
-        return CODAERespondeReclamante;
+        if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+          return CODAEAceitaReclamacao;
+        }
+        if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
+          return CODAERecusaReclamacao;
+        }
+        break;
       default:
         throw new Error("acao não informada");
     }
@@ -90,35 +105,63 @@ export default class TabelaProdutos extends Component {
 
   mostraToastSucesso = () => {
     switch (this.state.acao) {
-      case this.ACEITAR_RECLAMACAO:
-        return toastSuccess(
-          "Aceite de reclamação de produto enviado com sucesso"
-        );
-      case this.RECUSAR_RECLAMACAO:
-        return toastSuccess(
-          "Recusa de reclamação de produto enviado com sucesso"
-        );
-      case this.QUESTIONAR:
+      case this.QUESTIONAR_TERCEIRIZADA:
         return toastSuccess(
           "Questionamento enviado a terceirizada com sucesso"
         );
+      case this.QUESTIONAR_UE:
+        return toastSuccess(
+          "Questionamento enviado a unidade educacional com sucesso"
+        );
       case this.RESPONDER:
-        return toastSuccess("Reclamação respondida com sucesso");
+        if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+          return toastSuccess(
+            "Aceite de reclamação de produto enviado com sucesso"
+          );
+        }
+        if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
+          return toastSuccess(
+            "Recusa de reclamação de produto enviado com sucesso"
+          );
+        }
+        break;
       default:
         return toastSuccess("Solicitação enviada com sucesso");
     }
   };
 
-  abreModalJustificativa = (acao, uuidReclamacao) => {
+  abreModalJustificativa = (
+    acao,
+    uuidReclamacao,
+    produto,
+    terceirizada = null,
+    escola = null
+  ) => {
     this.setState({
       mostraModalJustificativa: true,
       acao,
-      uuidReclamacao
+      uuidReclamacao,
+      produto,
+      terceirizada: terceirizada,
+      escola: escola
     });
   };
 
   fechaModalJustificativa = () => {
     this.setState({ mostraModalJustificativa: false });
+  };
+
+  abreModalAnalise = async uuidReclamacao => {
+    let response = await getNumeroProtocoloAnaliseSensorial();
+    this.setState({
+      showModalAnalise: true,
+      protocoloAnalise: response.data,
+      uuidReclamacao: uuidReclamacao
+    });
+  };
+
+  closeModalAnalise = () => {
+    this.setState({ showModalAnalise: false });
   };
 
   onModalJustificativaSubmit = formValues =>
@@ -135,15 +178,23 @@ export default class TabelaProdutos extends Component {
         toastError(response.errors);
         reject(response.errors);
       }
+      this.props.setLoading(false);
     });
 
   render() {
     const {
       listaProdutos,
       indiceProdutoAtivo,
-      setIndiceProdutoAtivo
+      setIndiceProdutoAtivo,
+      terceirizadas
     } = this.props;
-    const { mostraModalJustificativa } = this.state;
+    const {
+      mostraModalJustificativa,
+      showModalAnalise,
+      protocoloAnalise,
+      escola,
+      terceirizada
+    } = this.state;
     return (
       <section className="resultados-busca-produtos mb-3">
         <section>
@@ -187,8 +238,8 @@ export default class TabelaProdutos extends Component {
                 </div>
               </div>
               {isProdutoAtivo && (
-                <>
-                  <div className="botao-reclamacao mt-4">
+                <div className="container">
+                  <div className="botao-ver-produto mt-4">
                     <Link
                       to={`/gestao-produto/relatorio?uuid=${
                         produto.ultima_homologacao.uuid
@@ -206,81 +257,113 @@ export default class TabelaProdutos extends Component {
                   {produto.ultima_homologacao.reclamacoes
                     .sort(ordenaPorCriadoEm)
                     .map((reclamacao, indice) => {
-                      const desabilitaAceitarReclamar =
-                        produtoTemReclacaoAceita ||
-                        (reclamacao.status !== AGUARDANDO_AVALIACAO &&
-                          reclamacao.status !== RESPONDIDO_TERCEIRIZADA);
                       const desabilitaQuestionar =
                         produtoTemReclacaoAceita ||
-                        reclamacao.status !== AGUARDANDO_AVALIACAO;
+                        ![
+                          AGUARDANDO_AVALIACAO,
+                          RESPONDIDO_TERCEIRIZADA,
+                          ANALISE_SENSORIAL_RESPONDIDA
+                        ].includes(reclamacao.status);
                       const desabilitaResponder =
-                        !produtoTemReclacaoAceita ||
-                        reclamacao.status === CODAE_RESPONDEU ||
-                        (reclamacao.status !== AGUARDANDO_AVALIACAO &&
-                          reclamacao.status !== RESPONDIDO_TERCEIRIZADA);
+                        produtoTemReclacaoAceita ||
+                        [
+                          CODAE_ACEITOU,
+                          CODAE_RECUSOU,
+                          AGUARDANDO_ANALISE_SENSORIAL
+                        ].includes(reclamacao.status);
+                      const desabilitarAnalise =
+                        produtoTemReclacaoAceita ||
+                        ![
+                          AGUARDANDO_AVALIACAO,
+                          RESPONDIDO_TERCEIRIZADA,
+                          ANALISE_SENSORIAL_RESPONDIDA
+                        ].includes(reclamacao.status);
+                      const desabilitaQuestionarUE =
+                        produtoTemReclacaoAceita ||
+                        reclamacao.status ===
+                          AGUARDANDO_RESPOSTA_TERCEIRIZADA ||
+                        reclamacao.status === AGUARDANDO_RESPOSTA_UE ||
+                        reclamacao.status === AGUARDANDO_ANALISE_SENSORIAL ||
+                        reclamacao.status === CODAE_RECUSOU;
                       const deveMostrarBarraHorizontal =
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
                         <Reclamacao key={0} reclamacao={reclamacao} />,
-                        <div key={1} className="botao-reclamacao mt-4">
+                        <div key={1}>
+                          <p className="botao-reclamacao-title">
+                            Questionamentos
+                          </p>
+                        </div>,
+                        <div key={2} className="botao-reclamacao mt-4">
+                          <Botao
+                            texto="Questionar Terceirizada"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            disabled={desabilitaQuestionar}
+                            onClick={() =>
+                              this.abreModalJustificativa(
+                                this.QUESTIONAR_TERCEIRIZADA,
+                                reclamacao.uuid,
+                                produto,
+                                reclamacao.escola.lote
+                                  ? reclamacao.escola.lote.terceirizada
+                                  : null
+                              )
+                            }
+                          />
+                          <Botao
+                            texto="Questionar U.E"
+                            className="ml-3"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            disabled={desabilitaQuestionarUE}
+                            onClick={() =>
+                              this.abreModalJustificativa(
+                                this.QUESTIONAR_UE,
+                                reclamacao.uuid,
+                                produto,
+                                null,
+                                reclamacao.escola
+                              )
+                            }
+                          />
+                        </div>,
+                        <div key={3}>
+                          <p className="botao-reclamacao-title">
+                            Solicitar análise e resposta
+                          </p>
+                        </div>,
+                        <div key={4} className="botao-reclamacao mt-4">
+                          <Botao
+                            texto="Solicitar análise sensorial"
+                            className="mr-3"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() =>
+                              this.abreModalAnalise(reclamacao.uuid)
+                            }
+                            disabled={desabilitarAnalise}
+                          />
                           <Botao
                             texto="Responder"
-                            className="ml-3"
+                            className="ml-3 botaoResponder"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN}
                             disabled={desabilitaResponder}
                             onClick={() =>
                               this.abreModalJustificativa(
                                 this.RESPONDER,
-                                reclamacao.uuid
+                                reclamacao.uuid,
+                                produto
                               )
                             }
-                          />
-                          <Botao
-                            texto="Questionar Terceirizada"
-                            className="ml-3"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaQuestionar}
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.QUESTIONAR,
-                                reclamacao.uuid
-                              )
-                            }
-                          />
-                          <Botao
-                            texto="Recusar"
-                            className="ml-3"
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.RECUSAR_RECLAMACAO,
-                                reclamacao.uuid
-                              )
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaAceitarReclamar}
-                          />
-                          <Botao
-                            texto="Aceitar"
-                            className="ml-3"
-                            onClick={() =>
-                              this.abreModalJustificativa(
-                                this.ACEITAR_RECLAMACAO,
-                                reclamacao.uuid
-                              )
-                            }
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaAceitarReclamar}
                           />
                         </div>,
                         deveMostrarBarraHorizontal && <hr />
                       ];
                     })}
-                </>
+                </div>
               )}
             </div>
           );
@@ -291,10 +374,24 @@ export default class TabelaProdutos extends Component {
           showModal={mostraModalJustificativa}
           closeModal={this.fechaModalJustificativa}
           onSubmit={this.onModalJustificativaSubmit}
-          comAnexo={
-            this.state.acao === this.ACEITAR_RECLAMACAO ||
-            this.state.acao === this.RECUSAR_RECLAMACAO
-          }
+          state={this.state}
+          comAnexo={this.state.acao === this.RESPONDER}
+          terceirizada={terceirizada}
+          escola={escola}
+        />
+        <ModalPadrao
+          showModal={showModalAnalise}
+          closeModal={this.closeModalAnalise}
+          toastSuccessMessage="Solicitação de análise sensorial enviada com sucesso"
+          modalTitle="Deseja solicitar a análise sensorial do produto?"
+          endpoint={CODAEPedeAnaliseSensorialProdutoReclamacao}
+          uuid={this.state.uuidReclamacao}
+          protocoloAnalise={protocoloAnalise}
+          loadSolicitacao={() => this.props.atualizar()}
+          terceirizadas={terceirizadas}
+          eAnalise={true}
+          labelJustificativa="Informações Adicionais"
+          helpText="Solicitamos que seja informado a quantidade e descrição para análise sensorial"
         />
       </section>
     );

@@ -55,7 +55,7 @@ export default ({ solicitacao, updatePage }) => {
     const diasUteis = getDiferencaDiasUteis(dataEntrega);
     const statusEnable = ["Enviada", "Confirmada"];
 
-    if (diasUteis <= 3) return true;
+    if (diasUteis <= 3 || solicitacao.situacao === "ARQUIVADA") return true;
     else if (!statusEnable.includes(solicitacao.status)) return true;
 
     return false;
@@ -99,6 +99,7 @@ export default ({ solicitacao, updatePage }) => {
           {alimentosConsolidado && (
             <TabelaAlimentoConsolidado
               alimentosConsolidado={alimentosConsolidado}
+              mostrarPesoTotal={true}
             />
           )}
           <Form

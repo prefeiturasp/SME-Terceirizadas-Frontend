@@ -2,7 +2,9 @@ import PropTypes from "prop-types";
 import React from "react";
 import { InputErroMensagem } from "../InputErroMensagem";
 import { HelpText } from "../../../Shareable/HelpText";
+import { ContadorCaracteres } from "../../ContadorCaracteres";
 import "../style.scss";
+import TooltipIcone from "../../TooltipIcone";
 
 export const InputText = props => {
   const {
@@ -23,9 +25,12 @@ export const InputText = props => {
     type,
     inputType,
     title,
+    tooltipText,
     maxlength,
     pattern,
-    icone
+    icone,
+    contador,
+    toUppercaseActive
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -43,6 +48,7 @@ export const InputText = props => {
           {label}
         </label>
       ]}
+      {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
       <input
         {...input}
         className={`form-control ${className} ${meta &&
@@ -60,6 +66,11 @@ export const InputText = props => {
         title={title}
         pattern={pattern}
         maxLength={maxlength}
+        onInput={e => {
+          e.target.value = toUppercaseActive
+            ? e.target.value.toUpperCase()
+            : e.target.value;
+        }}
       />
       {acrescentarAppend && (
         <div className="input-group-append">
@@ -69,6 +80,9 @@ export const InputText = props => {
         </div>
       )}
       {icone && <i className={icone} />}
+      {contador && (
+        <ContadorCaracteres atual={input.value.length} max={contador} />
+      )}
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
     </div>
@@ -87,7 +101,8 @@ InputText.propTypes = {
   name: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  type: PropTypes.string
+  type: PropTypes.string,
+  contador: PropTypes.number
 };
 
 InputText.defaultProps = {

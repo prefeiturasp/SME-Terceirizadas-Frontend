@@ -44,6 +44,14 @@ export default class ModalHistorico extends Component {
     this.setState({ logs });
   };
 
+  componentDidUpdate = async () => {
+    const { getHistorico } = this.props;
+
+    if (this.state.logs.length < getHistorico().length) {
+      this.setState({ logs: getHistorico() });
+    }
+  };
+
   render() {
     const { visible, onOk, onCancel } = this.props;
     const { logs, logSelecionado } = this.state;
@@ -88,6 +96,7 @@ export default class ModalHistorico extends Component {
                       >
                         {truncarString(log.status_evento_explicacao, 19)}
                       </div>
+                      <div className="break-column" />
                       <div className="descicao-entidade">{tipoUsuario}</div>
                     </div>
                     <div className="descricao">

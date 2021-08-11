@@ -4,7 +4,8 @@ import HTTP_STATUS from "http-status-codes";
 import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_QUESTIONADO,
-  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO,
+  STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO
 } from "configs/constants";
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
@@ -13,6 +14,7 @@ import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
   getNumeroProtocoloAnaliseSensorial,
+  getNomesTerceirizadas,
   CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
@@ -29,11 +31,14 @@ import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHo
 import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
+import MotivoCacelamentoSolicitacao from "components/Shareable/MotivoCancelamentoSolicitacao";
+import ModalCancelarHomologacaoProduto from "./components";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 import {
   corrigeLinkAnexo,
   stringSeparadaPorVirgulas,
-  usuarioEhCODAEGestaoProduto
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhTerceirizada
 } from "../../../../helpers/utilities";
 import { TIPO_PERFIL } from "../../../../constants/shared";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
@@ -60,7 +65,9 @@ class HomologacaoProduto extends Component {
       visible: false,
       logs: [],
       ativo: false,
-      acao: null
+      acao: null,
+      mostraModalCancelar: false,
+      terceirizadas: null
     };
     this.closeModal = this.closeModal.bind(this);
   }
@@ -110,6 +117,10 @@ class HomologacaoProduto extends Component {
         ativo: this.checaStatus(response.data)
       });
     });
+
+    getNomesTerceirizadas().then(response => {
+      this.setState({ terceirizadas: response.data.results });
+    });
   };
 
   componentDidUpdate = async () => {
@@ -129,6 +140,7 @@ class HomologacaoProduto extends Component {
           response.data.produto
         ),
         status: response.data.status,
+        logs: response.data.logs,
         ativo: this.checaStatus(response.data),
         acao: null
       });
@@ -206,6 +218,10 @@ class HomologacaoProduto extends Component {
     }
   };
 
+  getHistorico = () => {
+    return this.state.logs;
+  };
+
   render() {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
@@ -219,7 +235,8 @@ class HomologacaoProduto extends Component {
       protocoloAnalise,
       logs,
       ativo,
-      acao
+      acao,
+      terceirizadas
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -277,6 +294,10 @@ class HomologacaoProduto extends Component {
                     ? "Solicitamos que seja informado a quantidade e descrição para análise sensorial"
                     : undefined
                 }
+                eAnalise={qualModal === "analise" ? true : false}
+                terceirizadas={terceirizadas}
+                status={status}
+                terceirizada={terceirizada}
               />
               {!!status && status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
                 <InformativoReclamacao homologacao={ultima_homologacao} />
@@ -303,6 +324,13 @@ class HomologacaoProduto extends Component {
                     <MotivoHomologacao logs={logs} />
                   </Fragment>
                 )}
+
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO && (
+                  <MotivoCacelamentoSolicitacao logs={logs} />
+                )}
+
               {logAnaliseSensorial.status_evento_explicacao ===
                 "CODAE pediu análise sensorial" && (
                 <div className="row col-12">
@@ -356,6 +384,21 @@ class HomologacaoProduto extends Component {
                         }
                       />
                     )}
+                  {usuarioEhCODAEGestaoProduto() &&
+                    status === "CODAE_HOMOLOGADO" && (
+                      <Botao
+                        texto={"Solicitar análise sensorial"}
+                        className="mr-2 float-right"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          this.setState({
+                            qualModal: "analise",
+                            showModal: true
+                          })
+                        }
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                    )}
                 </div>
               </div>
               <hr />
@@ -365,6 +408,7 @@ class HomologacaoProduto extends Component {
                   onOk={this.handleOk}
                   onCancel={this.handleCancel}
                   logs={logs}
+                  getHistorico={this.getHistorico}
                 />
               )}
               <ModalAtivacaoSuspensaoProduto
@@ -376,6 +420,15 @@ class HomologacaoProduto extends Component {
                 atualizarDados={this.carregaHomologacao}
               />
               {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
+              <ModalCancelarHomologacaoProduto
+                showModal={this.state.mostraModalCancelar}
+                closeModal={() =>
+                  this.setState({ ...this.state, mostraModalCancelar: false })
+                }
+                produto={produto || {}}
+                idHomologacao={uuid}
+                onAtualizarHomologacao={this.carregaHomologacao}
+              />
               <div className="title">
                 Informação de empresa solicitante (Terceirizada)
               </div>
@@ -680,7 +733,7 @@ class HomologacaoProduto extends Component {
                   <div className="row">
                     <div className="col-12 text-right pt-3">
                       <Botao
-                        texto={"Análise"}
+                        texto={"Solicitar análise sensorial"}
                         className="mr-3"
                         type={BUTTON_TYPE.BUTTON}
                         onClick={() =>
@@ -731,6 +784,25 @@ class HomologacaoProduto extends Component {
                           !necessita_analise_sensorial ||
                           necessita_analise_sensorial === "1"
                         }
+                      />
+                    </div>
+                  </div>
+                )}
+              {usuarioEhTerceirizada() &&
+                status === "CODAE_PENDENTE_HOMOLOGACAO" && (
+                  <div className="row">
+                    <div className="col-12 text-right pt-3">
+                      <Botao
+                        texto={"Cancelar Solicitação"}
+                        className="mr-3"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          this.setState({
+                            ...this.state,
+                            mostraModalCancelar: true
+                          })
+                        }
+                        style={BUTTON_STYLE.GREEN}
                       />
                     </div>
                   </div>

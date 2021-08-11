@@ -1,11 +1,12 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
 export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
-export const ALTERACAO_CARDAPIO_CEI = "alteracao-de-cardapio-de-cei";
+export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
+  "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
-export const ALTERACAO_CARDAPIO = "alteracao-de-cardapio";
+export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
@@ -37,6 +38,8 @@ export const SOLICITACOES_INATIVAS = "solicitacoes-inativas";
 export const SOLICITACOES_COM_QUESTIONAMENTO =
   "solicitacoes-com-questionamento";
 export const SOLICITACOES_DIETA_ESPECIAL = "solicitacoes-dieta-especial";
+export const CONSULTA_PROTOCOLO_PADRAO_DIETA =
+  "consultar-protocolo-padrao-dieta";
 export const PROTOCOLO_PADRAO_DIETA = "protocolo-padrao-dieta";
 
 export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
@@ -134,10 +137,19 @@ export const ENVIO_REQUISICOES_ENTREGA_AVANCADO =
   "envio-requisicoes-entrega-completo";
 export const GESTAO_REQUISICAO_ENTREGA = "gestao-requisicao-entrega";
 export const INSUCESSO_ENTREGA = "insucesso-entrega";
+export const REGISTRAR_INSUCESSO = "registrar-insucesso";
 export const GESTAO_SOLICITACAO_ALTERACAO = "gestao-solicitacao-alteracao";
 export const CONSULTA_SOLICITACAO_ALTERACAO = "consulta-solicitacao-alteracao";
 export const CONFERENCIA_INCONSISTENCIAS = "conferencia-inconsistencias";
 export const CONFERIR_ENTREGA = "conferir-entrega";
+export const CONFERENCIA_GUIA = "conferencia-guia";
+export const CONFERENCIA_GUIA_COM_OCORRENCIA =
+  "conferencia-guia-com-ocorrencia";
+export const CONFERENCIA_GUIA_RESUMO_FINAL = "conferencia-guia-resumo-final";
+export const REPOSICAO_GUIA = "reposicao-guia";
+export const REPOSICAO_RESUMO_FINAL = "reposicao-guia-resumo-final";
+export const ENTREGAS_DILOG = "entregas-dilog";
+export const ENTREGAS_DISTRIBUIDOR = "entregas-distribuidor";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
@@ -152,6 +164,8 @@ export const STATUS_INFORMA_TERCEIRIZADA = "INFORMA_TERCEIRIZADA";
 export const STATUS_CODAE_SUSPENDEU = "CODAE_SUSPENDEU";
 export const STATUS_CODAE_QUESTIONADO = "CODAE_QUESTIONADO";
 export const STATUS_CODAE_AUTORIZOU_RECLAMACAO = "CODAE_AUTORIZOU_RECLAMACAO";
+export const STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO =
+  "TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";

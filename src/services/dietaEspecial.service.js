@@ -299,3 +299,29 @@ export const getMotivosAlteracaoUE = async params => {
 export const createSolicitacaoAlteracaoUE = async payload => {
   return axios.post(`/${SOLICITACOES_DIETA_ESPECIAL}/alteracao-ue/`, payload);
 };
+
+export const getNomesProtocolos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/nomes/");
+
+export const getNomesProtocolosValidos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/lista-protocolos-liberados/");
+
+export const getStatusProtocolos = async () =>
+  axios.get("/protocolo-padrao-dieta-especial/lista-status/");
+
+export const consultaProtocoloPadrao = async params =>
+  axios.get(`/protocolo-padrao-dieta-especial/`, { params });
+
+export const getProtocoloPadrao = async params =>
+  axios.get(`/protocolo-padrao-dieta-especial/${params}/`);
+
+export const editaProtocoloPadraoDietaEspecial = async payload => {
+  return await axios.put(
+    `/protocolo-padrao-dieta-especial/${payload.uuid}/`,
+    payload
+  );
+};
+
+export const consultaHistoricoProtocoloPadrao = async uuid => {
+  return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
+};

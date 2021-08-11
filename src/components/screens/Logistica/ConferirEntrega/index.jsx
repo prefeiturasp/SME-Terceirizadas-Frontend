@@ -13,6 +13,7 @@ export default () => {
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
+  const [initialValues, setInitialValues] = useState();
 
   const buscarGuias = async page => {
     setCarregando(true);
@@ -30,14 +31,28 @@ export default () => {
   };
 
   useEffect(() => {
-    if (filtros) {
-      buscarGuias(1);
-      setPage(1);
+    const queryString = window.location.search;
+
+    if (queryString) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codigo = urlParams.get("numero_guia");
+      const filtro = {
+        numero_guia: codigo
+      };
+      setFiltros({ ...filtro });
+      setInitialValues({ ...filtro });
     } else {
       const filtro = {
         status: ["PENDENTE_DE_CONFERENCIA"]
       };
       setFiltros({ ...filtro });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (filtros) {
+      buscarGuias(1);
+      setPage(1);
     }
   }, [filtros]);
 
@@ -54,7 +69,7 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
-          <Filtros setFiltros={setFiltros} />
+          <Filtros setFiltros={setFiltros} initialValuesProp={initialValues} />
           {guias && (
             <>
               <br /> <hr /> <br />

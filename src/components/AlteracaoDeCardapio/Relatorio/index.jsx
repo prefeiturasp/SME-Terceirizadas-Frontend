@@ -64,7 +64,9 @@ class Relatorio extends Component {
           toastError(getError(response.data));
         } else {
           this.setState({ erro: true });
-          toastError("Erro ao carregar relatório de Alteração de Cardápio");
+          toastError(
+            "Erro ao carregar relatório de Alteração do Tipo de Alimentação"
+          );
         }
       });
     }
@@ -179,7 +181,8 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       alteracaoDeCardapio &&
-      (alteracaoDeCardapio.foi_solicitado_fora_do_prazo || visao === CODAE) &&
+      (alteracaoDeCardapio.foi_solicitado_fora_do_prazo ||
+        (visao === CODAE && alteracaoDeCardapio.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         alteracaoDeCardapio.status
       );
@@ -233,7 +236,7 @@ class Relatorio extends Component {
                 tipoSolicitacao={this.state.tipoSolicitacao}
               />
             )}
-            <span className="page-title">{`Alteração de Cardápio - Solicitação # ${
+            <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
             <Link to={`/`}>

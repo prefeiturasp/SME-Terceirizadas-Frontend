@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { dateDelta } from "../../../helpers/utilities";
 import "./style.scss";
 import { HelpText } from "../HelpText";
+import TooltipIcone from "../TooltipIcone";
 import InputErroMensagem from "../Input/InputErroMensagem";
 
 export class InputComData extends Component {
@@ -16,7 +17,10 @@ export class InputComData extends Component {
   static propTypes = {
     input: PropTypes.shape({
       onChange: PropTypes.func.isRequired,
-      value: PropTypes.string.isRequired
+      value: PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.instanceOf(Date).isRequired
+      ])
     }).isRequired,
     meta: PropTypes.shape({
       touched: PropTypes.bool,
@@ -25,6 +29,9 @@ export class InputComData extends Component {
     placeholder: PropTypes.string,
     label: PropTypes.string,
     dateFormat: PropTypes.string,
+    dateFormatPicker: PropTypes.string,
+    tooltipText: PropTypes.string,
+    writable: PropTypes.bool,
     minDate: PropTypes.instanceOf(Date),
     maxDate: PropTypes.instanceOf(Date)
   };
@@ -32,12 +39,14 @@ export class InputComData extends Component {
   static defaultProps = {
     placeholder: "",
     dateFormat: "DD/MM/YYYY",
+    dateFormatPicker: "dd/MM/yyyy",
     minDate: dateDelta(0),
     maxDate: dateDelta(360),
     disabled: false,
     fullScreen: false,
     inline: false,
-    hasIcon: true
+    hasIcon: true,
+    writable: false
   };
 
   constructor(props) {
@@ -47,7 +56,11 @@ export class InputComData extends Component {
 
   handleChange(date) {
     this.props.input.onChange(
-      moment(date).format(this.props.dateFormat || this.defaultProps.dateFormat)
+      this.props.writable
+        ? date
+        : moment(date).format(
+            this.props.dateFormat || this.defaultProps.dateFormat
+          )
     );
   }
 
@@ -68,7 +81,7 @@ export class InputComData extends Component {
     const {
       activeCalendar,
       className,
-      dateFormat,
+      dateFormatPicker,
       disabled,
       fullScreen,
       hasIcon,
@@ -88,6 +101,7 @@ export class InputComData extends Component {
       showYearDropdown,
       textoLabel,
       popperPlacement,
+      tooltipText,
       visitedError
     } = this.props;
     return (
@@ -102,6 +116,7 @@ export class InputComData extends Component {
             {label}
           </label>
         ]}
+        {tooltipText && <TooltipIcone tooltipText={tooltipText} />}
         <div
           className={
             activeCalendar
@@ -124,7 +139,7 @@ export class InputComData extends Component {
             showMonthDropdown={showMonthDropdown}
             showMonthYearPicker={showMonthYearPicker}
             showYearDropdown={showYearDropdown}
-            dateFormat={dateFormat}
+            dateFormat={dateFormatPicker}
             isClearable={true}
             withPortal={fullScreen}
             inline={inline}

@@ -1,0 +1,59 @@
+.tabela-produto-ue {
+  display: grid;
+  grid-template-columns: 36% 16% 16% 16% 16%;
+}
+
+.tabela-header-produto-ue {
+  background: #f5f6f8;
+
+  div {
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    color: #42474a;
+    border: 1px solid #e9eaea;
+  }
+}
+
+.tabela-body-produto-ue {
+  height: 48px;
+}
+
+.item-produto-ue > div {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  color: #686868;
+  border: 1px solid #e9eaea;
+}
+
+.com-botao {
+  display: flex;
+  justify-content: space-between;
+
+  i {
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 18px;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #42474a;
+
+    cursor: pointer;
+  }
+
+  .botoes-produto {
+    width: 40px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.botao-responder {
+  float: right;
+}

@@ -1,5 +1,5 @@
 import {
-  ALTERACAO_CARDAPIO,
+  ALTERACAO_TIPO_ALIMENTACAO,
   DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INVERSAO_CARDAPIO,
@@ -11,6 +11,7 @@ import {
 import { truncarString } from "../../helpers/utilities";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { usuarioEhEscola } from "../../helpers/utilities";
+import { STATUS_ALIMENTO } from "./const";
 
 const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
@@ -65,13 +66,13 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
 
 export const ajustarFormatoLog = logs => {
   return logs.map(log => {
-    let tamanhoString = 48;
+    let tamanhoString = 52;
     let descricao = log.descricao;
     let solicitacao = "falta-implementar";
     let tipo = "";
     switch (log.tipo_doc) {
       case ALT_CARDAPIO:
-        solicitacao = ALTERACAO_CARDAPIO;
+        solicitacao = ALTERACAO_TIPO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
@@ -115,7 +116,7 @@ export const ajustarFormatoLog = logs => {
         break;
 
       case ALT_CARDAPIO_CEI:
-        solicitacao = ALTERACAO_CARDAPIO;
+        solicitacao = ALTERACAO_TIPO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
         break;
 
@@ -171,4 +172,10 @@ export const slugify = str => {
   }
 
   return str;
+};
+
+export const mapeiaStatusAlimento = str => {
+  if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;
+  if (str === "Parcial") return STATUS_ALIMENTO.PARCIAL;
+  if (str === "Não Recebido") return STATUS_ALIMENTO.NAO_RECEBIDO;
 };

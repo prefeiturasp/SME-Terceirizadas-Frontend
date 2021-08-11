@@ -105,6 +105,11 @@ class DashboardCODAE extends Component {
       filtroPorVencimento,
       visao
     );
+
+    // TODO melhorar essas duas linhas abaixo
+    resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
+    delete resumo["Kit Lanche Passeio Unificado"];
+
     const correcaoOk = corrigeResumo(resumo);
     if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
     this.setState({
@@ -307,7 +312,7 @@ class DashboardCODAE extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Pendentes Autorização"}
+                  cardTitle={"Aguardando Autorização"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={pendentesAutorizacaoListFiltered}
                   icon={"fa-exclamation-triangle"}

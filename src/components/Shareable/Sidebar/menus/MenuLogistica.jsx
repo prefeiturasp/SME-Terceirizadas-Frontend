@@ -1,7 +1,6 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
-  ENVIO_REQUISICOES_ENTREGA,
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
   LOGISTICA,
   GESTAO_REQUISICAO_ENTREGA,
@@ -9,7 +8,9 @@ import {
   CONSULTA_SOLICITACAO_ALTERACAO,
   CONFERENCIA_INCONSISTENCIAS,
   CONFERIR_ENTREGA,
-  INSUCESSO_ENTREGA
+  INSUCESSO_ENTREGA,
+  ENTREGAS_DILOG,
+  ENTREGAS_DISTRIBUIDOR
 } from "configs/constants";
 import {
   usuarioEhDistribuidora,
@@ -24,14 +25,9 @@ const MenuLogistica = () => {
         Disponibilização de solicitações
       </LeafItem> */}
       {usuarioEhLogistica() && (
-        <>
-          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA}`}>
-            Envio de Requisição de Entrega
-          </LeafItem>
-          <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
-            Consulta de Requisições de entrega
-          </LeafItem>
-        </>
+        <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
+          Requisições de Entrega
+        </LeafItem>
       )}
 
       {usuarioEhDistribuidora() && (
@@ -61,6 +57,16 @@ const MenuLogistica = () => {
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`}>
           Conferência de Inconsistências
+        </LeafItem>
+      )}
+
+      {usuarioEhLogistica() && (
+        <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
+      )}
+
+      {usuarioEhDistribuidora() && (
+        <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DISTRIBUIDOR}`}>
+          Entregas
         </LeafItem>
       )}
 

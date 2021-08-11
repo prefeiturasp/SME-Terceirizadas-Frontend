@@ -163,7 +163,8 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       solicitacaoKitLanche &&
-      (solicitacaoKitLanche.foi_solicitado_fora_do_prazo || visao === CODAE) &&
+      (solicitacaoKitLanche.foi_solicitado_fora_do_prazo ||
+        (visao === CODAE && solicitacaoKitLanche.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         solicitacaoKitLanche.status
       );

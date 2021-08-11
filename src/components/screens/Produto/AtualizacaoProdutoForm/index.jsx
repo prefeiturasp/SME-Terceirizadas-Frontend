@@ -9,7 +9,8 @@ import "./styles.scss";
 import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_QUESTIONADO,
-  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO,
+  STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO
 } from "configs/constants";
 import WizardFormPrimeiraPagina from "./components/WizardFormPrimeiraPagina";
 import WizardFormSegundaPagina from "./components/WizardFormSegundaPagina";
@@ -17,6 +18,7 @@ import WizardFormTerceiraPagina from "./components/WizardFormTerceiraPagina";
 import Wizard from "components/Shareable/Wizard";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
 import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
+import MotivoCacelamentoSolicitacao from "components/Shareable/MotivoCancelamentoSolicitacao";
 import {
   getProtocolosDietaEspecial,
   getHomologacao,
@@ -213,6 +215,10 @@ class AtualizacaoProdutoForm extends Component {
     this.setState({ page: this.state.page - 1 });
   }
 
+  getHistorico = () => {
+    return this.state.logs;
+  };
+
   render() {
     const { onSubmit, values } = this.props;
     const {
@@ -270,6 +276,13 @@ class AtualizacaoProdutoForm extends Component {
                     <MotivoHomologacao logs={logs} />
                   </Fragment>
                 )}
+
+              {!!logs.length &&
+                !!status &&
+                status === STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO && (
+                  <MotivoCacelamentoSolicitacao logs={logs} />
+                )}
+
               <div className="row mb-2">
                 <div className="col-12" style={{ alignItems: "flex-end" }}>
                   <Botao
@@ -286,6 +299,7 @@ class AtualizacaoProdutoForm extends Component {
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 logs={logs}
+                getHistorico={this.getHistorico}
               />
               <Wizard
                 arrayOfObjects={wizardSteps}

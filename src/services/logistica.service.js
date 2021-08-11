@@ -101,3 +101,61 @@ export const getGuiasEscola = async params => {
   const url = `/guias-da-requisicao/guias-escola/`;
   return await axios.get(url, { params });
 };
+
+export const getGuiaParaConferencia = async params => {
+  const url = `/guias-da-requisicao/guia-para-conferencia/`;
+  return await axios.get(url, { params });
+};
+
+export const recebeGuiaSemOcorrencia = async params => {
+  const url = `/conferencia-da-guia/`;
+  return await axios.post(url, params);
+};
+
+export const registraInsucessoDeEntrega = async params => {
+  const url = `/insucesso-de-entrega/`;
+  return await axios.post(url, params);
+};
+
+export const getGuiaParaInsucesso = async params => {
+  const url = `/guias-da-requisicao/guia-para-insucesso/`;
+  return await axios.get(url, { params });
+};
+
+export const recebeGuiaComOcorrencia = async params => {
+  const url = `/conferencia-da-guia-com-ocorrencia/`;
+  return await axios.post(url, params);
+};
+
+export const getEntregasDilog = async params => {
+  const url = `/solicitacao-remessa/lista-requisicoes-confirmadas/`;
+  return await axios.get(url, { params });
+};
+
+export const gerarExcelEntregas = async params => {
+  const url = `/solicitacao-remessa/exporta-excel-visao-entregas/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_entregas.xlsx");
+};
+
+export const arquivaGuias = async payload => {
+  const url = `/solicitacao-remessa/arquivar/`;
+  return await axios.post(url, payload);
+};
+
+export const desarquivaGuias = async payload => {
+  const url = `/solicitacao-remessa/desarquivar/`;
+  return await axios.post(url, payload);
+};
+
+export const imprimirGuiaRemessa = async uuid => {
+  const url = `/guias-da-requisicao/${uuid}/relatorio-guia-remessa/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guia_de_remessa.pdf");
+};
+
+export const imprimirGuiasDaSolicitacao = async uuid => {
+  const url = `/solicitacao-remessa/${uuid}/relatorio-guias-da-requisicao/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "guias_da_requisicao.pdf");
+};

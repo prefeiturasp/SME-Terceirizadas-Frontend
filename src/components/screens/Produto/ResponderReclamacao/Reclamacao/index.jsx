@@ -58,6 +58,7 @@ const Reclamacao = ({
   indexProduto,
   setAtivos,
   produtos,
+  produto,
   setProdutos,
   setCarregando,
   rastro_terceirizada
@@ -104,6 +105,7 @@ const Reclamacao = ({
         showModal={exibirModal}
         closeModal={() => setExibirModal(null)}
         reclamacao={reclamacao}
+        produto={produto}
         atualizarProduto={() => atualizarProduto()}
       />
 

@@ -374,6 +374,12 @@
           font-size: 10px;
           line-height: 20px;
         }
+
+        /* Usa uma coluna collapsed para quebrar em nova coluna */
+        .break-column {
+          flex-basis: 100%;
+          width: 0;
+        }
       }
     }
   }

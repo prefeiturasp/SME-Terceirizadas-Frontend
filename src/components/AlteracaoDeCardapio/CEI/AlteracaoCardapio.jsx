@@ -63,7 +63,7 @@ class AlteracaoCardapio extends Component {
       loading: true,
       alteracaoCardapioList: [],
       status: "SEM STATUS",
-      title: "Nova Alteração de Cardápio",
+      title: "Nova Alteração do Tipo de Alimentação",
       id: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -223,7 +223,7 @@ class AlteracaoCardapio extends Component {
     });
     this.setState({
       status: "SEM STATUS",
-      title: "Nova Alteração de Cardápio",
+      title: "Nova Alteração do Tipo de Alimentação",
       id: null,
       showModal: false,
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -239,19 +239,21 @@ class AlteracaoCardapio extends Component {
     ).then(
       res => {
         if (res.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio enviada com sucesso");
+          toastSuccess("Alteração do Tipo de Alimentação enviada com sucesso");
           this.refresh();
           this.resetForm("alteracaoCardapio");
         } else {
           toastError(
-            `Houve um erro ao enviar a Alteração de Cardápio ${getError(
+            `Houve um erro ao enviar a Alteração do Tipo de Alimentação ${getError(
               res.data
             )}`
           );
         }
       },
       function() {
-        toastError("Houve um erro ao enviar a Alteração de Cardápio");
+        toastError(
+          "Houve um erro ao enviar a Alteração do Tipo de Alimentação"
+        );
       }
     );
   }
@@ -286,7 +288,7 @@ class AlteracaoCardapio extends Component {
           SOLICITACAO_CEI
         );
         if (responseInicia.status === HTTP_STATUS.OK) {
-          toastSuccess("Alteração de Cardápio salva com sucesso");
+          toastSuccess("Alteração do Tipo de Alimentação salva com sucesso");
           this.refresh();
           this.resetForm("alteracaoCardapio");
         } else {
@@ -459,7 +461,7 @@ class AlteracaoCardapio extends Component {
                   className="card-title font-weight-bold descricao"
                   style={this.fontHeader}
                 >
-                  Descrição da Alteração de Cardápio
+                  Descrição da Alteração do Tipo de Alimentação
                 </div>
                 <div className="header-alteracao-cei">
                   <section className="section-form-motivo">
@@ -635,7 +637,8 @@ const AlteracaoCardapioForm = reduxForm({
     }
     const errors = {};
     if (!props.formValues.data_alteracao) {
-      errors.data_alteracao = "É necessária uma data de alteração de cardápio";
+      errors.data_alteracao =
+        "É necessária uma data de alteração do tipo de alimentação";
     }
     const periodos = Object.assign({}, values);
     delete periodos.observacao;

@@ -23,7 +23,9 @@ import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
-import ProtocoloPaadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPaadraoDietaEspecialPage.jsx";
+import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
+import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
+import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioDREPage from "../pages/DRE/InversaoDiaCardapio/PainelPedidosPage";
@@ -108,7 +110,8 @@ import {
   AtivacaoDeProdutoPage,
   ConsultaResponderReclamacaoPage,
   ResponderReclamacaoPage,
-  RelatorioQuantitativoPorTerceirizadaPage
+  RelatorioQuantitativoPorTerceirizadaPage,
+  ResponderQuestionamentoUEPage
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
@@ -128,6 +131,14 @@ import ConsultaSolicitacaoAlteracaoPage from "pages/Logistica/ConsultaSolicitaca
 import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
+import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
+import ReposicaoDeGuiaPage from "pages/Logistica/ReposicaoDeGuiaPage";
+import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
+import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
+import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
+import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
+import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
+import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 
 const routesConfig = [
   {
@@ -226,7 +237,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhEscola()
   },
   {
-    path: `/${constants.ESCOLA}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     exact: false,
     tipoUsuario: usuarioEhEscola()
@@ -341,7 +352,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
-    path: `/${constants.CODAE}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.CODAE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioCODAEPage,
     exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
@@ -389,7 +400,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhTerceirizada()
   },
   {
-    path: `/${constants.DRE}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.DRE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
@@ -505,7 +516,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
-    path: `/${constants.ALTERACAO_CARDAPIO}/${constants.RELATORIO}`,
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosAlteracaoDeCardapio(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
@@ -561,7 +572,7 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
-    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_CARDAPIO}`,
+    path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
@@ -738,6 +749,12 @@ const routesConfig = [
       usuarioEhEscola()
   },
   {
+    path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
+    component: ResponderQuestionamentoUEPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscola()
+  },
+  {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
       constants.HOMOLOGACAO_PRODUTO
     }`,
@@ -800,7 +817,11 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhCODAEGestaoProduto() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhEscola()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -979,7 +1000,21 @@ const routesConfig = [
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
-    component: ProtocoloPaadraoDietaEspecialPage,
+    component: ProtocoloPadraoDietaEspecialPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.CONSULTA_PROTOCOLO_PADRAO_DIETA
+    }`,
+    component: ConsultaProtocoloPadraoDietaEspecial,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/protocolo-padrao/:uuid/editar`,
+    component: EditaProtocoloPadraoDieta,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
@@ -1048,6 +1083,56 @@ const routesConfig = [
     component: ConferirEntregaPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA}`,
+    component: ConferenciaDeGuiaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REGISTRAR_INSUCESSO}`,
+    component: RegistrarInsucessoEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${
+      constants.CONFERENCIA_GUIA_COM_OCORRENCIA
+    }`,
+    component: ConferenciaDeGuiaComOcorrenciaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA_RESUMO_FINAL}`,
+    component: ConferenciaDeGuiaResumoFinalPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REPOSICAO_GUIA}`,
+    component: ReposicaoDeGuiaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.REPOSICAO_RESUMO_FINAL}`,
+    component: ReposicaoResumoFinalPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
+    component: EntregasDilogPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,
+    component: EntregasDistribuidorPage,
+    exact: true,
+    tipoUsuario: usuarioEhDistribuidora()
   }
 ];
 

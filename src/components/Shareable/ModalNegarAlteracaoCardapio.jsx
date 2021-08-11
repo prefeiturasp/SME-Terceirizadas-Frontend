@@ -36,7 +36,7 @@ export class ModalNegarAlteracaoCardapio extends Component {
     );
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
-      toastSuccess("Alteração de Cardápio recusado com sucesso!");
+      toastSuccess("Alteração do Tipo de Alimentação recusado com sucesso!");
       this.props.setRedirect();
     } else {
       toastError(resp.detail);

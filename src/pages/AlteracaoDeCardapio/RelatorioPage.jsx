@@ -44,7 +44,9 @@ export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
     ModalNaoAprova={ModalCancelarSolicitacao}
-    toastNaoAprovaMensagem={"Alteração de Cardápio cancelada com sucesso!"}
+    toastNaoAprovaMensagem={
+      "Alteração do Tipo de Alimentação cancelada com sucesso!"
+    }
     endpointNaoAprovaSolicitacao={
       escolaCancelarSolicitacaoDeAlteracaoDeCardapio
     }
@@ -57,8 +59,12 @@ export const RelatorioDRE = () => (
   <RelatorioBase
     visao={DRE}
     ModalNaoAprova={ModalNaoValidarSolicitacao}
-    toastAprovaMensagem={"Alteração de Cardápio validada com sucesso!"}
-    toastAprovaMensagemErro={"Houve um erro ao validar a Alteração de Cardápio"}
+    toastAprovaMensagem={
+      "Alteração do Tipo de Alimentação validada com sucesso!"
+    }
+    toastAprovaMensagemErro={
+      "Houve um erro ao validar a Alteração do Tipo de Alimentação"
+    }
     endpointNaoAprovaSolicitacao={dreReprovarSolicitacaoDeAlteracaoDeCardapio}
     endpointAprovaSolicitacao={dreValidarSolicitacaoDeAlteracaoDeCardapio}
     textoBotaoNaoAprova="Não Validar"
@@ -72,9 +78,11 @@ export const RelatorioCODAE = () => (
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
     ModalQuestionamento={ModalCODAEQuestiona}
-    toastAprovaMensagem={"Alteração de Cardápio autorizada com sucesso!"}
+    toastAprovaMensagem={
+      "Alteração do Tipo de Alimentação autorizada com sucesso!"
+    }
     toastAprovaMensagemErro={
-      "Houve um erro ao autorizar a Alteração de Cardápio"
+      "Houve um erro ao autorizar a Alteração do Tipo de Alimentação"
     }
     endpointNaoAprovaSolicitacao={codaeNegarSolicitacaoDeAlteracaoDeCardapio}
     endpointAprovaSolicitacao={codaeAutorizarSolicitacaoDeAlteracaoDeCardapio}
@@ -91,10 +99,10 @@ export const RelatorioTerceirizada = () => (
     ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
     ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
     toastAprovaMensagem={
-      "Ciência de Alteração de Cardápio enviado com sucesso!"
+      "Ciência de Alteração do Tipo de Alimentação enviado com sucesso!"
     }
     toastAprovaMensagemErro={
-      "Houve um erro ao tomar ciência da Alteração de Cardápio"
+      "Houve um erro ao tomar ciência da Alteração do Tipo de Alimentação"
     }
     endpointAprovaSolicitacao={TerceirizadaTomaCienciaAlteracaoCardapio}
     endpointNaoAprovaSolicitacao={

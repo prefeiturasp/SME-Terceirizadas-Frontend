@@ -1,189 +1,204 @@
-import React, { Component } from "react";
-
-import { ESCOLA, CODAE } from "../../../../configs/constants";
-import { statusEnum } from "constants/shared";
+import React, { useState, useEffect } from "react";
 import {
   getDietaEspecial,
   escolaCancelaSolicitacao
-} from "../../../../services/dietaEspecial.service";
-import { getProtocoloDietaEspecial } from "../../../../services/relatorios";
-
-import { toastSuccess } from "components/Shareable/Toast/dialogs";
-import "antd/dist/antd.css";
-import { Spin } from "antd";
-
-import Botao from "../../../Shareable/Botao";
+} from "services/dietaEspecial.service";
+import { getProtocoloDietaEspecial } from "services/relatorios";
+import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
-} from "../../../Shareable/Botao/constants";
-
+} from "components/Shareable/Botao/constants";
+import HTTP_STATUS from "http-status-codes";
+import { ESCOLA, CODAE } from "configs/constants";
+import { statusEnum } from "constants/shared";
+import "antd/dist/antd.css";
+import { cabecalhoDieta } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
-
+import ModalHistorico from "../../../Shareable/ModalHistorico";
+import { Spin } from "antd";
 import "./style.scss";
-import { cabecalhoDieta } from "./helpers";
 
-const BotaoGerarRelatorio = ({ uuid }) => {
-  return (
-    <div className="form-group row float-right mt-4">
-      <Botao
-        texto="Gerar Protocolo"
-        type={BUTTON_TYPE.BUTTON}
-        style={BUTTON_STYLE.BLUE_OUTLINE}
-        icon={BUTTON_ICON.PRINT}
-        className="ml-3"
-        onClick={() => {
-          getProtocoloDietaEspecial(uuid);
-        }}
-      />
-    </div>
-  );
-};
+const Relatorio = ({ visao }) => {
+  const [dietaEspecial, setDietaEspecial] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+  const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+  const [status, setStatus] = useState(undefined);
+  const [mostrarHistorico, setMostrarHistorico] = useState(false);
+  const [historico, setHistorico] = useState([]);
 
-const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
-  return (
-    <div className="form-group row float-right mt-4">
-      <Botao
-        texto="Autorizar Cancelamento"
-        type={BUTTON_TYPE.BUTTON}
-        style={BUTTON_STYLE.GREEN}
-        className="ml-3"
-        onClick={() => {
-          setCarregando(true);
-          escolaCancelaSolicitacao(uuid).then(() => {
-            onAutorizar();
-            toastSuccess("Autorização do Cancelamento realizada com sucesso!");
-          });
-        }}
-      />
-    </div>
-  );
-};
+  const fetchData = uuid => {
+    loadSolicitacao(uuid);
+  };
 
-export default class Relatorio extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dietaEspecial: null,
-      solicitacoesVigentes: null,
-      uuid: null,
-      carregando: false
-    };
-  }
+  const loadSolicitacao = async uuid => {
+    setCarregando(true);
+    const responseDietaEspecial = await getDietaEspecial(uuid);
+    if (responseDietaEspecial.status === HTTP_STATUS.OK) {
+      setDietaEspecial(responseDietaEspecial.data);
+      setStatus(responseDietaEspecial.data.status_solicitacao);
+      setHistorico(responseDietaEspecial.data.logs);
+      setCarregando(false);
+    } else {
+      toastError("Houve um erro ao carregar Solicitação");
+    }
+  };
 
-  componentDidMount() {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      this.loadSolicitacao(uuid);
+      fetchData(uuid);
     }
-  }
+  }, []);
 
-  showNaoAprovaModal = () => {
-    this.setState({ showNaoAprovaModal: true });
+  const gerarProtocolo = async uuid => {
+    setCarregando(true);
+    await getProtocoloDietaEspecial(uuid);
+    setCarregando(false);
   };
 
-  closeNaoAprovaModal = () => {
-    this.setState({ showNaoAprovaModal: false });
-    toastSuccess("Inativação realizada com sucesso.");
-    window.location.reload();
-  };
-
-  loadSolicitacao = uuid => {
-    this.setCarregando(true);
-    getDietaEspecial(uuid).then(responseDietaEspecial => {
-      this.setState({
-        dietaEspecial: responseDietaEspecial.data
-      });
-      this.setCarregando(false);
-    });
-  };
-
-  setTemSolicitacaoCadastroProduto = () => {
-    this.setState({
-      dietaEspecial: {
-        ...this.state.dietaEspecial,
-        tem_solicitacao_cadastro_produto: true
-      }
-    });
-  };
-
-  setCarregando = carregando => {
-    this.setState({ carregando: carregando });
-  };
-
-  render() {
-    const {
-      dietaEspecial,
-      showNaoAprovaModal,
-      solicitacoesVigentes,
-      carregando
-    } = this.state;
-    const { visao } = this.props;
-    if (!dietaEspecial) {
-      return <div>Carregando...</div>;
-    }
-
+  const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
     return (
-      <Spin tip="Carregando..." spinning={carregando}>
+      <div className="form-group row float-right mt-4">
+        <Botao
+          texto="Autorizar"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            setCarregando(true);
+            escolaCancelaSolicitacao(uuid).then(() => {
+              onAutorizar();
+              toastSuccess(
+                "Autorização do Cancelamento realizada com sucesso!"
+              );
+            });
+          }}
+        />
+      </div>
+    );
+  };
+
+  const BotaoGerarRelatorio = ({ uuid }) => {
+    return (
+      <Botao
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN}
+        icon={BUTTON_ICON.PRINT}
+        className="float-right"
+        onClick={() => gerarProtocolo(uuid)}
+      />
+    );
+  };
+
+  const getHistorico = () => {
+    return historico;
+  };
+
+  const showModalHistorico = () => {
+    setMostrarHistorico(true);
+  };
+
+  const handleOk = () => {
+    setMostrarHistorico(false);
+  };
+
+  const handleCancel = () => {
+    setMostrarHistorico(false);
+  };
+
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      {dietaEspecial && status && (
         <span className="page-title">{cabecalhoDieta(dietaEspecial)}</span>
-        <div className="card mt-3">
-          <div className="card-body">
-            <CorpoRelatorio
-              uuid={dietaEspecial.uuid}
-              solicitacoesVigentes={solicitacoesVigentes}
-              dietaEspecial={dietaEspecial}
-            />
-            {dietaEspecial.status_solicitacao ===
-              statusEnum.CODAE_A_AUTORIZAR &&
-              visao === ESCOLA && (
+      )}
+      <div className="card mt-3">
+        <div className="card-body">
+          <div className="row">
+            <div className="col-12" style={{ alignItems: "flex-end" }}>
+              {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
+                <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+              )}
+              {dietaEspecial && historico && (
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  texto="Histórico"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={showModalHistorico}
+                  className="mr-2 float-right"
+                />
+              )}
+            </div>
+          </div>
+          {historico.length > 0 && (
+            <>
+              <ModalHistorico
+                visible={mostrarHistorico}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                logs={historico}
+                getHistorico={getHistorico}
+              />
+            </>
+          )}
+          <hr />
+          {dietaEspecial && (
+            <>
+              <CorpoRelatorio dietaEspecial={dietaEspecial} />
+              {status === statusEnum.CODAE_A_AUTORIZAR && visao === ESCOLA && (
                 <EscolaCancelaDietaEspecial
                   uuid={dietaEspecial.uuid}
-                  onCancelar={() => this.loadSolicitacao(dietaEspecial.uuid)}
+                  onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
                 />
               )}
-            {dietaEspecial.status_solicitacao ===
-              statusEnum.CODAE_A_AUTORIZAR &&
-              visao === CODAE && (
-                <FormAutorizaDietaEspecial
-                  dietaEspecial={dietaEspecial}
-                  onAutorizarOuNegar={() =>
-                    this.loadSolicitacao(dietaEspecial.uuid)
-                  }
-                  setTemSolicitacaoCadastroProduto={
-                    this.setTemSolicitacaoCadastroProduto
-                  }
-                />
-              )}
-            {dietaEspecial.status_solicitacao ===
-              statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
-              visao === CODAE && (
-                <BotaoAutorizaCancelamento
-                  uuid={dietaEspecial.uuid}
-                  showNaoAprovaModal={this.showNaoAprovaModal}
-                  onAutorizar={() => {
-                    this.loadSolicitacao(dietaEspecial.uuid);
-                  }}
-                  setCarregando={this.setCarregando}
-                />
-              )}
-            {dietaEspecial.status_solicitacao ===
-              statusEnum.CODAE_AUTORIZADO && (
-              <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+            </>
+          )}
+          {dietaEspecial &&
+            status === statusEnum.CODAE_A_AUTORIZAR &&
+            visao === CODAE && (
+              <FormAutorizaDietaEspecial
+                dietaEspecial={dietaEspecial}
+                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                setTemSolicitacaoCadastroProduto={() =>
+                  setDietaEspecial({
+                    ...dietaEspecial,
+                    tem_solicitacao_cadastro_produto: true
+                  })
+                }
+              />
             )}
-          </div>
+          {dietaEspecial &&
+            status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
+            visao === CODAE && (
+              <BotaoAutorizaCancelamento
+                uuid={dietaEspecial.uuid}
+                showNaoAprovaModal={showNaoAprovaModal}
+                onAutorizar={() => {
+                  loadSolicitacao(dietaEspecial.uuid);
+                }}
+                setCarregando={setCarregando}
+              />
+            )}
         </div>
+      </div>
+      {dietaEspecial && (
         <ModalNegaDietaEspecial
           showModal={showNaoAprovaModal}
-          closeModal={this.closeNaoAprovaModal}
-          onNegar={this.props.onAutorizarOuNegar}
+          closeModal={setShowNaoAprovaModal}
+          onNegar={() => {
+            loadSolicitacao(dietaEspecial.uuid);
+          }}
           uuid={dietaEspecial.uuid}
         />
-      </Spin>
-    );
-  }
-}
+      )}
+    </Spin>
+  );
+};
+
+export default Relatorio;

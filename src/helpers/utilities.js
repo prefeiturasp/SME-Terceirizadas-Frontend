@@ -356,6 +356,10 @@ export const escolaEhCei = () => {
   );
 };
 
+export const nomeInstituicao = () => {
+  return localStorage.getItem("nome_instituicao");
+};
+
 export const usuarioEhDRE = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIRETORIA_REGIONAL;
 };

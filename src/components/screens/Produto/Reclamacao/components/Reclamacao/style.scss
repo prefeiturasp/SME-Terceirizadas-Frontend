@@ -1,40 +1,56 @@
-.detalhes-reclamacao {
-  .linha {
-    display: grid;
-    margin-bottom: 10px;
-  }
-  .linha-1 {
-    grid-template-columns: 52% 48%;
-    margin-top: 10px;
-  }
-  .linha-2 {
-    grid-template-columns: 36% 16% 32% 16%;
-  }
-  .linha-3 {
-    grid-template-columns: 36% 16% 48%;
-  }
-  .item {
-    padding: 5px 11px;
-    .label-item {
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 16px;
-      color: #686868;
-      margin-bottom: 0.5em;
-    }
-    .value-item {
-      font-style: normal;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 16px;
-      color: #42474a;
-    }
-    .value-uppercase {
-      text-transform: uppercase;
-    }
-  }
-  .item-horizontal {
-    display: flex;
-  }
+.reclamacao-title {
+  color: #198459;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.item-horizontal {
+  display: flex;
+}
+.label-item {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 16px;
+  color: #686868;
+  margin-bottom: 0.5em;
+}
+
+.value-item {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  color: #42474a;
+}
+
+.value-uppercase {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.value-item p {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 16px;
+  color: #42474a;
+}
+
+.value-uppercase p {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.resultados-busca-produtos hr {
+  width: 100%;
+}
+
+.right {
+  float: right;
 }

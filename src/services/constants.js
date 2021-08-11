@@ -36,7 +36,7 @@ export const SOLICITACOES = {
 export const TIPO_MOTIVO = {
   INCLUSAO_NORMAL: "motivos-inclusao-normal",
   INCLUSAO_CONTINUA: "motivos-inclusao-continua",
-  ALTERACAO_CARDAPIO: "motivos-alteracao-cardapio",
+  ALTERACAO_TIPO_ALIMENTACAO: "motivos-alteracao-tipo-alimentacao",
   NEGACAO: "motivos-negacao",
   SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio"
 };

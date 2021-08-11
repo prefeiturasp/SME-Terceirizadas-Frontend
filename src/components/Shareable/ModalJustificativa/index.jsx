@@ -2,7 +2,8 @@ import React from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
+import { InputText } from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,8 +19,11 @@ const ModalJustificativa = ({
   closeModal,
   onSubmit,
   titulo,
+  state,
   comAnexo = false,
-  labelJustificativa = "Justificativa"
+  labelJustificativa = "Justificativa",
+  escola,
+  terceirizada
 }) => {
   return (
     <Modal
@@ -30,15 +34,86 @@ const ModalJustificativa = ({
       <Modal.Header closeButton>
         <Modal.Title>{titulo}</Modal.Title>
       </Modal.Header>
+      {(state.acao === "responder" ||
+        state.acao === "questionar_ue" ||
+        state.acao === "resposta_ue") && (
+        <Modal.Body>
+          <Form
+            onSubmit={onSubmit}
+            initialValues={state.produto}
+            render={({ handleSubmit }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="form-row row-filds-produto">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Nome do Produto"
+                      name="nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Marca"
+                      name="marca.nome"
+                      disabled={true}
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Tipo"
+                      name="tipo_dieta"
+                      defaultValue={
+                        state.produto.eh_para_alunos_com_dieta
+                          ? "D. Especial"
+                          : "Comum"
+                      }
+                      disabled={true}
+                    />
+                  </div>
+                  {state.acao === "questionar_ue" && (
+                    <div className="col-12">
+                      <Field
+                        component={InputText}
+                        label="Unidade Educacional"
+                        name="escola"
+                        disabled={true}
+                        defaultValue={escola ? escola.nome : null}
+                      />
+                    </div>
+                  )}
+                </div>
+              </form>
+            )}
+          />
+        </Modal.Body>
+      )}
       <Form
         onSubmit={onSubmit}
-        render={({ handleSubmit, submitting }) => (
+        render={({ handleSubmit, submitting, form }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
-              <div className="form-row row-modal">
+              {state.acao === "questionar_terceirizada" && (
+                <div className="form-row">
+                  <div className="col-12">
+                    <Field
+                      component={InputText}
+                      label="Terceirizada"
+                      name="nome_terceirizada"
+                      disabled={true}
+                      defaultValue={
+                        terceirizada ? terceirizada.nome_fantasia : null
+                      }
+                    />
+                  </div>
+                </div>
+              )}
+              <div className="form-row">
                 <div className="col-12">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     label={labelJustificativa}
                     name="justificativa"
                     required
@@ -86,13 +161,40 @@ const ModalJustificativa = ({
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="ml-3"
                   />
-                  <Botao
-                    texto="Enviar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="ml-3"
-                    disabled={submitting}
-                  />
+                  {state.acao === "responder" ? (
+                    <>
+                      <Botao
+                        texto="Finalizar reclamação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          state.tipo_resposta = "rejeitar";
+                          form.submit();
+                        }}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                        disabled={submitting}
+                      />
+                      <Botao
+                        texto="Suspender produto"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          state.tipo_resposta = "aceitar";
+                          form.submit();
+                        }}
+                        style={BUTTON_STYLE.RED_OUTLINE}
+                        className="ml-3"
+                        disabled={submitting}
+                      />
+                    </>
+                  ) : (
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                      disabled={submitting}
+                    />
+                  )}
                 </div>
               </div>
             </Modal.Footer>

@@ -1,0 +1,19 @@
+.card-conferencia-guia {
+  .conferencia-guia {
+    .texto-confirma-entrega {
+      margin-top: calc(1rem + 1px);
+      margin-bottom: calc(1rem + 1px);
+    }
+
+    .tabela-conferencia-guia {
+      thead {
+        background: #20aa73;
+        color: white;
+
+        th {
+          border: 1px solid #e0e0e0;
+        }
+      }
+    }
+  }
+}

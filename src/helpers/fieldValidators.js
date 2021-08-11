@@ -33,6 +33,12 @@ export const peloMenosUmCaractere = value => {
     : "Pelo menos um caractere deve ser digitado";
 };
 
+export const selectValidate = value => {
+  let valorLimpo = strip_tags(value);
+  valorLimpo = valorLimpo.replace(/&nbsp;/g, "");
+  return /[a-zA-Z0-9]/i.test(valorLimpo) ? undefined : "Campo obrigatório";
+};
+
 export const textAreaRequiredAndAtLeastOneCharacter = value => {
   let result = textAreaRequired(value);
   if (result !== undefined) {
@@ -95,9 +101,17 @@ export const prefeituraEmail = value =>
     ? undefined
     : "Somente emails da prefeitura de São Paulo";
 
+export const peloMenosUmNumeroEUmaLetra = value =>
+  value && /^(?=.*[0-9])(?=.*[a-zA-Z])/i.test(value)
+    ? undefined
+    : "Precisa conter letras e números";
+
 export const alphaNumeric = value =>
-  value && /[^a-zA-Z0-9 ]/i.test(value)
-    ? "Only alphanumeric characters"
+  value && /[^a-zA-Z0-9]/i.test(value) ? "Apenas letras e números" : undefined;
+
+export const apenasLetras = value =>
+  value && /[^a-zA-Zà-úÀ-Ú ]/i.test(value)
+    ? "Não digite números ou caracteres especiais"
     : undefined;
 
 export const numericInteger = value =>
@@ -139,33 +153,51 @@ export const numeroInteiro = value =>
 
 export const validaCPF = value => {
   if (!value) return undefined;
+  let cpf = value.replace(/[^\d]+/g, "");
 
-  let soma;
-  let resto;
-  soma = 0;
-
-  if (value === "00000000000") return "CPF informado inválido";
-
-  for (let i = 1; i <= 9; i++) {
-    soma = soma + parseInt(value.substring(i - 1, i)) * (11 - i);
+  if (cpf === "") return false;
+  // Elimina CPFs invalidos conhecidos
+  if (
+    cpf.length !== 11 ||
+    cpf === "00000000000" ||
+    cpf === "11111111111" ||
+    cpf === "22222222222" ||
+    cpf === "33333333333" ||
+    cpf === "44444444444" ||
+    cpf === "55555555555" ||
+    cpf === "66666666666" ||
+    cpf === "77777777777" ||
+    cpf === "88888888888" ||
+    cpf === "99999999999"
+  ) {
+    return "CPF informado inválido";
   }
 
-  resto = (soma * 10) % 11;
-
-  if (resto === 10 || resto === 11) resto = 0;
-
-  if (resto !== parseInt(value.substring(9, 10)))
+  // Valida 1o digito
+  let add = 0;
+  let i, rev;
+  for (i = 0; i < 9; i++) {
+    add += parseInt(cpf.charAt(i)) * (10 - i);
+  }
+  rev = 11 - (add % 11);
+  if (rev === 10 || rev === 11) {
+    rev = 0;
+  }
+  if (rev !== parseInt(cpf.charAt(9))) {
     return "CPF informado inválido";
-
-  soma = 0;
-  for (let i = 1; i <= 10; i++)
-    soma = soma + parseInt(value.substring(i - 1, i)) * (12 - i);
-
-  resto = (soma * 10) % 11;
-
-  if (resto === 10 || resto === 11) resto = 0;
-
-  if (resto !== parseInt(value.substring(10, 11)))
+  }
+  // Valida 2o digito
+  add = 0;
+  for (i = 0; i < 10; i++) {
+    add += parseInt(cpf.charAt(i)) * (11 - i);
+  }
+  rev = 11 - (add % 11);
+  if (rev === 10 || rev === 11) {
+    rev = 0;
+  }
+  if (rev !== parseInt(cpf.charAt(10))) {
     return "CPF informado inválido";
+  }
+
   return undefined;
 };

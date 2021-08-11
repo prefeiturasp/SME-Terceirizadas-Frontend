@@ -16,7 +16,7 @@ export class Rascunhos extends Component {
           <div key={key} className="bg-white border rounded mt-3">
             <div className="mt-2">
               <label className="bold ml-3">
-                {`Alteração de Cardápio # ${id_externo}`}
+                {`Alteração do Tipo de Alimentação # ${id_externo}`}
               </label>
               <span
                 className="ml-3 p-1 border rounded"

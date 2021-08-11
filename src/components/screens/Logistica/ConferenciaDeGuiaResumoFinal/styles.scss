@@ -1,0 +1,58 @@
+@import "../../../../styles/variables.scss";
+
+.card-conferencia-guia-resumo-final {
+  .conferencia-guia-resumo-final {
+    .subtitulo {
+      font-weight: 500;
+      font-size: 20px;
+      color: #42474a;
+    }
+
+    .numero-guia {
+      font-weight: 500;
+      font-size: 18px;
+      color: #42474a;
+    }
+
+    .table-resumo-final {
+      th {
+        background-color: $greenLight;
+        color: $white;
+        padding: 6px 4px 6px 8px;
+        font-size: 14px;
+
+        .text-center {
+          padding: 6px 0px;
+        }
+      }
+
+      .icone-arquivo {
+        width: 2%;
+      }
+
+      .nome-alimento {
+        width: 20%;
+      }
+
+      .embalagem {
+        width: 8%;
+      }
+
+      .recebimento {
+        width: 10%;
+      }
+
+      td {
+        font-size: 14px;
+      }
+
+      .green {
+        color: #297805;
+      }
+
+      .red {
+        color: #b40c02;
+      }
+    }
+  }
+}

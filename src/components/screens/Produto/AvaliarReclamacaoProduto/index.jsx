@@ -20,7 +20,8 @@ import {
 
 import {
   getProdutosAvaliacaoReclamacao,
-  getHomologacao
+  getHomologacao,
+  getNomesTerceirizadas
 } from "services/produto.service";
 import "./style.scss";
 
@@ -40,6 +41,7 @@ export const AvaliarReclamacaoProduto = ({
   const [loading, setLoading] = useState(true);
   const [erroNaAPI, setErroNaAPI] = useState(false);
   const [formValues, setFormValues] = useState(null);
+  const [terceirizadas, setTerceirizadas] = useState(null);
   const PAGE_SIZE = 10;
 
   useEffect(() => {
@@ -82,6 +84,9 @@ export const AvaliarReclamacaoProduto = ({
     } else {
       setLoading(false);
     }
+    getNomesTerceirizadas().then(response => {
+      setTerceirizadas(response.data.results);
+    });
   }, []);
 
   const onSubmit = values => {
@@ -115,6 +120,8 @@ export const AvaliarReclamacaoProduto = ({
                     atualizar={() => onSubmit(formValues)}
                     indiceProdutoAtivo={indiceProdutoAtivo}
                     setIndiceProdutoAtivo={setIndiceProdutoAtivo}
+                    setLoading={setLoading}
+                    terceirizadas={terceirizadas}
                   />
                   <Pagination
                     current={page || 1}

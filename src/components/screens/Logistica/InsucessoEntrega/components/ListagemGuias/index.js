@@ -1,8 +1,20 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
+import { REGISTRAR_INSUCESSO, LOGISTICA } from "configs/constants";
+import { NavLink } from "react-router-dom";
 
 const ListagemGuias = ({ guias, ativos, setAtivos }) => {
+  const isDisabled = guia => {
+    if (
+      guia.situacao === "ARQUIVADA" ||
+      guia.status !== "Pendente de conferência"
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <section className="resultado-insucesso-entrega">
       <article>
@@ -42,11 +54,23 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>{guia.data_entrega}</div>
                 <div className={`${bordas}`}>{guia.status}</div>
                 <div className={`${bordas}`}>
-                  {guia.status === "Pendente de conferência" && (
-                    <span className="link-insucesso">
+                  <NavLink
+                    className="float-left"
+                    to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
+                      guia.uuid
+                    }`}
+                    disabled={isDisabled(guia)}
+                  >
+                    <span
+                      className={
+                        isDisabled(guia)
+                          ? "link-insucesso-desativado"
+                          : "link-insucesso"
+                      }
+                    >
                       <i className="fas fa-thumbs-down" /> Insucesso de Entrega
                     </span>
-                  )}
+                  </NavLink>
                 </div>
               </div>
               {ativos && ativos.includes(guia.uuid) && (

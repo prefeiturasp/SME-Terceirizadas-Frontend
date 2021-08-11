@@ -27,6 +27,7 @@ export default ({ solicitacao }) => {
         <TabelaAlimentoConsolidado
           className="table-sm"
           alimentosConsolidado={alimentosConsolidado}
+          mostrarPesoTotal={true}
         />
       )}
     </>
