@@ -85,7 +85,7 @@ const Relatorio = ({ visao }) => {
     );
   };
 
-  const BotaoGerarRelatorio = ({ uuid }) => {
+  const BotaoImprimir = ({ uuid }) => {
     return (
       <Botao
         type={BUTTON_TYPE.BUTTON}
@@ -94,6 +94,23 @@ const Relatorio = ({ visao }) => {
         className="float-right"
         onClick={() => gerarProtocolo(uuid)}
       />
+    );
+  };
+
+  const BotaoGerarRelatorio = ({ uuid }) => {
+    return (
+      <div className="form-group row float-right mt-4">
+        <Botao
+          texto="Gerar Protocolo"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          icon={BUTTON_ICON.PRINT}
+          className="ml-3"
+          onClick={() => {
+            gerarProtocolo(uuid);
+          }}
+        />
+      </div>
     );
   };
 
@@ -123,7 +140,7 @@ const Relatorio = ({ visao }) => {
           <div className="row">
             <div className="col-12" style={{ alignItems: "flex-end" }}>
               {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
-                <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+                <BotaoImprimir uuid={dietaEspecial.uuid} />
               )}
               {dietaEspecial && historico && (
                 <Botao
@@ -185,6 +202,9 @@ const Relatorio = ({ visao }) => {
                 setCarregando={setCarregando}
               />
             )}
+          {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
+            <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+          )}
         </div>
       </div>
       {dietaEspecial && (
