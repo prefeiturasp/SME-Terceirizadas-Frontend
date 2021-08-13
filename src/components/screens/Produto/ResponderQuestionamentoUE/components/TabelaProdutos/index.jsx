@@ -11,7 +11,10 @@ import { Link } from "react-router-dom";
 import Reclamacao from "components/screens/Produto/Reclamacao/components/Reclamacao";
 import ModalJustificativa from "components/Shareable/ModalJustificativa";
 
-import { responderQuestionamentoUE } from "services/reclamacaoProduto.service";
+import {
+  responderQuestionamentoUE,
+  filtrarReclamacoesEscola
+} from "services/reclamacaoProduto.service";
 
 import { ordenaPorCriadoEm } from "./helpers";
 import "./styles.scss";
@@ -20,7 +23,11 @@ const TabelaProdutos = ({
   produtos,
   exibirModal,
   setExibirModal,
-  setCarregando
+  setCarregando,
+  filtros,
+  setTotal,
+  setProdutos,
+  setShowBuscaVazia
 }) => {
   const [indiceProdutoAtivo, setIndiceProdutoAtivo] = useState();
   const [uuid, setUuid] = useState();
@@ -34,6 +41,19 @@ const TabelaProdutos = ({
       toastSuccess("Resposta enviada com sucesso");
     } else {
       toastError("Houve um erro ao enviar resposta");
+    }
+    updateResult();
+  };
+
+  const updateResult = async () => {
+    setProdutos(undefined);
+    const updated_result = await filtrarReclamacoesEscola(filtros);
+    if (updated_result.count > 0) {
+      setProdutos(updated_result.results);
+      setTotal(updated_result.count);
+      setShowBuscaVazia(false);
+    } else {
+      setShowBuscaVazia(true);
     }
     setCarregando(false);
   };

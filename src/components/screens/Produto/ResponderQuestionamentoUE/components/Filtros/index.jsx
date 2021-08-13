@@ -122,6 +122,8 @@ const Filtros = ({
                 onClick={() => {
                   form.reset();
                   setProdutos(undefined);
+                  setShowBuscaVazia(false);
+                  setFiltros(undefined);
                   setPage(1);
                 }}
                 disabled={submitting}
