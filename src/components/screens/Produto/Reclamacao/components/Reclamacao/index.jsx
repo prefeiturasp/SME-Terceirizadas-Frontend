@@ -50,30 +50,23 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoQuestionamentoUE = log => {
     return (
-      <>
-        <div className="row">
-          <div className="col-4">
-            <div className="label-item">Data questionamento CODAE</div>
-            <div className="value-item">{log.criado_em.split(" ")[0]}</div>
-          </div>
-          <div className="col-8">
-            <div className="label-item">Questionamento CODAE</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: log.justificativa
-              }}
-            />
-          </div>
+      <div className="row mb-4">
+        <div className="col-4">
+          <div className="label-item">Data questi. CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="row mb-4">
-          <div className="col-4" />
-          <div className="col-8">
-            <div className="label-item">Escola questionada</div>
-            <div className="value-item">{reclamacao.escola.nome}</div>
+        <div className="col-8">
+          <div className="label-item">
+            CODAE questionou Unidade Educacional sobre reclamação
           </div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
         </div>
-      </>
+      </div>
     );
   };
 
