@@ -275,7 +275,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "terceirizada_respondeu_reclamacao",
   TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO:
     "terceirizada_cancelou_solicitacao_homologacao",
-  CODAE_QUESTIONOU_UE: "codae_questionou_ue"
+  CODAE_QUESTIONOU_UE: "codae_questionou_ue",
+  UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
