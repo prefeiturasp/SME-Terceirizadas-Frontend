@@ -60,19 +60,30 @@ const ModalJustificativa = ({
                       disabled={true}
                     />
                   </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Tipo"
-                      name="tipo_dieta"
-                      defaultValue={
-                        state.produto.eh_para_alunos_com_dieta
-                          ? "D. Especial"
-                          : "Comum"
-                      }
-                      disabled={true}
-                    />
-                  </div>
+                  {state.acao === "resposta_ue" ? (
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Fabricante"
+                        name="fabricante.nome"
+                        disabled={true}
+                      />
+                    </div>
+                  ) : (
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Tipo"
+                        name="tipo_dieta"
+                        defaultValue={
+                          state.produto.eh_para_alunos_com_dieta
+                            ? "D. Especial"
+                            : "Comum"
+                        }
+                        disabled={true}
+                      />
+                    </div>
+                  )}
                   {state.acao === "questionar_ue" && (
                     <div className="col-12">
                       <Field
