@@ -48,7 +48,7 @@ export default ({ values, disabled }) => {
   return (
     <>
       <Botao
-        texto="Sim"
+        texto="Salvar e Continuar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
         className="float-right ml-3"

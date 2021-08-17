@@ -31,9 +31,9 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
           )}
         </tr>
         <tr>
-          <th scope="col">Qtde</th>
+          <th scope="col">Quantidade</th>
           <th scope="col">Capacidade</th>
-          <th scope="col">Qtde</th>
+          <th scope="col">Quantidade</th>
           <th scope="col">Capacidade</th>
         </tr>
       </thead>
