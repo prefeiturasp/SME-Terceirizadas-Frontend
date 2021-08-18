@@ -21,7 +21,8 @@ import {
   CODAEAceitaReclamacao,
   CODAERecusaReclamacao,
   CODAEQuestionaTerceirizada,
-  CODAEQuestionaUE
+  CODAEQuestionaUE,
+  CODAEQuestionaNutrisupervisor
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
 
@@ -30,6 +31,8 @@ const {
   CODAE_ACEITOU,
   CODAE_RECUSOU,
   AGUARDANDO_RESPOSTA_UE,
+  RESPONDIDO_UE,
+  AGUARDANDO_RESPOSTA_NUTRISUPERVISOR,
   AGUARDANDO_ANALISE_SENSORIAL,
   AGUARDANDO_RESPOSTA_TERCEIRIZADA,
   RESPONDIDO_TERCEIRIZADA,
@@ -56,6 +59,7 @@ export default class TabelaProdutos extends Component {
   RECUSAR_RECLAMACAO = "rejeitar";
   QUESTIONAR_TERCEIRIZADA = "questionar_terceirizada";
   QUESTIONAR_UE = "questionar_ue";
+  QUESTIONAR_NUTRISUPERVISOR = "questionar_nutrisupervisor";
   RESPONDER = "responder";
 
   defineTitulo = () => {
@@ -64,6 +68,8 @@ export default class TabelaProdutos extends Component {
         return "Questionar terceirizada sobre reclamação de produto";
       case this.QUESTIONAR_UE:
         return "Questionar Unidade Educacional sobre reclamação de produto";
+      case this.QUESTIONAR_NUTRISUPERVISOR:
+        return "Questionar Nutrisupervisor sobre reclamação de produto";
       case this.RESPONDER:
         return "Responder reclamação de produto";
       default:
@@ -76,6 +82,8 @@ export default class TabelaProdutos extends Component {
       case this.QUESTIONAR_TERCEIRIZADA:
         return "Questionamento";
       case this.QUESTIONAR_UE:
+        return "Questionamento";
+      case this.QUESTIONAR_NUTRISUPERVISOR:
         return "Questionamento";
       case this.RESPONDER:
         return "Justificativa";
@@ -90,6 +98,8 @@ export default class TabelaProdutos extends Component {
         return CODAEQuestionaTerceirizada;
       case this.QUESTIONAR_UE:
         return CODAEQuestionaUE;
+      case this.QUESTIONAR_NUTRISUPERVISOR:
+        return CODAEQuestionaNutrisupervisor;
       case this.RESPONDER:
         if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
           return CODAEAceitaReclamacao;
@@ -113,6 +123,8 @@ export default class TabelaProdutos extends Component {
         return toastSuccess(
           "Questionamento enviado a unidade educacional com sucesso"
         );
+      case this.QUESTIONAR_NUTRISUPERVISOR:
+        return toastSuccess("Questionamento enviado com Sucesso!");
       case this.RESPONDER:
         if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
           return toastSuccess(
@@ -262,7 +274,8 @@ export default class TabelaProdutos extends Component {
                         ![
                           AGUARDANDO_AVALIACAO,
                           RESPONDIDO_TERCEIRIZADA,
-                          ANALISE_SENSORIAL_RESPONDIDA
+                          ANALISE_SENSORIAL_RESPONDIDA,
+                          RESPONDIDO_UE
                         ].includes(reclamacao.status);
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
@@ -276,7 +289,8 @@ export default class TabelaProdutos extends Component {
                         ![
                           AGUARDANDO_AVALIACAO,
                           RESPONDIDO_TERCEIRIZADA,
-                          ANALISE_SENSORIAL_RESPONDIDA
+                          ANALISE_SENSORIAL_RESPONDIDA,
+                          RESPONDIDO_UE
                         ].includes(reclamacao.status);
                       const desabilitaQuestionarUE =
                         produtoTemReclacaoAceita ||
@@ -284,7 +298,18 @@ export default class TabelaProdutos extends Component {
                           AGUARDANDO_RESPOSTA_TERCEIRIZADA ||
                         reclamacao.status === AGUARDANDO_RESPOSTA_UE ||
                         reclamacao.status === AGUARDANDO_ANALISE_SENSORIAL ||
-                        reclamacao.status === CODAE_RECUSOU;
+                        reclamacao.status === CODAE_RECUSOU ||
+                        reclamacao.status ===
+                          AGUARDANDO_RESPOSTA_NUTRISUPERVISOR;
+                      const desabilitaQuestionarNutrisupervisao =
+                        produtoTemReclacaoAceita ||
+                        reclamacao.status ===
+                          AGUARDANDO_RESPOSTA_TERCEIRIZADA ||
+                        reclamacao.status === AGUARDANDO_RESPOSTA_UE ||
+                        reclamacao.status === AGUARDANDO_ANALISE_SENSORIAL ||
+                        reclamacao.status === CODAE_RECUSOU ||
+                        reclamacao.status ===
+                          AGUARDANDO_RESPOSTA_NUTRISUPERVISOR;
                       const deveMostrarBarraHorizontal =
                         indice <
                         produto.ultima_homologacao.reclamacoes.length - 1;
@@ -312,6 +337,25 @@ export default class TabelaProdutos extends Component {
                               )
                             }
                           />
+                          {reclamacao.usuario.tipo_usuario ===
+                            "supervisao_nutricao" && (
+                            <Botao
+                              texto="Questionar nutricionista supervisor"
+                              className="ml-3"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              disabled={desabilitaQuestionarNutrisupervisao}
+                              onClick={() =>
+                                this.abreModalJustificativa(
+                                  this.QUESTIONAR_NUTRISUPERVISOR,
+                                  reclamacao.uuid,
+                                  produto,
+                                  null,
+                                  reclamacao.escola
+                                )
+                              }
+                            />
+                          )}
                           <Botao
                             texto="Questionar U.E"
                             className="ml-3"

@@ -25,6 +25,12 @@ export const CODAEQuestionaUE = async (uuid, params) =>
     params
   );
 
+export const CODAEQuestionaNutrisupervisor = async (uuid, params) =>
+  await axios.patch(
+    `/reclamacoes-produtos/${uuid}/codae-questiona-nutrisupervisor/`,
+    params
+  );
+
 export const CODAERespondeReclamante = async (uuid, params) =>
   await axios.patch(`/reclamacoes-produtos/${uuid}/codae-responde/`, params);
 

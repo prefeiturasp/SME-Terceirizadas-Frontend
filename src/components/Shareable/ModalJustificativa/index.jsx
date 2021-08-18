@@ -36,7 +36,8 @@ const ModalJustificativa = ({
       </Modal.Header>
       {(state.acao === "responder" ||
         state.acao === "questionar_ue" ||
-        state.acao === "resposta_ue") && (
+        state.acao === "resposta_ue" ||
+        state.acao === "questionar_nutrisupervisor") && (
         <Modal.Body>
           <Form
             onSubmit={onSubmit}
@@ -84,7 +85,8 @@ const ModalJustificativa = ({
                       />
                     </div>
                   )}
-                  {state.acao === "questionar_ue" && (
+                  {(state.acao === "questionar_ue" ||
+                    state.acao === "questionar_nutrisupervisor") && (
                     <div className="col-12">
                       <Field
                         component={InputText}
