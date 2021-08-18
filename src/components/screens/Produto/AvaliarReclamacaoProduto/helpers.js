@@ -15,7 +15,8 @@ export const formatarValues = values => {
       "CODAE_AUTORIZOU_RECLAMACAO",
       "CODAE_PEDIU_ANALISE_SENSORIAL",
       "CODAE_QUESTIONOU_UE",
-      "UE_RESPONDEU_QUESTIONAMENTO"
+      "UE_RESPONDEU_QUESTIONAMENTO",
+      "CODAE_QUESTIONOU_NUTRISUPERVISOR"
     ];
   }
   values.status_reclamacao = [
@@ -25,7 +26,8 @@ export const formatarValues = values => {
     "ANALISE_SENSORIAL_RESPONDIDA",
     "AGUARDANDO_RESPOSTA_TERCEIRIZADA",
     "AGUARDANDO_RESPOSTA_UE",
-    "RESPONDIDO_UE"
+    "RESPONDIDO_UE",
+    "AGUARDANDO_RESPOSTA_NUTRISUPERVISOR"
   ];
   return values;
 };
