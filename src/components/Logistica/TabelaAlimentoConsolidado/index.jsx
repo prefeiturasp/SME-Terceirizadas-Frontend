@@ -16,7 +16,7 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
       <thead>
         <tr>
           <th scope="col" rowSpan="2" className="align-middle">
-            Alimento
+            Nome do Alimento
           </th>
           <th scope="col" colSpan="2" className="text-center">
             Embalagem Fechada
