@@ -276,7 +276,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO:
     "terceirizada_cancelou_solicitacao_homologacao",
   CODAE_QUESTIONOU_UE: "codae_questionou_ue",
-  UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento"
+  UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento",
+  CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
@@ -286,6 +287,8 @@ export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
     "CODAE questionou terceirizada sobre reclamação",
   CODAE_QUESTIONOU_UE: "CODAE questionou U.E. sobre reclamação",
   CODAE_RESPONDEU_RECLAMACAO: "CODAE respondeu ao reclamante da reclamação",
+  CODAE_QUESTIONOU_NUTRISUPERVISOR:
+    "CODAE questionou nutrisupervisor sobre reclamação",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Terceirizada respondeu a reclamação",
   UE_RESPONDEU_RECLAMACAO: "U.E. respondeu a reclamação",
   AGUARDANDO_ANALISE_SENSORIAL: "CODAE pediu análise sensorial",
@@ -300,6 +303,7 @@ export const RECLAMACAO_PRODUTO_STATUS = {
   AGUARDANDO_ANALISE_SENSORIAL: "AGUARDANDO_ANALISE_SENSORIAL",
   AGUARDANDO_RESPOSTA_UE: "AGUARDANDO_RESPOSTA_UE",
   RESPONDIDO_UE: "RESPONDIDO_UE",
+  AGUARDANDO_RESPOSTA_NUTRISUPERVISOR: "AGUARDANDO_RESPOSTA_NUTRISUPERVISOR",
   CODAE_ACEITOU: "CODAE_ACEITOU",
   CODAE_RECUSOU: "CODAE_RECUSOU",
   CODAE_RESPONDEU: "CODAE_RESPONDEU"
