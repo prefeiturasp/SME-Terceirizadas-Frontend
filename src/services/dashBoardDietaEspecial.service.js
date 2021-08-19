@@ -78,6 +78,9 @@ export const getDietaEspecialAutorizadasTemporariamenteEscola = uuid =>
     `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
   );
 
+export const getDietaEspecialAguardandoVigenciaEscola = uuid =>
+  fetchGet(`${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/`);
+
 export const getDietaEspecialInativasTemporariamenteEscola = uuid =>
   fetchGet(
     `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
