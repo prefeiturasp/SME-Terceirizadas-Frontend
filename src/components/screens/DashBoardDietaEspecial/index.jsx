@@ -28,6 +28,8 @@ class DashBoardDietaEspecial extends Component {
       inativasList: null,
       autorizadasListFiltered: null,
       autorizadasTemporariamenteListFiltered: null,
+      aguardandoVigenciaList: null,
+      aguardandoVigenciaListFiltered: null,
       inativasTemporariamenteListFiltered: null,
       pendentesListFiltered: null,
       negadasListFiltered: null,
@@ -54,6 +56,7 @@ class DashBoardDietaEspecial extends Component {
       canceladasList,
       inativasList,
       autorizadasTemporariamenteList,
+      aguardandoVigenciaList,
       inativasTemporariamenteList,
       instituicao
     } = this.state;
@@ -138,6 +141,26 @@ class DashBoardDietaEspecial extends Component {
           });
         });
     }
+
+    if (
+      usuarioEhEscola() &&
+      aguardandoVigenciaList !== prevState.aguardandoVigenciaList &&
+      !aguardandoVigenciaList
+    ) {
+      this.props
+        .getDietaEspecialAguardandoVigencia(instituicao.uuid)
+        .then(response => {
+          this.setState({
+            aguardandoVigenciaList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            ),
+            aguardandoVigenciaListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results
+            )
+          });
+        });
+    }
+
     if (
       inativasTemporariamenteList !== prevState.inativasTemporariamenteList &&
       !inativasTemporariamenteList
@@ -173,6 +196,7 @@ class DashBoardDietaEspecial extends Component {
       negadasList,
       canceladasList,
       autorizadasTemporariamenteList,
+      aguardandoVigenciaList,
       inativasTemporariamenteList,
       inativasList
     } = this.state;
@@ -186,6 +210,15 @@ class DashBoardDietaEspecial extends Component {
       autorizadasTemporariamenteList,
       event
     );
+
+    let aguardandoVigenciaListFiltered = null;
+    if (usuarioEhEscola()) {
+      aguardandoVigenciaListFiltered = this.filtrarNome(
+        aguardandoVigenciaList,
+        event
+      );
+    }
+
     let inativasTemporariamenteListFiltered = this.filtrarNome(
       inativasTemporariamenteList,
       event
@@ -197,6 +230,7 @@ class DashBoardDietaEspecial extends Component {
       negadasListFiltered,
       canceladasListFiltered,
       autorizadasTemporariamenteListFiltered,
+      aguardandoVigenciaListFiltered,
       inativasTemporariamenteListFiltered,
       inativasListFiltered
     });
@@ -209,6 +243,7 @@ class DashBoardDietaEspecial extends Component {
       negadasListFiltered,
       canceladasListFiltered,
       autorizadasTemporariamenteListFiltered,
+      aguardandoVigenciaListFiltered,
       inativasTemporariamenteListFiltered,
       inativasListFiltered,
       instituicao
@@ -317,6 +352,21 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
+                {podeIncluirDietaEspecial && (
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Aguardando início da vigência"}
+                      cardType={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                      solicitations={
+                        aguardandoVigenciaListFiltered
+                          ? aguardandoVigenciaListFiltered
+                          : []
+                      }
+                      icon={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                      href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas-temporariamente`}
+                    />
+                  </div>
+                )}
               </div>
             </CardBody>
           )}
