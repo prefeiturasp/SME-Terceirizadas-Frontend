@@ -164,7 +164,6 @@ const Relatorio = ({ visao }) => {
               />
             </>
           )}
-          <hr />
           {dietaEspecial && (
             <>
               <CorpoRelatorio dietaEspecial={dietaEspecial} />

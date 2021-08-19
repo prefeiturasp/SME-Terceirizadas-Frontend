@@ -14,7 +14,15 @@ const DESCRICAO_SOLICITACAO = {
 };
 
 export const cabecalhoDieta = dietaEspecial => {
-  return `Dieta Especial - ${
-    DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao]
-  }`;
+  let descricao = null;
+  if (
+    dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" &&
+    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+  ) {
+    descricao = "Solicitação de Alteração de U.E";
+  } else {
+    descricao = DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao];
+  }
+
+  return `Dieta Especial - ${descricao}`;
 };

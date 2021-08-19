@@ -4,6 +4,7 @@ import arrayMutators from "final-form-arrays";
 import InformacoesAluno from "./InformacoesAluno";
 import FluxoDeStatusDieta from "./FluxoDeStatusDieta";
 import DadosEscolaSolicitante from "./DadosEscolaSolicitante";
+import DadosEscolaDestino from "./DadosEscoladestino";
 import DadosDietaEspecial from "./DadosDietaEspecial";
 import "./styles.scss";
 
@@ -20,6 +21,8 @@ const CorpoRelatorio = ({ dietaEspecial }) => {
       render={({ values }) => (
         <form>
           <InformacoesAluno />
+          <hr />
+          <DadosEscolaDestino />
           <hr />
           <FluxoDeStatusDieta logs={dietaEspecial.logs} />
           <hr />
