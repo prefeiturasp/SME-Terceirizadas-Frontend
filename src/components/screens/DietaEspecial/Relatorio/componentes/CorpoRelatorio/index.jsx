@@ -22,8 +22,13 @@ const CorpoRelatorio = ({ dietaEspecial }) => {
         <form>
           <InformacoesAluno />
           <hr />
-          <DadosEscolaDestino />
-          <hr />
+          {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&
+            dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" && (
+              <>
+                <DadosEscolaDestino />
+                <hr />
+              </>
+            )}
           <FluxoDeStatusDieta logs={dietaEspecial.logs} />
           <hr />
           <DadosEscolaSolicitante />
