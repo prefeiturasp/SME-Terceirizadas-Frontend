@@ -337,25 +337,26 @@ export default class TabelaProdutos extends Component {
                               )
                             }
                           />
-                          {reclamacao.usuario.tipo_usuario ===
-                            "supervisao_nutricao" && (
-                            <Botao
-                              texto="Questionar nutricionista supervisor"
-                              className="ml-3"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              disabled={desabilitaQuestionarNutrisupervisao}
-                              onClick={() =>
-                                this.abreModalJustificativa(
-                                  this.QUESTIONAR_NUTRISUPERVISOR,
-                                  reclamacao.uuid,
-                                  produto,
-                                  null,
-                                  reclamacao.escola
-                                )
-                              }
-                            />
-                          )}
+                          {reclamacao.usuario &&
+                            reclamacao.usuario.tipo_usuario ===
+                              "supervisao_nutricao" && (
+                              <Botao
+                                texto="Questionar nutricionista supervisor"
+                                className="ml-3"
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                disabled={desabilitaQuestionarNutrisupervisao}
+                                onClick={() =>
+                                  this.abreModalJustificativa(
+                                    this.QUESTIONAR_NUTRISUPERVISOR,
+                                    reclamacao.uuid,
+                                    produto,
+                                    null,
+                                    reclamacao.escola
+                                  )
+                                }
+                              />
+                            )}
                           <Botao
                             texto="Questionar U.E"
                             className="ml-3"
