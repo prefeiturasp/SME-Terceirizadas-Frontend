@@ -283,12 +283,10 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
   CODAE_AUTORIZOU_RECLAMACAO: "CODAE autorizou reclamação",
   CODAE_RECUSOU_RECLAMACAO: "CODAE recusou reclamação",
-  CODAE_QUESTIONOU_TERCEIRIZADA:
-    "CODAE questionou terceirizada sobre reclamação",
-  CODAE_QUESTIONOU_UE: "CODAE questionou U.E. sobre reclamação",
+  CODAE_QUESTIONOU_TERCEIRIZADA: "CODAE questionou terceirizada",
+  CODAE_QUESTIONOU_UE: "CODAE questionou U.E.",
   CODAE_RESPONDEU_RECLAMACAO: "CODAE respondeu ao reclamante da reclamação",
-  CODAE_QUESTIONOU_NUTRISUPERVISOR:
-    "CODAE questionou nutrisupervisor sobre reclamação",
+  CODAE_QUESTIONOU_NUTRISUPERVISOR: "CODAE questionou nutrisupervisor",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Terceirizada respondeu a reclamação",
   UE_RESPONDEU_RECLAMACAO: "U.E. respondeu a reclamação",
   AGUARDANDO_ANALISE_SENSORIAL: "CODAE pediu análise sensorial",
