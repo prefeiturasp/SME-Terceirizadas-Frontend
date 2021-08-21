@@ -76,11 +76,13 @@ const Reclamacao = ({ reclamacao }) => {
     return (
       <div className="row mb-4">
         <div className="col-4">
-          <div className="label-item">Data Questionamento CODAE</div>
+          <div className="label-item">Data questi. CODAE</div>
           <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
         <div className="col-8">
-          <div className="label-item">Questionamento CODAE</div>
+          <div className="label-item">
+            CODAE questionou Nutrisupervisão sobre reclamação
+          </div>
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
