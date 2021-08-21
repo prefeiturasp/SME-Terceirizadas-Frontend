@@ -277,7 +277,9 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
     "terceirizada_cancelou_solicitacao_homologacao",
   CODAE_QUESTIONOU_UE: "codae_questionou_ue",
   UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento",
-  CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor"
+  CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor",
+  NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO:
+    "nutrisupervisor_respondeu_questionamento"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
@@ -291,6 +293,8 @@ export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
     "CODAE questionou nutrisupervisor sobre reclamação",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "Terceirizada respondeu a reclamação",
   UE_RESPONDEU_RECLAMACAO: "U.E. respondeu a reclamação",
+  NUTRISUPERVISOR_RESPONDEU_RECLAMACAO:
+    "Nutrisupervisor respondeu a reclamação",
   AGUARDANDO_ANALISE_SENSORIAL: "CODAE pediu análise sensorial",
   ANALISE_SENSORIAL_RESPONDIDA: "Terceirizada respondeu a análise"
 };
