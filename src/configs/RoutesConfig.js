@@ -111,7 +111,8 @@ import {
   ConsultaResponderReclamacaoPage,
   ResponderReclamacaoPage,
   RelatorioQuantitativoPorTerceirizadaPage,
-  ResponderQuestionamentoUEPage
+  ResponderQuestionamentoUEPage,
+  ResponderQuestionamentoNutrisupervisorPage
 } from "../pages/Produto";
 import AvaliarSolicitacaoCadastroProdutoPage from "pages/Produto/AvaliarSolicitacaoCadastroProdutoPage";
 import AcompanharSolicitacaoCadastroProdutoPage from "pages/Produto/AcompanharSolicitacaoCadastroProdutoPage";
@@ -753,6 +754,14 @@ const routesConfig = [
     component: ResponderQuestionamentoUEPage,
     exact: true,
     tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${
+      constants.GESTAO_PRODUTO
+    }/responder-questionamento-nutrisupervisor`,
+    component: ResponderQuestionamentoNutrisupervisorPage,
+    exact: true,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
