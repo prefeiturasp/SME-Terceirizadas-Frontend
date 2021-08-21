@@ -11,6 +11,7 @@ const {
   CODAE_RESPONDEU_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   UE_RESPONDEU_RECLAMACAO,
+  NUTRISUPERVISOR_RESPONDEU_RECLAMACAO,
   AGUARDANDO_ANALISE_SENSORIAL,
   ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
@@ -120,6 +121,26 @@ const Reclamacao = ({ reclamacao }) => {
         </div>
         <div className="col-8">
           <div className="label-item">Resposta U.E.</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaNutrisupervisor = log => {
+    return (
+      <div className="row mb-4">
+        <div className="col-4">
+          <div className="label-item">Data resposta Nutrisupervisor</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="col-8">
+          <div className="label-item">Resposta Nutrisupervisor</div>
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
@@ -242,6 +263,10 @@ const Reclamacao = ({ reclamacao }) => {
       return blocoRespostaAnalise(log);
     } else if (log.status_evento_explicacao === UE_RESPONDEU_RECLAMACAO) {
       return blocoRespostaUE(log);
+    } else if (
+      log.status_evento_explicacao === NUTRISUPERVISOR_RESPONDEU_RECLAMACAO
+    ) {
+      return blocoRespostaNutrisupervisor(log);
     }
   };
 

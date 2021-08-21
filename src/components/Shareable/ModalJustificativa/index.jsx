@@ -37,7 +37,8 @@ const ModalJustificativa = ({
       {(state.acao === "responder" ||
         state.acao === "questionar_ue" ||
         state.acao === "resposta_ue" ||
-        state.acao === "questionar_nutrisupervisor") && (
+        state.acao === "questionar_nutrisupervisor" ||
+        state.acao === "resposta_nutrisupervisor") && (
         <Modal.Body>
           <Form
             onSubmit={onSubmit}
@@ -61,7 +62,9 @@ const ModalJustificativa = ({
                       disabled={true}
                     />
                   </div>
-                  {state.acao === "resposta_ue" ? (
+                  {["resposta_ue", "resposta_nutrisupervisor"].includes(
+                    state.acao
+                  ) ? (
                     <div className="col-4">
                       <Field
                         component={InputText}

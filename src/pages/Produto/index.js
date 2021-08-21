@@ -5,6 +5,7 @@ import AtivacaoSuspensaoDetalheProduto from "components/screens/Produto/Ativacao
 import AtivacaoSuspensao from "components/screens/Produto/AtivacaoSuspensao";
 import ResponderReclamacaoDetalheProduto from "components/screens/Produto/ResponderReclamacao/ResponderReclamacaoDetalheProduto";
 import ResponderQuestionamentoUE from "components/screens/Produto/ResponderQuestionamentoUE";
+import ResponderQuestionamentoNutrisupervisor from "components/screens/Produto/ResponderQuestionamentoNutrisupervisor";
 import ResponderReclamacao from "components/screens/Produto/ResponderReclamacao";
 import RelatorioQuantitativoPorTerceirizada from "components/screens/Produto/RelatorioQuantitativoPorTerceirizada";
 
@@ -96,6 +97,20 @@ export const ResponderQuestionamentoUEPage = () => {
     <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
       <Breadcrumb home={"/"} atual={atual} />
       <ResponderQuestionamentoUE />
+    </Page>
+  );
+};
+
+export const ResponderQuestionamentoNutrisupervisorPage = () => {
+  const atual = {
+    href: `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`,
+    titulo: "Responder Questionamento"
+  };
+
+  return (
+    <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
+      <Breadcrumb home={"/"} atual={atual} />
+      <ResponderQuestionamentoNutrisupervisor />
     </Page>
   );
 };
