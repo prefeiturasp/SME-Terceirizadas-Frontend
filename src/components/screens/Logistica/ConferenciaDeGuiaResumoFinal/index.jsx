@@ -35,7 +35,7 @@ export default ({ reposicao }) => {
   const chaveGuia = reposicao ? "guiaReposicao" : "guiaConferencia";
 
   const onSubmit = async () => {
-    //setLoading(true);
+    setLoading(true);
     let flagOcorrencia = false;
     let payload = {};
     let ultimoItem = valoresForm[valoresForm.length - 1];
