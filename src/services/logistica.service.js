@@ -107,6 +107,11 @@ export const getGuiaParaConferencia = async params => {
   return await axios.get(url, { params });
 };
 
+export const getConferenciaParaEdicao = async params => {
+  const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-conferencia/`;
+  return await axios.get(url, { params });
+};
+
 export const recebeGuiaSemOcorrencia = async params => {
   const url = `/conferencia-da-guia/`;
   return await axios.post(url, params);
@@ -125,6 +130,13 @@ export const getGuiaParaInsucesso = async params => {
 export const recebeGuiaComOcorrencia = async params => {
   const url = `/conferencia-da-guia-com-ocorrencia/`;
   return await axios.post(url, params);
+};
+
+export const editaGuiaComOcorrencia = async payload => {
+  const url = `/conferencia-da-guia-com-ocorrencia/${
+    payload.uuid_conferencia
+  }/`;
+  return await axios.put(url, payload);
 };
 
 export const getEntregasDilog = async params => {

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Spin, Radio } from "antd";
-import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
+import {
+  getGuiaParaConferencia,
+  getConferenciaParaEdicao
+} from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -45,6 +48,7 @@ export default () => {
   const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
   const [existeOcorrencia, setExisteOcorrencia] = useState();
+  const [uuidEdicao, setUuidEdicao] = useState(false);
 
   const carregarGuia = async uuid => {
     let response;
@@ -58,6 +62,34 @@ export default () => {
         data_entrega: response.data.data_entrega,
         hora_recebimento: "00:00"
       });
+      setCarregando(false);
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
+  };
+
+  const carregarConferenciaEdicao = async uuid => {
+    let response;
+    try {
+      setCarregando(true);
+      const params = gerarParametrosConsulta({ uuid: uuid });
+      response = await getConferenciaParaEdicao(params);
+      let conferencia = response.data.results;
+      setGuia(conferencia.guia);
+      setExisteOcorrencia(conferencia.guia.status !== "Recebida");
+      setInitialValues({
+        numero_guia: conferencia.guia.numero_guia,
+        data_entrega: conferencia.guia.data_entrega,
+        hora_recebimento: conferencia.hora_recebimento,
+        placa_veiculo: conferencia.placa_veiculo,
+        data_entrega_real: moment(conferencia.data_recebimento, "DD/MM/YYYY"),
+        nome_motorista: conferencia.nome_motorista
+      });
+      setHoraRecebimento(conferencia.hora_recebimento);
+      setHoraRecebimentoAlterada(true);
+      setUuidEdicao(conferencia.uuid);
+      localStorage.setItem("conferenciaEdicao", JSON.stringify(conferencia));
       setCarregando(false);
     } catch (e) {
       toastError(e.response.data.detail);
@@ -108,9 +140,14 @@ export default () => {
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const param = urlParams.get("uuid");
-      setUuid(param);
-      carregarGuia(param);
+      const uuidParametro = urlParams.get("uuid");
+      const edicaoParametro = urlParams.get("editar");
+      setUuid(uuidParametro);
+      if (edicaoParametro === "true") {
+        carregarConferenciaEdicao(uuidParametro);
+      } else {
+        carregarGuia(uuidParametro);
+      }
     }
   }, []);
 
@@ -254,7 +291,7 @@ export default () => {
                         className="float-right ml-3"
                         to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
                           guia.uuid
-                        }`}
+                        }&editar=true`}
                       >
                         <Botao
                           texto="Continuar"
@@ -268,6 +305,7 @@ export default () => {
                     {!existeOcorrencia && (
                       <ReceberSemOcorrencia
                         values={values}
+                        uuidEdicao={uuidEdicao}
                         disabled={
                           Object.keys(errors).length > 0 ||
                           existeOcorrencia !== false ||

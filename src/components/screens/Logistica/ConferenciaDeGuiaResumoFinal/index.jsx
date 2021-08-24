@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Botao from "components/Shareable/Botao";
-import { recebeGuiaComOcorrencia } from "services/logistica.service";
+import {
+  recebeGuiaComOcorrencia,
+  editaGuiaComOcorrencia
+} from "services/logistica.service";
 import { mapeiaStatusAlimento } from "../../helper";
 import {
   BUTTON_TYPE,
@@ -16,6 +19,7 @@ import moment from "moment";
 import { useHistory } from "react-router-dom";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ConfirmacaoEdicao from "./components/confirmacaoEdicao";
 import "./styles.scss";
 
 export default ({ reposicao }) => {
@@ -24,6 +28,7 @@ export default ({ reposicao }) => {
   const [conferenciaInvalida, setConferenciaInvalida] = useState(false);
   const [loading, setLoading] = useState(false);
   const [reposicaoInvalida, setReposicaoInvalida] = useState(false);
+  const [edicao, setEdicao] = useState(false);
   const history = useHistory();
 
   const chaveValores = reposicao ? "valoresReposicao" : "valoresConferencia";
@@ -44,42 +49,60 @@ export default ({ reposicao }) => {
     payload.conferencia_dos_alimentos = [];
     valoresForm.map((item, index) => {
       let conferencia = {};
-      let tipo_embalagem =
-        item.recebidos_fechada !== undefined ? "FECHADA" : "FRACIONADA";
 
       if (item.status !== "Recebido") flagOcorrencia = true;
 
-      conferencia.tipo_embalagem = tipo_embalagem;
       conferencia.nome_alimento = guia.alimentos[index].nome_alimento;
-
-      conferencia.qtd_recebido =
-        tipo_embalagem === "FECHADA"
-          ? item.recebidos_fechada
-          : item.recebidos_fracionada;
       conferencia.status_alimento = mapeiaStatusAlimento(item.status);
       if (item.ocorrencias) conferencia.ocorrencia = item.ocorrencias;
       if (item.observacoes) conferencia.observacao = item.observacoes;
       if (item.arquivo && item.arquivo[0])
         conferencia.arquivo = item.arquivo[0].arquivo;
 
-      payload.conferencia_dos_alimentos.push(conferencia);
+      if (item.recebidos_fechada !== undefined) {
+        conferencia.tipo_embalagem = "FECHADA";
+        conferencia.qtd_recebido = item.recebidos_fechada;
+        payload.conferencia_dos_alimentos.push({ ...conferencia });
+      }
+
+      if (item.recebidos_fracionada !== undefined) {
+        conferencia.tipo_embalagem = "FRACIONADA";
+        conferencia.qtd_recebido = item.recebidos_fracionada;
+        payload.conferencia_dos_alimentos.push({ ...conferencia });
+      }
     });
 
-    recebeGuiaComOcorrencia(payload)
-      .then(() => {
-        let toastMsg = reposicao
-          ? "Reposição de alimentos faltantes registrada com sucesso"
-          : flagOcorrencia
-          ? "Guia de Remessa registrada com ocorrência"
-          : "Guia de Remessa recebida com sucesso";
-        toastSuccess(toastMsg);
-        setLoading(false);
-        goToConferir();
-      })
-      .catch(e => {
-        toastError(e.response.data.detail);
-        setLoading(false);
-      });
+    if (edicao === true) {
+      payload.uuid_conferencia = valoresForm[0].uuid_conferencia;
+      editaGuiaComOcorrencia(payload)
+        .then(() => {
+          let toastMsg =
+            "Conferência editada com sucesso. O respectivo registro de reposição foi apagado.";
+          toastSuccess(toastMsg);
+          setLoading(false);
+          goToConferir();
+        })
+        .catch(e => {
+          toastError(e.response.data.detail);
+          setLoading(false);
+        });
+    } else {
+      recebeGuiaComOcorrencia(payload)
+        .then(() => {
+          let toastMsg = reposicao
+            ? "Reposição de alimentos faltantes registrada com sucesso"
+            : flagOcorrencia
+            ? "Guia de Remessa registrada com ocorrência"
+            : "Guia de Remessa recebida com sucesso";
+          toastSuccess(toastMsg);
+          setLoading(false);
+          goToConferir();
+        })
+        .catch(e => {
+          toastError(e.response.data.detail);
+          setLoading(false);
+        });
+    }
   };
 
   const goToConferir = () => {
@@ -112,7 +135,7 @@ export default ({ reposicao }) => {
     history.push(
       `/${LOGISTICA}/${
         reposicao ? REPOSICAO_GUIA : CONFERENCIA_GUIA_COM_OCORRENCIA
-      }/?uuid=${uuid}&autofill=true`
+      }/?uuid=${uuid}&autofill=true&editar=true`
     );
   };
 
@@ -132,6 +155,11 @@ export default ({ reposicao }) => {
     let guiaConf = JSON.parse(localStorage.getItem(chaveGuia));
     if (!valoresConf) {
       setConferenciaInvalida(true);
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    let edicao = urlParams.get("editar");
+    if (edicao === "true") {
+      setEdicao(true);
     }
     setGuia(guiaConf);
     setValoresForm(valoresConf);
@@ -348,15 +376,26 @@ export default ({ reposicao }) => {
                     cancelarConferencia();
                   }}
                 />
-                <Botao
-                  texto={
-                    "Registrar " + (reposicao ? "Reposição" : "Conferência")
-                  }
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN}
-                  disabled={reposicaoInvalida}
-                  onClick={onSubmit}
-                />
+                {edicao ? (
+                  <ConfirmacaoEdicao
+                    disabled={reposicaoInvalida}
+                    texto={
+                      "Editar " + (reposicao ? "Reposição" : "Conferência")
+                    }
+                    guia={guia}
+                    onSubmit={onSubmit}
+                  />
+                ) : (
+                  <Botao
+                    texto={
+                      "Registrar " + (reposicao ? "Reposição" : "Conferência")
+                    }
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    disabled={reposicaoInvalida}
+                    onClick={onSubmit}
+                  />
+                )}
               </span>
             </div>
           </div>
