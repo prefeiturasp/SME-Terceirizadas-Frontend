@@ -291,7 +291,7 @@ export default () => {
                         className="float-right ml-3"
                         to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
                           guia.uuid
-                        }&editar=true`}
+                        }${uuidEdicao ? "&editar=true" : ""}`}
                       >
                         <Botao
                           texto="Continuar"

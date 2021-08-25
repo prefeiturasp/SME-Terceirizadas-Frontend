@@ -83,7 +83,7 @@ const ListagemSolicitacoes = ({ guias }) => {
         >
           <span className="link-acoes green">
             <i className="fas fa-eye" />
-            Editar Conferencia
+            Editar Conferência
           </span>
         </NavLink>
         |
