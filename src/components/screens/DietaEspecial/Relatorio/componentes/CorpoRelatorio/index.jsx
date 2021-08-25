@@ -33,7 +33,7 @@ const CorpoRelatorio = ({ dietaEspecial }) => {
           <hr />
           <DadosEscolaSolicitante />
           <hr />
-          <DadosDietaEspecial values={values} />
+          <DadosDietaEspecial values={values} dietaEspecial={dietaEspecial} />
         </form>
       )}
     />

@@ -3,7 +3,10 @@ import {
   getDietaEspecial,
   escolaCancelaSolicitacao
 } from "services/dietaEspecial.service";
-import { getProtocoloDietaEspecial } from "services/relatorios";
+import {
+  getProtocoloDietaEspecial,
+  getRelatorioDietaEspecial
+} from "services/relatorios";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
@@ -14,10 +17,10 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE } from "configs/constants";
 import { statusEnum } from "constants/shared";
+import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
 import { cabecalhoDieta } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
@@ -63,6 +66,12 @@ const Relatorio = ({ visao }) => {
     setCarregando(false);
   };
 
+  const gerarRelatorio = async uuid => {
+    setCarregando(true);
+    await getRelatorioDietaEspecial(uuid);
+    setCarregando(false);
+  };
+
   const BotaoAutorizaCancelamento = ({ uuid, onAutorizar, setCarregando }) => {
     return (
       <div className="form-group row float-right mt-4">
@@ -92,12 +101,12 @@ const Relatorio = ({ visao }) => {
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
         className="float-right"
-        onClick={() => gerarProtocolo(uuid)}
+        onClick={() => gerarRelatorio(uuid)}
       />
     );
   };
 
-  const BotaoGerarRelatorio = ({ uuid }) => {
+  const BotaoGerarProtocolo = ({ uuid }) => {
     return (
       <div className="form-group row float-right mt-4">
         <Botao
@@ -139,9 +148,12 @@ const Relatorio = ({ visao }) => {
         <div className="card-body">
           <div className="row">
             <div className="col-12" style={{ alignItems: "flex-end" }}>
-              {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
-                <BotaoImprimir uuid={dietaEspecial.uuid} />
-              )}
+              {dietaEspecial &&
+                (status === statusEnum.CODAE_AUTORIZADO ||
+                  (status === statusEnum.CODAE_A_AUTORIZAR &&
+                    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE")) && (
+                  <BotaoImprimir uuid={dietaEspecial.uuid} />
+                )}
               {dietaEspecial && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
@@ -167,28 +179,29 @@ const Relatorio = ({ visao }) => {
           {dietaEspecial && (
             <>
               <CorpoRelatorio dietaEspecial={dietaEspecial} />
-              {status === statusEnum.CODAE_A_AUTORIZAR && visao === ESCOLA && (
-                <EscolaCancelaDietaEspecial
-                  uuid={dietaEspecial.uuid}
-                  onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
-                />
-              )}
+              {status === statusEnum.CODAE_A_AUTORIZAR &&
+                visao === ESCOLA &&
+                dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" && (
+                  <EscolaCancelaDietaEspecial
+                    uuid={dietaEspecial.uuid}
+                    onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
+                  />
+                )}
             </>
           )}
-          {dietaEspecial &&
-            status === statusEnum.CODAE_A_AUTORIZAR &&
-            visao === CODAE && (
-              <FormAutorizaDietaEspecial
-                dietaEspecial={dietaEspecial}
-                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-                setTemSolicitacaoCadastroProduto={() =>
-                  setDietaEspecial({
-                    ...dietaEspecial,
-                    tem_solicitacao_cadastro_produto: true
-                  })
-                }
-              />
-            )}
+          {dietaEspecial && status === statusEnum.CODAE_A_AUTORIZAR && (
+            <FormAutorizaDietaEspecial
+              dietaEspecial={dietaEspecial}
+              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+              visao={visao}
+              setTemSolicitacaoCadastroProduto={() =>
+                setDietaEspecial({
+                  ...dietaEspecial,
+                  tem_solicitacao_cadastro_produto: true
+                })
+              }
+            />
+          )}
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
             visao === CODAE && (
@@ -202,7 +215,7 @@ const Relatorio = ({ visao }) => {
               />
             )}
           {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
-            <BotaoGerarRelatorio uuid={dietaEspecial.uuid} />
+            <BotaoGerarProtocolo uuid={dietaEspecial.uuid} />
           )}
         </div>
       </div>
