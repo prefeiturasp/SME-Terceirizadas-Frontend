@@ -92,13 +92,13 @@ export default class ModalNegarSolicitacao extends Component {
                       texto="Não"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      style={BUTTON_STYLE.DARK_OUTLINE}
                       className="ml-3"
                     />
                     <Botao
                       texto="Sim"
                       type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.BLUE}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                       disabled={submitting}
                     />

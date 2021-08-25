@@ -8,7 +8,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-const DadosDietaEspecial = ({ values }) => {
+const DadosDietaEspecial = ({ values, dietaEspecial }) => {
   const downloadAnexo = url => {
     const a = document.createElement("a");
     a.href = url;
@@ -68,15 +68,17 @@ const DadosDietaEspecial = ({ values }) => {
         />
       </div>
       <div className="col-4" />
-      <div className="col-12">
-        <Field
-          component={InputText}
-          name="laudo"
-          defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
-          label="Laudo"
-          disabled={true}
-        />
-      </div>
+      {dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" && (
+        <div className="col-12">
+          <Field
+            component={InputText}
+            name="laudo"
+            defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
+            label="Laudo"
+            disabled={true}
+          />
+        </div>
+      )}
       <div className="col-12">
         <p className="mt-1">Anexos</p>
         <div className="row">{anexos}</div>

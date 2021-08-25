@@ -10,7 +10,9 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-
+import { ESCOLA, CODAE } from "configs/constants";
+import { statusEnum } from "constants/shared";
+import EscolaCancelaDietaEspecial from "../../componentes/EscolaCancelaDietaEspecial";
 import {
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial,
@@ -24,13 +26,22 @@ import {
 import { getSubstitutos } from "services/produto.service";
 
 import Diagnosticos from "./componentes/Diagnosticos";
+import DiagnosticosLeitura from "./componentes/Diagnosticos/DiagnosticosLeitura";
 import ClassificacaoDaDieta from "./componentes/ClassificacaoDaDieta";
+import ClassificacaoDaDietaLeitura from "./componentes/ClassificacaoDaDieta/ClassificacaoDietaLeitura";
 import Protocolos from "./componentes/Protocolos";
+import ProtocoloLeitura from "./componentes/Protocolos/ProtocoloLeitura";
 import Orientacoes from "./componentes/Orientacoes";
+import OrientacoesLeitura from "./componentes/Orientacoes/OrientacoesLeitura";
 import SubstituicoesField from "./componentes/SubstituicoesField";
+import SubstituicoesTable from "./componentes/SubstituicoesField/SubstituicoesTable";
 import DataTermino from "./componentes/DataTermino";
+import PeriodoVigencia from "./componentes/PeriodoVigencia";
 import InformacoesAdicionais from "./componentes/InformacoesAdicionais";
+import InformacoesAdicionaisLeitura from "./componentes/InformacoesAdicionais/InformacoesAdicionaisLeitura";
 import IdentificacaoNutricionista from "./componentes/IdentificacaoNutricionista";
+import MotivoAlteracao from "./componentes/MotivoAlteracao";
+import ObservacoesAlteracao from "./componentes/ObservacoesAlteracao";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
@@ -48,7 +59,11 @@ import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 import { formatarSolicitacoesVigentes } from "../../../Escola/helper";
 import "./style.scss";
 
-const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
+const FormAutorizaDietaEspecial = ({
+  dietaEspecial,
+  onAutorizarOuNegar,
+  visao
+}) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
   const [alergias, setAlergias] = useState(undefined);
@@ -300,7 +315,7 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
         render={({ form, handleSubmit, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit}>
             {dietaEspecial.tipo_solicitacao !==
-              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
+            TIPO_SOLICITACAO_DIETA.ALTERACAO_UE ? (
               <div className="information-codae">
                 {diagnosticos && (
                   <Diagnosticos
@@ -348,6 +363,38 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
                 <InformacoesAdicionais />
                 <IdentificacaoNutricionista />
               </div>
+            ) : (
+              <>
+                <DiagnosticosLeitura alergias={alergias} />
+
+                <ClassificacaoDaDietaLeitura
+                  classificacaoDieta={dietaEspecial.classificacao}
+                />
+
+                <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} />
+
+                <OrientacoesLeitura
+                  orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+                />
+
+                <SubstituicoesTable
+                  substituicoes={dietaEspecial.substituicoes}
+                />
+
+                <PeriodoVigencia dieta={dietaEspecial} />
+
+                <InformacoesAdicionaisLeitura
+                  informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+                />
+
+                <IdentificacaoNutricionista />
+
+                <MotivoAlteracao motivo={dietaEspecial.motivo_alteracao_ue} />
+
+                <ObservacoesAlteracao
+                  observacoes={dietaEspecial.observacoes_alteracao}
+                />
+              </>
             )}
             <div className="row mt-3">
               <div className="col-4">
@@ -363,22 +410,36 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
                 )}
               </div>
               <div className="col-8">
-                <Botao
-                  texto="Autorizar"
-                  type={BUTTON_TYPE.BUTTON}
-                  onClick={() => validaAlergias(form)}
-                  style={BUTTON_STYLE.GREEN}
-                  className="ml-3 float-right"
-                  disabled={submitting}
-                />
-                <Botao
-                  texto="Negar"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.RED_OUTLINE}
-                  onClick={() => setShowModalNegaDieta(true)}
-                  className="ml-3 float-right"
-                  disabled={submitting}
-                />
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_A_AUTORIZAR &&
+                  visao === ESCOLA && (
+                    <EscolaCancelaDietaEspecial
+                      uuid={dietaEspecial.uuid}
+                      onCancelar={() => onAutorizarOuNegar()}
+                    />
+                  )}
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_A_AUTORIZAR &&
+                  visao === CODAE && (
+                    <>
+                      <Botao
+                        texto="Autorizar"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => validaAlergias(form)}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                      <Botao
+                        texto="Negar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.RED_OUTLINE}
+                        onClick={() => setShowModalNegaDieta(true)}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                    </>
+                  )}
                 <ModalAutorizaDietaEspecial
                   closeModal={() => setShowAutorizarModal(false)}
                   showModal={showAutorizarModal}
