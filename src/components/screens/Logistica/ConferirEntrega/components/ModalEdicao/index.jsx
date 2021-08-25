@@ -23,7 +23,7 @@ export default ({ uuid }) => {
     <>
       <span onClick={handleShow} className="link-acoes green">
         <i className="fas fa-eye" />
-        Editar Conferencia
+        Editar Conferência
       </span>
       |
       <Modal show={show} onHide={handleClose}>
