@@ -440,7 +440,9 @@ export class SolicitacaoDeKitLanche extends Component {
   getNumeroTotalDeKits() {
     const qtdeAlunos = this.state.ehCei
       ? this.props.totalAlunosSelecionadosCei || 0
-      : this.props.quantidade_alunos && parseInt(this.props.quantidade_alunos);
+      : this.props.quantidade_alunos !== undefined
+      ? parseInt(this.props.quantidade_alunos)
+      : 0;
     return qtdeAlunos * this.state.kitsChecked.length;
   }
 
