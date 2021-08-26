@@ -39,7 +39,12 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
     let descricao = log.descricao;
     let texto = truncarString(descricao, tamanhoString);
     let nomeAluno = log.nome_aluno;
-    let textoDieta = log.codigo_eol_aluno + " - " + nomeAluno;
+    let textoDieta =
+      (log.codigo_eol_aluno !== null
+        ? log.codigo_eol_aluno
+        : "(Aluno não matriculado)") +
+      " - " +
+      nomeAluno;
     let serie = log.serie ? log.serie : "";
     // Faz uma abreviação no texto quando tiver data com hora pra não quebrar o layout.
     if (
