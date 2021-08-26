@@ -6,12 +6,15 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 
-export default ({ texto, disabled, guia, onSubmit }) => {
+export default ({ texto, disabled, guia, onSubmit, reposicao }) => {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
-    if (["Reposição total", "Reposição parcial"].includes(guia.status)) {
+    if (
+      ["Reposição total", "Reposição parcial"].includes(guia.status) &&
+      !reposicao
+    ) {
       setShow(true);
     } else {
       onSubmit();

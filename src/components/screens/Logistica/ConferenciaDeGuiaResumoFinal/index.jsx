@@ -384,6 +384,7 @@ export default ({ reposicao }) => {
                     }
                     guia={guia}
                     onSubmit={onSubmit}
+                    reposicao={reposicao}
                   />
                 ) : (
                   <Botao

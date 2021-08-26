@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
-import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
+import {
+  getGuiaParaConferencia,
+  getReposicaoParaEdicao,
+  getConferenciaParaEdicao
+} from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -58,9 +62,14 @@ export default () => {
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
   const [arquivoAtual, setArquivoAtual] = useState([]);
+  const [edicao, setEdicao] = useState(false);
   const inputFile = useRef(null);
   const autoFillButton = useRef(null);
+  const editarButton = useRef(null);
   const history = useHistory();
+
+  const [flagAtraso, setFlagAtraso] = useState(false);
+  const [flagAlimento, setFlagAlimento] = useState(false);
 
   const carregarGuia = async uuid => {
     let response;
@@ -70,16 +79,8 @@ export default () => {
       response = await getGuiaParaConferencia(params);
       const guiaResponse = response.data;
       let conferencias = guiaResponse.conferencias[0];
-      conferencias.conferencia_dos_alimentos.map(conferencia => {
-        if (
-          conferencia.status_alimento === "Recebido" ||
-          conferencia.ocorrencia.split(", ").includes("Atraso na entrega")
-        ) {
-          guiaResponse.alimentos = guiaResponse.alimentos.filter(
-            alimento => alimento.nome_alimento !== conferencia.nome_alimento
-          );
-        }
-      });
+
+      filtrarAlimentos(conferencias.conferencia_dos_alimentos, guiaResponse);
       setGuia(guiaResponse);
       setInitialValues({
         numero_guia: response.data.numero_guia,
@@ -91,6 +92,141 @@ export default () => {
       toastError(e.response.data.detail);
       setCarregando(false);
     }
+  };
+
+  const filtrarAlimentos = (conf_alimentos, guiaResponse, edicao) => {
+    conf_alimentos.map(conferencia => {
+      if (
+        conferencia.status_alimento === "Recebido" ||
+        conferencia.ocorrencia.includes("ATRASO_ENTREGA")
+      ) {
+        guiaResponse.alimentos = guiaResponse.alimentos.filter(
+          alimento => alimento.nome_alimento !== conferencia.nome_alimento
+        );
+      }
+    });
+
+    if (edicao) {
+      guiaResponse.alimentos.map(alimento => {
+        alimento.embalagens.map(embalagem => {
+          let conf = conf_alimentos.find(
+            element =>
+              element.tipo_embalagem === embalagem.tipo_embalagem &&
+              element.nome_alimento === alimento.nome_alimento
+          );
+          if (conf)
+            embalagem.qtd_a_receber = embalagem.qtd_volume - conf.qtd_recebido;
+        });
+      });
+    }
+  };
+
+  const carregarReposicaoEdicao = async uuid => {
+    let response;
+    try {
+      setCarregando(true);
+      const params = gerarParametrosConsulta({ uuid: uuid });
+      response = await getReposicaoParaEdicao(params);
+      let response2 = await getConferenciaParaEdicao(params);
+      let conferencia = response.data.results;
+
+      filtrarAlimentos(
+        response2.data.results.conferencia_dos_alimentos,
+        conferencia.guia,
+        true
+      );
+
+      setGuia(conferencia.guia);
+      setEdicao(true);
+      setCarregando(false);
+      return conferencia;
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
+  };
+
+  const carregarEdicao = (values, conferencia) => {
+    setCarregando(true);
+
+    let valoresConf = conferencia.conferencia_dos_alimentos;
+    let guiaConf = conferencia.guia;
+
+    let primeiroItem = valoresConf[0];
+
+    for (let i = 0; i < valoresConf.length; i++) {
+      let item = valoresConf[i];
+
+      if (
+        valoresConf.length !== guiaConf.alimentos.length &&
+        i < valoresConf.length - 1
+      ) {
+        let proxItem = valoresConf[i + 1];
+        if (
+          item.nome_alimento === proxItem.nome_alimento &&
+          item.tipo_embalagem !== proxItem.tipo_embalagem
+        ) {
+          if (item.tipo_embalagem === "Fechada") {
+            item.recebidos_fechada = item.qtd_recebido;
+            item.recebidos_fracionada = proxItem.qtd_recebido;
+          } else if (item.tipo_embalagem === "Fracionada") {
+            item.recebidos_fechada = proxItem.qtd_recebido;
+            item.recebidos_fracionada = item.qtd_recebido;
+          }
+          valoresConf.splice(i + 1, 1);
+        }
+      }
+
+      if (item.tipo_embalagem === "Fechada")
+        item.recebidos_fechada = item.qtd_recebido;
+      if (item.tipo_embalagem === "Fracionada")
+        item.recebidos_fracionada = item.qtd_recebido;
+      item.ocorrencias = item.ocorrencia;
+      item.observacoes = item.observacao;
+      if (item.arquivo) {
+        item.arquivo = [
+          {
+            nome: "imagem.png",
+            arquivo: item.arquivo
+          }
+        ];
+      } else {
+        item.arquivo = [];
+      }
+    }
+
+    if (primeiroItem) {
+      values.recebidos_fechada = primeiroItem.recebidos_fechada;
+      values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
+      values.status = primeiroItem.status;
+      values.ocorrencias = primeiroItem.ocorrencias;
+      values.observacoes = primeiroItem.observacoes;
+
+      let newArquivo = primeiroItem.arquivo;
+      setArquivoAtual(newArquivo);
+      if (newArquivo) {
+        inputFile.current.setState({ files: newArquivo });
+      }
+    }
+
+    values.data_entrega = guiaConf.data_entrega;
+    values.nome_motorista = conferencia.nome_motorista;
+    values.hora_recebimento = conferencia.hora_recebimento;
+    values.placa_veiculo = conferencia.placa_veiculo;
+    values.data_entrega_real = moment(
+      conferencia.data_recebimento,
+      "DD/MM/YYYY"
+    );
+
+    values.uuid_conferencia = conferencia.uuid;
+
+    setHoraRecebimento(conferencia.hora_recebimento);
+    setHoraRecebimentoAlterada(true);
+
+    setValoresForm(valoresConf);
+    setGuia(guiaConf);
+
+    setCarregando(false);
   };
 
   const setFiles = files => {
@@ -114,6 +250,15 @@ export default () => {
     }
   };
 
+  const processarEdicao = async (event, values) => {
+    event.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    const param = urlParams.get("uuid");
+    setUuid(param);
+    let conf = await carregarReposicaoEdicao(param);
+    carregarEdicao(values, conf);
+  };
+
   const onSubmit = async values => {
     values.hora_recebimento = HoraRecebimento;
     values.data_recebimento = moment(values.data_entrega_real).format(
@@ -128,7 +273,7 @@ export default () => {
 
     localStorage.setItem("valoresReposicao", JSON.stringify(valoresForm));
     localStorage.setItem("guiaReposicao", JSON.stringify(guia));
-    history.push(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}`);
+    history.push(`/${LOGISTICA}/${REPOSICAO_RESUMO_FINAL}?editar=${edicao}`);
   };
 
   const comparaDataEntrega = value => {
@@ -149,6 +294,8 @@ export default () => {
   const validaOcorrencias = value => {
     if (status === "Recebido") return undefined;
     if (!value || value.length === 0) return "Selecione uma ocorrência";
+    if (flagAtraso && flagAlimento && value.length === 1)
+      return "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
   const validaObservacoes = values => value => {
@@ -232,6 +379,9 @@ export default () => {
     let alimentoFaltante =
       recebidos_fechada === 0 || recebidos_fracionada === 0;
 
+    setFlagAlimento(alimentoFaltante || alimentoParcial);
+    setFlagAtraso(dataEhDepois);
+
     if (alimentoParcial) values.status = "Parcial";
 
     if (alimentoFaltante) values.status = "Não Recebido";
@@ -292,10 +442,13 @@ export default () => {
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
 
-      let param2 = urlParams.get("autofill");
+      let autofill = urlParams.get("autofill");
+      let edicao = urlParams.get("editar");
 
-      if (param2) {
+      if (autofill) {
         autoFillButton.current.click();
+      } else if (edicao === "true") {
+        editarButton.current.click();
       } else {
         const param = urlParams.get("uuid");
         setUuid(param);
@@ -669,6 +822,14 @@ export default () => {
                     }}
                     style={{ display: "none" }}
                     ref={autoFillButton}
+                  />
+
+                  <button
+                    onClick={async event => {
+                      processarEdicao(event, values);
+                    }}
+                    style={{ display: "none" }}
+                    ref={editarButton}
                   />
 
                   <Botao

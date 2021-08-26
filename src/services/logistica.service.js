@@ -112,6 +112,11 @@ export const getConferenciaParaEdicao = async params => {
   return await axios.get(url, { params });
 };
 
+export const getReposicaoParaEdicao = async params => {
+  const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-reposicao/`;
+  return await axios.get(url, { params });
+};
+
 export const recebeGuiaSemOcorrencia = async params => {
   const url = `/conferencia-da-guia/`;
   return await axios.post(url, params);
