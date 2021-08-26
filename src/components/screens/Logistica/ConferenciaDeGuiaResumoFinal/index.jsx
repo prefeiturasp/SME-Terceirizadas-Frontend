@@ -76,8 +76,9 @@ export default ({ reposicao }) => {
       payload.uuid_conferencia = valoresForm[0].uuid_conferencia;
       editaGuiaComOcorrencia(payload)
         .then(() => {
-          let toastMsg =
-            "Conferência editada com sucesso. O respectivo registro de reposição foi apagado.";
+          let toastMsg = reposicao
+            ? "Reposição editada com sucesso."
+            : "Conferência editada com sucesso. O respectivo registro de reposição foi apagado.";
           toastSuccess(toastMsg);
           setLoading(false);
           goToConferir();
