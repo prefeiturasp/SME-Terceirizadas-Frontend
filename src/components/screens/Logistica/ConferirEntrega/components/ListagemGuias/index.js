@@ -90,6 +90,21 @@ const ListagemSolicitacoes = ({ guias }) => {
       </>
     );
 
+    const editarReposicao = (
+      <>
+        <NavLink
+          className="float-left"
+          to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}&editar=true`}
+        >
+          <span className="link-acoes green">
+            <i className="fas fa-redo" />
+            Editar Reposição
+          </span>
+        </NavLink>
+        |
+      </>
+    );
+
     if (
       ["Recebida", "Recebimento parcial", "Não recebida"].includes(
         guia.status
@@ -101,7 +116,7 @@ const ListagemSolicitacoes = ({ guias }) => {
       ["Reposição total", "Reposição parcial"].includes(guia.status) &&
       guia.situacao === "ATIVA"
     ) {
-      return <ModalEdicao uuid={guia.uuid} />;
+      return [<ModalEdicao uuid={guia.uuid} key={0} />, editarReposicao];
     }
   };
 
