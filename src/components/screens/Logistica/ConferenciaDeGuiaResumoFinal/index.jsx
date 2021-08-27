@@ -380,9 +380,7 @@ export default ({ reposicao }) => {
                 {edicao ? (
                   <ConfirmacaoEdicao
                     disabled={reposicaoInvalida}
-                    texto={
-                      "Editar " + (reposicao ? "Reposição" : "Conferência")
-                    }
+                    texto={"Registrar Edição"}
                     guia={guia}
                     onSubmit={onSubmit}
                     reposicao={reposicao}
