@@ -43,12 +43,14 @@ export class OpcoesKits extends Component {
       prevProps.tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS
     ) {
       this.setState({ kitsChecked: [] });
+      this.props.updateKitsChecked([]);
     } else if (
       this.props.tempoPasseio === TEMPO_PASSEIO.QUATRO_HORAS &&
       (prevProps.tempoPasseio === TEMPO_PASSEIO.CINCO_A_SETE_HORAS ||
         prevProps.tempoPasseio === "")
     ) {
       this.setState({ kitsChecked: [] });
+      this.props.updateKitsChecked([]);
     } else if (
       prevProps.kitsChecked &&
       this.props.kitsChecked &&
