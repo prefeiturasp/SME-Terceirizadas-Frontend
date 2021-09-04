@@ -3,6 +3,7 @@ import CadastroEmpresaPage from "../pages/Cadastros/CadastroEmpresaPage";
 import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHorarioComboAlimentacaoPage";
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
+import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
@@ -948,6 +949,12 @@ const routesConfig = [
     component: ResponderReclamacaoPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/cadastro-geral`,
+    component: CadastroGeralPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${
