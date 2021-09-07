@@ -15,7 +15,9 @@ import {
   TERCEIRIZADA,
   DRE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  CODAE
+  CODAE,
+  CADASTROS,
+  CONSULTA_KITS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -96,6 +98,19 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           Aguardando Resposta Empresa
         </LeafItem>
       </SubMenu>
+      {usuarioEhCODAEGestaoAlimentacao() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="cadastros"
+          onClick={onSubmenuClick}
+          title="Cadastros"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CODAE}/${CADASTROS}/${CONSULTA_KITS}`}>
+            Consulta de Kits
+          </LeafItem>
+        </SubMenu>
+      )}
     </Menu>
   );
 };
