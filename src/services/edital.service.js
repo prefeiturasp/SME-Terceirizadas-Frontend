@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import axios from "services/_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -101,4 +102,9 @@ export const excluirEdital = async uuid => {
     .catch(error => {
       return { data: error, status: status };
     });
+};
+
+export const getNumerosEditais = async () => {
+  const url = `/editais/lista-numeros/`;
+  return await axios.get(url);
 };
