@@ -6,6 +6,7 @@ import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
+import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
 import EditaisCadastradosPage from "../pages/Cadastros/EditaisCadastradosPage";
 import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
@@ -490,6 +491,14 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/faixas-etarias`,
     component: FaixasEtariasPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CODAE}/${constants.CADASTROS}/${
+      constants.CONSULTA_KITS
+    }`,
+    component: ConsultaKitLanchePage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },

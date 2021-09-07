@@ -8,7 +8,8 @@ import {
   EDITAIS_CONTRATOS,
   TIPOS_ALIMENTACAO,
   FAIXAS_ETARIAS,
-  HORARIO_COMBOS_ALIMENTACAO
+  HORARIO_COMBOS_ALIMENTACAO,
+  CONSULTA_KITS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -44,6 +45,9 @@ const MenuCadastros = () => {
           </LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${FAIXAS_ETARIAS}`}>
             Faixas Etárias
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${CONSULTA_KITS}`}>
+            Consulta de Kits
           </LeafItem>
         </>
       )}

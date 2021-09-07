@@ -135,3 +135,8 @@ export const getDetalheKitLancheAvulsa = (uuid, tipoSolicitacao) => {
       console.log(error);
     });
 };
+
+export const getKitsLanche = async params => {
+  const url = `/kit-lanches/consulta-kits/`;
+  return await axios.get(url, { params });
+};
