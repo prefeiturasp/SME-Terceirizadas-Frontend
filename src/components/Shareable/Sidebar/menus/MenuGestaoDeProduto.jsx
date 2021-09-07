@@ -27,6 +27,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
+  const exibirCadastroGeral =
+    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
@@ -95,6 +97,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
+      {exibirCadastroGeral && (
+        <LeafItem to="/gestao-produto/cadastro-geral">Cadastro Geral</LeafItem>
+      )}
     </Menu>
   );
 };

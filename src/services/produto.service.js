@@ -576,3 +576,20 @@ export const cancelaHomologacao = async (uuid, payload) =>
     `/homologacoes-produtos/${uuid}/cancela-solicitacao-homologacao/`,
     payload
   );
+
+export const getNomesItems = async () =>
+  axios.get("/itens-cadastros/lista-nomes/");
+
+export const getTiposItems = async () => axios.get("/itens-cadastros/tipos/");
+
+export const consultaItems = async params =>
+  axios.get(`/itens-cadastros/`, { params });
+
+export const cadastrarItem = async payload =>
+  await axios.post(`/itens-cadastros/`, payload);
+
+export const atualizarItem = async (payload, uuid) =>
+  await axios.patch(`/itens-cadastros/${uuid}/`, payload);
+
+export const deletarItem = async uuid =>
+  await axios.delete(`/itens-cadastros/${uuid}/`);
