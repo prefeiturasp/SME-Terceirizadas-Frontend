@@ -12,7 +12,9 @@ const ClassificacaoDaDietaLeitura = ({ classificacaoDieta }) => {
           label="Classificação da Dieta"
           name="classificacao_nome"
           defaultValue={
-            classificacaoDieta !== undefined ? classificacaoDieta.nome : ""
+            [undefined, null].includes(classificacaoDieta)
+              ? ""
+              : classificacaoDieta.nome
           }
           disabled={true}
         />
