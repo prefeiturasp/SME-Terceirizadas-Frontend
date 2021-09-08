@@ -11,14 +11,25 @@ const JustificativaCancelamento = ({ dietaEspecial }) => {
       <div className="col-12 mb-3">
         <label className="sectionName">Justificativa do Cancelamento</label>
       </div>
-      <div className="col-12">
-        <Field
-          component={TextArea}
-          name="log_cancelamento"
-          disabled={true}
-          defaultValue={justificativa}
-        />
-      </div>
+      {dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU" ? (
+        <div className="col-12">
+          <div
+            className="orientacoes"
+            dangerouslySetInnerHTML={{
+              __html: justificativa
+            }}
+          />
+        </div>
+      ) : (
+        <div className="col-12">
+          <Field
+            component={TextArea}
+            name="log_cancelamento"
+            disabled={true}
+            defaultValue={justificativa}
+          />
+        </div>
+      )}
     </div>
   );
 };
