@@ -5,10 +5,11 @@ const DESCRICAO_SOLICITACAO = {
   ESCOLA_SOLICITOU_INATIVACAO: "Solicitação de Cancelamento",
   CODAE_NEGOU_INATIVACAO: "Negada o Cancelamento",
   CODAE_AUTORIZOU_INATIVACAO: "Cancelamento Autorizado",
-  ESCOLA_CANCELOU: "Cancelada pela Unidade Escolar",
-  TERMINADA_AUTOMATICAMENTE_SISTEMA: "Cancelada por atingir data de término",
+  ESCOLA_CANCELOU: "Cancelada pela Unidade Educacional",
+  TERMINADA_AUTOMATICAMENTE_SISTEMA:
+    "Cancelamento automático por atingir data de término",
   CANCELADO_ALUNO_MUDOU_ESCOLA:
-    "Cancelamento por alteração de unidade educacional",
+    "Cancelamento para aluno não matriculado na Unidade Educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
     "Cancelamento para aluno não matriculado na rede municipal"
 };
@@ -25,4 +26,37 @@ export const cabecalhoDieta = dietaEspecial => {
   }
 
   return `Dieta Especial - ${descricao}`;
+};
+
+export const ehSolicitacaoDeCancelamento = status => {
+  return [
+    "ESCOLA_CANCELOU",
+    "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+    "CANCELADO_ALUNO_MUDOU_ESCOLA",
+    "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+  ].includes(status);
+};
+
+export const formataJustificativa = dietaEspecial => {
+  let justificativa = null;
+  if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
+    justificativa =
+      dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa;
+  }
+  if (
+    dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
+  ) {
+    justificativa = "Cancelamento automático por atingir data de término.";
+  }
+  if (
+    dietaEspecial.status_solicitacao === "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+  ) {
+    justificativa =
+      "Cancelamento automático para aluno não matriculado na rede municipal.";
+  }
+  if (dietaEspecial.status_solicitacao === "CANCELADO_ALUNO_MUDOU_ESCOLA") {
+    justificativa =
+      "Cancelamento automático para aluno não matriculado na Unidade Educacional.";
+  }
+  return justificativa;
 };
