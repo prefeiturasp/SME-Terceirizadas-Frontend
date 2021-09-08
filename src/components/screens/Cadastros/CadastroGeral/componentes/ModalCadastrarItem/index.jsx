@@ -83,29 +83,10 @@ export default ({ closeModal, showModal, item, changePage }) => {
               <Modal.Body>
                 <div className="row mb-3">
                   <div className="col-4">
-                    <label className="col-form-label">
+                    <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
                       Tipo
                     </label>
-                    {/* <Field
-                      name="tipo"
-                      component={ASelect}
-                      className="input-busca-tipo-item"
-                      suffixIcon={<Icon type="caret-down" />}
-                      showSearch
-                      required
-                      defaultValue={item ? item.tipo : undefined}
-                      disabled={item ? true : false}
-                      validate={selectValidate}
-                      filterOption={(inputValue, option) =>
-                        option.props.children
-                          .toString()
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      }
-                    >
-                      {opcoes}
-                    </Field> */}
                     <Field
                       name="tipo"
                       component={Select}
