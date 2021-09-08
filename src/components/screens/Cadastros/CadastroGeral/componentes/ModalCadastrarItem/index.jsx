@@ -7,11 +7,10 @@ import {
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { Select } from "components/Shareable/Select";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { required } from "helpers/fieldValidators";
+import { required, selectValidate } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -48,26 +47,28 @@ export default ({ closeModal, showModal, item, changePage }) => {
       nome: formValues.nome,
       tipo: formValues.tipo
     };
-    item
-      ? await atualizarItem(payload, item.uuid)
-      : await cadastrarItem(payload)
-          .then(() => {
-            toastSuccess("Cadastro atualizado com sucesso");
-          })
-          .catch(error => {
-            toastError(error.response.data[0]);
-          });
+    if (item) {
+      await atualizarItem(payload, item.uuid)
+        .then(() => {
+          toastSuccess("Cadastro atualizado com sucesso");
+        })
+        .catch(error => {
+          toastError(error.response.data[0]);
+        });
+    } else {
+      await cadastrarItem(payload)
+        .then(() => {
+          toastSuccess("Cadastro realizado com sucesso");
+        })
+        .catch(error => {
+          toastError(error.response.data[0]);
+        });
+    }
+
     setCarregando(false);
     closeModal();
     changePage();
   };
-
-  const { Option } = SelectAntd;
-  const opcoes = tipos
-    ? tipos.map(tipo => {
-        return <Option key={tipo.tipo}>{tipo.tipo_display}</Option>;
-      })
-    : [];
 
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
@@ -86,7 +87,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       <span className="asterisco">* </span>
                       Tipo
                     </label>
-                    <Field
+                    {/* <Field
                       name="tipo"
                       component={ASelect}
                       className="input-busca-tipo-item"
@@ -95,7 +96,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       required
                       defaultValue={item ? item.tipo : undefined}
                       disabled={item ? true : false}
-                      validate={required}
+                      validate={selectValidate}
                       filterOption={(inputValue, option) =>
                         option.props.children
                           .toString()
@@ -104,7 +105,23 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       }
                     >
                       {opcoes}
-                    </Field>
+                    </Field> */}
+                    <Field
+                      name="tipo"
+                      component={Select}
+                      defaultValue={item ? item.tipo : undefined}
+                      disabled={item ? true : false}
+                      options={[
+                        { uuid: "", nome: "Selecione uma opção" }
+                      ].concat(
+                        tipos &&
+                          tipos.map(tipo => {
+                            return { uuid: tipo.tipo, nome: tipo.tipo_display };
+                          })
+                      )}
+                      required
+                      validate={selectValidate}
+                    />
                   </div>
                   <div className="col-8">
                     <label className="col-form-label mb-1">

@@ -24,69 +24,68 @@ export default ({ resultado, changePage }) => {
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <table className="table table-bordered table-items">
-            <thead>
-              <tr className="table-head-items">
-                <th className="nome">Nome</th>
-                <th className="tipo">Tipo</th>
-                <th className="acoes">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {resultado.length === 0 && (
-                <tr className="table-body-sem-resultado">
-                  <td colSpan="3" className="p-3 text-center">
-                    Nenhum resultado encontrado
-                  </td>
-                </tr>
-              )}
-              {resultado.map((item, idx) => {
-                return (
-                  <Fragment key={idx}>
-                    <tr className="table-body-items">
-                      <td>{item.nome}</td>
-                      <td>{item.tipo}</td>
-                      <td className="acoes">
-                        <button
-                          className="botaoEditar mr-2"
-                          onClick={() => openModal(item)}
-                          disabled={
-                            (item.tipo === "UNIDADE_MEDIDA" ||
-                              item.tipo === "EMBALAGEM") &&
-                            permissao
-                              ? true
-                              : false
-                          }
-                        >
-                          <Icon className="mr-1" type="form" />
-                          Editar
-                        </button>
-                        |
-                        <button
-                          className="botaoExcluir ml-2"
-                          onClick={() => openModalExcluir(item)}
-                          disabled={
-                            (item.tipo === "UNIDADE_MEDIDA" ||
-                              item.tipo === "EMBALAGEM") &&
-                            permissao
-                              ? true
-                              : false
-                          }
-                        >
-                          <Icon className="mr-1" type="delete" />
-                          Excluir
-                        </button>
-                      </td>
-                    </tr>
-                  </Fragment>
-                );
-              })}
-            </tbody>
-          </table>
+      {resultado.length === 0 ? (
+        <div className="row">
+          <div className="col-12 text-center">Nenhum resultado encontrado</div>
         </div>
-      </div>
+      ) : (
+        <div className="row">
+          <div className="col-12">
+            <table className="table table-bordered table-items">
+              <thead>
+                <tr className="table-head-items">
+                  <th className="nome">Nome</th>
+                  <th className="tipo">Tipo</th>
+                  <th className="acoes">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {resultado.map((item, idx) => {
+                  return (
+                    <Fragment key={idx}>
+                      <tr className="table-body-items">
+                        <td>{item.nome}</td>
+                        <td>{item.tipo}</td>
+                        <td className="acoes">
+                          <button
+                            className="botaoEditar mr-2"
+                            onClick={() => openModal(item)}
+                            disabled={
+                              (item.tipo === "UNIDADE_MEDIDA" ||
+                                item.tipo === "EMBALAGEM") &&
+                              permissao
+                                ? true
+                                : false
+                            }
+                          >
+                            <Icon className="mr-1" type="form" />
+                            Editar
+                          </button>
+                          |
+                          <button
+                            className="botaoExcluir ml-2"
+                            onClick={() => openModalExcluir(item)}
+                            disabled={
+                              (item.tipo === "UNIDADE_MEDIDA" ||
+                                item.tipo === "EMBALAGEM") &&
+                              permissao
+                                ? true
+                                : false
+                            }
+                          >
+                            <Icon className="mr-1" type="delete" />
+                            Excluir
+                          </button>
+                        </td>
+                      </tr>
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
       <ModalCadastrarItem
         closeModal={() => setShowModal(false)}
         showModal={showModal}

@@ -44,6 +44,7 @@ export const Select = props => {
           "invalid-field"}`}
         disabled={disabled}
         data-cy={label}
+        required={required}
         onChange={input ? input.onChange : onChange}
         name={name}
         style={width && { width: width - 12 }}
