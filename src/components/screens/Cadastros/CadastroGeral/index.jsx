@@ -66,13 +66,6 @@ export default () => {
         />
         {resultado && (
           <>
-            <div className="row">
-              <div className="col-12">
-                <p>
-                  <b>Itens Cadastrados</b>
-                </p>
-              </div>
-            </div>
             <Tabela resultado={resultado} changePage={() => changePage(page)} />
             <Pagination
               className="mt-3 mb-3"
