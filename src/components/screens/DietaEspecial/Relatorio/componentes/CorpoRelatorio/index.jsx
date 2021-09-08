@@ -1,6 +1,8 @@
 import React from "react";
 import { Form } from "react-final-form";
 import arrayMutators from "final-form-arrays";
+import { ehSolicitacaoDeCancelamento } from "../../helpers";
+import JustificativaCancelamento from "./JustificativaCancelamento";
 import InformacoesAluno from "./InformacoesAluno";
 import FluxoDeStatusDieta from "./FluxoDeStatusDieta";
 import DadosEscolaSolicitante from "./DadosEscolaSolicitante";
@@ -13,6 +15,10 @@ const CorpoRelatorio = ({ dietaEspecial }) => {
     // será desenvolvido na história 41937
   };
 
+  const dietaCancelada = ehSolicitacaoDeCancelamento(
+    dietaEspecial.status_solicitacao
+  );
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -20,6 +26,10 @@ const CorpoRelatorio = ({ dietaEspecial }) => {
       mutators={{ ...arrayMutators }}
       render={({ values }) => (
         <form>
+          {dietaCancelada && [
+            <JustificativaCancelamento key={1} dietaEspecial={dietaEspecial} />,
+            <hr key={2} />
+          ]}
           <InformacoesAluno />
           <hr />
           {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&

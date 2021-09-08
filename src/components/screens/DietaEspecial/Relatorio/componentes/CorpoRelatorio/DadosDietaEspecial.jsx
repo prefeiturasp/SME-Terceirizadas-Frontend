@@ -68,17 +68,22 @@ const DadosDietaEspecial = ({ values, dietaEspecial }) => {
         />
       </div>
       <div className="col-4" />
-      {dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" && (
-        <div className="col-12">
-          <Field
-            component={InputText}
-            name="laudo"
-            defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
-            label="Laudo"
-            disabled={true}
-          />
-        </div>
-      )}
+      {dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" ||
+        dietaEspecial.status_solicitacao !==
+          "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
+        dietaEspecial.status_solicitacao !== "CANCELADO_ALUNO_MUDOU_ESCOLA" ||
+        (dietaEspecial.status_solicitacao !==
+          "CANCELADO_ALUNO_NAO_PERTENCE_REDE" && (
+          <div className="col-12">
+            <Field
+              component={InputText}
+              name="laudo"
+              defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
+              label="Laudo"
+              disabled={true}
+            />
+          </div>
+        ))}
       <div className="col-12">
         <p className="mt-1">Anexos</p>
         <div className="row">{anexos}</div>
