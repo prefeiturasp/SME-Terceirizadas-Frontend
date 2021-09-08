@@ -11,7 +11,6 @@ const ListagemKits = ({ kits }) => {
           <div>Descrição</div>
           <div>Nº do Edital</div>
           <div>Status</div>
-          <div />
         </div>
         {kits.map(kit => {
           return (
@@ -21,9 +20,6 @@ const ListagemKits = ({ kits }) => {
                 <div dangerouslySetInnerHTML={{ __html: kit.descricao }} />
                 <div>{kit.edital ? kit.edital.numero : ""}</div>
                 <div>{kit.status}</div>
-                <div>
-                  <span className="link-acoes green">Editar</span>
-                </div>
               </div>
             </>
           );
