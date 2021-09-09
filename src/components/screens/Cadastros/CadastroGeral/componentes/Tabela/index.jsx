@@ -31,6 +31,11 @@ export default ({ resultado, changePage }) => {
       ) : (
         <div className="row">
           <div className="col-12">
+            <p>
+              <b>Itens Cadastrados</b>
+            </p>
+          </div>
+          <div className="col-12">
             <table className="table table-bordered table-items">
               <thead>
                 <tr className="table-head-items">
