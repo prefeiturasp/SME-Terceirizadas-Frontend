@@ -18,7 +18,8 @@ import {
   formatarParaMultiselect,
   geradorUUID,
   getDataObj,
-  getError
+  getError,
+  retornaDuplicadasArray
 } from "../../helpers/utilities";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -143,6 +144,15 @@ class InclusaoDeAlimentacao extends Component {
       acimaDoLimite
     });
   }
+
+  validaData = value => {
+    if (value === null || value === undefined) return "Campo obrigatório";
+    let datas = this.state.inclusoes.map(x => x.data);
+    let datasDuplicadas = retornaDuplicadasArray(datas);
+    if (datasDuplicadas.includes(value))
+      return "Já existe uma solicitação de inclusão de alimento para essa mesma data.";
+    else return undefined;
+  };
 
   onDataChanged(value) {
     if (
@@ -801,7 +811,7 @@ class InclusaoDeAlimentacao extends Component {
                                 .toDate()}
                               label="Dia"
                               required
-                              validate={required}
+                              validate={this.validaData}
                             />
                           )}
                         </div>

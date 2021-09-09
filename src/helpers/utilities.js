@@ -581,3 +581,6 @@ export const corrigeLinkAnexo = url => {
 
 export const trocaAcentuadasPorSemAcento = texto =>
   texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+export const retornaDuplicadasArray = arr =>
+  arr.filter((item, index) => arr.indexOf(item) !== index);
