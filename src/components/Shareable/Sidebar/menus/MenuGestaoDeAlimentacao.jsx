@@ -94,9 +94,6 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
           Canceladas
         </LeafItem>
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
-          Aguardando Resposta Empresa
-        </LeafItem>
       </SubMenu>
       {usuarioEhCODAEGestaoAlimentacao() && (
         <SubMenu
