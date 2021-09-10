@@ -382,14 +382,15 @@ const FormAutorizaDietaEspecial = ({
                   substituicoes={dietaEspecial.substituicoes}
                 />
 
-                {dietaEspecial.status_solicitacao !==
-                  "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
-                  dietaEspecial.status_solicitacao !==
-                    "CANCELADO_ALUNO_MUDOU_ESCOLA" ||
-                  (dietaEspecial.status_solicitacao !==
-                    "CANCELADO_ALUNO_NAO_PERTENCE_REDE" && (
-                    <PeriodoVigencia dieta={dietaEspecial} />
-                  ))}
+                {[
+                  "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+                  "CANCELADO_ALUNO_MUDOU_ESCOLA",
+                  "ESCOLCANCELADO_ALUNO_NAO_PERTENCE_REDEA_CANCELOU"
+                ].includes(dietaEspecial.status_solicitacao) ? (
+                  <></>
+                ) : (
+                  <PeriodoVigencia dieta={dietaEspecial} />
+                )}
 
                 <InformacoesAdicionaisLeitura
                   informacoes_adicionais={dietaEspecial.informacoes_adicionais}
