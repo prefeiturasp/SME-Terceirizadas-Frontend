@@ -19,7 +19,7 @@ import { ESCOLA, CODAE } from "configs/constants";
 import { statusEnum } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
-import { cabecalhoDieta } from "./helpers";
+import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
@@ -35,6 +35,7 @@ const Relatorio = ({ visao }) => {
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
 
+  const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const fetchData = uuid => {
     loadSolicitacao(uuid);
   };
@@ -100,7 +101,7 @@ const Relatorio = ({ visao }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
-        className="float-right"
+        className="float-right botaoImprimirDieta"
         onClick={() => gerarRelatorio(uuid)}
       />
     );
@@ -148,19 +149,18 @@ const Relatorio = ({ visao }) => {
         <div className="card-body">
           <div className="row">
             <div className="col-12" style={{ alignItems: "flex-end" }}>
-              {dietaEspecial &&
+              {(dietaEspecial &&
                 (status === statusEnum.CODAE_AUTORIZADO ||
                   (status === statusEnum.CODAE_A_AUTORIZAR &&
-                    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE")) && (
-                  <BotaoImprimir uuid={dietaEspecial.uuid} />
-                )}
+                    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"))) ||
+                (dietaCancelada && <BotaoImprimir uuid={dietaEspecial.uuid} />)}
               {dietaEspecial && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
                   texto="Histórico"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
-                  className="mr-2 float-right"
+                  className="mr-2 float-left"
                 />
               )}
             </div>
@@ -189,19 +189,21 @@ const Relatorio = ({ visao }) => {
                 )}
             </>
           )}
-          {dietaEspecial && status === statusEnum.CODAE_A_AUTORIZAR && (
-            <FormAutorizaDietaEspecial
-              dietaEspecial={dietaEspecial}
-              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-              visao={visao}
-              setTemSolicitacaoCadastroProduto={() =>
-                setDietaEspecial({
-                  ...dietaEspecial,
-                  tem_solicitacao_cadastro_produto: true
-                })
-              }
-            />
-          )}
+          {(dietaEspecial && status === statusEnum.CODAE_A_AUTORIZAR) ||
+            (dietaCancelada && (
+              <FormAutorizaDietaEspecial
+                dietaEspecial={dietaEspecial}
+                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                visao={visao}
+                setTemSolicitacaoCadastroProduto={() =>
+                  setDietaEspecial({
+                    ...dietaEspecial,
+                    tem_solicitacao_cadastro_produto: true
+                  })
+                }
+                dietaCancelada={dietaCancelada}
+              />
+            ))}
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
             visao === CODAE && (
