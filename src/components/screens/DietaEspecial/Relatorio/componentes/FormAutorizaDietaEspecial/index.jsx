@@ -383,9 +383,9 @@ const FormAutorizaDietaEspecial = ({
                 />
 
                 {[
+                  "ESCOLA_CANCELOU",
                   "TERMINADA_AUTOMATICAMENTE_SISTEMA",
-                  "CANCELADO_ALUNO_MUDOU_ESCOLA",
-                  "ESCOLCANCELADO_ALUNO_NAO_PERTENCE_REDEA_CANCELOU"
+                  "CANCELADO_ALUNO_MUDOU_ESCOLA"
                 ].includes(dietaEspecial.status_solicitacao) ? (
                   <></>
                 ) : (
