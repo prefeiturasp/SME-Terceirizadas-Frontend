@@ -62,7 +62,8 @@ import "./style.scss";
 const FormAutorizaDietaEspecial = ({
   dietaEspecial,
   onAutorizarOuNegar,
-  visao
+  visao,
+  dietaCancelada
 }) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
@@ -315,7 +316,7 @@ const FormAutorizaDietaEspecial = ({
         render={({ form, handleSubmit, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit}>
             {dietaEspecial.tipo_solicitacao !==
-            TIPO_SOLICITACAO_DIETA.ALTERACAO_UE ? (
+              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && !dietaCancelada ? (
               <div className="information-codae">
                 {diagnosticos && (
                   <Diagnosticos
@@ -381,7 +382,15 @@ const FormAutorizaDietaEspecial = ({
                   substituicoes={dietaEspecial.substituicoes}
                 />
 
-                <PeriodoVigencia dieta={dietaEspecial} />
+                {[
+                  "ESCOLA_CANCELOU",
+                  "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+                  "CANCELADO_ALUNO_MUDOU_ESCOLA"
+                ].includes(dietaEspecial.status_solicitacao) ? (
+                  <></>
+                ) : (
+                  <PeriodoVigencia dieta={dietaEspecial} />
+                )}
 
                 <InformacoesAdicionaisLeitura
                   informacoes_adicionais={dietaEspecial.informacoes_adicionais}
@@ -389,25 +398,31 @@ const FormAutorizaDietaEspecial = ({
 
                 <IdentificacaoNutricionista />
 
-                <MotivoAlteracao motivo={dietaEspecial.motivo_alteracao_ue} />
-
-                <ObservacoesAlteracao
-                  observacoes={dietaEspecial.observacoes_alteracao}
-                />
+                {!dietaCancelada && [
+                  <MotivoAlteracao
+                    motivo={dietaEspecial.motivo_alteracao_ue}
+                    key={1}
+                  />,
+                  <ObservacoesAlteracao
+                    key={2}
+                    observacoes={dietaEspecial.observacoes_alteracao}
+                  />
+                ]}
               </>
             )}
             <div className="row mt-3">
               <div className="col-4">
                 {dietaEspecial.tipo_solicitacao !==
-                  TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
-                  <Botao
-                    texto="Salvar Rascunho"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => salvaRascunho(values)}
-                    disabled={pristine || submitting}
-                  />
-                )}
+                  TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
+                  !dietaCancelada && (
+                    <Botao
+                      texto="Salvar Rascunho"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() => salvaRascunho(values)}
+                      disabled={pristine || submitting}
+                    />
+                  )}
               </div>
               <div className="col-8">
                 {dietaEspecial.status_solicitacao ===
