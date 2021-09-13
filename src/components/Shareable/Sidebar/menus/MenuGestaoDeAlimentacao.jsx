@@ -5,7 +5,6 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_COM_QUESTIONAMENTO,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
   ALTERACAO_TIPO_ALIMENTACAO,
@@ -93,9 +92,6 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_NEGADAS}`}>Negadas</LeafItem>
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
           Canceladas
-        </LeafItem>
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
-          Aguardando Resposta Empresa
         </LeafItem>
       </SubMenu>
       {usuarioEhCODAEGestaoAlimentacao() && (
