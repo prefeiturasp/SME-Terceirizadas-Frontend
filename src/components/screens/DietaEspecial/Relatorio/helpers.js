@@ -60,3 +60,13 @@ export const formataJustificativa = dietaEspecial => {
   }
   return justificativa;
 };
+
+export const mostrarFormulário = status => {
+  return [
+    "ESCOLA_CANCELOU",
+    "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+    "CANCELADO_ALUNO_MUDOU_ESCOLA",
+    "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
+    "CODAE_A_AUTORIZAR"
+  ].includes(status);
+};
