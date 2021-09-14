@@ -19,7 +19,11 @@ import { ESCOLA, CODAE } from "configs/constants";
 import { statusEnum } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
-import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
+import {
+  cabecalhoDieta,
+  ehSolicitacaoDeCancelamento,
+  mostrarFormulário
+} from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
@@ -36,6 +40,8 @@ const Relatorio = ({ visao }) => {
   const [historico, setHistorico] = useState([]);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
+  const mostrarFormulario = status ? mostrarFormulário(status) : false;
+
   const fetchData = uuid => {
     loadSolicitacao(uuid);
   };
@@ -189,21 +195,20 @@ const Relatorio = ({ visao }) => {
                 )}
             </>
           )}
-          {(dietaEspecial && status === statusEnum.CODAE_A_AUTORIZAR) ||
-            (dietaCancelada && (
-              <FormAutorizaDietaEspecial
-                dietaEspecial={dietaEspecial}
-                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-                visao={visao}
-                setTemSolicitacaoCadastroProduto={() =>
-                  setDietaEspecial({
-                    ...dietaEspecial,
-                    tem_solicitacao_cadastro_produto: true
-                  })
-                }
-                dietaCancelada={dietaCancelada}
-              />
-            ))}
+          {mostrarFormulario && (
+            <FormAutorizaDietaEspecial
+              dietaEspecial={dietaEspecial}
+              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+              visao={visao}
+              setTemSolicitacaoCadastroProduto={() =>
+                setDietaEspecial({
+                  ...dietaEspecial,
+                  tem_solicitacao_cadastro_produto: true
+                })
+              }
+              dietaCancelada={dietaCancelada}
+            />
+          )}
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
             visao === CODAE && (
