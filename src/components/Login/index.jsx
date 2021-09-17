@@ -373,29 +373,24 @@ export class Login extends Component {
     return (
       <div>
         <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <center className="mt-5">
-          <div className="div-circular-verde">
-            <div>
-              <i className="fas fa-check fa-3x check-verde" />
+        <center>
+          <div className="mt-3">
+            <div className="alerta-verde mt-2">
+              <i className="far fa-check-circle" />
+              <p>E-mail de recuperação enviado com sucesso</p>
             </div>
-          </div>
-        </center>
-        <div className="mt-3 alinha-centro">
-          <div>
-            <p className="texto-simples-verde mt-2">
+            <p className="mt-1">
               {`Seu link de recuperação de senha foi enviado para
             ${this.state.email_recuperacao}`}
             </p>
-            <p className="texto-simples-verde mt-2">
-              Verifique sua caixa de entrada!
-            </p>
+            <p className="mt-2">Verifique sua caixa de entrada ou spam</p>
           </div>
-        </div>
-        <center className="mt-5">
+        </center>
+        <center className="mt-4">
           <Botao
-            className="col-4 "
+            className="col-4"
             style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
+            texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
             onClick={() =>
               this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -410,19 +405,16 @@ export class Login extends Component {
     return (
       <div>
         <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <center className="mt-5">
-          <div className="div-circular-vermelho">
-            <div>
-              <i className="fas fa-times fa-3x check-vermelho" />
+        <center className="mt-4">
+          <div className="mt-3">
+            <div className="alerta-vermelho mt-2">
+              <i className="far fa-times-circle" />
+              <p>E-mail não encontrado</p>
             </div>
-          </div>
-        </center>
-        <center>
-          <div className="col-8 mt-3">
-            <p className="texto-simples-vermelho mt-2">
+            <p className="mt-1">
               Você não tem um e-mail cadastrado para recuperar sua senha.
             </p>
-            <p className="texto-simples-vermelho mt-2">
+            <p className="mt-2">
               Para restabelecer o seu acesso, procure o Diretor da sua unidade.
             </p>
           </div>
@@ -431,7 +423,7 @@ export class Login extends Component {
           <Botao
             className="col-4"
             style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
+            texto="Voltar ao Inicio"
             type={BUTTON_TYPE.SUBMIT}
             onClick={() =>
               this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -469,15 +461,6 @@ export class Login extends Component {
         </form>
 
         <div className="alinha-direita mt-3 ml-4 mr-4">
-          <Botao
-            className="col-3"
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            texto="Voltar"
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-            }
-            type={BUTTON_TYPE.SUBMIT}
-          />
           <Botao
             className="col-3 ml-2"
             style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -525,7 +508,7 @@ export class Login extends Component {
         <div className="right-half">
           <div className="container my-auto">
             <div className="logo-sigpae">
-              <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
+              <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
             </div>
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
