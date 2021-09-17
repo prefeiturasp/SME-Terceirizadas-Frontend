@@ -22,7 +22,7 @@ export const InputPassword = props => {
     tooltipText,
     maxlength,
     pattern,
-    toUppercaseActive,
+    toUppercaseActive
   } = props;
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -57,9 +57,7 @@ export const InputPassword = props => {
         data-cy={input.name}
         placeholder={placeholder}
         required={required}
-        type={
-          passwordShown ? "text" : "password"
-        }
+        type={passwordShown ? "text" : "password"}
         pattern={pattern}
         title={title}
         maxLength={maxlength}

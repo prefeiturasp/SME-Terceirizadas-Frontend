@@ -12,6 +12,7 @@ import { recuperaSenha, setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
+import { InputPassword } from "../Shareable/Input/InputPassword";
 import Select from "../Shareable/Select";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
@@ -151,13 +152,12 @@ export class Login extends Component {
             validate={[required]}
           />
           <Field
-            component={InputText}
+            component={InputPassword}
             esconderAsterisco
             label="Senha"
             name="password"
             placeholder={"******"}
             required
-            type="password"
             validate={required}
           />
           <p className="mt-2">
@@ -181,16 +181,19 @@ export class Login extends Component {
             disabled={pristine || submitting || bloquearBotao}
             type={BUTTON_TYPE.SUBMIT}
           />
-          <Link
-            className="hyperlink text-center mt-3 d-block"
-            data-cy="ainda-nao-cadastrado"
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
-            }
-            to="#"
-          >
-            Ainda não sou cadastrado
-          </Link>
+          <p className="mt-3">
+            Não possui uma conta? &nbsp;
+            <Link
+              className="hyperlink"
+              data-cy="ainda-nao-cadastrado"
+              onClick={() =>
+                this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
+              }
+              to="#"
+            >
+              Cadastre-se
+            </Link>
+          </p>
         </form>
       </div>
     );
@@ -322,12 +325,11 @@ export class Login extends Component {
             <div className="row">
               <div className="col-6">
                 <Field
-                  component={InputText}
+                  component={InputPassword}
                   label="Senha"
                   name="password"
                   placeholder={"******"}
                   required
-                  type="password"
                   validate={required}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
@@ -336,12 +338,11 @@ export class Login extends Component {
               </div>
               <div className="col-6">
                 <Field
-                  component={InputText}
+                  component={InputPassword}
                   label="Confirme sua senha"
                   name="confirmar_password"
                   placeholder={"******"}
                   required
-                  type="password"
                   validate={required}
                 />
               </div>
