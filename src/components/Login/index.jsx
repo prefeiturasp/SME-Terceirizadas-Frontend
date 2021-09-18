@@ -23,6 +23,11 @@ import {
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
 
+const TOOLTIP_CPF = `Somente números`;
+const TOOLTIP_CNPJ = `Somente números`;
+const TOOLTIP_RF = `Somente números`;
+const TOOLTIP_SENHA = `Pelo menos 8 caracteres, uma letra e um número" e ícone de "olho" onde ao clicar irá mostrar e ocular a senha.`;
+
 export class Login extends Component {
   constructor(props) {
     super(props);
@@ -136,7 +141,7 @@ export class Login extends Component {
   }
 
   renderLogin() {
-    const { handleSubmit, pristine, submitting } = this.props;
+    const { handleSubmit, submitting } = this.props;
     const { bloquearBotao } = this.state;
     return (
       <div className="form">
@@ -178,7 +183,7 @@ export class Login extends Component {
             className="col-12"
             style={BUTTON_STYLE.GREEN}
             texto="Acessar"
-            disabled={pristine || submitting || bloquearBotao}
+            disabled={submitting || bloquearBotao}
             type={BUTTON_TYPE.SUBMIT}
           />
           <p className="mt-3">
@@ -284,7 +289,8 @@ export class Login extends Component {
                   component={InputText}
                   label="CPF"
                   name="cpf"
-                  placeholder={"Digite o seu CPF"}
+                  placeholder={"Digite seu CPF"}
+                  tooltipText={TOOLTIP_CPF}
                   required
                   type="text"
                   validate={required}
@@ -296,12 +302,12 @@ export class Login extends Component {
                     component={InputText}
                     label="Nº RF"
                     name="registro_funcional"
-                    placeholder={"Digite o RF"}
+                    placeholder={"Digite seu RF"}
+                    tooltipText={TOOLTIP_RF}
                     required
                     type="text"
                     pattern="\d*"
                     title="somente números"
-                    helpText="Somente números"
                     maxlength="7"
                     validate={[required, length(7)]}
                   />
@@ -315,6 +321,7 @@ export class Login extends Component {
                     label="CNPJ"
                     name="cnpj"
                     placeholder={"Digite o CNPJ da Empresa"}
+                    tooltipText={TOOLTIP_CNPJ}
                     required
                     type="text"
                     validate={[required]}
@@ -329,11 +336,11 @@ export class Login extends Component {
                   label="Senha"
                   name="password"
                   placeholder={"******"}
+                  tooltipText={TOOLTIP_SENHA}
                   required
                   validate={required}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
-                  helpText="Pelo menos 8 caracteres, uma letra e um número"
                 />
               </div>
               <div className="col-6">
@@ -347,20 +354,21 @@ export class Login extends Component {
                 />
               </div>
             </div>
-            <div
-              onClick={() =>
-                this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-              }
-              className="text-right back"
-            >
-              voltar
-            </div>
-            <div className="pt-2">
+            <div className="alinha-direita mt-3 ml-4">
+              <Botao
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                texto="Cancelar"
+                className="col-2 ml-3"
+                disabled={bloquearBotao}
+                onClick={() =>
+                  this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+                }
+              />
               <Botao
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-12"
+                className="col-2 ml-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -462,7 +470,7 @@ export class Login extends Component {
 
         <div className="alinha-direita mt-3 ml-4 mr-4">
           <Botao
-            className="col-3 ml-2"
+            className="col-2 ml-3"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             texto="Cancelar"
             type={BUTTON_TYPE.SUBMIT}
@@ -471,7 +479,7 @@ export class Login extends Component {
             }
           />
           <Botao
-            className="col-3 ml-2"
+            className="col-2 ml-3"
             style={BUTTON_STYLE.GREEN}
             texto="Continuar"
             type={BUTTON_TYPE.SUBMIT}
