@@ -14,12 +14,12 @@ div.input {
       margin-top: 10px;
     }
   }
-  &.pass {
+  &.show-hide-password {
     position: relative;
     input {
       width: 100%;
     }
-    i {
+    i.show-hide {
       color: $blackInput;
       position: absolute;
       right: 15px;

@@ -30,7 +30,7 @@ export const InputPassword = props => {
     setPasswordShown(passwordShown ? false : true);
   };
   return (
-    <div className={"input pass"}>
+    <div className={"input show-hide-password "}>
       {label && [
         required && !esconderAsterisco && (
           <span key={0} className="required-asterisk">
@@ -68,7 +68,9 @@ export const InputPassword = props => {
         }}
       />
       <i
-        className={` ${passwordShown ? "far fa-eye-slash" : "far fa-eye"}`}
+        className={`show-hide ${
+          passwordShown ? "far fa-eye-slash" : "far fa-eye"
+        }`}
         onClick={togglePasswordVisiblity}
       />
       <HelpText helpText={helpText} />
