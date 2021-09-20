@@ -40,8 +40,12 @@ export const ehSolicitacaoDeCancelamento = status => {
 export const formataJustificativa = dietaEspecial => {
   let justificativa = null;
   if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
-    justificativa =
-      dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa;
+    if (dietaEspecial.logs.length === 2) {
+      justificativa =
+        dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa;
+    } else {
+      justificativa = dietaEspecial.logs[2].justificativa;
+    }
   }
   if (
     dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
@@ -70,3 +74,27 @@ export const mostrarFormulário = status => {
     "CODAE_A_AUTORIZAR"
   ].includes(status);
 };
+
+export const mostrarFormUsuarioEscola = (perfil, dieta) => {
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
+  if (
+    tipoUsuario === perfil &&
+    dieta.status_solicitacao === "CODAE_A_AUTORIZAR"
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+export const ehCanceladaSegundoStep = dieta => {
+  if (
+    dieta.logs.length === 2 &&
+    dieta.logs[1].status_evento_explicacao === "Escola cancelou"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+// (dietaEspecial && dietaEspecial.logs.length === 2 && status === "ESCOLA_CANCELOU")? true : false;
