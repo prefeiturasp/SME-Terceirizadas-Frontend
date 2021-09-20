@@ -16,13 +16,15 @@ import {
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE } from "configs/constants";
-import { statusEnum } from "constants/shared";
+import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
 import {
   cabecalhoDieta,
   ehSolicitacaoDeCancelamento,
-  mostrarFormulário
+  mostrarFormulário,
+  mostrarFormUsuarioEscola,
+  ehCanceladaSegundoStep
 } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
@@ -41,6 +43,13 @@ const Relatorio = ({ visao }) => {
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const mostrarFormulario = status ? mostrarFormulário(status) : false;
+  const mostrarFormEscola = dietaEspecial
+    ? mostrarFormUsuarioEscola(TIPO_PERFIL.ESCOLA, dietaEspecial)
+    : false;
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
+  const canceladaSegundoStep = dietaEspecial
+    ? ehCanceladaSegundoStep(dietaEspecial)
+    : false;
 
   const fetchData = uuid => {
     loadSolicitacao(uuid);
@@ -187,7 +196,9 @@ const Relatorio = ({ visao }) => {
               <CorpoRelatorio dietaEspecial={dietaEspecial} />
               {status === statusEnum.CODAE_A_AUTORIZAR &&
                 visao === ESCOLA &&
-                dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" && (
+                !dietaCancelada &&
+                dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
+                tipoUsuario !== '"gestao_alimentacao_terceirizada"' && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}
                     onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
@@ -195,19 +206,23 @@ const Relatorio = ({ visao }) => {
                 )}
             </>
           )}
-          {mostrarFormulario && (
-            <FormAutorizaDietaEspecial
-              dietaEspecial={dietaEspecial}
-              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-              visao={visao}
-              setTemSolicitacaoCadastroProduto={() =>
-                setDietaEspecial({
-                  ...dietaEspecial,
-                  tem_solicitacao_cadastro_produto: true
-                })
-              }
-              dietaCancelada={dietaCancelada}
-            />
+          {dietaEspecial && mostrarFormulario && (
+            <>
+              {mostrarFormEscola && !canceladaSegundoStep && (
+                <FormAutorizaDietaEspecial
+                  dietaEspecial={dietaEspecial}
+                  onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                  visao={visao}
+                  setTemSolicitacaoCadastroProduto={() =>
+                    setDietaEspecial({
+                      ...dietaEspecial,
+                      tem_solicitacao_cadastro_produto: true
+                    })
+                  }
+                  dietaCancelada={dietaCancelada}
+                />
+              )}
+            </>
           )}
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
