@@ -25,8 +25,6 @@ class Step3 extends Component {
     return imagens_salvas && imagens_salvas.length > 0;
   };
 
-  validateEmbalagem = [required, this.maxLengthCaracteres(500)];
-
   render() {
     const { payload } = this.props;
     return (
@@ -37,6 +35,7 @@ class Step3 extends Component {
             <Field
               component={InputText}
               label="N° de registro do produto no órgão competente"
+              tooltipText="Campo específico para inserir o registro dos produtos de origem animal, polpas de frutas e sucos"
               name="numero_registro"
               type="text"
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
@@ -46,6 +45,7 @@ class Step3 extends Component {
             <Field
               component={InputText}
               label="Prazo de Validade"
+              tooltipText="Inserir o período de tempo em Dias, Meses ou Anos conforme descrição do rótulo"
               name="prazo_validade"
               type="text"
               placeholder="Digite o prazo da validade"
@@ -58,25 +58,16 @@ class Step3 extends Component {
           <div className="col-12 pt-3">
             <Field
               component={InputText}
-              label="Tipo"
+              label="Classificação de Grãos"
+              tooltipText="Campos específico para produtos que contém classificação de grãos"
               name="tipo"
               type="text"
-              placeholder="Digite o tipo"
             />
           </div>
         </div>
 
         <div className="row">
-          <div className="col-12 pb-5">
-            <Field
-              component={TextArea}
-              label="Embalagem primária"
-              name="embalagem"
-              placeholder="Digite os dados"
-              required
-              validate={this.validateEmbalagem}
-            />
-          </div>
+          <div className="col-12 pb-5" />
         </div>
         <div className="row">
           <div className="col-12 pt-5">
