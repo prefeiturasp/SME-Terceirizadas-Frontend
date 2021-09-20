@@ -70,3 +70,27 @@ export const mostrarFormulário = status => {
     "CODAE_A_AUTORIZAR"
   ].includes(status);
 };
+
+export const mostrarFormUsuarioEscola = (perfil, dieta) => {
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
+  if (
+    tipoUsuario === perfil &&
+    dieta.status_solicitacao === "CODAE_A_AUTORIZAR"
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+export const ehCanceladaSegundoStep = dieta => {
+  if (
+    dieta.logs.length === 2 &&
+    dieta.logs[1].status_evento_explicacao === "Escola cancelou"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+// (dietaEspecial && dietaEspecial.logs.length === 2 && status === "ESCOLA_CANCELOU")? true : false;

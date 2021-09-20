@@ -81,6 +81,7 @@ const FormAutorizaDietaEspecial = ({
   const [showAutorizarModal, setShowAutorizarModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(undefined);
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
 
   const fetchData = async dietaEspecial => {
     const respAlergiasIntolerancias = await getAlergiasIntolerancias();
@@ -316,7 +317,9 @@ const FormAutorizaDietaEspecial = ({
         render={({ form, handleSubmit, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit}>
             {dietaEspecial.tipo_solicitacao !==
-              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && !dietaCancelada ? (
+              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
+            !dietaCancelada &&
+            tipoUsuario === '"dieta_especial"' ? (
               <div className="information-codae">
                 {diagnosticos && (
                   <Diagnosticos
@@ -366,55 +369,65 @@ const FormAutorizaDietaEspecial = ({
               </div>
             ) : (
               <>
-                <DiagnosticosLeitura alergias={alergias} />
+                {dietaEspecial.status_solicitacao !==
+                  statusEnum.CODAE_A_AUTORIZAR && (
+                  <>
+                    <DiagnosticosLeitura alergias={alergias} />
 
-                <ClassificacaoDaDietaLeitura
-                  classificacaoDieta={dietaEspecial.classificacao}
-                />
+                    <ClassificacaoDaDietaLeitura
+                      classificacaoDieta={dietaEspecial.classificacao}
+                    />
 
-                <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} />
+                    <ProtocoloLeitura
+                      protocolo={dietaEspecial.nome_protocolo}
+                    />
 
-                <OrientacoesLeitura
-                  orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-                />
+                    <OrientacoesLeitura
+                      orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+                    />
 
-                <SubstituicoesTable
-                  substituicoes={dietaEspecial.substituicoes}
-                />
+                    <SubstituicoesTable
+                      substituicoes={dietaEspecial.substituicoes}
+                    />
 
-                {[
-                  "ESCOLA_CANCELOU",
-                  "TERMINADA_AUTOMATICAMENTE_SISTEMA",
-                  "CANCELADO_ALUNO_MUDOU_ESCOLA"
-                ].includes(dietaEspecial.status_solicitacao) ? (
-                  <></>
-                ) : (
-                  <PeriodoVigencia dieta={dietaEspecial} />
+                    {[
+                      "ESCOLA_CANCELOU",
+                      "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+                      "CANCELADO_ALUNO_MUDOU_ESCOLA"
+                    ].includes(dietaEspecial.status_solicitacao) ? (
+                      <></>
+                    ) : (
+                      <PeriodoVigencia dieta={dietaEspecial} />
+                    )}
+
+                    <InformacoesAdicionaisLeitura
+                      informacoes_adicionais={
+                        dietaEspecial.informacoes_adicionais
+                      }
+                    />
+
+                    <IdentificacaoNutricionista />
+
+                    {!dietaCancelada && [
+                      <MotivoAlteracao
+                        motivo={dietaEspecial.motivo_alteracao_ue}
+                        key={1}
+                      />,
+                      <ObservacoesAlteracao
+                        key={2}
+                        observacoes={dietaEspecial.observacoes_alteracao}
+                      />
+                    ]}
+                  </>
                 )}
-
-                <InformacoesAdicionaisLeitura
-                  informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-                />
-
-                <IdentificacaoNutricionista />
-
-                {!dietaCancelada && [
-                  <MotivoAlteracao
-                    motivo={dietaEspecial.motivo_alteracao_ue}
-                    key={1}
-                  />,
-                  <ObservacoesAlteracao
-                    key={2}
-                    observacoes={dietaEspecial.observacoes_alteracao}
-                  />
-                ]}
               </>
             )}
             <div className="row mt-3">
               <div className="col-4">
                 {dietaEspecial.tipo_solicitacao !==
                   TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
-                  !dietaCancelada && (
+                  !dietaCancelada &&
+                  tipoUsuario === '"dieta_especial"' && (
                     <Botao
                       texto="Salvar Rascunho"
                       type={BUTTON_TYPE.BUTTON}
@@ -427,7 +440,8 @@ const FormAutorizaDietaEspecial = ({
               <div className="col-8">
                 {dietaEspecial.status_solicitacao ===
                   statusEnum.CODAE_A_AUTORIZAR &&
-                  visao === ESCOLA && (
+                  visao === ESCOLA &&
+                  tipoUsuario === '"dieta_especial"' && (
                     <EscolaCancelaDietaEspecial
                       uuid={dietaEspecial.uuid}
                       onCancelar={() => onAutorizarOuNegar()}
@@ -435,7 +449,8 @@ const FormAutorizaDietaEspecial = ({
                   )}
                 {dietaEspecial.status_solicitacao ===
                   statusEnum.CODAE_A_AUTORIZAR &&
-                  visao === CODAE && (
+                  visao === CODAE &&
+                  tipoUsuario === '"dieta_especial"' && (
                     <>
                       <Botao
                         texto="Autorizar"
