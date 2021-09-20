@@ -131,6 +131,7 @@ class Step2 extends Component {
               label="Porção"
               name="porcao"
               type="text"
+              tooltipText="Inserir as informações conforme rótulo do produto"
               placeholder="Ex: porção de 200ml (01 unidade)"
               required
               validate={required}
@@ -142,6 +143,7 @@ class Step2 extends Component {
               label="Unidade Caseira"
               name="unidade_caseira"
               type="text"
+              tooltipText="Inserir as informações conforme rótulo do produto"
               placeholder="Ex: 01 copo"
               required
               validate={required}
