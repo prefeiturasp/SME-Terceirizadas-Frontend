@@ -431,7 +431,7 @@ export class Login extends Component {
           <Botao
             className="col-4"
             style={BUTTON_STYLE.GREEN}
-            texto="Voltar ao Inicio"
+            texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
             onClick={() =>
               this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
