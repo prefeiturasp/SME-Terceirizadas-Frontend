@@ -14,6 +14,7 @@
 
 a.hyperlink {
   font-size: 14px;
+  font-weight: bold;
   color: $blue;
 }
 
@@ -132,13 +133,13 @@ div.input-group.email-sme {
     @extend .texto-simples;
     align-items: center;
     text-align: center;
-    color: #297805;
+    color: #198459;
   }
   &-vermelho {
     @extend .texto-simples;
     align-items: center;
     text-align: center;
-    color: #b40c02;
+    color: #c00000;
   }
   &-grande {
     @extend .texto-simples;
@@ -147,6 +148,35 @@ div.input-group.email-sme {
     font-size: 24px;
     line-height: 28px;
     font-weight: bold;
+  }
+}
+
+.alerta {
+  display: flex;
+  justify-content: center;
+  i {
+    margin-right: 0.5em;
+  }
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+  }
+  &-vermelho {
+    @extend .alerta;
+    p,
+    i {
+      color: #c00000;
+    }
+  }
+  &-verde {
+    @extend .alerta;
+    p,
+    i {
+      color: #198459;
+    }
   }
 }
 
