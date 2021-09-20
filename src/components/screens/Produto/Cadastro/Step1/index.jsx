@@ -16,7 +16,7 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 
-import ModalCadastrarItem from "components/screens/Cadastros/CadastroGeral/componentes/ModalCadastrarItem";
+import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
 import { required, maxLengthProduto } from "helpers/fieldValidators";

@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { Icon } from "antd";
 import "./style.scss";
-import ModalCadastrarItem from "../ModalCadastrarItem";
+import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import ModalExcluirItem from "../ModalExcluirItem";
 import { usuarioEhTerceirizada } from "helpers/utilities";
 
