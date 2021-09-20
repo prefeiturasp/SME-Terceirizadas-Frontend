@@ -173,7 +173,7 @@ export const TIPOS_SOLICITACAO_LABEL = {
   INCLUSAO_DE_ALIMENTACAO: "Inclusão de Alimentação",
   INCLUSAO_DE_ALIMENTACAO_CEI: "Inclusão de Alimentacao de CEI",
   INCLUSAO_DE_ALIMENTACAO_CONTINUA: "Inclusão de Alimentação Contínua",
-  ALTERACAO_DO_TIPO_DE_ALIMENTACAO: "Alteração do Tipo de Alimentação",
+  ALTERACAO_DO_TIPO_DE_ALIMENTACAO: "Alteração do tipo de Alimentação",
   ALTERACAO_DO_TIPO_DE_ALIMENTACAO_CEI:
     "Alteração do Tipo de Alimentação de CEI",
   SOLICITACAO_DE_KIT_LANCHE_PASSEIO: "Kit Lanche Passeio",
