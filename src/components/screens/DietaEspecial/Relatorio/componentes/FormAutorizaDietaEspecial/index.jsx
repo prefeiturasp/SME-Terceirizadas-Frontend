@@ -392,7 +392,7 @@ const FormAutorizaDietaEspecial = ({
 
                     {[
                       "ESCOLA_CANCELOU",
-                      "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+                      "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
                       "CANCELADO_ALUNO_MUDOU_ESCOLA"
                     ].includes(dietaEspecial.status_solicitacao) ? (
                       <></>
