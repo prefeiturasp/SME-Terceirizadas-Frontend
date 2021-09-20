@@ -22,6 +22,12 @@ export default ({ setFiltros, setSolicitacoes }) => {
 
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (values.data_inicial)
+      filtros.data_inicial = moment(values.data_inicial).format("DD/MM/YYYY");
+    else delete filtros.data_inicial;
+    if (values.data_final)
+      filtros.data_final = moment(values.data_final).format("DD/MM/YYYY");
+    else delete filtros.data_final;
     if (filtros.status === "Todos") delete filtros.status;
     setFiltros({ ...filtros });
   };
@@ -140,6 +146,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : null
                   }
+                  writable
                 />
               </div>
               <div className="col-2">
@@ -155,6 +162,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                       : null
                   }
                   maxDate={null}
+                  writable
                 />
               </div>
               <div className="col-2">
