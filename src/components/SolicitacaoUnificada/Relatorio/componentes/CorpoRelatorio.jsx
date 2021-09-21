@@ -33,7 +33,7 @@ export const CorpoRelatorio = props => {
               }}
             />
           </p>
-          <div className="col-2">
+          <div className="col-3">
             <span className="badge-sme badge-secondary-sme">
               <span className="id-of-solicitation-dre">
                 # {solicitacaoUnificada.id_externo}
@@ -41,17 +41,25 @@ export const CorpoRelatorio = props => {
               <br /> <span className="number-of-order-label">ID DO PEDIDO</span>
             </span>
           </div>
-          <div className="my-auto col-6 pl-5">
+          <div className="col-4">
             <span className="requester">Diretoria Regional Solicitante</span>
             <br />
             <span className="dre-name">
               {solicitacaoUnificada.diretoria_regional.nome}
             </span>
           </div>
-          <div className="my-auto col-4">
+          <div className="col-1">
             <span className="requester">Lote</span>
             <br />
             <span className="dre-name">{solicitacaoUnificada.lote_nome}</span>
+          </div>
+          <div className="col-4">
+            <span className="requester">Empresa</span>
+            <br />
+            <span className="dre-name">
+              {solicitacaoUnificada.rastro_terceirizada &&
+                solicitacaoUnificada.rastro_terceirizada.nome_fantasia}
+            </span>
           </div>
         </div>
 
