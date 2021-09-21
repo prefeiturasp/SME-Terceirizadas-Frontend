@@ -61,7 +61,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {inversaoDiaCardapio.escola &&
@@ -69,18 +69,25 @@ export const CorpoRelatorio = props => {
               inversaoDiaCardapio.escola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {escolaDaInversao.lote && escolaDaInversao.lote.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {escolaDaInversao &&
               escolaDaInversao.tipo_gestao &&
               escolaDaInversao.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {inversaoDiaCardapio.rastro_terceirizada &&
+              inversaoDiaCardapio.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>

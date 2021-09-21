@@ -86,6 +86,7 @@ export class CorpoRelatorio extends Component {
         uuid,
         id_externo,
         escola = { diretoria_regional: { nome: "" } },
+        rastro_terceirizada,
         logs,
         quantidades_periodo,
         descricao,
@@ -134,20 +135,26 @@ export class CorpoRelatorio extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-2 report-label-value">
+          <div className="col-3 report-label-value">
             <p>DRE</p>
             <p className="value-important">{escola.diretoria_regional.nome}</p>
           </div>
-          <div className="col-2 report-label-value">
+          <div className="col-3 report-label-value">
             <p>Lote</p>
             <p className="value-important">
               {escola && escola.lote && escola.lote.nome}
             </p>
           </div>
-          <div className="col-2 report-label-value">
+          <div className="col-3 report-label-value">
             <p>Tipo de Gestão</p>
             <p className="value-important">
               {escola && escola.tipo_gestao && escola.tipo_gestao.nome}
+            </p>
+          </div>
+          <div className="col-3 report-label-value">
+            <p>Empresa</p>
+            <p className="value-important">
+              {rastro_terceirizada && rastro_terceirizada.nome_fantasia}
             </p>
           </div>
         </div>

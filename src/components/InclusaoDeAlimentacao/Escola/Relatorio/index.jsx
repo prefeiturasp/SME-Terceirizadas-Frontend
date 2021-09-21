@@ -238,6 +238,10 @@ class Relatorio extends Component {
                           inclusaoDeAlimentacao.escola.tipo_gestao.nome}
                       </p>
                     </div>
+                    <div className="col-2 report-label-value">
+                      <p>Empresa</p>
+                      <p className="value-important" />
+                    </div>
                   </div>
                   <hr />
                   {inclusaoDeAlimentacao.logs && (
