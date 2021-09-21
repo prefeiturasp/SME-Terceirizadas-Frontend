@@ -61,7 +61,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
@@ -69,7 +69,7 @@ export const CorpoRelatorio = props => {
               alteracaoDeCardapio.escola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
@@ -77,12 +77,19 @@ export const CorpoRelatorio = props => {
               alteracaoDeCardapio.escola.lote.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
               alteracaoDeCardapio.escola.tipo_gestao &&
               alteracaoDeCardapio.escola.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {alteracaoDeCardapio.rastro_terceirizada &&
+              alteracaoDeCardapio.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>
