@@ -13,6 +13,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { getNomesUnidadesEscolares } from "services/logistica.service.js";
+import { debounce } from "lodash";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
@@ -34,7 +35,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
 
   const getNomeUnidadeEscola = async (codigo, formValues) => {
     const values = { ...formValues };
-    if (codigo.length !== 5) {
+    if (codigo.length === 0) {
       delete values.nome_unidade;
       setInitialValues({ ...values });
       setDesabilitarAluno(false);
@@ -61,6 +62,8 @@ export default ({ setFiltros, setSolicitacoes }) => {
       }
     }
   };
+
+  const getNomeUnidadeEscolaDebounced = debounce(getNomeUnidadeEscola, 1000);
 
   return (
     <div className="filtros-requisicoes-dilog">
@@ -176,7 +179,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
 
                 <OnChange name="codigo_unidade">
                   {value => {
-                    getNomeUnidadeEscola(value, values);
+                    getNomeUnidadeEscolaDebounced(value, values);
                   }}
                 </OnChange>
               </div>
