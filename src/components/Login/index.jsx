@@ -209,40 +209,63 @@ export class Login extends Component {
     const { bloquearBotao, tab } = this.state;
     return (
       <div className="signup-form">
-        <div className="tabs">
+        <div className="tabs d-md-block d-none">
           <div className="row">
             <div
-              onClick={() => this.switchTab("escola")}
+              onClick={() => this.switchTab(TABS.ESCOLA)}
               className={`tab col-4 ${
                 tab === TABS.ESCOLA ? "active" : "inactive"
               }`}
             >
-              ESCOLA
+              {TABS.ESCOLA}
             </div>
             <div
-              onClick={() => this.switchTab("dre/codae")}
+              onClick={() => this.switchTab(TABS.DRE_CODAE)}
               className={`tab col-4 ${
                 tab === TABS.DRE_CODAE ? "active" : "inactive"
               }`}
             >
-              DRE/CODAE
+              {TABS.DRE_CODAE}
             </div>
             <div
-              onClick={() => this.switchTab("terceirizadas")}
+              onClick={() => this.switchTab(TABS.TERCEIRIZADAS)}
               className={`tab col-4 ${
                 tab === TABS.TERCEIRIZADAS ? "active" : "inactive"
               }`}
             >
-              EMPRESA
+              {TABS.TERCEIRIZADAS}
             </div>
           </div>
+        </div>
+        <div className="input-group-append d-block d-md-none col-md-6 col-12">
+          <Field
+            component={Select}
+            name="tipo_cadastro"
+            label="Tipo de Cadastro"
+            options={[
+              {
+                nome: "ESCOLA"
+              },
+              {
+                nome: "DRE/CODAE"
+              },
+              {
+                nome: "EMPRESA"
+              }
+            ]}
+            onChange={evt => {
+              this.switchTab(evt.target.value);
+            }}
+            naoDesabilitarPrimeiraOpcao
+            //width={this.state.width}
+          />
         </div>
         <div className="form">
           <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
             {tab === TABS.DRE_CODAE && (
               <div className="row">
                 <div className="input-group email-sme">
-                  <div ref={this.emailInput} className="col-6">
+                  <div ref={this.emailInput} className="col-12 col-md-6">
                     <Field
                       component={InputText}
                       placeholder={"Início do seu E-mail SME"}
@@ -253,7 +276,7 @@ export class Login extends Component {
                       validate={[required, semCaracteresEspeciais]}
                     />
                   </div>
-                  <div className="input-group-append col-6">
+                  <div className="input-group-append d-none d-md-flex col-md-6">
                     <Field
                       component={Select}
                       name="tipo_email"
@@ -262,6 +285,17 @@ export class Login extends Component {
                       validate={required}
                       naoDesabilitarPrimeiraOpcao
                       width={this.state.width}
+                    />
+                  </div>
+                  <div className="input-group-append d-block d-md-none col-md-6">
+                    <Field
+                      component={Select}
+                      name="tipo_email"
+                      label="Tipo de e-mail"
+                      options={TIPOS_EMAIL_CADASTRO}
+                      required
+                      validate={required}
+                      naoDesabilitarPrimeiraOpcao
                     />
                   </div>
                 </div>
@@ -283,7 +317,7 @@ export class Login extends Component {
               </div>
             )}
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
                   {...fieldCpf}
                   component={InputText}
@@ -297,7 +331,7 @@ export class Login extends Component {
                 />
               </div>
               {(tab === TABS.ESCOLA || tab === TABS.DRE_CODAE) && (
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                   <Field
                     component={InputText}
                     label="Nº RF"
@@ -314,7 +348,7 @@ export class Login extends Component {
                 </div>
               )}
               {tab === TABS.TERCEIRIZADAS && (
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                   <Field
                     {...fieldCnpj}
                     component={InputText}
@@ -330,7 +364,7 @@ export class Login extends Component {
               )}
             </div>
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
                   component={InputPassword}
                   label="Senha"
@@ -343,7 +377,7 @@ export class Login extends Component {
                   title="Pelo menos 8 caracteres, uma letra e um número"
                 />
               </div>
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
                   component={InputPassword}
                   label="Confirme sua senha"
@@ -358,7 +392,7 @@ export class Login extends Component {
               <Botao
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 texto="Cancelar"
-                className="col-2 ml-3"
+                className="col-md-2 ml-3"
                 disabled={bloquearBotao}
                 onClick={() =>
                   this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -368,7 +402,7 @@ export class Login extends Component {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-2 ml-3"
+                className="col-md-2 ml-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -396,7 +430,7 @@ export class Login extends Component {
         </center>
         <center className="mt-4">
           <Botao
-            className="col-4"
+            className="col-sm-4 col-8"
             style={BUTTON_STYLE.GREEN}
             texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
@@ -429,7 +463,7 @@ export class Login extends Component {
         </center>
         <center>
           <Botao
-            className="col-4"
+            className="col-sm-4 col-6"
             style={BUTTON_STYLE.GREEN}
             texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
@@ -470,7 +504,7 @@ export class Login extends Component {
 
         <div className="alinha-direita mt-3 ml-4 mr-4">
           <Botao
-            className="col-2 ml-3"
+            className="col-md-2 ml-3"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             texto="Cancelar"
             type={BUTTON_TYPE.SUBMIT}
@@ -479,7 +513,7 @@ export class Login extends Component {
             }
           />
           <Botao
-            className="col-2 ml-3"
+            className="col-md-2 ml-3"
             style={BUTTON_STYLE.GREEN}
             texto="Continuar"
             type={BUTTON_TYPE.SUBMIT}
