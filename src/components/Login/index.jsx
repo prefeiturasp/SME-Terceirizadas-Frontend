@@ -257,7 +257,6 @@ export class Login extends Component {
               this.switchTab(evt.target.value);
             }}
             naoDesabilitarPrimeiraOpcao
-            //width={this.state.width}
           />
         </div>
         <div className="form">
