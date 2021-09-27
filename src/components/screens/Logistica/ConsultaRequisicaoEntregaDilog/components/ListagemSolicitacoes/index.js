@@ -3,7 +3,10 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { Checkbox } from "antd";
+import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
 import ListagemGuias from "../ListagemGuias";
+import { Spin } from "antd";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export default ({
   solicitacoes,
@@ -14,6 +17,20 @@ export default ({
   arquivaDesarquivaGuias
 }) => {
   const [allChecked, setAllChecked] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+
+  const baixarPDFGuiasRemessa = solicitacao => {
+    setCarregando(true);
+    let uuid = solicitacao.uuid;
+    imprimirGuiasDaSolicitacao(uuid)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setCarregando(false);
+      });
+  };
 
   const checkSolicitacao = solicitacao => {
     let newSelecionados = [...selecionados];
@@ -48,95 +65,101 @@ export default ({
   }, [solicitacoes]);
 
   return (
-    <section className="resultado-busca-requisicao-entrega-dilog">
-      <header>Veja requisições disponibilizadas</header>
-      <article>
-        <div className="grid-table header-table">
-          <div>
-            <Checkbox checked={allChecked} onChange={() => checkAll()} />
+    <Spin tip="Carregando..." spinning={carregando}>
+      <section className="resultado-busca-requisicao-entrega-dilog">
+        <header>Veja requisições disponibilizadas</header>
+        <article>
+          <div className="grid-table header-table">
+            <div>
+              <Checkbox checked={allChecked} onChange={() => checkAll()} />
+            </div>
+            <div>N° da Requisição de Entrega</div>
+            <div>Qtde. de Guias Remessa</div>
+            <div>Distribuidor</div>
+            <div>Status</div>
+            <div>Data de entrega</div>
+            <div />
+            <div />
           </div>
-          <div>N° da Requisição de Entrega</div>
-          <div>Qtde. de Guias Remessa</div>
-          <div>Distribuidor</div>
-          <div>Status</div>
-          <div>Data de entrega</div>
-          <div />
-          <div />
-        </div>
-        {solicitacoes.map(solicitacao => {
-          const bordas =
-            ativos && ativos.includes(solicitacao.uuid)
-              ? "desativar-borda"
-              : "";
-          const icone =
-            ativos && ativos.includes(solicitacao.uuid)
-              ? "angle-up"
-              : "angle-down";
-          return (
-            <>
-              <div className="grid-table body-table">
-                <div>
-                  <Checkbox
-                    checked={solicitacao.checked}
-                    onChange={() => checkSolicitacao(solicitacao)}
-                  />
-                </div>
-                <div className={`${bordas}`}>
-                  {solicitacao.numero_solicitacao}
-                </div>
-                <div className={`${bordas}`}>
-                  {solicitacao.guias.length}{" "}
-                  {solicitacao.guias.length === 1 ? "guia" : "guias"}
-                </div>
-                <div className={`${bordas}`}>
-                  {solicitacao.distribuidor_nome}
-                </div>
-                <div className={`${bordas}`}>{solicitacao.status}</div>
-                <div className={`${bordas}`}>
-                  {solicitacao.guias[0].data_entrega}
-                </div>
+          {solicitacoes.map(solicitacao => {
+            const bordas =
+              ativos && ativos.includes(solicitacao.uuid)
+                ? "desativar-borda"
+                : "";
+            const icone =
+              ativos && ativos.includes(solicitacao.uuid)
+                ? "angle-up"
+                : "angle-down";
+            return (
+              <>
+                <div className="grid-table body-table">
+                  <div>
+                    <Checkbox
+                      checked={solicitacao.checked}
+                      onChange={() => checkSolicitacao(solicitacao)}
+                    />
+                  </div>
+                  <div className={`${bordas}`}>
+                    {solicitacao.numero_solicitacao}
+                  </div>
+                  <div className={`${bordas}`}>
+                    {solicitacao.guias.length}{" "}
+                    {solicitacao.guias.length === 1 ? "guia" : "guias"}
+                  </div>
+                  <div className={`${bordas}`}>
+                    {solicitacao.distribuidor_nome}
+                  </div>
+                  <div className={`${bordas}`}>{solicitacao.status}</div>
+                  <div className={`${bordas}`}>
+                    {solicitacao.guias[0].data_entrega}
+                  </div>
 
-                <div>
-                  <Button className="acoes" variant="link">
-                    Exportar Guias
-                  </Button>
-                </div>
+                  <div>
+                    <Button
+                      className="acoes"
+                      variant="link"
+                      onClick={() => baixarPDFGuiasRemessa(solicitacao)}
+                    >
+                      Exportar Guias
+                    </Button>
+                  </div>
 
-                <div>
-                  <i
-                    className={`fas fa-${icone} expand`}
-                    onClick={() => {
-                      ativos && ativos.includes(solicitacao.uuid)
-                        ? setAtivos(
-                            ativos.filter(el => el !== solicitacao.uuid)
-                          )
-                        : setAtivos(
-                            ativos
-                              ? [...ativos, solicitacao.uuid]
-                              : [solicitacao.uuid]
-                          );
-                    }}
-                  />
+                  <div>
+                    <i
+                      className={`fas fa-${icone} expand`}
+                      onClick={() => {
+                        ativos && ativos.includes(solicitacao.uuid)
+                          ? setAtivos(
+                              ativos.filter(el => el !== solicitacao.uuid)
+                            )
+                          : setAtivos(
+                              ativos
+                                ? [...ativos, solicitacao.uuid]
+                                : [solicitacao.uuid]
+                            );
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-              {ativos && ativos.includes(solicitacao.uuid) && (
-                <>
-                  <ListagemGuias
-                    arquivaDesarquivaGuias={arquivaDesarquivaGuias}
-                    solicitacao={solicitacao}
-                    situacao={"ATIVA"}
-                  />
-                  <ListagemGuias
-                    arquivaDesarquivaGuias={arquivaDesarquivaGuias}
-                    solicitacao={solicitacao}
-                    situacao={"ARQUIVADA"}
-                  />
-                </>
-              )}
-            </>
-          );
-        })}
-      </article>
-    </section>
+                {ativos && ativos.includes(solicitacao.uuid) && (
+                  <>
+                    <ListagemGuias
+                      arquivaDesarquivaGuias={arquivaDesarquivaGuias}
+                      solicitacao={solicitacao}
+                      situacao={"ATIVA"}
+                    />
+                    <ListagemGuias
+                      arquivaDesarquivaGuias={arquivaDesarquivaGuias}
+                      solicitacao={solicitacao}
+                      situacao={"ARQUIVADA"}
+                    />
+                  </>
+                )}
+              </>
+            );
+          })}
+        </article>
+      </section>
+    </Spin>
   );
 };
