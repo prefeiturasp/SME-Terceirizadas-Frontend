@@ -52,6 +52,7 @@ import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceir
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
 import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
+import StatusQuestionamentosCodaePage from "../pages/Terceirizada/StatusSolicitacoes/StatusQuestionamentosCodae";
 import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
 import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
@@ -381,6 +382,14 @@ const routesConfig = [
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasTerceirizadaPage,
+    exact: false,
+    tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/${constants.TERCEIRIZADA}/${
+      constants.SOLICITACOES_COM_QUESTIONAMENTO
+    }`,
+    component: StatusQuestionamentosCodaePage,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
   },

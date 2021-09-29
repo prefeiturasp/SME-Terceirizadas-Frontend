@@ -5,6 +5,7 @@ import {
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
+  SOLICITACOES_COM_QUESTIONAMENTO,
   ESCOLA,
   INCLUSAO_ALIMENTACAO,
   ALTERACAO_TIPO_ALIMENTACAO,
@@ -83,9 +84,16 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         title="Consulta de Solicitações"
         activeMenu={activeMenu}
       >
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
-          Aguardando autorização
-        </LeafItem>
+        {PERFIL === "terceirizada" ? (
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
+            Questionamentos da CODAE
+          </LeafItem>
+        ) : (
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
+            Aguardando autorização
+          </LeafItem>
+        )}
+
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
           Autorizadas
         </LeafItem>
