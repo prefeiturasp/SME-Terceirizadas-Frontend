@@ -74,6 +74,7 @@ export const SidebarContent = () => {
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
     usuarioEhDistribuidora() ||
+    usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento();
 
   const _props = {
