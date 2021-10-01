@@ -49,19 +49,21 @@ export const Select = props => {
         name={name}
         style={width && { width: width - 12 }}
       >
-        {options.map((e, key) => {
-          return (
-            <option
-              key={key}
-              value={e.uuid}
-              disabled={
-                e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
-              }
-            >
-              {e.nome}
-            </option>
-          );
-        })}
+        {options !== null &&
+          options.length > 0 &&
+          options.map((e, key) => {
+            return (
+              <option
+                key={key}
+                value={e.uuid}
+                disabled={
+                  e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
+                }
+              >
+                {e.nome}
+              </option>
+            );
+          })}
       </select>
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />
