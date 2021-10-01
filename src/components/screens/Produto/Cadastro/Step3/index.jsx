@@ -1,7 +1,12 @@
 import React, { Component } from "react";
-import { Field } from "redux-form";
+import { Field, FieldArray } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
+import Especificacoes from "./components/Especificacoes";
 import { required } from "../../../../../helpers/fieldValidators";
+import {
+  getUnidadesDeMedidaProduto,
+  getEmbalagensProduto
+} from "../../../../../services/produto.service";
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
@@ -9,8 +14,24 @@ import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedF
 class Step3 extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      unidades_de_medida: null,
+      embalagens: null
+    };
   }
+
+  componentDidMount = async () => {
+    await this.updateOpcoesItensCadastrados();
+  };
+
+  updateOpcoesItensCadastrados = async () => {
+    const reponseUnidades = await getUnidadesDeMedidaProduto();
+    const responseEmbalagens = await getEmbalagensProduto();
+    this.setState({
+      unidades_de_medida: reponseUnidades.data.results,
+      embalagens: responseEmbalagens.data.results
+    });
+  };
 
   maxLengthCaracteres = max => value =>
     value && value.length > max
@@ -65,12 +86,18 @@ class Step3 extends Component {
             />
           </div>
         </div>
-
+        <FieldArray
+          name="especificacoes"
+          component={Especificacoes}
+          unidades_de_medida={this.state.unidades_de_medida}
+          embalagens={this.state.embalagens}
+          especificacoesIniciais={payload.especificacoes}
+          updateOpcoesItensCadastrados={() =>
+            this.updateOpcoesItensCadastrados()
+          }
+        />
         <div className="row">
-          <div className="col-12 pb-5" />
-        </div>
-        <div className="row">
-          <div className="col-12 pt-5">
+          <div className="col-12 pt-3">
             <Field
               component={InputText}
               label="Condições de armazenamento, conservação e prazo máximo para consumo após a abertura da embalagem"

@@ -261,11 +261,12 @@ class Step2 extends Component {
             </div>
           </div>
           <div className="col-2">
-            <div className="mt-4 mb-3">
+            <div className="mt-3 mb-3">
               <Botao
                 texto={"salvar"}
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
+                className="botaoSalvar"
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values

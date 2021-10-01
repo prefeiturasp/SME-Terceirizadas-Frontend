@@ -26,6 +26,7 @@ import { validaFormularioStep1, retornaPayloadDefault } from "./helpers";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { getError, deepCopy } from "../../../../helpers/utilities";
 import { Rascunhos } from "./Rascunhos";
+import "./style.scss";
 
 class cadastroProduto extends Component {
   constructor(props) {
@@ -66,6 +67,7 @@ class cadastroProduto extends Component {
         tem_aditivos_alergenicos: false,
         aditivos: null,
         tipo: null,
+        especificacoes: [{}],
         embalagem: null,
         prazo_validade: null,
         info_armazenamento: null,
@@ -175,6 +177,7 @@ class cadastroProduto extends Component {
         quantidade_porcao: informacaoNutricional.quantidade_porcao
       });
     });
+    produto.especificacoes = produtoRaw.especificacoes;
     produto.imagens_salvas = produtoRaw.imagens;
     produto.imagens = [];
     produto.informacoes_nutricionais = informacoes_nutricionais;
@@ -309,7 +312,7 @@ class cadastroProduto extends Component {
     payload["outras_informacoes"] = values.outras_informacoes;
     payload["numero_registro"] = values.numero_registro;
     payload["cadastro_finalizado"] = true;
-
+    payload["especificacoes"] = values.especificacoes;
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
@@ -353,6 +356,7 @@ class cadastroProduto extends Component {
     payload["nome"] =
       values !== undefined && values.nome ? values.nome.split("+")[0] : "";
     payload["tipo"] = values ? values.tipo : null;
+    payload["especificacoes"] = values ? values.especificacoes : null;
     payload["embalagem"] = values ? values.embalagem : null;
     payload["prazo_validade"] = values ? values.prazo_validade : null;
     payload["info_armazenamento"] = values ? values.info_armazenamento : null;
@@ -481,7 +485,7 @@ class cadastroProduto extends Component {
                 exibeFormularioInicial={this.exibeFormularioInicial}
               />
             ) : (
-              <form className="special-diet" onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit}>
                 <Wizard
                   arrayOfObjects={wizardSteps}
                   currentStep={currentStep}
@@ -529,6 +533,9 @@ class cadastroProduto extends Component {
                   />
                 )}
                 <div className="row">
+                  <div className="col-12 mt-3">
+                    <hr />
+                  </div>
                   <div className="col-12 text-right pt-3">
                     <Botao
                       texto={"Anterior"}
@@ -542,7 +549,7 @@ class cadastroProduto extends Component {
                     />
                     <Botao
                       texto={"Salvar Rascunho"}
-                      className="mr-3"
+                      className="mr-3 salvarRascunho"
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       onClick={handleSubmit(values =>
