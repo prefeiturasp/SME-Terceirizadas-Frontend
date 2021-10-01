@@ -61,10 +61,9 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {usuarioEhLogistica() ||
-        (usuarioEhDRE() && (
-          <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
-        ))}
+      {(usuarioEhLogistica() || usuarioEhDRE()) && (
+        <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
+      )}
 
       {usuarioEhDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DISTRIBUIDOR}`}>
