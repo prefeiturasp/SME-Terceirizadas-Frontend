@@ -152,6 +152,7 @@ export const REPOSICAO_GUIA = "reposicao-guia";
 export const REPOSICAO_RESUMO_FINAL = "reposicao-guia-resumo-final";
 export const ENTREGAS_DILOG = "entregas-dilog";
 export const ENTREGAS_DISTRIBUIDOR = "entregas-distribuidor";
+export const ENTREGAS_DRE = "entregas-dre";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
