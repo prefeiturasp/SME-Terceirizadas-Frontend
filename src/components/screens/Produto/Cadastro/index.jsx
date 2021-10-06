@@ -21,7 +21,7 @@ import {
   produtoJaExiste
 } from "../../../../services/produto.service";
 import BuscaProduto from "./BuscaProduto";
-
+import validate from "./validate";
 import { validaFormularioStep1, retornaPayloadDefault } from "./helpers";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import { getError, deepCopy } from "../../../../helpers/utilities";
@@ -67,7 +67,7 @@ class cadastroProduto extends Component {
         tem_aditivos_alergenicos: false,
         aditivos: null,
         tipo: null,
-        especificacoes: [{}],
+        especificacoes: null,
         embalagem: null,
         prazo_validade: null,
         info_armazenamento: null,
@@ -177,7 +177,6 @@ class cadastroProduto extends Component {
         quantidade_porcao: informacaoNutricional.quantidade_porcao
       });
     });
-    produto.especificacoes = produtoRaw.especificacoes;
     produto.imagens_salvas = produtoRaw.imagens;
     produto.imagens = [];
     produto.informacoes_nutricionais = informacoes_nutricionais;
@@ -284,6 +283,7 @@ class cadastroProduto extends Component {
     nome,
     componentes,
     tem_aditivos_alergenicos,
+    tem_gluten,
     aditivos
   }) => {
     let { payload } = this.state;
@@ -297,6 +297,7 @@ class cadastroProduto extends Component {
     payload.nome = nome;
     payload.componentes = componentes;
     payload.tem_aditivos_alergenicos = tem_aditivos_alergenicos;
+    payload.tem_gluten = tem_gluten;
     payload.aditivos = aditivos;
 
     this.setState({ payload, concluidoStep1: true });
@@ -312,7 +313,14 @@ class cadastroProduto extends Component {
     payload["outras_informacoes"] = values.outras_informacoes;
     payload["numero_registro"] = values.numero_registro;
     payload["cadastro_finalizado"] = true;
-    payload["especificacoes"] = values.especificacoes;
+    if (
+      values.especificacoes &&
+      Object.keys(values.especificacoes[0]).length === 0
+    ) {
+      payload["especificacoes"] = [];
+    } else {
+      payload["especificacoes"] = values.especificacoes;
+    }
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
@@ -352,11 +360,20 @@ class cadastroProduto extends Component {
 
   updateOrCreateProduto = async values => {
     const { payload, currentStep } = this.state;
+    let erro = null;
 
     payload["nome"] =
       values !== undefined && values.nome ? values.nome.split("+")[0] : "";
     payload["tipo"] = values ? values.tipo : null;
-    payload["especificacoes"] = values ? values.especificacoes : null;
+    if (values && values.especificacoes) {
+      if (Object.keys(values.especificacoes[0]).length === 0) {
+        payload["especificacoes"] = [];
+      } else {
+        payload["especificacoes"] = values.especificacoes;
+      }
+    } else {
+      payload["especificacoes"] = [];
+    }
     payload["embalagem"] = values ? values.embalagem : null;
     payload["prazo_validade"] = values ? values.prazo_validade : null;
     payload["info_armazenamento"] = values ? values.info_armazenamento : null;
@@ -371,7 +388,7 @@ class cadastroProduto extends Component {
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
-    let erro = null;
+    payload["tem_gluten"] = values && values.tem_gluten === "1" ? true : false;
 
     if (
       currentStep === 0 &&
@@ -616,6 +633,7 @@ class cadastroProduto extends Component {
 
 const componentNameForm = reduxForm({
   form: "cadastroProduto",
+  validate: validate,
   enableReinitialize: true
 })(cadastroProduto);
 

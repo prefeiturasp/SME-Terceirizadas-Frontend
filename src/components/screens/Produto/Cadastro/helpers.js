@@ -10,6 +10,7 @@ export const validaFormularioStep1 = async ({
   fabricante,
   componentes,
   tem_aditivos_alergenicos,
+  tem_gluten,
   aditivos
 }) => {
   let arrayValidacao = [];
@@ -45,6 +46,9 @@ export const validaFormularioStep1 = async ({
     if (tem_aditivos_alergenicos && aditivos === null) {
       arrayValidacao.push("Informe os aditivos alergênicos.");
     }
+  }
+  if (tem_gluten === null) {
+    arrayValidacao.push("Informe se produto possui gluten.");
   }
   if (arrayValidacao.length === 0) {
     const resposta = await produtoJaExiste({
@@ -85,6 +89,7 @@ export const retornaObjetoRequest = ({
   fabricante,
   componentes,
   tem_aditivos_alergenicos,
+  tem_gluten,
   aditivos
 }) => {
   return {
@@ -96,6 +101,7 @@ export const retornaObjetoRequest = ({
     fabricante: fabricante,
     componentes: componentes,
     tem_aditivos_alergenicos: tem_aditivos_alergenicos,
+    tem_gluten: tem_gluten,
     aditivos: aditivos
   };
 };
@@ -113,12 +119,14 @@ export const retornaPayloadDefault = () => {
     componentes: null,
     tem_aditivos_alergenicos: null,
     aditivos: null,
+    tem_gluten: null,
     tipo: null,
     embalagem: null,
     prazo_validade: null,
     info_armazenamento: null,
     outras_informacoes: null,
     numero_registro: null,
+    especificacoes: null,
     porcao: null,
     unidade_caseira: null
   };
