@@ -4,6 +4,7 @@ import { InputErroMensagem } from "../InputErroMensagem";
 import { HelpText } from "../../HelpText";
 
 import InputFileManaged from "./Managed";
+import AnexosProdutoField from "./AnexosProdutoField";
 
 export default class ManagedInputFileField extends Component {
   constructor(props) {
@@ -35,11 +36,20 @@ export default class ManagedInputFileField extends Component {
       input: { value },
       meta,
       helpText,
+      ehCadastroProduto = false,
       ...rest
     } = this.props;
     return (
       <div>
-        <InputFileManaged onChange={this.setFiles} value={value} {...rest} />
+        {ehCadastroProduto ? (
+          <AnexosProdutoField
+            onChange={this.setFiles}
+            value={value}
+            {...rest}
+          />
+        ) : (
+          <InputFileManaged onChange={this.setFiles} value={value} {...rest} />
+        )}
         <HelpText helpText={helpText} />
         <InputErroMensagem meta={meta} />
       </div>
