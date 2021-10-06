@@ -19,7 +19,7 @@ const Especificaoes = ({
   updateOpcoesItensCadastrados
 }) => {
   const [showModal, setShowModal] = useState(false);
-
+  const [mounted, setMounted] = useState(false);
   const opcoesUnidadesDeMedida =
     unidades_de_medida &&
     [
@@ -47,23 +47,17 @@ const Especificaoes = ({
     );
 
   useEffect(() => {
-    if (
-      fields.length === 0 &&
-      opcoesUnidadesDeMedida !== undefined &&
-      opcoesEmbalagens !== undefined
-    ) {
-      fields.push({});
+    if (!mounted) {
+      if (
+        opcoesUnidadesDeMedida &&
+        opcoesEmbalagens &&
+        ([null, undefined].includes(especificacoesIniciais) ||
+          especificacoesIniciais.length === 0)
+      ) {
+        fields.push({});
+        setMounted(true);
+      }
     }
-    // if(fields.length !== 0){
-    //   for (let especificacao of especificacoesIniciais) {
-    //     fields.push({
-    //       volume: especificacao.volume,
-    //       unidade_de_medida: especificacao.unidade_de_medida.uuid,
-    //       embalagem_produto: especificacao.embalagem_produto.uuid
-    //     });
-    //     console.log(fields)
-    //   }
-    // }
   });
 
   return (
@@ -95,6 +89,7 @@ const Especificaoes = ({
                 label="Volume"
                 type="number"
                 min={1}
+                tooltipText="Campo específico para inserir a quantidade em volumes Ex: 01"
               />
             </div>
             <div className="col-4">
@@ -104,9 +99,7 @@ const Especificaoes = ({
                 label="Unidade de Medida"
                 options={opcoesUnidadesDeMedida}
                 naoDesabilitarPrimeiraOpcao
-                defaultValue={
-                  especificacoesIniciais[index].unidade_de_medida.uuid
-                }
+                tooltipText="Campo específico referente a unidade de medida do produto Ex: LT, ML..."
               />
             </div>
             <div className="col-4">
@@ -128,7 +121,9 @@ const Especificaoes = ({
               )}
             </div>
             <div className="col-12">
-              {submitFailed && error && <span>{error}</span>}
+              {submitFailed && error && (
+                <span className="erro-especificacoes">{error}</span>
+              )}
             </div>
           </div>
         );

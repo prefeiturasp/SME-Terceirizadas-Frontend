@@ -10,6 +10,7 @@ import {
 import "./style.scss";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 
 class Step3 extends Component {
   constructor(props) {
@@ -95,6 +96,7 @@ class Step3 extends Component {
           updateOpcoesItensCadastrados={() =>
             this.updateOpcoesItensCadastrados()
           }
+          required
         />
         <div className="row">
           <div className="col-12 pt-3">
@@ -110,7 +112,7 @@ class Step3 extends Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-12 pb-5">
+          <div className="col-12 pb-1">
             <Field
               component={TextArea}
               placeholder="Digite as informações"
@@ -119,25 +121,19 @@ class Step3 extends Component {
             />
           </div>
         </div>
-
         <section className="row attachments">
-          <div className="col-9">
-            <div className="card-title font-weight-bold cinza-escuro mt-4">
-              * Imagens do Produto
-            </div>
-            <div className="text">Anexe uma ou mais imagens do produto.</div>
-            <div className="card-warning mt-2">
-              <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
-              .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br />
-            </div>
+          <div className="col-12 card-title font-weight-bold cinza-escuro">
+            * Imagens do Produto
+            <TooltipIcone tooltipText="Anexe uma ou mais imagens do produto." />
           </div>
-          <div className="col-3 btn">
+          <div className="col-12 btn-produto">
             <Field
               component={ManagedInputFileField}
               concatenarNovosArquivos
               className="inputfile"
               texto="Anexar"
               name="anexos"
+              ehCadastroProduto={true}
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
               onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
@@ -147,35 +143,38 @@ class Step3 extends Component {
           </div>
         </section>
         {payload && this.ehRascunho(payload) && (
-          <div className="row pt-3 pb-3">
+          <div className="section-cards-imagens pb-3">
             {payload.imagens_salvas !== null &&
               payload.imagens_salvas.length > 0 && (
-                <div className="section-cards-imagens">
+                <>
                   {payload.imagens_salvas
                     .filter(anexo => anexo.arquivo.includes("media"))
                     .map((anexo, key) => {
                       return (
-                        <div key={key} className="pt-2">
+                        <div key={key} className="px-1 arquivos-anexados">
+                          <span onClick={() => this.openFile(anexo)}>
+                            <i className="fas fa-file-upload" />
+                          </span>
                           <a
                             rel="noopener noreferrer"
                             target="_blank"
                             href={anexo.arquivo}
-                            className="link"
+                            className="link ml-1 mr-5"
                           >
                             {anexo.nome}
                           </a>
                           <span
+                            className="float-right"
                             onClick={() =>
                               this.props.removerAnexo(anexo.uuid, key)
                             }
-                            className="delete"
                           >
-                            x
+                            <i className="fas fa-trash-alt" />
                           </span>
                         </div>
                       );
                     })}
-                </div>
+                </>
               )}
           </div>
         )}
