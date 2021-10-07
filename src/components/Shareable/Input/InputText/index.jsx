@@ -18,6 +18,7 @@ export const InputText = props => {
     labelClassName,
     meta,
     min,
+    step,
     max,
     name,
     placeholder,
@@ -58,6 +59,7 @@ export const InputText = props => {
         disabled={disabled}
         min={min}
         max={max}
+        step={step}
         name={name}
         data-cy={input.name}
         placeholder={placeholder}
@@ -96,6 +98,7 @@ InputText.propTypes = {
   helpText: PropTypes.string,
   input: PropTypes.object,
   label: PropTypes.string,
+  step: PropTypes.string,
   labelClassName: PropTypes.string,
   meta: PropTypes.object,
   name: PropTypes.string,
@@ -112,6 +115,7 @@ InputText.defaultProps = {
   helpText: "",
   input: {},
   label: "",
+  step: "0.01",
   labelClassName: "",
   meta: {},
   name: "",

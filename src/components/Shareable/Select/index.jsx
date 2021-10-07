@@ -3,6 +3,7 @@ import React from "react";
 import "./style.scss";
 import { InputErroMensagem } from "../Input/InputErroMensagem";
 import { HelpText } from "../../Shareable/HelpText";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 
 export const Select = props => {
   const {
@@ -17,6 +18,7 @@ export const Select = props => {
     naoDesabilitarPrimeiraOpcao,
     onChange,
     options,
+    tooltipText,
     required,
     width
   } = props;
@@ -34,7 +36,8 @@ export const Select = props => {
           className={`${labelClassName || "col-form-label"}`}
         >
           {label}
-        </label>
+        </label>,
+        tooltipText && <TooltipIcone tooltipText={tooltipText} />
       ]}
       <select
         {...input}
@@ -49,19 +52,21 @@ export const Select = props => {
         name={name}
         style={width && { width: width - 12 }}
       >
-        {options.map((e, key) => {
-          return (
-            <option
-              key={key}
-              value={e.uuid}
-              disabled={
-                e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
-              }
-            >
-              {e.nome}
-            </option>
-          );
-        })}
+        {options !== null &&
+          options.length > 0 &&
+          options.map((e, key) => {
+            return (
+              <option
+                key={key}
+                value={e.uuid}
+                disabled={
+                  e.disabled || (key === 0 && !naoDesabilitarPrimeiraOpcao)
+                }
+              >
+                {e.nome}
+              </option>
+            );
+          })}
       </select>
       <HelpText helpText={helpText} />
       <InputErroMensagem meta={meta} />

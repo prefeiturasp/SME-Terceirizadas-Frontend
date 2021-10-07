@@ -47,5 +47,41 @@
 }
 
 .align-left {
-  text-align: left;
+  text-align: left !important;
+}
+
+.delete {
+  margin-left: 2em;
+  font-weight: bold;
+  background-color: $blue;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: $blue;
+  }
+}
+
+.card-warning {
+  border: 1px solid $red;
+  color: $red;
+  font-size: 10px;
+  padding: 10px;
+}
+
+.anexos {
+  margin-top: 3%;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+}
+.link {
+  color: #086397 !important;
+}
+
+.arquivos-anexados {
+  background: #f3f3f3;
 }

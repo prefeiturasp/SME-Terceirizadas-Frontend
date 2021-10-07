@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalCadastrarItem from "../ModalCadastrarItem";
+import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
