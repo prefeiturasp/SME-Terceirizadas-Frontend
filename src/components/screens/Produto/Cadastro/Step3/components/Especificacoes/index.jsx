@@ -88,8 +88,10 @@ const Especificaoes = ({
                 name={`${name}.volume`}
                 label="Volume"
                 type="number"
+                step="0.01"
                 min={1}
                 tooltipText="Campo específico para inserir a quantidade em volumes Ex: 01"
+                required
               />
             </div>
             <div className="col-4">
@@ -100,6 +102,7 @@ const Especificaoes = ({
                 options={opcoesUnidadesDeMedida}
                 naoDesabilitarPrimeiraOpcao
                 tooltipText="Campo específico referente a unidade de medida do produto Ex: LT, ML..."
+                required
               />
             </div>
             <div className="col-4">
@@ -109,6 +112,7 @@ const Especificaoes = ({
                 label="Embalagem"
                 options={opcoesEmbalagens}
                 naoDesabilitarPrimeiraOpcao
+                required
               />
             </div>
             <div className="col-1 excluir-especificacoes">
