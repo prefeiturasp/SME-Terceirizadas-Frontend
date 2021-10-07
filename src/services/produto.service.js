@@ -182,6 +182,14 @@ export const criarMarcaProduto = async data => {
   return await axios.post(`/marcas/`, data);
 };
 
+export const getUnidadesDeMedidaProduto = async () => {
+  return await axios.get(`/unidades-medida/`);
+};
+
+export const getEmbalagensProduto = async () => {
+  return await axios.get(`/embalagens-produto/`);
+};
+
 export const submitProduto = async payload => {
   const url = `${API_URL}/produtos/`;
   let status = 0;

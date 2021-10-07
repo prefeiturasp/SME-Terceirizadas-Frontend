@@ -48,11 +48,12 @@ div.cadastro-produto-step1 {
 
 .adicionar-marca-fornecedor {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 
   .botao-adicionar-marca-fabricante {
-    height: 32px;
+    height: 38px;
+    margin-top: 5px;
   }
 }
 

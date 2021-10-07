@@ -131,6 +131,7 @@ class Step2 extends Component {
               label="Porção"
               name="porcao"
               type="text"
+              tooltipText="Inserir as informações conforme rótulo do produto"
               placeholder="Ex: porção de 200ml (01 unidade)"
               required
               validate={required}
@@ -142,6 +143,7 @@ class Step2 extends Component {
               label="Unidade Caseira"
               name="unidade_caseira"
               type="text"
+              tooltipText="Inserir as informações conforme rótulo do produto"
               placeholder="Ex: 01 copo"
               required
               validate={required}
@@ -259,11 +261,12 @@ class Step2 extends Component {
             </div>
           </div>
           <div className="col-2">
-            <div className="mt-4 mb-3">
+            <div className="mt-3 mb-3">
               <Botao
                 texto={"salvar"}
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
+                className="botaoSalvar"
                 onClick={handleSubmit(values =>
                   this.onSubmit({
                     ...values
