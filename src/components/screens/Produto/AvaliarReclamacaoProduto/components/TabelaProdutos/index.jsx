@@ -25,6 +25,7 @@ import {
   CODAEQuestionaNutrisupervisor
 } from "services/reclamacaoProduto.service";
 import { ordenaPorCriadoEm } from "./helpers";
+import { corrigeLinkAnexo } from "../../../../../../helpers/utilities";
 
 const {
   AGUARDANDO_AVALIACAO,
@@ -140,6 +141,32 @@ export default class TabelaProdutos extends Component {
       default:
         return toastSuccess("Solicitação enviada com sucesso");
     }
+  };
+
+  exibiAnexos = reclamacao => {
+    return (
+      <>
+        <div key={1}>
+          <p className="botao-reclamacao-title">Anexos</p>
+        </div>
+        <div key={2}>
+          {reclamacao.anexos.map((anexo, key) => {
+            return (
+              <div key={key}>
+                <a
+                  href={corrigeLinkAnexo(anexo.arquivo)}
+                  className="value-important link"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {`Anexo ${key + 1}`}
+                </a>
+              </div>
+            );
+          })}
+        </div>
+      </>
+    );
   };
 
   abreModalJustificativa = (
@@ -315,12 +342,17 @@ export default class TabelaProdutos extends Component {
                         produto.ultima_homologacao.reclamacoes.length - 1;
                       return [
                         <Reclamacao key={0} reclamacao={reclamacao} />,
-                        <div key={1}>
-                          <p className="botao-reclamacao-title">
+                        <div key={2}>
+                          {reclamacao.anexos.length > 0
+                            ? this.exibiAnexos(reclamacao)
+                            : undefined}
+                        </div>,
+                        <div key={3}>
+                          <p className="botao-reclamacao-title mt-4">
                             Questionamentos
                           </p>
                         </div>,
-                        <div key={2} className="botao-reclamacao mt-4">
+                        <div key={4} className="botao-reclamacao mt-4">
                           <Botao
                             texto="Questionar Terceirizada"
                             type={BUTTON_TYPE.BUTTON}
