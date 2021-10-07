@@ -13,6 +13,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { getNomesUnidadesEscolares } from "services/logistica.service.js";
+import { debounce } from "lodash";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
@@ -22,13 +23,19 @@ export default ({ setFiltros, setSolicitacoes }) => {
 
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (values.data_inicial)
+      filtros.data_inicial = moment(values.data_inicial).format("DD/MM/YYYY");
+    else delete filtros.data_inicial;
+    if (values.data_final)
+      filtros.data_final = moment(values.data_final).format("DD/MM/YYYY");
+    else delete filtros.data_final;
     if (filtros.status === "Todos") delete filtros.status;
     setFiltros({ ...filtros });
   };
 
   const getNomeUnidadeEscola = async (codigo, formValues) => {
     const values = { ...formValues };
-    if (codigo.length !== 5) {
+    if (codigo.length === 0) {
       delete values.nome_unidade;
       setInitialValues({ ...values });
       setDesabilitarAluno(false);
@@ -55,6 +62,8 @@ export default ({ setFiltros, setSolicitacoes }) => {
       }
     }
   };
+
+  const getNomeUnidadeEscolaDebounced = debounce(getNomeUnidadeEscola, 1000);
 
   return (
     <div className="filtros-requisicoes-dilog">
@@ -140,6 +149,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : null
                   }
+                  writable
                 />
               </div>
               <div className="col-2">
@@ -155,6 +165,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
                       : null
                   }
                   maxDate={null}
+                  writable
                 />
               </div>
               <div className="col-2">
@@ -168,7 +179,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
 
                 <OnChange name="codigo_unidade">
                   {value => {
-                    getNomeUnidadeEscola(value, values);
+                    getNomeUnidadeEscolaDebounced(value, values);
                   }}
                 </OnChange>
               </div>

@@ -14,6 +14,7 @@
 
 a.hyperlink {
   font-size: 14px;
+  font-weight: bold;
   color: $blue;
 }
 
@@ -42,14 +43,15 @@ a.hyperlink {
     }
     .logo-sigpae {
       text-align: center;
-      @media screen and (max-height: 610px) {
-        padding-top: 2rem;
+      @media screen and (max-width: 768px) {
+        padding-top: 1rem;
+        padding-bottom: 0.5rem;
         img {
           height: auto;
           width: 300px;
         }
       }
-      @media screen and (min-height: 611px) {
+      @media screen and (min-width: 769px) {
         padding-top: 2rem;
         padding-bottom: 1rem;
         img {
@@ -67,19 +69,10 @@ a.hyperlink {
     }
     .logo-prefeitura {
       text-align: center;
-      @media screen and (max-height: 610px) {
-        padding-top: 1rem;
-        img {
-          height: auto;
-          width: 100px;
-        }
-      }
-      @media screen and (min-height: 611px) {
-        padding-top: 2rem;
-        img {
-          height: 65px;
-          width: 171px;
-        }
+      padding-top: 2rem;
+      img {
+        height: 65px;
+        width: 171px;
       }
     }
   }
@@ -99,10 +92,14 @@ div.input-group.email-sme {
   .col-4 {
     padding-left: 0;
   }
-  .col-6 {
-    padding-right: 0;
-    margin-right: -12px;
+
+  @media screen and (min-width: 768px) {
+    .col-md-6 {
+      padding-right: 0;
+      margin-right: -12px;
+    }
   }
+
   select {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
@@ -132,13 +129,13 @@ div.input-group.email-sme {
     @extend .texto-simples;
     align-items: center;
     text-align: center;
-    color: #297805;
+    color: #198459;
   }
   &-vermelho {
     @extend .texto-simples;
     align-items: center;
     text-align: center;
-    color: #b40c02;
+    color: #c00000;
   }
   &-grande {
     @extend .texto-simples;
@@ -147,6 +144,35 @@ div.input-group.email-sme {
     font-size: 24px;
     line-height: 28px;
     font-weight: bold;
+  }
+}
+
+.alerta {
+  display: flex;
+  justify-content: center;
+  i {
+    margin-right: 0.5em;
+  }
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    text-align: center;
+  }
+  &-vermelho {
+    @extend .alerta;
+    p,
+    i {
+      color: #c00000;
+    }
+  }
+  &-verde {
+    @extend .alerta;
+    p,
+    i {
+      color: #198459;
+    }
   }
 }
 
@@ -217,6 +243,54 @@ div.input-group.email-sme {
         color: $grayDisabled;
         border-bottom: 3px solid $grayDisabled;
       }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login-bg {
+    width: 100%;
+    position: fixed;
+  }
+
+  .right-half {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: auto;
+
+    .container {
+      padding: 1rem;
+      height: auto;
+      transform: none;
+      background: rgba(255, 255, 255, 0.95);
+      left: 0%;
+      min-height: 90vh;
+      max-width: 720px;
+
+      .texto-simples-grande {
+        font-size: 20px;
+      }
+    }
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  .logo-sigpae {
+    img {
+      max-width: 100%;
+    }
+  }
+
+  div.input-group.email-sme .input-group-append {
+    padding-top: 0;
+  }
+}
+
+@media screen and (min-width: 576px) and (max-width: 768px) {
+  .right-half {
+    .container {
+      padding: 1rem 5rem;
     }
   }
 }

@@ -52,22 +52,29 @@ export const CorpoRelatorio = props => {
         </p>
       </div>
       <div className="row">
-        <div className="col-4 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {dadosEscola && dadosEscola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-4 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {dadosEscola && dadosEscola.lote.nome}
           </p>
         </div>
-        <div className="col-4 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {dadosEscola && dadosEscola.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {suspensaoAlimentacao.rastro_terceirizada &&
+              suspensaoAlimentacao.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>
