@@ -561,6 +561,14 @@ class Step1 extends Component {
             </div>
           )}
         </div>
+        <div className="row">
+          <div className="col-5">
+            <div className="card-warning mt-3">
+              <strong>IMPORTANTE:</strong> Relacioná-los conforme dispõe a RDC
+              nº 26 de 02/07/15
+            </div>
+          </div>
+        </div>
         <div className="link-with-student">
           <div className="label">
             <span className="required-asterisk">*</span>O produto contém glúten?
@@ -596,14 +604,6 @@ class Step1 extends Component {
                 />
                 <span className="checkmark" />
               </label>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-5">
-            <div className="card-warning mt-3">
-              <strong>IMPORTANTE:</strong> Relacioná-los conforme dispõe a RDC
-              nº 26 de 02/07/15
             </div>
           </div>
         </div>

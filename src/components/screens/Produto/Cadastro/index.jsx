@@ -304,6 +304,7 @@ class cadastroProduto extends Component {
   };
 
   onSubmit = values => {
+    let erro = null;
     const { payload } = this.state;
     payload["nome"] = values.nome.split("+")[0];
     payload["tipo"] = values.tipo;
@@ -324,7 +325,13 @@ class cadastroProduto extends Component {
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
-
+    if ([null, undefined].includes(values.tem_gluten)) {
+      erro = "O campo contém glúten é obrigatório";
+    }
+    if (erro !== null) {
+      toastError(erro);
+      return;
+    }
     return new Promise(async (resolve, reject) => {
       const endpoint = payload.uuid ? updateProduto : submitProduto;
       const response = await endpoint(payload);
@@ -388,8 +395,9 @@ class cadastroProduto extends Component {
     if (!payload["tem_aditivos_alergenicos"]) {
       delete payload["aditivos"];
     }
-    payload["tem_gluten"] = values && values.tem_gluten === "1" ? true : false;
-
+    if (values && values.tem_gluten) {
+      payload["tem_gluten"] = values.tem_gluten === "1" ? true : false;
+    }
     if (
       currentStep === 0 &&
       payload["nome"] !== null &&

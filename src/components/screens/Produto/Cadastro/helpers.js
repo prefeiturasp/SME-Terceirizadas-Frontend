@@ -67,11 +67,18 @@ export const validaFormularioStep1 = async ({
   return arrayValidacao;
 };
 
-export const Step1EstaValido = ({ nome, marca, fabricante, componentes }) => {
+export const Step1EstaValido = ({
+  nome,
+  marca,
+  fabricante,
+  tem_gluten,
+  componentes
+}) => {
   if (
     nome !== null &&
     marca !== null &&
     fabricante !== null &&
+    tem_gluten !== null &&
     componentes !== null
   ) {
     return true;

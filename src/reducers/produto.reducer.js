@@ -12,7 +12,9 @@ export default function reducer(state = {}, action) {
           .tem_aditivos_alergenicos
           ? "1"
           : "0";
-        action.data.tem_gluten = action.data.tem_gluten ? "1" : "0";
+        if (![null, undefined].includes(action.data.tem_gluten)) {
+          action.data.tem_gluten = action.data.tem_gluten ? "1" : "0";
+        }
         action.data.marca =
           action.data.marca !== null ? action.data.marca.nome : "";
         action.data.fabricante =
