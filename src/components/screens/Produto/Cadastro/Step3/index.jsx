@@ -122,8 +122,9 @@ class Step3 extends Component {
           </div>
         </div>
         <section className="row attachments">
-          <div className="col-12 card-title font-weight-bold cinza-escuro">
-            * Imagens do Produto
+          <div className="col-12 card-title cinza-escuro image-label-cadastro-produto">
+            <span className="image-required">*</span>
+            <span>Imagens do Produto</span>
             <TooltipIcone tooltipText="Anexe uma ou mais imagens do produto." />
           </div>
           <div className="col-12 btn-produto">
@@ -151,9 +152,14 @@ class Step3 extends Component {
                     .filter(anexo => anexo.arquivo.includes("media"))
                     .map((anexo, key) => {
                       return (
-                        <div key={key} className="px-1 arquivos-anexados">
+                        <div
+                          key={key}
+                          className={`px-1 arquivos-anexados ${
+                            key > 0 ? "mt-1" : ""
+                          }`}
+                        >
                           <span onClick={() => this.openFile(anexo)}>
-                            <i className="fas fa-file-upload" />
+                            <i className="fas fa-paperclip" />
                           </span>
                           <a
                             rel="noopener noreferrer"

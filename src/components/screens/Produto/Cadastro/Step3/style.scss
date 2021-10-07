@@ -25,6 +25,15 @@ div.cadastro-produto-step3 {
 }
 
 .attachments {
+  .image-required {
+    color: #a50e05;
+    padding-right: 5px;
+  }
+  .image-label-cadastro-produto {
+    font-size: 14px !important;
+    color: #686868 !important;
+    font-weight: normal !important;
+  }
   .text {
     font-size: 14px;
     color: #686868;

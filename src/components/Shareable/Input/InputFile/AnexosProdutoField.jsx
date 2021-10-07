@@ -82,15 +82,7 @@ export class AnexosProdutoField extends Component {
   }
 
   render() {
-    const {
-      accept,
-      disabled,
-      icone,
-      multiple,
-      title,
-      texto,
-      value
-    } = this.props;
+    const { accept, disabled, multiple, title, texto, value } = this.props;
     const files = value === "" ? [] : value;
     return (
       <div className={`input input-file align-left`}>
@@ -112,7 +104,7 @@ export class AnexosProdutoField extends Component {
             texto={texto}
             style={BUTTON_STYLE.GREEN_OUTLINE}
             disabled={disabled}
-            icon={icone}
+            icon="fas fa-paperclip"
             type={BUTTON_TYPE.BUTTON}
           />
         </div>
@@ -125,7 +117,7 @@ export class AnexosProdutoField extends Component {
             return (
               <div key={key} className="px-1 arquivos-anexados mt-1">
                 <span onClick={() => this.openFile(file)}>
-                  <i className="fas fa-file-upload" />
+                  <i className="fas fa-paperclip" />
                 </span>
                 <a
                   rel="noopener noreferrer"
