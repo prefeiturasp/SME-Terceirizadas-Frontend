@@ -135,7 +135,7 @@ const Especificaoes = ({
       <div className="row  pt-3">
         <div className="col-12">
           <Botao
-            texto="Adicionar Item"
+            texto="Adicionar"
             onClick={() => fields.push({})}
             style={BUTTON_STYLE.GREEN}
           />
