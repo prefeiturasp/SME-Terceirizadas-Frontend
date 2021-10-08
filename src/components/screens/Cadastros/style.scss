@@ -374,6 +374,13 @@ table.cadastro-empresa {
     grid-column-gap: 4%;
   }
 
+  .fields-set-contatos {
+    display: grid;
+    grid-template-columns: 26% 26% 42%;
+    grid-template-rows: 50% 50%;
+    grid-column-gap: 3%;
+  }
+
   .fields-set-edital {
     margin-top: 10px;
     display: grid;
