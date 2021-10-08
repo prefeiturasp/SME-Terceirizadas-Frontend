@@ -118,8 +118,6 @@ export const retornArrayTerceirizadas = response => {
 };
 
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
-  console.log(valoresForm);
-  console.log(valoresState);
   const { ehDistribuidor } = valoresState;
 
   if (valoresState.ehDistribuidor) {
