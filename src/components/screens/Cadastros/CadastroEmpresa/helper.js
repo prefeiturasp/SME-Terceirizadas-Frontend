@@ -118,6 +118,8 @@ export const retornArrayTerceirizadas = response => {
 };
 
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
+  console.log(valoresForm);
+  console.log(valoresState);
   const { ehDistribuidor } = valoresState;
 
   if (valoresState.ehDistribuidor) {
@@ -134,14 +136,21 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         ]
       }
     ];
-    const contatosEmpresa = valoresState.contatosEmpresa.map(item => {
+    const contatosEmpresa = [
+      ...valoresState.contatosEmpresa,
+      ...valoresState.contatosPessoaEmpresa
+    ].map(item => {
       return {
+        nome: item.nome,
         telefone: item.telefone,
         email: item.email
       };
     });
     return {
       nome_fantasia: valoresForm.nome_fantasia,
+      tipo_alimento: valoresForm.tipo_alimento,
+      tipo_empresa: valoresForm.tipo_empresa,
+      numero_contrato: valoresForm.numero_contrato,
       razao_social: valoresForm.razao_social,
       cnpj: valoresForm.cnpj,
       endereco: valoresForm.endereco,
@@ -160,6 +169,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       responsavel_telefone: valoresForm.responsavel_telefone,
       responsavel_email: valoresForm.responsavel_email,
       lotes: [],
+      ativo: valoresForm.situacao,
       super_admin: {
         nome: "xxx",
         cpf: "00000000000",

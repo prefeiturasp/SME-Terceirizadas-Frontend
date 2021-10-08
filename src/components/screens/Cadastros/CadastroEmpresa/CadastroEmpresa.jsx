@@ -1,5 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component, Fragment } from "react";
+import moment from "moment";
 import { Spin } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { Field, reduxForm, FormSection } from "redux-form";
@@ -30,6 +31,7 @@ import InputPhoneNumber from "../../../Shareable/Input/InputPhoneNumber";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
 import { Botao } from "../../../Shareable/Botao";
 import { InputText } from "../../../Shareable/Input/InputText";
+import Select from "../../../Shareable/Select";
 import { loadEmpresa } from "../../../../reducers/empresa.reducer";
 import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
@@ -48,11 +50,19 @@ class CadastroEmpresa extends Component {
       lotesNomesSelecionados: [],
       formValido: false,
       contatosEmpresaForm: ["contatoEmpresa_0"],
+      contatosPessoaEmpresaForm: ["contatoPessoaEmpresa_0"],
       contatosTerceirizadaForm: ["contatoTerceirizada_0"],
       editaisContratosForm: ["editalContrato_0"],
       ehDistribuidor: false,
       contatosEmpresa: [
         {
+          telefone: null,
+          email: ""
+        }
+      ],
+      contatosPessoaEmpresa: [
+        {
+          nome: "",
           telefone: null,
           email: ""
         }
@@ -85,6 +95,7 @@ class CadastroEmpresa extends Component {
       }
     };
     this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
+    this.setaContatosPessoaEmpresa = this.setaContatosPessoaEmpresa.bind(this);
     this.setaContatoRepresentante = this.setaContatoRepresentante.bind(this);
     this.setaContatosNutricionista = this.setaContatosNutricionista.bind(this);
     this.exibirModal = this.exibirModal.bind(this);
@@ -151,6 +162,15 @@ class CadastroEmpresa extends Component {
     this.setState({ contatosEmpresaForm });
   }
 
+  nomeFormContatoPessoaEmpresa() {
+    const indiceDoFormAtual = `contatoPessoaEmpresa_${
+      this.state.contatosPessoaEmpresaForm.length
+    }`;
+    let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
+    contatosPessoaEmpresaForm.push(indiceDoFormAtual);
+    this.setState({ contatosPessoaEmpresaForm });
+  }
+
   nomeFormContatoTerceirizada() {
     const indiceDoFormAtual = `contatoTerceirizada_${
       this.state.contatosTerceirizadaForm.length
@@ -173,6 +193,12 @@ class CadastroEmpresa extends Component {
     let contatosEmpresa = this.state.contatosEmpresa;
     contatosEmpresa[indice][input] = event ? event : "";
     this.setState({ contatosEmpresa });
+  }
+
+  setaContatosPessoaEmpresa(input, event, indice) {
+    let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
+    contatosPessoaEmpresa[indice][input] = event ? event : "";
+    this.setState({ contatosPessoaEmpresa });
   }
 
   setaContatosNutricionista(input, event, indice) {
@@ -198,6 +224,17 @@ class CadastroEmpresa extends Component {
   adicionaContatoEmpresa() {
     this.setState({
       contatosEmpresa: this.state.contatosEmpresa.concat([
+        {
+          telefone: "",
+          email: ""
+        }
+      ])
+    });
+  }
+
+  adicionaContatoPessoaEmpresa() {
+    this.setState({
+      contatosPessoaEmpresa: this.state.contatosPessoaEmpresa.concat([
         {
           telefone: "",
           email: ""
@@ -244,6 +281,40 @@ class CadastroEmpresa extends Component {
       );
       this.props.change(
         `contatoEmpresa_${indice}.email_empresa_${indice}`,
+        contato.email
+      );
+    });
+  }
+
+  atribuiContatosPessoaEmpresaForm(contatos) {
+    contatos.forEach((contato, indice) => {
+      let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
+      let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
+      if (indice !== 0 && contatos.length > contatosPessoaEmpresaForm.length) {
+        contatosPessoaEmpresaForm.push(`contatoPessoaEmpresa_${indice}`);
+        contatosPessoaEmpresa.push({
+          telefone: null,
+          email: null
+        });
+      }
+      this.setState({ contatosPessoaEmpresaForm });
+
+      contatosPessoaEmpresa[indice]["nome"] = contato.email;
+      contatosPessoaEmpresa[indice]["email"] = contato.email;
+      contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
+
+      this.setState({ contatosPessoaEmpresa });
+
+      this.props.change(
+        `contatoPessoaEmpresa_${indice}.nome_contato_${indice}`,
+        contato.email
+      );
+      this.props.change(
+        `contatoPessoaEmpresa_${indice}.telefone_contato_${indice}`,
+        contato.telefone
+      );
+      this.props.change(
+        `contatoPessoaEmpresa_${indice}.email_contato_${indice}`,
         contato.email
       );
     });
@@ -335,6 +406,7 @@ class CadastroEmpresa extends Component {
     this.props.change("responsavel_telefone", data.responsavel_telefone);
     this.props.change("responsavel_cargo", data.responsavel_cargo);
     this.atribuiContatosEmpresaForm(data.contatos);
+    this.atribuiContatosPessoaEmpresaForm(data.contatos);
     this.atribuiNutricionistaEmpresaForm(data.nutricionistas);
   }
 
@@ -365,6 +437,7 @@ class CadastroEmpresa extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
+    this.props.change("data_cadastro", moment().format("DD/MM/YYYY"));
     let lotes = this.state.lotes;
     const tipoPerfil = localStorage.getItem("perfil");
     let validate = false;
@@ -558,6 +631,7 @@ class CadastroEmpresa extends Component {
     const { handleSubmit } = this.props;
     const {
       contatosEmpresaForm,
+      contatosPessoaEmpresaForm,
       contatosTerceirizadaForm,
       contatosNutricionista,
       lotes,
@@ -595,11 +669,23 @@ class CadastroEmpresa extends Component {
                       <Link to="/configuracoes/cadastros/empresas-cadastradas">
                         <Botao
                           texto="Consulta de empresas cadastradas"
-                          style={BUTTON_STYLE.BLUE_OUTLINE}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
                       </Link>
                     </div>
                   </div>
+                  {ehDistribuidor && (
+                    <div className="row pt-3">
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          label="Data de Cadastro"
+                          name="data_cadastro"
+                          disabled
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="row pt-3">
                     <div className="col-9">
                       <Field
@@ -634,6 +720,75 @@ class CadastroEmpresa extends Component {
                       />
                     </div>
                   </div>
+                  {ehDistribuidor && (
+                    <div className="row pt-3">
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          label="Número de Contrato"
+                          name="numero_contrato"
+                          validate={required}
+                          required
+                        />
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={Select}
+                          label="Tipo de Empresa"
+                          name="tipo_empresa"
+                          validate={required}
+                          required
+                          naoDesabilitarPrimeiraOpcao
+                          options={[
+                            {
+                              nome: "Selecione...",
+                              uuid: ""
+                            },
+                            {
+                              nome: "Armazém/Distribuidor",
+                              uuid: "ARMAZEM/DISTRIBUIDOR"
+                            },
+                            {
+                              nome: "Fornecedor/Distribuidor",
+                              uuid: "FORNECEDOR/DISTRIBUIDOR"
+                            }
+                          ]}
+                        />
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={Select}
+                          label="Tipo de Alimento"
+                          name="tipo_alimento"
+                          validate={required}
+                          required
+                          naoDesabilitarPrimeiraOpcao
+                          options={[
+                            {
+                              nome: "Selecione...",
+                              uuid: ""
+                            },
+                            {
+                              nome: "Congelados e resfriados",
+                              uuid: "CONGELADOS_E_RESFRIADOS"
+                            },
+                            {
+                              nome: "FLVO",
+                              uuid: "FLVO"
+                            },
+                            {
+                              nome: "Pães & bolos",
+                              uuid: "PAES_E_BOLO"
+                            },
+                            {
+                              nome: "Secos",
+                              uuid: "SECOS"
+                            }
+                          ]}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="row pt-3">
                     <div className="col-3">
@@ -768,7 +923,7 @@ class CadastroEmpresa extends Component {
                       <Botao
                         texto="+"
                         type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
                         onClick={() => {
                           this.nomeFormContatoEmpresa();
                           this.adicionaContatoEmpresa();
@@ -954,6 +1109,125 @@ class CadastroEmpresa extends Component {
                   </div>
                 </div>
 
+                <hr className="linha-form" />
+
+                {ehDistribuidor && (
+                  <Fragment>
+                    <div>
+                      <div className="card-body">
+                        <div className="card-title font-weight-bold">
+                          Contatos
+                        </div>
+
+                        <div className="container-fields row">
+                          <div className="col-11">
+                            {contatosPessoaEmpresaForm.map(
+                              (contatoEmpresa, indiceEmpresa) => {
+                                return (
+                                  <FormSection
+                                    nomeForm={`contatoPessoaEmpresa_${indiceEmpresa}`}
+                                    name={contatoEmpresa}
+                                    key={indiceEmpresa}
+                                  >
+                                    <div className="fields-set-contatos">
+                                      <div>
+                                        <Field
+                                          name={`nome_contato_${indiceEmpresa}`}
+                                          component={InputText}
+                                          label="Nome"
+                                          required
+                                          validate={required}
+                                          onChange={event =>
+                                            this.setaContatosPessoaEmpresa(
+                                              "nome",
+                                              event.target.value,
+                                              indiceEmpresa
+                                            )
+                                          }
+                                          maxlength="140"
+                                        />
+                                      </div>
+                                      <div>
+                                        <Field
+                                          name={`telefone_contato_${indiceEmpresa}`}
+                                          component={TelefoneOuCelular}
+                                          label="Telefone"
+                                          id={`telefone_contato_${indiceEmpresa}`}
+                                          setaContatosEmpresa={
+                                            this.setaContatosPessoaEmpresa
+                                          }
+                                          indice={indiceEmpresa}
+                                          cenario="contatoEmpresa"
+                                          validate={required}
+                                          required
+                                          maxlength="140"
+                                        />
+                                      </div>
+                                      <div>
+                                        <Field
+                                          name={`email_contato_${indiceEmpresa}`}
+                                          component={InputText}
+                                          label="E-mail"
+                                          validate={email}
+                                          onChange={event =>
+                                            this.setaContatosPessoaEmpresa(
+                                              "email",
+                                              event.target.value,
+                                              indiceEmpresa
+                                            )
+                                          }
+                                          maxlength="140"
+                                        />
+                                      </div>
+                                    </div>
+                                  </FormSection>
+                                );
+                              }
+                            )}
+                          </div>
+                          <div className={`col-1 mt-auto mb-1`}>
+                            <Botao
+                              texto="+"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() => {
+                                this.nomeFormContatoPessoaEmpresa();
+                                this.adicionaContatoPessoaEmpresa();
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr className="linha-form" />
+                    <div className="card-body">
+                      <div className="w-25">
+                        <Field
+                          component={Select}
+                          label="Situacao"
+                          name="situacao"
+                          validate={required}
+                          required
+                          options={[
+                            {
+                              nome: "Selecione...",
+                              uuid: ""
+                            },
+                            {
+                              nome: "Ativo",
+                              uuid: true
+                            },
+                            {
+                              nome: "Inativo",
+                              uuid: false
+                            }
+                          ]}
+                        />
+                      </div>
+                    </div>
+                  </Fragment>
+                )}
+
                 {!ehDistribuidor && (
                   <div>
                     <hr className="linha-form" />
@@ -1062,7 +1336,7 @@ class CadastroEmpresa extends Component {
                           <Botao
                             texto="+"
                             type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.BLUE_OUTLINE}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
                             onClick={() => {
                               this.nomeFormContatoTerceirizada();
                               this.adicionaContatoNutricionista();
