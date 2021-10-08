@@ -503,6 +503,7 @@ class Step1 extends Component {
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);
               }}
+              required
             />
           </div>
         </div>

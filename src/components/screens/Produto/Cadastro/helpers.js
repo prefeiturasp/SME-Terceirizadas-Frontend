@@ -32,9 +32,6 @@ export const validaFormularioStep1 = async ({
   if (fabricante === null) {
     arrayValidacao.push("Informe um fabricante do produto.");
   }
-  if (componentes === null) {
-    arrayValidacao.push("Informe os componentes do produto.");
-  }
   if (componentes && componentes.length > 5000) {
     arrayValidacao.push(
       'Sistema não permite campo "Nome dos componentes do produto" com mais de 5000 caracteres.'
@@ -79,7 +76,7 @@ export const Step1EstaValido = ({
     marca !== null &&
     fabricante !== null &&
     tem_gluten !== null &&
-    componentes !== null
+    ![null, undefined, ""].includes(componentes)
   ) {
     return true;
   } else {
