@@ -328,6 +328,9 @@ class cadastroProduto extends Component {
     if ([null, undefined].includes(values.tem_gluten)) {
       erro = "O campo contém glúten é obrigatório";
     }
+    if ([null, undefined, ""].includes(values.componentes)) {
+      erro = "Informe os componentes do produto";
+    }
     if (erro !== null) {
       toastError(erro);
       return;
@@ -397,6 +400,8 @@ class cadastroProduto extends Component {
     }
     if (values && values.tem_gluten) {
       payload["tem_gluten"] = values.tem_gluten === "1" ? true : false;
+    } else {
+      delete payload["tem_gluten"];
     }
     if (
       currentStep === 0 &&
