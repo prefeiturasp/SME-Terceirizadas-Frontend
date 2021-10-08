@@ -164,11 +164,9 @@ const Relatorio = ({ visao }) => {
         <div className="card-body">
           <div className="row">
             <div className="col-12" style={{ alignItems: "flex-end" }}>
-              {(dietaEspecial &&
-                (status === statusEnum.CODAE_AUTORIZADO ||
-                  (status === statusEnum.CODAE_A_AUTORIZAR &&
-                    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"))) ||
-                (dietaCancelada && <BotaoImprimir uuid={dietaEspecial.uuid} />)}
+              {dietaEspecial && status !== statusEnum.CODAE_NEGOU_PEDIDO && (
+                <BotaoImprimir uuid={dietaEspecial.uuid} />
+              )}
               {dietaEspecial && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
