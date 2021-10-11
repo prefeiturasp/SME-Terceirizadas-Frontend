@@ -1204,7 +1204,7 @@ class CadastroEmpresa extends Component {
                       <div className="w-25">
                         <Field
                           component={Select}
-                          label="Situacao"
+                          label="Situação"
                           name="situacao"
                           validate={required}
                           required
