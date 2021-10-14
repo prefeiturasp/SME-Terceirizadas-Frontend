@@ -142,6 +142,7 @@ import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGui
 import ConferenciaDeGuiaResumoFinalPage from "pages/Logistica/ConferenciaDeGuiaResumoFinalPage";
 import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
 import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
+import EntregasDrePage from "pages/Logistica/EntregasDrePage";
 import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 
 const routesConfig = [
@@ -1160,13 +1161,19 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
     component: EntregasDilogPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica() || usuarioEhDRE()
+    tipoUsuario: usuarioEhLogistica()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,
     component: EntregasDistribuidorPage,
     exact: true,
     tipoUsuario: usuarioEhDistribuidora()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DRE}`,
+    component: EntregasDrePage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE()
   }
 ];
 

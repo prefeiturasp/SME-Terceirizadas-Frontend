@@ -10,6 +10,7 @@ import {
   CONFERIR_ENTREGA,
   INSUCESSO_ENTREGA,
   ENTREGAS_DILOG,
+  ENTREGAS_DRE,
   ENTREGAS_DISTRIBUIDOR
 } from "configs/constants";
 import {
@@ -61,8 +62,12 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {(usuarioEhLogistica() || usuarioEhDRE()) && (
+      {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
+      )}
+
+      {usuarioEhDRE() && (
+        <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DRE}`}>Entregas</LeafItem>
       )}
 
       {usuarioEhDistribuidora() && (
