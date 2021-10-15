@@ -14,6 +14,7 @@ const JustificativaCancelamento = ({ dietaEspecial }) => {
       {dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU" ? (
         <div className="col-12">
           <div
+            name="log_cancelamento"
             className="orientacoes"
             dangerouslySetInnerHTML={{
               __html: justificativa

@@ -16,16 +16,10 @@ import {
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE } from "configs/constants";
-import { statusEnum, TIPO_PERFIL } from "constants/shared";
+import { statusEnum } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
-import {
-  cabecalhoDieta,
-  ehSolicitacaoDeCancelamento,
-  mostrarFormulário,
-  mostrarFormUsuarioEscola,
-  ehCanceladaSegundoStep
-} from "./helpers";
+import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
@@ -42,14 +36,7 @@ const Relatorio = ({ visao }) => {
   const [historico, setHistorico] = useState([]);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
-  const mostrarFormulario = status ? mostrarFormulário(status) : false;
-  const mostrarFormEscola = dietaEspecial
-    ? mostrarFormUsuarioEscola(TIPO_PERFIL.ESCOLA, dietaEspecial)
-    : false;
   const tipoUsuario = localStorage.getItem("tipo_perfil");
-  const canceladaSegundoStep = dietaEspecial
-    ? ehCanceladaSegundoStep(dietaEspecial)
-    : false;
 
   const fetchData = uuid => {
     loadSolicitacao(uuid);
@@ -113,6 +100,7 @@ const Relatorio = ({ visao }) => {
   const BotaoImprimir = ({ uuid }) => {
     return (
       <Botao
+        title="botao_imprimir"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         icon={BUTTON_ICON.PRINT}
@@ -164,9 +152,7 @@ const Relatorio = ({ visao }) => {
         <div className="card-body">
           <div className="row">
             <div className="col-12" style={{ alignItems: "flex-end" }}>
-              {dietaEspecial && status !== statusEnum.CODAE_NEGOU_PEDIDO && (
-                <BotaoImprimir uuid={dietaEspecial.uuid} />
-              )}
+              {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
               {dietaEspecial && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
@@ -191,7 +177,10 @@ const Relatorio = ({ visao }) => {
           )}
           {dietaEspecial && (
             <>
-              <CorpoRelatorio dietaEspecial={dietaEspecial} />
+              <CorpoRelatorio
+                dietaEspecial={dietaEspecial}
+                dietaCancelada={dietaCancelada}
+              />
               {status === statusEnum.CODAE_A_AUTORIZAR &&
                 visao === ESCOLA &&
                 !dietaCancelada &&
@@ -204,24 +193,20 @@ const Relatorio = ({ visao }) => {
                 )}
             </>
           )}
-          {dietaEspecial && mostrarFormulario && (
-            <>
-              {mostrarFormEscola && !canceladaSegundoStep && (
-                <FormAutorizaDietaEspecial
-                  dietaEspecial={dietaEspecial}
-                  onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-                  visao={visao}
-                  setTemSolicitacaoCadastroProduto={() =>
-                    setDietaEspecial({
-                      ...dietaEspecial,
-                      tem_solicitacao_cadastro_produto: true
-                    })
-                  }
-                  dietaCancelada={dietaCancelada}
-                />
-              )}
-            </>
+          {status === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE && (
+            <FormAutorizaDietaEspecial
+              dietaEspecial={dietaEspecial}
+              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+              visao={visao}
+              setTemSolicitacaoCadastroProduto={() =>
+                setDietaEspecial({
+                  ...dietaEspecial,
+                  tem_solicitacao_cadastro_produto: true
+                })
+              }
+            />
           )}
+
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
             visao === CODAE && (
