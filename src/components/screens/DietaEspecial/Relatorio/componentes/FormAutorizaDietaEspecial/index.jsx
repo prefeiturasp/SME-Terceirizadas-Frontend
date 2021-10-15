@@ -26,22 +26,13 @@ import {
 import { getSubstitutos } from "services/produto.service";
 
 import Diagnosticos from "./componentes/Diagnosticos";
-import DiagnosticosLeitura from "./componentes/Diagnosticos/DiagnosticosLeitura";
 import ClassificacaoDaDieta from "./componentes/ClassificacaoDaDieta";
-import ClassificacaoDaDietaLeitura from "./componentes/ClassificacaoDaDieta/ClassificacaoDietaLeitura";
 import Protocolos from "./componentes/Protocolos";
-import ProtocoloLeitura from "./componentes/Protocolos/ProtocoloLeitura";
 import Orientacoes from "./componentes/Orientacoes";
-import OrientacoesLeitura from "./componentes/Orientacoes/OrientacoesLeitura";
 import SubstituicoesField from "./componentes/SubstituicoesField";
-import SubstituicoesTable from "./componentes/SubstituicoesField/SubstituicoesTable";
 import DataTermino from "./componentes/DataTermino";
-import PeriodoVigencia from "./componentes/PeriodoVigencia";
 import InformacoesAdicionais from "./componentes/InformacoesAdicionais";
-import InformacoesAdicionaisLeitura from "./componentes/InformacoesAdicionais/InformacoesAdicionaisLeitura";
 import IdentificacaoNutricionista from "./componentes/IdentificacaoNutricionista";
-import MotivoAlteracao from "./componentes/MotivoAlteracao";
-import ObservacoesAlteracao from "./componentes/ObservacoesAlteracao";
 import ModalNegaDietaEspecial from "../ModalNegaDietaEspecial";
 import ModalAutorizaDietaEspecial from "./componentes/ModalAutorizaDietaEspecial";
 import ModalAutorizaAlteracaoUE from "./componentes/ModalAutorizaAlteracaoUE";
@@ -317,9 +308,7 @@ const FormAutorizaDietaEspecial = ({
         render={({ form, handleSubmit, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit}>
             {dietaEspecial.tipo_solicitacao !==
-              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
-            !dietaCancelada &&
-            tipoUsuario === '"dieta_especial"' ? (
+              TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
               <div className="information-codae">
                 {diagnosticos && (
                   <Diagnosticos
@@ -367,60 +356,6 @@ const FormAutorizaDietaEspecial = ({
                 <InformacoesAdicionais />
                 <IdentificacaoNutricionista />
               </div>
-            ) : (
-              <>
-                {dietaEspecial.status_solicitacao !==
-                  statusEnum.CODAE_A_AUTORIZAR && (
-                  <>
-                    <DiagnosticosLeitura alergias={alergias} />
-
-                    <ClassificacaoDaDietaLeitura
-                      classificacaoDieta={dietaEspecial.classificacao}
-                    />
-
-                    <ProtocoloLeitura
-                      protocolo={dietaEspecial.nome_protocolo}
-                    />
-
-                    <OrientacoesLeitura
-                      orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-                    />
-
-                    <SubstituicoesTable
-                      substituicoes={dietaEspecial.substituicoes}
-                    />
-
-                    {[
-                      "ESCOLA_CANCELOU",
-                      "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
-                      "CANCELADO_ALUNO_MUDOU_ESCOLA"
-                    ].includes(dietaEspecial.status_solicitacao) ? (
-                      <></>
-                    ) : (
-                      <PeriodoVigencia dieta={dietaEspecial} />
-                    )}
-
-                    <InformacoesAdicionaisLeitura
-                      informacoes_adicionais={
-                        dietaEspecial.informacoes_adicionais
-                      }
-                    />
-
-                    <IdentificacaoNutricionista />
-
-                    {!dietaCancelada && [
-                      <MotivoAlteracao
-                        motivo={dietaEspecial.motivo_alteracao_ue}
-                        key={1}
-                      />,
-                      <ObservacoesAlteracao
-                        key={2}
-                        observacoes={dietaEspecial.observacoes_alteracao}
-                      />
-                    ]}
-                  </>
-                )}
-              </>
             )}
             <div className="row mt-3">
               <div className="col-4">

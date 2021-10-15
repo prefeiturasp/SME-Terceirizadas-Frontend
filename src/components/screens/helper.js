@@ -32,7 +32,7 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
-export const ajustaFormatoLogPainelDietaEspecial = logs => {
+export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
   if (!logs) return;
   return logs.map(log => {
     let tamanhoString = 53;
@@ -64,12 +64,13 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      }&ehInclusaoContinua=${log.tipo_doc ===
+        INC_ALIMENTA_CONTINUA}&card=${card}`
     };
   });
 };
 
-export const ajustarFormatoLog = logs => {
+export const ajustarFormatoLog = (logs, card) => {
   return logs.map(log => {
     let tamanhoString = 52;
     let descricao = log.descricao;
@@ -143,7 +144,7 @@ export const ajustarFormatoLog = logs => {
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
       }&ehInclusaoContinua=${log.tipo_doc ===
-        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}`
+        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}&card=${card}`
     };
   });
 };

@@ -13,7 +13,7 @@ import "./styles.scss";
 
 const FORM_NAME = "entregasDilog";
 
-export default ({ setFiltros, setSolicitacoes, setTotal, dilog }) => {
+export default ({ setFiltros, setSolicitacoes, setTotal, dilog, dre }) => {
   const [initialValues] = useState({});
 
   const onSubmit = async values => {
@@ -40,7 +40,7 @@ export default ({ setFiltros, setSolicitacoes, setTotal, dilog }) => {
                 />
               </div>
 
-              {dilog && (
+              {(dilog || dre) && (
                 <div className="col-6">
                   <Field
                     component={InputText}
@@ -81,6 +81,17 @@ export default ({ setFiltros, setSolicitacoes, setTotal, dilog }) => {
                   maxDate={null}
                 />
               </div>
+              {dre && (
+                <div className="col-6">
+                  <Field
+                    component={InputText}
+                    label="Nome da Unidade Educacional"
+                    name="nome_unidade"
+                    placeholder="Digite o nome da Unidade Educacional"
+                    className="input-busca-produto"
+                  />
+                </div>
+              )}
             </div>
             <div className="mt-4 mb-4">
               <Botao

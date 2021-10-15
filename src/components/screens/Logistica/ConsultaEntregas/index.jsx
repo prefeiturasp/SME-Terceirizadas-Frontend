@@ -6,7 +6,7 @@ import Filtros from "./components/Filtros";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
-export default ({ dilog }) => {
+export default ({ dilog, dre }) => {
   const [carregando, setCarregando] = useState(false);
   const [solicitacoes, setSolicitacoes] = useState();
   const [filtros, setFiltros] = useState();
@@ -67,6 +67,7 @@ export default ({ dilog }) => {
             setSolicitacoes={setSolicitacoes}
             setTotal={setTotal}
             dilog={dilog}
+            dre={dre}
           />
           {solicitacoes && (
             <>
