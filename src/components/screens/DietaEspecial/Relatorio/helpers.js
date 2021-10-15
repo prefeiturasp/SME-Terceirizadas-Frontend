@@ -21,6 +21,11 @@ export const cabecalhoDieta = dietaEspecial => {
     dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
   ) {
     descricao = "Solicitação de Alteração de U.E";
+  } else if (
+    dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" &&
+    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+  ) {
+    descricao = "Negada Alteração de UE";
   } else {
     descricao = DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao];
   }

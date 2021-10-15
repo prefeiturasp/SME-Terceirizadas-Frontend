@@ -112,6 +112,7 @@ test("Relatorio para cancelamento por atingir data termino", async () => {
   expect(
     await screen.getByText(/Nome do Prescritor do laudo/i)
   ).toBeInTheDocument();
+  expect(await screen.queryByText("Laudo")).not.toBeInTheDocument();
   expect(await screen.getByText(/Anexos/i)).toBeInTheDocument();
   expect(await screen.getByText(/Observações/i)).toBeInTheDocument();
   expect(
@@ -188,6 +189,7 @@ test("Relatorio para cancelamento para aluno não matriculado na rede", async ()
   expect(
     await screen.getByText(/Nome do Prescritor do laudo/i)
   ).toBeInTheDocument();
+  expect(await screen.queryByText("Laudo")).not.toBeInTheDocument();
   expect(await screen.getByText(/Anexos/i)).toBeInTheDocument();
   expect(await screen.getByText(/Observações/i)).toBeInTheDocument();
   expect(

@@ -100,6 +100,34 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada }) => {
       dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE"
     ) {
       return <IdentificacaoNutricionista />;
+    } else if (
+      dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" &&
+      dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+    ) {
+      return [
+        <DiagnosticosLeitura
+          alergias={formataAlergias(dietaEspecial)}
+          key={0}
+        />,
+        <ClassificacaoDaDietaLeitura
+          classificacaoDieta={dietaEspecial.classificacao}
+          key={1}
+        />,
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <OrientacoesLeitura
+          orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+          key={3}
+        />,
+        <SubstituicoesTable
+          substituicoes={dietaEspecial.substituicoes}
+          key={4}
+        />,
+        <InformacoesAdicionaisLeitura
+          informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+          key={5}
+        />,
+        <IdentificacaoNutricionista key={6} />
+      ];
     }
 
     return <></>;
