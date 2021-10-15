@@ -25,7 +25,7 @@ import { ehCanceladaSegundoStep } from "../../helpers";
 import "./styles.scss";
 import JustificativaNegacao from "./JustificativaNegacao";
 
-const CorpoRelatorio = ({ dietaEspecial, dietaCancelada }) => {
+const CorpoRelatorio = ({ dietaEspecial, dietaCancelada, card }) => {
   const onSubmit = () => {
     // será desenvolvido na história 41937
   };
@@ -36,6 +36,35 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada }) => {
 
   const montaCorpoRelatorio = () => {
     if (
+      card &&
+      ["inativas", "inativas-temp"].includes(card) &&
+      dietaEspecial.ativo === false
+    ) {
+      return [
+        <DiagnosticosLeitura
+          alergias={formataAlergias(dietaEspecial)}
+          key={0}
+        />,
+        <ClassificacaoDaDietaLeitura
+          classificacaoDieta={dietaEspecial.classificacao}
+          key={1}
+        />,
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <OrientacoesLeitura
+          orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+          key={3}
+        />,
+        <SubstituicoesTable
+          substituicoes={dietaEspecial.substituicoes}
+          key={4}
+        />,
+        <InformacoesAdicionaisLeitura
+          informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+          key={5}
+        />,
+        <IdentificacaoNutricionista key={6} />
+      ];
+    } else if (
       dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
     ) {
       return [
@@ -157,10 +186,15 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada }) => {
               justificativaNegacao={dietaEspecial.justificativa_negacao}
             />
           ]}
-          {dietaCancelada && [
-            <JustificativaCancelamento key={1} dietaEspecial={dietaEspecial} />,
-            <hr key={2} />
-          ]}
+          {card &&
+            !["inativas", "inativas-temp"].includes(card) &&
+            dietaCancelada && [
+              <JustificativaCancelamento
+                key={1}
+                dietaEspecial={dietaEspecial}
+              />,
+              <hr key={2} />
+            ]}
           <InformacoesAluno />
           <hr />
           {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&
@@ -174,7 +208,11 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada }) => {
           <hr />
           <DadosEscolaSolicitante />
           <hr />
-          <DadosDietaEspecial values={values} dietaEspecial={dietaEspecial} />
+          <DadosDietaEspecial
+            values={values}
+            dietaEspecial={dietaEspecial}
+            card={card}
+          />
 
           {dietaEspecial && montaCorpoRelatorio()}
         </form>

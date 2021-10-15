@@ -14,9 +14,13 @@ const DESCRICAO_SOLICITACAO = {
     "Cancelamento para aluno não matriculado na rede municipal"
 };
 
-export const cabecalhoDieta = dietaEspecial => {
+export const cabecalhoDieta = (dietaEspecial, card) => {
   let descricao = null;
-  if (
+  if (card && card === "inativas") {
+    descricao = "Inativa";
+  } else if (card && card === "inativas-temp") {
+    descricao = "Inativa Temporariamente";
+  } else if (
     dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" &&
     dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
   ) {

@@ -67,10 +67,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             autorizadasList: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "autorizadas"
             ),
             autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "autorizadas"
             )
           });
         });
@@ -81,10 +83,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             pendentesList: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "pendentes-aut"
             ),
             pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "pendentes-aut"
             )
           });
         });
@@ -92,9 +96,13 @@ class DashBoardDietaEspecial extends Component {
     if (negadasList !== prevState.negadasList && !negadasList) {
       this.props.getDietaEspecialNegadas(instituicao.uuid).then(response => {
         this.setState({
-          negadasList: ajustaFormatoLogPainelDietaEspecial(response.results),
+          negadasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "negadas"
+          ),
           negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-            response.results
+            response.results,
+            "negadas"
           )
         });
       });
@@ -102,9 +110,13 @@ class DashBoardDietaEspecial extends Component {
     if (canceladasList !== prevState.canceladasList && !canceladasList) {
       this.props.getDietaEspecialCanceladas(instituicao.uuid).then(response => {
         this.setState({
-          canceladasList: ajustaFormatoLogPainelDietaEspecial(response.results),
+          canceladasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "canceladas"
+          ),
           canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-            response.results
+            response.results,
+            "canceladas"
           )
         });
       });
@@ -114,10 +126,12 @@ class DashBoardDietaEspecial extends Component {
         this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
           this.setState({
             inativasList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas"
             ),
             inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas"
             )
           });
         });
@@ -133,10 +147,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "autorizadas-temp"
             ),
             autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "autorizadas-temp"
             )
           });
         });
@@ -152,10 +168,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             aguardandoVigenciaList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "aguardando-vigencia"
             ),
             aguardandoVigenciaListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "aguardando-vigencia"
             )
           });
         });
@@ -170,10 +188,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas-temp"
             ),
             inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas-temp"
             )
           });
         });

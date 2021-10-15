@@ -20,7 +20,8 @@ import { API_URL } from "constants/config";
 
 const payload = {
   ...respostaApiCancelamentoporDataTermino(),
-  status_solicitacao: "CODAE_NEGOU_PEDIDO"
+  status_solicitacao: "CODAE_AUTORIZADO",
+  ativo: false
 };
 
 const server = setupServer(
@@ -63,8 +64,8 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test("Relatorio negadas para inclusão", async () => {
-  const search = `?uuid=${payload.uuid}&ehInclusaoContinua=false&card=negadas:`;
+test("Teste dietas inativas", async () => {
+  const search = `?uuid=${payload.uuid}&ehInclusaoContinua=false&card=inativas`;
   Object.defineProperty(window, "location", {
     value: {
       search: search
@@ -73,95 +74,16 @@ test("Relatorio negadas para inclusão", async () => {
   render(<Relatorio visao={CODAE} />);
 
   expect(
-    await screen.findByText(/dieta especial - Negada a Inclusão/i)
+    await screen.findByText(/Dieta especial - Inativa/i)
   ).toBeInTheDocument();
   expect(
     await screen.findByRole("button", { name: /histórico/i })
   ).toBeInTheDocument();
-  expect(await screen.findByText("Motivo")).toBeInTheDocument();
+  expect(await screen.queryByText("Motivo")).not.toBeInTheDocument();
   expect(
-    await screen.findByText("Justificativa da Negação")
-  ).toBeInTheDocument();
+    await screen.queryByText("Justificativa da Negação")
+  ).not.toBeInTheDocument();
 
-  expect(await screen.getByText(`Foi negada`)).toBeInTheDocument();
-  expect(await screen.getByText(/dados do aluno/i)).toBeInTheDocument();
-  expect(await screen.getByText(/código eol do aluno/i)).toBeInTheDocument();
-  expect(await screen.getByText(/data de nascimento/i)).toBeInTheDocument();
-  expect(await screen.getByText(/nome completo do aluno/i)).toBeInTheDocument();
-  expect(
-    await screen.getByText(/dados da escola solicitante/i)
-  ).toBeInTheDocument();
-  expect(await screen.getByText("Nome")).toBeInTheDocument();
-  expect(await screen.getByText("Telefone")).toBeInTheDocument();
-  expect(await screen.getByText("E-mail")).toBeInTheDocument();
-  expect(await screen.getByText("DRE")).toBeInTheDocument();
-  expect(await screen.getByText("Lote")).toBeInTheDocument();
-  expect(await screen.getByText("Tipo de Gestão")).toBeInTheDocument();
-
-  expect(
-    await screen.getByText(/detalhamento da dieta especial/i)
-  ).toBeInTheDocument();
-  expect(await screen.getByText(/Registro Funcional/i)).toBeInTheDocument();
-  expect(
-    await screen.getByText(/Nome do Prescritor do laudo/i)
-  ).toBeInTheDocument();
-  expect(await screen.getByText("Laudo")).toBeInTheDocument();
-  expect(await screen.getByText(/Anexos/i)).toBeInTheDocument();
-  expect(await screen.getByText(/Observações/i)).toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Relação por Diagnóstico/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Classificação da Dieta/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Nome do Protocolo Padrão de Dieta Especial/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Orientações Gerais/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Lista de Substituições/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Período de Vigência/i)
-  ).not.toBeInTheDocument();
-  expect(await screen.queryByText(/Início/i)).not.toBeInTheDocument();
-  expect(await screen.queryByText(/Fim/i)).not.toBeInTheDocument();
-  expect(
-    await screen.queryByText(/Informações Adicionais/i)
-  ).not.toBeInTheDocument();
-  expect(
-    await screen.getByText(/Identificação do Nutricionista/i)
-  ).toBeInTheDocument();
-});
-
-test("Relatorio negadas para solicitação de alteração de U.E.", async () => {
-  let payload_alteracao = payload;
-  payload_alteracao.tipo_solicitacao = "ALTERACAO_UE";
-
-  const search = `?uuid=${
-    payload_alteracao.uuid
-  }&ehInclusaoContinua=false&card=negadas:`;
-  Object.defineProperty(window, "location", {
-    value: {
-      search: search
-    }
-  });
-  render(<Relatorio visao={CODAE} />);
-
-  expect(
-    await screen.findByText(/dieta especial - Negada Alteração de UE/i)
-  ).toBeInTheDocument();
-  expect(
-    await screen.findByRole("button", { name: /histórico/i })
-  ).toBeInTheDocument();
-  expect(await screen.findByText("Motivo")).toBeInTheDocument();
-  expect(
-    await screen.findByText("Justificativa da Negação")
-  ).toBeInTheDocument();
-
-  expect(await screen.getByText(`Foi negada`)).toBeInTheDocument();
   expect(await screen.getByText(/dados do aluno/i)).toBeInTheDocument();
   expect(await screen.getByText(/código eol do aluno/i)).toBeInTheDocument();
   expect(await screen.getByText(/data de nascimento/i)).toBeInTheDocument();

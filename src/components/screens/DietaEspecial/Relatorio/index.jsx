@@ -34,6 +34,7 @@ const Relatorio = ({ visao }) => {
   const [status, setStatus] = useState(undefined);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
+  const [card, setCard] = useState(null);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoUsuario = localStorage.getItem("tipo_perfil");
@@ -58,6 +59,10 @@ const Relatorio = ({ visao }) => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const card = urlParams.get("card");
+    if (card) {
+      setCard(card);
+    }
     if (uuid) {
       fetchData(uuid);
     }
@@ -146,7 +151,9 @@ const Relatorio = ({ visao }) => {
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       {dietaEspecial && status && (
-        <span className="page-title">{cabecalhoDieta(dietaEspecial)}</span>
+        <span className="page-title">
+          {cabecalhoDieta(dietaEspecial, card)}
+        </span>
       )}
       <div className="card mt-3">
         <div className="card-body">
@@ -180,6 +187,7 @@ const Relatorio = ({ visao }) => {
               <CorpoRelatorio
                 dietaEspecial={dietaEspecial}
                 dietaCancelada={dietaCancelada}
+                card={card}
               />
               {status === statusEnum.CODAE_A_AUTORIZAR &&
                 visao === ESCOLA &&
@@ -219,9 +227,11 @@ const Relatorio = ({ visao }) => {
                 setCarregando={setCarregando}
               />
             )}
-          {dietaEspecial && status === statusEnum.CODAE_AUTORIZADO && (
-            <BotaoGerarProtocolo uuid={dietaEspecial.uuid} />
-          )}
+          {dietaEspecial &&
+            status === statusEnum.CODAE_AUTORIZADO &&
+            card !== "inativas-temp" && (
+              <BotaoGerarProtocolo uuid={dietaEspecial.uuid} />
+            )}
         </div>
       </div>
       {dietaEspecial && (
