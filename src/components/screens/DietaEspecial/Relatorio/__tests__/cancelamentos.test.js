@@ -66,7 +66,7 @@ afterAll(() => server.close());
 test("Relatorio para cancelamento por atingir data termino", async () => {
   const search = `?uuid=${
     cancelamento_data_termino.uuid
-  }&ehInclusaoContinua=false:`;
+  }&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
       search: search
@@ -140,7 +140,7 @@ test("Relatorio para cancelamento para aluno não matriculado na rede", async ()
 
   const search = `?uuid=${
     cancelamento_rede_municipal.uuid
-  }&ehInclusaoContinua=false:`;
+  }&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
       search: search
@@ -254,7 +254,7 @@ test("Relatorio para cancelamento quando a escola cancela antes da aprovação p
 
   const search = `?uuid=${
     cancelamento_escola_antes_aprovacao.uuid
-  }&ehInclusaoContinua=false:`;
+  }&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
       search: search
@@ -409,7 +409,7 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
 
   const search = `?uuid=${
     cancelamento_escola_apos_aprovacao.uuid
-  }&ehInclusaoContinua=false:`;
+  }&ehInclusaoContinua=false&card=canceladas:`;
   Object.defineProperty(window, "location", {
     value: {
       search: search

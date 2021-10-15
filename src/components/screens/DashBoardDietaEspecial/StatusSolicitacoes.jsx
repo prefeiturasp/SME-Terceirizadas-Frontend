@@ -153,7 +153,7 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
                   response.results,
-                  this.props.logPara
+                  "pendentes-aut"
                 ),
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.PENDENTE,
@@ -168,10 +168,7 @@ export class StatusSolicitacoes extends Component {
             .getDietaEspecialNegadas(instituicao.uuid)
             .then(response => {
               this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.results,
-                  this.props.logPara
-                ),
+                solicitacoes: ajustarFormatoLog(response.results, "negadas"),
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.NEGADO,
                 icone: ICON_CARD_TYPE_ENUM.NEGADO,
@@ -187,7 +184,7 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
                   response.results,
-                  this.props.logPara
+                  "autorizadas"
                 ),
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
@@ -202,10 +199,7 @@ export class StatusSolicitacoes extends Component {
             .getDietaEspecialCanceladas(instituicao.uuid)
             .then(response => {
               this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.results,
-                  this.props.logPara
-                ),
+                solicitacoes: ajustarFormatoLog(response.results, "canceladas"),
                 count: response.count,
                 tipoCard: CARD_TYPE_ENUM.CANCELADO,
                 icone: ICON_CARD_TYPE_ENUM.CANCELADO,
@@ -221,7 +215,7 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
                   response.data.results,
-                  this.props.logPara
+                  "autorizadas-temp"
                 ),
                 count: response.data.count,
                 tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
@@ -241,7 +235,7 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
                   response.data.results,
-                  this.props.logPara
+                  "inativas-temp"
                 ),
                 count: response.data.count,
                 tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
@@ -262,7 +256,7 @@ export class StatusSolicitacoes extends Component {
                 this.setState({
                   solicitacoes: ajustarFormatoLog(
                     response.data.results,
-                    this.props.logPara
+                    "inativas"
                   ),
                   count: response.data.count,
                   tipoCard: CARD_TYPE_ENUM.CANCELADO,

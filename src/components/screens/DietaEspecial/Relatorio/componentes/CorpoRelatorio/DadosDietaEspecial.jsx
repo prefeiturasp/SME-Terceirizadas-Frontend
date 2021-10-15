@@ -8,7 +8,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-const DadosDietaEspecial = ({ values, dietaEspecial }) => {
+const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
   const downloadAnexo = url => {
     const a = document.createElement("a");
     a.href = url;
@@ -28,17 +28,24 @@ const DadosDietaEspecial = ({ values, dietaEspecial }) => {
     />
   );
 
-  const exibeLaudo = [
-    "TERMINADA_AUTOMATICAMENTE_SISTEMA",
-    "CANCELADO_ALUNO_MUDOU_ESCOLA",
-    "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
-  ].includes(dietaEspecial.status_solicitacao);
-
   const checaTipoSolicitacao = () => {
-    if (dietaEspecial.tipo_solicitacao === "ALTERACAO_UE") {
+    if (
+      card &&
+      ["inativas", "inativas-temp"].includes(card) &&
+      dietaEspecial.ativo === false
+    ) {
+      return true;
+    } else if (dietaEspecial.tipo_solicitacao === "ALTERACAO_UE") {
       return dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO";
     }
-    return dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE";
+    return (
+      dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
+      ![
+        "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+        "CANCELADO_ALUNO_MUDOU_ESCOLA",
+        "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+      ].includes(dietaEspecial.status_solicitacao)
+    );
   };
 
   const anexos = values.anexos.map((anexo, key) => {
@@ -81,7 +88,7 @@ const DadosDietaEspecial = ({ values, dietaEspecial }) => {
         />
       </div>
       <div className="col-4" />
-      {checaTipoSolicitacao() && !exibeLaudo && (
+      {checaTipoSolicitacao() && (
         <div className="col-12">
           <Field
             component={InputText}
