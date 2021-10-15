@@ -17,6 +17,12 @@ if (process.env.NODE_ENV === "development") {
   USER_URL = `${API_URL}/users/`;
 }
 
+if (process.env.NODE_ENV === "test") {
+  API_URL = "http://localhost:8000";
+  JWT_AUTH = `${API_URL}/api-token-auth/`;
+  USER_URL = `${API_URL}/users/`;
+}
+
 module.exports = {
   API_URL: API_URL,
   JWT_AUTH: JWT_AUTH,
