@@ -105,6 +105,7 @@ test("Relatorio negadas para inclusão", async () => {
   expect(
     await screen.getByText(/Nome do Prescritor do laudo/i)
   ).toBeInTheDocument();
+  expect(await screen.getByText("Laudo")).toBeInTheDocument();
   expect(await screen.getByText(/Anexos/i)).toBeInTheDocument();
   expect(await screen.getByText(/Observações/i)).toBeInTheDocument();
   expect(
@@ -130,6 +131,76 @@ test("Relatorio negadas para inclusão", async () => {
   expect(
     await screen.queryByText(/Informações Adicionais/i)
   ).not.toBeInTheDocument();
+  expect(
+    await screen.getByText(/Identificação do Nutricionista/i)
+  ).toBeInTheDocument();
+});
+
+test("Relatorio negadas para solicitação de alteração de U.E.", async () => {
+  let payload_alteracao = payload;
+  payload_alteracao.tipo_solicitacao = "ALTERACAO_UE";
+
+  const search = `?uuid=${payload_alteracao.uuid}&ehInclusaoContinua=false:`;
+  Object.defineProperty(window, "location", {
+    value: {
+      search: search
+    }
+  });
+  render(<Relatorio visao={CODAE} />);
+
+  expect(
+    await screen.findByText(/dieta especial - Negada Alteração de UE/i)
+  ).toBeInTheDocument();
+  expect(
+    await screen.findByRole("button", { name: /histórico/i })
+  ).toBeInTheDocument();
+  expect(await screen.findByText("Motivo")).toBeInTheDocument();
+  expect(
+    await screen.findByText("Justificativa da Negação")
+  ).toBeInTheDocument();
+
+  expect(await screen.getByText(`Foi negada`)).toBeInTheDocument();
+  expect(await screen.getByText(/dados do aluno/i)).toBeInTheDocument();
+  expect(await screen.getByText(/código eol do aluno/i)).toBeInTheDocument();
+  expect(await screen.getByText(/data de nascimento/i)).toBeInTheDocument();
+  expect(await screen.getByText(/nome completo do aluno/i)).toBeInTheDocument();
+  expect(
+    await screen.getByText(/dados da escola solicitante/i)
+  ).toBeInTheDocument();
+  expect(await screen.getByText("Nome")).toBeInTheDocument();
+  expect(await screen.getByText("Telefone")).toBeInTheDocument();
+  expect(await screen.getByText("E-mail")).toBeInTheDocument();
+  expect(await screen.getByText("DRE")).toBeInTheDocument();
+  expect(await screen.getByText("Lote")).toBeInTheDocument();
+  expect(await screen.getByText("Tipo de Gestão")).toBeInTheDocument();
+
+  expect(
+    await screen.getByText(/detalhamento da dieta especial/i)
+  ).toBeInTheDocument();
+  expect(await screen.getByText(/Registro Funcional/i)).toBeInTheDocument();
+  expect(
+    await screen.getByText(/Nome do Prescritor do laudo/i)
+  ).toBeInTheDocument();
+  expect(await screen.getByText("Laudo")).toBeInTheDocument();
+  expect(await screen.getByText(/Anexos/i)).toBeInTheDocument();
+  expect(await screen.getByText(/Observações/i)).toBeInTheDocument();
+  expect(
+    await screen.getByText(/Relação por Diagnóstico/i)
+  ).toBeInTheDocument();
+  expect(await screen.getByText(/Classificação da Dieta/i)).toBeInTheDocument();
+  expect(
+    await screen.getByText(/Nome do Protocolo Padrão de Dieta Especial/i)
+  ).toBeInTheDocument();
+  expect(await screen.getByText(/Orientações Gerais/i)).toBeInTheDocument();
+  expect(await screen.getByText(/Lista de Substituições/i)).toBeInTheDocument();
+  expect(
+    await screen.queryByText(/Período de Vigência/i)
+  ).not.toBeInTheDocument();
+  expect(await screen.queryByText(/Início/i)).not.toBeInTheDocument();
+  expect(await screen.queryByText(/Fim/i)).not.toBeInTheDocument();
+  expect(
+    await screen.queryByText(/Informações Adicionais/i)
+  ).toBeInTheDocument();
   expect(
     await screen.getByText(/Identificação do Nutricionista/i)
   ).toBeInTheDocument();

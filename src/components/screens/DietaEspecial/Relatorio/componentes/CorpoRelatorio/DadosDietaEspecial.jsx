@@ -34,6 +34,13 @@ const DadosDietaEspecial = ({ values, dietaEspecial }) => {
     "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
   ].includes(dietaEspecial.status_solicitacao);
 
+  const checaTipoSolicitacao = () => {
+    if (dietaEspecial.tipo_solicitacao === "ALTERACAO_UE") {
+      return dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO";
+    }
+    return dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE";
+  };
+
   const anexos = values.anexos.map((anexo, key) => {
     return (
       <div className="col-2 mb-3" key={key}>
@@ -74,7 +81,7 @@ const DadosDietaEspecial = ({ values, dietaEspecial }) => {
         />
       </div>
       <div className="col-4" />
-      {dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" && !exibeLaudo && (
+      {checaTipoSolicitacao() && !exibeLaudo && (
         <div className="col-12">
           <Field
             component={InputText}
