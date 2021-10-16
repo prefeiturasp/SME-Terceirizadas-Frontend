@@ -20,6 +20,8 @@ export const cabecalhoDieta = (dietaEspecial, card) => {
     descricao = "Inativa";
   } else if (card && card === "inativas-temp") {
     descricao = "Inativa Temporariamente";
+  } else if (card && card === "autorizadas-temp") {
+    descricao = "Autorizada Temporariamente";
   } else if (
     dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" &&
     dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"

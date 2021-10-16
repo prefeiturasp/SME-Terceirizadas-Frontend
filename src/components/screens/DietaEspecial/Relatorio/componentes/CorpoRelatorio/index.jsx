@@ -65,7 +65,9 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada, card }) => {
         <IdentificacaoNutricionista key={6} />
       ];
     } else if (
-      dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
+      dietaEspecial.status_solicitacao ===
+        "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
+      (card && ["autorizadas", "autorizadas-temp"].includes(card))
     ) {
       return [
         <DiagnosticosLeitura
