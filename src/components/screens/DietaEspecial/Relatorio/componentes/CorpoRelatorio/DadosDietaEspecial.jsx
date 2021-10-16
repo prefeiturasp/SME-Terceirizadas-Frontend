@@ -29,7 +29,9 @@ const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
   );
 
   const checaTipoSolicitacao = () => {
-    if (
+    if (card && ["autorizadas", "autorizadas-temp"].includes(card)) {
+      return true;
+    } else if (
       card &&
       ["inativas", "inativas-temp"].includes(card) &&
       dietaEspecial.ativo === false
