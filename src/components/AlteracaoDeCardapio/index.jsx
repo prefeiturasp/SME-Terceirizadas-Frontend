@@ -8,7 +8,10 @@ import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   peloMenosUmCaractere,
   required,
-  textAreaRequired
+  textAreaRequired,
+  maxValue,
+  naoPodeSerZero,
+  numericInteger
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
@@ -24,6 +27,8 @@ import {
   escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
+
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
@@ -36,10 +41,12 @@ import { Select } from "../Shareable/Select";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
+import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/helper";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { InputText } from "components/Shareable/Input/InputText";
 
 const ENTER = 13;
 
@@ -49,6 +56,7 @@ class AlteracaoCardapio extends Component {
     this.state = {
       periodos: [],
       loading: true,
+      loadQuantidadeAlunos: false,
       alteracaoCardapioList: [],
       motivo: {},
       alimentacaoDe: {},
@@ -72,6 +80,7 @@ class AlteracaoCardapio extends Component {
     this.closeModalConfirm = this.closeModalConfirm.bind(this);
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
+    this.onNumeroAlunosChanged = this.onNumeroAlunosChanged.bind(this);
     this.resetForm = this.resetForm.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -83,14 +92,16 @@ class AlteracaoCardapio extends Component {
       periodos,
       substituicoesAlimentacao,
       periodosQuePossuemLancheNaAlteracao,
-      verificado
+      verificado,
+      loadQuantidadeAlunos
     } = this.state;
     if (
       meusDados &&
       proximos_dois_dias_uteis &&
       loading &&
       !periodosQuePossuemLancheNaAlteracao &&
-      periodos.length === 0
+      periodos.length === 0 &&
+      !loadQuantidadeAlunos
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
@@ -100,6 +111,18 @@ class AlteracaoCardapio extends Component {
       });
       periodos.forEach(periodo => {
         this.montaObjetoDeSubstituicoesEdit(periodo);
+      });
+    }
+    const escola = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    if (periodos.length > 0 && escola && !loadQuantidadeAlunos) {
+      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+        if (periodos !== []) {
+          periodos = abstraiPeriodosComAlunosMatriculados(
+            periodos,
+            response.results
+          );
+        }
+        this.setState({ periodos, loadQuantidadeAlunos: true });
       });
     }
 
@@ -538,6 +561,7 @@ class AlteracaoCardapio extends Component {
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
         null
       );
+      this.props.change(`substituicoes_${periodoNome}.numero_de_alunos`, null);
     }
   }
 
@@ -606,6 +630,11 @@ class AlteracaoCardapio extends Component {
       }
     }
 
+    periodos[indice].validador = [
+      naoPodeSerZero,
+      numericInteger,
+      maxValue(periodos[indice].maximo_alunos)
+    ];
     this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
 
     periodos[indice].checked = !periodos[indice].checked;
@@ -717,6 +746,18 @@ class AlteracaoCardapio extends Component {
     });
   };
 
+  onNumeroAlunosChanged(event, periodo) {
+    const indicePeriodo = this.state.periodos.findIndex(
+      periodoState => periodoState.nome === periodo.nome
+    );
+    let periodos = this.state.periodos;
+    periodos[indicePeriodo].numero_de_alunos = event.target.value;
+    this.props.change(
+      `quantidades_periodo_${periodo.nome}.numero_de_alunos`,
+      event.target.value
+    );
+  }
+
   render() {
     const {
       loading,
@@ -774,12 +815,29 @@ class AlteracaoCardapio extends Component {
                 >
                   Descrição da Alteração
                 </div>
+                <section className="section-form-motivo mt-3">
+                  <Field
+                    component={Select}
+                    name="motivo"
+                    label="Tipo de Alteracao"
+                    options={motivos}
+                    validate={required}
+                    required
+                    onChange={evt => {
+                      this.onChangeMotivo(evt.target.value);
+                    }}
+                  />
+                </section>
                 <section className="section-form-datas mt-4">
                   <Field
                     component={InputComData}
                     onBlur={event => this.onAlterarDiaChanged(event)}
                     name="alterar_dia"
-                    minDate={proximos_dois_dias_uteis}
+                    minDate={
+                      this.state.motivo.nome === "Merenda Seca"
+                        ? moment().toDate()
+                        : proximos_dois_dias_uteis
+                    }
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
@@ -791,7 +849,11 @@ class AlteracaoCardapio extends Component {
                     component={InputComData}
                     name="data_inicial"
                     label="De"
-                    minDate={proximos_dois_dias_uteis}
+                    minDate={
+                      this.state.motivo.nome === "Merenda Seca"
+                        ? moment().toDate()
+                        : proximos_dois_dias_uteis
+                    }
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
@@ -809,26 +871,13 @@ class AlteracaoCardapio extends Component {
                       .toDate()}
                   />
                 </section>
-                <section className="section-form-motivo mt-3">
-                  <Field
-                    component={Select}
-                    name="motivo"
-                    label="Motivo"
-                    options={motivos}
-                    validate={required}
-                    required
-                    onChange={evt => {
-                      this.onChangeMotivo(evt.target.value);
-                    }}
-                  />
-                </section>
               </div>
-              <hr />
               <div className="card-body">
                 <header className="descricao-periodos-alimentacao">
                   <div>Período</div>
                   <div>Alterar alimentação de:</div>
                   <div>Para alimentação:</div>
+                  <div>Nº de Alunos</div>
                 </header>
                 {periodos.map((periodo, indice) => {
                   this.props.change(
@@ -913,6 +962,28 @@ class AlteracaoCardapio extends Component {
                         validate={periodo.checked && required}
                         required={periodo.checked}
                       />
+                      <Field
+                        component={InputText}
+                        onChange={event =>
+                          this.onNumeroAlunosChanged(event, periodo)
+                        }
+                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                          indice
+                        )}
+                        type="number"
+                        name={`numero_de_alunos`}
+                        min="0"
+                        step="1"
+                        className="form-control quantidade-aluno"
+                        required={periodo.checked}
+                        validate={
+                          periodo.checked && [
+                            naoPodeSerZero,
+                            numericInteger,
+                            maxValue(periodos[indice].maximo_alunos)
+                          ]
+                        }
+                      />
                     </FormSection>
                   );
                 })}
@@ -921,7 +992,7 @@ class AlteracaoCardapio extends Component {
               <div className="card-body">
                 <Field
                   component={TextAreaWYSIWYG}
-                  label="Observações"
+                  label="Motivo/Justificativa"
                   name="observacao"
                   required
                   validate={[textAreaRequired, peloMenosUmCaractere]}
