@@ -105,7 +105,7 @@ export const CorpoRelatorio = props => {
       <hr />
       <table className="table-periods">
         <tr>
-          <th>Motivo</th>
+          <th>Tipo de Alteração</th>
           {alteracaoDeCardapio.data_inicial ===
           alteracaoDeCardapio.data_final ? (
             <th>Alterar dia</th>
