@@ -14,13 +14,24 @@ const DESCRICAO_SOLICITACAO = {
     "Cancelamento para aluno não matriculado na rede municipal"
 };
 
-export const cabecalhoDieta = dietaEspecial => {
+export const cabecalhoDieta = (dietaEspecial, card) => {
   let descricao = null;
-  if (
+  if (card && card === "inativas") {
+    descricao = "Inativa";
+  } else if (card && card === "inativas-temp") {
+    descricao = "Inativa Temporariamente";
+  } else if (card && card === "autorizadas-temp") {
+    descricao = "Autorizada Temporariamente";
+  } else if (
     dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" &&
     dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
   ) {
     descricao = "Solicitação de Alteração de U.E";
+  } else if (
+    dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" &&
+    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+  ) {
+    descricao = "Negada Alteração de UE";
   } else {
     descricao = DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao];
   }
