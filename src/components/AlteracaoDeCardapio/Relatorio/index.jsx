@@ -316,20 +316,29 @@ class Relatorio extends Component {
                             className="ml-3"
                           />
                         )))}
-                    {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                      <Botao
-                        texto={
-                          tipoPerfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                            ? "Questionar"
-                            : "Sim"
-                        }
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.showQuestionamentoModal("Sim")}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
-                    )}
+                    {EXIBIR_BOTAO_QUESTIONAMENTO &&
+                      (alteracaoDeCardapio.motivo.nome !== "Merenda Seca" ? (
+                        <Botao
+                          texto={
+                            tipoPerfil ===
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                              ? "Questionar"
+                              : "Sim"
+                          }
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() => this.showQuestionamentoModal("Sim")}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ) : (
+                        <Botao
+                          texto="Autorizar"
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() => this.handleSubmit()}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      ))}
                   </div>
                 )}
               </div>
