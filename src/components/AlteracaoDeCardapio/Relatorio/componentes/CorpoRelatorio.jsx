@@ -105,7 +105,7 @@ export const CorpoRelatorio = props => {
       <hr />
       <table className="table-periods">
         <tr>
-          <th>Motivo</th>
+          <th>Tipo de Alteração</th>
           {alteracaoDeCardapio.data_inicial ===
           alteracaoDeCardapio.data_final ? (
             <th>Alterar dia</th>
@@ -133,6 +133,7 @@ export const CorpoRelatorio = props => {
           <th>Período</th>
           <th>Alteração alimentação de:</th>
           <th>Alteração alimentação para:</th>
+          <th>Número de alunos</th>
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
           (
@@ -140,6 +141,7 @@ export const CorpoRelatorio = props => {
               periodo_escolar,
               tipo_alimentacao_de,
               tipo_alimentacao_para,
+              qtd_alunos,
               faixas_etarias
             },
             key
@@ -150,6 +152,7 @@ export const CorpoRelatorio = props => {
                   <td>{periodo_escolar && periodo_escolar.nome}</td>
                   <td>{tipo_alimentacao_de.label}</td>
                   <td>{tipo_alimentacao_para.label}</td>
+                  <td>{qtd_alunos}</td>
                 </tr>
                 {ehInclusaoCei(tipoSolicitacao) && (
                   <tr>
