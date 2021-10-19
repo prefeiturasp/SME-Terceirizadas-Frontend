@@ -79,18 +79,20 @@ export class OpcoesKits extends Component {
         <div className="row">
           {kitsLanche &&
             kitsLanche.map((kitLanche, key) => {
-              return (
-                <div key={key} className="col-lg-4 col-md-12">
-                  <CardKit
-                    onCardChange={this.onCardChange}
-                    kitLanche={kitLanche}
-                    kitsChecked={kitsChecked}
-                    numeroKit={key}
-                    checked={kitsChecked.includes(kitLanche.uuid)}
-                    {...this.props}
-                  />
-                </div>
-              );
+              if (kitLanche.status !== "INATIVO") {
+                return (
+                  <div key={key} className="col-lg-4 col-md-12">
+                    <CardKit
+                      onCardChange={this.onCardChange}
+                      kitLanche={kitLanche}
+                      kitsChecked={kitsChecked}
+                      numeroKit={key}
+                      checked={kitsChecked.includes(kitLanche.uuid)}
+                      {...this.props}
+                    />
+                  </div>
+                );
+              }
             })}
         </div>
       </div>

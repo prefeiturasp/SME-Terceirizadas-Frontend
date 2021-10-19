@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { ContentState, convertToRaw, EditorState } from "draft-js";
+import {
+  ContentState,
+  convertToRaw,
+  EditorState,
+  convertFromHTML
+} from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import "react-datepicker/dist/react-datepicker.css";
@@ -23,8 +28,7 @@ export class TextAreaWYSIWYG extends Component {
     this.changeValue(editorState);
   }
 
-  initEditorState() {
-    const html = "";
+  initEditorState(html = "") {
     const contentBlock = htmlToDraft(html);
     const contentState = ContentState.createFromBlockArray(
       contentBlock.contentBlocks
@@ -57,6 +61,18 @@ export class TextAreaWYSIWYG extends Component {
         EditorState.createWithContent(contentState)
       );
       this.setState({ editorState });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.valorInicial !== prevProps.valorInicial) {
+      this.setState({
+        editorState: EditorState.createWithContent(
+          ContentState.createFromBlockArray(
+            convertFromHTML(this.props.valorInicial)
+          )
+        )
+      });
     }
   }
 
@@ -149,6 +165,7 @@ TextAreaWYSIWYG.propTypes = {
   label: PropTypes.string,
   meta: PropTypes.object,
   name: PropTypes.string,
+  valorInicial: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool
 };
@@ -159,6 +176,7 @@ TextAreaWYSIWYG.defaultProps = {
   helpText: "",
   input: {},
   label: "",
+  valorInicial: "",
   meta: {},
   name: "",
   placeholder: "",
