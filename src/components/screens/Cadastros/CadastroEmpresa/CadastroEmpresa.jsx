@@ -258,66 +258,73 @@ class CadastroEmpresa extends Component {
   }
 
   atribuiContatosEmpresaForm(contatos) {
-    contatos.forEach((contato, indice) => {
-      let contatosEmpresaForm = this.state.contatosEmpresaForm;
-      let contatosEmpresa = this.state.contatosEmpresa;
-      if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
-        contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
-        contatosEmpresa.push({
-          telefone: null,
-          email: null
-        });
-      }
-      this.setState({ contatosEmpresaForm });
+    contatos
+      .filter(contato => !contato.nome)
+      .forEach((contato, indice) => {
+        let contatosEmpresaForm = this.state.contatosEmpresaForm;
+        let contatosEmpresa = this.state.contatosEmpresa;
+        if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
+          contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
+          contatosEmpresa.push({
+            telefone: null,
+            email: null
+          });
+        }
+        this.setState({ contatosEmpresaForm });
 
-      contatosEmpresa[indice]["email"] = contato.email;
-      contatosEmpresa[indice]["telefone"] = contato.telefone;
+        contatosEmpresa[indice]["email"] = contato.email;
+        contatosEmpresa[indice]["telefone"] = contato.telefone;
 
-      this.setState({ contatosEmpresa });
+        this.setState({ contatosEmpresa });
 
-      this.props.change(
-        `contatoEmpresa_${indice}.telefone_empresa_${indice}`,
-        contato.telefone
-      );
-      this.props.change(
-        `contatoEmpresa_${indice}.email_empresa_${indice}`,
-        contato.email
-      );
-    });
+        this.props.change(
+          `contatoEmpresa_${indice}.telefone_empresa_${indice}`,
+          contato.telefone
+        );
+        this.props.change(
+          `contatoEmpresa_${indice}.email_empresa_${indice}`,
+          contato.email
+        );
+      });
   }
 
   atribuiContatosPessoaEmpresaForm(contatos) {
-    contatos.forEach((contato, indice) => {
-      let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
-      let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
-      if (indice !== 0 && contatos.length > contatosPessoaEmpresaForm.length) {
-        contatosPessoaEmpresaForm.push(`contatoPessoaEmpresa_${indice}`);
-        contatosPessoaEmpresa.push({
-          telefone: null,
-          email: null
-        });
-      }
-      this.setState({ contatosPessoaEmpresaForm });
+    contatos
+      .filter(contato => contato.nome)
+      .forEach((contato, indice) => {
+        let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
+        let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
+        if (
+          indice !== 0 &&
+          contatos.length > contatosPessoaEmpresaForm.length
+        ) {
+          contatosPessoaEmpresaForm.push(`contatoPessoaEmpresa_${indice}`);
+          contatosPessoaEmpresa.push({
+            telefone: null,
+            email: null
+          });
+        }
+        this.setState({ contatosPessoaEmpresaForm });
 
-      contatosPessoaEmpresa[indice]["nome"] = contato.email;
-      contatosPessoaEmpresa[indice]["email"] = contato.email;
-      contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
+        contatosPessoaEmpresa[indice]["nome"] = contato.email;
+        contatosPessoaEmpresa[indice]["email"] = contato.email;
+        contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
 
-      this.setState({ contatosPessoaEmpresa });
+        this.setState({ contatosPessoaEmpresa });
 
-      this.props.change(
-        `contatoPessoaEmpresa_${indice}.nome_contato_${indice}`,
-        contato.email
-      );
-      this.props.change(
-        `contatoPessoaEmpresa_${indice}.telefone_contato_${indice}`,
-        contato.telefone
-      );
-      this.props.change(
-        `contatoPessoaEmpresa_${indice}.email_contato_${indice}`,
-        contato.email
-      );
-    });
+        this.props.change(
+          `contatoPessoaEmpresa_${indice}.nome_contato_${indice}`,
+          contato.email
+        );
+        this.props.change(
+          `contatoPessoaEmpresa_${indice}.telefone_contato_${indice}`,
+          contato.telefone
+        );
+        this.props.change(
+          `contatoPessoaEmpresa_${indice}.email_contato_${indice}`,
+          contato.email
+        );
+      });
   }
 
   atribuiNutricionistaEmpresaForm(nutricionistas) {
@@ -399,6 +406,14 @@ class CadastroEmpresa extends Component {
     this.props.change("eh_distribuidor", data.eh_distribuidor);
     if (data.eh_distribuidor) {
       this.setState({ ehDistribuidor: true });
+      this.props.change("numero_contrato", data.numero_contrato);
+      this.props.change("tipo_alimento", data.tipo_alimento);
+      this.props.change("tipo_empresa", data.tipo_empresa);
+      this.props.change("situacao", data.ativo);
+      this.props.change(
+        "data_cadastro",
+        moment(data.criado_em, "DD/MM/YYYY").format("DD/MM/YYYY")
+      );
     }
     this.props.change("responsavel_nome", data.responsavel_nome);
     this.props.change("responsavel_email", data.responsavel_email);
@@ -437,7 +452,6 @@ class CadastroEmpresa extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.change("data_cadastro", moment().format("DD/MM/YYYY"));
     let lotes = this.state.lotes;
     const tipoPerfil = localStorage.getItem("perfil");
     let validate = false;
@@ -473,6 +487,7 @@ class CadastroEmpresa extends Component {
           this.setaValoresForm(response.data);
         });
       } else {
+        this.props.change("data_cadastro", moment().format("DD/MM/YYYY"));
         this.setState({
           uuid: null,
           redirect: false,
@@ -1434,6 +1449,12 @@ class CadastroEmpresa extends Component {
                       </div>
                     ) : (
                       <div className="col-12 text-right">
+                        <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                          <Botao
+                            texto="Cancelar"
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </Link>
                         <Botao
                           texto={"Atualizar"}
                           onClick={handleSubmit(values =>

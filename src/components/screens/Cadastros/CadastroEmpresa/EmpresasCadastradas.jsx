@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import moment from "moment";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { getTerceirizada } from "../../../../services/terceirizada.service.js";
 import { Link, NavLink } from "react-router-dom";
@@ -11,7 +12,8 @@ class EmpresasCadastradas extends Component {
     super(props);
     this.state = {
       empresas: [],
-      empresasFiltradas: []
+      empresasFiltradas: [],
+      ehDistribuidor: false
     };
   }
 
@@ -27,6 +29,7 @@ class EmpresasCadastradas extends Component {
           }
         });
       } else if (tipoPerfil === PERFIL.COORDENADOR_LOGISTICA) {
+        this.setState({ ...this.state, ehDistribuidor: true });
         resp.forEach(empresa => {
           if (empresa.eh_distribuidor) {
             empresasF.push(empresa);
@@ -55,7 +58,7 @@ class EmpresasCadastradas extends Component {
         <div className="card-body card-table-cadastro">
           <table className="cadastro-empresa">
             <tr>
-              <th className="col">ID</th>
+              {!this.state.ehDistribuidor && <th className="col">ID</th>}
               <th className="col">Empresas Cadastradas</th>
               <th className="col">CNPJ</th>
               <th className="col">Situação</th>
@@ -74,7 +77,9 @@ class EmpresasCadastradas extends Component {
                   key={key}
                   className={empresa.ativo ? "detalhe-empresa" : ""}
                 >
-                  <td>{empresa.codigo_empresa}</td>
+                  {!empresa.eh_distribuidor && (
+                    <td>{empresa.codigo_empresa}</td>
+                  )}
                   <td className="nome-empresa">{empresa.nome}</td>
                   <td>{empresa.cnpj}</td>
                   <td>{empresa.status}</td>
@@ -102,9 +107,37 @@ class EmpresasCadastradas extends Component {
 
                 empresa.ativo && (
                   <tr>
-                    <td className="detalhe-empresa" />
+                    {!empresa.eh_distribuidor && (
+                      <td className="detalhe-empresa" />
+                    )}
                     <td className="container-detalhe" colSpan="5">
                       <div className="secao-empresa">
+                        <div className="endereco-empresa-top">
+                          <div>
+                            <span className="descricao">
+                              Número de Contrato:
+                            </span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.numero_contrato}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="descricao">Tipo de Empresa:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.tipo_empresa}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="descricao">Tipo de Alimento:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {empresa.tipo_alimento}
+                            </span>
+                          </div>
+                        </div>
+
                         <div className="endereco-empresa-top">
                           <div>
                             <span className="descricao">CEP:</span>
@@ -153,13 +186,24 @@ class EmpresasCadastradas extends Component {
                         <div className="contato-empresa">
                           <div>
                             <span className="descricao">Telefone/FAX:</span>
+                            <br />
                             <span className="valor-desc">
                               {empresa.telefone}
                             </span>
                           </div>
                           <div>
                             <span className="descricao">E-mail:</span>
+                            <br />
                             <span className="valor-desc">{empresa.email}</span>
+                          </div>
+                          <div>
+                            <span className="descricao">Data de Cadastro:</span>
+                            <br />
+                            <span className="valor-desc">
+                              {moment(empresa.criado_em, "DD/MM/YYYY").format(
+                                "DD/MM/YYYY"
+                              )}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -167,56 +211,90 @@ class EmpresasCadastradas extends Component {
                       <hr className="linha-detalhe" />
 
                       {empresa.eh_distribuidor ? (
-                        <div className="secao-distribuidor">
-                          <header>
-                            Cadastro do Usuário Responsável pelo acesso ao
-                            sistema
-                          </header>
-                          <div className="secao-empresa">
-                            <section className="contato-empresa">
-                              <div>
-                                <span className="descricao">E-mail:</span>
-                                <br />
-                                <span className="valor-desc">
-                                  {empresa.responsavel_email}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="descricao">Nome:</span>
-                                <br />
-                                <span className="valor-desc">
-                                  {empresa.responsavel_nome}
-                                </span>
-                              </div>
-                            </section>
-                            <section className="contato-empresa">
-                              <div>
-                                <span className="descricao">CPF:</span>
-                                <br />
-                                <span className="valor-desc">
-                                  {empresa.responsavel_cpf}
-                                </span>
-                              </div>
-                              <div>
-                                <span className="descricao">Telefone:</span>
-                                <br />
-                                <span className="valor-desc">
-                                  {empresa.responsavel_telefone}
-                                </span>
-                              </div>
-                            </section>
-                            <section className="contato-empresa">
-                              <div>
-                                <span className="descricao">Cargo:</span>
-                                <br />
-                                <span className="valor-desc">
-                                  {empresa.responsavel_cargo}
-                                </span>
-                              </div>
-                              <div />
-                            </section>
+                        <Fragment>
+                          <div className="secao-distribuidor">
+                            <header>
+                              Cadastro do Usuário Responsável pelo acesso ao
+                              sistema
+                            </header>
+                            <div className="secao-empresa">
+                              <section className="contato-empresa">
+                                <div>
+                                  <span className="descricao">E-mail:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {empresa.responsavel_email}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">Nome:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {empresa.responsavel_nome}
+                                  </span>
+                                </div>
+                              </section>
+                              <section className="contato-empresa">
+                                <div>
+                                  <span className="descricao">CPF:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {empresa.responsavel_cpf}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">Cargo:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {empresa.responsavel_cargo}
+                                  </span>
+                                </div>
+                                <div>
+                                  <span className="descricao">Telefone:</span>
+                                  <br />
+                                  <span className="valor-desc">
+                                    {empresa.responsavel_telefone}
+                                  </span>
+                                </div>
+                              </section>
+                            </div>
                           </div>
-                        </div>
+                          <hr className="linha-detalhe" />
+                          <div className="secao-distribuidor">
+                            <header>Contatos</header>
+                            <div className="secao-empresa">
+                              {empresa.contatos
+                                .filter(contato => contato.nome)
+                                .map(contato => (
+                                  <section key="" className="contato-empresa">
+                                    <div>
+                                      <span className="descricao">Nome:</span>
+                                      <br />
+                                      <span className="valor-desc">
+                                        {contato.nome}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="descricao">
+                                        Telefone/FAX:
+                                      </span>
+                                      <br />
+                                      <span className="valor-desc">
+                                        {contato.telefone}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <span className="descricao">E-mail:</span>
+                                      <br />
+                                      <span className="valor-desc">
+                                        {contato.email}
+                                      </span>
+                                    </div>
+                                  </section>
+                                ))}
+                            </div>
+                          </div>
+                        </Fragment>
                       ) : (
                         <Fragment>
                           <div className="secao-representante">
