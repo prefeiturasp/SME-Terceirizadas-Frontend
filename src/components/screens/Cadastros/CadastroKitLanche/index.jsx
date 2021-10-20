@@ -32,6 +32,7 @@ export default ({ uuid }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [editais, setEditais] = useState([]);
+  const [desabilitarBotao, setDesabilitarBotao] = useState(false);
   const [modeloKitLanche, setModeloKitLanche] = useState({
     edital: null,
     nome: null,
@@ -106,9 +107,16 @@ export default ({ uuid }) => {
         edital: values.edital,
         uuid: modeloKitLanche.uuid
       };
-      const response = await checaNomeKitLanche(payload);
-      if (response.status === HTTP_STATUS.OK) {
-        toastError("Esse nome de kit lanche já existe para edital selecionado");
+      try {
+        const response = await checaNomeKitLanche(payload);
+        if (response.status === HTTP_STATUS.OK) {
+          toastError(
+            "Esse nome de kit lanche já existe para edital selecionado"
+          );
+          setDesabilitarBotao(true);
+        }
+      } catch (error) {
+        setDesabilitarBotao(false);
       }
     }
   };
@@ -183,21 +191,22 @@ export default ({ uuid }) => {
                     <hr />
                   </div>
                   <div className="col-6">
-                    {uuid && modeloKitLanche.status === "ATIVO" ? (
-                      <Botao
-                        texto="Inativar"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.RED_OUTLINE}
-                        onClick={() => ativaOuInativa("INATIVO", uuid)}
-                      />
-                    ) : (
-                      <Botao
-                        texto="Ativar"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN}
-                        onClick={() => ativaOuInativa("ATIVO", uuid)}
-                      />
-                    )}
+                    {uuid &&
+                      (modeloKitLanche.status === "ATIVO" ? (
+                        <Botao
+                          texto="Inativar"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.RED_OUTLINE}
+                          onClick={() => ativaOuInativa("INATIVO", uuid)}
+                        />
+                      ) : (
+                        <Botao
+                          texto="Ativar"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                          onClick={() => ativaOuInativa("ATIVO", uuid)}
+                        />
+                      ))}
                   </div>
                   <div className="col-6">
                     <Botao
@@ -205,7 +214,7 @@ export default ({ uuid }) => {
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3 float-right"
-                      disabled={submitting}
+                      disabled={submitting || desabilitarBotao}
                     />
                     <Botao
                       texto="Cancelar"
