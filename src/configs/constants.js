@@ -126,6 +126,7 @@ export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
 export const CONSULTA_KITS = "consulta-kits";
+export const KITS = "kits";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
