@@ -88,6 +88,7 @@ export const retornArrayTerceirizadas = response => {
       cep: resp.cep,
       contatos: resp.contatos.map(contato => {
         return {
+          nome: contato.nome,
           telefone: contato.telefone,
           email: contato.email
         };
@@ -111,7 +112,11 @@ export const retornArrayTerceirizadas = response => {
       responsavel_email: resp.responsavel_email,
       responsavel_cpf: resp.responsavel_cpf,
       responsavel_telefone: resp.responsavel_telefone,
-      responsavel_cargo: resp.responsavel_cargo
+      responsavel_cargo: resp.responsavel_cargo,
+      tipo_alimento: resp.tipo_alimento_display,
+      tipo_empresa: resp.tipo_empresa_display,
+      numero_contrato: resp.numero_contrato,
+      criado_em: resp.criado_em
     };
   });
   return listaTerceirizadas;
