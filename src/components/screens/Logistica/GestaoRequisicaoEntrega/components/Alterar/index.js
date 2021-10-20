@@ -53,7 +53,7 @@ export default ({ solicitacao, updatePage }) => {
   const isDisabled = () => {
     const dataEntrega = solicitacao.guias[0].data_entrega;
     const diasUteis = getDiferencaDiasUteis(dataEntrega);
-    const statusEnable = ["Enviada", "Confirmada"];
+    const statusEnable = ["Enviada"];
 
     if (diasUteis <= 3 || solicitacao.situacao === "ARQUIVADA") return true;
     else if (!statusEnable.includes(solicitacao.status)) return true;
