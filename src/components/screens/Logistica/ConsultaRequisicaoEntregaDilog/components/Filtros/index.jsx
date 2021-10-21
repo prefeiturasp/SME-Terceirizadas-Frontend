@@ -102,6 +102,10 @@ export default ({ setFiltros, setSolicitacoes }) => {
                     { uuid: "", nome: "Selecione" },
                     { uuid: undefined, nome: "Todos" },
                     { uuid: "AGUARDANDO_ENVIO", nome: "Aguardando envio" },
+                    {
+                      uuid: "AGUARDANDO_CANCELAMENTO",
+                      nome: "Aguardando cancelamento"
+                    },
                     { uuid: "DILOG_ENVIA", nome: "Enviada" },
                     { uuid: "CANCELADA", nome: "Cancelada" },
                     { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
