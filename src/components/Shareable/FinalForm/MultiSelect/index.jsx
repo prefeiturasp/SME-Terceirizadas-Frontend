@@ -100,7 +100,7 @@ export default ({
         />
       )}
       <HelpText helpText={helpText} />
-      <InputErroMensagem meta={meta} dirty />
+      <InputErroMensagem meta={meta} dirtyValidation />
     </div>
   );
 };
