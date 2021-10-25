@@ -165,6 +165,25 @@ export const escolaInativaDietaEspecial = async (uuid, payload) => {
     });
 };
 
+export const terceirizadaMarcaConferencia = async uuid => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/marcar-conferida/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
 export const CODAEAutorizaInativacaoDietaEspecial = async uuid => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/codae-autoriza-inativacao/`;
   return fetch(url, {

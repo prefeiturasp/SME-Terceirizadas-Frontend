@@ -15,7 +15,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
-import { ESCOLA, CODAE } from "configs/constants";
+import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
@@ -23,6 +23,7 @@ import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
+import ModalMarcarConferencia from "./componentes/ModalMarcarConferencia";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
@@ -31,6 +32,9 @@ const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
   const [status, setStatus] = useState(undefined);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
@@ -115,9 +119,23 @@ const Relatorio = ({ visao }) => {
     );
   };
 
+  const BotaoMarcarConferencia = () => {
+    return (
+      <Botao
+        texto="Marcar Conferência"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN}
+        className="ml-3"
+        onClick={() => {
+          setShowModalMarcarConferencia(true);
+        }}
+      />
+    );
+  };
+
   const BotaoGerarProtocolo = ({ uuid }) => {
     return (
-      <div className="form-group row float-right mt-4">
+      <div className="form-group float-right mt-4">
         <Botao
           texto="Gerar Protocolo"
           type={BUTTON_TYPE.BUTTON}
@@ -228,6 +246,20 @@ const Relatorio = ({ visao }) => {
               />
             )}
           {dietaEspecial &&
+            visao === TERCEIRIZADA &&
+            (status === statusEnum.CODAE_AUTORIZADO || dietaCancelada) && (
+              <div className="form-group float-right mt-4">
+                {dietaEspecial.conferido ? (
+                  <label className="ml-3 conferido">
+                    <i className="fas fa-check mr-2" />
+                    Solicitação Conferida
+                  </label>
+                ) : (
+                  <BotaoMarcarConferencia uuid={dietaEspecial.uuid} />
+                )}
+              </div>
+            )}
+          {dietaEspecial &&
             status === statusEnum.CODAE_AUTORIZADO &&
             card !== "inativas-temp" && (
               <BotaoGerarProtocolo uuid={dietaEspecial.uuid} />
@@ -239,6 +271,16 @@ const Relatorio = ({ visao }) => {
           showModal={showNaoAprovaModal}
           closeModal={setShowNaoAprovaModal}
           onNegar={() => {
+            loadSolicitacao(dietaEspecial.uuid);
+          }}
+          uuid={dietaEspecial.uuid}
+        />
+      )}
+      {dietaEspecial && (
+        <ModalMarcarConferencia
+          showModal={showModalMarcarConferencia}
+          closeModal={() => setShowModalMarcarConferencia(false)}
+          onMarcarConferencia={() => {
             loadSolicitacao(dietaEspecial.uuid);
           }}
           uuid={dietaEspecial.uuid}
