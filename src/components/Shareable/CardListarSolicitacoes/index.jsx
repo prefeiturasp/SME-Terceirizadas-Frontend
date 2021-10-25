@@ -43,6 +43,10 @@ export class CardListarSolicitacoes extends Component {
             </Field>
             <div className="card-listagem-solicitacoes">
               {solicitacoes.map((value, key) => {
+                let conferida = "";
+                if (["Autorizadas", "Canceladas"].includes(titulo)) {
+                  conferida = value.conferido ? "conferida" : "";
+                }
                 return (
                   <div key={key} className="row">
                     <div className="col-9">
@@ -62,11 +66,13 @@ export class CardListarSolicitacoes extends Component {
                               "INC_ALIMENTA_CONTINUA"}`
                           }
                         >
-                          <p className="data ml-4">{value.text}</p>
+                          <p className={`data ml-4 ${conferida}`}>
+                            {value.text}
+                          </p>
                         </NavLink>
                       </Field>
                     </div>
-                    <span className="date-time col-3 text-right">
+                    <span className={`date-time col-3 text-right ${conferida}`}>
                       {value.date}
                     </span>
                   </div>

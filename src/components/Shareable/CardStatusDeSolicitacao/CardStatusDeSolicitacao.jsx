@@ -55,13 +55,17 @@ export const CardStatusDeSolicitacao = props => {
       </div>
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
+        let conferida = "";
+        if (["Autorizadas", "Canceladas"].includes(cardTitle)) {
+          conferida = solicitation.conferido ? "conferida" : "";
+        }
         return (
           <NavLink
             to={solicitation.link}
             key={key}
             data-cy={`${cardType}-${key}`}
           >
-            <p className="data">
+            <p className={`data ${conferida}`}>
               {solicitation.text}
               <span className="float-right">{solicitation.date}</span>
             </p>

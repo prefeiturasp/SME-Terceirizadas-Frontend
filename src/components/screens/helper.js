@@ -57,6 +57,7 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
       texto = texto.replace("Alteração", "Alt.");
     }
     return {
+      conferido: log.conferido,
       text: truncarString(
         `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
         41
@@ -140,6 +141,7 @@ export const ajustarFormatoLog = (logs, card) => {
         ? truncarString(descricao, tamanhoString) +
           (log.serie ? " - " + log.serie : "")
         : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
+      conferido: log.conferido,
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
