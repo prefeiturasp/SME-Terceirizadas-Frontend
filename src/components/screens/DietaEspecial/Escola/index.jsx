@@ -117,7 +117,7 @@ class solicitacaoDietaEspecial extends Component {
       event.target.value.padStart(6, "0")
     ).then(response => {
       this.props.loadSolicitacoesVigentes(
-        formatarSolicitacoesVigentes(response.data.results)
+        formatarSolicitacoesVigentes(response.data.results.slice(0, 1))
       );
     });
 
