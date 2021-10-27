@@ -37,6 +37,8 @@ import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { Paginacao } from "../../Shareable/Paginacao";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
+import { getMeusLotes } from "services/lote.service";
+import { usuarioEhTerceirizada } from "helpers/utilities";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -51,14 +53,15 @@ export class StatusSolicitacoes extends Component {
       titulo: null,
       solicitacoesFiltrados: null,
       urlPaginacao: null,
-      selecionarTodos: false
+      selecionarTodos: false,
+      listaLotes: null
     };
     this.selecionarTodos = this.selecionarTodos.bind(this);
     this.onCheckClicked = this.onCheckClicked.bind(this);
     this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const url = window.location.href;
     let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
     this.setState({ tipoSolicitacao });
@@ -67,6 +70,15 @@ export class StatusSolicitacoes extends Component {
         instituicao: response.vinculo_atual.instituicao
       });
     });
+    if (usuarioEhTerceirizada()) {
+      await getMeusLotes().then(response => {
+        this.setState({
+          listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
+            response.results
+          )
+        });
+      });
+    }
   }
 
   selecionarTodos(solicitacoes) {
@@ -83,15 +95,48 @@ export class StatusSolicitacoes extends Component {
     this.props.change(`check_${key}`, solicitacoes[key].checked);
   }
 
-  onPesquisarChanged(event) {
+  onPesquisarChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     let solicitacoesFiltrados = this.state.solicitacoes;
-    solicitacoesFiltrados = this.filtrarNome(solicitacoesFiltrados, event);
+    if (values.lote && values.lote.length > 0) {
+      solicitacoesFiltrados = this.filtrarLote(
+        solicitacoesFiltrados,
+        values.lote
+      );
+    }
+    if (values.status && values.status.length > 0) {
+      solicitacoesFiltrados = this.filtrarStatus(
+        solicitacoesFiltrados,
+        values.status
+      );
+    }
+    if (values.titulo && values.titulo.length > 0) {
+      solicitacoesFiltrados = this.filtrarNome(
+        solicitacoesFiltrados,
+        values.titulo
+      );
+    }
     this.setState({ solicitacoesFiltrados });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarStatus(listaFiltro, value) {
+    if (value === "1") {
+      listaFiltro = listaFiltro.filter(item => item.conferido === true);
+    }
+    if (value === "0") {
+      listaFiltro = listaFiltro.filter(item => item.conferido === false);
+    }
+    return listaFiltro;
+  }
+
+  filtrarLote(listaFiltro, value) {
+    listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
+    return listaFiltro;
+  }
+
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
+      const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
     return listaFiltro;
@@ -281,31 +326,34 @@ export class StatusSolicitacoes extends Component {
       titulo,
       tipoCard,
       icone,
-      count
+      count,
+      tipoSolicitacao,
+      listaLotes
     } = this.state;
+
     return (
-      <form onSubmit={this.props.handleSubmit}>
-        <div className="card mt-3">
-          <div className="card-body">
-            <div className="pr-3">
-              <InputSearchPendencias
-                voltarLink={`/`}
-                filterList={this.onPesquisarChanged}
-              />
-            </div>
-            <div className="pb-3" />
-            <CardListarSolicitacoes
-              titulo={titulo}
-              solicitacoes={solicitacoesFiltrados ? solicitacoesFiltrados : []}
-              tipo={tipoCard}
-              icone={icone}
-              selecionarTodos={this.selecionarTodos}
-              onCheckClicked={this.onCheckClicked}
+      <div className="card mt-3">
+        <div className="card-body">
+          <div className="pr-3">
+            <InputSearchPendencias
+              voltarLink={`/`}
+              filterList={this.onPesquisarChanged}
+              tipoSolicitacao={tipoSolicitacao}
+              listaLotes={listaLotes}
             />
-            <Paginacao onChange={this.navegacaoPage} total={count} />
           </div>
+          <div className="pb-3" />
+          <CardListarSolicitacoes
+            titulo={titulo}
+            solicitacoes={solicitacoesFiltrados ? solicitacoesFiltrados : []}
+            tipo={tipoCard}
+            icone={icone}
+            selecionarTodos={this.selecionarTodos}
+            onCheckClicked={this.onCheckClicked}
+          />
+          <Paginacao onChange={this.navegacaoPage} total={count} />
         </div>
-      </form>
+      </div>
     );
   }
 }

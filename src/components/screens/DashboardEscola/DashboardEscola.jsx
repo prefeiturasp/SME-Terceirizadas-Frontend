@@ -56,8 +56,8 @@ export class DashboardEscola extends Component {
       });
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  onPesquisaChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     const { autorizadas, pendentes, negadas, canceladas } = this.props;
 
     let pendentesListFiltered = pendentes;
@@ -65,10 +65,19 @@ export class DashboardEscola extends Component {
     let negadasListFiltered = negadas;
     let canceladasListFiltered = canceladas;
 
-    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
-    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
-    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
-    canceladasListFiltered = this.filtrarNome(canceladasListFiltered, event);
+    pendentesListFiltered = this.filtrarNome(
+      pendentesListFiltered,
+      values.titulo
+    );
+    autorizadasListFiltered = this.filtrarNome(
+      autorizadasListFiltered,
+      values.titulo
+    );
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, values.titulo);
+    canceladasListFiltered = this.filtrarNome(
+      canceladasListFiltered,
+      values.titulo
+    );
 
     this.setState({
       autorizadasListFiltered,
@@ -78,9 +87,9 @@ export class DashboardEscola extends Component {
     });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(event.target.value.toLowerCase());
+      const wordToFilter = slugify(value.toLowerCase());
       return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
