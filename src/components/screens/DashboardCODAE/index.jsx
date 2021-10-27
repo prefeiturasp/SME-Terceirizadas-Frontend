@@ -66,9 +66,9 @@ class DashboardCODAE extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(event.target.value.toLowerCase());
+      const wordToFilter = slugify(value.toLowerCase());
       return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
@@ -162,8 +162,8 @@ class DashboardCODAE extends Component {
     });
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  onPesquisaChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     const {
       questionamentosListSolicitacao,
       pendentesAutorizacaoListSolicitacao,
@@ -175,18 +175,24 @@ class DashboardCODAE extends Component {
     this.setState({
       pendentesAutorizacaoListFiltered: this.filtrarNome(
         pendentesAutorizacaoListSolicitacao,
-        event
+        values.titulo
       ),
       autorizadasListFiltered: this.filtrarNome(
         autorizadasListSolicitacao,
-        event
+        values.titulo
       ),
       questionamentosListFiltered: this.filtrarNome(
         questionamentosListSolicitacao,
-        event
+        values.titulo
       ),
-      negadasListFiltered: this.filtrarNome(negadasListSolicitacao, event),
-      canceladasListFiltered: this.filtrarNome(canceladasListSolicitacao, event)
+      negadasListFiltered: this.filtrarNome(
+        negadasListSolicitacao,
+        values.titulo
+      ),
+      canceladasListFiltered: this.filtrarNome(
+        canceladasListSolicitacao,
+        values.titulo
+      )
     });
   }
 
