@@ -103,6 +103,25 @@ export const getLotes = payload => {
     });
 };
 
+export const getMeusLotes = () => {
+  const url = `${API_URL}/lotes/meus-lotes-vinculados/`;
+  let status = 0;
+  return fetch(url, {
+    method: "GET",
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { ...data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getLotesSimples = payload => {
   const url = `${API_URL}/lotes-simples/`;
   let status = 0;

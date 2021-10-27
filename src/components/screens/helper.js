@@ -58,6 +58,7 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
     }
     return {
       conferido: log.conferido,
+      lote_uuid: log.lote_uuid,
       text: truncarString(
         `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
         41
@@ -142,6 +143,7 @@ export const ajustarFormatoLog = (logs, card) => {
           (log.serie ? " - " + log.serie : "")
         : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
       conferido: log.conferido,
+      lote_uuid: log.lote_uuid,
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid

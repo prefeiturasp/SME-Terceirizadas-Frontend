@@ -71,10 +71,16 @@ pipeline {
                             input message: 'Deseja realizar o deploy?', ok: 'SIM', submitter: 'kelwy_oliveira, anderson_morais, luis_zimmermann, rodolpho_azeredo'
                         }
                     }
+                    if ( env.branchname == 'homolog' || env.branchname == 'release' ) {
+                        withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('cp $config '+"$home"+'/.kube/config')
+                            sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae-treino'
+                            sh('rm -f '+"$home"+'/.kube/config')
+                        }
+                    }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
                             sh('cp $config '+"$home"+'/.kube/config')
                             sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
-                            sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae-treino'
                             sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }

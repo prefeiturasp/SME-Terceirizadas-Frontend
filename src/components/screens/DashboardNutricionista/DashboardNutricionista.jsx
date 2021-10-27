@@ -48,17 +48,23 @@ export default class DashboardNutricionista extends Component {
       });
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  onPesquisaChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     const { autorizadas, pendentes, negadas } = this.props;
 
     let pendentesListFiltered = pendentes;
     let autorizadasListFiltered = autorizadas;
     let negadasListFiltered = negadas;
 
-    pendentesListFiltered = this.filtrarNome(pendentesListFiltered, event);
-    autorizadasListFiltered = this.filtrarNome(autorizadasListFiltered, event);
-    negadasListFiltered = this.filtrarNome(negadasListFiltered, event);
+    pendentesListFiltered = this.filtrarNome(
+      pendentesListFiltered,
+      values.titulo
+    );
+    autorizadasListFiltered = this.filtrarNome(
+      autorizadasListFiltered,
+      values.titulo
+    );
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, values.titulo);
 
     this.setState({
       autorizadasListFiltered,
@@ -67,9 +73,9 @@ export default class DashboardNutricionista extends Component {
     });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
+      const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
     return listaFiltro;
