@@ -55,15 +55,16 @@ export default class DashboardGestaoProduto extends Component {
       });
   }
 
-  onPesquisaChanged = (event = { target: { value: "" } }) => {
+  onPesquisaChanged = values => {
+    if (values.titulo === undefined) values.titulo = "";
     const { cards } = this.state;
     let cardsFiltered = deepCopy(cards);
-    cardsFiltered = this.filtrarNome(cardsFiltered, event);
+    cardsFiltered = this.filtrarNome(cardsFiltered, values.titulo);
     this.setState({ cardsFiltered });
   };
 
-  filtrarNome = (listaFiltro, event) => {
-    const wordToFilter = slugify(event.target.value.toLowerCase());
+  filtrarNome = (listaFiltro, value) => {
+    const wordToFilter = slugify(value.toLowerCase());
     return listaFiltro.map(card => {
       card.items = card.items.filter(
         item =>
