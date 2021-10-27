@@ -90,7 +90,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removeKitLanche(uuid, this.resolveTipo()).then(
+      removeKitLanche(uuid, this.state.tipoSolicitacao).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
