@@ -204,7 +204,7 @@ const CorpoRelatorio = ({
               <hr key={2} />
             ]}
           <InformacoesAluno />
-          {solicitacaoVigenteAtiva && (
+          {solicitacaoVigenteAtiva && ["pendentes-aut"].includes(card) && (
             <SolicitacaoVigente
               solicitacoesVigentes={solicitacaoVigenteAtiva}
             />
