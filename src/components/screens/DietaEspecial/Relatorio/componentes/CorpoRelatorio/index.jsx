@@ -8,6 +8,7 @@ import DadosEscolaSolicitante from "./DadosEscolaSolicitante";
 import DadosEscolaDestino from "./DadosEscoladestino";
 import DadosDietaEspecial from "./DadosDietaEspecial";
 import MotivoNegacao from "./MotivoNegacao";
+import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
 
 import DiagnosticosLeitura from "../FormAutorizaDietaEspecial/componentes/Diagnosticos/DiagnosticosLeitura";
 import ClassificacaoDaDietaLeitura from "../FormAutorizaDietaEspecial/componentes/ClassificacaoDaDieta/ClassificacaoDietaLeitura";
@@ -25,7 +26,12 @@ import { ehCanceladaSegundoStep } from "../../helpers";
 import "./styles.scss";
 import JustificativaNegacao from "./JustificativaNegacao";
 
-const CorpoRelatorio = ({ dietaEspecial, dietaCancelada, card }) => {
+const CorpoRelatorio = ({
+  dietaEspecial,
+  dietaCancelada,
+  card,
+  solicitacaoVigenteAtiva
+}) => {
   const onSubmit = () => {
     // será desenvolvido na história 41937
   };
@@ -198,6 +204,11 @@ const CorpoRelatorio = ({ dietaEspecial, dietaCancelada, card }) => {
               <hr key={2} />
             ]}
           <InformacoesAluno />
+          {solicitacaoVigenteAtiva && (
+            <SolicitacaoVigente
+              solicitacoesVigentes={solicitacaoVigenteAtiva}
+            />
+          )}
           <hr />
           {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&
             dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" && (
