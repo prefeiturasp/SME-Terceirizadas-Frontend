@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import {
   getDietaEspecial,
-  escolaCancelaSolicitacao
+  escolaCancelaSolicitacao,
+  getDietasEspeciaisVigentesDeUmAluno
 } from "services/dietaEspecial.service";
 import {
   getProtocoloDietaEspecial,
@@ -39,6 +40,7 @@ const Relatorio = ({ visao }) => {
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
   const [card, setCard] = useState(null);
+  const [solicitacaoVigenteAtiva, setSolicitacaoVigenteAtiva] = useState(null);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoUsuario = localStorage.getItem("tipo_perfil");
@@ -54,7 +56,23 @@ const Relatorio = ({ visao }) => {
       setDietaEspecial(responseDietaEspecial.data);
       setStatus(responseDietaEspecial.data.status_solicitacao);
       setHistorico(responseDietaEspecial.data.logs);
+      await getSolicitacoesVigentes(
+        responseDietaEspecial.data.aluno.codigo_eol
+      );
       setCarregando(false);
+    } else {
+      toastError("Houve um erro ao carregar Solicitação");
+    }
+  };
+
+  const getSolicitacoesVigentes = async codigo_eol => {
+    const responseDietasVigentes = await getDietasEspeciaisVigentesDeUmAluno(
+      codigo_eol
+    );
+    if (responseDietasVigentes.status === HTTP_STATUS.OK) {
+      setSolicitacaoVigenteAtiva(
+        responseDietasVigentes.data.results.slice(0, 1)
+      );
     } else {
       toastError("Houve um erro ao carregar Solicitação");
     }
@@ -206,6 +224,7 @@ const Relatorio = ({ visao }) => {
                 dietaEspecial={dietaEspecial}
                 dietaCancelada={dietaCancelada}
                 card={card}
+                solicitacaoVigenteAtiva={solicitacaoVigenteAtiva}
               />
               {status === statusEnum.CODAE_A_AUTORIZAR &&
                 visao === ESCOLA &&
