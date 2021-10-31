@@ -69,42 +69,48 @@ const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
 
   return (
     <div className="row mb-3">
-      <div className="col-12 mb-3">
-        <label className="sectionName">Detalhamento da Dieta Especial</label>
-      </div>
-      <div className="col-4">
-        <Field
-          component={InputText}
-          name="registro_funcional_pescritor"
-          label="Registro Funcional (CRM/CRN/CRFa/RMS)"
-          disabled={true}
-        />
-      </div>
-      <div className="col-8" />
-      <div className="col-8">
-        <Field
-          component={InputText}
-          name="nome_completo_pescritor"
-          label="Nome do Prescritor do laudo (médico, nutricionista, fonoaudiólogo)"
-          disabled={true}
-        />
-      </div>
-      <div className="col-4" />
-      {checaTipoSolicitacao() && (
-        <div className="col-12">
-          <Field
-            component={InputText}
-            name="laudo"
-            defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
-            label="Laudo"
-            disabled={true}
-          />
-        </div>
+      {dietaEspecial && dietaEspecial.eh_importado === false && (
+        <>
+          <div className="col-12 mb-3">
+            <label className="sectionName">
+              Detalhamento da Dieta Especial
+            </label>
+          </div>
+          <div className="col-4">
+            <Field
+              component={InputText}
+              name="registro_funcional_pescritor"
+              label="Registro Funcional (CRM/CRN/CRFa/RMS)"
+              disabled={true}
+            />
+          </div>
+          <div className="col-8" />
+          <div className="col-8">
+            <Field
+              component={InputText}
+              name="nome_completo_pescritor"
+              label="Nome do Prescritor do laudo (médico, nutricionista, fonoaudiólogo)"
+              disabled={true}
+            />
+          </div>
+          <div className="col-4" />
+          {checaTipoSolicitacao() && (
+            <div className="col-12">
+              <Field
+                component={InputText}
+                name="laudo"
+                defaultValue="O laudo fornecido pelo profissional. Sem ele, a solicitação de Dieta Especial será negada."
+                label="Laudo"
+                disabled={true}
+              />
+            </div>
+          )}
+          <div className="col-12">
+            <p className="mt-1">Anexos</p>
+            <div className="row">{anexos}</div>
+          </div>
+        </>
       )}
-      <div className="col-12">
-        <p className="mt-1">Anexos</p>
-        <div className="row">{anexos}</div>
-      </div>
       <div className="col-12">
         <p className="mt-1">Observações</p>
         {observacoes}

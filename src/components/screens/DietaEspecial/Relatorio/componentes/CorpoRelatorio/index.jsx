@@ -71,9 +71,10 @@ const CorpoRelatorio = ({
         <IdentificacaoNutricionista key={6} />
       ];
     } else if (
-      dietaEspecial.status_solicitacao ===
+      dietaEspecial.eh_importado === false &&
+      (dietaEspecial.status_solicitacao ===
         "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
-      (card && ["autorizadas", "autorizadas-temp"].includes(card))
+        (card && ["autorizadas", "autorizadas-temp"].includes(card)))
     ) {
       return [
         <DiagnosticosLeitura
@@ -164,6 +165,21 @@ const CorpoRelatorio = ({
           key={5}
         />,
         <IdentificacaoNutricionista key={6} />
+      ];
+    } else if (
+      dietaEspecial.eh_importado === true &&
+      ["autorizadas"].includes(card)
+    ) {
+      return [
+        <DiagnosticosLeitura
+          alergias={formataAlergias(dietaEspecial)}
+          key={0}
+        />,
+        <ClassificacaoDaDietaLeitura
+          classificacaoDieta={dietaEspecial.classificacao}
+          key={1}
+        />,
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />
       ];
     }
 
