@@ -8,7 +8,7 @@ import "./style.scss";
 import { deepCopy } from "../../../helpers/utilities";
 
 export const FluxoDeStatus = props => {
-  const { listaDeStatus, fluxo } = props;
+  const { listaDeStatus, fluxo, eh_importado = false } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
@@ -62,7 +62,8 @@ export const FluxoDeStatus = props => {
                   <br />
                   {novoStatus.usuario && (
                     <span>
-                      {novoStatus.usuario.registro_funcional !== undefined &&
+                      {!eh_importado &&
+                      novoStatus.usuario.registro_funcional !== undefined &&
                       cloneListaDeStatus[key].usuario.tipo_usuario ===
                         "terceirizada"
                         ? `CPF: ${novoStatus.usuario.cpf}`
@@ -70,8 +71,9 @@ export const FluxoDeStatus = props => {
                             "Cancelamento por alteração de unidade educacional" &&
                           status.status_evento_explicacao !==
                             "Cancelamento para aluno não matriculado na rede municipal" &&
+                          !eh_importado &&
                           `RF: ${novoStatus.usuario.registro_funcional}`}
-                      <br />
+                      {!eh_importado && <br />}
                       {novoStatus.usuario &&
                         (status.status_evento_explicacao !==
                           "Cancelamento por alteração de unidade educacional" &&
