@@ -22,7 +22,7 @@ function sleep(ms) {
 }
 
 //eslint-disable-next-line
-if (["development", "homolog", "treinamento"].includes(process.env.NODE_ENV)) {
+if (["development", "homolog", "treinamento"].includes("NODE_ENV_REPLACE_ME")) {
   document.addEventListener("keydown", async function(event) {
     if (event.key === "PrintScreen") {
       document.body.style.display = "none";
