@@ -233,7 +233,10 @@ const CorpoRelatorio = ({
                 <hr />
               </>
             )}
-          <FluxoDeStatusDieta logs={dietaEspecial.logs} />
+          <FluxoDeStatusDieta
+            logs={dietaEspecial.logs}
+            eh_importado={dietaEspecial.eh_importado}
+          />
           <hr />
           <DadosEscolaSolicitante />
           <hr />

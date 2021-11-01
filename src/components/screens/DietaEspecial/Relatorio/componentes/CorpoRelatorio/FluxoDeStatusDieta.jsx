@@ -5,7 +5,7 @@ import {
   formatarFluxoDietaEspecial
 } from "components/Shareable/FluxoDeStatus/helper";
 
-const FluxoDeStatusDieta = ({ logs }) => {
+const FluxoDeStatusDieta = ({ logs, eh_importado = false }) => {
   return (
     <div className="row mb-3">
       <div className="col-12">
@@ -19,6 +19,7 @@ const FluxoDeStatusDieta = ({ logs }) => {
               ? formatarFluxoDietaEspecial(logs)
               : fluxoDietaEspecialPartindoEscola
           }
+          eh_importado={eh_importado}
         />
       </div>
     </div>
