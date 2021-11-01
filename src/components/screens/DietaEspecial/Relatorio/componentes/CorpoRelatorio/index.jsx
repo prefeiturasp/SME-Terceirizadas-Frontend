@@ -71,9 +71,10 @@ const CorpoRelatorio = ({
         <IdentificacaoNutricionista key={6} />
       ];
     } else if (
-      dietaEspecial.status_solicitacao ===
+      dietaEspecial.eh_importado === false &&
+      (dietaEspecial.status_solicitacao ===
         "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
-      (card && ["autorizadas", "autorizadas-temp"].includes(card))
+        (card && ["autorizadas", "autorizadas-temp"].includes(card)))
     ) {
       return [
         <DiagnosticosLeitura
@@ -165,6 +166,21 @@ const CorpoRelatorio = ({
         />,
         <IdentificacaoNutricionista key={6} />
       ];
+    } else if (
+      dietaEspecial.eh_importado === true &&
+      ["autorizadas"].includes(card)
+    ) {
+      return [
+        <DiagnosticosLeitura
+          alergias={formataAlergias(dietaEspecial)}
+          key={0}
+        />,
+        <ClassificacaoDaDietaLeitura
+          classificacaoDieta={dietaEspecial.classificacao}
+          key={1}
+        />,
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />
+      ];
     }
 
     return <></>;
@@ -217,7 +233,10 @@ const CorpoRelatorio = ({
                 <hr />
               </>
             )}
-          <FluxoDeStatusDieta logs={dietaEspecial.logs} />
+          <FluxoDeStatusDieta
+            logs={dietaEspecial.logs}
+            eh_importado={dietaEspecial.eh_importado}
+          />
           <hr />
           <DadosEscolaSolicitante />
           <hr />

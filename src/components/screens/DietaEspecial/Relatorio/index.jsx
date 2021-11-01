@@ -28,6 +28,7 @@ import ModalMarcarConferencia from "./componentes/ModalMarcarConferencia";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
+import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
@@ -36,6 +37,7 @@ const Relatorio = ({ visao }) => {
   const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
     false
   );
+  const [showModalAviso, setShowModalAviso] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
@@ -90,10 +92,14 @@ const Relatorio = ({ visao }) => {
     }
   }, []);
 
-  const gerarProtocolo = async uuid => {
-    setCarregando(true);
-    await getProtocoloDietaEspecial(uuid);
-    setCarregando(false);
+  const gerarProtocolo = async (uuid, eh_importado) => {
+    if (eh_importado === true) {
+      setShowModalAviso(true);
+    } else {
+      setCarregando(true);
+      await getProtocoloDietaEspecial(uuid);
+      setCarregando(false);
+    }
   };
 
   const gerarRelatorio = async uuid => {
@@ -151,7 +157,7 @@ const Relatorio = ({ visao }) => {
     );
   };
 
-  const BotaoGerarProtocolo = ({ uuid }) => {
+  const BotaoGerarProtocolo = ({ uuid, eh_importado }) => {
     return (
       <div className="form-group float-right mt-4">
         <Botao
@@ -161,7 +167,7 @@ const Relatorio = ({ visao }) => {
           icon={BUTTON_ICON.PRINT}
           className="ml-3"
           onClick={() => {
-            gerarProtocolo(uuid);
+            gerarProtocolo(uuid, eh_importado);
           }}
         />
       </div>
@@ -281,7 +287,10 @@ const Relatorio = ({ visao }) => {
           {dietaEspecial &&
             status === statusEnum.CODAE_AUTORIZADO &&
             card !== "inativas-temp" && (
-              <BotaoGerarProtocolo uuid={dietaEspecial.uuid} />
+              <BotaoGerarProtocolo
+                uuid={dietaEspecial.uuid}
+                eh_importado={dietaEspecial.eh_importado}
+              />
             )}
         </div>
       </div>
@@ -305,6 +314,10 @@ const Relatorio = ({ visao }) => {
           uuid={dietaEspecial.uuid}
         />
       )}
+      <ModalAvisoDietaImportada
+        closeModal={() => setShowModalAviso(false)}
+        showModal={showModalAviso}
+      />
     </Spin>
   );
 };

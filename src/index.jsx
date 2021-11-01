@@ -17,6 +17,23 @@ import "./styles/custom.css";
 import "./styles/sb-admin-2.css";
 import * as Sentry from "@sentry/browser";
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+//eslint-disable-next-line
+if (["development"].includes(process.env.NODE_ENV)) {
+  document.addEventListener("keydown", async function(event) {
+    // if (event.key === "PageDown") {
+    if (event.key === "PrintScreen") {
+      document.body.style.display = "none";
+      await sleep(3000);
+      document.body.style.display = "block";
+      alert("Não é permitido capturar tela neste ambiente");
+    }
+  });
+}
+
 /* eslint-disable-next-line */
 if (process.env.IS_DOCKER_ENVIRONMENT === true) {
   // This way we can pass params to static files. see Dockerfile.
