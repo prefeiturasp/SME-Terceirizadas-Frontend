@@ -3,7 +3,9 @@
 let API_URL = "API_URL_REPLACE_ME";
 let JWT_AUTH = "API_URL_REPLACE_ME/api-token-auth/";
 let USER_URL = "API_URL_REPLACE_ME/users/";
-let ENVIRONMENT = process.env.NODE_ENV;
+let ENVIRONMENT = process.env.NODE_ENV
+  ? process.env.NODE_ENV
+  : "NODE_ENV_REPLACE_ME";
 
 // verifica o tempo minimo para refresh do token
 // se faltar 300s (5 min) para o token vencer, ele deve ser atualizado
