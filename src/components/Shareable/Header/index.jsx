@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import authService from "../../../services/auth";
 import "./style.scss";
+import { ENVIRONMENT } from "constants/config";
 
 export class Header extends Component {
   render() {
@@ -10,10 +11,35 @@ export class Header extends Component {
       <div>
         <nav className="navbar navbar-expand-lg navbar-light bg-white static-top navbar-sme fixed-top">
           <div className="container-fluid">
-            <div className={`nav-bar ${toggled && "toggled"}`}>
+            <div
+              className={`nav-bar ${toggled && "toggled"} ${
+                ENVIRONMENT !== "production" ? "p-0" : ""
+              }`}
+            >
               <Link className="navbar-brand" to="/">
                 <img src="/assets/image/logo-sigpae.png" alt="" />
               </Link>
+              {ENVIRONMENT === "development" && (
+                <img
+                  className="marca-d-agua"
+                  src="/assets/image/marca-dev.png"
+                  alt=""
+                />
+              )}
+              {ENVIRONMENT === "homolog" && (
+                <img
+                  className="marca-d-agua"
+                  src="/assets/image/marca-hom.png"
+                  alt=""
+                />
+              )}
+              {ENVIRONMENT === "treinamento" && (
+                <img
+                  className="marca-d-agua"
+                  src="/assets/image/marca-tre.png"
+                  alt=""
+                />
+              )}
             </div>
             <button
               className="navbar-toggler"
