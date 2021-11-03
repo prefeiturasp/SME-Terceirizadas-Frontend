@@ -11,6 +11,7 @@ import multi from "redux-multi";
 import promise from "redux-promise";
 import thunk from "redux-thunk";
 import App from "./App";
+import { ENVIRONMENT } from "constants/config";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/custom.css";
@@ -22,7 +23,7 @@ function sleep(ms) {
 }
 
 //eslint-disable-next-line
-if (["development", "homolog", "treinamento"].includes("NODE_ENV_REPLACE_ME")) {
+if (["development", "homolog", "treinamento"].includes(ENVIRONMENT)) {
   document.addEventListener("keydown", async function(event) {
     if (event.key === "PrintScreen") {
       document.body.style.display = "none";
