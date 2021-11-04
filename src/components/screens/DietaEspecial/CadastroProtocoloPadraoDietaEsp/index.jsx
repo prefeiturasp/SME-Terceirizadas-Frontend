@@ -18,7 +18,6 @@ import {
   editaProtocoloPadraoDietaEspecial,
   getProtocoloPadrao
 } from "services/dietaEspecial.service";
-import { getSubstitutos } from "services/produto.service";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import {
   BUTTON_TYPE,
@@ -40,9 +39,16 @@ export default ({ uuid }) => {
     const respAlimentos = await getAlimentos({
       tipo: "E"
     });
-    setAlimentos(respAlimentos.data);
-    const respProdutos = await (await getSubstitutos()).data.results;
-    setProdutos(respProdutos);
+    setAlimentos(
+      respAlimentos.data.filter(alimento =>
+        ["AMBOS", "SO_ALIMENTOS"].includes(alimento.tipo_listagem_protocolo)
+      )
+    );
+    setProdutos(
+      respAlimentos.data.filter(alimento =>
+        ["AMBOS", "SO_SUBSTITUTOS"].includes(alimento.tipo_listagem_protocolo)
+      )
+    );
     if (uuid) {
       const respProtocolo = await getProtocoloPadrao(uuid);
       setProcoloPadrao(respProtocolo.data);
