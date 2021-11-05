@@ -26,9 +26,11 @@ import {
   MenuRelatorios,
   MenuLogistica
 } from "./menus";
+import { ENVIRONMENT } from "constants/config";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
+  const ehTreinamento = ENVIRONMENT === "treinamento" ? true : false;
 
   const onSubmenuClick = useCallback(
     clickedMenu => {
@@ -42,10 +44,11 @@ export const SidebarContent = () => {
   // criterios de exibicao abaixo
   const exibirPainelInicial = !usuarioEhCoordenadorEscola();
   const exibirGestaoAlimentacao =
-    usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhDRE() ||
-    usuarioEhEscola() ||
-    usuarioEhTerceirizada();
+    !ehTreinamento &&
+    (usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhDRE() ||
+      usuarioEhEscola() ||
+      usuarioEhTerceirizada());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -60,9 +63,11 @@ export const SidebarContent = () => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhTerceirizada();
-  const exibirLancamentoInicial = usuarioEhEscola();
+  const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
   const exibirCadastros =
-    usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
+    (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
+    (!ehTreinamento &&
+      (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
   const exibirRelatorios = !usuarioEhCoordenadorEscola();
 
   const exibirConfiguracoes =
