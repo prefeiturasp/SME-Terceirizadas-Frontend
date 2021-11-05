@@ -14,23 +14,27 @@ import {
   usuarioEhDRE,
   usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
+import { ENVIRONMENT } from "constants/config";
 
 const PainelInicial = ({ history }) => {
+  const ehTreinamento = ENVIRONMENT === "treinamento" ? true : false;
+
   return (
     <Row className="mt-3" gutter={[16, 16]}>
-      {(usuarioEhCODAEGestaoAlimentacao() ||
-        usuarioEhTerceirizada() ||
-        usuarioEhDRE() ||
-        usuarioEhEscola()) && (
-        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-          <CardLogo
-            titulo={"Gestão de Alimentação"}
-            onClick={() => history.push("/painel-gestao-alimentacao")}
-          >
-            <IconeGestaoDeAlimentacao />
-          </CardLogo>
-        </Col>
-      )}
+      {!ehTreinamento &&
+        (usuarioEhCODAEGestaoAlimentacao() ||
+          usuarioEhTerceirizada() ||
+          usuarioEhDRE() ||
+          usuarioEhEscola()) && (
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+            <CardLogo
+              titulo={"Gestão de Alimentação"}
+              onClick={() => history.push("/painel-gestao-alimentacao")}
+            >
+              <IconeGestaoDeAlimentacao />
+            </CardLogo>
+          </Col>
+        )}
       {(usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhCODAEDietaEspecial() ||
         usuarioEhNutricionistaSupervisao() ||
