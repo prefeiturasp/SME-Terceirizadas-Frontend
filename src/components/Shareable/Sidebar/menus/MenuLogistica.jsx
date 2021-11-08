@@ -17,7 +17,8 @@ import {
   usuarioEhDistribuidora,
   usuarioEhLogistica,
   usuarioEhEscolaAbastecimento,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioComAcessoTelaEntregasDilog
 } from "helpers/utilities";
 
 const MenuLogistica = () => {
@@ -62,7 +63,7 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {usuarioEhLogistica() && (
+      {usuarioComAcessoTelaEntregasDilog() && (
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
       )}
 

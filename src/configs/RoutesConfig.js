@@ -94,7 +94,8 @@ import {
   usuarioEhQualquerCODAE,
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
-  usuarioEhDistribuidora
+  usuarioEhDistribuidora,
+  usuarioComAcessoTelaEntregasDilog
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1176,7 +1177,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
     component: EntregasDilogPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica()
+    tipoUsuario: usuarioComAcessoTelaEntregasDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,

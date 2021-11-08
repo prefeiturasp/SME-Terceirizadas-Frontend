@@ -327,21 +327,35 @@ export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
     PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI,
-    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO
+    PERFIL.DIRETOR_CEI
   ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhEscolaAbastecimento = () => {
-  return [PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
+    PERFIL.ADMINISTRADOR_UE_DIRETA,
+    PERFIL.ADMINISTRADOR_UE_MISTA,
+    PERFIL.ADMINISTRADOR_UE_PARCEIRA
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoTelaEntregasDilog = () => {
+  return [
+    PERFIL.COORDENADOR_LOGISTICA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
+    PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+  ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhLogistica = () => {
-  return [PERFIL.COORDENADOR_LOGISTICA].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.COORDENADOR_LOGISTICA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhDistribuidora = () => {
@@ -423,7 +437,10 @@ export const usuarioEhQualquerCODAE = () => {
 };
 
 export const usuarioEhTerceirizada = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA
+  );
 };
 
 export const converterDDMMYYYYparaYYYYMMDD = data => {

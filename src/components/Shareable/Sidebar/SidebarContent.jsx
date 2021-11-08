@@ -13,7 +13,8 @@ import {
   usuarioEhLogistica,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
-  usuarioEhDistribuidora
+  usuarioEhDistribuidora,
+  usuarioComAcessoTelaEntregasDilog
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -42,7 +43,10 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirPainelInicial = !usuarioEhCoordenadorEscola();
+  const exibirPainelInicial =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioEhDistribuidora();
   const exibirGestaoAlimentacao =
     !ehTreinamento &&
     (usuarioEhCODAEGestaoAlimentacao() ||
@@ -68,19 +72,25 @@ export const SidebarContent = () => {
     (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
     (!ehTreinamento &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
-  const exibirRelatorios = !usuarioEhCoordenadorEscola();
+  const exibirRelatorios =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioEhDistribuidora();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE();
+    !usuarioEhAdministradorDRE() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioEhDistribuidora();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
     usuarioEhDistribuidora() ||
     usuarioEhDRE() ||
-    usuarioEhEscolaAbastecimento();
+    usuarioEhEscolaAbastecimento() ||
+    usuarioComAcessoTelaEntregasDilog();
 
   const _props = {
     activeMenu,
