@@ -58,6 +58,11 @@ export const formataJustificativa = dietaEspecial => {
       justificativa = dietaEspecial.logs[2].justificativa;
     }
   }
+  if (dietaEspecial.status_solicitacao === "ESCOLA_SOLICITOU_INATIVACAO") {
+    justificativa = dietaEspecial.logs.filter(
+      log => log.status_evento_explicacao === "Escola solicitou inativação"
+    )[0].justificativa;
+  }
   if (
     dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
   ) {
