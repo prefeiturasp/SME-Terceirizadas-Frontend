@@ -13,6 +13,14 @@ import {
 } from "../../../services/suspensaoDeAlimentacao.service";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { statusEnum, TIPO_PERFIL } from "constants/shared";
+
 import "./style.scss";
 
 class RelatorioSuspensaoAlimentacao extends Component {
@@ -22,8 +30,13 @@ class RelatorioSuspensaoAlimentacao extends Component {
       uuid: null,
       suspensaoAlimentacao: null,
       dadosEscola: null,
-      redirect: false
+      redirect: false,
+      showModalMarcarConferencia: false
     };
+    this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   setRedirect() {
@@ -66,6 +79,38 @@ class RelatorioSuspensaoAlimentacao extends Component {
     }
   }
 
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
+  }
+
+  loadSolicitacao(uuid) {
+    getSuspensaoDeAlimentacaoUUID(uuid).then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        let suspensaoAlimentacao = response.data;
+        let dadosEscola = suspensaoAlimentacao.escola;
+        this.setState({
+          suspensaoAlimentacao,
+          dadosEscola,
+          uuid
+        });
+      } else if (response.data.detail) {
+        this.setState({ erro: true });
+        toastError(
+          `Erro ao carregar relatório de Suspensão de Alimentação ${getError(
+            response.data
+          )}`
+        );
+      } else {
+        this.setState({ erro: true });
+        toastError("Erro ao carregar relatório de Suspensão de Alimentação");
+      }
+    });
+  }
+
   handleSubmit() {
     const uuid = this.state.uuid;
     terceirizadaTomaCienciaSuspensaoDeAlimentacao(uuid).then(
@@ -90,9 +135,48 @@ class RelatorioSuspensaoAlimentacao extends Component {
   }
 
   render() {
-    const { suspensaoAlimentacao, dadosEscola, erro } = this.state;
+    const {
+      suspensaoAlimentacao,
+      dadosEscola,
+      erro,
+      showModalMarcarConferencia,
+      uuid
+    } = this.state;
+
+    const visao = localStorage.getItem("tipo_perfil");
+
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TIPO_PERFIL.TERCEIRIZADA &&
+      suspensaoAlimentacao &&
+      [statusEnum.INFORMADO].includes(suspensaoAlimentacao.status);
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
+
     return (
       <div className="report">
+        {suspensaoAlimentacao && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid);
+            }}
+            uuid={suspensaoAlimentacao.uuid}
+            endpoint=""
+          />
+        )}
         {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
         {erro && (
           <div>Opss... parece que ocorreu um erro ao carregar a página.</div>
@@ -109,6 +193,20 @@ class RelatorioSuspensaoAlimentacao extends Component {
                   suspensaoAlimentacao={suspensaoAlimentacao}
                   dadosEscola={dadosEscola}
                 />
+                {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                  <div className="form-group float-right mt-4">
+                    {suspensaoAlimentacao.conferido ? (
+                      <label className="ml-3 conferido">
+                        <i className="fas fa-check mr-2" />
+                        Solicitação Conferida
+                      </label>
+                    ) : (
+                      <BotaoMarcarConferencia
+                        uuid={suspensaoAlimentacao.uuid}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </form>
