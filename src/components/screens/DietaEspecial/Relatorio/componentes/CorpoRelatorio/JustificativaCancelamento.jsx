@@ -11,7 +11,9 @@ const JustificativaCancelamento = ({ dietaEspecial }) => {
       <div className="col-12 mb-3">
         <label className="sectionName">Justificativa do Cancelamento</label>
       </div>
-      {dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU" ? (
+      {["ESCOLA_CANCELOU", "ESCOLA_SOLICITOU_INATIVACAO"].includes(
+        dietaEspecial.status_solicitacao
+      ) ? (
         <div className="col-12">
           <div
             name="log_cancelamento"
