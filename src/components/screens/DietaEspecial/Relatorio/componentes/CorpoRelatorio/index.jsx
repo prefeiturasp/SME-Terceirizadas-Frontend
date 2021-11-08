@@ -213,6 +213,36 @@ const CorpoRelatorio = ({
         />,
         <IdentificacaoNutricionista key={7} />
       ];
+    } else if (
+      dietaEspecial.eh_importado === false &&
+      dietaEspecial.tipo_solicitacao === "COMUM" &&
+      ["ESCOLA_SOLICITOU_INATIVACAO"].includes(dietaEspecial.status_solicitacao)
+    ) {
+      return [
+        <DiagnosticosLeitura
+          alergias={formataAlergias(dietaEspecial)}
+          key={0}
+        />,
+        <ClassificacaoDaDietaLeitura
+          classificacaoDieta={dietaEspecial.classificacao}
+          key={1}
+        />,
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <OrientacoesLeitura
+          orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+          key={2}
+        />,
+        <SubstituicoesTable
+          substituicoes={dietaEspecial.substituicoes}
+          key={3}
+        />,
+        <PeriodoVigencia dieta={dietaEspecial} key={4} />,
+        <InformacoesAdicionaisLeitura
+          informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+          key={5}
+        />,
+        <IdentificacaoNutricionista key={7} />
+      ];
     }
 
     return <></>;
@@ -243,8 +273,12 @@ const CorpoRelatorio = ({
             />
           ]}
           {card &&
-            !["inativas", "inativas-temp"].includes(card) &&
-            dietaCancelada && [
+            ((["pendentes-aut"].includes(card) &&
+              ["ESCOLA_SOLICITOU_INATIVACAO"].includes(
+                dietaEspecial.status_solicitacao
+              )) ||
+              (!["inativas", "inativas-temp"].includes(card) &&
+                dietaCancelada)) && [
               <JustificativaCancelamento
                 key={1}
                 dietaEspecial={dietaEspecial}
