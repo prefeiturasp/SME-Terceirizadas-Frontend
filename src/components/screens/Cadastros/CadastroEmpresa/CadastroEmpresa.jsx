@@ -457,7 +457,10 @@ class CadastroEmpresa extends Component {
     let validate = false;
     if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
       validate = false;
-    } else if (tipoPerfil === PERFIL.COORDENADOR_LOGISTICA) {
+    } else if (
+      tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
+      tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+    ) {
       validate = true;
     } else {
       validate = false;

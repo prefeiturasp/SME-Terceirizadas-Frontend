@@ -95,7 +95,8 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
-  usuarioComAcessoTelaEntregasDilog
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhCoordenadorNutriSupervisao
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -486,13 +487,13 @@ const routesConfig = [
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: usuarioEhQualquerCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE() || usuarioEhLogistica()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
-    tipoUsuario: usuarioEhQualquerCODAE()
+    tipoUsuario: usuarioEhQualquerCODAE() || usuarioEhLogistica()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
@@ -1177,7 +1178,9 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
     component: EntregasDilogPage,
     exact: true,
-    tipoUsuario: usuarioComAcessoTelaEntregasDilog()
+    tipoUsuario:
+      usuarioComAcessoTelaEntregasDilog() ||
+      usuarioEhCoordenadorNutriSupervisao()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,

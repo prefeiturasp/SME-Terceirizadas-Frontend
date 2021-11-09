@@ -14,7 +14,8 @@ import {
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
-  usuarioComAcessoTelaEntregasDilog
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhCoordenadorNutriSupervisao
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -46,6 +47,8 @@ export const SidebarContent = () => {
   const exibirPainelInicial =
     !usuarioEhCoordenadorEscola() &&
     !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
     !usuarioEhDistribuidora();
   const exibirGestaoAlimentacao =
     !ehTreinamento &&
@@ -69,12 +72,15 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
   const exibirCadastros =
+    usuarioEhLogistica() ||
     (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
     (!ehTreinamento &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
   const exibirRelatorios =
     !usuarioEhCoordenadorEscola() &&
     !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
     !usuarioEhDistribuidora();
 
   const exibirConfiguracoes =
@@ -83,6 +89,8 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
     !usuarioEhDistribuidora();
 
   const exibirMenuLogistica =
@@ -90,6 +98,7 @@ export const SidebarContent = () => {
     usuarioEhDistribuidora() ||
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
   const _props = {

@@ -346,8 +346,7 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
-    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
-    PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -394,10 +393,7 @@ export const usuarioEhCODAEGestaoAlimentacao = () => {
    * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
    */
   const tipoPerfil = localStorage.getItem("tipo_perfil");
-  return (
-    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.LOGISTICA
-  );
+  return tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA;
 };
 
 export const usuarioEhCoordenadorCODAE = () => {
