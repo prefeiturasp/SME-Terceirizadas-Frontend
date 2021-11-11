@@ -200,7 +200,7 @@ const Relatorio = ({ visao }) => {
       <div className="card mt-3">
         <div className="card-body">
           <div className="row">
-            <div className="col-12" style={{ alignItems: "flex-end" }}>
+            <div className="col-12 mb-3" style={{ alignItems: "flex-end" }}>
               {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
               {dietaEspecial && historico && (
                 <Botao
