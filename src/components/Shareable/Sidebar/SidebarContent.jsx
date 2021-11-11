@@ -13,7 +13,9 @@ import {
   usuarioEhLogistica,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
-  usuarioEhDistribuidora
+  usuarioEhDistribuidora,
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhCoordenadorNutriSupervisao
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -42,7 +44,12 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirPainelInicial = !usuarioEhCoordenadorEscola();
+  const exibirPainelInicial =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
   const exibirGestaoAlimentacao =
     !ehTreinamento &&
     (usuarioEhCODAEGestaoAlimentacao() ||
@@ -65,22 +72,34 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
   const exibirCadastros =
+    usuarioEhLogistica() ||
     (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
     (!ehTreinamento &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
-  const exibirRelatorios = !usuarioEhCoordenadorEscola();
+  const exibirRelatorios =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE();
+    !usuarioEhAdministradorDRE() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
     usuarioEhDistribuidora() ||
     usuarioEhDRE() ||
-    usuarioEhEscolaAbastecimento();
+    usuarioEhEscolaAbastecimento() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
+    usuarioComAcessoTelaEntregasDilog();
 
   const _props = {
     activeMenu,

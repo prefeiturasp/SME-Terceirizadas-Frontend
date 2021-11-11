@@ -83,6 +83,10 @@ export default ({ setFiltros, initialValuesProp }) => {
                     {
                       value: "REPOSICAO_TOTAL",
                       label: "Reposição total"
+                    },
+                    {
+                      value: "CANCELADA",
+                      label: "Cancelada"
                     }
                   ]}
                 />

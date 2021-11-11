@@ -30,6 +30,7 @@ export default () => {
   const [numEnviadas, setNumEnviadas] = useState();
   const [numConfirmadas, setNumConfirmadas] = useState();
   const [page, setPage] = useState();
+  const [initialValues, setInitialValues] = useState({});
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
@@ -58,6 +59,7 @@ export default () => {
         numero_requisicao: codigo
       };
       setFiltros({ ...filtro });
+      setInitialValues({ ...filtro });
     }
   }, []);
 
@@ -85,6 +87,8 @@ export default () => {
             setFiltros={setFiltros}
             setSolicitacoes={setSolicitacoes}
             setTotal={setTotal}
+            initialValues={initialValues}
+            setInitialValues={setInitialValues}
           />
           {solicitacoes && (
             <>
