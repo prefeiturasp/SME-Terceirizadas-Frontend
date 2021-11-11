@@ -44,6 +44,7 @@ const CorpoRelatorio = ({
     if (
       card &&
       ["inativas", "inativas-temp"].includes(card) &&
+      dietaEspecial.eh_importado === false &&
       dietaEspecial.ativo === false
     ) {
       return [
@@ -107,7 +108,8 @@ const CorpoRelatorio = ({
         "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
         "ESCOLA_CANCELOU"
       ].includes(dietaEspecial.status_solicitacao) &&
-      !canceladaSegundoStep
+      !canceladaSegundoStep &&
+      dietaEspecial.eh_importado === false
     ) {
       return [
         <DiagnosticosLeitura
@@ -168,7 +170,15 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
-      ["autorizadas"].includes(card)
+      [
+        "autorizadas",
+        "autorizadas-temp",
+        "pendentes-aut",
+        "inativas",
+        "inativas-temp",
+        "canceladas",
+        "aguardando-vigencia"
+      ].includes(card)
     ) {
       return [
         <DiagnosticosLeitura
@@ -179,7 +189,10 @@ const CorpoRelatorio = ({
           classificacaoDieta={dietaEspecial.classificacao}
           key={1}
         />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />
+        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+          <PeriodoVigencia dieta={dietaEspecial} key={3} />
+        )
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
@@ -292,13 +305,12 @@ const CorpoRelatorio = ({
             />
           )}
           <hr />
-          {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&
-            dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" && (
-              <>
-                <DadosEscolaDestino />
-                <hr />
-              </>
-            )}
+          {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+            <>
+              <DadosEscolaDestino />
+              <hr />
+            </>
+          )}
           <FluxoDeStatusDieta
             logs={dietaEspecial.logs}
             eh_importado={dietaEspecial.eh_importado}
