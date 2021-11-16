@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
 
-const ClassificacaoDaDietaLeitura = ({ classificacaoDieta }) => {
+const ClassificacaoDaDietaLeitura = () => {
   return (
     <div className="row mt-3">
       <div className="col-4">
@@ -11,11 +11,6 @@ const ClassificacaoDaDietaLeitura = ({ classificacaoDieta }) => {
           className={"select-form-produto"}
           label="Classificação da Dieta"
           name="classificacao_nome"
-          defaultValue={
-            [undefined, null].includes(classificacaoDieta)
-              ? ""
-              : classificacaoDieta.nome
-          }
           disabled={true}
         />
       </div>
