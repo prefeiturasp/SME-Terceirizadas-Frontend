@@ -2,7 +2,7 @@ import React from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
 
-const PeriodoVigencia = ({ dieta }) => {
+const PeriodoVigencia = () => {
   return (
     <div className="row">
       <div className="col-12">
@@ -18,11 +18,6 @@ const PeriodoVigencia = ({ dieta }) => {
               className={"select-form-produto"}
               label="Início"
               name="data_inicio"
-              defaultValue={
-                dieta !== undefined && dieta.data_inicio !== null
-                  ? dieta.data_inicio
-                  : ""
-              }
               disabled={true}
             />
           </div>
@@ -32,11 +27,6 @@ const PeriodoVigencia = ({ dieta }) => {
               className={"select-form-produto"}
               label="Fim"
               name="data_fim"
-              defaultValue={
-                dieta !== undefined && dieta.data_termino !== null
-                  ? dieta.data_termino
-                  : ""
-              }
               disabled={true}
             />
           </div>
