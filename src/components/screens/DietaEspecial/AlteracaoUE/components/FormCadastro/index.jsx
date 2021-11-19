@@ -83,14 +83,14 @@ export default ({
 
     const params = { codigo_eol: codigoEol };
     const response = await getEscolasSimplissima(params);
-
+    // debugger
     if (!response) {
       toastError("Escola não encontrada no EOL.");
       setDadosIniciais({ ...values, nome_escola: undefined });
       return;
     }
 
-    if (response.count) {
+    if (response.results.length) {
       setDadosIniciais({
         ...values,
         nome_escola: response.results[0].nome
