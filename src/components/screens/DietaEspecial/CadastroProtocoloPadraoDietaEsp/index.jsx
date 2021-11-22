@@ -6,6 +6,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import ModalHistoricoProtocoloPadrao from "components/Shareable/ModalHistoricoProtocoloPadrao";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import Botao from "components/Shareable/Botao";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -32,6 +33,8 @@ export default ({ uuid }) => {
   const [produtos, setProdutos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [protocoloPadrao, setProcoloPadrao] = useState(undefined);
+  const [visible, setVisible] = useState(false);
+  const [historico, setHistorico] = useState([]);
 
   const history = useHistory();
 
@@ -150,7 +153,10 @@ export default ({ uuid }) => {
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right"
-                  onClick={() => {}}
+                  onClick={() => {
+                    setHistorico(protocoloPadrao.historico);
+                    setVisible(true);
+                  }}
                 />
               </div>
             </div>
@@ -256,6 +262,14 @@ export default ({ uuid }) => {
             )}
           />
         </Spin>
+        {historico && (
+          <ModalHistoricoProtocoloPadrao
+            visible={visible}
+            onOk={() => setVisible(false)}
+            onCancel={() => setVisible(false)}
+            history={historico}
+          />
+        )}
       </div>
     </div>
   );
