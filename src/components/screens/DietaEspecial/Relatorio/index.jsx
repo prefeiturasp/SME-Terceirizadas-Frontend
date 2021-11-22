@@ -8,6 +8,10 @@ import {
   getProtocoloDietaEspecial,
   getRelatorioDietaEspecial
 } from "services/relatorios";
+import {
+  CODAENegaSolicitacaoCancelamento,
+  getMotivosNegarSolicitacaoCancelamento
+} from "services/dietaEspecial.service";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
@@ -260,16 +264,26 @@ const Relatorio = ({ visao }) => {
 
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
-            visao === CODAE && (
+            visao === CODAE && [
               <BotaoAutorizaCancelamento
+                key={0}
                 uuid={dietaEspecial.uuid}
                 showNaoAprovaModal={showNaoAprovaModal}
                 onAutorizar={() => {
                   loadSolicitacao(dietaEspecial.uuid);
                 }}
                 setCarregando={setCarregando}
-              />
-            )}
+              />,
+              <div className="form-group row float-right mt-4 mr-3" key={1}>
+                <Botao
+                  texto="Negar"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.RED}
+                  className="ml-3"
+                  onClick={() => setShowNaoAprovaModal(true)}
+                />
+              </div>
+            ]}
           {dietaEspecial &&
             visao === TERCEIRIZADA &&
             (status === statusEnum.CODAE_AUTORIZADO || dietaCancelada) && (
@@ -297,11 +311,15 @@ const Relatorio = ({ visao }) => {
       {dietaEspecial && (
         <ModalNegaDietaEspecial
           showModal={showNaoAprovaModal}
-          closeModal={setShowNaoAprovaModal}
+          closeModal={() => setShowNaoAprovaModal(false)}
           onNegar={() => {
             loadSolicitacao(dietaEspecial.uuid);
           }}
           uuid={dietaEspecial.uuid}
+          getMotivos={() => getMotivosNegarSolicitacaoCancelamento()}
+          submitModal={(uuid, values) =>
+            CODAENegaSolicitacaoCancelamento(uuid, values)
+          }
         />
       )}
       {dietaEspecial && (

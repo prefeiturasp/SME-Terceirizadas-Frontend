@@ -15,10 +15,7 @@ import {
 } from "../../../../../Shareable/Botao/constants";
 import Select from "../../../../../Shareable/Select";
 import { agregarDefault } from "../../../../../../helpers/utilities";
-import { getMotivosNegacaoDietaEspecial } from "../../../../../../services/painelNutricionista.service";
 import { formataMotivos } from "./helper";
-
-import { CODAENegaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 
 export default class ModalNegarSolicitacao extends Component {
   constructor(props) {
@@ -27,8 +24,8 @@ export default class ModalNegarSolicitacao extends Component {
   }
 
   onSubmit = async values => {
-    const { uuid } = this.props;
-    const resp = await CODAENegaDietaEspecial(uuid, values);
+    const { uuid, submitModal } = this.props;
+    const resp = await submitModal(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação negada com sucesso!");
@@ -41,7 +38,7 @@ export default class ModalNegarSolicitacao extends Component {
   };
 
   componentDidMount = async () => {
-    const motivosNegacao = await getMotivosNegacaoDietaEspecial();
+    const motivosNegacao = await this.props.getMotivos();
     this.setState({
       motivosNegacao: agregarDefault(formataMotivos(motivosNegacao.results))
     });
@@ -49,12 +46,11 @@ export default class ModalNegarSolicitacao extends Component {
 
   render() {
     const { motivosNegacao } = this.state;
-    const { showModalNegaDieta, closeModal } = this.props;
     return (
       <Modal
         dialogClassName="modal-90w"
-        show={showModalNegaDieta}
-        onHide={closeModal}
+        show={this.props.showModal}
+        onHide={this.props.closeModal}
       >
         <Modal.Header closeButton>
           <Modal.Title>Deseja negar a solicitação?</Modal.Title>
@@ -91,7 +87,7 @@ export default class ModalNegarSolicitacao extends Component {
                     <Botao
                       texto="Não"
                       type={BUTTON_TYPE.BUTTON}
-                      onClick={closeModal}
+                      onClick={this.props.closeModal}
                       style={BUTTON_STYLE.DARK_OUTLINE}
                       className="ml-3"
                     />
