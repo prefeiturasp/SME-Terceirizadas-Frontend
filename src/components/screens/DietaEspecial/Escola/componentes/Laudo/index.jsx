@@ -32,6 +32,7 @@ export default ({ pertence_a_escola }) => {
             name="anexos"
             accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
             validate={[required]}
+            concatenarNovosArquivos
             toastSuccessMessage={"Laudo incluído com sucesso"}
             disabled={pertence_a_escola !== true}
           />
