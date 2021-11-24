@@ -137,14 +137,14 @@ export class SolicitacaoDeKitLanche extends Component {
       // TODO: caso tenha alunos no rascunho, expandir o seletor
       //       tem que passar state.collapsed do componente SeletorAlunosDietaEspecial pra prop
       //       e guardar no state desse componente
-      solicitacaoKitLanche.alunos_com_dieta_especial_participantes.forEach(
-        aluno =>
-          this.props.change(
-            `alunos_com_dieta_especial_participantes.${aluno.codigo_eol}`,
-            true
-          )
-      );
     }
+    solicitacaoKitLanche.alunos_com_dieta_especial_participantes.forEach(
+      aluno =>
+        this.props.change(
+          `alunos_com_dieta_especial_participantes.${aluno.codigo_eol}`,
+          true
+        )
+    );
     this.setState({
       status: solicitacaoKitLanche.status,
       title: `Solicitação de Kit Lanche Passeio #${
@@ -561,18 +561,16 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              {ehCei && (
-                <Fragment>
-                  <div className="form-group row sub-title">
-                    <p className="dre-name">
-                      Selecionar alunos com dieta especial
-                    </p>
-                  </div>
-                  <SeletorAlunosDietaEspecial
-                    alunosComDietaEspecial={alunosComDietaEspecial}
-                  />
-                </Fragment>
-              )}
+              <Fragment>
+                <div className="form-group row sub-title">
+                  <p className="dre-name">
+                    Selecionar alunos com dieta especial
+                  </p>
+                </div>
+                <SeletorAlunosDietaEspecial
+                  alunosComDietaEspecial={alunosComDietaEspecial}
+                />
+              </Fragment>
               <div className="form-group">
                 <Field
                   component={TextAreaWYSIWYG}
