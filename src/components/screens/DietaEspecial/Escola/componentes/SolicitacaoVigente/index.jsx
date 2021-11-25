@@ -159,7 +159,7 @@ export class SolicitacaoVigente extends Component {
                                       <a
                                         rel="noopener noreferrer"
                                         target="_blank"
-                                        href={anexo.arquivo}
+                                        href={anexo.arquivo_url}
                                         className="link"
                                         tabIndex="-1"
                                       >
