@@ -150,32 +150,32 @@ export const CorpoRelatorio = props => {
       {ehInclusaoCei(tipoSolicitacao) && (
         <Fragment>
           <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
-          {!!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
-            .length && (
-            <Fragment>
-              <div className="row report-label-value">
-                <div className="col-12 report-label-value">
-                  <p>Alunos com dieta especial</p>
-                </div>
-              </div>
-              <section className="table-report-dieta-especial">
-                <article>
-                  <div className="codigo-eol">Código EOL</div>
-                  <div className="nome">Nome</div>
-                </article>
-                {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
-                  (aluno, key) => {
-                    return (
-                      <article key={key}>
-                        <div className="codigo-eol">{aluno.codigo_eol}</div>
-                        <div className="nome">{aluno.nome}</div>
-                      </article>
-                    );
-                  }
-                )}
-              </section>
-            </Fragment>
-          )}
+        </Fragment>
+      )}
+      {!!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
+        .length && (
+        <Fragment>
+          <div className="row report-label-value">
+            <div className="col-12 report-label-value">
+              <p>Alunos com dieta especial</p>
+            </div>
+          </div>
+          <section className="table-report-dieta-especial">
+            <article>
+              <div className="codigo-eol">Código EOL</div>
+              <div className="nome">Nome</div>
+            </article>
+            {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
+              (aluno, key) => {
+                return (
+                  <article key={key}>
+                    <div className="codigo-eol">{aluno.codigo_eol}</div>
+                    <div className="nome">{aluno.nome}</div>
+                  </article>
+                );
+              }
+            )}
+          </section>
         </Fragment>
       )}
 
