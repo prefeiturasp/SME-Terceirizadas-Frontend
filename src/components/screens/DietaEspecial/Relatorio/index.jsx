@@ -320,6 +320,7 @@ const Relatorio = ({ visao }) => {
           submitModal={(uuid, values) =>
             CODAENegaSolicitacaoCancelamento(uuid, values)
           }
+          fieldJustificativa={"justificativa"}
         />
       )}
       {dietaEspecial && (

@@ -432,6 +432,7 @@ const FormAutorizaDietaEspecial = ({
         uuid={dietaEspecial.uuid}
         getMotivos={() => getMotivosNegacaoDietaEspecial()}
         submitModal={(uuid, values) => CODAENegaDietaEspecial(uuid, values)}
+        fieldJustificativa={"justificativa_negacao"}
       />
     </>
   );

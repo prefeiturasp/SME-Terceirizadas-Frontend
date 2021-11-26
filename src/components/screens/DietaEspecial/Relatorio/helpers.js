@@ -11,7 +11,8 @@ const DESCRICAO_SOLICITACAO = {
   CANCELADO_ALUNO_MUDOU_ESCOLA:
     "Cancelamento para aluno não matriculado na Unidade Educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
-    "Cancelamento para aluno não matriculado na rede municipal"
+    "Cancelamento para aluno não matriculado na rede municipal",
+  CODAE_NEGOU_CANCELAMENTO: "Negada o Cancelamento"
 };
 
 export const cabecalhoDieta = (dietaEspecial, card) => {

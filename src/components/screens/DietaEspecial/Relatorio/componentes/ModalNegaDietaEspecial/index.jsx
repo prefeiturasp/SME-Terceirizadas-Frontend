@@ -76,7 +76,7 @@ export default class ModalNegarSolicitacao extends Component {
                     <Field
                       component={TextAreaWYSIWYG}
                       label="Justificativa"
-                      name="justificativa_negacao"
+                      name={this.props.fieldJustificativa}
                     />
                   </div>
                 </div>
