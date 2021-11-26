@@ -321,6 +321,7 @@ const Relatorio = ({ visao }) => {
             CODAENegaSolicitacaoCancelamento(uuid, values)
           }
           fieldJustificativa={"justificativa"}
+          tituloModal={"Deseja negar a solicitação de cancelamento?"}
         />
       )}
       {dietaEspecial && (

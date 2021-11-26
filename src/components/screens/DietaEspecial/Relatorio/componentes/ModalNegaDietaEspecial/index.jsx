@@ -2,7 +2,6 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { required } from "../../../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastError,
@@ -14,6 +13,12 @@ import {
   BUTTON_STYLE
 } from "../../../../../Shareable/Botao/constants";
 import Select from "../../../../../Shareable/Select";
+import {
+  peloMenosUmCaractere,
+  required,
+  textAreaRequired
+} from "helpers/fieldValidators";
+import { composeValidators } from "helpers/utilities";
 import { agregarDefault } from "../../../../../../helpers/utilities";
 import { formataMotivos } from "./helper";
 
@@ -53,7 +58,7 @@ export default class ModalNegarSolicitacao extends Component {
         onHide={this.props.closeModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+          <Modal.Title>{this.props.tituloModal}</Modal.Title>
         </Modal.Header>
         <Form
           onSubmit={this.onSubmit}
@@ -67,6 +72,7 @@ export default class ModalNegarSolicitacao extends Component {
                       label="Motivo"
                       name="motivo_negacao"
                       options={motivosNegacao}
+                      required
                       validate={required}
                     />
                   </div>
@@ -77,6 +83,12 @@ export default class ModalNegarSolicitacao extends Component {
                       component={TextAreaWYSIWYG}
                       label="Justificativa"
                       name={this.props.fieldJustificativa}
+                      className="form-control"
+                      required
+                      validate={composeValidators(
+                        textAreaRequired,
+                        peloMenosUmCaractere
+                      )}
                     />
                   </div>
                 </div>
