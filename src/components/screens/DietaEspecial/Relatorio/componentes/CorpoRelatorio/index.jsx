@@ -177,16 +177,16 @@ const CorpoRelatorio = ({
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-          key={2}
+          key={3}
         />,
         <SubstituicoesTable
           substituicoes={dietaEspecial.substituicoes}
-          key={3}
+          key={4}
         />,
-        <PeriodoVigencia key={4} />,
+        <PeriodoVigencia key={5} />,
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
         <IdentificacaoNutricionista key={7} />
       ];
@@ -201,16 +201,16 @@ const CorpoRelatorio = ({
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-          key={2}
+          key={3}
         />,
         <SubstituicoesTable
           substituicoes={dietaEspecial.substituicoes}
-          key={3}
+          key={4}
         />,
-        <PeriodoVigencia key={4} />,
+        <PeriodoVigencia key={5} />,
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
         <IdentificacaoNutricionista key={7} />
       ];

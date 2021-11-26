@@ -2,7 +2,6 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { required } from "../../../../../../helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastError,
@@ -14,11 +13,14 @@ import {
   BUTTON_STYLE
 } from "../../../../../Shareable/Botao/constants";
 import Select from "../../../../../Shareable/Select";
+import {
+  peloMenosUmCaractere,
+  required,
+  textAreaRequired
+} from "helpers/fieldValidators";
+import { composeValidators } from "helpers/utilities";
 import { agregarDefault } from "../../../../../../helpers/utilities";
-import { getMotivosNegacaoDietaEspecial } from "../../../../../../services/painelNutricionista.service";
 import { formataMotivos } from "./helper";
-
-import { CODAENegaDietaEspecial } from "../../../../../../services/dietaEspecial.service";
 
 export default class ModalNegarSolicitacao extends Component {
   constructor(props) {
@@ -27,8 +29,8 @@ export default class ModalNegarSolicitacao extends Component {
   }
 
   onSubmit = async values => {
-    const { uuid } = this.props;
-    const resp = await CODAENegaDietaEspecial(uuid, values);
+    const { uuid, submitModal } = this.props;
+    const resp = await submitModal(uuid, values);
     if (resp.status === HTTP_STATUS.OK) {
       this.props.closeModal();
       toastSuccess("Solicitação negada com sucesso!");
@@ -41,7 +43,7 @@ export default class ModalNegarSolicitacao extends Component {
   };
 
   componentDidMount = async () => {
-    const motivosNegacao = await getMotivosNegacaoDietaEspecial();
+    const motivosNegacao = await this.props.getMotivos();
     this.setState({
       motivosNegacao: agregarDefault(formataMotivos(motivosNegacao.results))
     });
@@ -49,15 +51,14 @@ export default class ModalNegarSolicitacao extends Component {
 
   render() {
     const { motivosNegacao } = this.state;
-    const { showModalNegaDieta, closeModal } = this.props;
     return (
       <Modal
         dialogClassName="modal-90w"
-        show={showModalNegaDieta}
-        onHide={closeModal}
+        show={this.props.showModal}
+        onHide={this.props.closeModal}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+          <Modal.Title>{this.props.tituloModal}</Modal.Title>
         </Modal.Header>
         <Form
           onSubmit={this.onSubmit}
@@ -71,6 +72,7 @@ export default class ModalNegarSolicitacao extends Component {
                       label="Motivo"
                       name="motivo_negacao"
                       options={motivosNegacao}
+                      required
                       validate={required}
                     />
                   </div>
@@ -80,7 +82,13 @@ export default class ModalNegarSolicitacao extends Component {
                     <Field
                       component={TextAreaWYSIWYG}
                       label="Justificativa"
-                      name="justificativa_negacao"
+                      name={this.props.fieldJustificativa}
+                      className="form-control"
+                      required
+                      validate={composeValidators(
+                        textAreaRequired,
+                        peloMenosUmCaractere
+                      )}
                     />
                   </div>
                 </div>
@@ -91,7 +99,7 @@ export default class ModalNegarSolicitacao extends Component {
                     <Botao
                       texto="Não"
                       type={BUTTON_TYPE.BUTTON}
-                      onClick={closeModal}
+                      onClick={this.props.closeModal}
                       style={BUTTON_STYLE.DARK_OUTLINE}
                       className="ml-3"
                     />
