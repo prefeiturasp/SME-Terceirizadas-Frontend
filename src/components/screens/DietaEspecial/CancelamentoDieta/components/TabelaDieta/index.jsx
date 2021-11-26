@@ -133,7 +133,7 @@ export default ({
                 return (
                   <div key={key}>
                     <a
-                      href={anexo.arquivo}
+                      href={anexo.arquivo_url}
                       className="value-important link"
                       rel="noopener noreferrer"
                       target="_blank"
