@@ -99,14 +99,12 @@ export const CODAENegaDietaEspecial = async (uuid, payload) => {
 };
 
 export const CODAENegaSolicitacaoCancelamento = async (uuid, payload) => {
-  // TODO: Modificar endpoint para o desenvolvido pelo Luiz
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar-cancelamento-dieta-especial/`;
   return axios.post(url, payload);
 };
 
 export const getMotivosNegarSolicitacaoCancelamento = async () => {
-  // TODO: Modificar endpoint para o desenvolvido pelo Luiz
-  const url = `${API_URL}/motivos-negacao/`;
+  const url = `${API_URL}/motivos-negacao/?processo=CANCELAMENTO`;
   return retornoBase(url);
 };
 
