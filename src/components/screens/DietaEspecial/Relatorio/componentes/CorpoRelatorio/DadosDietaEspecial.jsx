@@ -61,7 +61,7 @@ const DadosDietaEspecial = ({ values, dietaEspecial, card }) => {
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ATTACH}
           className="w-100"
-          onClick={() => downloadAnexo(anexo.arquivo)}
+          onClick={() => downloadAnexo(anexo.arquivo_url)}
         />
       </div>
     );
