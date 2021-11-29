@@ -44,18 +44,13 @@ const CorpoRelatorio = ({
     if (
       card &&
       ["inativas", "inativas-temp"].includes(card) &&
+      dietaEspecial.eh_importado === false &&
       dietaEspecial.ativo === false
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
           key={3}
@@ -77,15 +72,9 @@ const CorpoRelatorio = ({
         (card && ["autorizadas", "autorizadas-temp"].includes(card)))
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
           key={3}
@@ -94,7 +83,7 @@ const CorpoRelatorio = ({
           substituicoes={dietaEspecial.substituicoes}
           key={4}
         />,
-        <PeriodoVigencia dieta={dietaEspecial} key={5} />,
+        <PeriodoVigencia key={5} />,
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
           key={6}
@@ -107,18 +96,13 @@ const CorpoRelatorio = ({
         "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
         "ESCOLA_CANCELOU"
       ].includes(dietaEspecial.status_solicitacao) &&
-      !canceladaSegundoStep
+      !canceladaSegundoStep &&
+      dietaEspecial.eh_importado === false
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
           key={3}
@@ -143,15 +127,9 @@ const CorpoRelatorio = ({
       dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
           key={3}
@@ -168,18 +146,23 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
-      ["autorizadas"].includes(card)
+      [
+        "autorizadas",
+        "autorizadas-temp",
+        "pendentes-aut",
+        "inativas",
+        "inativas-temp",
+        "canceladas",
+        "aguardando-vigencia"
+      ].includes(card)
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
+        dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+          <PeriodoVigencia key={3} />
+        )
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
@@ -189,27 +172,21 @@ const CorpoRelatorio = ({
       )
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-          key={2}
+          key={3}
         />,
         <SubstituicoesTable
           substituicoes={dietaEspecial.substituicoes}
-          key={3}
+          key={4}
         />,
-        <PeriodoVigencia dieta={dietaEspecial} key={4} />,
+        <PeriodoVigencia key={5} />,
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
         <IdentificacaoNutricionista key={7} />
       ];
@@ -219,27 +196,21 @@ const CorpoRelatorio = ({
       ["ESCOLA_SOLICITOU_INATIVACAO"].includes(dietaEspecial.status_solicitacao)
     ) {
       return [
-        <DiagnosticosLeitura
-          alergias={formataAlergias(dietaEspecial)}
-          key={0}
-        />,
-        <ClassificacaoDaDietaLeitura
-          classificacaoDieta={dietaEspecial.classificacao}
-          key={1}
-        />,
-        <ProtocoloLeitura protocolo={dietaEspecial.nome_protocolo} key={2} />,
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
           orientacoes_gerais={dietaEspecial.orientacoes_gerais}
-          key={2}
+          key={3}
         />,
         <SubstituicoesTable
           substituicoes={dietaEspecial.substituicoes}
-          key={3}
+          key={4}
         />,
-        <PeriodoVigencia dieta={dietaEspecial} key={4} />,
+        <PeriodoVigencia key={5} />,
         <InformacoesAdicionaisLeitura
           informacoes_adicionais={dietaEspecial.informacoes_adicionais}
-          key={5}
+          key={6}
         />,
         <IdentificacaoNutricionista key={7} />
       ];
@@ -252,6 +223,33 @@ const CorpoRelatorio = ({
     if (dietaEspecial.registro_funcional_nutricionista === "") {
       dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionista();
     }
+    if (![undefined, null].includes(dietaEspecial.alergias_intolerancias)) {
+      dietaEspecial.relacao_diagnosticos = formataAlergias(dietaEspecial)
+        .map(a => a.nome)
+        .join("; ");
+    } else {
+      dietaEspecial.relacao_diagnosticos = "";
+    }
+    dietaEspecial.classificacao_nome = [undefined, null].includes(
+      dietaEspecial.classificacao
+    )
+      ? ""
+      : dietaEspecial.classificacao.nome;
+    dietaEspecial.nome_protocolo_padrao = [undefined, null].includes(
+      dietaEspecial.nome_protocolo
+    )
+      ? ""
+      : dietaEspecial.nome_protocolo;
+    dietaEspecial.data_inicio = [undefined, null].includes(
+      dietaEspecial.data_inicio
+    )
+      ? ""
+      : dietaEspecial.data_inicio;
+    dietaEspecial.data_fim = [undefined, null].includes(
+      dietaEspecial.data_termino
+    )
+      ? ""
+      : dietaEspecial.data_termino;
     return dietaEspecial;
   };
 
@@ -286,19 +284,21 @@ const CorpoRelatorio = ({
               <hr key={2} />
             ]}
           <InformacoesAluno />
-          {solicitacaoVigenteAtiva && ["pendentes-aut"].includes(card) && (
-            <SolicitacaoVigente
-              solicitacoesVigentes={solicitacaoVigenteAtiva}
-            />
-          )}
-          <hr />
-          {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" &&
+          {solicitacaoVigenteAtiva &&
+            ["pendentes-aut"].includes(card) &&
+            dietaEspecial.tipo_solicitacao === "COMUM" &&
             dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" && (
-              <>
-                <DadosEscolaDestino />
-                <hr />
-              </>
+              <SolicitacaoVigente
+                solicitacoesVigentes={solicitacaoVigenteAtiva}
+              />
             )}
+          <hr />
+          {dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+            <>
+              <DadosEscolaDestino />
+              <hr />
+            </>
+          )}
           <FluxoDeStatusDieta
             logs={dietaEspecial.logs}
             eh_importado={dietaEspecial.eh_importado}

@@ -28,7 +28,10 @@ class EmpresasCadastradas extends Component {
             empresasF.push(empresa);
           }
         });
-      } else if (tipoPerfil === PERFIL.COORDENADOR_LOGISTICA) {
+      } else if (
+        tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
+        tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+      ) {
         this.setState({ ...this.state, ehDistribuidor: true });
         resp.forEach(empresa => {
           if (empresa.eh_distribuidor) {

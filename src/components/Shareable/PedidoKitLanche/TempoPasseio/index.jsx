@@ -18,7 +18,7 @@ export class TempoPasseio extends Component {
         <p className="label">Tempo previsto do passeio</p>
         <div className="d-inline-flex">
           <label className="container-radio">
-            até 4 horas (1 kit)
+            até 4 horas (1 Kit)
             <Field
               component={"input"}
               onChange={onTempoPasseioChanged}
@@ -30,7 +30,7 @@ export class TempoPasseio extends Component {
             <span className="checkmark" />
           </label>
           <label className="container-radio">
-            de 5 a 7 horas (2 kits)
+            de 5 a 7 horas (2 Kits)
             <Field
               component={"input"}
               onChange={onTempoPasseioChanged}
@@ -43,7 +43,7 @@ export class TempoPasseio extends Component {
           </label>
           {!ehCei && (
             <label className="container-radio">
-              8 horas ou mais (3 kits)
+              8 horas ou mais (3 Kits)
               <Field
                 component={"input"}
                 onChange={onTempoPasseioChanged}
@@ -61,17 +61,17 @@ export class TempoPasseio extends Component {
             <div className="col-12">
               <div className="explanation border rounded mt-3 p-3">
                 <label>
-                  <b>Até 4 horas:</b> 1 kit lanche/aluno: Escolher 1 kit entre
-                  os 3 modelos estabelecidos contratualmente;
+                  <b>Até 4 horas:</b> 1 Kit lanche/aluno: Escolher 1 Kit entre
+                  os modelos estabelecidos contratualmente;
                 </label>
                 <label>
-                  <b>De 5 a 7 horas:</b> 2 kit lanche/alunos: Escolher 2 kits
-                  distintos entre os 3 modelos estabelecidos contratualmente;
+                  <b>De 5 a 7 horas:</b> 2 Kit lanche/aluno: Escolher 2 Kits
+                  distintos entre os modelos estabelecidos contratualmente;
                 </label>
                 {!ehCei && (
                   <label>
-                    <b>8 horas ou mais:</b> 3 kit lanche/aluno: Será autorizado
-                    o fornecimento dos 3 modelos estabelecidos, kits 1, 2 e 3);
+                    <b>8 horas ou mais:</b> 3 Kit lanche/aluno: Escolher 3 Kits
+                    distintos entre os modelos estabelecidos contratualmente;
                   </label>
                 )}
               </div>

@@ -137,6 +137,7 @@ export const tipoDeStatus = status => {
     case "CODAE negou":
     case "CODAE negou inativação":
     case "Terceirizada recusou":
+    case "CODAE negou cancelamento":
       return "reprovado";
     case "Questionamento pela CODAE":
       return "questionado";

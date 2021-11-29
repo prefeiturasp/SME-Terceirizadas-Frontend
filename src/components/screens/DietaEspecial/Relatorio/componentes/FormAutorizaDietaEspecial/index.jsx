@@ -24,6 +24,8 @@ import {
   CODAEAutorizaDietaEspecial
 } from "services/dietaEspecial.service";
 import { getSubstitutos } from "services/produto.service";
+import { getMotivosNegacaoDietaEspecial } from "services/painelNutricionista.service";
+import { CODAENegaDietaEspecial } from "services/dietaEspecial.service";
 
 import Diagnosticos from "./componentes/Diagnosticos";
 import ClassificacaoDaDieta from "./componentes/ClassificacaoDaDieta";
@@ -424,10 +426,14 @@ const FormAutorizaDietaEspecial = ({
         )}
       />
       <ModalNegaDietaEspecial
-        showModalNegaDieta={showModalNegaDieta}
+        showModal={showModalNegaDieta}
         closeModal={() => setShowModalNegaDieta(false)}
         onNegar={onAutorizarOuNegar}
         uuid={dietaEspecial.uuid}
+        getMotivos={() => getMotivosNegacaoDietaEspecial()}
+        submitModal={(uuid, values) => CODAENegaDietaEspecial(uuid, values)}
+        fieldJustificativa={"justificativa_negacao"}
+        tituloModal={"Deseja negar a solicitação?"}
       />
     </>
   );

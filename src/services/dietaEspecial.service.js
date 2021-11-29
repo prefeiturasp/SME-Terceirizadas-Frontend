@@ -98,6 +98,16 @@ export const CODAENegaDietaEspecial = async (uuid, payload) => {
   return axios.post(url, payload);
 };
 
+export const CODAENegaSolicitacaoCancelamento = async (uuid, payload) => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar-cancelamento-dieta-especial/`;
+  return axios.post(url, payload);
+};
+
+export const getMotivosNegarSolicitacaoCancelamento = async () => {
+  const url = `${API_URL}/motivos-negacao/?processo=CANCELAMENTO`;
+  return retornoBase(url);
+};
+
 export const terceirizadaTomaCienciaDietaEspecial = async uuid => {
   const url = `/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
   return axios.post(url);

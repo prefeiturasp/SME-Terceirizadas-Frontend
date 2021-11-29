@@ -90,7 +90,7 @@ export default ({
       return;
     }
 
-    if (response.count) {
+    if (response.results.length) {
       setDadosIniciais({
         ...values,
         nome_escola: response.results[0].nome
