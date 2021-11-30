@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { CardKit } from "./CardKit";
 import { getKitLanches } from "../../../../services/kitLanche";
-import { extrairKitsLanche } from "./helper";
 import { TEMPO_PASSEIO } from "../../../../constants/shared";
 import "./style.scss";
 
@@ -33,20 +32,16 @@ export class OpcoesKits extends Component {
 
   iteracaoEntreTempoPasseioECards(prevProps) {
     if (
-      this.props.tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS &&
-      prevProps.tempoPasseio !== TEMPO_PASSEIO.OITO_HORAS_OU_MAIS
-    ) {
-      this.setState({ kitsChecked: extrairKitsLanche(this.state.kitsLanche) });
-      this.props.updateKitsChecked(extrairKitsLanche(this.state.kitsLanche));
-    } else if (
-      this.props.tempoPasseio !== TEMPO_PASSEIO.OITO_HORAS_OU_MAIS &&
-      prevProps.tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS
+      this.props.tempoPasseio === TEMPO_PASSEIO.QUATRO_HORAS &&
+      (prevProps.tempoPasseio === TEMPO_PASSEIO.CINCO_A_SETE_HORAS ||
+        prevProps.tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS ||
+        prevProps.tempoPasseio === "")
     ) {
       this.setState({ kitsChecked: [] });
       this.props.updateKitsChecked([]);
     } else if (
-      this.props.tempoPasseio === TEMPO_PASSEIO.QUATRO_HORAS &&
-      (prevProps.tempoPasseio === TEMPO_PASSEIO.CINCO_A_SETE_HORAS ||
+      this.props.tempoPasseio === TEMPO_PASSEIO.CINCO_A_SETE_HORAS &&
+      (prevProps.tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS ||
         prevProps.tempoPasseio === "")
     ) {
       this.setState({ kitsChecked: [] });
