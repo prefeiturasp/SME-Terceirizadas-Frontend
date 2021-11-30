@@ -3,7 +3,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
-import { INVERSAO_CARDAPIO, CODAE } from "../../../configs/constants";
+import {
+  INVERSAO_CARDAPIO,
+  CODAE,
+  TERCEIRIZADA
+} from "../../../configs/constants";
 import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import {
@@ -23,6 +27,7 @@ import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistorico
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -37,12 +42,16 @@ class Relatorio extends Component {
       inversaoDiaCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null,
-      erro: false
+      erro: false,
+      showModalMarcarConferencia: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   setRedirect() {
@@ -111,6 +120,14 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
+  }
+
   loadSolicitacao(uuid) {
     getInversaoDeDiaDeCardapio(uuid).then(response => {
       this.setState({
@@ -147,7 +164,8 @@ class Relatorio extends Component {
       showNaoAprovaModal,
       showQuestionamentoModal,
       showAutorizarModal,
-      erro
+      erro,
+      showModalMarcarConferencia
     } = this.state;
     const {
       visao,
@@ -197,6 +215,27 @@ class Relatorio extends Component {
       inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
       !inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
         .resposta_sim_nao;
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TERCEIRIZADA &&
+      inversaoDiaCardapio &&
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        inversaoDiaCardapio.status
+      );
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -220,6 +259,17 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+          />
+        )}
+        {inversaoDiaCardapio && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+            }}
+            uuid={inversaoDiaCardapio.uuid}
+            endpoint="inversoes-dia-cardapio"
           />
         )}
         {erro && (
@@ -309,6 +359,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />
+                    )}
+                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                      <div className="form-group float-right mt-4">
+                        {inversaoDiaCardapio.terceirizada_conferiu_gestao ? (
+                          <label className="ml-3 conferido">
+                            <i className="fas fa-check mr-2" />
+                            Solicitação Conferida
+                          </label>
+                        ) : (
+                          <BotaoMarcarConferencia
+                            uuid={inversaoDiaCardapio.uuid}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
