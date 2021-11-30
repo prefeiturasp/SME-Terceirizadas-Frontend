@@ -84,14 +84,10 @@ export class StatusSolicitacoes extends Component {
 
   filtrarStatus(listaFiltro, value) {
     if (value === "1") {
-      listaFiltro = listaFiltro.filter(
-        item => item.terceirizada_conferiu_gestao === true
-      );
+      listaFiltro = listaFiltro.filter(item => item.conferido === true);
     }
     if (value === "0") {
-      listaFiltro = listaFiltro.filter(
-        item => item.terceirizada_conferiu_gestao === false
-      );
+      listaFiltro = listaFiltro.filter(item => item.conferido === false);
     }
     return listaFiltro;
   }
