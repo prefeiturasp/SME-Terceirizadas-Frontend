@@ -142,7 +142,7 @@ export const ajustarFormatoLog = (logs, card) => {
         ? truncarString(descricao, tamanhoString) +
           (log.serie ? " - " + log.serie : "")
         : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
-      conferido: log.conferido,
+      conferido: log.conferido || log.terceirizada_conferiu_gestao,
       lote_uuid: log.lote_uuid,
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
