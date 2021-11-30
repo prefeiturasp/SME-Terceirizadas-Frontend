@@ -4,7 +4,8 @@ import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
 import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
-import { ordenaPorDate } from "./helper";
+import { ordenaPorDate, extrairStatusDaSolicitacaoURL } from "./helper";
+import { getMeusLotes } from "services/lote.service";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -27,7 +28,8 @@ export class StatusSolicitacoes extends Component {
       titulo: "...",
       tipoCard: "...",
       icone: "...",
-      selecionarTodos: false
+      selecionarTodos: false,
+      listaLotes: null
     };
 
     this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
@@ -49,17 +51,49 @@ export class StatusSolicitacoes extends Component {
     this.props.change(`check_${key}`, solicitacoes[key].checked);
   }
 
-  onPesquisarChanged(event) {
+  onPesquisarChanged(values) {
     let solicitacoesFiltrados = this.state.solicitacoes;
-    solicitacoesFiltrados = this.filtrarNome(solicitacoesFiltrados, event);
+    if (values.lote && values.lote.length > 0) {
+      solicitacoesFiltrados = this.filtrarLote(
+        solicitacoesFiltrados,
+        values.lote
+      );
+    }
+    if (values.status && values.status.length > 0) {
+      solicitacoesFiltrados = this.filtrarStatus(
+        solicitacoesFiltrados,
+        values.status
+      );
+    }
+    if (values.titulo && values.titulo.length > 0) {
+      solicitacoesFiltrados = this.filtrarNome(
+        solicitacoesFiltrados,
+        values.titulo
+      );
+    }
     this.setState({ solicitacoesFiltrados });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
+      const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
+    return listaFiltro;
+  }
+
+  filtrarStatus(listaFiltro, value) {
+    if (value === "1") {
+      listaFiltro = listaFiltro.filter(item => item.conferido === true);
+    }
+    if (value === "0") {
+      listaFiltro = listaFiltro.filter(item => item.conferido === false);
+    }
+    return listaFiltro;
+  }
+
+  filtrarLote(listaFiltro, value) {
+    listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
     return listaFiltro;
   }
 
@@ -69,6 +103,9 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
+    const url = window.location.href;
+    let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
+    this.setState({ tipoSolicitacao });
     const listaStatus = Array.isArray(status) ? status : [status];
     const dadosMeus = await meusDados();
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
@@ -86,6 +123,13 @@ export class StatusSolicitacoes extends Component {
         ))
     );
     solicitacoes = solicitacoes.sort(ordenaPorDate);
+    await getMeusLotes().then(response => {
+      this.setState({
+        listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
+          response.results
+        )
+      });
+    });
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes
@@ -93,7 +137,7 @@ export class StatusSolicitacoes extends Component {
   }
 
   render() {
-    const { solicitacoesFiltrados } = this.state;
+    const { solicitacoesFiltrados, tipoSolicitacao, listaLotes } = this.state;
     const { titulo, tipoCard, icone } = this.props;
     return (
       <form onSubmit={this.props.handleSubmit}>
@@ -103,6 +147,8 @@ export class StatusSolicitacoes extends Component {
               <InputSearchPendencias
                 voltarLink={`/`}
                 filterList={this.onPesquisarChanged}
+                tipoSolicitacao={tipoSolicitacao}
+                listaLotes={listaLotes}
               />
             </div>
             <div className="pb-3" />
