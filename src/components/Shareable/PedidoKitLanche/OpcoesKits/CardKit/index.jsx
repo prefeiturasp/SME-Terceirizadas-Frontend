@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { TEMPO_PASSEIO } from "../../../../../constants/shared";
 import "./style.scss";
 
 export class CardKit extends Component {
@@ -20,16 +19,13 @@ export class CardKit extends Component {
         kitsChecked.length !== 0 &&
         !kitsChecked.includes(uuid) &&
         parseInt(tempoPasseio) === kitsChecked.length - 1) ||
-      tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS ||
       (tempoPasseio === "" &&
         (kitsChecked.length === 0 || !kitsChecked.includes(uuid)));
     return (
       <div
         className={`card meal-kit
         ${checked && "checked"}
-        ${disabled &&
-          tempoPasseio !== TEMPO_PASSEIO.OITO_HORAS_OU_MAIS &&
-          "disabled"}
+        ${disabled && "disabled"}
         ${esconderDetalhamentoKits && "minor-height"} mb-3`}
       >
         <div className="card-body">
