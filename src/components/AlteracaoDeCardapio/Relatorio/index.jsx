@@ -209,7 +209,9 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
       visao === TERCEIRIZADA &&
       alteracaoDeCardapio &&
-      [statusEnum.CODAE_AUTORIZADO].includes(alteracaoDeCardapio.status);
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        alteracaoDeCardapio.status
+      );
 
     const BotaoMarcarConferencia = () => {
       return (
@@ -260,7 +262,7 @@ class Relatorio extends Component {
               this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
             }}
             uuid={alteracaoDeCardapio.uuid}
-            endpoint=""
+            endpoint="alteracoes-cardapio"
           />
         )}
         {erro && (
@@ -385,7 +387,7 @@ class Relatorio extends Component {
                       ))}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                       <div className="form-group float-right mt-4">
-                        {alteracaoDeCardapio.conferido ? (
+                        {alteracaoDeCardapio.terceirizada_conferiu_gestao ? (
                           <label className="ml-3 conferido">
                             <i className="fas fa-check mr-2" />
                             Solicitação Conferida

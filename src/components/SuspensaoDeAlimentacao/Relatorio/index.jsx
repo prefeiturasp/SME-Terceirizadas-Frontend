@@ -148,7 +148,9 @@ class RelatorioSuspensaoAlimentacao extends Component {
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
       visao === TIPO_PERFIL.TERCEIRIZADA &&
       suspensaoAlimentacao &&
-      [statusEnum.INFORMADO].includes(suspensaoAlimentacao.status);
+      [statusEnum.INFORMADO, statusEnum.ESCOLA_CANCELOU].includes(
+        suspensaoAlimentacao.status
+      );
 
     const BotaoMarcarConferencia = () => {
       return (
@@ -174,7 +176,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
               this.loadSolicitacao(uuid);
             }}
             uuid={suspensaoAlimentacao.uuid}
-            endpoint=""
+            endpoint="grupos-suspensoes-alimentacao"
           />
         )}
         {this.renderizarRedirecionamentoParaSuspensoesDeAlimentacao()}
@@ -195,7 +197,7 @@ class RelatorioSuspensaoAlimentacao extends Component {
                 />
                 {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                   <div className="form-group float-right mt-4">
-                    {suspensaoAlimentacao.conferido ? (
+                    {suspensaoAlimentacao.terceirizada_conferiu_gestao ? (
                       <label className="ml-3 conferido">
                         <i className="fas fa-check mr-2" />
                         Solicitação Conferida

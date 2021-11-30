@@ -191,7 +191,9 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
       visao === TERCEIRIZADA &&
       solicitacaoKitLanche &&
-      [statusEnum.CODAE_AUTORIZADO].includes(solicitacaoKitLanche.status);
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        solicitacaoKitLanche.status
+      );
 
     const BotaoMarcarConferencia = () => {
       return (
@@ -242,7 +244,7 @@ class Relatorio extends Component {
               this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
             }}
             uuid={solicitacaoKitLanche.uuid}
-            endpoint=""
+            endpoint="solicitacoes-kit-lanche-avulsa"
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -335,7 +337,7 @@ class Relatorio extends Component {
                     )}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                       <div className="form-group float-right mt-4">
-                        {solicitacaoKitLanche.conferido ? (
+                        {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
                           <label className="ml-3 conferido">
                             <i className="fas fa-check mr-2" />
                             Solicitação Conferida
