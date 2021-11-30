@@ -1,15 +1,12 @@
 import HTTP_STATUS from "http-status-codes";
 import React from "react";
 import { Modal } from "react-bootstrap";
-import Botao from "../../../../../Shareable/Botao";
+import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
-} from "../../../../../Shareable/Botao/constants";
-import {
-  toastSuccess,
-  toastError
-} from "../../../../../Shareable/Toast/dialogs";
+} from "components/Shareable/Botao/constants";
+import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { terceirizadaMarcaConferencia } from "services/dietaEspecial.service";
 import "./style.scss";
 
@@ -17,10 +14,11 @@ const ModalMarcarConferencia = ({
   showModal,
   closeModal,
   onMarcarConferencia,
-  uuid
+  uuid,
+  endpoint
 }) => {
   const marcaConferencia = async () => {
-    const resp = await terceirizadaMarcaConferencia(uuid);
+    const resp = await terceirizadaMarcaConferencia(uuid, endpoint);
     if (resp.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação conferida com sucesso!");
       onMarcarConferencia();

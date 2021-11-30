@@ -18,9 +18,10 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
-import { CODAE } from "../../../configs/constants";
+import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -34,7 +35,8 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
       error: false,
-      showModalConfirm: false
+      showModalConfirm: false,
+      showModalMarcarConferencia: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
@@ -42,6 +44,9 @@ class Relatorio extends Component {
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeModalConfirm = this.closeModalConfirm.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -112,6 +117,14 @@ class Relatorio extends Component {
     this.setState({ showModalConfirm: false });
   }
 
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
+  }
+
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
@@ -142,7 +155,8 @@ class Relatorio extends Component {
       uuid,
       showAutorizarModal,
       erro,
-      showModalConfirm
+      showModalConfirm,
+      showModalMarcarConferencia
     } = this.state;
     const {
       justificativa,
@@ -192,6 +206,27 @@ class Relatorio extends Component {
       alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
       !alteracaoDeCardapio.logs[alteracaoDeCardapio.logs.length - 1]
         .resposta_sim_nao;
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TERCEIRIZADA &&
+      alteracaoDeCardapio &&
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        alteracaoDeCardapio.status
+      );
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -217,6 +252,17 @@ class Relatorio extends Component {
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
             tipoSolicitacao={this.state.tipoSolicitacao}
+          />
+        )}
+        {alteracaoDeCardapio && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+            }}
+            uuid={alteracaoDeCardapio.uuid}
+            endpoint="alteracoes-cardapio"
           />
         )}
         {erro && (
@@ -339,6 +385,20 @@ class Relatorio extends Component {
                           className="ml-3"
                         />
                       ))}
+                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                      <div className="form-group float-right mt-4">
+                        {alteracaoDeCardapio.terceirizada_conferiu_gestao ? (
+                          <label className="ml-3 conferido">
+                            <i className="fas fa-check mr-2" />
+                            Solicitação Conferida
+                          </label>
+                        ) : (
+                          <BotaoMarcarConferencia
+                            uuid={alteracaoDeCardapio.uuid}
+                          />
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

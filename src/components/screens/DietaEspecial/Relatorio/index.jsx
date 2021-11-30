@@ -28,7 +28,7 @@ import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
 import ModalNegaDietaEspecial from "./componentes/ModalNegaDietaEspecial";
-import ModalMarcarConferencia from "./componentes/ModalMarcarConferencia";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
@@ -332,6 +332,7 @@ const Relatorio = ({ visao }) => {
             loadSolicitacao(dietaEspecial.uuid);
           }}
           uuid={dietaEspecial.uuid}
+          endpoint="solicitacoes-dieta-especial"
         />
       )}
       <ModalAvisoDietaImportada
