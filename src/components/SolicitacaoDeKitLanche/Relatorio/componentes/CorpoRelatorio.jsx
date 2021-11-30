@@ -152,32 +152,33 @@ export const CorpoRelatorio = props => {
           <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
         </Fragment>
       )}
-      {!!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
-        .length && (
-        <Fragment>
-          <div className="row report-label-value">
-            <div className="col-12 report-label-value">
-              <p>Alunos com dieta especial</p>
+      {solicitacaoKitLanche.alunos_com_dieta_especial_participantes &&
+        !!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
+          .length && (
+          <Fragment>
+            <div className="row report-label-value">
+              <div className="col-12 report-label-value">
+                <p>Alunos com dieta especial</p>
+              </div>
             </div>
-          </div>
-          <section className="table-report-dieta-especial">
-            <article>
-              <div className="codigo-eol">Código EOL</div>
-              <div className="nome">Nome</div>
-            </article>
-            {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
-              (aluno, key) => {
-                return (
-                  <article key={key}>
-                    <div className="codigo-eol">{aluno.codigo_eol}</div>
-                    <div className="nome">{aluno.nome}</div>
-                  </article>
-                );
-              }
-            )}
-          </section>
-        </Fragment>
-      )}
+            <section className="table-report-dieta-especial">
+              <article>
+                <div className="codigo-eol">Código EOL</div>
+                <div className="nome">Nome</div>
+              </article>
+              {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
+                (aluno, key) => {
+                  return (
+                    <article key={key}>
+                      <div className="codigo-eol">{aluno.codigo_eol}</div>
+                      <div className="nome">{aluno.nome}</div>
+                    </article>
+                  );
+                }
+              )}
+            </section>
+          </Fragment>
+        )}
 
       <div className="row">
         <div className="col-12 report-label-value">

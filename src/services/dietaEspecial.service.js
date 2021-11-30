@@ -175,8 +175,8 @@ export const escolaInativaDietaEspecial = async (uuid, payload) => {
     });
 };
 
-export const terceirizadaMarcaConferencia = async uuid => {
-  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/marcar-conferida/`;
+export const terceirizadaMarcaConferencia = async (uuid, endpoint) => {
+  const url = `${API_URL}/${endpoint}/${uuid}/marcar-conferida/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
