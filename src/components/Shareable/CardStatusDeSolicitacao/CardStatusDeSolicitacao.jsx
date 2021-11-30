@@ -57,7 +57,10 @@ export const CardStatusDeSolicitacao = props => {
       {solicitations.slice(0, 5).map((solicitation, key) => {
         let conferida = "";
         if (["Autorizadas", "Canceladas"].includes(cardTitle)) {
-          conferida = solicitation.conferido ? "conferida" : "";
+          conferida =
+            solicitation.conferido || solicitation.terceirizada_conferiu_gestao
+              ? "conferida"
+              : "";
         }
         return (
           <NavLink

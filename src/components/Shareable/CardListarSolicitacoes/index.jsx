@@ -45,7 +45,10 @@ export class CardListarSolicitacoes extends Component {
               {solicitacoes.map((value, key) => {
                 let conferida = "";
                 if (["Autorizadas", "Canceladas"].includes(titulo)) {
-                  conferida = value.conferido ? "conferida" : "";
+                  conferida =
+                    value.conferido || value.terceirizada_conferiu_gestao
+                      ? "conferida"
+                      : "";
                 }
                 return (
                   <div key={key} className="row">
