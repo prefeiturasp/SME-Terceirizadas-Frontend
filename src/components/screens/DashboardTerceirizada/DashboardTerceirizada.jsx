@@ -237,16 +237,8 @@ class DashboardTerceirizada extends Component {
       values.titulo
     );
 
-    questionamentosListFiltered = this.filtrarStatus(
-      questionamentosListFiltered,
-      values.status
-    );
     autorizadasListFiltered = this.filtrarStatus(
       autorizadasListFiltered,
-      values.status
-    );
-    negadasListFiltered = this.filtrarStatus(
-      negadasListFiltered,
       values.status
     );
     canceladasListFiltered = this.filtrarStatus(
