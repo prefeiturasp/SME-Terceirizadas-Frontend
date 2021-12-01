@@ -178,9 +178,11 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
       visao === TERCEIRIZADA &&
       solicitacaoUnificada &&
-      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
-        solicitacaoUnificada.status
-      );
+      [
+        statusEnum.CODAE_AUTORIZADO,
+        statusEnum.ESCOLA_CANCELOU,
+        statusEnum.DRE_CANCELOU
+      ].includes(solicitacaoUnificada.status);
 
     const BotaoMarcarConferencia = () => {
       return (
