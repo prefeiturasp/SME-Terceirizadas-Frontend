@@ -242,6 +242,7 @@ export const visualizaBotoesDoFluxo = solicitacao => {
         tipoPerfil
       );
     case statusEnum.ESCOLA_CANCELOU:
+    case statusEnum.DRE_CANCELOU:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     default:
       return false;
@@ -262,6 +263,7 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
     case statusEnum.CODAE_QUESTIONADO:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     case statusEnum.ESCOLA_CANCELOU:
+    case statusEnum.DRE_CANCELOU:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
       return [TIPO_PERFIL.DIRETORIA_REGIONAL].includes(tipoPerfil);
