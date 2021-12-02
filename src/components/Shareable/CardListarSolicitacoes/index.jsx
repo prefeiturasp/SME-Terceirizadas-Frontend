@@ -5,6 +5,7 @@ import { Checkbox } from "../Checkbox";
 import "./style.scss";
 import { RELATORIO } from "../../../configs/constants";
 import { caminhoURL } from "../CardStatusDeSolicitacao/helper";
+import { conferidaClass } from "helpers/terceirizadas";
 
 export class CardListarSolicitacoes extends Component {
   constructor(props) {
@@ -43,10 +44,7 @@ export class CardListarSolicitacoes extends Component {
             </Field>
             <div className="card-listagem-solicitacoes">
               {solicitacoes.map((value, key) => {
-                let conferida = "";
-                if (["Autorizadas", "Canceladas"].includes(titulo)) {
-                  conferida = value.conferido ? "conferida" : "";
-                }
+                let conferida = conferidaClass(value, titulo);
                 return (
                   <div key={key} className="row">
                     <div className="col-9">

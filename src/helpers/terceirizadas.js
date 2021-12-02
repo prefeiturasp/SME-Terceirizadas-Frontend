@@ -1,3 +1,4 @@
+import { TIPO_PERFIL } from "constants/shared";
 import { getRelatorioQuantitativo } from "services/terceirizada.service";
 
 // Por algum motivo não consegui usar as constantes de status como chave do objeto
@@ -13,6 +14,8 @@ const MAPEAMENTO_STATUS_LABEL = {
   ESCOLA_OU_NUTRICIONISTA_RECLAMOU: "PRODUTOS_ANALISE_RECLAMACAO",
   TERCEIRIZADA_RESPONDEU_RECLAMACAO: "PRODUTOS_ANALISE_RECLAMACAO"
 };
+
+const tipoPerfil = localStorage.getItem("tipo_perfil");
 
 export const obterRelatorioQuantitativo = async params => {
   const dadosRelatorio = await getRelatorioQuantitativo(params);
@@ -45,4 +48,16 @@ export const obterRelatorioQuantitativo = async params => {
     detalhes: relatorio,
     qtdeDias: dadosRelatorio.data.dias
   };
+};
+
+export const conferidaClass = (solicitation, cardTitle) => {
+  let conferida = "";
+  if (
+    tipoPerfil === TIPO_PERFIL.TERCEIRIZADA &&
+    ["Autorizadas", "Canceladas"].includes(cardTitle)
+  ) {
+    conferida = solicitation.conferido ? "conferida" : "";
+  }
+
+  return conferida;
 };
