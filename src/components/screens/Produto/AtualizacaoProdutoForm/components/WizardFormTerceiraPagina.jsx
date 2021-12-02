@@ -108,7 +108,9 @@ class WizardFormTerceiraPagina extends Component {
     } else {
       values["eh_para_alunos_com_dieta"] = false;
     }
-
+    if (values["outras_informacoes"] === undefined) {
+      values["outras_informacoes"] = "";
+    }
     if (values["tem_aditivos_alergenicos"] === "1") {
       values["tem_aditivos_alergenicos"] = true;
     } else {
