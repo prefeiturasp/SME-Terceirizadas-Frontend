@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
+import { conferidaClass } from "helpers/terceirizadas";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
@@ -55,10 +56,7 @@ export const CardStatusDeSolicitacao = props => {
       </div>
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
-        let conferida = "";
-        if (["Autorizadas", "Canceladas"].includes(cardTitle)) {
-          conferida = solicitation.conferido ? "conferida" : "";
-        }
+        let conferida = conferidaClass(solicitation, cardTitle);
         return (
           <NavLink
             to={solicitation.link}
