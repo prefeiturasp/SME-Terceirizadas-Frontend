@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import authService from "../../../services/auth";
 import "./style.scss";
 import { ENVIRONMENT } from "constants/config";
+import NotificacoesNavbar from "../NotificacoesNavbar";
 
 export class Header extends Component {
   render() {
@@ -70,13 +71,7 @@ export class Header extends Component {
                   <p className="title">Ajuda</p>
                 </li>
                 <li className="nav-item">
-                  <Link to="#" className="nav-link">
-                    <img
-                      src="/assets/image/vinculo.svg"
-                      alt="Ícone de vínculo"
-                    />
-                  </Link>
-                  <p className="title">Vínculo</p>
+                  <NotificacoesNavbar />
                 </li>
                 <li onClick={() => authService.logout()} className="nav-item">
                   <div className="nav-link">
