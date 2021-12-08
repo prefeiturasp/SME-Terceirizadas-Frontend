@@ -58,6 +58,7 @@ export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
   dataFormatada.data_final = values.inclusoes[0].data_final;
   dataFormatada.dias_semana = values.inclusoes[0].dias_semana;
   dataFormatada.outro_motivo = values.inclusoes[0].outro_motivo;
+  dataFormatada.observacao = values.inclusoes[0].observacao;
   let quantidades_periodo = [];
   values.quantidades_periodo.forEach(quantidade_periodo => {
     if (quantidade_periodo.checked) {
@@ -84,6 +85,7 @@ export const formatarSubmissaoSolicitacaoNormal = (values, meusDados) => {
     inclusao_formatada["data"] = inclusao.data;
     inclusao_formatada["motivo"] = inclusao.motivo;
     inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
+    inclusao_formatada["observacao"] = inclusao.observacao;
     inclusoes.push(inclusao_formatada);
   });
   dataFormatada.inclusoes = inclusoes;
