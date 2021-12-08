@@ -136,6 +136,20 @@ class InclusaoDeAlimentacao extends Component {
         }
       }
     }
+    if (field === "observacao") {
+      value = value.target.value;
+      if (value.length > 1000) {
+        const index = acimaDoLimite.indexOf(id);
+        if (index === -1) {
+          acimaDoLimite.push(id);
+        }
+      } else {
+        const index = acimaDoLimite.indexOf(id);
+        if (index > -1) {
+          acimaDoLimite.splice(index, 1);
+        }
+      }
+    }
     inclusoes[indiceDiaMotivo][field] = value;
     this.setState({
       inclusoes
@@ -400,6 +414,7 @@ class InclusaoDeAlimentacao extends Component {
           inclusao_formatada["data"] = inclusao.data;
           inclusao_formatada["motivo"] = inclusao.motivo.uuid;
           inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
+          inclusao_formatada["observacao"] = inclusao.observacao;
           inclusao_formatada["outroMotivo"] =
             inclusao.outro_motivo !== null && inclusao.outro_motivo !== "";
           return inclusao_formatada;
@@ -815,6 +830,31 @@ class InclusaoDeAlimentacao extends Component {
                             />
                           )}
                         </div>
+                        {ehMotivoContinuo && (
+                          <div className="grid-outro-motivo pb-2">
+                            <Field
+                              component={TextArea}
+                              label="Observação"
+                              onChange={event =>
+                                this.handleField(
+                                  "observacao",
+                                  event,
+                                  diaMotivo.id
+                                )
+                              }
+                              name="observacao"
+                              required
+                              validate={required}
+                            />
+                            {this.state.acimaDoLimite.includes(
+                              diaMotivo.id
+                            ) && (
+                              <div className="error-msg">
+                                Limite máximo de 1000 caracteres
+                              </div>
+                            )}
+                          </div>
+                        )}
                         {diaMotivo.outroMotivo && (
                           <div className="grid-outro-motivo pb-2">
                             <Field
