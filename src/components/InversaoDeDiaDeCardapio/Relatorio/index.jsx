@@ -28,6 +28,7 @@ import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHist
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -39,6 +40,7 @@ class Relatorio extends Component {
       showNaoAprovaModal: false,
       showModal: false,
       showAutorizarModal: false,
+      showModalCodaeAutorizar: false,
       inversaoDiaCardapio: null,
       escolaDaInversao: null,
       prazoDoPedidoMensagem: null,
@@ -48,6 +50,7 @@ class Relatorio extends Component {
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
+    this.closeModalCodaeAutorizar = this.closeModalCodaeAutorizar.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
       this
@@ -120,6 +123,14 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  showModalCodaeAutorizar() {
+    this.setState({ showModalCodaeAutorizar: true });
+  }
+
+  closeModalCodaeAutorizar() {
+    this.setState({ showModalCodaeAutorizar: false });
+  }
+
   showModalMarcarConferencia() {
     this.setState({ showModalMarcarConferencia: true });
   }
@@ -164,6 +175,7 @@ class Relatorio extends Component {
       showNaoAprovaModal,
       showQuestionamentoModal,
       showAutorizarModal,
+      showModalCodaeAutorizar,
       erro,
       showModalMarcarConferencia
     } = this.state;
@@ -176,7 +188,8 @@ class Relatorio extends Component {
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
-      ModalQuestionamento
+      ModalQuestionamento,
+      handleSubmit
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -236,6 +249,16 @@ class Relatorio extends Component {
       );
     };
 
+    const handleClickBotaoAprova = () => {
+      if (EXIBIR_MODAL_AUTORIZACAO) {
+        this.showAutorizarModal();
+      } else if (visao === CODAE && inversaoDiaCardapio) {
+        this.showModalCodaeAutorizar();
+      } else {
+        this.handleSubmit();
+      }
+    };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -277,13 +300,22 @@ class Relatorio extends Component {
         )}
         {!inversaoDiaCardapio && !erro && <div>Carregando...</div>}
         {inversaoDiaCardapio && (
-          <form onSubmit={this.props.handleSubmit}>
-            {endpointAprovaSolicitacao && (
+          <form onSubmit={handleSubmit(this.props.handleSubmit)}>
+            {EXIBIR_MODAL_AUTORIZACAO ? (
               <ModalAutorizarAposQuestionamento
                 showModal={showAutorizarModal}
                 loadSolicitacao={this.loadSolicitacao}
                 justificativa={justificativa}
                 closeModal={this.closeAutorizarModal}
+                endpoint={endpointAprovaSolicitacao}
+                uuid={uuid}
+              />
+            ) : (
+              <ModalCODAEAutoriza
+                showModal={showModalCodaeAutorizar}
+                loadSolicitacao={this.loadSolicitacao}
+                justificativa={justificativa}
+                closeModal={this.closeModalCodaeAutorizar}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
               />
@@ -337,11 +369,7 @@ class Relatorio extends Component {
                           <Botao
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.SUBMIT}
-                            onClick={() =>
-                              EXIBIR_MODAL_AUTORIZACAO
-                                ? this.showAutorizarModal()
-                                : this.handleSubmit()
-                            }
+                            onClick={() => handleClickBotaoAprova()}
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
                           />
