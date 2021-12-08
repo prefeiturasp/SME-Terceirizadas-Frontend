@@ -136,6 +136,7 @@ export default ({ uuid }) => {
                       ].concat(editais)}
                       required
                       validate={selectValidate}
+                      disabled={modeloKitLanche.uuid ? true : false}
                     />
                     <OnBlur name="edital">
                       {() => checaNomeExiste(values)}
