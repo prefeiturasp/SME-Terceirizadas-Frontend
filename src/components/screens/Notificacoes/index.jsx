@@ -9,21 +9,20 @@ import {
 import CardNotificacao from "./components/CardNotificacao";
 
 export default () => {
-  const [carregando, setCarregando] = useState(false);
+  const [carregando] = useState(false);
   const [notificacoes, setNotificacoes] = useState([]);
   const [pendencias, setPendencias] = useState([]);
   const [total, setTotal] = useState(1);
   const [page, setPage] = useState(1);
   const [clickBtnNotificacoes, setClickBtnNotificacoes] = useState(false);
 
-  const buscarNotificacoes = async page => {
+  const buscarNotificacoes = async () => {
     // CONSERTAR PAGINAÇÃO
     let pendenciasResponse = await getPendenciasNaoResolvidas();
     let notifsResponse = await getNotificacoesGerais();
     setPendencias(pendenciasResponse.data.results);
     setNotificacoes(notifsResponse.data.results);
     setTotal(notifsResponse.data.count);
-    console.log(pendencias);
   };
 
   const nextPage = page => {
@@ -44,7 +43,6 @@ export default () => {
     };
     let notificacoesNew = notificacoes;
     notificacoesNew[index].lido = !notificacoesNew[index].lido;
-    console.log(notificacoesNew);
     setNotificacoes([...notificacoesNew]);
     await setNotificacaoMarcarDesmarcarLida(payload);
   };

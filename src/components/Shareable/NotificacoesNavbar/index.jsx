@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Dropdown } from "antd";
 import moment from "moment";
 import Botao from "../Botao";
