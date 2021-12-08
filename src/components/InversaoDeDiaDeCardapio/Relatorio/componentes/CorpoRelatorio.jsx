@@ -10,6 +10,7 @@ import {
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import { statusEnum } from "constants/shared";
 
 export const CorpoRelatorio = props => {
   const {
@@ -135,6 +136,33 @@ export const CorpoRelatorio = props => {
           />
         </div>
       </div>
+      {inversaoDiaCardapio.logs &&
+        !inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+        inversaoDiaCardapio.status === statusEnum.CODAE_AUTORIZADO && (
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>
+                <b>Autorizou</b>
+              </p>
+              <div>
+                {
+                  inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
+                    .criado_em
+                }{" "}
+                - Informações da CODAE
+              </div>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    inversaoDiaCardapio.logs[
+                      inversaoDiaCardapio.logs.length - 1
+                    ].justificativa
+                }}
+              />
+            </div>
+          </div>
+        )}
     </div>
   );
 };
