@@ -24,7 +24,11 @@ export default ({ match }) => {
   const atual = defineAtual();
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={`/`}>
+    <Page
+      titulo={atual.titulo}
+      botaoVoltar
+      voltarPara={`/codae/cadastros/consulta-kits`}
+    >
       <Breadcrumb home={"/"} atual={atual} />
       <CadastroKitLanche uuid={uuid} />
     </Page>

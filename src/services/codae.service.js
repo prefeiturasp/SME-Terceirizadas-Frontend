@@ -33,6 +33,3 @@ export const createKitLanche = async payload =>
 
 export const updateKitLanche = async (payload, uuid) =>
   await axios.put(`/kit-lanches/${uuid}/`, payload);
-
-export const ativaOuInativaKitLanche = async (payload, uuid) =>
-  await axios.patch(`/kit-lanches/${uuid}/`, payload);

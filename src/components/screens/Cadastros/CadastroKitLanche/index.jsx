@@ -7,7 +7,6 @@ import {
   getKitLanches,
   createKitLanche,
   checaNomeKitLanche,
-  ativaOuInativaKitLanche,
   updateKitLanche
 } from "services/codae.service";
 import { Field, Form } from "react-final-form";
@@ -32,6 +31,11 @@ export default ({ uuid }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [editais, setEditais] = useState([]);
+  const [opcaoStatus] = useState([
+    { uuid: "", nome: "Selecione uma opção" },
+    { uuid: "ATIVO", nome: "Ativo" },
+    { uuid: "INATIVO", nome: "Inativo" }
+  ]);
   const [desabilitarBotao, setDesabilitarBotao] = useState(false);
   const [modeloKitLanche, setModeloKitLanche] = useState({
     edital: null,
@@ -46,31 +50,13 @@ export default ({ uuid }) => {
       edital: formValues.edital,
       nome: formValues.nome,
       descricao: formValues.descricao,
-      status: "ATIVO"
+      status: formValues.status
     };
     const response = uuid
       ? await updateKitLanche(payload, uuid)
       : await createKitLanche(payload);
     if ([HTTP_STATUS.CREATED, HTTP_STATUS.OK].includes(response.status)) {
       toastSuccess("Cadastro salvo com sucesso");
-      history.push(`/codae/cadastros/consulta-kits`);
-    } else {
-      toastError("Houve um erro ao tentar criar o Kit Lanche");
-    }
-    setCarregando(false);
-  };
-
-  const ativaOuInativa = async (solicitacao, uuid) => {
-    setCarregando(true);
-    let payload = modeloKitLanche;
-    payload.status = solicitacao;
-    const response = await ativaOuInativaKitLanche(payload, uuid);
-    if (response.status === HTTP_STATUS.OK) {
-      if (solicitacao === "ATIVO") {
-        toastSuccess("Cadastro ativado com sucesso");
-      } else {
-        toastSuccess("Cadastro inativo com sucesso");
-      }
       history.push(`/codae/cadastros/consulta-kits`);
     } else {
       toastError("Houve um erro ao tentar criar o Kit Lanche");
@@ -150,6 +136,7 @@ export default ({ uuid }) => {
                       ].concat(editais)}
                       required
                       validate={selectValidate}
+                      disabled={modeloKitLanche.uuid ? true : false}
                     />
                     <OnBlur name="edital">
                       {() => checaNomeExiste(values)}
@@ -185,30 +172,25 @@ export default ({ uuid }) => {
                       validate={textAreaRequired}
                     />
                   </div>
+                  <div className="col-4">
+                    <label className="col-form-label mb-1">
+                      <span className="asterisco">* </span>
+                      Status
+                    </label>
+                    <Field
+                      name="status"
+                      component={Select}
+                      options={opcaoStatus}
+                      required
+                      validate={selectValidate}
+                    />
+                  </div>
                 </div>
                 <div className="row">
                   <div className="col-12">
                     <hr />
                   </div>
-                  <div className="col-6">
-                    {uuid &&
-                      (modeloKitLanche.status === "ATIVO" ? (
-                        <Botao
-                          texto="Inativar"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.RED_OUTLINE}
-                          onClick={() => ativaOuInativa("INATIVO", uuid)}
-                        />
-                      ) : (
-                        <Botao
-                          texto="Ativar"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN}
-                          onClick={() => ativaOuInativa("ATIVO", uuid)}
-                        />
-                      ))}
-                  </div>
-                  <div className="col-6">
+                  <div className="offset-6 col-6">
                     <Botao
                       texto="Salvar"
                       type={BUTTON_TYPE.SUBMIT}
