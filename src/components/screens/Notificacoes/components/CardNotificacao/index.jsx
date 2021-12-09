@@ -107,6 +107,8 @@ export default ({
                 <Botao
                   texto="Acesse Aqui"
                   className="general-button"
+                  icon="fas fa-arrow-right"
+                  iconPosition="right"
                   style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                 />
               </Link>

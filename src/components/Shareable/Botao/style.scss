@@ -9,8 +9,11 @@ button.general-button {
   padding: 0 12px;
   text-align: center;
   border: 1px solid;
-  i.text-and-icon {
+  i.text-and-icon-left {
     padding-right: 8px;
+  }
+  i.text-and-icon-right {
+    padding-left: 8px;
   }
   &.blue-button {
     background-color: $blueButtonFont;
