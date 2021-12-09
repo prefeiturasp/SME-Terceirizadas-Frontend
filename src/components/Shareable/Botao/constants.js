@@ -3,6 +3,7 @@ export const BUTTON_STYLE = {
   BLUE_OUTLINE: "blue-button-outline",
   GREEN: "green-button",
   GREEN_OUTLINE: "green-button-outline",
+  GREEN_OUTLINE_WHITE: "green-button-outline-white",
   RED: "red-button",
   RED_OUTLINE: "red-button-outline",
   GRAY_OUTLINE: "red-button-outline",

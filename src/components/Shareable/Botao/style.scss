@@ -87,6 +87,29 @@ button.general-button {
       border: 1px solid $grayDisabled;
     }
   }
+  &.green-button-outline-white {
+    color: $green;
+    border: 1px solid $green;
+    background-color: white;
+    &:not(:disabled) {
+      i {
+        color: $green;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      background-color: $greenButtonHover;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: white;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
   &.red-button {
     color: $white;
     border: 1.5px solid $redToastError;

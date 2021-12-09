@@ -87,13 +87,6 @@ export default ({
             <div className="col-12">{notificacao.descricao}</div>
           </div>
           <div className="row acoes-notificacoes">
-            {/* <button
-                                        //onClick={() => toggleBtnNotificacoes(notificacao.uuid)}
-                                        className="btn btn-link btn-block text-left px-0" type="button"
-                                        data-toggle="collapse" data-target={`#collapse_${notificacao.uuid}`}
-                                        aria-expanded="true" aria-controls={`collapse_${notificacao.uuid}`}
-                                    > */}
-
             <div className="checkbox-container">
               <Checkbox
                 defaultChecked={notificacao.lido}
@@ -109,14 +102,12 @@ export default ({
                 Marcar como lida
               </Checkbox>
             </div>
-            {/* </button> */}
             {notificacao.link && (
               <Link to={notificacao.link}>
-                {/* TENTAR COLOCAR ÍCONE NO BOTÃO */}
                 <Botao
                   texto="Acesse Aqui"
                   className="general-button"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                 />
               </Link>
             )}

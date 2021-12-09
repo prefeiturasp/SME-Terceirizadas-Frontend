@@ -39,42 +39,44 @@
 }
 
 .menu-notificacoes {
+  overflow: hidden;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
   font-size: 12px;
-  //margin-top: 5px;
   min-width: 360px;
+  width: 20vw;
   z-index: 1;
+
+  .nao-lida > td {
+    background: #cfe8de;
+    &.status {
+      color: #b40c02;
+      text-transform: uppercase;
+    }
+  }
+
+  .lida > td {
+    background: white;
+  }
 
   .tr-notificacoes {
     cursor: pointer;
+    border: 1px solid #dadada;
+    height: 50px;
     &:first-child {
       th,
       td {
         border-top: 0 none;
       }
     }
-    td:first-child {
-      color: #42474a;
-    }
-    td:last-child {
-      color: #42474a;
-    }
     th,
     td {
       border-color: #dadada;
       padding-bottom: 0.5rem !important;
       padding-top: 0.5rem !important;
-      background: #cfe8de;
+
       font-weight: bold;
-      &.nao {
-        color: #b40c02;
-        text-transform: uppercase;
-      }
-      &.w-75 {
-        width: 160px !important;
-      }
-      &.w-25 {
-        width: 50px !important;
-      }
+      color: #42474a;
     }
   }
 }

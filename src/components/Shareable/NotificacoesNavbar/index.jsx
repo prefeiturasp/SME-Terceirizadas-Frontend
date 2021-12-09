@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Dropdown } from "antd";
-import moment from "moment";
 import Botao from "../Botao";
 import { BUTTON_STYLE } from "../Botao/constants";
+import { getNotificacoes, getQtdNaoLidas } from "services/notificacoes.service";
+import { NOTIFICACOES } from "configs/constants";
 import "./style.scss";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default () => {
-  const notificacoes = [
-    { lida: "sim", status: "lida", titulo: "aaaaaa" },
-    { lida: "sim", status: "lida", titulo: "bbbbb" },
-    { lida: "nao", status: "nao lida", titulo: "cccc" },
-    { lida: "nao", status: "nao lida", titulo: "eeeeeeeeee" },
-    { lida: "nao", status: "nao lida", titulo: "dddddddddddddddddd" }
-  ];
+  const [notificacoes, setNotificacoes] = useState([]);
+  const [quantidade, setQuantidade] = useState([]);
+  const history = useHistory();
+
+  const buscarNotificacoes = async () => {
+    const params = gerarParametrosConsulta({ page_size: 4 });
+    let notifsResponse = await getNotificacoes(params);
+    let qtdResponse = await getQtdNaoLidas();
+    setQuantidade(qtdResponse.data.quantidade_nao_lidos);
+    setNotificacoes(notifsResponse.data.results);
+  };
+
+  const goToNotificacoes = () => {
+    history.push(`/${NOTIFICACOES}/`);
+  };
+
+  useEffect(() => {
+    buscarNotificacoes();
+  }, []);
 
   const menu = (
     <div className="menu-notificacoes">
@@ -21,34 +36,34 @@ export default () => {
           {notificacoes.map((notificacao, index) => {
             return (
               <tr
+                onClick={() => goToNotificacoes()}
                 key={index}
-                className="tr-notificacoes"
-                // status={notificacao.status}
-                // onClick={() => onClickNotificacao(notificacao.id)}
+                className={`tr-notificacoes ${
+                  notificacao.lido ? "lida" : "nao-lida"
+                }`}
               >
                 <td className="py-1 px-4 align-middle w-75">
                   {notificacao.titulo}
                 </td>
                 <td
-                  className={`py-1 px-1 text-center w-25 align-middle ${
-                    notificacao.lida
-                  }`}
+                  className={`py-1 px-1 text-center w-25 align-middle status`}
                 >
-                  {notificacao.status}
+                  {notificacao.lido ? "Lida" : "Não Lida"}
                 </td>
                 <td className="py-1 px-2 align-middle w-25 text-right">
-                  {moment(notificacao.data).format("DD/MM/YYYY")}
+                  {notificacao.criado_em}
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+
       <Botao
         texto="Ver tudo"
         className="btn-block btn-notificacoes"
-        style={BUTTON_STYLE.GREEN_OUTLINE}
-        // onClick={onClickVerTudo}
+        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+        onClick={() => goToNotificacoes()}
       />
     </div>
   );
@@ -59,9 +74,7 @@ export default () => {
         <div className="nav-link text-center">
           <div className="icone-verde-fundo">
             <i className="fas fa-bell icone-verde" />
-            <span className="span-notificacoes-menor-que-10">
-              {notificacoes.length}
-            </span>
+            <span className="span-notificacoes-menor-que-10">{quantidade}</span>
           </div>
         </div>
         <p className="title">Notificações</p>

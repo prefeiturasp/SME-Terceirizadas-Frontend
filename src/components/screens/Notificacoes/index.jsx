@@ -7,6 +7,7 @@ import {
   setNotificacaoMarcarDesmarcarLida
 } from "services/notificacoes.service";
 import CardNotificacao from "./components/CardNotificacao";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default () => {
   const [carregando] = useState(false);
@@ -16,10 +17,10 @@ export default () => {
   const [page, setPage] = useState(1);
   const [clickBtnNotificacoes, setClickBtnNotificacoes] = useState(false);
 
-  const buscarNotificacoes = async () => {
-    // CONSERTAR PAGINAÇÃO
+  const buscarNotificacoes = async page => {
+    const params = gerarParametrosConsulta({ page: page });
     let pendenciasResponse = await getPendenciasNaoResolvidas();
-    let notifsResponse = await getNotificacoesGerais();
+    let notifsResponse = await getNotificacoesGerais(params);
     setPendencias(pendenciasResponse.data.results);
     setNotificacoes(notifsResponse.data.results);
     setTotal(notifsResponse.data.count);
@@ -41,14 +42,21 @@ export default () => {
       uuid: notificacao.uuid,
       lido: !notificacao.lido
     };
-    let notificacoesNew = notificacoes;
-    notificacoesNew[index].lido = !notificacoesNew[index].lido;
-    setNotificacoes([...notificacoesNew]);
+    if (notificacao.tipo === "Pendência") {
+      let pendenciasNew = pendencias;
+      pendenciasNew[index].lido = !pendenciasNew[index].lido;
+      setPendencias([...pendenciasNew]);
+    } else {
+      let notificacoesNew = notificacoes;
+      notificacoesNew[index].lido = !notificacoesNew[index].lido;
+      setNotificacoes([...notificacoesNew]);
+    }
+
     await setNotificacaoMarcarDesmarcarLida(payload);
   };
 
   useEffect(() => {
-    buscarNotificacoes();
+    buscarNotificacoes(page);
   }, []);
 
   return (
