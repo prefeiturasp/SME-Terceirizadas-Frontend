@@ -9,6 +9,7 @@ export const Botao = props => {
     className,
     disabled,
     icon,
+    iconPosition,
     onClick,
     style,
     titulo,
@@ -27,8 +28,13 @@ export const Botao = props => {
       accept={accept}
       tabIndex={tabindex}
     >
-      {icon && <i className={`${icon} ${texto && "text-and-icon"}`} />}
+      {iconPosition !== "right" && icon && (
+        <i className={`${icon} ${texto && "text-and-icon-left"}`} />
+      )}
       {texto}
+      {iconPosition === "right" && icon && (
+        <i className={`${icon} ${texto && "text-and-icon-right"}`} />
+      )}
     </button>
   );
 };
@@ -37,6 +43,8 @@ Botao.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
+  icon: PropTypes.string,
+  iconPosition: PropTypes.string,
   style: PropTypes.string,
   texto: PropTypes.string,
   titulo: PropTypes.string,
