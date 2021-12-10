@@ -184,6 +184,8 @@ export const slugify = str => {
   return str;
 };
 
+export const slugifyMin = str => slugify(str).toLowerCase();
+
 export const mapeiaStatusAlimento = str => {
   if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;
   if (str === "Parcial") return STATUS_ALIMENTO.PARCIAL;

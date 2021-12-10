@@ -147,6 +147,7 @@ import EntregasDilogPage from "pages/Logistica/EntregasDilogPage";
 import EntregasDistribuidorPage from "pages/Logistica/EntregasDistribuidorPage";
 import EntregasDrePage from "pages/Logistica/EntregasDrePage";
 import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
+import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 
 const routesConfig = [
   {
@@ -1193,6 +1194,12 @@ const routesConfig = [
     component: EntregasDrePage,
     exact: true,
     tipoUsuario: usuarioEhDRE()
+  },
+  {
+    path: `/${constants.NOTIFICACOES}`,
+    component: NotificacoesPage,
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
   }
 ];
 

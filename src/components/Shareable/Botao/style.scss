@@ -9,8 +9,11 @@ button.general-button {
   padding: 0 12px;
   text-align: center;
   border: 1px solid;
-  i.text-and-icon {
+  i.text-and-icon-left {
     padding-right: 8px;
+  }
+  i.text-and-icon-right {
+    padding-left: 8px;
   }
   &.blue-button {
     background-color: $blueButtonFont;
@@ -83,6 +86,29 @@ button.general-button {
     }
     &:disabled {
       background-color: transparent;
+      color: $grayDisabled;
+      border: 1px solid $grayDisabled;
+    }
+  }
+  &.green-button-outline-white {
+    color: $green;
+    border: 1px solid $green;
+    background-color: white;
+    &:not(:disabled) {
+      i {
+        color: $green;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      color: $white;
+      background-color: $greenButtonHover;
+      i {
+        color: $white;
+      }
+    }
+    &:disabled {
+      background-color: white;
       color: $grayDisabled;
       border: 1px solid $grayDisabled;
     }
