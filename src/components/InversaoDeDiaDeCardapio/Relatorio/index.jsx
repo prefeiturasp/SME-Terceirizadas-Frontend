@@ -28,7 +28,6 @@ import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHist
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
-import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -189,7 +188,7 @@ class Relatorio extends Component {
       endpointQuestionamento,
       ModalNaoAprova,
       ModalQuestionamento,
-      handleSubmit
+      ModalCodaeAutoriza
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -261,6 +260,15 @@ class Relatorio extends Component {
 
     return (
       <div className="report">
+        {ModalCodaeAutoriza && (
+          <ModalCodaeAutoriza
+            showModal={showModalCodaeAutorizar}
+            loadSolicitacao={this.loadSolicitacao}
+            closeModal={this.closeModalCodaeAutorizar}
+            endpoint={endpointAprovaSolicitacao}
+            uuid={uuid}
+          />
+        )}
         {ModalNaoAprova && (
           <ModalNaoAprova
             showModal={showNaoAprovaModal}
@@ -300,22 +308,13 @@ class Relatorio extends Component {
         )}
         {!inversaoDiaCardapio && !erro && <div>Carregando...</div>}
         {inversaoDiaCardapio && (
-          <form onSubmit={handleSubmit(this.props.handleSubmit)}>
-            {EXIBIR_MODAL_AUTORIZACAO ? (
+          <form onSubmit={() => this.handleSubmit()}>
+            {EXIBIR_MODAL_AUTORIZACAO && (
               <ModalAutorizarAposQuestionamento
                 showModal={showAutorizarModal}
                 loadSolicitacao={this.loadSolicitacao}
                 justificativa={justificativa}
                 closeModal={this.closeAutorizarModal}
-                endpoint={endpointAprovaSolicitacao}
-                uuid={uuid}
-              />
-            ) : (
-              <ModalCODAEAutoriza
-                showModal={showModalCodaeAutorizar}
-                loadSolicitacao={this.loadSolicitacao}
-                justificativa={justificativa}
-                closeModal={this.closeModalCodaeAutorizar}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
               />
@@ -368,10 +367,10 @@ class Relatorio extends Component {
                         ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.SUBMIT}
-                            onClick={() => handleClickBotaoAprova()}
-                            style={BUTTON_STYLE.GREEN}
                             className="ml-3"
+                            onClick={() => handleClickBotaoAprova()}
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
                           />
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
@@ -382,7 +381,7 @@ class Relatorio extends Component {
                             ? "Questionar"
                             : "Sim"
                         }
-                        type={BUTTON_TYPE.SUBMIT}
+                        type={BUTTON_TYPE.BUTTON}
                         onClick={() => this.showQuestionamentoModal("Sim")}
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
