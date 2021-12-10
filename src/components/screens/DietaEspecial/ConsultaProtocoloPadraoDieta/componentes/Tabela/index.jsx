@@ -21,6 +21,7 @@ export default ({ resultado }) => {
             <tr className="table-head-alimentacao">
               <th>Nome do Protocolo Padrão</th>
               <th>Status</th>
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -31,8 +32,13 @@ export default ({ resultado }) => {
                     <td>{protocoloPadrao.nome_protocolo}</td>
                     <td>
                       <div className="row">
-                        <div className="col-10">{protocoloPadrao.status}</div>
-                        <div className="col-2">
+                        <div className="col-12">{protocoloPadrao.status}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="row">
+                        <div className="col-4" />
+                        <div className="col-8">
                           <i
                             className={
                               selecionado === idx
