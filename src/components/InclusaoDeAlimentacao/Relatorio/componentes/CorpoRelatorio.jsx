@@ -89,12 +89,12 @@ export class CorpoRelatorio extends Component {
         rastro_terceirizada,
         logs,
         quantidades_periodo,
-        descricao,
         quantidade_alunos_por_faixas_etarias,
         inclusoes,
         data,
         motivo,
-        outro_motivo
+        outro_motivo,
+        observacao
       }
     } = this.props;
     return (
@@ -214,7 +214,7 @@ export class CorpoRelatorio extends Component {
             <p
               className="value"
               dangerouslySetInnerHTML={{
-                __html: descricao
+                __html: observacao
               }}
             />
           </div>
