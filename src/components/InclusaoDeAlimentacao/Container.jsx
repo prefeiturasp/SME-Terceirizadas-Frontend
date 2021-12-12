@@ -6,7 +6,7 @@ import {
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { formatarPeriodos } from "./helper";
-import { dataParaUTC } from "../../helpers/utilities";
+import { dataParaUTC, escolaEhCei } from "../../helpers/utilities";
 import InclusaoDeAlimentacao from ".";
 
 class Container extends Component {
@@ -33,12 +33,14 @@ class Container extends Component {
       });
     });
 
-    getMotivosInclusaoContinua().then(response => {
-      const motivos_continuos = response.results;
-      this.setState({
-        motivos_continuos
+    if (!escolaEhCei()) {
+      getMotivosInclusaoContinua().then(response => {
+        const motivos_continuos = response.results;
+        this.setState({
+          motivos_continuos
+        });
       });
-    });
+    }
 
     getMotivosInclusaoNormal().then(response => {
       const motivos_simples = response.results;
