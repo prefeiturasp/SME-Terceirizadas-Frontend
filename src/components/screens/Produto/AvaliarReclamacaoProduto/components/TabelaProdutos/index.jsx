@@ -243,6 +243,7 @@ export default class TabelaProdutos extends Component {
             <div>Tipo</div>
             <div>Qtde. Reclamações</div>
             <div>Data de cadastro</div>
+            <div />
           </div>
         </section>
         {listaProdutos.map((produto, indice) => {
@@ -262,18 +263,16 @@ export default class TabelaProdutos extends Component {
                 <div>{produto.ultima_homologacao.reclamacoes.length}</div>
                 <div className="com-botao">
                   {produto.criado_em.split(" ")[0]}
-                  <div className="botoes-produto">
-                    <i
-                      className={`fas fa-angle-${
-                        isProdutoAtivo ? "up" : "down"
-                      }`}
-                      onClick={() => {
-                        setIndiceProdutoAtivo(
-                          indice === indiceProdutoAtivo ? undefined : indice
-                        );
-                      }}
-                    />
-                  </div>
+                </div>
+                <div className="com-botao botoes-produto">
+                  <i
+                    className={`fas fa-angle-${isProdutoAtivo ? "up" : "down"}`}
+                    onClick={() => {
+                      setIndiceProdutoAtivo(
+                        indice === indiceProdutoAtivo ? undefined : indice
+                      );
+                    }}
+                  />
                 </div>
               </div>
               {isProdutoAtivo && (

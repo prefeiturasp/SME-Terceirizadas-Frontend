@@ -48,6 +48,7 @@ const TabelaProdutos = ({
           <div className="table-header-cell">Tipo</div>
           <div className="table-header-cell">Qtde. Reclamações</div>
           <div className="table-header-cell">Data de Cadastro</div>
+          <div />
         </div>
         {produtos.map((produto, indexProduto) => {
           const bordas = ativos.includes(indexProduto) ? "desativar-borda" : "";
@@ -76,6 +77,10 @@ const TabelaProdutos = ({
                     className={`table-body-cell ${bordas} d-flex justify-content-between`}
                   >
                     {produto.criado_em.split(" ")[0]}
+                  </div>
+                  <div
+                    className={`table-body-cell ${bordas} d-flex justify-content-between`}
+                  >
                     <i
                       className={`fas fa-${icone} mr-3`}
                       onClick={() => {

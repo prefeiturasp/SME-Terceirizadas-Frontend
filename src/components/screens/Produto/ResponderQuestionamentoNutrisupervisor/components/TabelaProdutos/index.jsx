@@ -62,109 +62,110 @@ const TabelaProdutos = ({
   };
 
   return (
-    <div className="row">
-      <div className="col-12 mt-3">Veja os resultados para a busca:</div>
-      <div className="col-12">
-        <div className="resultados-busca-produtos mb-3 mt-3">
-          <div className="tabela-produto-ue tabela-header-produto-ue">
-            <div>Nome do Produto</div>
-            <div>Marca</div>
-            <div>Fabricante</div>
-            <div>Qtde. Reclamações</div>
-            <div>Data de cadastro</div>
-          </div>
-          {produtos &&
-            produtos.map((produto, indice) => {
-              const isProdutoAtivo = indice === indiceProdutoAtivo;
-              return (
-                <div key={indice}>
-                  <div className="tabela-produto-ue tabela-body-produto-ue item-produto-ue">
-                    <div>{produto.nome}</div>
-                    <div>{produto.marca.nome}</div>
-                    <div>{produto.fabricante.nome}</div>
-                    <div>{produto.ultima_homologacao.reclamacoes.length}</div>
-                    <div className="com-botao">
-                      {produto.criado_em.split(" ")[0]}
-                      <div className="botoes-produto">
-                        <i
-                          className={`fas fa-angle-${
-                            isProdutoAtivo ? "up" : "down"
-                          }`}
-                          onClick={() => {
-                            setIndiceProdutoAtivo(
-                              indice === indiceProdutoAtivo ? undefined : indice
-                            );
-                          }}
-                        />
-                      </div>
-                    </div>
+    <>
+      <div className="row">
+        <div className="col-12 mt-3 mb-2">Veja os resultados para a busca:</div>
+      </div>
+      <section className="resultados-busca-questionamentos-ue">
+        <div className="tabela-produto-ue tabela-header-produto-ue">
+          <div>Nome do Produto</div>
+          <div>Marca</div>
+          <div>Fabricante</div>
+          <div>Qtde. Reclamações</div>
+          <div>Data de cadastro</div>
+          <div />
+        </div>
+        {produtos &&
+          produtos.map((produto, indice) => {
+            const isProdutoAtivo = indice === indiceProdutoAtivo;
+            return (
+              <div key={indice}>
+                <div className="tabela-produto-ue tabela-body-produto-ue item-produto-ue">
+                  <div>{produto.nome}</div>
+                  <div>{produto.marca.nome}</div>
+                  <div>{produto.fabricante.nome}</div>
+                  <div>{produto.ultima_homologacao.reclamacoes.length}</div>
+                  <div className="com-botao">
+                    {produto.criado_em.split(" ")[0]}
                   </div>
-                  {isProdutoAtivo && (
-                    <div className="container">
-                      <div className="botao-ver-produto mt-4">
-                        <Link
-                          to={`/gestao-produto/relatorio?uuid=${
-                            produto.ultima_homologacao.uuid
-                          }`}
-                        >
-                          <Botao
-                            texto="Ver produto"
-                            className="ml-3"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                          />
-                        </Link>
-                      </div>
-                      <hr />
-                      {produto.ultima_homologacao.reclamacoes
-                        .sort(ordenaPorCriadoEm)
-                        .map(reclamacao => {
-                          const desabilitarResponder =
-                            reclamacao.status === "RESPONDIDO_NUTRISUPERVISOR";
-                          return (
-                            <div key={reclamacao.uuid}>
-                              <Reclamacao reclamacao={reclamacao} />
-                              <div className="row">
-                                <div className="col-12">
-                                  <div className="botao-responder mb-4">
-                                    <Botao
-                                      texto="Responder"
-                                      type={BUTTON_TYPE.BUTTON}
-                                      style={BUTTON_STYLE.GREEN}
-                                      onClick={() => {
-                                        setUuid(reclamacao.uuid);
-                                        setProdutoSelecionado(produto);
-                                        setExibirModal(true);
-                                      }}
-                                      disabled={desabilitarResponder}
-                                    />
-                                  </div>
+                  <div className="com-botao botoes-produto">
+                    <i
+                      className={`fas fa-angle-${
+                        isProdutoAtivo ? "up" : "down"
+                      }`}
+                      onClick={() => {
+                        setIndiceProdutoAtivo(
+                          indice === indiceProdutoAtivo ? undefined : indice
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
+                {isProdutoAtivo && (
+                  <div className="container">
+                    <div className="botao-ver-produto mt-4">
+                      <Link
+                        to={`/gestao-produto/relatorio?uuid=${
+                          produto.ultima_homologacao.uuid
+                        }`}
+                      >
+                        <Botao
+                          texto="Ver produto"
+                          className="ml-3"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      </Link>
+                    </div>
+                    <hr />
+                    {produto.ultima_homologacao.reclamacoes
+                      .sort(ordenaPorCriadoEm)
+                      .map(reclamacao => {
+                        const desabilitarResponder =
+                          reclamacao.status === "RESPONDIDO_NUTRISUPERVISOR";
+                        return (
+                          <div key={reclamacao.uuid}>
+                            <Reclamacao reclamacao={reclamacao} />
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="botao-responder mb-4">
+                                  <Botao
+                                    texto="Responder"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN}
+                                    onClick={() => {
+                                      setUuid(reclamacao.uuid);
+                                      setProdutoSelecionado(produto);
+                                      setExibirModal(true);
+                                    }}
+                                    disabled={desabilitarResponder}
+                                  />
                                 </div>
                               </div>
                             </div>
-                          );
-                        })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          <ModalJustificativa
-            titulo="Responder reclamação de produto"
-            state={{
-              acao: "resposta_nutrisupervisor",
-              uuidReclamacao: uuid,
-              produto: produtoSelecionado
-            }}
-            labelJustificativa="Responder"
-            showModal={exibirModal}
-            closeModal={() => setExibirModal(false)}
-            onSubmit={onSubmit}
-            comAnexo={true}
-          />
-        </div>
-      </div>
-    </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        <ModalJustificativa
+          titulo="Responder reclamação de produto"
+          state={{
+            acao: "resposta_nutrisupervisor",
+            uuidReclamacao: uuid,
+            produto: produtoSelecionado
+          }}
+          labelJustificativa="Responder"
+          showModal={exibirModal}
+          closeModal={() => setExibirModal(false)}
+          onSubmit={onSubmit}
+          comAnexo={true}
+        />
+      </section>
+    </>
   );
 };
 
