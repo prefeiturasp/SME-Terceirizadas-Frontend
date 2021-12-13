@@ -169,7 +169,7 @@ export const CODAEAutorizaPedidoDRE = (uuid, justificativa) => {
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    body: JSON.stringify({ justificativa }),
+    body: JSON.stringify({ justificativa: justificativa }),
     headers: authToken
   })
     .then(res => {
