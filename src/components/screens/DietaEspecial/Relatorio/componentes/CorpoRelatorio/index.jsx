@@ -20,7 +20,7 @@ import IdentificacaoNutricionista from "../FormAutorizaDietaEspecial/componentes
 import PeriodoVigencia from "../FormAutorizaDietaEspecial/componentes/PeriodoVigencia";
 import { formataAlergias } from "../FormAutorizaDietaEspecial/helper";
 
-import { obtemIdentificacaoNutricionista } from "helpers/utilities";
+import { obtemIdentificacaoNutricionistaDieta } from "helpers/utilities";
 
 import { ehCanceladaSegundoStep } from "../../helpers";
 import "./styles.scss";
@@ -220,8 +220,11 @@ const CorpoRelatorio = ({
   };
 
   const initialValues = () => {
+    let logs = dietaEspecial.logs;
     if (dietaEspecial.registro_funcional_nutricionista === "") {
-      dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionista();
+      dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionistaDieta(
+        logs.pop().usuario
+      );
     }
     if (![undefined, null].includes(dietaEspecial.alergias_intolerancias)) {
       dietaEspecial.relacao_diagnosticos = formataAlergias(dietaEspecial)
