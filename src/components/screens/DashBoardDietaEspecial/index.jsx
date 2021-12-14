@@ -179,7 +179,7 @@ class DashBoardDietaEspecial extends Component {
     }
 
     if (
-      usuarioEhEscola() &&
+      (usuarioEhEscola() || usuarioEhTerceirizada()) &&
       aguardandoVigenciaList !== prevState.aguardandoVigenciaList &&
       !aguardandoVigenciaList
     ) {
@@ -282,7 +282,7 @@ class DashBoardDietaEspecial extends Component {
     );
 
     let aguardandoVigenciaListFiltered = null;
-    if (usuarioEhEscola()) {
+    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
       aguardandoVigenciaListFiltered = this.filtrarLote(
         aguardandoVigenciaList,
         values.lote
@@ -325,7 +325,7 @@ class DashBoardDietaEspecial extends Component {
       values.titulo
     );
 
-    if (usuarioEhEscola()) {
+    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
       aguardandoVigenciaListFiltered = this.filtrarNome(
         aguardandoVigenciaListFiltered,
         values.titulo
@@ -469,7 +469,7 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
-                {podeIncluirDietaEspecial && (
+                {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
                   <div className="col-6">
                     <CardStatusDeSolicitacao
                       cardTitle={"Aguardando início da vigência"}

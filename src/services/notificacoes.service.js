@@ -9,8 +9,8 @@ export const getQtdNaoLidas = async () =>
 export const getNotificacoesGerais = async params =>
   await axios.get("/notificacoes/gerais/", { params });
 
-export const getPendenciasNaoResolvidas = async () =>
-  await axios.get("/notificacoes/pendencias-nao-resolvidas/");
+export const getPendenciasNaoResolvidas = async params =>
+  await axios.get("/notificacoes/pendencias-nao-resolvidas/", { params });
 
 export const setNotificacaoMarcarDesmarcarLida = async payload =>
   await axios.put("/notificacoes/marcar-lido/", payload);

@@ -41,7 +41,8 @@ import {
   getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialPendenteAutorizacaoTerceirizada
+  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialAguardandoVigenciaTerceirizada
 } from "../../services/dashBoardDietaEspecial.service";
 
 class DietaEspecialBase extends React.Component {
@@ -128,6 +129,9 @@ export const DietaEspecialTerceirizada = () => (
     getDietaEspecialCanceladas={getDietaEspecialCanceladasTerceirizada}
     getDietaEspecialInativasTemporariamente={
       getDietaEspecialInativasTemporariamenteTerceirizada
+    }
+    getDietaEspecialAguardandoVigencia={
+      getDietaEspecialAguardandoVigenciaTerceirizada
     }
     getDietaEspecialAutorizadasTemporariamente={
       getDietaEspecialAutorizadasTemporariamenteTerceirizada
