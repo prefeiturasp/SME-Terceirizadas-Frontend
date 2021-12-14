@@ -1,0 +1,27 @@
+.data_inicio {
+  label {
+    font-weight: 500 !important;
+    color: #686868 !important;
+  }
+}
+
+.filtros-notificacoes {
+  padding-bottom: 40px;
+
+  .container-btn-broup-categorias {
+    display: block;
+    padding-bottom: 30px;
+    border-bottom: solid 1px #ccc;
+    font-size: 14px;
+
+    label {
+      color: #000;
+      border-color: #dadada;
+    }
+    .btn-outline-light:not(:disabled):not(.disabled).active,
+    .btn-outline-light:not(:disabled):not(.disabled):active,
+    .show > .btn-outline-light.dropdown-toggle {
+      background-color: #dadada !important;
+    }
+  }
+}

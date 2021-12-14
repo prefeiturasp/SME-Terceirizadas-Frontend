@@ -21,8 +21,10 @@ export default () => {
     setNotificacoes(notifsResponse.data.results);
   };
 
-  const goToNotificacoes = () => {
-    history.push(`/${NOTIFICACOES}/`);
+  const goToNotificacoes = notificacao => {
+    history.push(
+      `/${NOTIFICACOES}/${notificacao ? `?uuid=${notificacao.uuid}` : ""}`
+    );
   };
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default () => {
           {notificacoes.map((notificacao, index) => {
             return (
               <tr
-                onClick={() => goToNotificacoes()}
+                onClick={() => goToNotificacoes(notificacao)}
                 key={index}
                 className={`tr-notificacoes ${
                   notificacao.lido ? "lida" : "nao-lida"
@@ -60,7 +62,7 @@ export default () => {
       </table>
 
       <Botao
-        texto="Ver tudo"
+        texto="Ver todas"
         className="btn-block btn-notificacoes"
         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
         onClick={() => goToNotificacoes()}
