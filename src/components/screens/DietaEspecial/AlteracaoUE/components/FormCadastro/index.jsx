@@ -54,7 +54,12 @@ export default ({
 
   const onSubmit = (values, form) => {
     const payload = { ...values };
-
+    if (values.data_inicio)
+      payload.data_inicio = moment(values.data_inicio).format("DD/MM/YYYY");
+    else delete payload.data_inicio;
+    if (values.data_termino)
+      payload.data_termino = moment(values.data_termino).format("DD/MM/YYYY");
+    else delete payload.data_termino;
     payload.dieta_alterada = solicitacoesVigentes[0].uuid;
     payload.escola_destino = values.codigo_eol_escola;
 
