@@ -24,7 +24,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
   return (
     <>
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="2">
+        <td colSpan="3">
           <Botao
             texto="Histórico"
             type={BUTTON_TYPE.BUTTON}
@@ -43,7 +43,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
         />
       )}
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="2">
+        <td colSpan="3">
           <p className="data-title">Orientações Gerais</p>
           <div
             dangerouslySetInnerHTML={{
@@ -53,7 +53,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
         </td>
       </tr>
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="2">
+        <td colSpan="3">
           <p className="data-title">Lista de Substituições</p>
           <table className="table table-bordered table-alimentacao">
             <thead>
