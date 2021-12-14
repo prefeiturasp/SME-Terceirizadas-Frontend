@@ -454,6 +454,12 @@ export const obtemIdentificacaoNutricionista = () =>
     "crn_numero"
   )}`.replace(/[^\w\s-]/g, "");
 
+export const obtemIdentificacaoNutricionistaDieta = usuario =>
+  `Elaborado por ${usuario.nome} - CRN ${usuario.crn_numero}`.replace(
+    /[^\w\s-]/g,
+    ""
+  );
+
 export const getKey = obj => {
   return Object.keys(obj)[0];
 };
