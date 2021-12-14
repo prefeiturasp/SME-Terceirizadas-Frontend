@@ -220,7 +220,7 @@ const CorpoRelatorio = ({
   };
 
   const initialValues = () => {
-    let logs = dietaEspecial.logs;
+    let logs = [...dietaEspecial.logs];
     if (dietaEspecial.registro_funcional_nutricionista === "") {
       dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionistaDieta(
         logs.pop().usuario
