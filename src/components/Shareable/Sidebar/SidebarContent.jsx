@@ -69,6 +69,7 @@ export const SidebarContent = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
   const exibirCadastros =

@@ -819,6 +819,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
       usuarioEhEscola()
   },
   {
@@ -847,6 +848,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
       usuarioEhEscola()
   },
   {
@@ -899,6 +901,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
@@ -914,6 +917,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscola()
   },
@@ -927,7 +931,8 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      usuarioEhEscola()
+      usuarioEhEscola() ||
+      usuarioEhDRE()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.RECLAMACAO_DE_PRODUTO}`,
