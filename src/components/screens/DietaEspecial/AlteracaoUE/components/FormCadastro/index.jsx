@@ -277,6 +277,7 @@ export default ({
                           ? moment(values.data_termino, "DD/MM/YYYY")._d
                           : null
                       }
+                      writable
                       validate={required}
                       visitedError={true}
                     />
@@ -293,6 +294,7 @@ export default ({
                           : moment().add(1, "days")._d
                       }
                       maxDate={null}
+                      writable
                       validate={required}
                     />
                   </div>
