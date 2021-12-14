@@ -13,7 +13,7 @@ import { Field, Form } from "react-final-form";
 import { OnBlur } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import {
   required,
   selectValidate,
@@ -119,7 +119,7 @@ export default ({ uuid }) => {
         <div className="card-body consulta-kits">
           <Form
             onSubmit={onSubmit}
-            initialValues={modeloKitLanche}
+            initialValues={() => modeloKitLanche}
             render={({ handleSubmit, submitting, values, form }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row mb-3">
@@ -151,6 +151,7 @@ export default ({ uuid }) => {
                       name="nome"
                       component={InputText}
                       required
+                      disabled={modeloKitLanche.uuid ? true : false}
                       validate={required}
                     />
                     <OnBlur name="nome">{() => checaNomeExiste(values)}</OnBlur>
@@ -161,13 +162,8 @@ export default ({ uuid }) => {
                       Alimentos que compõe o KIT
                     </label>
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       name="descricao"
-                      valorInicial={
-                        modeloKitLanche.descricao
-                          ? modeloKitLanche.descricao
-                          : ""
-                      }
                       required
                       validate={textAreaRequired}
                     />
