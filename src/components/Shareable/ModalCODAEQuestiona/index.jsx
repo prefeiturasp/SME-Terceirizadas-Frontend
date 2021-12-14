@@ -4,8 +4,13 @@ import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
-import { TextArea } from "../TextArea/TextArea";
-import { toastError, toastSuccess } from "../Toast/dialogs";
+import {
+  peloMenosUmCaractere,
+  required
+} from "../../../helpers/fieldValidators";
+import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
+import { MENSAGEM_VAZIA } from "../TextArea/constants";
+import { toastError, toastSuccess, toastWarn } from "../Toast/dialogs";
 import "./style.scss";
 
 export class ModalCODAEQuestiona extends Component {
@@ -18,18 +23,22 @@ export class ModalCODAEQuestiona extends Component {
 
   async enviarQuestionamento(uuid) {
     const { justificativa } = this.state;
-    let resp = "";
-    resp = await this.props.endpoint(
-      uuid,
-      justificativa,
-      this.props.tipoSolicitacao
-    );
-    if (resp.status === HTTP_STATUS.OK) {
-      this.props.closeModal();
-      this.props.loadSolicitacao(this.props.uuid, this.props.tipoSolicitacao);
-      toastSuccess("Questionamento enviado com sucesso!");
+    if (justificativa === MENSAGEM_VAZIA) {
+      toastWarn("Observação é obrigatória.");
     } else {
-      toastError(resp.data.detail);
+      let resp = "";
+      resp = await this.props.endpoint(
+        uuid,
+        justificativa,
+        this.props.tipoSolicitacao
+      );
+      if (resp.status === HTTP_STATUS.OK) {
+        this.props.closeModal();
+        this.props.loadSolicitacao(this.props.uuid, this.props.tipoSolicitacao);
+        toastSuccess("Questionamento enviado com sucesso!");
+      } else {
+        toastError(resp.data.detail);
+      }
     }
   }
 
@@ -63,10 +72,12 @@ export class ModalCODAEQuestiona extends Component {
           <div className="row">
             <div className="col-12">
               <Field
-                component={TextArea}
+                component={TextAreaWYSIWYG}
                 label="Observação"
                 placeholder="Alguma observação para a Terceirizada?"
                 name="justificativa"
+                required
+                validate={[peloMenosUmCaractere, required]}
               />
             </div>
           </div>
