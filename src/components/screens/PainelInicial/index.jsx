@@ -54,6 +54,7 @@ const PainelInicial = ({ history }) => {
       {(usuarioEhQualquerCODAE() ||
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
+        usuarioEhDRE() ||
         usuarioEhEscola()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo

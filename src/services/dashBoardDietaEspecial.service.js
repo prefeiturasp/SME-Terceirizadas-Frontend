@@ -363,3 +363,8 @@ export const getPaginacaoSolicitacoesDietaEspecialCODAE = (
       console.log(error);
     });
 };
+
+export const getDietaEspecialAguardandoVigenciaTerceirizada = async uuid =>
+  fetchGet(
+    `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
+  );
