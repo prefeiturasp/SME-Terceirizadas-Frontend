@@ -3,22 +3,6 @@
     font-weight: 700;
   }
 
-  .container-btn-broup-categorias {
-    display: block;
-    padding-bottom: 30px;
-    border-bottom: solid 1px #ccc;
-
-    label {
-      color: #000;
-      border-color: #dadada;
-    }
-    .btn-outline-light:not(:disabled):not(.disabled).active,
-    .btn-outline-light:not(:disabled):not(.disabled):active,
-    .show > .btn-outline-light.dropdown-toggle {
-      background-color: #dadada !important;
-    }
-  }
-
   .span-icone-toogle {
     background-color: rgb(199, 201, 200);
     border-radius: 67px;
