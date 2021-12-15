@@ -1040,6 +1040,44 @@ class InclusaoDeAlimentacao extends Component {
                     </FormSection>
                   );
                 })}
+                {inclusoes.map((diaMotivo, indice) => {
+                  const ehMotivoContinuo =
+                    diaMotivo.motivo && diaMotivo.motivoContinuo;
+                  return (
+                    <FormSection
+                      key={indice}
+                      name={`inclusoes_${diaMotivo.id}`}
+                    >
+                      <section>
+                        {ehMotivoContinuo && (
+                          <div className="grid-outro-motivo pb-2">
+                            <Field
+                              component={TextArea}
+                              label="Observação"
+                              onChange={event =>
+                                this.handleField(
+                                  "observacao",
+                                  event,
+                                  diaMotivo.id
+                                )
+                              }
+                              name="observacao"
+                              required
+                              validate={required}
+                            />
+                            {this.state.acimaDoLimite.includes(
+                              diaMotivo.id
+                            ) && (
+                              <div className="error-msg">
+                                Limite máximo de 1000 caracteres
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </section>
+                    </FormSection>
+                  );
+                })}
                 <hr className="w-100" />
 
                 <div className="form-group row float-right mt-4">
