@@ -14,8 +14,8 @@ export default ({ pertence_a_escola }) => {
             Laudo
           </div>
           <div className="text">
-            Anexe o laudo fornecido pelo profissional acima. Sem ele, a
-            solicitação de Dieta Especial será negada.
+            Anexe o laudo de alta médica fornecido pelo profissional. Sem ele, a
+            solicitação de cancelamento será negada.
           </div>
           <div className="card-warning mt-2">
             <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
