@@ -15,7 +15,16 @@ export const FluxoDeStatus = props => {
     cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
   const fluxoUtilizado =
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
-
+  const fluxoUtilizadoEFormatado = fluxoUtilizado.map(log => {
+    let logFormatado = log;
+    if (log.status_evento_explicacao === "Escola solicitou inativação") {
+      logFormatado = "Escola solicitou cancelamento";
+    }
+    if (log.status_evento_explicacao === "Escola cancelou") {
+      logFormatado = "NUTRICODAE autorizou cancelamento";
+    }
+    return logFormatado;
+  });
   const getTitulo = log => {
     if (log) {
       if (
@@ -24,6 +33,12 @@ export const FluxoDeStatus = props => {
       ) {
         return log.justificativa;
       } else {
+        if (log.status_evento_explicacao === "Escola solicitou inativação") {
+          return "Escola solicitou cancelamento";
+        }
+        if (log.status_evento_explicacao === "Escola cancelou") {
+          return "NUTRICODAE autorizou cancelamento";
+        }
         return log.status_evento_explicacao;
       }
     }
@@ -33,7 +48,7 @@ export const FluxoDeStatus = props => {
       <div className="row">
         <div className="col-12">
           <ul className={`progressbar-titles fluxos`}>
-            {fluxoUtilizado.map((status, key) => {
+            {fluxoUtilizadoEFormatado.map((status, key) => {
               return (
                 <li key={key}>
                   {cloneListaDeStatus[key]
@@ -44,7 +59,7 @@ export const FluxoDeStatus = props => {
             })}
           </ul>
           <ul className="progressbar">
-            {fluxoUtilizado.map((status, key) => {
+            {fluxoUtilizadoEFormatado.map((status, key) => {
               let novoStatus = cloneListaDeStatus[key] || status;
               return (
                 <li
@@ -56,7 +71,7 @@ export const FluxoDeStatus = props => {
                       ? "pending"
                       : ""
                   }`}
-                  style={{ width: 100 / fluxoUtilizado.length + "%" }}
+                  style={{ width: 100 / fluxoUtilizadoEFormatado.length + "%" }}
                 >
                   {novoStatus.criado_em}
                   <br />
