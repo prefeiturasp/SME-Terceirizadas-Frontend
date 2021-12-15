@@ -830,31 +830,6 @@ class InclusaoDeAlimentacao extends Component {
                             />
                           )}
                         </div>
-                        {ehMotivoContinuo && (
-                          <div className="grid-outro-motivo pb-2">
-                            <Field
-                              component={TextArea}
-                              label="Observação"
-                              onChange={event =>
-                                this.handleField(
-                                  "observacao",
-                                  event,
-                                  diaMotivo.id
-                                )
-                              }
-                              name="observacao"
-                              required
-                              validate={required}
-                            />
-                            {this.state.acimaDoLimite.includes(
-                              diaMotivo.id
-                            ) && (
-                              <div className="error-msg">
-                                Limite máximo de 1000 caracteres
-                              </div>
-                            )}
-                          </div>
-                        )}
                         {diaMotivo.outroMotivo && (
                           <div className="grid-outro-motivo pb-2">
                             <Field
