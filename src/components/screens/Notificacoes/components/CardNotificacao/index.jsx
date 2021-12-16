@@ -84,7 +84,12 @@ export default ({
       >
         <div className="card-body">
           <div className="row">
-            <div className="col-12">{notificacao.descricao}</div>
+            <div
+              className="col-12 descricao-notificacao"
+              dangerouslySetInnerHTML={{
+                __html: notificacao.descricao
+              }}
+            />
           </div>
           <div className="row acoes-notificacoes">
             <div className="checkbox-container">
