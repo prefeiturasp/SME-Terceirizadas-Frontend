@@ -12,7 +12,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 
-const FORM_NAME = "buscaRequisicoesDilog";
+const FORM_NAME = "buscaNotificações";
 
 export default ({ filtros, setFiltros }) => {
   const initialValues = {};
