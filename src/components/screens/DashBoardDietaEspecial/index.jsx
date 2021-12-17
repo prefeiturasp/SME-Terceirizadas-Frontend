@@ -480,7 +480,7 @@ class DashBoardDietaEspecial extends Component {
                           : []
                       }
                       icon={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
-                      href={`/solicitacoes-dieta-especial/solicitacoes-autorizadas-temporariamente`}
+                      href={`/solicitacoes-dieta-especial/solicitacoes-aguardando-inicio-vigencia`}
                     />
                   </div>
                 )}
