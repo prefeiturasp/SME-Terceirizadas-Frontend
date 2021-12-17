@@ -24,6 +24,7 @@ import {
   DIETA_ESPECIAL_SOLICITACOES,
   SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE,
   SOLICITACOES_INATIVAS_TEMPORARIAMENTE,
+  SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA,
   INATIVAS_TEMPORARIAMENTE_DIETA,
   SOLICITACOES_INATIVAS,
   INATIVAS_DIETA
@@ -269,6 +270,26 @@ export class StatusSolicitacoes extends Component {
                 urlPaginacao: this.retornaUrlPaginacao(
                   visao,
                   AUTORIZADAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          break;
+        case SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA:
+          this.props
+            .getDietaEspecialAguardandoVigencia(instituicao.uuid)
+            .then(response => {
+              this.setState({
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  "aguardando-inicio-vigencia"
+                ),
+                count: response.data.count,
+                tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
+                titulo: "Aguardando início da vigência",
+                urlPaginacao: this.retornaUrlPaginacao(
+                  visao,
+                  SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA
                 )
               });
             });
