@@ -32,7 +32,9 @@ import {
   getDietaEspecialPendenteAutorizacaoCODAE,
   getDietaEspecialPendenteAutorizacaoDRE,
   getDietaEspecialPendenteAutorizacaoEscola,
-  getDietaEspecialPendenteAutorizacaoTerceirizada
+  getDietaEspecialPendenteAutorizacaoTerceirizada,
+  getDietaEspecialAguardandoVigenciaTerceirizada,
+  getDietaEspecialAguardandoVigenciaEscola
 } from "../../services/dashBoardDietaEspecial.service";
 
 export const HOME = "/painel-dieta-especial";
@@ -83,6 +85,9 @@ export const SolicitacoesDietaEspecialEscola = () => (
       getDietaEspecialInativasTemporariamenteEscola
     }
     getDietaEspecialInativas={getDietaEspecialInativasEscola}
+    getDietaEspecialAguardandoVigencia={
+      getDietaEspecialAguardandoVigenciaEscola
+    }
   />
 );
 
@@ -144,5 +149,8 @@ export const SolicitacoesDietaEspecialTerceirizada = () => (
       getDietaEspecialInativasTemporariamenteTerceirizada
     }
     getDietaEspecialInativas={getDietaEspecialInativasTerceirizada}
+    getDietaEspecialAguardandoVigencia={
+      getDietaEspecialAguardandoVigenciaTerceirizada
+    }
   />
 );
