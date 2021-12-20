@@ -67,7 +67,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {solicitacaoKitLanche.escola &&
@@ -75,7 +75,7 @@ export const CorpoRelatorio = props => {
               solicitacaoKitLanche.escola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {solicitacaoKitLanche.escola &&
@@ -83,12 +83,19 @@ export const CorpoRelatorio = props => {
               solicitacaoKitLanche.escola.lote.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {solicitacaoKitLanche.escola &&
               solicitacaoKitLanche.escola.tipo_gestao &&
               solicitacaoKitLanche.escola.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {solicitacaoKitLanche.rastro_terceirizada &&
+              solicitacaoKitLanche.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>
@@ -143,34 +150,35 @@ export const CorpoRelatorio = props => {
       {ehInclusaoCei(tipoSolicitacao) && (
         <Fragment>
           <TabelaFaixaEtaria faixas={solicitacaoKitLanche.faixas_etarias} />
-          {!!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
-            .length && (
-            <Fragment>
-              <div className="row report-label-value">
-                <div className="col-12 report-label-value">
-                  <p>Alunos com dieta especial</p>
-                </div>
-              </div>
-              <section className="table-report-dieta-especial">
-                <article>
-                  <div className="codigo-eol">Código EOL</div>
-                  <div className="nome">Nome</div>
-                </article>
-                {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
-                  (aluno, key) => {
-                    return (
-                      <article key={key}>
-                        <div className="codigo-eol">{aluno.codigo_eol}</div>
-                        <div className="nome">{aluno.nome}</div>
-                      </article>
-                    );
-                  }
-                )}
-              </section>
-            </Fragment>
-          )}
         </Fragment>
       )}
+      {solicitacaoKitLanche.alunos_com_dieta_especial_participantes &&
+        !!solicitacaoKitLanche.alunos_com_dieta_especial_participantes
+          .length && (
+          <Fragment>
+            <div className="row report-label-value">
+              <div className="col-12 report-label-value">
+                <p>Alunos com dieta especial</p>
+              </div>
+            </div>
+            <section className="table-report-dieta-especial">
+              <article>
+                <div className="codigo-eol">Código EOL</div>
+                <div className="nome">Nome</div>
+              </article>
+              {solicitacaoKitLanche.alunos_com_dieta_especial_participantes.map(
+                (aluno, key) => {
+                  return (
+                    <article key={key}>
+                      <div className="codigo-eol">{aluno.codigo_eol}</div>
+                      <div className="nome">{aluno.nome}</div>
+                    </article>
+                  );
+                }
+              )}
+            </section>
+          </Fragment>
+        )}
 
       <div className="row">
         <div className="col-12 report-label-value">

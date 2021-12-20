@@ -7,20 +7,25 @@
 .tabela-resultado-consultar-reclamacao-produto {
   font-size: 14px;
   border-left: 1px solid #e9eaea;
-  border-right: 1px solid #e9eaea;
   border-bottom: 1px solid #e9eaea;
 
   .table-grid {
     display: grid;
-    grid-template-columns: 36% 16% 16% 16% 16%;
+    grid-template-columns: 36% 15% 15% 15% 15% 4%;
   }
 
   .table-header {
     background: #f5f6f8;
+    div:last-child {
+      border-top: 1px solid #e9eaea;
+      border-left: 1px solid #e9eaea;
+      border-right: 1px solid #e9eaea;
+    }
   }
 
   .table-header-cell {
-    border: 1px solid #e9eaea;
+    border-left: 1px solid #e9eaea;
+    border-top: 1px solid #e9eaea;
     color: #42474a;
     text-align: left;
     font-weight: bold;
@@ -57,6 +62,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    div:last-child {
+      border-top: 1px solid #e9eaea;
+      border-left: 1px solid #e9eaea;
+      border-right: 1px solid #e9eaea;
+    }
   }
 
   .desativar-borda {

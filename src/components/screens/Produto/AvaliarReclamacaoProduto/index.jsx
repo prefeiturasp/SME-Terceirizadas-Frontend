@@ -92,7 +92,7 @@ export const AvaliarReclamacaoProduto = ({
   const onSubmit = values => {
     setLoading(true);
     setFormValues(deepCopy(values));
-    setPage(1);
+    setPage(page ? page : 1);
   };
 
   return (

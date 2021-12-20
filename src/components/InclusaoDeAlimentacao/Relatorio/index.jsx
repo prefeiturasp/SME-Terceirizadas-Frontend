@@ -17,8 +17,9 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE } from "../../../configs/constants";
+import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 
@@ -33,7 +34,8 @@ class Relatorio extends Component {
       showModal: false,
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
-      resposta_sim_nao: null
+      resposta_sim_nao: null,
+      showModalMarcarConferencia: false
     };
 
     //FIXME: migrar para padrao sem binding
@@ -42,6 +44,9 @@ class Relatorio extends Component {
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -86,6 +91,14 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
+  }
+
   loadSolicitacao(uuid, tipoSolicitacao) {
     obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
       response => {
@@ -128,7 +141,8 @@ class Relatorio extends Component {
       tipoSolicitacao,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal
+      showAutorizarModal,
+      showModalMarcarConferencia
     } = this.state;
     const {
       endpointAprovaSolicitacao,
@@ -178,6 +192,27 @@ class Relatorio extends Component {
       inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
       !inclusaoDeAlimentacao.logs[inclusaoDeAlimentacao.logs.length - 1]
         .resposta_sim_nao;
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TERCEIRIZADA &&
+      inclusaoDeAlimentacao &&
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        inclusaoDeAlimentacao.status
+      );
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -203,6 +238,17 @@ class Relatorio extends Component {
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
             tipoSolicitacao={this.state.tipoSolicitacao}
+          />
+        )}
+        {inclusaoDeAlimentacao && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+            }}
+            uuid={inclusaoDeAlimentacao.uuid}
+            endpoint="grupos-inclusao-alimentacao-normal"
           />
         )}
         {!inclusaoDeAlimentacao ? (
@@ -279,18 +325,49 @@ class Relatorio extends Component {
                           />
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
-                      <Botao
-                        texto={
-                          tipoPerfil ===
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
-                            ? "Questionar"
-                            : "Sim"
-                        }
-                        type={BUTTON_TYPE.SUBMIT}
-                        onClick={() => this.showQuestionamentoModal("Sim")}
-                        style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
-                      />
+                      <>
+                        {inclusaoDeAlimentacao.status ===
+                          statusEnum.CODAE_QUESTIONADO &&
+                        tipoPerfil === TIPO_PERFIL.TERCEIRIZADA ? (
+                          <Botao
+                            key="1"
+                            texto="Não"
+                            type={BUTTON_TYPE.SUBMIT}
+                            onClick={() => this.showQuestionamentoModal("Não")}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            className="ml-3"
+                          />
+                        ) : (
+                          <></>
+                        )}
+                        <Botao
+                          key="2"
+                          texto={
+                            tipoPerfil ===
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                              ? "Questionar"
+                              : "Sim"
+                          }
+                          type={BUTTON_TYPE.SUBMIT}
+                          onClick={() => this.showQuestionamentoModal("Sim")}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      </>
+                    )}
+                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                      <div className="form-group float-right mt-4">
+                        {inclusaoDeAlimentacao.terceirizada_conferiu_gestao ? (
+                          <label className="ml-3 conferido">
+                            <i className="fas fa-check mr-2" />
+                            Solicitação Conferida
+                          </label>
+                        ) : (
+                          <BotaoMarcarConferencia
+                            uuid={inclusaoDeAlimentacao.uuid}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
                 )}

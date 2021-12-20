@@ -23,8 +23,12 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
   const exibirReclamacao =
     usuarioEhNutricionistaSupervisao() || usuarioEhEscola();
+  const exibirReclamacaoUE = usuarioEhEscola();
+  const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
+  const exibirCadastroGeral =
+    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
@@ -53,8 +57,15 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           Reclamação de Produto
         </LeafItem>
       )}
-      {exibirReclamacao && (
+      {exibirReclamacaoUE && (
         <LeafItem to={`/${GESTAO_PRODUTO}/responder-questionamento-ue`}>
+          Responder Questionamento
+        </LeafItem>
+      )}
+      {exibirReclamacaoNutrisupervisao && (
+        <LeafItem
+          to={`/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`}
+        >
           Responder Questionamento
         </LeafItem>
       )}
@@ -86,6 +97,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
+      {exibirCadastroGeral && (
+        <LeafItem to="/gestao-produto/cadastro-geral">Cadastro Geral</LeafItem>
+      )}
     </Menu>
   );
 };

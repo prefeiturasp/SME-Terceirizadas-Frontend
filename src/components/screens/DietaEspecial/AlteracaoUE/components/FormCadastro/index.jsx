@@ -54,7 +54,12 @@ export default ({
 
   const onSubmit = (values, form) => {
     const payload = { ...values };
-
+    if (values.data_inicio)
+      payload.data_inicio = moment(values.data_inicio).format("DD/MM/YYYY");
+    else delete payload.data_inicio;
+    if (values.data_termino)
+      payload.data_termino = moment(values.data_termino).format("DD/MM/YYYY");
+    else delete payload.data_termino;
     payload.dieta_alterada = solicitacoesVigentes[0].uuid;
     payload.escola_destino = values.codigo_eol_escola;
 
@@ -79,6 +84,12 @@ export default ({
       setDadosIniciais({ ...values, nome_escola: undefined });
       return;
     }
+
+    if (codigoEol === meusDadosEscola.codigo_eol) {
+      setDadosIniciais({ ...values, nome_escola: undefined });
+      toastError("Escola de destino deve ser diferente da escola de origem.");
+      return;
+    }
     setCarregandoEscola(true);
 
     const params = { codigo_eol: codigoEol };
@@ -90,7 +101,7 @@ export default ({
       return;
     }
 
-    if (response.count) {
+    if (response.results.length) {
       setDadosIniciais({
         ...values,
         nome_escola: response.results[0].nome
@@ -277,6 +288,7 @@ export default ({
                           ? moment(values.data_termino, "DD/MM/YYYY")._d
                           : null
                       }
+                      writable
                       validate={required}
                       visitedError={true}
                     />
@@ -293,6 +305,7 @@ export default ({
                           : moment().add(1, "days")._d
                       }
                       maxDate={null}
+                      writable
                       validate={required}
                     />
                   </div>

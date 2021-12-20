@@ -10,6 +10,7 @@ export const validaFormularioStep1 = async ({
   fabricante,
   componentes,
   tem_aditivos_alergenicos,
+  tem_gluten,
   aditivos
 }) => {
   let arrayValidacao = [];
@@ -31,9 +32,6 @@ export const validaFormularioStep1 = async ({
   if (fabricante === null) {
     arrayValidacao.push("Informe um fabricante do produto.");
   }
-  if (componentes === null) {
-    arrayValidacao.push("Informe os componentes do produto.");
-  }
   if (componentes && componentes.length > 5000) {
     arrayValidacao.push(
       'Sistema não permite campo "Nome dos componentes do produto" com mais de 5000 caracteres.'
@@ -45,6 +43,9 @@ export const validaFormularioStep1 = async ({
     if (tem_aditivos_alergenicos && aditivos === null) {
       arrayValidacao.push("Informe os aditivos alergênicos.");
     }
+  }
+  if (tem_gluten === null) {
+    arrayValidacao.push("Informe se produto possui gluten.");
   }
   if (arrayValidacao.length === 0) {
     const resposta = await produtoJaExiste({
@@ -63,12 +64,19 @@ export const validaFormularioStep1 = async ({
   return arrayValidacao;
 };
 
-export const Step1EstaValido = ({ nome, marca, fabricante, componentes }) => {
+export const Step1EstaValido = ({
+  nome,
+  marca,
+  fabricante,
+  tem_gluten,
+  componentes
+}) => {
   if (
     nome !== null &&
     marca !== null &&
     fabricante !== null &&
-    componentes !== null
+    tem_gluten !== null &&
+    ![null, undefined, ""].includes(componentes)
   ) {
     return true;
   } else {
@@ -85,6 +93,7 @@ export const retornaObjetoRequest = ({
   fabricante,
   componentes,
   tem_aditivos_alergenicos,
+  tem_gluten,
   aditivos
 }) => {
   return {
@@ -96,6 +105,7 @@ export const retornaObjetoRequest = ({
     fabricante: fabricante,
     componentes: componentes,
     tem_aditivos_alergenicos: tem_aditivos_alergenicos,
+    tem_gluten: tem_gluten,
     aditivos: aditivos
   };
 };
@@ -113,12 +123,14 @@ export const retornaPayloadDefault = () => {
     componentes: null,
     tem_aditivos_alergenicos: null,
     aditivos: null,
+    tem_gluten: null,
     tipo: null,
     embalagem: null,
     prazo_validade: null,
     info_armazenamento: null,
     outras_informacoes: null,
     numero_registro: null,
+    especificacoes: null,
     porcao: null,
     unidade_caseira: null
   };

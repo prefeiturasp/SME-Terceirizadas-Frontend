@@ -8,3 +8,32 @@
   background: #3e8459;
   color: #fff;
 }
+
+.orientacoes {
+  background: #dadada;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+  padding: 1.5%;
+  min-height: 150px;
+  p {
+    color: #42474a;
+    font-weight: 900;
+  }
+}
+
+.motivoNegacao {
+  background: #dadada;
+  border: 1px solid #d1d3e2;
+  border-radius: 0.35rem;
+  padding: 1.5%;
+  min-height: 60px;
+  p {
+    color: #42474a;
+    font-weight: 900;
+  }
+}
+
+.label {
+  color: #686868;
+  font-weight: 500;
+}

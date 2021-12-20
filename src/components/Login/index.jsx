@@ -12,6 +12,7 @@ import { recuperaSenha, setUsuario } from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
+import { InputPassword } from "../Shareable/Input/InputPassword";
 import Select from "../Shareable/Select";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
@@ -21,6 +22,11 @@ import {
   fieldCnpj,
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
+
+const TOOLTIP_CPF = `Somente números`;
+const TOOLTIP_CNPJ = `Somente números`;
+const TOOLTIP_RF = `Somente números`;
+const TOOLTIP_SENHA = `Pelo menos 8 caracteres, uma letra e um número" e ícone de "olho" onde ao clicar irá mostrar e ocular a senha.`;
 
 export class Login extends Component {
   constructor(props) {
@@ -135,7 +141,7 @@ export class Login extends Component {
   }
 
   renderLogin() {
-    const { handleSubmit, pristine, submitting } = this.props;
+    const { handleSubmit, submitting } = this.props;
     const { bloquearBotao } = this.state;
     return (
       <div className="form">
@@ -151,13 +157,12 @@ export class Login extends Component {
             validate={[required]}
           />
           <Field
-            component={InputText}
+            component={InputPassword}
             esconderAsterisco
             label="Senha"
             name="password"
             placeholder={"******"}
             required
-            type="password"
             validate={required}
           />
           <p className="mt-2">
@@ -178,19 +183,22 @@ export class Login extends Component {
             className="col-12"
             style={BUTTON_STYLE.GREEN}
             texto="Acessar"
-            disabled={pristine || submitting || bloquearBotao}
+            disabled={submitting || bloquearBotao}
             type={BUTTON_TYPE.SUBMIT}
           />
-          <Link
-            className="hyperlink text-center mt-3 d-block"
-            data-cy="ainda-nao-cadastrado"
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
-            }
-            to="#"
-          >
-            Ainda não sou cadastrado
-          </Link>
+          <p className="mt-3">
+            Não possui uma conta? &nbsp;
+            <Link
+              className="hyperlink"
+              data-cy="ainda-nao-cadastrado"
+              onClick={() =>
+                this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
+              }
+              to="#"
+            >
+              Cadastre-se
+            </Link>
+          </p>
         </form>
       </div>
     );
@@ -201,40 +209,62 @@ export class Login extends Component {
     const { bloquearBotao, tab } = this.state;
     return (
       <div className="signup-form">
-        <div className="tabs">
+        <div className="tabs d-md-block d-none">
           <div className="row">
             <div
-              onClick={() => this.switchTab("escola")}
+              onClick={() => this.switchTab(TABS.ESCOLA)}
               className={`tab col-4 ${
                 tab === TABS.ESCOLA ? "active" : "inactive"
               }`}
             >
-              ESCOLA
+              {TABS.ESCOLA}
             </div>
             <div
-              onClick={() => this.switchTab("dre/codae")}
+              onClick={() => this.switchTab(TABS.DRE_CODAE)}
               className={`tab col-4 ${
                 tab === TABS.DRE_CODAE ? "active" : "inactive"
               }`}
             >
-              DRE/CODAE
+              {TABS.DRE_CODAE}
             </div>
             <div
-              onClick={() => this.switchTab("terceirizadas")}
+              onClick={() => this.switchTab(TABS.TERCEIRIZADAS)}
               className={`tab col-4 ${
                 tab === TABS.TERCEIRIZADAS ? "active" : "inactive"
               }`}
             >
-              EMPRESA
+              {TABS.TERCEIRIZADAS}
             </div>
           </div>
+        </div>
+        <div className="input-group-append d-block d-md-none col-md-6 col-12">
+          <Field
+            component={Select}
+            name="tipo_cadastro"
+            label="Tipo de Cadastro"
+            options={[
+              {
+                nome: "ESCOLA"
+              },
+              {
+                nome: "DRE/CODAE"
+              },
+              {
+                nome: "EMPRESA"
+              }
+            ]}
+            onChange={evt => {
+              this.switchTab(evt.target.value);
+            }}
+            naoDesabilitarPrimeiraOpcao
+          />
         </div>
         <div className="form">
           <form onSubmit={handleSubmit(this.handleSubmitCadastro)}>
             {tab === TABS.DRE_CODAE && (
               <div className="row">
                 <div className="input-group email-sme">
-                  <div ref={this.emailInput} className="col-6">
+                  <div ref={this.emailInput} className="col-12 col-md-6">
                     <Field
                       component={InputText}
                       placeholder={"Início do seu E-mail SME"}
@@ -245,7 +275,7 @@ export class Login extends Component {
                       validate={[required, semCaracteresEspeciais]}
                     />
                   </div>
-                  <div className="input-group-append col-6">
+                  <div className="input-group-append d-none d-md-flex col-md-6">
                     <Field
                       component={Select}
                       name="tipo_email"
@@ -254,6 +284,17 @@ export class Login extends Component {
                       validate={required}
                       naoDesabilitarPrimeiraOpcao
                       width={this.state.width}
+                    />
+                  </div>
+                  <div className="input-group-append d-block d-md-none col-md-6">
+                    <Field
+                      component={Select}
+                      name="tipo_email"
+                      label="Tipo de e-mail"
+                      options={TIPOS_EMAIL_CADASTRO}
+                      required
+                      validate={required}
+                      naoDesabilitarPrimeiraOpcao
                     />
                   </div>
                 </div>
@@ -275,43 +316,45 @@ export class Login extends Component {
               </div>
             )}
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
                   {...fieldCpf}
                   component={InputText}
                   label="CPF"
                   name="cpf"
-                  placeholder={"Digite o seu CPF"}
+                  placeholder={"Digite seu CPF"}
+                  tooltipText={TOOLTIP_CPF}
                   required
                   type="text"
                   validate={required}
                 />
               </div>
               {(tab === TABS.ESCOLA || tab === TABS.DRE_CODAE) && (
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                   <Field
                     component={InputText}
                     label="Nº RF"
                     name="registro_funcional"
-                    placeholder={"Digite o RF"}
+                    placeholder={"Digite seu RF"}
+                    tooltipText={TOOLTIP_RF}
                     required
                     type="text"
                     pattern="\d*"
                     title="somente números"
-                    helpText="Somente números"
                     maxlength="7"
                     validate={[required, length(7)]}
                   />
                 </div>
               )}
               {tab === TABS.TERCEIRIZADAS && (
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                   <Field
                     {...fieldCnpj}
                     component={InputText}
                     label="CNPJ"
                     name="cnpj"
                     placeholder={"Digite o CNPJ da Empresa"}
+                    tooltipText={TOOLTIP_CNPJ}
                     required
                     type="text"
                     validate={[required]}
@@ -320,46 +363,45 @@ export class Login extends Component {
               )}
             </div>
             <div className="row">
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
-                  component={InputText}
+                  component={InputPassword}
                   label="Senha"
                   name="password"
                   placeholder={"******"}
+                  tooltipText={TOOLTIP_SENHA}
                   required
-                  type="password"
                   validate={required}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
-                  helpText="Pelo menos 8 caracteres, uma letra e um número"
                 />
               </div>
-              <div className="col-6">
+              <div className="col-12 col-md-6">
                 <Field
-                  component={InputText}
+                  component={InputPassword}
                   label="Confirme sua senha"
                   name="confirmar_password"
                   placeholder={"******"}
                   required
-                  type="password"
                   validate={required}
                 />
               </div>
             </div>
-            <div
-              onClick={() =>
-                this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-              }
-              className="text-right back"
-            >
-              voltar
-            </div>
-            <div className="pt-2">
+            <div className="alinha-direita mt-3 ml-4">
+              <Botao
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                texto="Cancelar"
+                className="col-md-2 ml-3"
+                disabled={bloquearBotao}
+                onClick={() =>
+                  this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+                }
+              />
               <Botao
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 texto="Cadastrar"
-                className="col-12"
+                className="col-md-2 ml-3"
                 disabled={bloquearBotao}
               />
             </div>
@@ -372,29 +414,24 @@ export class Login extends Component {
     return (
       <div>
         <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <center className="mt-5">
-          <div className="div-circular-verde">
-            <div>
-              <i className="fas fa-check fa-3x check-verde" />
+        <center>
+          <div className="mt-3">
+            <div className="alerta-verde mt-2">
+              <i className="far fa-check-circle" />
+              <p>E-mail de recuperação enviado com sucesso</p>
             </div>
-          </div>
-        </center>
-        <div className="mt-3 alinha-centro">
-          <div>
-            <p className="texto-simples-verde mt-2">
+            <p className="mt-1">
               {`Seu link de recuperação de senha foi enviado para
             ${this.state.email_recuperacao}`}
             </p>
-            <p className="texto-simples-verde mt-2">
-              Verifique sua caixa de entrada!
-            </p>
+            <p className="mt-2">Verifique sua caixa de entrada ou spam</p>
           </div>
-        </div>
-        <center className="mt-5">
+        </center>
+        <center className="mt-4">
           <Botao
-            className="col-4 "
+            className="col-sm-4 col-8"
             style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
+            texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
             onClick={() =>
               this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -409,28 +446,25 @@ export class Login extends Component {
     return (
       <div>
         <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <center className="mt-5">
-          <div className="div-circular-vermelho">
-            <div>
-              <i className="fas fa-times fa-3x check-vermelho" />
+        <center className="mt-4">
+          <div className="mt-3">
+            <div className="alerta-vermelho mt-2">
+              <i className="far fa-times-circle" />
+              <p>E-mail não encontrado</p>
             </div>
-          </div>
-        </center>
-        <center>
-          <div className="col-8 mt-3">
-            <p className="texto-simples-vermelho mt-2">
+            <p className="mt-1">
               Você não tem um e-mail cadastrado para recuperar sua senha.
             </p>
-            <p className="texto-simples-vermelho mt-2">
+            <p className="mt-2">
               Para restabelecer o seu acesso, procure o Diretor da sua unidade.
             </p>
           </div>
         </center>
         <center>
           <Botao
-            className="col-4"
+            className="col-sm-4 col-6"
             style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
+            texto="Voltar ao Início"
             type={BUTTON_TYPE.SUBMIT}
             onClick={() =>
               this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
@@ -469,16 +503,7 @@ export class Login extends Component {
 
         <div className="alinha-direita mt-3 ml-4 mr-4">
           <Botao
-            className="col-3"
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            texto="Voltar"
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-            }
-            type={BUTTON_TYPE.SUBMIT}
-          />
-          <Botao
-            className="col-3 ml-2"
+            className="col-md-2 ml-3"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             texto="Cancelar"
             type={BUTTON_TYPE.SUBMIT}
@@ -487,7 +512,7 @@ export class Login extends Component {
             }
           />
           <Botao
-            className="col-3 ml-2"
+            className="col-md-2 ml-3"
             style={BUTTON_STYLE.GREEN}
             texto="Continuar"
             type={BUTTON_TYPE.SUBMIT}
@@ -524,7 +549,7 @@ export class Login extends Component {
         <div className="right-half">
           <div className="container my-auto">
             <div className="logo-sigpae">
-              <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
+              <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
             </div>
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">

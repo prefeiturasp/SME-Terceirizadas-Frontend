@@ -5,16 +5,113 @@ const DESCRICAO_SOLICITACAO = {
   ESCOLA_SOLICITOU_INATIVACAO: "Solicitação de Cancelamento",
   CODAE_NEGOU_INATIVACAO: "Negada o Cancelamento",
   CODAE_AUTORIZOU_INATIVACAO: "Cancelamento Autorizado",
-  ESCOLA_CANCELOU: "Cancelada pela Unidade Escolar",
-  TERMINADA_AUTOMATICAMENTE_SISTEMA: "Cancelada por atingir data de término",
+  ESCOLA_CANCELOU: "Cancelada pela Unidade Educacional",
+  TERMINADA_AUTOMATICAMENTE_SISTEMA:
+    "Cancelamento automático por atingir data de término",
   CANCELADO_ALUNO_MUDOU_ESCOLA:
-    "Cancelamento por alteração de unidade educacional",
+    "Cancelamento para aluno não matriculado na Unidade Educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
-    "Cancelamento para aluno não matriculado na rede municipal"
+    "Cancelamento para aluno não matriculado na rede municipal",
+  CODAE_NEGOU_CANCELAMENTO: "Negada o Cancelamento"
 };
 
-export const cabecalhoDieta = dietaEspecial => {
-  return `Dieta Especial - ${
-    DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao]
-  }`;
+export const cabecalhoDieta = (dietaEspecial, card) => {
+  let descricao = null;
+  if (card && card === "inativas") {
+    descricao = "Inativa";
+  } else if (card && card === "inativas-temp") {
+    descricao = "Inativa Temporariamente";
+  } else if (card && card === "autorizadas-temp") {
+    descricao = "Autorizada Temporariamente";
+  } else if (
+    dietaEspecial.status_solicitacao === "CODAE_A_AUTORIZAR" &&
+    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+  ) {
+    descricao = "Solicitação de Alteração de U.E";
+  } else if (
+    dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" &&
+    dietaEspecial.tipo_solicitacao === "ALTERACAO_UE"
+  ) {
+    descricao = "Negada Alteração de UE";
+  } else {
+    descricao = DESCRICAO_SOLICITACAO[dietaEspecial.status_solicitacao];
+  }
+
+  return `Dieta Especial - ${descricao}`;
 };
+
+export const ehSolicitacaoDeCancelamento = status => {
+  return [
+    "ESCOLA_CANCELOU",
+    "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+    "CANCELADO_ALUNO_MUDOU_ESCOLA",
+    "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+  ].includes(status);
+};
+
+export const formataJustificativa = dietaEspecial => {
+  let justificativa = null;
+  if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
+    if (dietaEspecial.logs.length === 2) {
+      justificativa =
+        dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa;
+    } else {
+      justificativa = dietaEspecial.logs[2].justificativa;
+    }
+  }
+  if (dietaEspecial.status_solicitacao === "ESCOLA_SOLICITOU_INATIVACAO") {
+    justificativa = dietaEspecial.logs.filter(
+      log => log.status_evento_explicacao === "Escola solicitou inativação"
+    )[0].justificativa;
+  }
+  if (
+    dietaEspecial.status_solicitacao === "TERMINADA_AUTOMATICAMENTE_SISTEMA"
+  ) {
+    justificativa = "Cancelamento automático por atingir data de término.";
+  }
+  if (
+    dietaEspecial.status_solicitacao === "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+  ) {
+    justificativa =
+      "Cancelamento automático para aluno não matriculado na rede municipal.";
+  }
+  if (dietaEspecial.status_solicitacao === "CANCELADO_ALUNO_MUDOU_ESCOLA") {
+    justificativa =
+      "Cancelamento automático para aluno não matriculado na Unidade Educacional.";
+  }
+  return justificativa;
+};
+
+export const mostrarFormulário = status => {
+  return [
+    "ESCOLA_CANCELOU",
+    "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+    "CANCELADO_ALUNO_MUDOU_ESCOLA",
+    "CANCELADO_ALUNO_NAO_PERTENCE_REDE",
+    "CODAE_A_AUTORIZAR"
+  ].includes(status);
+};
+
+export const mostrarFormUsuarioEscola = (perfil, dieta) => {
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
+  if (
+    tipoUsuario === perfil &&
+    dieta.status_solicitacao === "CODAE_A_AUTORIZAR"
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+export const ehCanceladaSegundoStep = dieta => {
+  if (
+    dieta.logs.length === 2 &&
+    dieta.logs[1].status_evento_explicacao === "Escola cancelou"
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
+// (dietaEspecial && dietaEspecial.logs.length === 2 && status === "ESCOLA_CANCELOU")? true : false;

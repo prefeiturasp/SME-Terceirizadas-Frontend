@@ -42,6 +42,10 @@ div.card.meal-kit {
       &:not(:last-child) {
         border-bottom: 1px solid $grayInputBackground;
       }
+
+      p {
+        font-size: 13px;
+      }
     }
   }
 }

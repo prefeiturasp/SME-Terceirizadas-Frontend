@@ -30,3 +30,8 @@ export const ordenaPorDate = (a, b) => {
   const data_b = parseDataHoraBrToMoment(b.date);
   return comparaObjetosMoment(data_b, data_a);
 };
+
+export const extrairStatusDaSolicitacaoURL = urlParaSeparar => {
+  let arrayDeStrings = urlParaSeparar.split("/");
+  return arrayDeStrings[arrayDeStrings.length - 1];
+};

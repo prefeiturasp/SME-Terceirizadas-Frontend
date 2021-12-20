@@ -52,10 +52,16 @@
       text-decoration: underline;
     }
   }
+  p.conferida {
+    color: #198459 !important;
+  }
   span.date-time {
     font-size: 10px;
     color: $blackInput;
     padding-right: 35px;
+  }
+  span.conferida {
+    color: #198459 !important;
   }
   a.see-more {
     font-weight: bold;

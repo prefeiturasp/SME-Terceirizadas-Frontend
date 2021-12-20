@@ -8,7 +8,8 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
   const isDisabled = guia => {
     if (
       guia.situacao === "ARQUIVADA" ||
-      guia.status !== "Pendente de conferência"
+      guia.status !== "Pendente de conferência" ||
+      guia.status_requisicao !== "DISTRIBUIDOR_CONFIRMA"
     ) {
       return true;
     } else {

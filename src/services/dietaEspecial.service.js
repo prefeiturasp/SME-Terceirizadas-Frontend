@@ -98,6 +98,16 @@ export const CODAENegaDietaEspecial = async (uuid, payload) => {
   return axios.post(url, payload);
 };
 
+export const CODAENegaSolicitacaoCancelamento = async (uuid, payload) => {
+  const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar-cancelamento-dieta-especial/`;
+  return axios.post(url, payload);
+};
+
+export const getMotivosNegarSolicitacaoCancelamento = async () => {
+  const url = `${API_URL}/motivos-negacao/?processo=CANCELAMENTO`;
+  return retornoBase(url);
+};
+
 export const terceirizadaTomaCienciaDietaEspecial = async uuid => {
   const url = `/solicitacoes-dieta-especial/${uuid}/tomar_ciencia/`;
   return axios.post(url);
@@ -151,6 +161,25 @@ export const escolaInativaDietaEspecial = async (uuid, payload) => {
   return fetch(url, {
     method: "PATCH",
     body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+export const terceirizadaMarcaConferencia = async (uuid, endpoint) => {
+  const url = `${API_URL}/${endpoint}/${uuid}/marcar-conferida/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
     headers: authToken
   })
     .then(res => {

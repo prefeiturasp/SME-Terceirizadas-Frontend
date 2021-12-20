@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Field } from "redux-form";
-import { TEMPO_PASSEIO } from "../../../../../constants/shared";
 import "./style.scss";
 
 export class CardKit extends Component {
   render() {
-    const { nome, itens, uuid } = this.props.kitLanche;
+    const { nome, uuid, descricao } = this.props.kitLanche;
     const {
       checked,
       kitsChecked,
@@ -20,17 +19,14 @@ export class CardKit extends Component {
         kitsChecked.length !== 0 &&
         !kitsChecked.includes(uuid) &&
         parseInt(tempoPasseio) === kitsChecked.length - 1) ||
-      tempoPasseio === TEMPO_PASSEIO.OITO_HORAS_OU_MAIS ||
       (tempoPasseio === "" &&
         (kitsChecked.length === 0 || !kitsChecked.includes(uuid)));
     return (
       <div
         className={`card meal-kit
         ${checked && "checked"}
-        ${disabled &&
-          tempoPasseio !== TEMPO_PASSEIO.OITO_HORAS_OU_MAIS &&
-          "disabled"}
-        ${esconderDetalhamentoKits && "minor-height"}`}
+        ${disabled && "disabled"}
+        ${esconderDetalhamentoKits && "minor-height"} mb-3`}
       >
         <div className="card-body">
           <div className="card-title">
@@ -48,14 +44,12 @@ export class CardKit extends Component {
               <span className="checkmark" />
             </label>
           </div>
-          {!esconderDetalhamentoKits &&
-            itens.map((item, key) => {
-              return (
-                <div key={key} className={`item-meal-kit`}>
-                  {item.nome}
-                </div>
-              );
-            })}
+          {!esconderDetalhamentoKits && (
+            <div
+              className={`item-meal-kit`}
+              dangerouslySetInnerHTML={{ __html: descricao }}
+            />
+          )}
         </div>
       </div>
     );

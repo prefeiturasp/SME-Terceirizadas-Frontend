@@ -182,6 +182,14 @@ export const criarMarcaProduto = async data => {
   return await axios.post(`/marcas/`, data);
 };
 
+export const getUnidadesDeMedidaProduto = async () => {
+  return await axios.get(`/unidades-medida/`);
+};
+
+export const getEmbalagensProduto = async () => {
+  return await axios.get(`/embalagens-produto/`);
+};
+
 export const submitProduto = async payload => {
   const url = `${API_URL}/produtos/`;
   let status = 0;
@@ -576,3 +584,20 @@ export const cancelaHomologacao = async (uuid, payload) =>
     `/homologacoes-produtos/${uuid}/cancela-solicitacao-homologacao/`,
     payload
   );
+
+export const getNomesItems = async () =>
+  axios.get("/itens-cadastros/lista-nomes/");
+
+export const getTiposItems = async () => axios.get("/itens-cadastros/tipos/");
+
+export const consultaItems = async params =>
+  axios.get(`/itens-cadastros/`, { params });
+
+export const cadastrarItem = async payload =>
+  await axios.post(`/itens-cadastros/`, payload);
+
+export const atualizarItem = async (payload, uuid) =>
+  await axios.patch(`/itens-cadastros/${uuid}/`, payload);
+
+export const deletarItem = async uuid =>
+  await axios.delete(`/itens-cadastros/${uuid}/`);

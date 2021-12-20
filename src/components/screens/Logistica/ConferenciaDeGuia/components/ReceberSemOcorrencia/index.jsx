@@ -6,13 +6,16 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { CONFERIR_ENTREGA, LOGISTICA } from "configs/constants";
-import { recebeGuiaSemOcorrencia } from "services/logistica.service";
+import {
+  recebeGuiaSemOcorrencia,
+  editaGuiaComOcorrencia
+} from "services/logistica.service";
 import { Spin } from "antd";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
-export default ({ values, disabled }) => {
+export default ({ values, disabled, uuidEdicao }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const history = useHistory();
@@ -27,18 +30,35 @@ export default ({ values, disabled }) => {
     delete payload.numero_guia;
     delete payload.data_entrega_real;
 
-    recebeGuiaSemOcorrencia(payload)
-      .then(() => {
-        toastSuccess("Guia de remessa recebida com sucesso");
-        setShow(false);
-        setLoading(false);
-        goToConferir();
-      })
-      .catch(e => {
-        toastError(e.response.data.detail);
-        setShow(false);
-        setLoading(false);
-      });
+    if (uuidEdicao) {
+      payload.uuid_conferencia = uuidEdicao;
+      payload.conferencia_dos_alimentos = [];
+      editaGuiaComOcorrencia(payload)
+        .then(() => {
+          let toastMsg =
+            "Conferência editada com sucesso. O respectivo registro de reposição foi apagado.";
+          toastSuccess(toastMsg);
+          setLoading(false);
+          goToConferir();
+        })
+        .catch(e => {
+          toastError(e.response.data.detail);
+          setLoading(false);
+        });
+    } else {
+      recebeGuiaSemOcorrencia(payload)
+        .then(() => {
+          toastSuccess("Guia de remessa recebida com sucesso");
+          setShow(false);
+          setLoading(false);
+          goToConferir();
+        })
+        .catch(e => {
+          toastError(e.response.data.detail);
+          setShow(false);
+          setLoading(false);
+        });
+    }
   };
 
   const goToConferir = () => {
@@ -48,7 +68,7 @@ export default ({ values, disabled }) => {
   return (
     <>
       <Botao
-        texto="Sim"
+        texto="Salvar e Continuar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
         className="float-right ml-3"
@@ -78,7 +98,9 @@ export default ({ values, disabled }) => {
               className="ml-3"
             />
             <Botao
-              texto="Registrar Conferência"
+              texto={
+                uuidEdicao ? "Editar Conferência" : "Registrar Conferência"
+              }
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN}
               className="ml-3"

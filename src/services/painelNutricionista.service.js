@@ -46,6 +46,6 @@ export const getTiposDietaEspecial = async () => {
 };
 
 export const getMotivosNegacaoDietaEspecial = async () => {
-  const url = `${API_URL}/motivos-negacao/`;
+  const url = `${API_URL}/motivos-negacao/?processo=INCLUSAO`;
   return retornoBase(url);
 };

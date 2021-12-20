@@ -10,6 +10,7 @@ import {
 
 import { getDetalheInversaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+import { statusEnum } from "constants/shared";
 
 export const CorpoRelatorio = props => {
   const {
@@ -61,7 +62,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {inversaoDiaCardapio.escola &&
@@ -69,18 +70,25 @@ export const CorpoRelatorio = props => {
               inversaoDiaCardapio.escola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {escolaDaInversao.lote && escolaDaInversao.lote.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {escolaDaInversao &&
               escolaDaInversao.tipo_gestao &&
               escolaDaInversao.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {inversaoDiaCardapio.rastro_terceirizada &&
+              inversaoDiaCardapio.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>
@@ -128,6 +136,33 @@ export const CorpoRelatorio = props => {
           />
         </div>
       </div>
+      {inversaoDiaCardapio.logs &&
+        !inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+        inversaoDiaCardapio.status === statusEnum.CODAE_AUTORIZADO && (
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>
+                <b>Autorizou</b>
+              </p>
+              <div>
+                {
+                  inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
+                    .criado_em
+                }{" "}
+                - Informações da CODAE
+              </div>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    inversaoDiaCardapio.logs[
+                      inversaoDiaCardapio.logs.length - 1
+                    ].justificativa
+                }}
+              />
+            </div>
+          </div>
+        )}
     </div>
   );
 };

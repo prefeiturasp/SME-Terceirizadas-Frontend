@@ -133,7 +133,7 @@ export default ({
                 return (
                   <div key={key}>
                     <a
-                      href={anexo.arquivo}
+                      href={anexo.arquivo_url}
                       className="value-important link"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -162,7 +162,7 @@ export default ({
           <div className="row">
             <div className="col">
               <Botao
-                texto="Cancelar"
+                texto="Solicitar Cancelamento"
                 className="float-right ml-3"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}

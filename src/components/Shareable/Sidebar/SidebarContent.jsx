@@ -13,7 +13,9 @@ import {
   usuarioEhLogistica,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
-  usuarioEhDistribuidora
+  usuarioEhDistribuidora,
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhCoordenadorNutriSupervisao
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -26,9 +28,11 @@ import {
   MenuRelatorios,
   MenuLogistica
 } from "./menus";
+import { ENVIRONMENT } from "constants/config";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
+  const ehTreinamento = ENVIRONMENT === "treinamento" ? true : false;
 
   const onSubmenuClick = useCallback(
     clickedMenu => {
@@ -40,12 +44,18 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
-  const exibirPainelInicial = !usuarioEhCoordenadorEscola();
+  const exibirPainelInicial =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
   const exibirGestaoAlimentacao =
-    usuarioEhCODAEGestaoAlimentacao() ||
-    usuarioEhDRE() ||
-    usuarioEhEscola() ||
-    usuarioEhTerceirizada();
+    !ehTreinamento &&
+    (usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhDRE() ||
+      usuarioEhEscola() ||
+      usuarioEhTerceirizada());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -59,22 +69,38 @@ export const SidebarContent = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhDRE() ||
     usuarioEhTerceirizada();
-  const exibirLancamentoInicial = usuarioEhEscola();
+  const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
   const exibirCadastros =
-    usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola();
-  const exibirRelatorios = !usuarioEhCoordenadorEscola();
+    usuarioEhLogistica() ||
+    (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
+    (!ehTreinamento &&
+      (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
+  const exibirRelatorios =
+    !usuarioEhCoordenadorEscola() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE();
+    !usuarioEhAdministradorDRE() &&
+    !usuarioEhEscolaAbastecimento() &&
+    !usuarioComAcessoTelaEntregasDilog() &&
+    !usuarioEhLogistica() &&
+    !usuarioEhDistribuidora();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
     usuarioEhDistribuidora() ||
-    usuarioEhEscolaAbastecimento();
+    usuarioEhDRE() ||
+    usuarioEhEscolaAbastecimento() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
+    usuarioComAcessoTelaEntregasDilog();
 
   const _props = {
     activeMenu,

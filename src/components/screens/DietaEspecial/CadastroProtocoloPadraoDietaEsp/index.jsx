@@ -6,6 +6,7 @@ import { InputText } from "components/Shareable/Input/InputText";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import ModalHistoricoProtocoloPadrao from "components/Shareable/ModalHistoricoProtocoloPadrao";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import Botao from "components/Shareable/Botao";
 import CKEditorField from "components/Shareable/CKEditorField";
@@ -18,7 +19,6 @@ import {
   editaProtocoloPadraoDietaEspecial,
   getProtocoloPadrao
 } from "services/dietaEspecial.service";
-import { getSubstitutos } from "services/produto.service";
 import SubstituicoesField from "./componentes/SubstituicoesField";
 import {
   BUTTON_TYPE,
@@ -33,6 +33,8 @@ export default ({ uuid }) => {
   const [produtos, setProdutos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [protocoloPadrao, setProcoloPadrao] = useState(undefined);
+  const [visible, setVisible] = useState(false);
+  const [historico, setHistorico] = useState([]);
 
   const history = useHistory();
 
@@ -40,9 +42,16 @@ export default ({ uuid }) => {
     const respAlimentos = await getAlimentos({
       tipo: "E"
     });
-    setAlimentos(respAlimentos.data);
-    const respProdutos = await (await getSubstitutos()).data.results;
-    setProdutos(respProdutos);
+    setAlimentos(
+      respAlimentos.data.filter(alimento =>
+        ["AMBOS", "SO_ALIMENTOS"].includes(alimento.tipo_listagem_protocolo)
+      )
+    );
+    setProdutos(
+      respAlimentos.data.filter(alimento =>
+        ["AMBOS", "SO_SUBSTITUTOS"].includes(alimento.tipo_listagem_protocolo)
+      )
+    );
     if (uuid) {
       const respProtocolo = await getProtocoloPadrao(uuid);
       setProcoloPadrao(respProtocolo.data);
@@ -144,7 +153,10 @@ export default ({ uuid }) => {
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right"
-                  onClick={() => {}}
+                  onClick={() => {
+                    setHistorico(protocoloPadrao.historico);
+                    setVisible(true);
+                  }}
                 />
               </div>
             </div>
@@ -250,6 +262,14 @@ export default ({ uuid }) => {
             )}
           />
         </Spin>
+        {historico && (
+          <ModalHistoricoProtocoloPadrao
+            visible={visible}
+            onOk={() => setVisible(false)}
+            onCancel={() => setVisible(false)}
+            history={historico}
+          />
+        )}
       </div>
     </div>
   );

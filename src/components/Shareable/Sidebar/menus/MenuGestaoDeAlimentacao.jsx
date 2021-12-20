@@ -15,7 +15,9 @@ import {
   TERCEIRIZADA,
   DRE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  CODAE
+  CODAE,
+  CADASTROS,
+  CONSULTA_KITS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -82,9 +84,16 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         title="Consulta de Solicitações"
         activeMenu={activeMenu}
       >
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
-          Aguardando autorização
-        </LeafItem>
+        {PERFIL === "terceirizada" ? (
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
+            Questionamentos da CODAE
+          </LeafItem>
+        ) : (
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
+            Aguardando autorização
+          </LeafItem>
+        )}
+
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
           Autorizadas
         </LeafItem>
@@ -92,10 +101,20 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
           Canceladas
         </LeafItem>
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
-          Aguardando Resposta Empresa
-        </LeafItem>
       </SubMenu>
+      {usuarioEhCODAEGestaoAlimentacao() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="cadastros"
+          onClick={onSubmenuClick}
+          title="Cadastros"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CODAE}/${CADASTROS}/${CONSULTA_KITS}`}>
+            Consulta de Kits
+          </LeafItem>
+        </SubMenu>
+      )}
     </Menu>
   );
 };

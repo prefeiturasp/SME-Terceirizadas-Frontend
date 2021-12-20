@@ -21,6 +21,7 @@ import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoV
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -85,6 +86,7 @@ export const RelatorioCODAE = () => (
   <RelatorioBase
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
+    ModalCodaeAutoriza={ModalCODAEAutoriza}
     HandleAprovaPedido={CODAEAutorizaPedidoDRE}
     ModalQuestionamento={ModalCODAEQuestiona}
     toastAprovaMensagem={"Inversão de dia de Cardápio autorizada com sucesso!"}

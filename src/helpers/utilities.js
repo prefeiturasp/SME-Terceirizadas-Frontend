@@ -241,6 +241,9 @@ export const visualizaBotoesDoFluxo = solicitacao => {
       return [TIPO_PERFIL.DIRETORIA_REGIONAL, TIPO_PERFIL.ESCOLA].includes(
         tipoPerfil
       );
+    case statusEnum.ESCOLA_CANCELOU:
+    case statusEnum.DRE_CANCELOU:
+      return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     default:
       return false;
   }
@@ -258,6 +261,9 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_QUESTIONADO:
+      return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
+    case statusEnum.ESCOLA_CANCELOU:
+    case statusEnum.DRE_CANCELOU:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
       return [TIPO_PERFIL.DIRETORIA_REGIONAL].includes(tipoPerfil);
@@ -327,21 +333,34 @@ export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
     PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI,
-    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO
+    PERFIL.DIRETOR_CEI
   ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhEscolaAbastecimento = () => {
-  return [PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
+    PERFIL.ADMINISTRADOR_UE_DIRETA,
+    PERFIL.ADMINISTRADOR_UE_MISTA,
+    PERFIL.ADMINISTRADOR_UE_PARCEIRA
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioComAcessoTelaEntregasDilog = () => {
+  return [
+    PERFIL.COORDENADOR_LOGISTICA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+  ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhLogistica = () => {
-  return [PERFIL.COORDENADOR_LOGISTICA].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.COORDENADOR_LOGISTICA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhDistribuidora = () => {
@@ -380,10 +399,7 @@ export const usuarioEhCODAEGestaoAlimentacao = () => {
    * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
    */
   const tipoPerfil = localStorage.getItem("tipo_perfil");
-  return (
-    tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA ||
-    tipoPerfil === TIPO_PERFIL.LOGISTICA
-  );
+  return tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA;
 };
 
 export const usuarioEhCoordenadorCODAE = () => {
@@ -423,7 +439,10 @@ export const usuarioEhQualquerCODAE = () => {
 };
 
 export const usuarioEhTerceirizada = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA;
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA
+  );
 };
 
 export const converterDDMMYYYYparaYYYYMMDD = data => {
@@ -434,6 +453,12 @@ export const obtemIdentificacaoNutricionista = () =>
   `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
     "crn_numero"
   )}`.replace(/[^\w\s-]/g, "");
+
+export const obtemIdentificacaoNutricionistaDieta = usuario =>
+  `Elaborado por ${usuario.nome} - CRN ${usuario.crn_numero}`.replace(
+    /[^\w\s-]/g,
+    ""
+  );
 
 export const getKey = obj => {
   return Object.keys(obj)[0];
@@ -581,3 +606,6 @@ export const corrigeLinkAnexo = url => {
 
 export const trocaAcentuadasPorSemAcento = texto =>
   texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+export const retornaDuplicadasArray = arr =>
+  arr.filter((item, index) => arr.indexOf(item) !== index);

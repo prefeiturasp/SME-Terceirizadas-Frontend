@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
+import { conferidaClass } from "helpers/terceirizadas";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
@@ -55,13 +56,14 @@ export const CardStatusDeSolicitacao = props => {
       </div>
       <hr />
       {solicitations.slice(0, 5).map((solicitation, key) => {
+        let conferida = conferidaClass(solicitation, cardTitle);
         return (
           <NavLink
             to={solicitation.link}
             key={key}
             data-cy={`${cardType}-${key}`}
           >
-            <p className="data">
+            <p className={`data ${conferida}`}>
               {solicitation.text}
               <span className="float-right">{solicitation.date}</span>
             </p>

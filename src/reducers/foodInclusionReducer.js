@@ -26,6 +26,7 @@ export default function reducer(state = {}, action) {
             data_final: action.data.data_final,
             motivo: action.data.motivo.uuid,
             outro_motivo: action.data.outro_motivo,
+            observacao: action.data.observacao,
             dias_semana: formatarDiasSemana(action.data.dias_semana)
           };
         } else {
@@ -33,7 +34,8 @@ export default function reducer(state = {}, action) {
             action.data[`inclusoes_${indice}`] = {
               data: inclusao.data,
               motivo: inclusao.motivo.uuid,
-              outro_motivo: inclusao.outro_motivo
+              outro_motivo: inclusao.outro_motivo,
+              observacao: inclusao.observacao
             };
           });
         }

@@ -61,7 +61,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <div className="row">
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>DRE</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
@@ -69,7 +69,7 @@ export const CorpoRelatorio = props => {
               alteracaoDeCardapio.escola.diretoria_regional.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Lote</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
@@ -77,12 +77,19 @@ export const CorpoRelatorio = props => {
               alteracaoDeCardapio.escola.lote.nome}
           </p>
         </div>
-        <div className="col-2 report-label-value">
+        <div className="col-3 report-label-value">
           <p>Tipo de Gestão</p>
           <p className="value-important">
             {alteracaoDeCardapio.escola &&
               alteracaoDeCardapio.escola.tipo_gestao &&
               alteracaoDeCardapio.escola.tipo_gestao.nome}
+          </p>
+        </div>
+        <div className="col-3 report-label-value">
+          <p>Empresa</p>
+          <p className="value-important">
+            {alteracaoDeCardapio.rastro_terceirizada &&
+              alteracaoDeCardapio.rastro_terceirizada.nome_fantasia}
           </p>
         </div>
       </div>
@@ -98,7 +105,7 @@ export const CorpoRelatorio = props => {
       <hr />
       <table className="table-periods">
         <tr>
-          <th>Motivo</th>
+          <th>Tipo de Alteração</th>
           {alteracaoDeCardapio.data_inicial ===
           alteracaoDeCardapio.data_final ? (
             <th>Alterar dia</th>
@@ -126,6 +133,7 @@ export const CorpoRelatorio = props => {
           <th>Período</th>
           <th>Alteração alimentação de:</th>
           <th>Alteração alimentação para:</th>
+          <th>Número de alunos</th>
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
           (
@@ -133,6 +141,7 @@ export const CorpoRelatorio = props => {
               periodo_escolar,
               tipo_alimentacao_de,
               tipo_alimentacao_para,
+              qtd_alunos,
               faixas_etarias
             },
             key
@@ -143,6 +152,7 @@ export const CorpoRelatorio = props => {
                   <td>{periodo_escolar && periodo_escolar.nome}</td>
                   <td>{tipo_alimentacao_de.label}</td>
                   <td>{tipo_alimentacao_para.label}</td>
+                  <td>{qtd_alunos}</td>
                 </tr>
                 {ehInclusaoCei(tipoSolicitacao) && (
                   <tr>

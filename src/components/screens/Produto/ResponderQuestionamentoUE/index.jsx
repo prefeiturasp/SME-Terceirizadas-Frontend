@@ -62,6 +62,10 @@ const ResponderQuestionamentoUE = () => {
                 exibirModal={exibirModal}
                 setExibirModal={setExibirModal}
                 setCarregando={setCarregando}
+                filtros={filtros}
+                setTotal={setTotal}
+                setProdutos={setProdutos}
+                setShowBuscaVazia={setShowBuscaVazia}
               />,
               <Pagination
                 className="mt-3 mb-3"

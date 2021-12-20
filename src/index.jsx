@@ -11,11 +11,28 @@ import multi from "redux-multi";
 import promise from "redux-promise";
 import thunk from "redux-thunk";
 import App from "./App";
+import { ENVIRONMENT } from "constants/config";
 import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/custom.css";
 import "./styles/sb-admin-2.css";
 import * as Sentry from "@sentry/browser";
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+//eslint-disable-next-line
+if (["development", "homolog", "treinamento"].includes(ENVIRONMENT)) {
+  document.addEventListener("keydown", async function(event) {
+    if (event.key === "PrintScreen") {
+      document.body.style.display = "none";
+      await sleep(3000);
+      document.body.style.display = "block";
+      alert("Não é permitido capturar tela neste ambiente");
+    }
+  });
+}
 
 /* eslint-disable-next-line */
 if (process.env.IS_DOCKER_ENVIRONMENT === true) {

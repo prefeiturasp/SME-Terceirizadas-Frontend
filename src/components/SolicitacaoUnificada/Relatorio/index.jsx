@@ -18,8 +18,9 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE } from "../../../configs/constants";
+import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -31,12 +32,16 @@ class Relatorio extends Component {
       showModal: false,
       solicitacaoUnificada: null,
       prazoDoPedidoMensagem: null,
-      resposta_sim_nao: null
+      resposta_sim_nao: null,
+      showModalMarcarConferencia: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -77,6 +82,14 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
+  }
+
   loadSolicitacao(uuid) {
     getSolicitacaoUnificada(uuid).then(response => {
       this.setState({
@@ -111,7 +124,8 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal
+      showAutorizarModal,
+      showModalMarcarConferencia
     } = this.state;
     const {
       visao,
@@ -161,6 +175,28 @@ class Relatorio extends Component {
       solicitacaoUnificada.foi_solicitado_fora_do_prazo &&
       !solicitacaoUnificada.logs[solicitacaoUnificada.logs.length - 1]
         .resposta_sim_nao;
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TERCEIRIZADA &&
+      solicitacaoUnificada &&
+      [
+        statusEnum.CODAE_AUTORIZADO,
+        statusEnum.ESCOLA_CANCELOU,
+        statusEnum.DRE_CANCELOU
+      ].includes(solicitacaoUnificada.status);
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -184,6 +220,17 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
+          />
+        )}
+        {solicitacaoUnificada && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+            }}
+            uuid={solicitacaoUnificada.uuid}
+            endpoint="solicitacoes-kit-lanche-unificada"
           />
         )}
         {!solicitacaoUnificada ? (
@@ -272,6 +319,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />
+                    )}
+                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                      <div className="form-group float-right mt-4">
+                        {solicitacaoUnificada.terceirizada_conferiu_gestao ? (
+                          <label className="ml-3 conferido">
+                            <i className="fas fa-check mr-2" />
+                            Solicitação Conferida
+                          </label>
+                        ) : (
+                          <BotaoMarcarConferencia
+                            uuid={solicitacaoUnificada.uuid}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
                 )}

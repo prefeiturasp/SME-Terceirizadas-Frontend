@@ -27,7 +27,7 @@
     }
 
     div:last-child {
-      border-left: 0px;
+      border-left: 1px;
     }
 
     div:nth-last-child(2) {
@@ -36,7 +36,7 @@
   }
 
   .tabela-body-produto {
-    height: 48px;
+    min-height: 48px;
   }
 
   .item-produto {
@@ -54,7 +54,7 @@
       border: 1px solid #e9eaea;
     }
     div:last-child {
-      border-left: 0px;
+      border-left: 1px solid #e9eaea;
     }
 
     div:nth-last-child(2) {

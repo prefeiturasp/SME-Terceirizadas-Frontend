@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 import { imprimirGuiaRemessa } from "services/logistica.service.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { Spin } from "antd";
+import ModalEdicao from "../ModalEdicao";
 
 const ListagemSolicitacoes = ({ guias }) => {
   const [carregando, setCarregando] = useState(false);
@@ -73,6 +74,52 @@ const ListagemSolicitacoes = ({ guias }) => {
     }
   };
 
+  const retornaBotaoEdicao = guia => {
+    const editarConferencia = (
+      <>
+        <NavLink
+          className="float-left"
+          to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}&editar=true`}
+        >
+          <span className="link-acoes green">
+            <i className="fas fa-eye" />
+            Editar Conferência
+          </span>
+        </NavLink>
+        |
+      </>
+    );
+
+    const editarReposicao = (
+      <>
+        <NavLink
+          className="float-left"
+          to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}&editar=true`}
+        >
+          <span className="link-acoes green">
+            <i className="fas fa-redo" />
+            Editar Reposição
+          </span>
+        </NavLink>
+        |
+      </>
+    );
+
+    if (
+      ["Recebida", "Recebimento parcial", "Não recebida"].includes(
+        guia.status
+      ) &&
+      guia.situacao === "ATIVA"
+    ) {
+      return editarConferencia;
+    } else if (
+      ["Reposição total", "Reposição parcial"].includes(guia.status) &&
+      guia.situacao === "ATIVA"
+    ) {
+      return [<ModalEdicao uuid={guia.uuid} key={0} />, editarReposicao];
+    }
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <section className="resultado-conferir-entrega">
@@ -93,6 +140,7 @@ const ListagemSolicitacoes = ({ guias }) => {
                   <div>{guia.data_entrega}</div>
                   <div>{guia.status}</div>
                   <div>
+                    {retornaBotaoEdicao(guia)}
                     {retornaBotaoAcao(guia)}
 
                     <span

@@ -12,6 +12,9 @@ export default function reducer(state = {}, action) {
           .tem_aditivos_alergenicos
           ? "1"
           : "0";
+        if (![null, undefined].includes(action.data.tem_gluten)) {
+          action.data.tem_gluten = action.data.tem_gluten ? "1" : "0";
+        }
         action.data.marca =
           action.data.marca !== null ? action.data.marca.nome : "";
         action.data.fabricante =
@@ -21,6 +24,22 @@ export default function reducer(state = {}, action) {
           protocolos.push(protocolo.nome);
         });
         action.data.protocolos = protocolos;
+        if (
+          action.data.especificacoes &&
+          action.data.especificacoes.length > 0
+        ) {
+          action.data.especificacoes = action.data.especificacoes.map(
+            especificacao => {
+              return {
+                volume: especificacao.volume,
+                unidade_de_medida: especificacao.unidade_de_medida.uuid,
+                embalagem_produto: especificacao.embalagem_produto.uuid
+              };
+            }
+          );
+        } else {
+          action.data.especificacoes = [{}];
+        }
       }
       return {
         data: {

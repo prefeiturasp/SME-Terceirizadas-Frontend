@@ -55,7 +55,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
     let invalidas = guias.filter(guia =>
       ["Aguardando envio", "Aguardando confirmação"].includes(guia.status)
     );
-    return invalidas.length > 0;
+    return invalidas.length > 0 || selecionados.length <= 0;
   };
 
   const abrirModalGuia = guia => {

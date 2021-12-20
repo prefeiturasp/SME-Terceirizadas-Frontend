@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -20,3 +21,15 @@ export const getTotalAlunos = async () => {
     return error.json;
   }
 };
+
+export const getKitLanches = async uuid =>
+  await axios.get(`/kit-lanches/${uuid}/`);
+
+export const checaNomeKitLanche = async payload =>
+  await axios.get(`/kit-lanches/nome-existe/`, { params: payload });
+
+export const createKitLanche = async payload =>
+  await axios.post(`/kit-lanches/`, payload);
+
+export const updateKitLanche = async (payload, uuid) =>
+  await axios.put(`/kit-lanches/${uuid}/`, payload);

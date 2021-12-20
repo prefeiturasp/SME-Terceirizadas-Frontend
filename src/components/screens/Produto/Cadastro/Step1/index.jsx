@@ -5,9 +5,7 @@ import { Select } from "antd";
 import {
   getNomeDeProdutosEdital,
   getMarcasProdutos,
-  getFabricantesProdutos,
-  criarMarcaProduto,
-  criarFabricanteProduto
+  getFabricantesProdutos
 } from "../../../../../services/produto.service";
 import "./style.scss";
 
@@ -18,13 +16,11 @@ import {
   BUTTON_STYLE
 } from "../../../../Shareable/Botao/constants";
 
-import ModalMarca from "./ModalMarca";
-import ModalFabricante from "./ModalFabricante";
+import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 
 import { Step1EstaValido, retornaObjetoRequest } from "../helpers";
 import { required, maxLengthProduto } from "helpers/fieldValidators";
 import { ASelect } from "components/Shareable/MakeField";
-import { toastError } from "components/Shareable/Toast/dialogs";
 
 const { Option } = Select;
 const maxLength5000 = maxLengthProduto(5000);
@@ -38,9 +34,7 @@ class Step1 extends Component {
       nomeDeProdutosEditalArray: [],
       marcasArray: [],
       fabricantesArray: [],
-      showModalMarca: false,
-      showModalFabricante: false,
-      loadingDefault: false,
+      showModalCadastrarItem: false,
       payloadStep1: {
         eh_para_alunos_com_dieta: null,
         protocolos: [],
@@ -51,6 +45,7 @@ class Step1 extends Component {
         fabricante: null,
         componentes: null,
         tem_aditivos_alergenicos: null,
+        tem_gluten: null,
         aditivos: null
       },
       dafaultArrayProtocolo: [],
@@ -59,10 +54,12 @@ class Step1 extends Component {
       fabricantesNomes: [],
       marcasNomes: []
     };
-    this.enviaMarca = this.enviaMarca.bind(this);
-    this.closeModalMarca = this.closeModalMarca.bind(this);
-    this.enviaFabricante = this.enviaFabricante.bind(this);
-    this.closeModalFabricante = this.closeModalFabricante.bind(this);
+    this.closeModalCadastrarItem = this.closeModalCadastrarItem.bind(this);
+    this.getItensCadastrados = this.getItensCadastrados.bind(this);
+    this.updateOpcoesItensCadastrados = this.updateOpcoesItensCadastrados.bind(
+      this
+    );
+    this.produtoTemGluten = this.produtoTemGluten.bind(this);
   }
 
   abreOuFechaFormDietaEspecial = value => {
@@ -97,106 +94,67 @@ class Step1 extends Component {
     this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  showModalMarca = () => {
-    this.setState({
-      showModalMarca: true
-    });
-  };
-
-  closeModalMarca = () => {
-    this.setState({
-      showModalMarca: false
-    });
-  };
-
-  enviaMarca = async value => {
-    const { marcasArray, marcasNomes } = this.state;
-    const { nome } = value;
-    const listaNomes = marcasNomes.map(marca => {
-      return marca.nome.toUpperCase();
-    });
-    const nulo = nome === null;
-    const vazio = nome === "";
-    if (!nulo && !vazio) {
-      const existeNome = listaNomes.includes(nome.toUpperCase());
-      if (existeNome) {
-        setTimeout(() => {
-          this.setState({
-            loadingDefault: false,
-            showModalMarca: false
-          });
-          this.props.resetModal();
-        }, 1000);
-        toastError("Marca do produto já cadastrada");
-      } else {
-        const response = await criarMarcaProduto(value);
-        const { nome, uuid } = response.data;
-        marcasArray.push(<Option key={`${nome}+${uuid}`}>{nome}</Option>);
-        marcasNomes.push({ nome: nome });
-        this.setState({ loadingDefault: true });
-        setTimeout(() => {
-          this.setState({
-            loadingDefault: false,
-            showModalMarca: false,
-            marcasArray,
-            marcasNomes
-          });
-          this.props.resetModal();
-        }, 1000);
-      }
+  produtoTemGluten = value => {
+    let { payloadStep1 } = this.state;
+    let condicao = false;
+    if (value === 1) {
+      condicao = true;
+    } else {
+      condicao = false;
     }
-  };
-
-  showModalFabricante = () => {
+    payloadStep1.tem_gluten = condicao;
     this.setState({
-      showModalFabricante: true
+      payloadStep1
     });
+    this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
-  closeModalFabricante = () => {
+  showModalCadastrarItem = () => {
     this.setState({
-      showModalFabricante: false
+      showModalCadastrarItem: true
     });
   };
 
-  enviaFabricante = async value => {
-    const { fabricantesArray, fabricantesNomes } = this.state;
-    const listaNomes = fabricantesNomes.map(fabricante => {
-      return fabricante.nome.toUpperCase();
+  closeModalCadastrarItem = () => {
+    this.setState({
+      showModalCadastrarItem: false
     });
-    const { nome } = value;
-    const existeNome = listaNomes.includes(nome.toUpperCase());
-    if (value !== null) {
-      if (value !== "") {
-        if (existeNome) {
-          setTimeout(() => {
-            this.setState({
-              loadingDefault: false,
-              showModalFabricante: false
-            });
-            this.props.resetModal();
-          }, 1000);
-          toastError("Fabricante do produto já cadastrado");
-        } else {
-          const response = await criarFabricanteProduto(value);
-          const { nome, uuid } = response.data;
-          fabricantesArray.push(
-            <Option key={`${nome}+${uuid}`}>{nome}</Option>
-          );
-          this.setState({ loadingDefault: true });
-          fabricantesNomes.push({ nome: nome });
-          setTimeout(() => {
-            this.setState({
-              loadingDefault: false,
-              showModalFabricante: false,
-              fabricantesArray,
-              fabricantesNomes
-            });
-            this.props.resetModal();
-          }, 1000);
-        }
-      }
-    }
+  };
+
+  updateOpcoesItensCadastrados = async () => {
+    const itensCadastrados = await this.getItensCadastrados();
+    this.setState({
+      marcasArray: itensCadastrados.listaMarcas,
+      fabricantesArray: itensCadastrados.listaFabricantes,
+      loading: false,
+      marcasNomes: itensCadastrados.marcasCadastradas,
+      fabricantesNomes: itensCadastrados.fabricantesCadastrados
+    });
+  };
+
+  getItensCadastrados = async () => {
+    let listaMarcas = [];
+    let listaFabricantes = [];
+    const responseMarcas = await getMarcasProdutos();
+    const responseFabricantes = await getFabricantesProdutos();
+    responseMarcas.data.results.forEach(marca => {
+      listaMarcas.push(
+        <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
+      );
+    });
+    responseFabricantes.data.results.forEach(fabricante => {
+      listaFabricantes.push(
+        <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
+          {fabricante.nome}
+        </Option>
+      );
+    });
+    return {
+      marcasCadastradas: responseMarcas.data.results,
+      fabricantesCadastrados: responseFabricantes.data.results,
+      listaMarcas: listaMarcas,
+      listaFabricantes: listaFabricantes
+    };
   };
 
   componentDidMount = async () => {
@@ -219,12 +177,10 @@ class Step1 extends Component {
     }
 
     let listaNomeDeProdutosEdital = [];
-    let listaMarcas = [];
-    let listaFabricantes = [];
+
     if (marcasArray.length === 0 && fabricantesArray.length === 0) {
+      const itensCadastrados = await this.getItensCadastrados();
       const responseNomeDeProdutosEdital = await getNomeDeProdutosEdital();
-      const responseMarcas = await getMarcasProdutos();
-      const responseFabricantes = await getFabricantesProdutos();
       responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
         listaNomeDeProdutosEdital.push(
           <Option key={`${produtoEdital.nome}+${produtoEdital.uuid}`}>
@@ -232,25 +188,14 @@ class Step1 extends Component {
           </Option>
         );
       });
-      responseMarcas.data.results.forEach(marca => {
-        listaMarcas.push(
-          <Option key={`${marca.nome}+${marca.uuid}`}>{marca.nome}</Option>
-        );
-      });
-      responseFabricantes.data.results.forEach(fabricante => {
-        listaFabricantes.push(
-          <Option key={`${fabricante.nome}+${fabricante.uuid}`}>
-            {fabricante.nome}
-          </Option>
-        );
-      });
+
       this.setState({
         nomeDeProdutosEditalArray: listaNomeDeProdutosEdital,
-        marcasArray: listaMarcas,
-        fabricantesArray: listaFabricantes,
+        marcasArray: itensCadastrados.listaMarcas,
+        fabricantesArray: itensCadastrados.listaFabricantes,
         loading: false,
-        marcasNomes: responseMarcas.data.results,
-        fabricantesNomes: responseFabricantes.data.results
+        marcasNomes: itensCadastrados.marcasCadastradas,
+        fabricantesNomes: itensCadastrados.fabricantesCadastrados
       });
     }
   };
@@ -404,9 +349,6 @@ class Step1 extends Component {
       nomeDeProdutosEditalArray,
       marcasArray,
       fabricantesArray,
-      showModalMarca,
-      showModalFabricante,
-      loadingDefault,
       dafaultArrayProtocolo
     } = this.state;
     const {
@@ -522,17 +464,6 @@ class Step1 extends Component {
               {marcasArray}
             </Field>
           </div>
-          <div className="col-2 adicionar-marca-fornecedor">
-            <Botao
-              texto="Adicionar"
-              className={"botao-adicionar-marca-fabricante"}
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
-              onClick={() => {
-                this.showModalMarca();
-              }}
-            />
-          </div>
           <div className="col-4">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do fabricante
@@ -548,14 +479,14 @@ class Step1 extends Component {
               {fabricantesArray}
             </Field>
           </div>
-          <div className="col-2 adicionar-marca-fornecedor">
+          <div className="col-4 adicionar-marca-fornecedor">
             <Botao
-              texto="Adicionar"
+              texto="Cadastrar Item"
               className={"botao-adicionar-marca-fabricante"}
               type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
               onClick={() => {
-                this.showModalFabricante();
+                this.showModalCadastrarItem();
               }}
             />
           </div>
@@ -572,6 +503,7 @@ class Step1 extends Component {
               onChange={event => {
                 this.setaNomeComponentes(event.target.value);
               }}
+              required
             />
           </div>
         </div>
@@ -638,17 +570,49 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-        <ModalMarca
-          visible={showModalMarca}
-          loading={loadingDefault}
-          closeModal={this.closeModalMarca}
-          onSubmit={this.enviaMarca}
-        />
-        <ModalFabricante
-          visible={showModalFabricante}
-          loading={loadingDefault}
-          closeModal={this.closeModalFabricante}
-          onSubmit={this.enviaFabricante}
+        <div className="link-with-student">
+          <div className="label">
+            <span className="required-asterisk">*</span>O produto contém glúten?
+          </div>
+
+          <div className="row">
+            <div className="col-3">
+              <label className="container-radio">
+                Sim
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="1"
+                  name="tem_gluten"
+                  onClick={() => {
+                    this.produtoTemGluten(1);
+                  }}
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
+            <div className="col-3">
+              <label className="container-radio">
+                Não
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="0"
+                  name="tem_gluten"
+                  onClick={() => {
+                    this.produtoTemGluten(0);
+                  }}
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
+          </div>
+        </div>
+        <ModalCadastrarItem
+          closeModal={this.closeModalCadastrarItem}
+          showModal={this.state.showModalCadastrarItem}
+          item={undefined}
+          changePage={this.updateOpcoesItensCadastrados}
         />
       </div>
     );

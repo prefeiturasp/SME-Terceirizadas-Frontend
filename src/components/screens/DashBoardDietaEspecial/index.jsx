@@ -8,7 +8,12 @@ import {
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
-import { dataAtual, usuarioEhEscola } from "../../../helpers/utilities";
+import {
+  dataAtual,
+  usuarioEhEscola,
+  usuarioEhTerceirizada
+} from "../../../helpers/utilities";
+import { getMeusLotes } from "services/lote.service";
 
 import { ajustaFormatoLogPainelDietaEspecial, slugify } from "../helper";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
@@ -28,22 +33,39 @@ class DashBoardDietaEspecial extends Component {
       inativasList: null,
       autorizadasListFiltered: null,
       autorizadasTemporariamenteListFiltered: null,
+      aguardandoVigenciaList: null,
+      aguardandoVigenciaListFiltered: null,
       inativasTemporariamenteListFiltered: null,
       pendentesListFiltered: null,
       negadasListFiltered: null,
       canceladasListFiltered: null,
       inativasListFiltered: null,
-      instituicao: null
+      instituicao: null,
+      listaLotes: null,
+      listaStatus: [
+        { nome: "Conferência Status", uuid: "" },
+        { nome: "Conferida", uuid: "1" },
+        { nome: "Não Conferida", uuid: "0" }
+      ]
     };
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
   }
 
-  componentDidMount() {
-    meusDados().then(response => {
+  async componentDidMount() {
+    await meusDados().then(response => {
       this.setState({
         instituicao: response.vinculo_atual.instituicao
       });
     });
+    if (usuarioEhTerceirizada()) {
+      await getMeusLotes().then(response => {
+        this.setState({
+          listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
+            response.results
+          )
+        });
+      });
+    }
   }
 
   componentDidUpdate(prevState) {
@@ -54,6 +76,7 @@ class DashBoardDietaEspecial extends Component {
       canceladasList,
       inativasList,
       autorizadasTemporariamenteList,
+      aguardandoVigenciaList,
       inativasTemporariamenteList,
       instituicao
     } = this.state;
@@ -64,10 +87,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             autorizadasList: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "autorizadas"
             ),
             autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "autorizadas"
             )
           });
         });
@@ -78,10 +103,12 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             pendentesList: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "pendentes-aut"
             ),
             pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results
+              response.results,
+              "pendentes-aut"
             )
           });
         });
@@ -89,9 +116,13 @@ class DashBoardDietaEspecial extends Component {
     if (negadasList !== prevState.negadasList && !negadasList) {
       this.props.getDietaEspecialNegadas(instituicao.uuid).then(response => {
         this.setState({
-          negadasList: ajustaFormatoLogPainelDietaEspecial(response.results),
+          negadasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "negadas"
+          ),
           negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-            response.results
+            response.results,
+            "negadas"
           )
         });
       });
@@ -99,9 +130,13 @@ class DashBoardDietaEspecial extends Component {
     if (canceladasList !== prevState.canceladasList && !canceladasList) {
       this.props.getDietaEspecialCanceladas(instituicao.uuid).then(response => {
         this.setState({
-          canceladasList: ajustaFormatoLogPainelDietaEspecial(response.results),
+          canceladasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "canceladas"
+          ),
           canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-            response.results
+            response.results,
+            "canceladas"
           )
         });
       });
@@ -111,10 +146,12 @@ class DashBoardDietaEspecial extends Component {
         this.props.getDietaEspecialInativas(instituicao.uuid).then(response => {
           this.setState({
             inativasList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas"
             ),
             inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas"
             )
           });
         });
@@ -130,14 +167,38 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "autorizadas-temp"
             ),
             autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "autorizadas-temp"
             )
           });
         });
     }
+
+    if (
+      (usuarioEhEscola() || usuarioEhTerceirizada()) &&
+      aguardandoVigenciaList !== prevState.aguardandoVigenciaList &&
+      !aguardandoVigenciaList
+    ) {
+      this.props
+        .getDietaEspecialAguardandoVigencia(instituicao.uuid)
+        .then(response => {
+          this.setState({
+            aguardandoVigenciaList: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results,
+              "aguardando-vigencia"
+            ),
+            aguardandoVigenciaListFiltered: ajustaFormatoLogPainelDietaEspecial(
+              response.data.results,
+              "aguardando-vigencia"
+            )
+          });
+        });
+    }
+
     if (
       inativasTemporariamenteList !== prevState.inativasTemporariamenteList &&
       !inativasTemporariamenteList
@@ -147,48 +208,133 @@ class DashBoardDietaEspecial extends Component {
         .then(response => {
           this.setState({
             inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas-temp"
             ),
             inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results
+              response.data.results,
+              "inativas-temp"
             )
           });
         });
     }
   }
 
-  filtrarNome(listaFiltro, event) {
-    listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(event.target.value.toLowerCase());
-      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
-    });
-    return listaFiltro;
+  filtrarStatus(listaFiltro, value) {
+    if (value && value.length > 0) {
+      if (value === "1") {
+        listaFiltro = listaFiltro.filter(item => item.conferido === true);
+      }
+      if (value === "0") {
+        listaFiltro = listaFiltro.filter(item => item.conferido === false);
+      }
+      return listaFiltro;
+    } else {
+      return listaFiltro;
+    }
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  filtrarLote(listaFiltro, value) {
+    if (value && value.length > 0) {
+      listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
+      return listaFiltro;
+    } else {
+      return listaFiltro;
+    }
+  }
+
+  filtrarNome(listaFiltro, value) {
+    if (value && value.length > 0) {
+      listaFiltro = listaFiltro.filter(function(item) {
+        const wordToFilter = slugify(value.toLowerCase());
+        return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
+      });
+      return listaFiltro;
+    } else {
+      return listaFiltro;
+    }
+  }
+
+  onPesquisaChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     let {
       pendentesList,
       autorizadasList,
       negadasList,
       canceladasList,
       autorizadasTemporariamenteList,
+      aguardandoVigenciaList,
       inativasTemporariamenteList,
       inativasList
     } = this.state;
 
-    let pendentesListFiltered = this.filtrarNome(pendentesList, event);
-    let autorizadasListFiltered = this.filtrarNome(autorizadasList, event);
-    let negadasListFiltered = this.filtrarNome(negadasList, event);
-    let canceladasListFiltered = this.filtrarNome(canceladasList, event);
-    let inativasListFiltered = this.filtrarNome(inativasList, event);
-    let autorizadasTemporariamenteListFiltered = this.filtrarNome(
-      autorizadasTemporariamenteList,
-      event
+    let pendentesListFiltered = this.filtrarLote(pendentesList, values.lote);
+    let autorizadasListFiltered = this.filtrarLote(
+      autorizadasList,
+      values.lote
     );
-    let inativasTemporariamenteListFiltered = this.filtrarNome(
+    let negadasListFiltered = this.filtrarLote(negadasList, values.lote);
+    let canceladasListFiltered = this.filtrarLote(canceladasList, values.lote);
+    let inativasListFiltered = this.filtrarLote(inativasList, values.lote);
+    let autorizadasTemporariamenteListFiltered = this.filtrarLote(
+      autorizadasTemporariamenteList,
+      values.lote
+    );
+
+    let aguardandoVigenciaListFiltered = null;
+    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+      aguardandoVigenciaListFiltered = this.filtrarLote(
+        aguardandoVigenciaList,
+        values.lote
+      );
+    }
+
+    let inativasTemporariamenteListFiltered = this.filtrarLote(
       inativasTemporariamenteList,
-      event
+      values.lote
+    );
+
+    autorizadasListFiltered = this.filtrarStatus(
+      autorizadasListFiltered,
+      values.status
+    );
+    canceladasListFiltered = this.filtrarStatus(
+      canceladasListFiltered,
+      values.status
+    );
+
+    pendentesListFiltered = this.filtrarNome(
+      pendentesListFiltered,
+      values.titulo
+    );
+    autorizadasListFiltered = this.filtrarNome(
+      autorizadasListFiltered,
+      values.titulo
+    );
+    negadasListFiltered = this.filtrarNome(negadasListFiltered, values.titulo);
+    canceladasListFiltered = this.filtrarNome(
+      canceladasListFiltered,
+      values.titulo
+    );
+    inativasListFiltered = this.filtrarNome(
+      inativasListFiltered,
+      values.titulo
+    );
+    autorizadasTemporariamenteListFiltered = this.filtrarNome(
+      autorizadasTemporariamenteListFiltered,
+      values.titulo
+    );
+
+    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+      aguardandoVigenciaListFiltered = this.filtrarNome(
+        aguardandoVigenciaListFiltered,
+        values.titulo
+      );
+    }
+
+    inativasTemporariamenteListFiltered = this.filtrarNome(
+      inativasTemporariamenteListFiltered,
+      values.titulo
     );
 
     this.setState({
@@ -197,6 +343,7 @@ class DashBoardDietaEspecial extends Component {
       negadasListFiltered,
       canceladasListFiltered,
       autorizadasTemporariamenteListFiltered,
+      aguardandoVigenciaListFiltered,
       inativasTemporariamenteListFiltered,
       inativasListFiltered
     });
@@ -209,9 +356,12 @@ class DashBoardDietaEspecial extends Component {
       negadasListFiltered,
       canceladasListFiltered,
       autorizadasTemporariamenteListFiltered,
+      aguardandoVigenciaListFiltered,
       inativasTemporariamenteListFiltered,
       inativasListFiltered,
-      instituicao
+      instituicao,
+      listaLotes,
+      listaStatus
     } = this.state;
 
     const podeIncluirDietaEspecial = usuarioEhEscola();
@@ -228,6 +378,8 @@ class DashBoardDietaEspecial extends Component {
               titulo={"Acompanhamento de solicitações dieta especial"}
               dataAtual={dataAtual()}
               onChange={this.onPesquisaChanged}
+              listaLotes={listaLotes}
+              listaStatus={listaStatus}
             >
               <div className="row">
                 <div className="col-6">
@@ -317,6 +469,21 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
+                {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Aguardando início da vigência"}
+                      cardType={CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                      solicitations={
+                        aguardandoVigenciaListFiltered
+                          ? aguardandoVigenciaListFiltered
+                          : []
+                      }
+                      icon={ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO}
+                      href={`/solicitacoes-dieta-especial/solicitacoes-aguardando-inicio-vigencia`}
+                    />
+                  </div>
+                )}
               </div>
             </CardBody>
           )}

@@ -1,0 +1,85 @@
+.resultados-busca-questionamentos-ue {
+  border-radius: 4px;
+  border: 0.5px solid #f0f0f0;
+
+  .tabela-produto-ue {
+    display: grid;
+    grid-template-columns: 36% 15% 15% 15% 15% 4%;
+  }
+
+  .tabela-header-produto-ue {
+    background: hsl(220, 18%, 97%);
+    height: 48px;
+
+    div {
+      padding: 5px 10px;
+      font-weight: bold;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      color: #42474a;
+      border: 1px solid #e9eaea;
+    }
+
+    div:last-child {
+      border-left: 1px;
+    }
+
+    div:nth-last-child(2) {
+      border-right: 0px;
+    }
+  }
+
+  .tabela-body-produto-ue {
+    min-height: 48px;
+  }
+
+  .item-produto-ue {
+    div {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 18px;
+      padding: 5px 10px;
+
+      display: flex;
+      align-items: center;
+
+      color: #686868;
+
+      border: 1px solid #e9eaea;
+    }
+    div:last-child {
+      border-left: 1px solid #e9eaea;
+    }
+
+    div:nth-last-child(2) {
+      border-right: 0px;
+    }
+  }
+
+  .com-botao {
+    display: flex;
+    justify-content: space-between;
+
+    i {
+      font-weight: 900;
+      font-size: 18px;
+      line-height: 18px;
+      text-align: center;
+      letter-spacing: 0.01em;
+      color: #42474a;
+
+      cursor: pointer;
+    }
+
+    .botoes-produto {
+      width: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .botao-responder {
+    float: right;
+  }
+}

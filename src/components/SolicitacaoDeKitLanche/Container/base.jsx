@@ -4,7 +4,7 @@ import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-
+import CKEditorField from "components/Shareable/CKEditorField";
 import { TIPO_SOLICITACAO } from "../../../constants/shared";
 import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
 import {
@@ -42,7 +42,6 @@ import { InputText } from "../../Shareable/Input/InputText";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
 import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
-import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
 import { Rascunhos } from "../Rascunhos";
@@ -90,7 +89,7 @@ export class SolicitacaoDeKitLanche extends Component {
 
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
-      removeKitLanche(uuid, this.resolveTipo()).then(
+      removeKitLanche(uuid, this.state.tipoSolicitacao).then(
         res => {
           if (res.status === HTTP_STATUS.NO_CONTENT) {
             toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
@@ -112,7 +111,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.props.change("uuid", solicitacaoKitLanche.uuid);
     this.props.change(
       "observacao",
-      solicitacaoKitLanche.solicitacao_kit_lanche.descricao
+      solicitacaoKitLanche.solicitacao_kit_lanche.descricao + "\n"
     );
     this.props.change(
       "evento_data",
@@ -137,14 +136,14 @@ export class SolicitacaoDeKitLanche extends Component {
       // TODO: caso tenha alunos no rascunho, expandir o seletor
       //       tem que passar state.collapsed do componente SeletorAlunosDietaEspecial pra prop
       //       e guardar no state desse componente
-      solicitacaoKitLanche.alunos_com_dieta_especial_participantes.forEach(
-        aluno =>
-          this.props.change(
-            `alunos_com_dieta_especial_participantes.${aluno.codigo_eol}`,
-            true
-          )
-      );
     }
+    solicitacaoKitLanche.alunos_com_dieta_especial_participantes.forEach(
+      aluno =>
+        this.props.change(
+          `alunos_com_dieta_especial_participantes.${aluno.uuid}`,
+          true
+        )
+    );
     this.setState({
       status: solicitacaoKitLanche.status,
       title: `Solicitação de Kit Lanche Passeio #${
@@ -440,7 +439,9 @@ export class SolicitacaoDeKitLanche extends Component {
   getNumeroTotalDeKits() {
     const qtdeAlunos = this.state.ehCei
       ? this.props.totalAlunosSelecionadosCei || 0
-      : this.props.quantidade_alunos && parseInt(this.props.quantidade_alunos);
+      : this.props.quantidade_alunos !== undefined
+      ? parseInt(this.props.quantidade_alunos)
+      : 0;
     return qtdeAlunos * this.state.kitsChecked.length;
   }
 
@@ -559,21 +560,19 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              {ehCei && (
-                <Fragment>
-                  <div className="form-group row sub-title">
-                    <p className="dre-name">
-                      Selecionar alunos com dieta especial
-                    </p>
-                  </div>
-                  <SeletorAlunosDietaEspecial
-                    alunosComDietaEspecial={alunosComDietaEspecial}
-                  />
-                </Fragment>
-              )}
+              <Fragment>
+                <div className="form-group row sub-title">
+                  <p className="dre-name">
+                    Selecionar alunos com dieta especial
+                  </p>
+                </div>
+                <SeletorAlunosDietaEspecial
+                  alunosComDietaEspecial={alunosComDietaEspecial}
+                />
+              </Fragment>
               <div className="form-group">
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Observações"
                   name="observacao"
                   placeholder="Campo opcional"

@@ -7,9 +7,11 @@ const {
   CODAE_RECUSOU_RECLAMACAO,
   CODAE_QUESTIONOU_TERCEIRIZADA,
   CODAE_QUESTIONOU_UE,
+  CODAE_QUESTIONOU_NUTRISUPERVISOR,
   CODAE_RESPONDEU_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
   UE_RESPONDEU_RECLAMACAO,
+  NUTRISUPERVISOR_RESPONDEU_RECLAMACAO,
   AGUARDANDO_ANALISE_SENSORIAL,
   ANALISE_SENSORIAL_RESPONDIDA
 } = RECLAMACAO_PRODUTO_STATUS_EXPLICACAO;
@@ -50,30 +52,45 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoQuestionamentoUE = log => {
     return (
-      <>
-        <div className="row">
-          <div className="col-4">
-            <div className="label-item">Data questionamento CODAE</div>
-            <div className="value-item">{log.criado_em.split(" ")[0]}</div>
-          </div>
-          <div className="col-8">
-            <div className="label-item">Questionamento CODAE</div>
-            <div
-              className="value-item value-uppercase"
-              dangerouslySetInnerHTML={{
-                __html: log.justificativa
-              }}
-            />
-          </div>
+      <div className="row mb-4">
+        <div className="col-4">
+          <div className="label-item">Data questi. CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
         </div>
-        <div className="row mb-4">
-          <div className="col-4" />
-          <div className="col-8">
-            <div className="label-item">Escola questionada</div>
-            <div className="value-item">{reclamacao.escola.nome}</div>
+        <div className="col-8">
+          <div className="label-item">
+            CODAE questionou Unidade Educacional sobre reclamação
           </div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
         </div>
-      </>
+      </div>
+    );
+  };
+
+  const blocoQuestionamentoNutrisupervisor = log => {
+    return (
+      <div className="row mb-4">
+        <div className="col-4">
+          <div className="label-item">Data questi. CODAE</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="col-8">
+          <div className="label-item">
+            CODAE questionou Nutrisupervisão sobre reclamação
+          </div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
     );
   };
 
@@ -106,6 +123,26 @@ const Reclamacao = ({ reclamacao }) => {
         </div>
         <div className="col-8">
           <div className="label-item">Resposta U.E.</div>
+          <div
+            className="value-item value-uppercase"
+            dangerouslySetInnerHTML={{
+              __html: log.justificativa
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const blocoRespostaNutrisupervisor = log => {
+    return (
+      <div className="row mb-4">
+        <div className="col-4">
+          <div className="label-item">Data resposta Nutrisupervisor</div>
+          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+        </div>
+        <div className="col-8">
+          <div className="label-item">Resposta Nutrisupervisor</div>
           <div
             className="value-item value-uppercase"
             dangerouslySetInnerHTML={{
@@ -208,6 +245,10 @@ const Reclamacao = ({ reclamacao }) => {
     } else if (log.status_evento_explicacao === CODAE_QUESTIONOU_UE) {
       return blocoQuestionamentoUE(log);
     } else if (
+      log.status_evento_explicacao === CODAE_QUESTIONOU_NUTRISUPERVISOR
+    ) {
+      return blocoQuestionamentoNutrisupervisor(log);
+    } else if (
       log.status_evento_explicacao === TERCEIRIZADA_RESPONDEU_RECLAMACAO
     ) {
       return blocoRespostaTerceirizada(log);
@@ -224,6 +265,10 @@ const Reclamacao = ({ reclamacao }) => {
       return blocoRespostaAnalise(log);
     } else if (log.status_evento_explicacao === UE_RESPONDEU_RECLAMACAO) {
       return blocoRespostaUE(log);
+    } else if (
+      log.status_evento_explicacao === NUTRISUPERVISOR_RESPONDEU_RECLAMACAO
+    ) {
+      return blocoRespostaNutrisupervisor(log);
     }
   };
 

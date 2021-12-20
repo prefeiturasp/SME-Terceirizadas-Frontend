@@ -28,6 +28,7 @@ import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
 import { ajustarFormatoLog, LOG_PARA, slugify } from "../helper";
 import { MENU_DASHBOARD_TERCEIRIZADAS } from "./constants";
 import { FILTRO } from "../const";
+import { getMeusLotes } from "services/lote.service";
 
 class DashboardTerceirizada extends Component {
   constructor(props) {
@@ -51,7 +52,13 @@ class DashboardTerceirizada extends Component {
       visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO,
       filtroPorVencimento: FILTRO.SEM_FILTRO,
 
-      minhaTerceirizada: null
+      minhaTerceirizada: null,
+      listaLotes: null,
+      listaStatus: [
+        { nome: "Conferência Status", uuid: "" },
+        { nome: "Conferida", uuid: "1" },
+        { nome: "Não Conferida", uuid: "0" }
+      ]
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
@@ -62,12 +69,35 @@ class DashboardTerceirizada extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
-  filtrarNome(listaFiltro, event) {
+  filtrarNome(listaFiltro, value) {
     listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(event.target.value.toLowerCase());
+      const wordToFilter = slugify(value.toLowerCase());
       return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
     });
     return listaFiltro;
+  }
+
+  filtrarStatus(listaFiltro, value) {
+    if (value && value.length > 0) {
+      if (value === "1") {
+        listaFiltro = listaFiltro.filter(item => item.conferido === true);
+      }
+      if (value === "0") {
+        listaFiltro = listaFiltro.filter(item => item.conferido === false);
+      }
+      return listaFiltro;
+    } else {
+      return listaFiltro;
+    }
+  }
+
+  filtrarLote(listaFiltro, value) {
+    if (value && value.length > 0) {
+      listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
+      return listaFiltro;
+    } else {
+      return listaFiltro;
+    }
   }
 
   renderSecao(secao) {
@@ -170,11 +200,19 @@ class DashboardTerceirizada extends Component {
           });
         }
       );
+
+      getMeusLotes().then(response => {
+        this.setState({
+          listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
+            response.results
+          )
+        });
+      });
     });
   }
 
-  onPesquisaChanged(event) {
-    if (event === undefined) event = { target: { value: "" } };
+  onPesquisaChanged(values) {
+    if (values.titulo === undefined) values.titulo = "";
     const {
       questionamentosListSolicitacao,
       canceladasListSolicitacao,
@@ -182,17 +220,51 @@ class DashboardTerceirizada extends Component {
       negadasListSolicitacao
     } = this.state;
 
+    let questionamentosListFiltered = this.filtrarNome(
+      questionamentosListSolicitacao,
+      values.titulo
+    );
+    let autorizadasListFiltered = this.filtrarNome(
+      autorizadasListSolicitacao,
+      values.titulo
+    );
+    let negadasListFiltered = this.filtrarNome(
+      negadasListSolicitacao,
+      values.titulo
+    );
+    let canceladasListFiltered = this.filtrarNome(
+      canceladasListSolicitacao,
+      values.titulo
+    );
+
+    autorizadasListFiltered = this.filtrarStatus(
+      autorizadasListFiltered,
+      values.status
+    );
+    canceladasListFiltered = this.filtrarStatus(
+      canceladasListFiltered,
+      values.status
+    );
+
+    questionamentosListFiltered = this.filtrarLote(
+      questionamentosListFiltered,
+      values.lote
+    );
+    autorizadasListFiltered = this.filtrarLote(
+      autorizadasListFiltered,
+      values.lote
+    );
+    negadasListFiltered = this.filtrarLote(negadasListFiltered, values.lote);
+    canceladasListFiltered = this.filtrarLote(
+      canceladasListFiltered,
+      values.lote
+    );
+
     this.setState({
-      questionamentosListFiltered: this.filtrarNome(
-        questionamentosListSolicitacao,
-        event
-      ),
-      autorizadasListFiltered: this.filtrarNome(
-        autorizadasListSolicitacao,
-        event
-      ),
-      negadasListFiltered: this.filtrarNome(negadasListSolicitacao, event),
-      canceladasListFiltered: this.filtrarNome(canceladasListSolicitacao, event)
+      questionamentosListFiltered,
+      autorizadasListFiltered,
+      negadasListFiltered,
+      canceladasListFiltered
     });
   }
 
@@ -204,7 +276,9 @@ class DashboardTerceirizada extends Component {
       questionamentosListFiltered,
       canceladasListFiltered,
       negadasListFiltered,
-      autorizadasListFiltered
+      autorizadasListFiltered,
+      listaLotes,
+      listaStatus
     } = this.state;
 
     return (
@@ -233,6 +307,8 @@ class DashboardTerceirizada extends Component {
             titulo={"Acompanhamento solicitações"}
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
+            listaLotes={listaLotes}
+            listaStatus={listaStatus}
           >
             <div className="row pb-3">
               <div className="col-6">

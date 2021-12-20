@@ -18,7 +18,8 @@ import {
   formatarParaMultiselect,
   geradorUUID,
   getDataObj,
-  getError
+  getError,
+  retornaDuplicadasArray
 } from "../../helpers/utilities";
 import { loadFoodInclusion } from "../../reducers/foodInclusionReducer";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -135,6 +136,20 @@ class InclusaoDeAlimentacao extends Component {
         }
       }
     }
+    if (field === "observacao") {
+      value = value.target.value;
+      if (value.length > 1000) {
+        const index = acimaDoLimite.indexOf(id);
+        if (index === -1) {
+          acimaDoLimite.push(id);
+        }
+      } else {
+        const index = acimaDoLimite.indexOf(id);
+        if (index > -1) {
+          acimaDoLimite.splice(index, 1);
+        }
+      }
+    }
     inclusoes[indiceDiaMotivo][field] = value;
     this.setState({
       inclusoes
@@ -143,6 +158,15 @@ class InclusaoDeAlimentacao extends Component {
       acimaDoLimite
     });
   }
+
+  validaData = value => {
+    if (value === null || value === undefined) return "Campo obrigatório";
+    let datas = this.state.inclusoes.map(x => x.data);
+    let datasDuplicadas = retornaDuplicadasArray(datas);
+    if (datasDuplicadas.includes(value))
+      return "Já existe uma solicitação de inclusão de alimento para essa mesma data.";
+    else return undefined;
+  };
 
   onDataChanged(value) {
     if (
@@ -390,6 +414,7 @@ class InclusaoDeAlimentacao extends Component {
           inclusao_formatada["data"] = inclusao.data;
           inclusao_formatada["motivo"] = inclusao.motivo.uuid;
           inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
+          inclusao_formatada["observacao"] = inclusao.observacao;
           inclusao_formatada["outroMotivo"] =
             inclusao.outro_motivo !== null && inclusao.outro_motivo !== "";
           return inclusao_formatada;
@@ -801,7 +826,7 @@ class InclusaoDeAlimentacao extends Component {
                                 .toDate()}
                               label="Dia"
                               required
-                              validate={required}
+                              validate={this.validaData}
                             />
                           )}
                         </div>
@@ -987,6 +1012,44 @@ class InclusaoDeAlimentacao extends Component {
                           />
                         </div>
                       </div>
+                    </FormSection>
+                  );
+                })}
+                {inclusoes.map((diaMotivo, indice) => {
+                  const ehMotivoContinuo =
+                    diaMotivo.motivo && diaMotivo.motivoContinuo;
+                  return (
+                    <FormSection
+                      key={indice}
+                      name={`inclusoes_${diaMotivo.id}`}
+                    >
+                      <section>
+                        {ehMotivoContinuo && (
+                          <div className="grid-outro-motivo pb-2">
+                            <Field
+                              component={TextArea}
+                              label="Observação"
+                              onChange={event =>
+                                this.handleField(
+                                  "observacao",
+                                  event,
+                                  diaMotivo.id
+                                )
+                              }
+                              name="observacao"
+                              required
+                              validate={required}
+                            />
+                            {this.state.acimaDoLimite.includes(
+                              diaMotivo.id
+                            ) && (
+                              <div className="error-msg">
+                                Limite máximo de 1000 caracteres
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </section>
                     </FormSection>
                   );
                 })}

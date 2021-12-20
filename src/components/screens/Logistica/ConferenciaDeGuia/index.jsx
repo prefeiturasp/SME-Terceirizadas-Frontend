@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Spin } from "antd";
-import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
+import { Spin, Radio } from "antd";
+import {
+  getGuiaParaConferencia,
+  getConferenciaParaEdicao
+} from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -44,6 +47,8 @@ export default () => {
   const [HoraRecebimento, setHoraRecebimento] = useState("00:00");
   const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
+  const [existeOcorrencia, setExisteOcorrencia] = useState();
+  const [uuidEdicao, setUuidEdicao] = useState(false);
 
   const carregarGuia = async uuid => {
     let response;
@@ -57,6 +62,34 @@ export default () => {
         data_entrega: response.data.data_entrega,
         hora_recebimento: "00:00"
       });
+      setCarregando(false);
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
+  };
+
+  const carregarConferenciaEdicao = async uuid => {
+    let response;
+    try {
+      setCarregando(true);
+      const params = gerarParametrosConsulta({ uuid: uuid });
+      response = await getConferenciaParaEdicao(params);
+      let conferencia = response.data.results;
+      setGuia(conferencia.guia);
+      setExisteOcorrencia(conferencia.guia.status !== "Recebida");
+      setInitialValues({
+        numero_guia: conferencia.guia.numero_guia,
+        data_entrega: conferencia.guia.data_entrega,
+        hora_recebimento: conferencia.hora_recebimento,
+        placa_veiculo: conferencia.placa_veiculo,
+        data_entrega_real: moment(conferencia.data_recebimento, "DD/MM/YYYY"),
+        nome_motorista: conferencia.nome_motorista
+      });
+      setHoraRecebimento(conferencia.hora_recebimento);
+      setHoraRecebimentoAlterada(true);
+      setUuidEdicao(conferencia.uuid);
+      localStorage.setItem("conferenciaEdicao", JSON.stringify(conferencia));
       setCarregando(false);
     } catch (e) {
       toastError(e.response.data.detail);
@@ -83,6 +116,10 @@ export default () => {
     values.guia = uuid;
   };
 
+  const onChangeCampos = e => {
+    setExisteOcorrencia(e.target.value);
+  };
+
   const validaDataEntrega = value => {
     if (value === null) return "Digite uma data válida";
     if (guia.status === "Insucesso de entrega") return undefined;
@@ -103,9 +140,14 @@ export default () => {
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
-      const param = urlParams.get("uuid");
-      setUuid(param);
-      carregarGuia(param);
+      const uuidParametro = urlParams.get("uuid");
+      const edicaoParametro = urlParams.get("editar");
+      setUuid(uuidParametro);
+      if (edicaoParametro === "true") {
+        carregarConferenciaEdicao(uuidParametro);
+      } else {
+        carregarGuia(uuidParametro);
+      }
     }
   }, []);
 
@@ -124,7 +166,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Nº da guia de remessa"
+                      label="Número da guia de remessa"
                       name="numero_guia"
                       className="input-busca-produto"
                       disabled
@@ -133,75 +175,10 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Data de Entrega Prevista"
+                      label="Data de entrega prevista"
                       name="data_entrega"
                       className="input-busca-produto"
                       disabled
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputComData}
-                      label="Data de recebimento da UE"
-                      name="data_entrega_real"
-                      className="data-inicial"
-                      tooltipText={TOOLTIP_DATA}
-                      validate={composeValidators(required, validaDataEntrega)}
-                      minDate={null}
-                      maxDate={null}
-                      required
-                      writable
-                    />
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Nome do Motorista"
-                      name="nome_motorista"
-                      className="input-busca-produto"
-                      tooltipText={TOOLTIP_NOME}
-                      validate={composeValidators(
-                        required,
-                        maxLength(100),
-                        apenasLetras
-                      )}
-                      required
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Placa do Veículo"
-                      name="placa_veiculo"
-                      className="input-busca-produto"
-                      tooltipText={TOOLTIP_PLACA}
-                      validate={composeValidators(
-                        required,
-                        maxLength(7),
-                        alphaNumeric,
-                        peloMenosUmNumeroEUmaLetra
-                      )}
-                      required
-                    />
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputHorario}
-                      label="Hora da Entrega"
-                      name="hora_recebimento"
-                      placeholder="Selecione a Hora"
-                      horaAtual={HoraRecebimento}
-                      onChangeFunction={data => {
-                        escolherHora(data);
-                      }}
-                      className="input-busca-produto"
-                      tooltipText={TOOLTIP_HORA}
-                      validate={validaHoraRecebimento}
-                      required
-                      functionComponent
                     />
                   </div>
                 </div>
@@ -216,29 +193,127 @@ export default () => {
                 <hr />
                 <div className="mt-4 mb-4">
                   <div className="texto-confirma-entrega">
-                    Todos os alimentos descritos nesta Guia de Remessa foram
-                    entregues no prazo, na quantidade prevista e em boa
-                    qualidade para consumo?
+                    <i className="fas fa-exclamation-triangle" />
+                    <strong>
+                      Todos os alimentos descritos nesta Guia de Remessa foram
+                      entregues no prazo, na quantidade prevista e em boa
+                      qualidade para consumo?
+                    </strong>
                   </div>
 
-                  <NavLink
-                    className="float-right ml-3"
-                    to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
-                      guia.uuid
-                    }`}
+                  <Radio.Group
+                    size="large"
+                    onChange={onChangeCampos}
+                    value={existeOcorrencia}
                   >
-                    <Botao
-                      texto="Não"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      disabled={submitting}
-                    />
-                  </NavLink>
+                    <Radio value={false}>Sim</Radio>
+                    <Radio value={true}>Não</Radio>
+                  </Radio.Group>
 
-                  <ReceberSemOcorrencia
-                    values={values}
-                    disabled={Object.keys(errors).length > 0 || submitting}
-                  />
+                  {existeOcorrencia === false && (
+                    <>
+                      <div className="row mt-3 mb-3">
+                        <div className="col-4">
+                          <Field
+                            component={InputComData}
+                            label="Data de recebimento da UE"
+                            name="data_entrega_real"
+                            className="data-inicial"
+                            tooltipText={TOOLTIP_DATA}
+                            validate={composeValidators(
+                              required,
+                              validaDataEntrega
+                            )}
+                            minDate={null}
+                            maxDate={null}
+                            required
+                            writable
+                          />
+                        </div>
+                      </div>
+
+                      <div className="row mb-custom">
+                        <div className="col-4">
+                          <Field
+                            component={InputText}
+                            label="Nome do Motorista"
+                            name="nome_motorista"
+                            className="input-busca-produto"
+                            tooltipText={TOOLTIP_NOME}
+                            validate={composeValidators(
+                              required,
+                              maxLength(100),
+                              apenasLetras
+                            )}
+                            required
+                          />
+                        </div>
+                        <div className="col-4">
+                          <Field
+                            component={InputText}
+                            label="Placa do Veículo"
+                            name="placa_veiculo"
+                            className="input-busca-produto"
+                            tooltipText={TOOLTIP_PLACA}
+                            validate={composeValidators(
+                              required,
+                              maxLength(7),
+                              alphaNumeric,
+                              peloMenosUmNumeroEUmaLetra
+                            )}
+                            required
+                          />
+                        </div>
+                        <div className="col-4">
+                          <Field
+                            component={InputHorario}
+                            label="Hora da Entrega"
+                            name="hora_recebimento"
+                            placeholder="Selecione a Hora"
+                            horaAtual={HoraRecebimento}
+                            onChangeFunction={data => {
+                              escolherHora(data);
+                            }}
+                            className="input-busca-produto"
+                            tooltipText={TOOLTIP_HORA}
+                            validate={validaHoraRecebimento}
+                            required
+                            functionComponent
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  <div className="mb-3">
+                    {existeOcorrencia && (
+                      <NavLink
+                        className="float-right ml-3"
+                        to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
+                          guia.uuid
+                        }${uuidEdicao ? "&editar=true" : ""}`}
+                      >
+                        <Botao
+                          texto="Continuar"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN}
+                          disabled={submitting}
+                        />
+                      </NavLink>
+                    )}
+
+                    {!existeOcorrencia && (
+                      <ReceberSemOcorrencia
+                        values={values}
+                        uuidEdicao={uuidEdicao}
+                        disabled={
+                          Object.keys(errors).length > 0 ||
+                          existeOcorrencia !== false ||
+                          submitting
+                        }
+                      />
+                    )}
+                  </div>
                 </div>
               </form>
             )}

@@ -25,6 +25,15 @@ div.cadastro-produto-step3 {
 }
 
 .attachments {
+  .image-required {
+    color: #a50e05;
+    padding-right: 5px;
+  }
+  .image-label-cadastro-produto {
+    font-size: 14px !important;
+    color: #686868 !important;
+    font-weight: normal !important;
+  }
   .text {
     font-size: 14px;
     color: #686868;
@@ -37,27 +46,32 @@ div.cadastro-produto-step3 {
   }
   .btn {
     display: flex;
-    margin-top: 2em;
     justify-content: flex-end;
+    padding-bottom: 0% !important;
+  }
+
+  .btn-produto {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 0% !important;
   }
 }
 
 .section-cards-imagens {
-  display: flex;
-  flex-direction: column;
-  padding: 0 15px;
-  margin: 20px 0 0 0;
-
-  span {
-    margin: 0 0 0 10px;
-
-    cursor: pointer;
-  }
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 0px !important;
 
   .link {
-    font-size: 14px;
-    font-weight: bold;
-    color: $blue;
+    color: #086397 !important;
+  }
+
+  .arquivos-anexados {
+    background: #f3f3f3;
+    max-width: 48%;
   }
 }
 

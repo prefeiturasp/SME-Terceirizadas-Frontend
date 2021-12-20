@@ -1,8 +1,58 @@
+@import "../../../../styles/variables.scss";
+
 .card-conferencia-guia {
   .conferencia-guia {
     .texto-confirma-entrega {
       margin-top: calc(1rem + 1px);
       margin-bottom: calc(1rem + 1px);
+      color: #42474a;
+
+      .fa-exclamation-triangle {
+        color: #ab6701;
+        padding-right: 8px;
+      }
+    }
+
+    .ant-radio-inner::after {
+      background-color: $green;
+    }
+
+    .ant-radio-checked::after {
+      border: 1px solid $green;
+    }
+
+    .ant-radio-checked .ant-radio-inner {
+      border-color: $green;
+    }
+
+    .ant-radio-wrapper:hover .ant-radio,
+    .ant-radio:hover .ant-radio-inner,
+    .ant-radio-input:focus + .ant-radio-inner {
+      border-color: $green;
+    }
+
+    .mb-custom {
+      margin-bottom: 5rem;
+    }
+
+    .ant-radio-inner {
+      width: 20px;
+      height: 20px;
+      border-color: #42474a;
+      border-width: 2px;
+    }
+
+    .ant-radio-inner::after {
+      width: 6px;
+      height: 6px;
+      top: 5px;
+      left: 5px;
+    }
+
+    .ant-radio-wrapper {
+      font-size: 16px;
+      line-height: 24px;
+      border-color: #42474a;
     }
 
     .tabela-conferencia-guia {

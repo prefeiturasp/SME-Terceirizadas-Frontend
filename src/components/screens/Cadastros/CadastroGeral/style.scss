@@ -1,0 +1,55 @@
+.ant-pagination {
+  text-align: center;
+}
+
+.ant-pagination-prev,
+.ant-pagination-next {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  background: #ffffff;
+  border: 1px solid #dadada;
+  box-sizing: border-box;
+  a {
+    border: 0px !important;
+  }
+}
+
+.ant-pagination-prev:hover,
+.ant-pagination-next:hover {
+  border: 1px solid #219653;
+  box-sizing: border-box;
+  a {
+    border: 0px !important;
+  }
+}
+
+.ant-pagination-item-active {
+  background-color: #219653;
+  color: white;
+  border: 1px solid #219653;
+  box-sizing: border-box;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.ant-pagination-item-active:hover {
+  border: 1px solid #219653;
+}
+
+.ant-pagination-item {
+  font-family: Roboto;
+  font-style: normal;
+  font-size: 14px;
+}
+
+.ant-pagination-item:hover {
+  border: 1px solid #219653;
+}
+
+.anticon {
+  vertical-align: 0.1em;
+}

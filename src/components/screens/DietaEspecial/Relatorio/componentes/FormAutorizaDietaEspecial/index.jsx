@@ -10,7 +10,9 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-
+import { ESCOLA, CODAE } from "configs/constants";
+import { statusEnum } from "constants/shared";
+import EscolaCancelaDietaEspecial from "../../componentes/EscolaCancelaDietaEspecial";
 import {
   getAlergiasIntolerancias,
   getClassificacoesDietaEspecial,
@@ -22,6 +24,8 @@ import {
   CODAEAutorizaDietaEspecial
 } from "services/dietaEspecial.service";
 import { getSubstitutos } from "services/produto.service";
+import { getMotivosNegacaoDietaEspecial } from "services/painelNutricionista.service";
+import { CODAENegaDietaEspecial } from "services/dietaEspecial.service";
 
 import Diagnosticos from "./componentes/Diagnosticos";
 import ClassificacaoDaDieta from "./componentes/ClassificacaoDaDieta";
@@ -48,7 +52,12 @@ import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 import { formatarSolicitacoesVigentes } from "../../../Escola/helper";
 import "./style.scss";
 
-const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
+const FormAutorizaDietaEspecial = ({
+  dietaEspecial,
+  onAutorizarOuNegar,
+  visao,
+  dietaCancelada
+}) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
   const [alergias, setAlergias] = useState(undefined);
@@ -65,6 +74,7 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
   const [showAutorizarModal, setShowAutorizarModal] = useState(false);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(undefined);
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
+  const tipoUsuario = localStorage.getItem("tipo_perfil");
 
   const fetchData = async dietaEspecial => {
     const respAlergiasIntolerancias = await getAlergiasIntolerancias();
@@ -352,33 +362,51 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
             <div className="row mt-3">
               <div className="col-4">
                 {dietaEspecial.tipo_solicitacao !==
-                  TIPO_SOLICITACAO_DIETA.ALTERACAO_UE && (
-                  <Botao
-                    texto="Salvar Rascunho"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => salvaRascunho(values)}
-                    disabled={pristine || submitting}
-                  />
-                )}
+                  TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
+                  !dietaCancelada &&
+                  tipoUsuario === '"dieta_especial"' && (
+                    <Botao
+                      texto="Salvar Rascunho"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      onClick={() => salvaRascunho(values)}
+                      disabled={pristine || submitting}
+                    />
+                  )}
               </div>
               <div className="col-8">
-                <Botao
-                  texto="Autorizar"
-                  type={BUTTON_TYPE.BUTTON}
-                  onClick={() => validaAlergias(form)}
-                  style={BUTTON_STYLE.GREEN}
-                  className="ml-3 float-right"
-                  disabled={submitting}
-                />
-                <Botao
-                  texto="Negar"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.RED_OUTLINE}
-                  onClick={() => setShowModalNegaDieta(true)}
-                  className="ml-3 float-right"
-                  disabled={submitting}
-                />
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_A_AUTORIZAR &&
+                  visao === ESCOLA &&
+                  tipoUsuario === '"dieta_especial"' && (
+                    <EscolaCancelaDietaEspecial
+                      uuid={dietaEspecial.uuid}
+                      onCancelar={() => onAutorizarOuNegar()}
+                    />
+                  )}
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_A_AUTORIZAR &&
+                  visao === CODAE &&
+                  tipoUsuario === '"dieta_especial"' && (
+                    <>
+                      <Botao
+                        texto="Autorizar"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => validaAlergias(form)}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                      <Botao
+                        texto="Negar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.RED_OUTLINE}
+                        onClick={() => setShowModalNegaDieta(true)}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                    </>
+                  )}
                 <ModalAutorizaDietaEspecial
                   closeModal={() => setShowAutorizarModal(false)}
                   showModal={showAutorizarModal}
@@ -398,10 +426,14 @@ const FormAutorizaDietaEspecial = ({ dietaEspecial, onAutorizarOuNegar }) => {
         )}
       />
       <ModalNegaDietaEspecial
-        showModalNegaDieta={showModalNegaDieta}
+        showModal={showModalNegaDieta}
         closeModal={() => setShowModalNegaDieta(false)}
         onNegar={onAutorizarOuNegar}
         uuid={dietaEspecial.uuid}
+        getMotivos={() => getMotivosNegacaoDietaEspecial()}
+        submitModal={(uuid, values) => CODAENegaDietaEspecial(uuid, values)}
+        fieldJustificativa={"justificativa_negacao"}
+        tituloModal={"Deseja negar a solicitação?"}
       />
     </>
   );

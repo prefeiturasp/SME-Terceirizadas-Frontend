@@ -30,6 +30,9 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const QUESTIONAMENTOS_CODAE = "questionamentos-codae";
+export const SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA =
+  "solicitacoes-aguardando-inicio-vigencia";
 export const SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE =
   "solicitacoes-autorizadas-temporariamente";
 export const SOLICITACOES_INATIVAS_TEMPORARIAMENTE =
@@ -124,6 +127,8 @@ export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
+export const CONSULTA_KITS = "consulta-kits";
+export const KITS = "kits";
 export const LOTE = "lote";
 export const LOTES_CADASTRADOS = "lotes-cadastrados";
 export const HORARIO_COMBOS_ALIMENTACAO = "horario-combos-alimentacao";
@@ -150,11 +155,13 @@ export const REPOSICAO_GUIA = "reposicao-guia";
 export const REPOSICAO_RESUMO_FINAL = "reposicao-guia-resumo-final";
 export const ENTREGAS_DILOG = "entregas-dilog";
 export const ENTREGAS_DISTRIBUIDOR = "entregas-distribuidor";
+export const ENTREGAS_DRE = "entregas-dre";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 
+export const NOTIFICACOES = "notificacoes";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

@@ -32,14 +32,19 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
-export const ajustaFormatoLogPainelDietaEspecial = logs => {
+export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
   if (!logs) return;
   return logs.map(log => {
     let tamanhoString = 53;
     let descricao = log.descricao;
     let texto = truncarString(descricao, tamanhoString);
     let nomeAluno = log.nome_aluno;
-    let textoDieta = log.codigo_eol_aluno + " - " + nomeAluno;
+    let textoDieta =
+      (log.codigo_eol_aluno !== null
+        ? log.codigo_eol_aluno
+        : "(Aluno não matriculado)") +
+      " - " +
+      nomeAluno;
     let serie = log.serie ? log.serie : "";
     // Faz uma abreviação no texto quando tiver data com hora pra não quebrar o layout.
     if (
@@ -52,6 +57,8 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
       texto = texto.replace("Alteração", "Alt.");
     }
     return {
+      conferido: log.conferido,
+      lote_uuid: log.lote_uuid,
       text: truncarString(
         `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
         41
@@ -59,12 +66,13 @@ export const ajustaFormatoLogPainelDietaEspecial = logs => {
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
-      }&ehInclusaoContinua=${log.tipo_doc === INC_ALIMENTA_CONTINUA}`
+      }&ehInclusaoContinua=${log.tipo_doc ===
+        INC_ALIMENTA_CONTINUA}&card=${card}`
     };
   });
 };
 
-export const ajustarFormatoLog = logs => {
+export const ajustarFormatoLog = (logs, card) => {
   return logs.map(log => {
     let tamanhoString = 52;
     let descricao = log.descricao;
@@ -134,11 +142,13 @@ export const ajustarFormatoLog = logs => {
         ? truncarString(descricao, tamanhoString) +
           (log.serie ? " - " + log.serie : "")
         : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
+      conferido: log.conferido || log.terceirizada_conferiu_gestao,
+      lote_uuid: log.lote_uuid,
       date: log.data_log,
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
       }&ehInclusaoContinua=${log.tipo_doc ===
-        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}`
+        INC_ALIMENTA_CONTINUA}&tipoSolicitacao=${tipo}&card=${card}`
     };
   });
 };
@@ -173,6 +183,8 @@ export const slugify = str => {
 
   return str;
 };
+
+export const slugifyMin = str => slugify(str).toLowerCase();
 
 export const mapeiaStatusAlimento = str => {
   if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;

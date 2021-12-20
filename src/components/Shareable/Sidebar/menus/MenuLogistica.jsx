@@ -10,12 +10,16 @@ import {
   CONFERIR_ENTREGA,
   INSUCESSO_ENTREGA,
   ENTREGAS_DILOG,
+  ENTREGAS_DRE,
   ENTREGAS_DISTRIBUIDOR
 } from "configs/constants";
 import {
   usuarioEhDistribuidora,
   usuarioEhLogistica,
-  usuarioEhEscolaAbastecimento
+  usuarioEhEscolaAbastecimento,
+  usuarioEhDRE,
+  usuarioComAcessoTelaEntregasDilog,
+  usuarioEhCoordenadorNutriSupervisao
 } from "helpers/utilities";
 
 const MenuLogistica = () => {
@@ -60,8 +64,13 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {usuarioEhLogistica() && (
+      {(usuarioComAcessoTelaEntregasDilog() ||
+        usuarioEhCoordenadorNutriSupervisao()) && (
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DILOG}`}>Entregas</LeafItem>
+      )}
+
+      {usuarioEhDRE() && (
+        <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DRE}`}>Entregas</LeafItem>
       )}
 
       {usuarioEhDistribuidora() && (

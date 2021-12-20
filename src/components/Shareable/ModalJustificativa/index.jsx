@@ -36,7 +36,9 @@ const ModalJustificativa = ({
       </Modal.Header>
       {(state.acao === "responder" ||
         state.acao === "questionar_ue" ||
-        state.acao === "resposta_ue") && (
+        state.acao === "resposta_ue" ||
+        state.acao === "questionar_nutrisupervisor" ||
+        state.acao === "resposta_nutrisupervisor") && (
         <Modal.Body>
           <Form
             onSubmit={onSubmit}
@@ -60,20 +62,34 @@ const ModalJustificativa = ({
                       disabled={true}
                     />
                   </div>
-                  <div className="col-4">
-                    <Field
-                      component={InputText}
-                      label="Tipo"
-                      name="tipo_dieta"
-                      defaultValue={
-                        state.produto.eh_para_alunos_com_dieta
-                          ? "D. Especial"
-                          : "Comum"
-                      }
-                      disabled={true}
-                    />
-                  </div>
-                  {state.acao === "questionar_ue" && (
+                  {["resposta_ue", "resposta_nutrisupervisor"].includes(
+                    state.acao
+                  ) ? (
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Fabricante"
+                        name="fabricante.nome"
+                        disabled={true}
+                      />
+                    </div>
+                  ) : (
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Tipo"
+                        name="tipo_dieta"
+                        defaultValue={
+                          state.produto.eh_para_alunos_com_dieta
+                            ? "D. Especial"
+                            : "Comum"
+                        }
+                        disabled={true}
+                      />
+                    </div>
+                  )}
+                  {(state.acao === "questionar_ue" ||
+                    state.acao === "questionar_nutrisupervisor") && (
                     <div className="col-12">
                       <Field
                         component={InputText}

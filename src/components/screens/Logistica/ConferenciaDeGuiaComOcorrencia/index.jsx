@@ -59,8 +59,10 @@ export default () => {
   const [fechada, setFechada] = useState({});
   const [fracionada, setFracionada] = useState({});
   const [status, setStatus] = useState({});
+  const [edicao, setEdicao] = useState(false);
   const inputFile = useRef(null);
   const autoFillButton = useRef(null);
+  const editarButton = useRef(null);
   const history = useHistory();
 
   const [flagAtraso, setFlagAtraso] = useState(false);
@@ -97,7 +99,7 @@ export default () => {
   };
 
   const onSubmit = async values => {
-    values.hora_recebimento = HoraRecebimento;
+    values.uuid_conferencia = values.hora_recebimento = HoraRecebimento;
     values.data_recebimento = moment(values.data_entrega_real).format(
       "DD/MM/YYYY"
     );
@@ -110,7 +112,9 @@ export default () => {
 
     localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
     localStorage.setItem("guiaConferencia", JSON.stringify(guia));
-    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}`);
+    history.push(
+      `/${LOGISTICA}/${CONFERENCIA_GUIA_RESUMO_FINAL}?editar=${edicao}`
+    );
   };
 
   const validaDataEntrega = value => {
@@ -292,16 +296,104 @@ export default () => {
     setCarregando(false);
   };
 
+  const carregarLocalStorageEdicao = values => {
+    setCarregando(true);
+    let conferencia = JSON.parse(localStorage.getItem("conferenciaEdicao"));
+
+    let valoresConf = conferencia.conferencia_dos_alimentos;
+    let guiaConf = conferencia.guia;
+
+    let primeiroItem = valoresConf[0];
+
+    for (let i = 0; i < valoresConf.length; i++) {
+      let item = valoresConf[i];
+
+      if (
+        valoresConf.length !== guiaConf.alimentos.length &&
+        i < valoresConf.length - 1
+      ) {
+        let proxItem = valoresConf[i + 1];
+        if (
+          item.nome_alimento === proxItem.nome_alimento &&
+          item.tipo_embalagem !== proxItem.tipo_embalagem
+        ) {
+          if (item.tipo_embalagem === "Fechada") {
+            item.recebidos_fechada = item.qtd_recebido;
+            item.recebidos_fracionada = proxItem.qtd_recebido;
+          } else if (item.tipo_embalagem === "Fracionada") {
+            item.recebidos_fechada = proxItem.qtd_recebido;
+            item.recebidos_fracionada = item.qtd_recebido;
+          }
+          valoresConf.splice(i + 1, 1);
+        }
+      }
+
+      if (item.tipo_embalagem === "Fechada")
+        item.recebidos_fechada = item.qtd_recebido;
+      if (item.tipo_embalagem === "Fracionada")
+        item.recebidos_fracionada = item.qtd_recebido;
+      item.ocorrencias = item.ocorrencia;
+      item.observacoes = item.observacao;
+      if (item.arquivo) {
+        item.arquivo = [
+          {
+            nome: "imagem.png",
+            arquivo: item.arquivo
+          }
+        ];
+      } else {
+        item.arquivo = [];
+      }
+    }
+
+    if (primeiroItem) {
+      values.recebidos_fechada = primeiroItem.recebidos_fechada;
+      values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
+      values.status = primeiroItem.status;
+      values.ocorrencias = primeiroItem.ocorrencias;
+      values.observacoes = primeiroItem.observacoes;
+
+      let newArquivo = primeiroItem.arquivo;
+      setArquivoAtual(newArquivo);
+      if (newArquivo) {
+        inputFile.current.setState({ files: newArquivo });
+      }
+    }
+
+    values.data_entrega = guiaConf.data_entrega;
+    values.nome_motorista = conferencia.nome_motorista;
+    values.hora_recebimento = conferencia.hora_recebimento;
+    values.placa_veiculo = conferencia.placa_veiculo;
+    values.data_entrega_real = moment(
+      conferencia.data_recebimento,
+      "DD/MM/YYYY"
+    );
+
+    values.uuid_conferencia = conferencia.uuid;
+
+    setHoraRecebimento(conferencia.hora_recebimento);
+    setHoraRecebimentoAlterada(true);
+
+    setValoresForm(valoresConf);
+    setGuia(guiaConf);
+
+    setCarregando(false);
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
     if (queryString) {
       const urlParams = new URLSearchParams(window.location.search);
 
-      let param2 = urlParams.get("autofill");
+      let autofill = urlParams.get("autofill");
+      let edicao = urlParams.get("editar");
+      setEdicao(edicao === "true");
 
-      if (param2) {
+      if (autofill) {
         autoFillButton.current.click();
+      } else if (edicao === "true") {
+        editarButton.current.click();
       } else {
         const param = urlParams.get("uuid");
         setUuid(param);
@@ -668,6 +760,15 @@ export default () => {
                     }}
                     style={{ display: "none" }}
                     ref={autoFillButton}
+                  />
+
+                  <button
+                    onClick={event => {
+                      event.preventDefault();
+                      carregarLocalStorageEdicao(values);
+                    }}
+                    style={{ display: "none" }}
+                    ref={editarButton}
                   />
 
                   <Botao

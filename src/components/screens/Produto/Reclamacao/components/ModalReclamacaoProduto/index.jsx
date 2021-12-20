@@ -22,7 +22,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
-import { getEscolasSimplissima } from "services/escola.service";
+import { getEscolasSimplissimaComDREUnpaginated } from "services/escola.service";
 
 import "./style.scss";
 
@@ -46,12 +46,10 @@ export default class ModalReclamacaoProduto extends Component {
 
   componentWillMount = async () => {
     const meusDadosResposta = await meusDados();
-    const escolasResposta = await getEscolasSimplissima();
+    const escolasResposta = await getEscolasSimplissimaComDREUnpaginated();
     this.setState({
       meusDados: meusDadosResposta,
-      escolas: escolasResposta.results.sort((a, b) =>
-        a.nome > b.nome ? 1 : -1
-      )
+      escolas: escolasResposta.data.sort((a, b) => (a.nome > b.nome ? 1 : -1))
     });
   };
 

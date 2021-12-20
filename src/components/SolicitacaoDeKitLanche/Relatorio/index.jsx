@@ -18,7 +18,8 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE } from "../../../configs/constants";
+import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
@@ -31,12 +32,16 @@ class Relatorio extends Component {
       showModal: false,
       solicitacaoKitLanche: null,
       prazoDoPedidoMensagem: null,
-      resposta_sim_nao: null
+      resposta_sim_nao: null,
+      showModalMarcarConferencia: false
     };
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
+    this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
+      this
+    );
   }
 
   componentDidMount() {
@@ -78,6 +83,14 @@ class Relatorio extends Component {
 
   closeAutorizarModal() {
     this.setState({ showAutorizarModal: false });
+  }
+
+  showModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: true });
+  }
+
+  closeModalMarcarConferencia() {
+    this.setState({ showModalMarcarConferencia: false });
   }
 
   loadSolicitacao(uuid) {
@@ -123,7 +136,8 @@ class Relatorio extends Component {
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
       uuid,
-      showAutorizarModal
+      showAutorizarModal,
+      showModalMarcarConferencia
     } = this.state;
     const {
       visao,
@@ -174,6 +188,27 @@ class Relatorio extends Component {
       solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
       !solicitacaoKitLanche.logs[solicitacaoKitLanche.logs.length - 1]
         .resposta_sim_nao;
+    const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+      visao === TERCEIRIZADA &&
+      solicitacaoKitLanche &&
+      [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+        solicitacaoKitLanche.status
+      );
+
+    const BotaoMarcarConferencia = () => {
+      return (
+        <Botao
+          texto="Marcar Conferência"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            this.showModalMarcarConferencia();
+          }}
+        />
+      );
+    };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -199,6 +234,17 @@ class Relatorio extends Component {
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
             tipoSolicitacao={this.state.tipoSolicitacao}
+          />
+        )}
+        {solicitacaoKitLanche && (
+          <ModalMarcarConferencia
+            showModal={showModalMarcarConferencia}
+            closeModal={() => this.closeModalMarcarConferencia()}
+            onMarcarConferencia={() => {
+              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+            }}
+            uuid={solicitacaoKitLanche.uuid}
+            endpoint="solicitacoes-kit-lanche-avulsa"
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -288,6 +334,20 @@ class Relatorio extends Component {
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3"
                       />
+                    )}
+                    {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                      <div className="form-group float-right mt-4">
+                        {solicitacaoKitLanche.terceirizada_conferiu_gestao ? (
+                          <label className="ml-3 conferido">
+                            <i className="fas fa-check mr-2" />
+                            Solicitação Conferida
+                          </label>
+                        ) : (
+                          <BotaoMarcarConferencia
+                            uuid={solicitacaoKitLanche.uuid}
+                          />
+                        )}
+                      </div>
                     )}
                   </div>
                 )}
