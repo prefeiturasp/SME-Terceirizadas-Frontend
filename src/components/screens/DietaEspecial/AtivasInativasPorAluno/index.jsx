@@ -43,7 +43,7 @@ const AtivasInativasPorAluno = ({
     if (firstLoad) {
       if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
-    } else if (filtros) fetchData(filtros);
+    } else if (filtros) fetchData({ ...filtros, page: 1 });
   }, [filtros]);
 
   const fetchData = async filtros => {
