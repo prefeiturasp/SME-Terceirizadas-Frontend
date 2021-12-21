@@ -204,7 +204,7 @@ export class SolicitacaoDeKitLanche extends Component {
     const resposta = await getDietasAtivasInativasPorAluno();
     if (resposta.status === 200) {
       this.setState({
-        alunosComDietaEspecial: resposta.data.results.solicitacoes.filter(
+        alunosComDietaEspecial: resposta.data.solicitacoes.filter(
           s => s.ativas > 0
         )
       });
