@@ -12,7 +12,8 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 
@@ -25,7 +26,7 @@ const PainelInicial = ({ history }) => {
         (usuarioEhCODAEGestaoAlimentacao() ||
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
-          usuarioEhEscola()) && (
+          (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
