@@ -96,7 +96,8 @@ import {
   usuarioEhLogistica,
   usuarioEhDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEscolaEhGestaoMistaParceira
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -167,7 +168,7 @@ const routesConfig = [
     component: painelGestaoAlimentacao(),
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhTerceirizada()
@@ -213,62 +214,62 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/status-solicitacoes`,
     component: StatusSolicitacoesPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoCardapio(),
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     //AQUI POW
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: suspensaoAlimentacao(),
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES}`,

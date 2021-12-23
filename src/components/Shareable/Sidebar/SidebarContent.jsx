@@ -15,7 +15,8 @@ import {
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -54,7 +55,7 @@ export const SidebarContent = () => {
     !ehTreinamento &&
     (usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
-      usuarioEhEscola() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhTerceirizada());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
