@@ -19,6 +19,10 @@ export default ({ filtros, setFiltros }) => {
 
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (filtros.data_inicial)
+      filtros.data_inicial = moment(filtros.data_inicial).format("DD/MM/YYYY");
+    if (filtros.data_final)
+      filtros.data_final = moment(filtros.data_final).format("DD/MM/YYYY");
     setFiltros({ ...filtros });
   };
 
@@ -68,7 +72,7 @@ export default ({ filtros, setFiltros }) => {
             <FinalFormToRedux form={FORM_NAME} />
 
             <div className="row">
-              <div className="col-3">
+              <div className="col-6">
                 <Field
                   component={InputText}
                   label="Tema"
@@ -78,7 +82,7 @@ export default ({ filtros, setFiltros }) => {
                 />
               </div>
 
-              <div className="col-3">
+              <div className="col-6">
                 <Field
                   label="Tipo"
                   component={MultiSelect}
@@ -102,6 +106,8 @@ export default ({ filtros, setFiltros }) => {
                   ]}
                 />
               </div>
+            </div>
+            <div className="row">
               <div className="col-3">
                 <Field
                   component={InputComData}
@@ -115,8 +121,10 @@ export default ({ filtros, setFiltros }) => {
                       ? moment(values.data_final, "DD/MM/YYYY")._d
                       : null
                   }
+                  writable
                 />
               </div>
+
               <div className="col-3">
                 <Field
                   component={InputComData}
@@ -130,6 +138,7 @@ export default ({ filtros, setFiltros }) => {
                       : null
                   }
                   maxDate={null}
+                  writable
                 />
               </div>
             </div>

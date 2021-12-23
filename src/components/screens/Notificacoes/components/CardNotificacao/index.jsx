@@ -29,7 +29,7 @@ export default ({
         )} ${retornaClasseStatus(notificacao)}`}
         id={`heading_${notificacao.uuid}`}
       >
-        <div className="row">
+        <div className="row card-header-content">
           <div className="col-9">
             <div className="row">
               <div className="col-md-3 align-self-center">
