@@ -72,6 +72,13 @@ export const TIPO_USUARIO = {
   TERCEIRIZADA: `terceirizada`
 };
 
+export const TIPO_GESTAO = {
+  PARCEIRA: `"PARCEIRA"`,
+  DIRETA: `"DIRETA"`,
+  MISTA: `"MISTA"`,
+  TERC_TOTAL: `"TERC TOTAL"`
+};
+
 export const TIPODECARD = {
   PRIORIDADE: "priority",
   NO_LIMITE: "on-limit",

@@ -22,11 +22,14 @@ import {
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhDRE,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
-  const exibeMenuNovasSolicitacoes = usuarioEhEscola() || usuarioEhDRE();
+  const exibeMenuNovasSolicitacoes =
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    usuarioEhDRE();
   const PERFIL = usuarioEhEscola()
     ? ESCOLA
     : usuarioEhDRE()
