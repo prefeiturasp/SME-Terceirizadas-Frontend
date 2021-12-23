@@ -48,6 +48,15 @@
     background-color: #f3f3f3;
   }
 
+  .card-header {
+    height: 110px;
+
+    .card-header-content {
+      height: 100%;
+      align-content: center;
+    }
+  }
+
   .data-notificacoes {
     font-size: 20px;
     font-weight: bold;
