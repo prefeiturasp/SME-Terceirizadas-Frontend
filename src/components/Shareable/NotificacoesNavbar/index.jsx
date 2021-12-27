@@ -22,9 +22,15 @@ export default () => {
   };
 
   const goToNotificacoes = notificacao => {
-    history.push(
-      `/${NOTIFICACOES}/${notificacao ? `?uuid=${notificacao.uuid}` : ""}`
-    );
+    let path = `/${NOTIFICACOES}/${
+      notificacao ? `?uuid=${notificacao.uuid}` : ""
+    }`;
+    if (history.location.pathname.includes(`/${NOTIFICACOES}/`)) {
+      history.push("/");
+      setTimeout(() => history.push(path), 10);
+    } else {
+      history.push(path);
+    }
   };
 
   useEffect(() => {
