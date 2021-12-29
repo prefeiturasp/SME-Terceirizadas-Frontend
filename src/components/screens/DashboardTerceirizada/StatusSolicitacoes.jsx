@@ -6,10 +6,6 @@ import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import { ordenaPorDate, extrairStatusDaSolicitacaoURL } from "./helper";
 import { getMeusLotes } from "services/lote.service";
-import {
-  usuarioEhAdministradorDRE,
-  usuarioEhTerceirizada
-} from "helpers/utilities";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -127,15 +123,13 @@ export class StatusSolicitacoes extends Component {
         ))
     );
     solicitacoes = solicitacoes.sort(ordenaPorDate);
-    if (usuarioEhTerceirizada() || usuarioEhAdministradorDRE()) {
-      await getMeusLotes().then(response => {
-        this.setState({
-          listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
-            response.results
-          )
-        });
+    await getMeusLotes().then(response => {
+      this.setState({
+        listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
+          response.results
+        )
       });
-    }
+    });
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes
