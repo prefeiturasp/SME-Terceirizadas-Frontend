@@ -1,0 +1,17 @@
+.excluir-especificacoes {
+  align-items: end;
+  display: flex;
+  padding-bottom: 5px;
+  max-height: 78px;
+}
+
+.erro-especificacoes {
+  color: #a50e05;
+  padding-top: 5px;
+  font-size: 12px;
+}
+
+.invalid-field {
+  box-shadow: none;
+  border-color: #a50e05 !important;
+}
