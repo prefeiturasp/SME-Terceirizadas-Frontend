@@ -1,5 +1,15 @@
 @import "../../../../../styles/variables.scss";
 
+.checks {
+  .container-radio {
+    input {
+      &:checked ~ .checkmark {
+        background-color: $green;
+      }
+    }
+  }
+}
+
 div.cadastro-produto-step3 {
   .card-title {
     padding-top: 1.5em;
@@ -51,6 +61,7 @@ div.cadastro-produto-step3 {
       margin-bottom: 10px;
       label {
         padding: 0 30px;
+        margin-right: 20%;
       }
     }
   }
@@ -61,6 +72,7 @@ div.cadastro-produto-step3 {
       margin-bottom: 10px;
       label {
         padding: 0 30px;
+        margin-right: 20%;
       }
     }
 
@@ -88,8 +100,8 @@ div.cadastro-produto-step3 {
 
   .section-marca-fabricante-produto {
     display: grid;
-    grid-template-columns: 49% 49%;
-    column-gap: 2%;
+    grid-template-columns: 30% 30% 30%;
+    column-gap: 3%;
 
     .botoes-adicionar-m-f {
       display: flex;
