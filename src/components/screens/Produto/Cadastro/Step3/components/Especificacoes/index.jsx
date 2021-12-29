@@ -7,7 +7,6 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import Select from "components/Shareable/Select";
-import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import "./style.scss";
 
 const Especificaoes = ({
@@ -15,10 +14,8 @@ const Especificaoes = ({
   meta: { error, submitFailed },
   unidades_de_medida,
   embalagens,
-  especificacoesIniciais,
-  updateOpcoesItensCadastrados
+  especificacoesIniciais
 }) => {
-  const [showModal, setShowModal] = useState(false);
   const [mounted, setMounted] = useState(false);
   const opcoesUnidadesDeMedida =
     unidades_de_medida &&
@@ -69,13 +66,6 @@ const Especificaoes = ({
               Insira as informações referentes ao volume e unidade de medida
             </b>
           </p>
-        </div>
-        <div className="col-12">
-          <Botao
-            texto="Cadastrar Item"
-            onClick={() => setShowModal(true)}
-            style={BUTTON_STYLE.GREEN}
-          />
         </div>
       </div>
       {fields.map((name, index) => {
@@ -141,12 +131,6 @@ const Especificaoes = ({
           />
         </div>
       </div>
-      <ModalCadastrarItem
-        closeModal={() => setShowModal(false)}
-        showModal={showModal}
-        item={undefined}
-        changePage={() => updateOpcoesItensCadastrados}
-      />
     </>
   );
 };
