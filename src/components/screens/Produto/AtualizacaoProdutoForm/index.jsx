@@ -112,6 +112,7 @@ class AtualizacaoProdutoForm extends Component {
       produtoForm["eh_para_alunos_com_dieta"];
     valuesForm["tem_aditivos_alergenicos"] =
       produtoForm["tem_aditivos_alergenicos"];
+    valuesForm["tem_gluten"] = produtoForm["tem_gluten"];
     this.setState({ primeiroStep: true, valoresPrimeiroForm: valuesForm });
   }
 
