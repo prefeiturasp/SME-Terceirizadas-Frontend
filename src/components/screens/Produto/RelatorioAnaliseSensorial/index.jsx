@@ -17,6 +17,7 @@ import {
   getRelatorioProdutoAnaliseSensorial,
   getRelatorioProdutoAnaliseSensorialRecebimento
 } from "services/relatorios";
+import TabelaEspecificacoesProduto from "components/Shareable/TabelaEspecificacoesProduto";
 
 class RelatorioAnaliseSensorial extends Component {
   constructor(props) {
@@ -321,6 +322,13 @@ class RelatorioAnaliseSensorial extends Component {
 
                   <div />
                 </section>
+
+                <section>
+                  <div>
+                    <label>O produto contém glúten?</label>
+                    <p>{homologacao.produto.tem_gluten ? "SIM" : "NÃO"}</p>
+                  </div>
+                </section>
               </article>
 
               <hr />
@@ -401,23 +409,36 @@ class RelatorioAnaliseSensorial extends Component {
 
               <article>
                 <header>Informação do Produto (classificação)</header>
-                <section>
-                  <div>
-                    <label>Tipo</label>
-                    <p>{homologacao.produto.tipo}</p>
-                  </div>
-                </section>
-
                 <section className="duas-colunas">
                   <div>
-                    <label>Embalagem primária</label>
-                    <p>{homologacao.produto.embalagem}</p>
+                    <label>Nº de registro do produto de órgão competente</label>
+                    <p>
+                      {homologacao.produto.numero_registro || "Sem registro"}
+                    </p>
                   </div>
 
                   <div>
                     <label>Prazo de validade</label>
-                    <p>{homologacao.produto.prazo_validade}</p>
+                    <p>{homologacao.produto.prazo_validade || "Sem prazo"}</p>
                   </div>
+                </section>
+
+                <section>
+                  <div>
+                    <label>Classificação de Grãos</label>
+                    <p>{homologacao.produto.tipo || "Sem classificação"}</p>
+                  </div>
+                </section>
+
+                <section>
+                  {homologacao.produto.embalagem ? (
+                    <div>
+                      <label>Embalagem primária</label>
+                      <p>{homologacao.produto.embalagem || "Sem embalagem"}</p>
+                    </div>
+                  ) : (
+                    TabelaEspecificacoesProduto(homologacao.produto)
+                  )}
                 </section>
 
                 <section>
@@ -436,13 +457,6 @@ class RelatorioAnaliseSensorial extends Component {
                       Outras informações que empresa julgar necessário
                     </label>
                     <p>{homologacao.produto.outras_informacoes}</p>
-                  </div>
-                </section>
-
-                <section>
-                  <div>
-                    <label>Nº de registro do produto de órgão competente</label>
-                    <p>{homologacao.produto.numero_registro}</p>
                   </div>
                 </section>
               </article>
