@@ -5,6 +5,7 @@ import { Collapse } from "react-collapse";
 import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import "./styles.scss";
 import InformacaoDeReclamante from "components/Shareable/InformacaoDeReclamante";
+import TabelaEspecificacoesProduto from "../TabelaEspecificacoesProduto";
 
 const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
   const [ativos, setAtivos] = useState([]);
@@ -169,6 +170,12 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           </div>
         </div>
       </div>
+      <div className="row">
+        <div className="col-12 report-label-value">
+          <p>O produto contém glúten?</p>
+          <p className="value">{produto.tem_gluten ? "SIM" : "NÃO"}</p>
+        </div>
+      </div>
       <div className="mb-4 mt-4">
         <hr />
       </div>
@@ -261,14 +268,10 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       <div className="title">Informação do Produto (classificação)</div>
       <div className="row">
         <div className="col-6 report-label-value">
-          <p>Tipo</p>
-          <p className="value">{produto.tipo || "Sem tipo"}</p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-6 report-label-value">
-          <p>Embalagem primária</p>
-          <p className="value">{produto.embalagem || "Sem embalagem"}</p>
+          <p>Nº de registro do produto de órgão competente</p>
+          <p className="value">
+            {produto.numero_registro || "Registro não encontrado"}
+          </p>
         </div>
         <div className="col-6 report-label-value">
           <p>Prazo de validade</p>
@@ -277,6 +280,22 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           </p>
         </div>
       </div>
+      <div className="row">
+        <div className="col-6 report-label-value">
+          <p>Classificação de Grãos</p>
+          <p className="value">{produto.tipo || "Sem classificação"}</p>
+        </div>
+      </div>
+      {produto.embalagem ? (
+        <div className="row">
+          <div className="col-6 report-label-value">
+            <p>Embalagem primária</p>
+            <p className="value">{produto.embalagem || "Sem embalagem"}</p>
+          </div>
+        </div>
+      ) : (
+        TabelaEspecificacoesProduto(produto)
+      )}
       <div className="row">
         <div className="col-12 report-label-value">
           <p>
@@ -294,14 +313,6 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           <p>Outras informações que empresa julgar necessário</p>
           <p className="value">
             {produto.outras_informacoes || "Sem mais informações"}
-          </p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-12 report-label-value">
-          <p>Nº de registro do produto de órgão competente</p>
-          <p className="value">
-            {produto.numero_registro || "Registro não encontrado"}
           </p>
         </div>
       </div>
