@@ -44,6 +44,7 @@ import { TIPO_PERFIL } from "../../../../constants/shared";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
+import TabelaEspecificacoesProduto from "components/Shareable/TabelaEspecificacoesProduto";
 
 const {
   CODAE_HOMOLOGADO,
@@ -537,6 +538,12 @@ class HomologacaoProduto extends Component {
                   </div>
                 </div>
               </div>
+              <div className="row">
+                <div className="col-12 report-label-value">
+                  <p>O produto contém glúten?</p>
+                  <p className="value">{produto.tem_gluten ? "SIM" : "NÃO"}</p>
+                </div>
+              </div>
               <hr />
               <div className="title">Informações nutricionais</div>
               <div className="row">
@@ -628,15 +635,9 @@ class HomologacaoProduto extends Component {
               <div className="title">Informação do Produto (classificação)</div>
               <div className="row">
                 <div className="col-6 report-label-value">
-                  <p>Tipo</p>
-                  <p className="value">{produto.tipo || "Sem tipo"}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-6 report-label-value">
-                  <p>Embalagem primária</p>
+                  <p>Nº de registro do produto de órgão competente</p>
                   <p className="value">
-                    {produto.embalagem || "Sem embalagem"}
+                    {produto.numero_registro || "Registro não encontrado"}
                   </p>
                 </div>
                 <div className="col-6 report-label-value">
@@ -646,6 +647,24 @@ class HomologacaoProduto extends Component {
                   </p>
                 </div>
               </div>
+              <div className="row">
+                <div className="col-6 report-label-value">
+                  <p>Classificação de Grãos</p>
+                  <p className="value">{produto.tipo || "Sem classificação"}</p>
+                </div>
+              </div>
+              {produto.embalagem ? (
+                <div className="row">
+                  <div className="col-6 report-label-value">
+                    <p>Embalagem primária</p>
+                    <p className="value">
+                      {produto.embalagem || "Sem embalagem"}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                TabelaEspecificacoesProduto(produto)
+              )}
               <div className="row">
                 <div className="col-12 report-label-value">
                   <p>
@@ -663,14 +682,6 @@ class HomologacaoProduto extends Component {
                   <p>Outras informações que empresa julgar necessário</p>
                   <p className="value">
                     {produto.outras_informacoes || "Sem mais informações"}
-                  </p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-12 report-label-value">
-                  <p>Nº de registro do produto de órgão competente</p>
-                  <p className="value">
-                    {produto.numero_registro || "Registro não encontrado"}
                   </p>
                 </div>
               </div>
