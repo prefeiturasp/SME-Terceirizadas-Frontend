@@ -37,7 +37,7 @@ export const Select = props => {
         >
           {label}
         </label>,
-        tooltipText && <TooltipIcone tooltipText={tooltipText} />
+        tooltipText && <TooltipIcone key={2} tooltipText={tooltipText} />
       ]}
       <select
         {...input}
