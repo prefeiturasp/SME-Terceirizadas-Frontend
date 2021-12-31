@@ -63,15 +63,19 @@ class WizardFormTerceiraPagina extends Component {
     if (terceiroStep) {
       change("numero_registro", valoresterceiroForm.numero_registro);
       change("tipo", valoresterceiroForm.tipo);
-      let especificacoes = valoresterceiroForm.especificacoes.map(
-        especificacao => {
-          return {
-            volume: especificacao.volume,
-            unidade_de_medida: especificacao.unidade_de_medida.uuid,
-            embalagem_produto: especificacao.embalagem_produto.uuid
-          };
-        }
-      );
+      let especificacoes = valoresterceiroForm.especificacoes.length
+        ? valoresterceiroForm.especificacoes.map(especificacao => {
+            return {
+              volume: especificacao.volume,
+              unidade_de_medida: especificacao.unidade_de_medida
+                ? especificacao.unidade_de_medida.uuid
+                : undefined,
+              embalagem_produto: especificacao.embalagem_produto
+                ? especificacao.embalagem_produto.uuid
+                : undefined
+            };
+          })
+        : [{}];
       change("especificacoes", especificacoes);
       change("prazo_validade", valoresterceiroForm.prazo_validade);
       change("info_armazenamento", valoresterceiroForm.info_armazenamento);
@@ -79,13 +83,15 @@ class WizardFormTerceiraPagina extends Component {
     } else {
       change("numero_registro", produto.numero_registro);
       change("tipo", produto.tipo);
-      let especificacoes = produto.especificacoes.map(especificacao => {
-        return {
-          volume: especificacao.volume,
-          unidade_de_medida: especificacao.unidade_de_medida.uuid,
-          embalagem_produto: especificacao.embalagem_produto.uuid
-        };
-      });
+      let especificacoes = produto.especificacoes.length
+        ? produto.especificacoes.map(especificacao => {
+            return {
+              volume: especificacao.volume,
+              unidade_de_medida: especificacao.unidade_de_medida.uuid,
+              embalagem_produto: especificacao.embalagem_produto.uuid
+            };
+          })
+        : [{}];
       change("especificacoes", especificacoes);
       change("prazo_validade", produto.prazo_validade);
       change("info_armazenamento", produto.info_armazenamento);
@@ -248,7 +254,6 @@ class WizardFormTerceiraPagina extends Component {
               tooltipText="Campos específico para produtos que contém classificação de grãos"
               name="tipo"
               type="text"
-              placeholder="Digite o tipo"
             />
           </div>
         </div>
@@ -306,6 +311,7 @@ class WizardFormTerceiraPagina extends Component {
               removeFile={this.props.removeFile}
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
               toastErrorMessage="Arquivo superior a 10 MB não é possível fazer o upload"
+              validate={required}
             />
           </div>
         </section>

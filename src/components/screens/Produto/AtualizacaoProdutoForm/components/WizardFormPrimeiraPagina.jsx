@@ -385,6 +385,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     .includes(inputValue.toLowerCase());
                 }}
                 onSelect={this.addMarca}
+                validate={required}
               >
                 {marcasArray}
               </Field>
@@ -405,6 +406,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     .includes(inputValue.toLowerCase());
                 }}
                 onSelect={this.addFabricante}
+                validate={required}
               >
                 {fabricantesArray}
               </Field>
