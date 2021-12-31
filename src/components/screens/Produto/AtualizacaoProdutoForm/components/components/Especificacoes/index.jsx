@@ -7,6 +7,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import Select from "components/Shareable/Select";
+import { required } from "helpers/fieldValidators";
 import "./style.scss";
 
 const Especificaoes = ({
@@ -21,7 +22,7 @@ const Especificaoes = ({
     unidades_de_medida &&
     [
       {
-        uuid: undefined,
+        uuid: "",
         nome: "Selecione a Unidade de Medida"
       }
     ].concat(
@@ -34,7 +35,7 @@ const Especificaoes = ({
     embalagens &&
     [
       {
-        uuid: undefined,
+        uuid: "",
         nome: "Selecione a Embalagem"
       }
     ].concat(
@@ -82,6 +83,7 @@ const Especificaoes = ({
                 min={1}
                 tooltipText="Campo específico para inserir a quantidade em volumes Ex: 01"
                 required
+                validate={required}
               />
             </div>
             <div className="col-4">
@@ -93,6 +95,7 @@ const Especificaoes = ({
                 naoDesabilitarPrimeiraOpcao
                 tooltipText="Campo específico referente a unidade de medida do produto Ex: LT, ML..."
                 required
+                validate={required}
               />
             </div>
             <div className="col-4">
@@ -103,6 +106,7 @@ const Especificaoes = ({
                 options={opcoesEmbalagens}
                 naoDesabilitarPrimeiraOpcao
                 required
+                validate={required}
               />
             </div>
             <div className="col-1 excluir-especificacoes">
