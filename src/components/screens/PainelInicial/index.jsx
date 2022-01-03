@@ -13,16 +13,16 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhNutricionistaSupervisao,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEscolaEhGestaoMistaParceira,
+  exibirGA
 } from "helpers/utilities";
-import { ENVIRONMENT } from "constants/config";
 
 const PainelInicial = ({ history }) => {
-  const ehTreinamento = ENVIRONMENT === "treinamento" ? true : false;
+  const exibeMenuValidandoAmbiente = exibirGA();
 
   return (
     <Row className="mt-3" gutter={[16, 16]}>
-      {!ehTreinamento &&
+      {exibeMenuValidandoAmbiente &&
         (usuarioEhCODAEGestaoAlimentacao() ||
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
