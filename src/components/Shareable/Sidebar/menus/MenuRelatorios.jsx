@@ -7,7 +7,8 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
   usuarioEhEscola,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -16,7 +17,7 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
-    usuarioEhEscola() ||
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada();
 
@@ -28,7 +29,7 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    usuarioEhEscola() ||
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
     usuarioEhCODAEDietaEspecial();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =

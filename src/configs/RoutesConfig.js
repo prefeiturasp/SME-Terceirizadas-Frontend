@@ -733,7 +733,9 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
     exact: true,
-    tipoUsuario: constants.QUALQUER_USUARIO
+    tipoUsuario:
+      constants.QUALQUER_USUARIO &&
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -773,7 +775,9 @@ const routesConfig = [
     }`,
     component: RelatorioProduto,
     exact: true,
-    tipoUsuario: constants.QUALQUER_USUARIO
+    tipoUsuario:
+      constants.QUALQUER_USUARIO &&
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -781,7 +785,9 @@ const routesConfig = [
     }`,
     component: RelatorioSituacaoProduto,
     exact: true,
-    tipoUsuario: constants.QUALQUER_USUARIO
+    tipoUsuario:
+      constants.QUALQUER_USUARIO &&
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -794,13 +800,13 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
     component: ResponderQuestionamentoUEPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${
@@ -829,7 +835,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -843,7 +849,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -858,7 +864,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -879,7 +885,7 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -912,7 +918,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -928,7 +934,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: "/painel-gestao-produto",
@@ -940,7 +946,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      usuarioEhEscola() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhDRE()
   },
   {
@@ -950,7 +956,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
@@ -961,7 +967,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -986,8 +992,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhQualquerCODAE() ||
       usuarioEhTerceirizada() ||
-      usuarioEhEscola() ||
-      usuarioEhNutricionistaSupervisao
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
