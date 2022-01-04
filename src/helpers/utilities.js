@@ -621,7 +621,7 @@ export const exibirGA = () => {
   switch (ENVIRONMENT) {
     case "treinamento":
       return false;
-    case "producao":
+    case "production":
       return false;
     default:
       return true;
