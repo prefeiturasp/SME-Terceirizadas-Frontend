@@ -13,6 +13,9 @@ export default () => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
   const [ativos, setAtivos] = useState([]);
+  const [buscaPorParametro, setBuscaPorParametro] = useState(false);
+  const [numeroSolicitacaoInicial, setNumeroSolicitacaoInicial] = useState("");
+  const queryString = window.location.search;
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
@@ -28,7 +31,24 @@ export default () => {
       setSolicitacoes();
     }
     setCarregando(false);
+    if (response.data.count === 1 && buscaPorParametro) {
+      setBuscaPorParametro(false);
+      setAtivos([response.data.results[0].uuid]);
+    }
   };
+
+  useEffect(() => {
+    if (queryString) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codigo = urlParams.get("numero_solicitacao");
+      const filtro = {
+        numero_solicitacao: codigo
+      };
+      setBuscaPorParametro(true);
+      setNumeroSolicitacaoInicial(codigo);
+      setFiltros({ ...filtro });
+    }
+  }, []);
 
   useEffect(() => {
     if (filtros) {
@@ -50,6 +70,7 @@ export default () => {
             setFiltros={setFiltros}
             setSolicitacoes={setSolicitacoes}
             solicitacoes={solicitacoes}
+            numeroSolicitacaoInicial={numeroSolicitacaoInicial}
           />
           {solicitacoes && (
             <>

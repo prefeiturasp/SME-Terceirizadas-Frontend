@@ -457,6 +457,12 @@ class Step1 extends Component {
               component={ASelect}
               className={"select-form-produto"}
               showSearch
+              filterOption={(inputValue, option) => {
+                return option.props.children
+                  .toString()
+                  .toLowerCase()
+                  .includes(inputValue.toLowerCase());
+              }}
               name="marca"
               onSelect={this.addMarca}
               defaultValue={defaultMarcaStep1}
@@ -471,6 +477,12 @@ class Step1 extends Component {
             <Field
               component={ASelect}
               className={"select-form-produto"}
+              filterOption={(inputValue, option) => {
+                return option.props.children
+                  .toString()
+                  .toLowerCase()
+                  .includes(inputValue.toLowerCase());
+              }}
               showSearch
               name="fabricante"
               onSelect={this.addFabricante}

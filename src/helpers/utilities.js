@@ -2,8 +2,9 @@ import moment from "moment";
 import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
 import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
-import { PERFIL, TIPO_PERFIL } from "../constants/shared";
+import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
+import { ENVIRONMENT } from "constants/config";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
 //       Dá pra separar por tipo de helper:
@@ -337,6 +338,12 @@ export const usuarioEhEscola = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEscolaEhGestaoMistaParceira = () => {
+  return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
+    localStorage.getItem("tipo_gestao")
+  );
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
@@ -609,3 +616,14 @@ export const trocaAcentuadasPorSemAcento = texto =>
 
 export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
+
+export const exibirGA = () => {
+  switch (ENVIRONMENT) {
+    case "treinamento":
+      return false;
+    case "producao":
+      return false;
+    default:
+      return true;
+  }
+};

@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Field, reduxForm } from "redux-form";
+import { Field, FieldArray, reduxForm } from "redux-form";
 import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
+import TooltipIcone from "components/Shareable/TooltipIcone";
+import Especificacoes from "./components/Especificacoes";
 import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
 import {
   updateProduto,
@@ -20,6 +22,10 @@ import {
 import { withRouter } from "react-router-dom";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import ModalConfirmacaoSimNao from "components/Shareable/ModalConfirmacaoSimNao";
+import {
+  getUnidadesDeMedidaProduto,
+  getEmbalagensProduto
+} from "services/produto.service";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
@@ -27,30 +33,66 @@ class WizardFormTerceiraPagina extends Component {
     this.state = {
       produto: null,
       arquivos: [],
+      unidades_de_medida: null,
+      embalagens: null,
       mostraModalConfimacao: false,
-      formValues: undefined
+      formValues: undefined,
+      especificacoesIniciais: this.props.produto.especificacoes
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
   }
+
+  updateOpcoesItensCadastrados = async () => {
+    const reponseUnidades = await getUnidadesDeMedidaProduto();
+    const responseEmbalagens = await getEmbalagensProduto();
+    this.setState({
+      unidades_de_medida: reponseUnidades.data.results,
+      embalagens: responseEmbalagens.data.results
+    });
+  };
 
   componentDidMount = async () => {
     if (this.props.produto !== this.state.produto) {
       this.setState({ produto: this.props.produto });
     }
 
+    await this.updateOpcoesItensCadastrados();
+
     const { change, produto, terceiroStep, valoresterceiroForm } = this.props;
     if (terceiroStep) {
       change("numero_registro", valoresterceiroForm.numero_registro);
       change("tipo", valoresterceiroForm.tipo);
-      change("embalagem", valoresterceiroForm.embalagem);
+      let especificacoes = valoresterceiroForm.especificacoes.length
+        ? valoresterceiroForm.especificacoes.map(especificacao => {
+            return {
+              volume: especificacao.volume,
+              unidade_de_medida: especificacao.unidade_de_medida
+                ? especificacao.unidade_de_medida.uuid
+                : undefined,
+              embalagem_produto: especificacao.embalagem_produto
+                ? especificacao.embalagem_produto.uuid
+                : undefined
+            };
+          })
+        : [{}];
+      change("especificacoes", especificacoes);
       change("prazo_validade", valoresterceiroForm.prazo_validade);
       change("info_armazenamento", valoresterceiroForm.info_armazenamento);
       change("outras_informacoes", valoresterceiroForm.outras_informacoes);
     } else {
       change("numero_registro", produto.numero_registro);
       change("tipo", produto.tipo);
-      change("embalagem", produto.embalagem);
+      let especificacoes = produto.especificacoes.length
+        ? produto.especificacoes.map(especificacao => {
+            return {
+              volume: especificacao.volume,
+              unidade_de_medida: especificacao.unidade_de_medida.uuid,
+              embalagem_produto: especificacao.embalagem_produto.uuid
+            };
+          })
+        : [{}];
+      change("especificacoes", especificacoes);
       change("prazo_validade", produto.prazo_validade);
       change("info_armazenamento", produto.info_armazenamento);
       change("outras_informacoes", produto.outras_informacoes);
@@ -185,40 +227,17 @@ class WizardFormTerceiraPagina extends Component {
             <Field
               component={InputText}
               label="N° de registro do produto no órgão competente"
+              tooltipText="Campo específico para inserir o registro dos produtos de origem animal, polpas de frutas e sucos"
               name="numero_registro"
               type="text"
               placeholder="Registro no Ministério da Agricultura SP 000499-5.000060"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12 pt-3">
-            <Field
-              component={InputText}
-              label="Tipo"
-              name="tipo"
-              type="text"
-              placeholder="Digite o tipo"
-            />
-          </div>
-        </div>
-
-        <div className="row">
-          <div className="col-6 pt-3">
-            <Field
-              component={InputText}
-              label="Embalagem primária"
-              name="embalagem"
-              type="text"
-              placeholder="Digite os dados"
-              required
-              validate={required}
             />
           </div>
           <div className="col-6 pt-3">
             <Field
               component={InputText}
               label="Prazo de Validade"
+              tooltipText="Inserir o período de tempo em Dias, Meses ou Anos conforme descrição do rótulo"
               name="prazo_validade"
               type="text"
               placeholder="Digite o prazo da validade"
@@ -227,6 +246,28 @@ class WizardFormTerceiraPagina extends Component {
             />
           </div>
         </div>
+        <div className="row">
+          <div className="col-12 pt-3">
+            <Field
+              component={InputText}
+              label="Classificação de Grãos"
+              tooltipText="Campos específico para produtos que contém classificação de grãos"
+              name="tipo"
+              type="text"
+            />
+          </div>
+        </div>
+        <FieldArray
+          name="especificacoes"
+          component={Especificacoes}
+          unidades_de_medida={this.state.unidades_de_medida}
+          embalagens={this.state.embalagens}
+          especificacoesIniciais={this.state.especificacoesIniciais}
+          updateOpcoesItensCadastrados={() =>
+            this.updateOpcoesItensCadastrados()
+          }
+          required
+        />
         <div className="row">
           <div className="col-12 pt-3">
             <Field
@@ -252,31 +293,28 @@ class WizardFormTerceiraPagina extends Component {
         </div>
 
         <section className="row attachments">
-          <div className="col-9">
-            <div className="card-title font-weight-bold cinza-escuro mt-4">
-              Imagens do Produto
-            </div>
-            <div className="text">Anexe uma ou mais imagens do produto.</div>
-            <div className="card-warning mt-2">
-              <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
-              .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br />
-            </div>
+          <div className="col-12 card-title cinza-escuro image-label-cadastro-produto">
+            <span className="image-required">*</span>
+            <span>Imagens do Produto</span>
+            <TooltipIcone tooltipText="Anexe uma ou mais imagens do produto." />
           </div>
-          <div className="col-3 btn">
+          <div className="col-12 btn-produto">
             <Field
               component={ManagedInputFileField}
               concatenarNovosArquivos
               className="inputfile"
               texto="Anexar"
               name="anexos"
+              ehCadastroProduto={true}
               accept=".png, .doc, .pdf, .docx, .jpeg, .jpg"
+              onChange={this.props.setFiles}
               removeFile={this.props.removeFile}
               toastSuccessMessage="Imagem do produto inclusa com sucesso"
               toastErrorMessage="Arquivo superior a 10 MB não é possível fazer o upload"
+              validate={required}
             />
           </div>
         </section>
-
         <div className="section-botoes">
           <Botao
             texto={"Voltar"}

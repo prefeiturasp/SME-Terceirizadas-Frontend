@@ -15,7 +15,9 @@ import {
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEscolaEhGestaoMistaParceira,
+  exibirGA
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -28,11 +30,9 @@ import {
   MenuRelatorios,
   MenuLogistica
 } from "./menus";
-import { ENVIRONMENT } from "constants/config";
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
-  const ehTreinamento = ENVIRONMENT === "treinamento" ? true : false;
 
   const onSubmenuClick = useCallback(
     clickedMenu => {
@@ -44,6 +44,7 @@ export const SidebarContent = () => {
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
   // Para utilizar esse componente com outros perfis precisa atualizar os
   // criterios de exibicao abaixo
+  const exibeMenuValidandoAmbiente = exibirGA();
   const exibirPainelInicial =
     !usuarioEhCoordenadorEscola() &&
     !usuarioEhEscolaAbastecimento() &&
@@ -51,10 +52,10 @@ export const SidebarContent = () => {
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora();
   const exibirGestaoAlimentacao =
-    !ehTreinamento &&
+    exibeMenuValidandoAmbiente &&
     (usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
-      usuarioEhEscola() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhTerceirizada());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
@@ -71,11 +72,12 @@ export const SidebarContent = () => {
     usuarioEhEscola() ||
     usuarioEhDRE() ||
     usuarioEhTerceirizada();
-  const exibirLancamentoInicial = !ehTreinamento && usuarioEhEscola();
+  const exibirLancamentoInicial =
+    exibeMenuValidandoAmbiente && usuarioEhEscola();
   const exibirCadastros =
     usuarioEhLogistica() ||
-    (ehTreinamento && usuarioEhCODAEGestaoAlimentacao()) ||
-    (!ehTreinamento &&
+    (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
+    (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
   const exibirRelatorios =
     !usuarioEhCoordenadorEscola() &&

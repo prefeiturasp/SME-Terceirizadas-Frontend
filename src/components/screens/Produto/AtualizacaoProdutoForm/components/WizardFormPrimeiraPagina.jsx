@@ -1,9 +1,18 @@
 import React from "react";
 import { Field, reduxForm } from "redux-form";
-import { ASelect } from "../../../../Shareable/MakeField";
-import InputText from "components/Shareable/Input/InputText";
-import { required, requiredMultiselect } from "helpers/fieldValidators";
+import { Select } from "antd";
+import { ASelect } from "components/Shareable/MakeField";
+import {
+  required,
+  requiredMultiselect,
+  maxLengthProduto
+} from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
+import {
+  getNomeDeProdutosEdital,
+  getMarcasProdutos,
+  getFabricantesProdutos
+} from "services/produto.service";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
@@ -11,6 +20,10 @@ import {
 
 import "./styles.scss";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
+import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
+
+const maxLength5000 = maxLengthProduto(5000);
+const { Option } = Select;
 
 class WizardFormPrimeiraPagina extends React.Component {
   constructor(props) {
@@ -20,7 +33,15 @@ class WizardFormPrimeiraPagina extends React.Component {
       checkDieta: false,
       produtoForm: null,
       protocoloDietas: null,
-      completo: false
+      nomeDeProdutosEditalArray: [],
+      marcasArray: [],
+      fabricantesArray: [],
+      listNomesProdutos: [],
+      listaMarcas: [],
+      listaFabricantes: [],
+      loading: true,
+      completo: false,
+      showModalCadastrarItem: false
     };
   }
 
@@ -29,14 +50,58 @@ class WizardFormPrimeiraPagina extends React.Component {
     this.setState({ produtoForm: produto });
   }
 
-  componentDidUpdate() {
-    const { retificou, produtoForm, completo } = this.state;
+  async componentDidUpdate() {
+    const {
+      retificou,
+      produtoForm,
+      completo,
+      marcasArray,
+      fabricantesArray,
+      loading
+    } = this.state;
+
     const {
       change,
       protocolos,
       primeiroStep,
       valoresPrimeiroForm
     } = this.props;
+
+    let listaNomeDeProdutosEdital = [];
+    let listaMarcas = [];
+    let listaFabricantes = [];
+
+    if (marcasArray.length === 0 && loading && fabricantesArray.length === 0) {
+      const responseNomeDeProdutosEdital = await getNomeDeProdutosEdital();
+      const responseMarcas = await getMarcasProdutos();
+      const responseFabricantes = await getFabricantesProdutos();
+
+      responseNomeDeProdutosEdital.data.results.forEach(produtoEdital => {
+        listaNomeDeProdutosEdital.push(
+          <Option key={`${produtoEdital.uuid}`}>{produtoEdital.nome}</Option>
+        );
+      });
+
+      responseMarcas.data.results.forEach(marca => {
+        listaMarcas.push(<Option key={`${marca.uuid}`}>{marca.nome}</Option>);
+      });
+
+      responseFabricantes.data.results.forEach(fabricante => {
+        listaFabricantes.push(
+          <Option key={`${fabricante.uuid}`}>{fabricante.nome}</Option>
+        );
+      });
+      this.setState({
+        nomeDeProdutosEditalArray: listaNomeDeProdutosEdital,
+        marcasArray: listaMarcas,
+        fabricantesArray: listaFabricantes,
+        listNomesProdutos: responseNomeDeProdutosEdital.data.results,
+        listaMarcas: responseMarcas.data.results,
+        listaFabricantes: responseFabricantes.data.results,
+        loading: false
+      });
+    }
+
     if (produtoForm !== null && !retificou && !primeiroStep) {
       if (produtoForm.eh_para_alunos_com_dieta) {
         change("eh_para_alunos_com_dieta", "1");
@@ -48,6 +113,12 @@ class WizardFormPrimeiraPagina extends React.Component {
         change("tem_aditivos_alergenicos", "1");
       } else {
         change("tem_aditivos_alergenicos", "0");
+      }
+
+      if (produtoForm.tem_gluten) {
+        change("tem_gluten", "1");
+      } else {
+        change("tem_gluten", "0");
       }
 
       if (!primeiroStep) {
@@ -65,6 +136,7 @@ class WizardFormPrimeiraPagina extends React.Component {
         this.setState({ retificou: true });
       }
     }
+
     if (primeiroStep && !completo && valoresPrimeiroForm !== null) {
       if (valoresPrimeiroForm.eh_para_alunos_com_dieta) {
         change("eh_para_alunos_com_dieta", "1");
@@ -76,6 +148,12 @@ class WizardFormPrimeiraPagina extends React.Component {
         change("tem_aditivos_alergenicos", "1");
       } else {
         change("tem_aditivos_alergenicos", "0");
+      }
+
+      if (valoresPrimeiroForm.tem_gluten) {
+        change("tem_gluten", "1");
+      } else {
+        change("tem_gluten", "0");
       }
 
       change("protocolos", valoresPrimeiroForm.protocolos);
@@ -95,6 +173,44 @@ class WizardFormPrimeiraPagina extends React.Component {
       this.setState({ completo: true });
     }
   }
+
+  showModalCadastrarItem = () => {
+    this.setState({
+      showModalCadastrarItem: true
+    });
+  };
+
+  closeModalCadastrarItem = () => {
+    this.setState({
+      showModalCadastrarItem: false
+    });
+  };
+
+  updateOpcoesItensCadastrados = async () => {
+    const responseMarcas = await getMarcasProdutos();
+    const responseFabricantes = await getFabricantesProdutos();
+
+    let listaMarcas = [];
+    let listaFabricantes = [];
+
+    responseMarcas.data.results.forEach(marca => {
+      listaMarcas.push(<Option key={`${marca.uuid}`}>{marca.nome}</Option>);
+    });
+
+    responseFabricantes.data.results.forEach(fabricante => {
+      listaFabricantes.push(
+        <Option key={`${fabricante.uuid}`}>{fabricante.nome}</Option>
+      );
+    });
+
+    this.setState({
+      marcasArray: listaMarcas,
+      fabricantesArray: listaFabricantes,
+      listaMarcas: responseMarcas.data.results,
+      listaFabricantes: responseFabricantes.data.results,
+      loading: false
+    });
+  };
 
   dietaEspecialCheck = valor => {
     let { produtoForm } = this.state;
@@ -121,15 +237,55 @@ class WizardFormPrimeiraPagina extends React.Component {
     }
   };
 
+  temGlutemCheck = valor => {
+    let { produtoForm } = this.state;
+    const { change } = this.props;
+    produtoForm.tem_gluten = valor === "1" ? true : false;
+    if (valor === "0") {
+      this.setState({ produtoForm });
+      change("tem_gluten", null);
+    } else if (valor === "1") {
+      this.setState({ produtoForm });
+    }
+  };
+
+  addNome = valor => {
+    let { produtoForm, listNomesProdutos } = this.state;
+    const { change } = this.props;
+    let nome = listNomesProdutos.filter(nome => valor === nome.uuid)[0].nome;
+    produtoForm.nome = nome;
+    change("nome", nome);
+    this.setState({ produtoForm });
+  };
+
+  addMarca = valor => {
+    let { produtoForm, listaMarcas } = this.state;
+    const { change } = this.props;
+    produtoForm.marca = listaMarcas.filter(marca => valor === marca.uuid)[0];
+    change("marca", valor);
+    this.setState({ produtoForm });
+  };
+
+  addFabricante = valor => {
+    let { produtoForm, listaFabricantes } = this.state;
+    const { change } = this.props;
+    produtoForm.fabricante = listaFabricantes.filter(
+      fabricante => valor === fabricante.uuid
+    )[0];
+    change("fabricante", valor);
+    this.setState({ produtoForm });
+  };
+
   render() {
+    const { handleSubmit, arrayProtocolos, valuesForm } = this.props;
+
     const {
-      handleSubmit,
-      arrayProtocolos,
-      arrayMarcas,
-      arrayFabricantes,
-      valuesForm
-    } = this.props;
-    const { produtoForm } = this.state;
+      produtoForm,
+      nomeDeProdutosEditalArray,
+      marcasArray,
+      fabricantesArray
+    } = this.state;
+
     return (
       <form onSubmit={handleSubmit}>
         <section className="identificacao-produto">
@@ -197,19 +353,23 @@ class WizardFormPrimeiraPagina extends React.Component {
           </section>
 
           <div className="section-produto-nome">
+            <label className="label-formulario-produto">
+              <nav>*</nav>Nome do produto
+            </label>
             <Field
-              component={InputText}
-              label="Nome do produto"
+              component={ASelect}
+              className={"select-form-produto"}
+              showSearch
               name="nome"
-              type="text"
-              placeholder="Digite o nome do produto"
-              required
+              onSelect={this.addNome}
               validate={required}
-            />
+            >
+              {nomeDeProdutosEditalArray}
+            </Field>
           </div>
 
           <section className="section-marca-fabricante-produto">
-            <div>
+            <div className="">
               <label className="label-formulario-produto">
                 <nav>*</nav>Marca do produto
               </label>
@@ -217,19 +377,20 @@ class WizardFormPrimeiraPagina extends React.Component {
                 component={ASelect}
                 className={"select-form-produto"}
                 showSearch
-                filterOption={(inputValue, option) =>
-                  option.props.children
+                name="marca"
+                filterOption={(inputValue, option) => {
+                  return option.props.children
                     .toString()
                     .toLowerCase()
-                    .includes(inputValue.toLowerCase())
-                }
-                name="marca"
+                    .includes(inputValue.toLowerCase());
+                }}
+                onSelect={this.addMarca}
+                validate={required}
               >
-                {arrayMarcas}
+                {marcasArray}
               </Field>
             </div>
-
-            <div>
+            <div className="">
               <label className="label-formulario-produto">
                 <nav>*</nav>Nome do fabricante
               </label>
@@ -238,24 +399,39 @@ class WizardFormPrimeiraPagina extends React.Component {
                 className={"select-form-produto"}
                 showSearch
                 name="fabricante"
-                filterOption={(inputValue, option) =>
-                  option.props.children
+                filterOption={(inputValue, option) => {
+                  return option.props.children
                     .toString()
                     .toLowerCase()
-                    .includes(inputValue.toLowerCase())
-                }
+                    .includes(inputValue.toLowerCase());
+                }}
+                onSelect={this.addFabricante}
+                validate={required}
               >
-                {arrayFabricantes}
+                {fabricantesArray}
               </Field>
+            </div>
+            <div className="mt-4 adicionar-marca-fornecedor">
+              <Botao
+                texto="Cadastrar Item"
+                className={"botao-adicionar-marca-fabricante"}
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={() => {
+                  this.showModalCadastrarItem();
+                }}
+              />
             </div>
           </section>
 
           <div className="componentes-do-produto">
             <Field
-              component={InputText}
+              component={TextArea}
               label="Nome dos componentes do produto"
               name="componentes"
               type="text"
+              validate={[maxLength5000]}
+              maxLength={5001}
               required
             />
           </div>
@@ -297,17 +473,63 @@ class WizardFormPrimeiraPagina extends React.Component {
                 </label>
               </div>
             </article>
+            <article>
+              <div className="card-warning mt-3 w-50">
+                <strong>IMPORTANTE:</strong> Relacioná-los conforme dispõe a RDC
+                nº 26 de 02/07/15
+              </div>
+            </article>
             {produtoForm !== null && produtoForm.tem_aditivos_alergenicos && (
               <article>
+                <label className="label-formulario-produto">
+                  <nav>*</nav>Quais?
+                </label>
                 <Field
                   component={TextArea}
                   className="field-aditivos"
-                  label={"Quais?"}
                   name="aditivos"
                   required
                 />
               </article>
             )}
+          </section>
+
+          <section className="componentes-alergenicos">
+            <article>
+              <label className="label-formulario-produto">
+                <span>*</span>O produto contém glúten?
+              </label>
+              <div className="checks">
+                <label className="container-radio">
+                  Sim
+                  <Field
+                    component={"input"}
+                    type="radio"
+                    value="1"
+                    name="tem_gluten"
+                    onClick={() => {
+                      this.temGlutemCheck("1");
+                    }}
+                    required
+                  />
+                  <span className="checkmark" />
+                </label>
+                <label className="container-radio">
+                  Não
+                  <Field
+                    component={"input"}
+                    type="radio"
+                    value="0"
+                    name="tem_gluten"
+                    onClick={() => {
+                      this.temGlutemCheck("0");
+                    }}
+                    required
+                  />
+                  <span className="checkmark" />
+                </label>
+              </div>
+            </article>
           </section>
         </section>
 
@@ -321,6 +543,12 @@ class WizardFormPrimeiraPagina extends React.Component {
             }}
           />
         </section>
+        <ModalCadastrarItem
+          closeModal={this.closeModalCadastrarItem}
+          showModal={this.state.showModalCadastrarItem}
+          item={undefined}
+          changePage={this.updateOpcoesItensCadastrados}
+        />
       </form>
     );
   }

@@ -14,7 +14,7 @@ import "./styles.scss";
 
 const FORM_NAME = "buscaSolicitacaoAlteracao";
 
-export default ({ setFiltros, setSolicitacoes }) => {
+export default ({ setFiltros, setSolicitacoes, numeroSolicitacaoInicial }) => {
   const onSubmit = async values => {
     const filtros = { ...values };
     if (filtros.motivos) {
@@ -27,6 +27,7 @@ export default ({ setFiltros, setSolicitacoes }) => {
     <div className="filtros-solicitacao-alteracao">
       <Form
         onSubmit={onSubmit}
+        initialValues={{ numero_solicitacao: numeroSolicitacaoInicial }}
         render={({ form, handleSubmit, submitting, values }) => (
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
