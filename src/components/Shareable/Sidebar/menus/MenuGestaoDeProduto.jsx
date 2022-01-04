@@ -13,17 +13,20 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 
-const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
+const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
   const exibirReclamacao =
-    usuarioEhNutricionistaSupervisao() || usuarioEhEscola();
-  const exibirReclamacaoUE = usuarioEhEscola();
+    usuarioEhNutricionistaSupervisao() ||
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira());
+  const exibirReclamacaoUE =
+    usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira();
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
@@ -104,4 +107,4 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   );
 };
 
-export default MenuGestaoDeAlimentacao;
+export default MenuGestaoDeProduto;
