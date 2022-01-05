@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Spin, Radio } from "antd";
+import { Spin, Radio, Checkbox } from "antd";
 import {
   getGuiaParaConferencia,
   getConferenciaParaEdicao
@@ -42,6 +42,8 @@ const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimento
 
 export default () => {
   const [guia, setGuia] = useState({});
+  const [alimentos, setAlimentos] = useState([]);
+  const [nomesAlimentos, setNomesAlimentos] = useState([]);
   const [uuid, setUuid] = useState();
   const [carregando, setCarregando] = useState(false);
   const [HoraRecebimento, setHoraRecebimento] = useState("00:00");
@@ -57,6 +59,10 @@ export default () => {
       const params = gerarParametrosConsulta({ uuid: uuid });
       response = await getGuiaParaConferencia(params);
       setGuia(response.data);
+      //setAlimentos(response.data.alimentos);
+      setNomesAlimentos(
+        response.data.alimentos.map(alimento => alimento.nome_alimento)
+      );
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
@@ -77,6 +83,10 @@ export default () => {
       response = await getConferenciaParaEdicao(params);
       let conferencia = response.data.results;
       setGuia(conferencia.guia);
+      //setAlimentos(conferencia.guia.alimentos)
+      setNomesAlimentos(
+        conferencia.guia.alimentos.map(alimento => alimento.nome_alimento)
+      );
       setExisteOcorrencia(conferencia.guia.status !== "Recebida");
       setInitialValues({
         numero_guia: conferencia.guia.numero_guia,
@@ -133,6 +143,22 @@ export default () => {
   const validaHoraRecebimento = value => {
     value = HoraRecebimentoAlterada ? HoraRecebimento : undefined;
     return value !== undefined ? "" : "Campo obrigatório";
+  };
+
+  const onChangeAlimentos = list => {
+    console.log(list);
+    setAlimentos(list);
+    localStorage.alimentosConferencia = JSON.stringify(list);
+    //setIndeterminate(!!list.length && list.length < plainOptions.length);
+    //setCheckAll(list.length === plainOptions.length);
+  };
+
+  const onChangeAlimentosAll = e => {
+    let listaAlimentos = e.target.checked ? nomesAlimentos : [];
+    setAlimentos(listaAlimentos);
+    localStorage.alimentosConferencia = JSON.stringify(listaAlimentos);
+    //setIndeterminate(!!list.length && list.length < plainOptions.length);
+    //setCheckAll(list.length === plainOptions.length);
   };
 
   useEffect(() => {
@@ -287,19 +313,39 @@ export default () => {
 
                   <div className="mb-3">
                     {existeOcorrencia && (
-                      <NavLink
-                        className="float-right ml-3"
-                        to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
-                          guia.uuid
-                        }${uuidEdicao ? "&editar=true" : ""}`}
-                      >
-                        <Botao
-                          texto="Continuar"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN}
-                          disabled={submitting}
-                        />
-                      </NavLink>
+                      <>
+                        <div className="checkbox-container">
+                          <div className="checkbox-title">
+                            Quais alimentos nesta Guia de Remessa não atendem os
+                            critérios descritos acima?
+                          </div>
+                          <Checkbox
+                            onChange={onChangeAlimentosAll}
+                            checked={alimentos.length === nomesAlimentos.length}
+                          >
+                            Todos
+                          </Checkbox>
+                          <Checkbox.Group
+                            options={nomesAlimentos}
+                            value={alimentos}
+                            onChange={onChangeAlimentos}
+                          />
+                        </div>
+                        <NavLink
+                          className="float-right ml-3"
+                          to={`/${LOGISTICA}/${CONFERENCIA_GUIA_COM_OCORRENCIA}?uuid=${
+                            guia.uuid
+                          }${uuidEdicao ? "&editar=true" : ""}`}
+                          disabled={alimentos.length < 1}
+                        >
+                          <Botao
+                            texto="Continuar"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN}
+                            disabled={submitting || alimentos.length < 1}
+                          />
+                        </NavLink>
+                      </>
                     )}
 
                     {!existeOcorrencia && (

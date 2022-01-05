@@ -68,13 +68,21 @@ export default () => {
   const [flagAtraso, setFlagAtraso] = useState(false);
   const [flagAlimento, setFlagAlimento] = useState(false);
 
+  const filtrarAlimentos = guia => {
+    let listaAlimentos = localStorage.alimentosConferencia;
+    guia.alimentos = guia.alimentos.filter(item =>
+      listaAlimentos.includes(item.nome_alimento)
+    );
+    return guia;
+  };
+
   const carregarGuia = async uuid => {
     let response;
     try {
       setCarregando(true);
       const params = gerarParametrosConsulta({ uuid: uuid });
       response = await getGuiaParaConferencia(params);
-      setGuia(response.data);
+      setGuia(filtrarAlimentos(response.data));
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
@@ -265,7 +273,9 @@ export default () => {
     setCarregando(true);
 
     let valoresConf = JSON.parse(localStorage.getItem("valoresConferencia"));
-    let guiaConf = JSON.parse(localStorage.getItem("guiaConferencia"));
+    let guiaConf = filtrarAlimentos(
+      JSON.parse(localStorage.getItem("guiaConferencia"))
+    );
     let primeiroItem = valoresConf[0];
     let ultimoItem = valoresConf[valoresConf.length - 1];
 
@@ -301,7 +311,7 @@ export default () => {
     let conferencia = JSON.parse(localStorage.getItem("conferenciaEdicao"));
 
     let valoresConf = conferencia.conferencia_dos_alimentos;
-    let guiaConf = conferencia.guia;
+    let guiaConf = filtrarAlimentos(conferencia.guia);
 
     let primeiroItem = valoresConf[0];
 

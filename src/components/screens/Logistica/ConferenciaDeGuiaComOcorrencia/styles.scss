@@ -96,4 +96,34 @@
       opacity: 1;
     }
   }
+
+  .ant-switch-checked {
+    background-color: #198459;
+  }
+  .ant-click-animating-node {
+    -webkit-box-shadow: 0 0 0 0 #198459;
+    box-shadow: 0 0 0 0 #198459;
+  }
+
+  .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #198459;
+    border-color: #198459;
+  }
+
+  .checkbox-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 24px;
+
+    .checkbox-title {
+      font-weight: 700;
+      font-size: 14px;
+      padding-bottom: 5px;
+    }
+
+    label {
+      margin-left: 12px;
+      margin-top: 12px;
+    }
+  }
 }
