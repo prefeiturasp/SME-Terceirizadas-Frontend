@@ -146,7 +146,6 @@ export default () => {
   };
 
   const onChangeAlimentos = list => {
-    console.log(list);
     setAlimentos(list);
     localStorage.alimentosConferencia = JSON.stringify(list);
     //setIndeterminate(!!list.length && list.length < plainOptions.length);
