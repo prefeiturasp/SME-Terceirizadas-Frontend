@@ -7,12 +7,19 @@ import {
 } from "../../../Shareable/Botao/constants";
 import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao
+} from "../../../../helpers/utilities";
 import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
 import { fluxoPartindoDRE } from "../../../Shareable/FluxoDeStatus/helper";
 
 export const CorpoRelatorio = props => {
   const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    solicitacaoUnificada.logs
+  );
+
   return (
     <div>
       <div className="container-detail">
@@ -140,6 +147,19 @@ export const CorpoRelatorio = props => {
               }}
             />
           </div>
+          {justificativaNegacao && (
+            <div>
+              <div className="descricao-titulo">
+                Justificativa do cancelamento da solicitação
+              </div>
+              <div
+                className="descricao-texto"
+                dangerouslySetInnerHTML={{
+                  __html: justificativaNegacao
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
