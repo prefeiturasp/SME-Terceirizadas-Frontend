@@ -7,7 +7,10 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../Shareable/Botao/constants";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import {
+  stringSeparadaPorVirgulas,
+  justificativaAoNegarSolicitacao
+} from "../../../../helpers/utilities";
 import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
@@ -19,6 +22,11 @@ export const CorpoRelatorio = props => {
     solicitacaoKitLanche,
     prazoDoPedidoMensagem
   } = props;
+
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    solicitacaoKitLanche.logs
+  );
+
   return (
     <div>
       <div className="row">
@@ -193,6 +201,19 @@ export const CorpoRelatorio = props => {
           />
         </div>
       </div>
+      {justificativaNegacao && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Justificativa do cancelamento da solicitação</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
