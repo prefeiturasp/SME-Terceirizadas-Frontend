@@ -344,6 +344,15 @@ export const usuarioEscolaEhGestaoMistaParceira = () => {
   );
 };
 
+export const validaPerfilEscolaMistaParceira = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.ESCOLA:
+      return !usuarioEscolaEhGestaoMistaParceira();
+    default:
+      return true;
+  }
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,

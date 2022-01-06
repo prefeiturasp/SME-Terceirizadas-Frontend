@@ -97,7 +97,8 @@ import {
   usuarioEhDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEscolaEhGestaoMistaParceira,
+  validaPerfilEscolaMistaParceira
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -733,9 +734,7 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
     exact: true,
-    tipoUsuario:
-      constants.QUALQUER_USUARIO &&
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+    tipoUsuario: validaPerfilEscolaMistaParceira()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -775,9 +774,7 @@ const routesConfig = [
     }`,
     component: RelatorioProduto,
     exact: true,
-    tipoUsuario:
-      constants.QUALQUER_USUARIO &&
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+    tipoUsuario: validaPerfilEscolaMistaParceira()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -785,9 +782,7 @@ const routesConfig = [
     }`,
     component: RelatorioSituacaoProduto,
     exact: true,
-    tipoUsuario:
-      constants.QUALQUER_USUARIO &&
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+    tipoUsuario: validaPerfilEscolaMistaParceira()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
