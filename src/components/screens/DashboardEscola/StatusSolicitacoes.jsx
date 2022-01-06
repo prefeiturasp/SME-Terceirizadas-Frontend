@@ -58,18 +58,20 @@ export class StatusSolicitacoes extends Component {
     this.props.change(`check_${key}`, solicitacoes[key].checked);
   }
 
-  onPesquisarChanged(event) {
-    let solicitacoesFiltrados = this.state.solicitacoes;
-    solicitacoesFiltrados = this.filtrarNome(solicitacoesFiltrados, event);
+  onPesquisarChanged(values) {
+    const solicitacoesFiltrados = this.filtrarNome(values);
     this.setState({ solicitacoesFiltrados });
   }
 
-  filtrarNome(listaFiltro, event) {
-    listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return item.text.toLowerCase().search(wordToFilter) !== -1;
-    });
-    return listaFiltro;
+  filtrarNome(values) {
+    if (values["titulo"]) {
+      const listaFiltro = this.state.solicitacoes.filter(function(item) {
+        const wordToFilter = values["titulo"].toLowerCase();
+        return item.text.toLowerCase().search(wordToFilter) !== -1;
+      });
+      return listaFiltro;
+    }
+    return this.state.solicitacoes;
   }
 
   async componentDidMount() {
