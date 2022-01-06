@@ -627,3 +627,16 @@ export const exibirGA = () => {
       return true;
   }
 };
+
+export const justificativaAoNegarSolicitacao = logs => {
+  let justificativa = null;
+  if (logs.length) {
+    justificativa = logs.filter(log =>
+      ["DRE não validou", "CODAE negou"].includes(log.status_evento_explicacao)
+    );
+    justificativa = justificativa.length
+      ? justificativa[0].justificativa
+      : null;
+  }
+  return justificativa;
+};
