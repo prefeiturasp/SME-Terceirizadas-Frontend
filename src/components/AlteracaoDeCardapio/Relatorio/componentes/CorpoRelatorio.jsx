@@ -1,6 +1,10 @@
 import React, { Fragment } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
+import {
+  corDaMensagem,
+  ehInclusaoCei,
+  justificativaAoNegarSolicitacao
+} from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -13,6 +17,11 @@ import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
+
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    alteracaoDeCardapio.logs
+  );
+
   return (
     <div>
       <div className="row">
@@ -181,6 +190,23 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
+      {justificativaNegacao && (
+        <table className="table-periods">
+          <tr>
+            <th>Justificativa da rejeição</th>
+          </tr>
+          <tr>
+            <td>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativaNegacao
+                }}
+              />
+            </td>
+          </tr>
+        </table>
+      )}
     </div>
   );
 };
