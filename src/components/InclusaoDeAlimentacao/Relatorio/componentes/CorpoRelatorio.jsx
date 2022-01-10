@@ -4,7 +4,8 @@ import {
   corDaMensagem,
   stringSeparadaPorVirgulas,
   ehInclusaoContinua,
-  ehInclusaoCei
+  ehInclusaoCei,
+  justificativaAoNegarSolicitacao
 } from "helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -97,6 +98,10 @@ export class CorpoRelatorio extends Component {
         observacao
       }
     } = this.props;
+
+    const justificativaNegacao = justificativaAoNegarSolicitacao(
+      this.props.inclusaoDeAlimentacao.logs
+    );
     return (
       <div>
         <div className="row">
@@ -219,6 +224,19 @@ export class CorpoRelatorio extends Component {
             />
           </div>
         </div>
+        {justificativaNegacao && (
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>Justificativa da rejeição</p>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativaNegacao
+                }}
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   }
