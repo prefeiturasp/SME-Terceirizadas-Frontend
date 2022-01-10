@@ -204,7 +204,7 @@ export const CorpoRelatorio = props => {
       {justificativaNegacao && (
         <div className="row">
           <div className="col-12 report-label-value">
-            <p>Justificativa do cancelamento da solicitação</p>
+            <p>Justificativa da rejeição</p>
             <p
               className="value"
               dangerouslySetInnerHTML={{
