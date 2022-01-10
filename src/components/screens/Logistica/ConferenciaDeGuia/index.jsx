@@ -148,16 +148,12 @@ export default () => {
   const onChangeAlimentos = list => {
     setAlimentos(list);
     localStorage.alimentosConferencia = JSON.stringify(list);
-    //setIndeterminate(!!list.length && list.length < plainOptions.length);
-    //setCheckAll(list.length === plainOptions.length);
   };
 
   const onChangeAlimentosAll = e => {
     let listaAlimentos = e.target.checked ? nomesAlimentos : [];
     setAlimentos(listaAlimentos);
     localStorage.alimentosConferencia = JSON.stringify(listaAlimentos);
-    //setIndeterminate(!!list.length && list.length < plainOptions.length);
-    //setCheckAll(list.length === plainOptions.length);
   };
 
   useEffect(() => {
@@ -313,18 +309,20 @@ export default () => {
                   <div className="mb-3">
                     {existeOcorrencia && (
                       <>
+                        <div className="checkbox-title">
+                          Quais alimentos nesta Guia de Remessa não atendem os
+                          critérios descritos acima?
+                        </div>
+                        <Checkbox
+                          className="checkbox-todos"
+                          onChange={onChangeAlimentosAll}
+                          checked={alimentos.length === nomesAlimentos.length}
+                        >
+                          Todos
+                        </Checkbox>
                         <div className="checkbox-container">
-                          <div className="checkbox-title">
-                            Quais alimentos nesta Guia de Remessa não atendem os
-                            critérios descritos acima?
-                          </div>
-                          <Checkbox
-                            onChange={onChangeAlimentosAll}
-                            checked={alimentos.length === nomesAlimentos.length}
-                          >
-                            Todos
-                          </Checkbox>
                           <Checkbox.Group
+                            style={{ width: "100%" }}
                             options={nomesAlimentos}
                             value={alimentos}
                             onChange={onChangeAlimentos}
