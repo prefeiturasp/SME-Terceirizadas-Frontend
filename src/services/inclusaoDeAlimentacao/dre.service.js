@@ -46,7 +46,8 @@ export const dreValidarSolicitacaoDeInclusaoDeAlimentacao = (
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: AUTH_TOKEN
+    headers: AUTH_TOKEN,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
@@ -69,7 +70,8 @@ export const dreReprovarSolicitacaoDeInclusaoDeAlimentacao = (
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: AUTH_TOKEN
+    headers: AUTH_TOKEN,
+    body: JSON.stringify({ justificativa })
   })
     .then(res => {
       status = res.status;
