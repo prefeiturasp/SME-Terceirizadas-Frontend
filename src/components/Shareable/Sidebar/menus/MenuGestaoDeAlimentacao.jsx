@@ -91,6 +91,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         title="Consulta de Solicitações"
         activeMenu={activeMenu}
       >
+        {PERFIL === "nutrisupervisao" && (
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
+            Aguardando resposta da empresa
+          </LeafItem>
+        )}
         {PERFIL === "terceirizada" ? (
           <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
             Questionamentos da CODAE
