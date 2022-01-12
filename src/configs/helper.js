@@ -2,6 +2,7 @@ import DashboardDREPage from "../pages/DRE/DashboardDREPage";
 import DashboardEscolaPage from "../pages/Escola/DashboardEscolaPage";
 import DashboardCODAEPage from "../pages/CODAE/DashboardCODAEPage";
 import DashboardTerceirizadaPage from "../pages/Terceirizada/DashboardTerceirizadaPage";
+import DashboardNutricionistaGAPage from "../pages/Nutricionista/DashboardNutricionistaGAPage";
 import InclusaoDeAlimentacaoPage from "../pages/Escola/InclusaoDeAlimentacaoPage";
 import InclusaoDeAlimentacaoCEIPage from "../pages/Escola/InclusaoDeAlimentacaoCEIPage";
 import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
@@ -31,6 +32,8 @@ export const painelGestaoAlimentacao = () => {
       return DashboardCODAEPage;
     case TIPO_PERFIL.TERCEIRIZADA:
       return DashboardTerceirizadaPage;
+    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
+      return DashboardNutricionistaGAPage;
     default:
       return DashboardEscolaPage;
   }
