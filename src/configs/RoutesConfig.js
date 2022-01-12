@@ -22,6 +22,11 @@ import StatusSolicitacoesCanceladasCODAEPage from "../pages/CODAE/Solicitacoes/S
 import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesPendentesCODAEPage";
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
 import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
+import StatusSolicitacoesAutorizadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutrisupervisaoPage";
+import StatusSolicitacoesCanceladasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutrisupervisaoPage";
+import StatusSolicitacoesPendentesNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesPendentesNutrisupervisaoPage";
+import StatusSolicitacoesRecusadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
+import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
@@ -172,6 +177,7 @@ const routesConfig = [
       (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
   {
@@ -379,6 +385,38 @@ const routesConfig = [
     component: PainelPedidosSolicitacaoUnificadaCODAEPage,
     exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.NUTRISUPERVISAO}/${constants.SOLICITACOES_AUTORIZADAS}`,
+    component: StatusSolicitacoesAutorizadasNutrisupervisaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
+  },
+  {
+    path: `/${constants.NUTRISUPERVISAO}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesNutrisupervisaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
+  },
+  {
+    path: `/${constants.NUTRISUPERVISAO}/${constants.SOLICITACOES_NEGADAS}`,
+    component: StatusSolicitacoesRecusadasNutrisupervisaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
+  },
+  {
+    path: `/${constants.NUTRISUPERVISAO}/${constants.SOLICITACOES_CANCELADAS}`,
+    component: StatusSolicitacoesCanceladasNutrisupervisaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
+  },
+  {
+    path: `/${constants.NUTRISUPERVISAO}/${
+      constants.SOLICITACOES_COM_QUESTIONAMENTO
+    }`,
+    component: StatusSolicitacoesComQuestionamentosNutrisupervisaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,

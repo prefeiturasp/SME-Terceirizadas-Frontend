@@ -12,6 +12,7 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
+  NUTRISUPERVISAO,
   TERCEIRIZADA,
   DRE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
@@ -23,7 +24,8 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhDRE,
   usuarioEhEscola,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEscolaEhGestaoMistaParceira,
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -36,6 +38,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     ? DRE
     : usuarioEhCODAEGestaoAlimentacao()
     ? CODAE
+    : usuarioEhNutricionistaSupervisao()
+    ? NUTRISUPERVISAO
     : TERCEIRIZADA;
   return (
     <Menu
