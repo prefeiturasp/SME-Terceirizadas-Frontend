@@ -2,6 +2,15 @@
   input {
     height: 40px;
   }
+  span {
+    color: #42474a;
+    font-size: 14px;
+    font-weight: 900;
+  }
+  input::placeholder {
+    color: #42474a;
+    font-size: 14px;
+  }
   label.select-item {
     white-space: nowrap;
   }
