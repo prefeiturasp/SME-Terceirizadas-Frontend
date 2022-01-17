@@ -20,9 +20,7 @@ export default ({
 }) => {
   const allItemsAreSelectedText = `${
     pluralFeminino ? "Todas as" : "Todos os"
-  } ${nomeDoItemNoPlural} estão ${
-    pluralFeminino ? "selecionadas" : "selecionados"
-  }`;
+  } ${nomeDoItemNoPlural}`;
 
   const disabledInputValue = () => {
     if (
@@ -73,7 +71,7 @@ export default ({
           }}
           valueRenderer={(selected, options) => {
             if (selected.length === 0) {
-              return "Selecione...";
+              return "Selecione";
             }
             if (selected.length === 1) {
               return selected.value;
@@ -94,6 +92,7 @@ export default ({
             (meta.error || meta.warning) &&
             "invalid-field"}`}
           disabled={props.disabled}
+          placeholder="Selecione"
           data-cy={input.name}
           required={required}
           value={disabledInputValue()}
