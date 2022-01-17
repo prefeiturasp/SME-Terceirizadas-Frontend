@@ -131,12 +131,9 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         nome: "nome",
         crn_numero: "numero",
         super_admin_terceirizadas: false,
-        contatos: [
-          {
-            telefone: "0000000000000",
-            email: "email@email.com"
-          }
-        ]
+        telefone: "0000000000000",
+        email: "email@email.com",
+        eh_nutricionista: true
       }
     ];
     const contatosEmpresa = [
@@ -149,6 +146,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         email: item.email
       };
     });
+    const contatos = [...contatosEmpresa, ...contatosNutri];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       tipo_alimento: valoresForm.tipo_alimento,
@@ -158,8 +156,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       cnpj: valoresForm.cnpj,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
-      contatos: contatosEmpresa,
-      nutricionistas: contatosNutri,
+      contatos: contatos,
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
@@ -195,14 +192,12 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
           valoresState.contatosNutricionista.length === 1
             ? true
             : nutri.super_admin_terceirizadas,
-        contatos: [
-          {
-            telefone: nutri.telefone,
-            email: nutri.email
-          }
-        ]
+        telefone: nutri.telefone,
+        email: nutri.email,
+        eh_nutricionista: true
       });
     });
+    const contatosEmpresa = [...valoresState.contatosEmpresa, ...contatosNutri];
     const super_admin = { ...valoresForm.super_admin };
     super_admin.contatos = [
       { email: super_admin.email, telefone: super_admin.telefone }
@@ -216,8 +211,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       representante_email: valoresForm.email_representante_legal,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
-      contatos: valoresState.contatosEmpresa,
-      nutricionistas: contatosNutri,
+      contatos: contatosEmpresa,
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
