@@ -327,51 +327,95 @@ class CadastroEmpresa extends Component {
       });
   }
 
-  atribuiNutricionistaEmpresaForm(nutricionistas) {
-    nutricionistas.forEach((nutri, indice) => {
-      let contatosNutricionista = this.state.contatosNutricionista;
-      let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
-      if (
-        indice !== 0 &&
-        nutricionistas.length > contatosNutricionista.length
-      ) {
-        contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
-        contatosNutricionista.push({
-          telefone: null,
-          responsavel: null,
-          crn: null,
-          email: null
+  atribuiNutricionistaEmpresaForm(contatos, antigosUsuariosNutri) {
+    if (antigosUsuariosNutri.length) {
+      antigosUsuariosNutri.forEach((nutri, indice) => {
+        let contatosNutricionista = this.state.contatosNutricionista;
+        let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
+        if (
+          indice !== 0 &&
+          antigosUsuariosNutri.length > contatosNutricionista.length
+        ) {
+          contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
+          contatosNutricionista.push({
+            telefone: null,
+            responsavel: null,
+            crn: null,
+            email: null
+          });
+        }
+        contatosNutricionista[indice]["telefone"] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
+        contatosNutricionista[indice]["responsavel"] = nutri.nome;
+        contatosNutricionista[indice]["crn"] = nutri.crn_numero;
+        contatosNutricionista[indice]["vinculo_atual"] = nutri.vinculo_atual;
+        contatosNutricionista[indice]["super_admin_terceirizadas"] =
+          nutri.super_admin_terceirizadas;
+        contatosNutricionista[indice]["email"] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
+
+        this.setState({ contatosNutricionista });
+
+        this.props.change(
+          `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
+          nutri.nome
+        );
+        this.props.change(
+          `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
+          nutri.crn_numero
+        );
+        this.props.change(
+          `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone
+        );
+        this.props.change(
+          `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].email
+        );
+      });
+    } else {
+      contatos
+        .filter(contato => contato.eh_nutricionista)
+        .forEach((nutri, indice) => {
+          let contatosNutricionista = this.state.contatosNutricionista;
+          let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
+          if (indice !== 0 && contatos.length > contatosNutricionista.length) {
+            contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
+            contatosNutricionista.push({
+              telefone: null,
+              responsavel: null,
+              crn: null,
+              email: null
+            });
+          }
+          contatosNutricionista[indice]["telefone"] = nutri.telefone;
+          contatosNutricionista[indice]["responsavel"] = nutri.nome;
+          contatosNutricionista[indice]["crn"] = nutri.crn_numero;
+          contatosNutricionista[indice]["vinculo_atual"] = nutri.vinculo_atual;
+          contatosNutricionista[indice]["super_admin_terceirizadas"] =
+            nutri.super_admin_terceirizadas;
+          contatosNutricionista[indice]["email"] = nutri.email;
+
+          this.setState({ contatosNutricionista });
+
+          this.props.change(
+            `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
+            nutri.nome
+          );
+          this.props.change(
+            `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
+            nutri.crn_numero
+          );
+          this.props.change(
+            `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
+            nutri.telefone
+          );
+          this.props.change(
+            `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
+            nutri.email
+          );
         });
-      }
-      contatosNutricionista[indice]["telefone"] =
-        nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
-      contatosNutricionista[indice]["responsavel"] = nutri.nome;
-      contatosNutricionista[indice]["crn"] = nutri.crn_numero;
-      contatosNutricionista[indice]["vinculo_atual"] = nutri.vinculo_atual;
-      contatosNutricionista[indice]["super_admin_terceirizadas"] =
-        nutri.super_admin_terceirizadas;
-      contatosNutricionista[indice]["email"] =
-        nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
-
-      this.setState({ contatosNutricionista });
-
-      this.props.change(
-        `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
-        nutri.nome
-      );
-      this.props.change(
-        `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
-        nutri.crn_numero
-      );
-      this.props.change(
-        `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
-        nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone
-      );
-      this.props.change(
-        `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
-        nutri.contatos.length === 0 ? null : nutri.contatos[0].email
-      );
-    });
+    }
   }
 
   setaValoresForm(data) {
@@ -422,7 +466,7 @@ class CadastroEmpresa extends Component {
     this.props.change("responsavel_cargo", data.responsavel_cargo);
     this.atribuiContatosEmpresaForm(data.contatos);
     this.atribuiContatosPessoaEmpresaForm(data.contatos);
-    this.atribuiNutricionistaEmpresaForm(data.nutricionistas);
+    this.atribuiNutricionistaEmpresaForm(data.contatos, data.nutricionistas);
   }
 
   componentDidMount() {
