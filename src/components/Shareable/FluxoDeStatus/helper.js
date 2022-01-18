@@ -123,6 +123,7 @@ export const tipoDeStatus = status => {
     case "CODAE não homologou":
       return "cancelado";
     case "CODAE pediu correção":
+    case "Terceirizada respondeu questionamento":
       return "questionado";
     case "Terceirizada tomou ciência":
     case "Escola solicitou inativação":
@@ -180,22 +181,5 @@ export const existeAlgumStatusFimDeFluxo = logs => {
 };
 
 export const formatarLogs = logs => {
-  let novoLogs = deepCopy(logs);
-  let indexLogQuestionamento = -1;
-  logs.forEach((log, index) => {
-    if (log.status_evento_explicacao === "Questionamento pela CODAE") {
-      indexLogQuestionamento = index;
-    } else if (
-      log.status_evento_explicacao === "Terceirizada respondeu questionamento"
-    ) {
-      novoLogs.splice(index, 1);
-    } else if (
-      (log.status_evento_explicacao === "CODAE autorizou" ||
-        log.status_evento_explicacao === "CODAE negou") &&
-      indexLogQuestionamento !== -1
-    ) {
-      novoLogs.splice(indexLogQuestionamento, 1);
-    }
-  });
-  return novoLogs;
+  return deepCopy(logs);
 };

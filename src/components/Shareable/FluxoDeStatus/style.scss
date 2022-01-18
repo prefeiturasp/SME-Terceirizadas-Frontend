@@ -102,6 +102,17 @@
         background-color: $red;
         color: #fff;
       }
+      &:after {
+        content: "";
+        position: absolute;
+        margin-left: 14px;
+        width: 100%;
+        height: 5px;
+        background-color: $red;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
+      }
     }
     &.cancelled {
       &:before {
@@ -121,6 +132,17 @@
         font-weight: 900;
         background-color: $yellow;
         color: #000;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        margin-left: 14px;
+        width: 100%;
+        height: 5px;
+        background-color: $yellow;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
       }
     }
   }
