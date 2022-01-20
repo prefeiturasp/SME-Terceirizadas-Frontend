@@ -27,7 +27,8 @@ import {
   SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA,
   INATIVAS_TEMPORARIAMENTE_DIETA,
   SOLICITACOES_INATIVAS,
-  INATIVAS_DIETA
+  INATIVAS_DIETA,
+  AGUARDANDO_VIGENCIA_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -49,6 +50,8 @@ export class StatusSolicitacoes extends Component {
       count: 0,
       tipoSolicitacao: null,
       solicitacoes: null,
+      listaSolicitacoesSemFiltro: null,
+      originalCount: null,
       tipoCard: null,
       icone: null,
       titulo: null,
@@ -99,6 +102,7 @@ export class StatusSolicitacoes extends Component {
   onPesquisarChanged(values) {
     if (values.titulo === undefined) values.titulo = "";
     let solicitacoesFiltrados = this.state.solicitacoes;
+    let listaSolicitacoesSemFiltro = this.state.listaSolicitacoesSemFiltro;
     if (values.lote && values.lote.length > 0) {
       solicitacoesFiltrados = this.filtrarLote(
         solicitacoesFiltrados,
@@ -113,9 +117,17 @@ export class StatusSolicitacoes extends Component {
     }
     if (values.titulo && values.titulo.length > 0) {
       solicitacoesFiltrados = this.filtrarNome(
-        solicitacoesFiltrados,
+        listaSolicitacoesSemFiltro,
         values.titulo
       );
+      this.setState({
+        count: solicitacoesFiltrados.length
+      });
+    }
+    if (values.titulo === "") {
+      this.setState({
+        count: this.state.originalCount
+      });
     }
     this.setState({ solicitacoesFiltrados });
   }
