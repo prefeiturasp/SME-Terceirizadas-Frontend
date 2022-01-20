@@ -177,7 +177,8 @@ export class StatusSolicitacoes extends Component {
       getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
         response => {
           this.setState({
-            solicitacoesFiltrados: ajustarFormatoLog(response.results)
+            solicitacoesFiltrados: ajustarFormatoLog(response.results),
+            solicitacoes: ajustarFormatoLog(response.results)
           });
         }
       );
@@ -188,7 +189,8 @@ export class StatusSolicitacoes extends Component {
         offSet
       ).then(response => {
         this.setState({
-          solicitacoesFiltrados: ajustarFormatoLog(response.results)
+          solicitacoesFiltrados: ajustarFormatoLog(response.results),
+          solicitacoes: ajustarFormatoLog(response.results)
         });
       });
     }
