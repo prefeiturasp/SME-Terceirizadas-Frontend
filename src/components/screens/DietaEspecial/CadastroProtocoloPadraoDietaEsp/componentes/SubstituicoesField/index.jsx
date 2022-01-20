@@ -17,7 +17,7 @@ export default class SubstituicoesField extends Component {
         <div className="row">
           <div className="col-4">Alimento</div>
           <div className="col-3">Tipo</div>
-          <div className="col-4">Insenções/Substituições</div>
+          <div className="col-4">Isenções/Substituições</div>
         </div>
         <FieldArray name="substituicoes">
           {({ fields }) =>
