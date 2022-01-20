@@ -65,6 +65,7 @@ export const NEGADOS_DIETA = "negados-dieta";
 export const CANCELADOS_DIETA = "cancelados-dieta";
 export const INATIVAS_TEMPORARIAMENTE_DIETA = "inativas-temporariamente-dieta";
 export const INATIVAS_DIETA = "inativas-dieta";
+export const AGUARDANDO_VIGENCIA_DIETA = "aguardando-vigencia-dieta";
 
 export const DIETA_ESPECIAL_SOLICITACOES = {
   CODAE: "codae-solicitacoes",
