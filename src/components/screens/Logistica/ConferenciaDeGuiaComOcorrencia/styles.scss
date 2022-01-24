@@ -25,7 +25,38 @@
       font-size: 12px;
     }
 
+    .aviso-alimentos {
+      color: #42474a;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 19px;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.01em;
+
+      .red {
+        color: #b40c02;
+        white-space: pre;
+      }
+
+      .green {
+        color: #198459;
+        white-space: pre;
+      }
+    }
+
+    .titulo-tabela {
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 20px;
+      padding-bottom: 6px;
+      color: #42474a;
+    }
+
     .table-conferencia {
+      height: 73%;
       th {
         background-color: $greenLight;
         color: $white;
@@ -97,9 +128,6 @@
     }
 
     .span-icone-toogle {
-      background-color: rgb(199, 201, 200);
-      border-radius: 67px;
-      border: 1px solid rgb(199, 201, 200);
       padding: 8px 12px;
       font-size: 16px;
       color: #42474a;
@@ -138,15 +166,20 @@
     #accordionNotificacoes .card-header,
     #accordionNotificacoes .card-body {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-      background-color: #f3f3f3;
     }
 
     .card-header {
-      height: 110px;
+      height: 50px;
 
       .card-header-content {
         height: 100%;
         align-content: center;
+        justify-content: space-between;
+        color: #42474a;
+
+        .nome-alimento {
+          margin: auto 0;
+        }
       }
     }
 
@@ -163,36 +196,12 @@
       font-size: 14px;
     }
 
-    .span-tipo-pendencia,
-    .span-tipo-informacao,
-    .span-tipo-aviso,
-    .span-tipo-alerta {
-      padding-left: 0.5rem;
-      padding-right: 0.5rem;
-      font-size: 16px;
-      font-weight: 700;
-    }
-
-    .card-tipo-pendencia {
+    .card-tipo-red {
       border-left: #b40c02 solid 8px;
     }
-    .span-tipo-pendencia {
-      color: #b40c02;
-    }
 
-    .span-tipo-aviso {
-      color: #0048a9;
-    }
-    .card-tipo-aviso {
-      border-left: #0048a9 solid 8px;
-    }
-
-    .span-tipo-alerta {
-      color: #d06d12;
-    }
-
-    .card-tipo-alerta {
-      border-left: #d06d12 solid 8px;
+    .card-tipo-green {
+      border-left: #198459 solid 8px;
     }
 
     .container-form-filtros {
