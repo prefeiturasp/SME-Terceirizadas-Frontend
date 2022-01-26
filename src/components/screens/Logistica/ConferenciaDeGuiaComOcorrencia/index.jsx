@@ -536,7 +536,7 @@ export default () => {
                   pendentes ou que possuem erros no preenchimento.
                 </div>
 
-                <div className="accordion mt-1" id="accordionNotificacoes">
+                <div className="accordion mt-1" id="accordionAlimentos">
                   {guia.alimentos &&
                     guia.alimentos.map((alimento, index) => (
                       <div className="card mt-3" key={alimento.uuid}>
@@ -581,7 +581,7 @@ export default () => {
                           id={`collapse_${alimento.uuid}`}
                           className="collapse"
                           aria-labelledby="headingOne"
-                          data-parent="#accordionNotificacoes"
+                          data-parent="#accordionAlimentos"
                         >
                           <div className="card-body">
                             <div className="row">

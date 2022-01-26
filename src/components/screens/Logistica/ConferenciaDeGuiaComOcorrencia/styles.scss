@@ -133,38 +133,18 @@
       color: #42474a;
     }
 
-    #accordionNotificacoes > .card {
+    #accordionAlimentos > .card {
       border-radius: 5px;
     }
 
-    #accordionNotificacoes > .card > .card-header {
+    #accordionAlimentos > .card > .card-header {
       border-radius: 5px;
       margin-bottom: 0;
       background-color: #fff;
     }
 
-    .descricao-notificacao {
-      * {
-        font-size: 16px;
-      }
-    }
-
-    .card-header-notificacao-lida {
-      border-left: #a4a4a4 solid 8px !important;
-      p,
-      span {
-        color: #a4a4a4 !important;
-      }
-    }
-
-    .card-header-notificacao-pendente {
-      background: #b40c021a !important;
-      border: 1px solid #b40c02 !important;
-      border-left: #b40c02 solid 8px !important;
-    }
-
-    #accordionNotificacoes .card-header,
-    #accordionNotificacoes .card-body {
+    #accordionAlimentos .card-header,
+    #accordionAlimentos .card-body {
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     }
 
@@ -183,33 +163,12 @@
       }
     }
 
-    .data-notificacoes {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .titulo-notificacao {
-      font-weight: 700;
-    }
-
-    .remetente-categoria {
-      font-size: 14px;
-    }
-
     .card-tipo-red {
       border-left: #b40c02 solid 8px;
     }
 
     .card-tipo-green {
       border-left: #198459 solid 8px;
-    }
-
-    .container-form-filtros {
-      border-bottom: solid 1px #ccc;
-    }
-
-    .acoes-notificacoes {
-      justify-content: space-between;
     }
   }
 }
