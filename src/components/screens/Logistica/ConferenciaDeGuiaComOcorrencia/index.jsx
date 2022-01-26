@@ -23,7 +23,11 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { CONFERENCIA_GUIA_RESUMO_FINAL, LOGISTICA } from "configs/constants";
+import {
+  CONFERENCIA_GUIA,
+  CONFERENCIA_GUIA_RESUMO_FINAL,
+  LOGISTICA
+} from "configs/constants";
 import { composeValidators } from "../../../../helpers/utilities";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
@@ -364,6 +368,7 @@ export default () => {
       }
     });
 
+    values.numero_guia = guiaConf.numero_guia;
     values.data_entrega = guiaConf.data_entrega;
     values.nome_motorista = conferencia.nome_motorista;
     values.hora_recebimento = conferencia.hora_recebimento;
@@ -401,6 +406,10 @@ export default () => {
     ];
     if (errorsNameList.some(r => Object.keys(errors).includes(r))) return "red";
     else return "green";
+  };
+
+  const cancelarConferencia = () => {
+    history.push(`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`);
   };
 
   useEffect(() => {
@@ -441,7 +450,16 @@ export default () => {
                 </span>
                 <hr />
                 <div className="row mt-2">
-                  <div className="col-6">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Número da guia de remessa"
+                      name="numero_guia"
+                      className="input-busca-produto"
+                      disabled
+                    />
+                  </div>
+                  <div className="col-4">
                     <Field
                       component={InputText}
                       label="Data de Entrega Prevista"
@@ -450,7 +468,7 @@ export default () => {
                       disabled
                     />
                   </div>
-                  <div className="col-6">
+                  <div className="col-4">
                     <Field
                       component={InputComData}
                       label="Data de recebimento da UE"
@@ -919,6 +937,13 @@ export default () => {
                     ref={editarButton}
                   />
                   <span className="float-right tooltip-botao">
+                    <Botao
+                      texto="Cancelar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="mr-3"
+                      onClick={() => cancelarConferencia(values)}
+                    />
                     <Botao
                       texto="Finalizar Conferência"
                       type={BUTTON_TYPE.BUTTON}
