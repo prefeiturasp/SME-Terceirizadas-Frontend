@@ -4,6 +4,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   peloMenosUmCaractere,
@@ -15,6 +16,7 @@ import {
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
+  formatarParaMultiselect,
   checaSeDataEstaEntre2e5DiasUteis,
   getError
 } from "../../helpers/utilities";
@@ -918,28 +920,44 @@ class AlteracaoCardapio extends Component {
                           <div className=""> {periodo.nome}</div>
                         </label>
                       </Fragment>
-
-                      <Field
-                        component={Select}
-                        name="tipo_alimentacao_de"
-                        options={agregarDefault(periodo.tipos_alimentacao)}
-                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
-                          indice
-                        )}
-                        onChange={event => {
-                          this.resetAlteracaoDoPeriodo(
-                            event.target.value,
-                            periodo.nome,
+                      {this.state.motivo &&
+                      this.state.motivo.nome === "Merenda Seca" ? (
+                        <Field
+                          component={MultiSelect}
+                          disableSearch
+                          name="tipo_alimentacao_de"
+                          disabled={this.deveDesabilitarSeletorDeAlimentacao(
                             indice
-                          );
-                          this.selectSubstituicoesAlimentacaoAPartirDe(
-                            event.target.value,
+                          )}
+                          multiple
+                          options={formatarParaMultiselect(
+                            periodo.tipos_alimentacao
+                          )}
+                          nomeDoItemNoPlural="Alimentos"
+                        />
+                      ) : (
+                        <Field
+                          component={Select}
+                          name="tipo_alimentacao_de"
+                          options={agregarDefault(periodo.tipos_alimentacao)}
+                          disabled={this.deveDesabilitarSeletorDeAlimentacao(
                             indice
-                          );
-                        }}
-                        validate={periodo.checked && required}
-                        required={periodo.checked}
-                      />
+                          )}
+                          onChange={event => {
+                            this.resetAlteracaoDoPeriodo(
+                              event.target.value,
+                              periodo.nome,
+                              indice
+                            );
+                            this.selectSubstituicoesAlimentacaoAPartirDe(
+                              event.target.value,
+                              indice
+                            );
+                          }}
+                          validate={periodo.checked && required}
+                          required={periodo.checked}
+                        />
+                      )}
 
                       <Field
                         component={Select}

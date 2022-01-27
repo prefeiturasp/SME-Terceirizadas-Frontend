@@ -2,20 +2,21 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
-  getSolicitacoesAutorizadasEscola,
-  getSolicitacoesCanceladasEscola,
-  getSolicitacoesNegadasEscola,
-  getSolicitacoesPendentesEscola
-} from "../../../services/painelEscola.service";
-import { meusDados } from "../../../services/perfil.service";
+  getSolicitacoesAutorizadasNutrisupervisao,
+  getSolicitacoesCanceladasNutrisupervisao,
+  getSolicitacoesNegadasNutrisupervisao,
+  getSolicitacoesPendentesAutorizacaoNutrisupervisao,
+  getSolicitacoesComQuestionamentoNutrisupervisao
+} from "../../../services/painelNutricionista.service";
+import CardLegendas from "../../Shareable/CardLegendas";
+import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
-import { STATUS } from "../const";
-import { ajustarFormatoLog } from "../helper";
-import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
+import { FILTRO, STATUS } from "../const";
+import { ajustarFormatoLog, LOG_PARA } from "../helper";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -37,8 +38,10 @@ export class StatusSolicitacoes extends Component {
       ],
       titulo: "...",
       tipoCard: "...",
-      icone: "..."
+      icone: "...",
+      selecionarTodos: false
     };
+
     this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
     this.selecionarTodos = this.selecionarTodos.bind(this);
     this.onCheckClicked = this.onCheckClicked.bind(this);
@@ -79,75 +82,84 @@ export class StatusSolicitacoes extends Component {
     let tipoCard = "";
     let icone = "";
     let titulo = "";
-    const dadosMeus = await meusDados();
     //TODO aguardando definicao de perfil
-    const minhaEscolaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
 
     switch (this.props.tipoStatus) {
-      case STATUS.RECUSADAS:
-        tipoCard = CARD_TYPE_ENUM.NEGADO;
-        icone = ICON_CARD_TYPE_ENUM.NEGADO;
-        titulo = "Negadas";
-        solicitacoes = await getSolicitacoesNegadasEscola(minhaEscolaUUID);
-        break;
-
-      case STATUS.CANCELADAS:
-        tipoCard = CARD_TYPE_ENUM.CANCELADO;
-        icone = ICON_CARD_TYPE_ENUM.CANCELADO;
-        titulo = "Canceladas";
-        solicitacoes = await getSolicitacoesCanceladasEscola(minhaEscolaUUID);
-        break;
-
       case STATUS.AUTORIZADAS:
         tipoCard = CARD_TYPE_ENUM.AUTORIZADO;
         icone = ICON_CARD_TYPE_ENUM.AUTORIZADO;
         titulo = "Autorizadas";
-        solicitacoes = await getSolicitacoesAutorizadasEscola(minhaEscolaUUID);
+        solicitacoes = await getSolicitacoesAutorizadasNutrisupervisao();
         break;
 
       case STATUS.PENDENTES:
         tipoCard = CARD_TYPE_ENUM.PENDENTE;
         icone = ICON_CARD_TYPE_ENUM.PENDENTE;
         titulo = "Aguardando Autorização";
-        solicitacoes = await getSolicitacoesPendentesEscola(minhaEscolaUUID);
+        solicitacoes = await getSolicitacoesPendentesAutorizacaoNutrisupervisao(
+          FILTRO.SEM_FILTRO
+        );
         break;
 
+      case STATUS.QUESTIONADAS:
+        tipoCard = CARD_TYPE_ENUM.PENDENTE;
+        icone = ICON_CARD_TYPE_ENUM.PENDENTE;
+        titulo = "Aguardando Resposta da Empresa";
+        solicitacoes = await getSolicitacoesComQuestionamentoNutrisupervisao();
+        break;
+
+      case STATUS.CANCELADAS:
+        tipoCard = CARD_TYPE_ENUM.CANCELADO;
+        icone = ICON_CARD_TYPE_ENUM.CANCELADO;
+        titulo = "Canceladas";
+        solicitacoes = await getSolicitacoesCanceladasNutrisupervisao();
+        break;
+
+      case STATUS.RECUSADAS:
+        tipoCard = CARD_TYPE_ENUM.NEGADO;
+        icone = ICON_CARD_TYPE_ENUM.NEGADO;
+        titulo = "Negadas";
+        solicitacoes = await getSolicitacoesNegadasNutrisupervisao();
+        break;
       default:
         break;
     }
 
-    solicitacoes = ajustarFormatoLog(solicitacoes.results);
+    solicitacoes = ajustarFormatoLog(solicitacoes, LOG_PARA.CODAE);
     this.setState({
       solicitacoes,
-      solicitacoesFiltrados: solicitacoes,
       tipoCard,
       icone,
-      titulo
+      titulo,
+      solicitacoesFiltrados: solicitacoes
     });
   }
 
   render() {
     const { solicitacoesFiltrados, titulo, tipoCard, icone } = this.state;
     return (
-      <div className="card mt-3">
-        <div className="card-body">
-          <div className="pr-3">
-            <InputSearchPendencias
-              voltarLink={`/`}
-              filterList={this.onPesquisarChanged}
+      <form onSubmit={this.props.handleSubmit}>
+        <div className="card mt-3">
+          <div className="card-body">
+            <div className="pr-3">
+              <InputSearchPendencias
+                voltarLink={`/`}
+                filterList={this.onPesquisarChanged}
+              />
+            </div>
+            <div className="pb-3" />
+            <CardListarSolicitacoes
+              titulo={titulo}
+              solicitacoes={solicitacoesFiltrados}
+              tipo={tipoCard}
+              icone={icone}
+              selecionarTodos={this.selecionarTodos}
+              onCheckClicked={this.onCheckClicked}
             />
+            <CardLegendas />
           </div>
-          <div className="pb-3" />
-          <CardListarSolicitacoes
-            titulo={titulo}
-            solicitacoes={solicitacoesFiltrados}
-            tipo={tipoCard}
-            icone={icone}
-            selecionarTodos={this.selecionarTodos}
-            onCheckClicked={this.onCheckClicked}
-          />
         </div>
-      </div>
+      </form>
     );
   }
 }

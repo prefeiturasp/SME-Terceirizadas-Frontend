@@ -28,8 +28,9 @@ const KIT_LANCHE_AVULSA_CEI = "KIT_LANCHE_AVULSA_CEI";
 export const LOG_PARA = {
   ESCOLA: 0,
   DRE: 1,
+  TERCEIRIZADA: 2,
   CODAE: 3,
-  TERCEIRIZADA: 2
+  NUTRISUPERVISAO: 4
 };
 
 export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {

@@ -27,7 +27,8 @@ import {
   SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA,
   INATIVAS_TEMPORARIAMENTE_DIETA,
   SOLICITACOES_INATIVAS,
-  INATIVAS_DIETA
+  INATIVAS_DIETA,
+  AGUARDANDO_VIGENCIA_DIETA
 } from "../../../configs/constants";
 import {
   CARD_TYPE_ENUM,
@@ -49,6 +50,8 @@ export class StatusSolicitacoes extends Component {
       count: 0,
       tipoSolicitacao: null,
       solicitacoes: null,
+      listaSolicitacoesSemFiltro: null,
+      originalCount: null,
       tipoCard: null,
       icone: null,
       titulo: null,
@@ -99,6 +102,7 @@ export class StatusSolicitacoes extends Component {
   onPesquisarChanged(values) {
     if (values.titulo === undefined) values.titulo = "";
     let solicitacoesFiltrados = this.state.solicitacoes;
+    let listaSolicitacoesSemFiltro = this.state.listaSolicitacoesSemFiltro;
     if (values.lote && values.lote.length > 0) {
       solicitacoesFiltrados = this.filtrarLote(
         solicitacoesFiltrados,
@@ -113,9 +117,17 @@ export class StatusSolicitacoes extends Component {
     }
     if (values.titulo && values.titulo.length > 0) {
       solicitacoesFiltrados = this.filtrarNome(
-        solicitacoesFiltrados,
+        listaSolicitacoesSemFiltro,
         values.titulo
       );
+      this.setState({
+        count: solicitacoesFiltrados.length
+      });
+    }
+    if (values.titulo === "") {
+      this.setState({
+        count: this.state.originalCount
+      });
     }
     this.setState({ solicitacoesFiltrados });
   }
@@ -165,7 +177,8 @@ export class StatusSolicitacoes extends Component {
       getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
         response => {
           this.setState({
-            solicitacoesFiltrados: ajustarFormatoLog(response.results)
+            solicitacoesFiltrados: ajustarFormatoLog(response.results),
+            solicitacoes: ajustarFormatoLog(response.results)
           });
         }
       );
@@ -176,7 +189,8 @@ export class StatusSolicitacoes extends Component {
         offSet
       ).then(response => {
         this.setState({
-          solicitacoesFiltrados: ajustarFormatoLog(response.results)
+          solicitacoesFiltrados: ajustarFormatoLog(response.results),
+          solicitacoes: ajustarFormatoLog(response.results)
         });
       });
     }
@@ -202,10 +216,21 @@ export class StatusSolicitacoes extends Component {
                   "pendentes-aut"
                 ),
                 count: response.count,
+                originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.PENDENTE,
                 icone: ICON_CARD_TYPE_ENUM.PENDENTE,
                 titulo: getNomeCardAguardandoAutorizacao(),
                 urlPaginacao: this.retornaUrlPaginacao(visao, PENDENTES_DIETA)
+              });
+            });
+          this.props
+            .getDietaEspecialPendenteAutorizacao(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.results,
+                  "pendentes-aut"
+                )
               });
             });
           break;
@@ -216,10 +241,21 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(response.results, "negadas"),
                 count: response.count,
+                originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.NEGADO,
                 icone: ICON_CARD_TYPE_ENUM.NEGADO,
                 titulo: "Negadas",
                 urlPaginacao: this.retornaUrlPaginacao(visao, NEGADOS_DIETA)
+              });
+            });
+          this.props
+            .getDietaEspecialNegadas(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.results,
+                  "negadas"
+                )
               });
             });
           break;
@@ -233,10 +269,21 @@ export class StatusSolicitacoes extends Component {
                   "autorizadas"
                 ),
                 count: response.count,
+                originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
                 icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
                 titulo: "Autorizadas",
                 urlPaginacao: this.retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
+              });
+            });
+          this.props
+            .getDietaEspecialAutorizadas(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.results,
+                  "autorizadas"
+                )
               });
             });
           break;
@@ -247,10 +294,21 @@ export class StatusSolicitacoes extends Component {
               this.setState({
                 solicitacoes: ajustarFormatoLog(response.results, "canceladas"),
                 count: response.count,
+                originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.CANCELADO,
                 icone: ICON_CARD_TYPE_ENUM.CANCELADO,
                 titulo: "Canceladas",
                 urlPaginacao: this.retornaUrlPaginacao(visao, CANCELADOS_DIETA)
+              });
+            });
+          this.props
+            .getDietaEspecialCanceladas(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.results,
+                  "canceladas"
+                )
               });
             });
           break;
@@ -264,12 +322,23 @@ export class StatusSolicitacoes extends Component {
                   "autorizadas-temp"
                 ),
                 count: response.data.count,
+                originalCount: response.data.count,
                 tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
                 icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
                 titulo: "Autorizadas Temporariamente",
                 urlPaginacao: this.retornaUrlPaginacao(
                   visao,
                   AUTORIZADAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          this.props
+            .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.data.results,
+                  "autorizadas-temp"
                 )
               });
             });
@@ -284,12 +353,23 @@ export class StatusSolicitacoes extends Component {
                   "aguardando-inicio-vigencia"
                 ),
                 count: response.data.count,
+                originalCount: response.data.count,
                 tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
                 icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
                 titulo: "Aguardando início da vigência",
                 urlPaginacao: this.retornaUrlPaginacao(
                   visao,
-                  SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA
+                  AGUARDANDO_VIGENCIA_DIETA
+                )
+              });
+            });
+          this.props
+            .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.data.results,
+                  "aguardando-inicio-vigencia"
                 )
               });
             });
@@ -304,12 +384,23 @@ export class StatusSolicitacoes extends Component {
                   "inativas-temp"
                 ),
                 count: response.data.count,
+                originalCount: response.data.count,
                 tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
                 icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
                 titulo: "Inativas Temporariamente",
                 urlPaginacao: this.retornaUrlPaginacao(
                   visao,
                   INATIVAS_TEMPORARIAMENTE_DIETA
+                )
+              });
+            });
+          this.props
+            .getDietaEspecialInativasTemporariamente(instituicao.uuid, true)
+            .then(response => {
+              this.setState({
+                listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                  response.data.results,
+                  "inativas-temp"
                 )
               });
             });
@@ -325,10 +416,21 @@ export class StatusSolicitacoes extends Component {
                     "inativas"
                   ),
                   count: response.data.count,
+                  originalCount: response.data.count,
                   tipoCard: CARD_TYPE_ENUM.CANCELADO,
                   icone: ICON_CARD_TYPE_ENUM.CANCELADO,
                   titulo: "Inativas",
                   urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
+                });
+              }) &&
+            this.props
+              .getDietaEspecialInativas(instituicao.uuid, true)
+              .then(response => {
+                this.setState({
+                  listaSolicitacoesSemFiltro: ajustarFormatoLog(
+                    response.data.results,
+                    "inativas"
+                  )
                 });
               });
           break;

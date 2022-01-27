@@ -56,7 +56,8 @@ export const SidebarContent = () => {
     (usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhDRE() ||
       (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
-      usuarioEhTerceirizada());
+      usuarioEhTerceirizada() ||
+      usuarioEhNutricionistaSupervisao());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -69,7 +70,7 @@ export const SidebarContent = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhEscola() ||
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
     usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirLancamentoInicial =

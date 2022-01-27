@@ -40,11 +40,13 @@ export const RelatorioHistoricoQuestionamento = props => {
                         É possível atender a solicitação com todos os itens
                         previstos no contrato?
                       </div>
-                      <div className="obs">
-                        Observação da CODAE:{" "}
-                        {log.justificativa ||
-                          "Sem observações por parte da CODAE"}
-                      </div>
+                      <div
+                        className="obs"
+                        dangerouslySetInnerHTML={{
+                          __html: `Observação da CODAE: ${log.justificativa ||
+                            "Sem observações por parte da CODAE"}`
+                        }}
+                      />
                     </div>
                   )}
                   {log.status_evento_explicacao ===

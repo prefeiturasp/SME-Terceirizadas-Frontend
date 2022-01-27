@@ -93,19 +93,21 @@ export default ({
           </div>
           <div className="row acoes-notificacoes">
             <div className="checkbox-container">
-              <Checkbox
-                defaultChecked={notificacao.lido}
-                style={{
-                  fontSize: "16px",
-                  paddingTop: "10px",
-                  paddingLeft: "12px"
-                }}
-                onChange={() => {
-                  handleChangeMarcarComoLida(notificacao, index);
-                }}
-              >
-                Marcar como lida
-              </Checkbox>
+              {notificacao.tipo !== "Pendência" && (
+                <Checkbox
+                  defaultChecked={notificacao.lido}
+                  style={{
+                    fontSize: "16px",
+                    paddingTop: "10px",
+                    paddingLeft: "12px"
+                  }}
+                  onChange={() => {
+                    handleChangeMarcarComoLida(notificacao, index);
+                  }}
+                >
+                  Marcar como lida
+                </Checkbox>
+              )}
             </div>
             {notificacao.link && (
               <Link to={notificacao.link}>

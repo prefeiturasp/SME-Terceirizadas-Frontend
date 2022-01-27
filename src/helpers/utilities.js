@@ -344,6 +344,15 @@ export const usuarioEscolaEhGestaoMistaParceira = () => {
   );
 };
 
+export const validaPerfilEscolaMistaParceira = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.ESCOLA:
+      return !usuarioEscolaEhGestaoMistaParceira();
+    default:
+      return true;
+  }
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
@@ -626,4 +635,17 @@ export const exibirGA = () => {
     default:
       return true;
   }
+};
+
+export const justificativaAoNegarSolicitacao = logs => {
+  let justificativa = null;
+  if (logs.length) {
+    justificativa = logs.filter(log =>
+      ["DRE não validou", "CODAE negou"].includes(log.status_evento_explicacao)
+    );
+    justificativa = justificativa.length
+      ? justificativa[0].justificativa
+      : null;
+  }
+  return justificativa;
 };

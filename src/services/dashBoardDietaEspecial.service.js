@@ -9,8 +9,14 @@ const authToken = {
 };
 
 // ESCOLA
-export const getDietaEspecialPendenteAutorizacaoEscola = uuid => {
-  const url = `${API_URL}/escola-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+export const getDietaEspecialPendenteAutorizacaoEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/escola-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/escola-solicitacoes/pendentes-autorizacao-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -25,8 +31,14 @@ export const getDietaEspecialPendenteAutorizacaoEscola = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasEscola = uuid => {
-  const url = `${API_URL}/escola-solicitacoes/autorizados-dieta/${uuid}/`;
+export const getDietaEspecialAutorizadasEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/escola-solicitacoes/autorizados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/escola-solicitacoes/autorizados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -41,9 +53,11 @@ export const getDietaEspecialAutorizadasEscola = uuid => {
     });
 };
 
-export const getDietaEspecialNegadasEscola = uuid => {
-  const url = `${API_URL}/escola-solicitacoes/negados-dieta/${uuid}/`;
-
+export const getDietaEspecialNegadasEscola = (uuid, sem_paginacao = false) => {
+  let url = `${API_URL}/escola-solicitacoes/negados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/escola-solicitacoes/negados-dieta/${uuid}/?sem_paginacao=true`;
+  }
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -57,9 +71,14 @@ export const getDietaEspecialNegadasEscola = uuid => {
     });
 };
 
-export const getDietaEspecialCanceladasEscola = uuid => {
-  const url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/`;
-
+export const getDietaEspecialCanceladasEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/?sem_paginacao=true`;
+  }
   const OBJ_REQUEST = {
     headers: authToken,
     method: "GET"
@@ -73,25 +92,66 @@ export const getDietaEspecialCanceladasEscola = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasTemporariamenteEscola = uuid =>
-  fetchGet(
+export const getDietaEspecialAutorizadasTemporariamenteEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
     `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialAguardandoVigenciaEscola = uuid =>
-  fetchGet(`${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/`);
+export const getDietaEspecialAguardandoVigenciaEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
+    `${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
+  );
+};
 
-export const getDietaEspecialInativasTemporariamenteEscola = uuid =>
-  fetchGet(
+export const getDietaEspecialInativasTemporariamenteEscola = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
     `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialInativasEscola = uuid =>
-  fetchGet(`${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`);
+export const getDietaEspecialInativasEscola = (uuid, sem_paginacao = false) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(`${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`);
+};
 
 // DRE
-export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+export const getDietaEspecialPendenteAutorizacaoDRE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/diretoria-regional-solicitacoes/pendentes-autorizacao-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -106,8 +166,11 @@ export const getDietaEspecialPendenteAutorizacaoDRE = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasDRE = uuid => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/autorizados-dieta/${uuid}/`;
+export const getDietaEspecialAutorizadasDRE = (uuid, sem_paginacao = false) => {
+  let url = `${API_URL}/diretoria-regional-solicitacoes/autorizados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/diretoria-regional-solicitacoes/autorizados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -122,8 +185,11 @@ export const getDietaEspecialAutorizadasDRE = uuid => {
     });
 };
 
-export const getDietaEspecialNegadasDRE = uuid => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/negados-dieta/${uuid}/`;
+export const getDietaEspecialNegadasDRE = (uuid, sem_paginacao = false) => {
+  let url = `${API_URL}/diretoria-regional-solicitacoes/negados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/diretoria-regional-solicitacoes/negados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -138,8 +204,11 @@ export const getDietaEspecialNegadasDRE = uuid => {
     });
 };
 
-export const getDietaEspecialCanceladasDRE = uuid => {
-  const url = `${API_URL}/diretoria-regional-solicitacoes/cancelados-dieta/${uuid}/`;
+export const getDietaEspecialCanceladasDRE = (uuid, sem_paginacao = false) => {
+  let url = `${API_URL}/diretoria-regional-solicitacoes/cancelados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/diretoria-regional-solicitacoes/cancelados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -154,24 +223,54 @@ export const getDietaEspecialCanceladasDRE = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasTemporariamenteDRE = uuid =>
-  fetchGet(
+export const getDietaEspecialAutorizadasTemporariamenteDRE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/diretoria-regional-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
     `${API_URL}/diretoria-regional-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialInativasTemporariamenteDRE = uuid =>
-  fetchGet(
+export const getDietaEspecialInativasTemporariamenteDRE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/diretoria-regional-solicitacoes/inativas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
     `${API_URL}/diretoria-regional-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialInativasDRE = uuid =>
-  fetchGet(
+export const getDietaEspecialInativasDRE = (uuid, sem_paginacao = false) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/diretoria-regional-solicitacoes/inativas-dieta/${uuid}/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
     `${API_URL}/diretoria-regional-solicitacoes/inativas-dieta/${uuid}/`
   );
+};
 
 // CODAE
-export const getDietaEspecialPendenteAutorizacaoCODAE = () => {
-  const url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
+export const getDietaEspecialPendenteAutorizacaoCODAE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -186,8 +285,14 @@ export const getDietaEspecialPendenteAutorizacaoCODAE = () => {
     });
 };
 
-export const getDietaEspecialAutorizadasCODAE = () => {
-  const url = `${API_URL}/codae-solicitacoes/autorizados-dieta/`;
+export const getDietaEspecialAutorizadasCODAE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/codae-solicitacoes/autorizados-dieta/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/codae-solicitacoes/autorizados-dieta/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -202,8 +307,11 @@ export const getDietaEspecialAutorizadasCODAE = () => {
     });
 };
 
-export const getDietaEspecialNegadasCODAE = () => {
-  const url = `${API_URL}/codae-solicitacoes/negados-dieta/`;
+export const getDietaEspecialNegadasCODAE = (uuid, sem_paginacao = false) => {
+  let url = `${API_URL}/codae-solicitacoes/negados-dieta/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/codae-solicitacoes/negados-dieta/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -218,8 +326,14 @@ export const getDietaEspecialNegadasCODAE = () => {
     });
 };
 
-export const getDietaEspecialCanceladasCODAE = () => {
-  const url = `${API_URL}/codae-solicitacoes/cancelados-dieta/`;
+export const getDietaEspecialCanceladasCODAE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/codae-solicitacoes/cancelados-dieta/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/codae-solicitacoes/cancelados-dieta/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -234,18 +348,52 @@ export const getDietaEspecialCanceladasCODAE = () => {
     });
 };
 
-export const getDietaEspecialAutorizadasTemporariamenteCODAE = () =>
-  fetchGet(`${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`);
+export const getDietaEspecialAutorizadasTemporariamenteCODAE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
+    `${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`
+  );
+};
 
-export const getDietaEspecialInativasTemporariamenteCODAE = () =>
-  fetchGet(`${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`);
+export const getDietaEspecialInativasTemporariamenteCODAE = (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(
+    `${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`
+  );
+};
 
-export const getDietaEspecialInativasCODAE = () =>
-  fetchGet(`${API_URL}/codae-solicitacoes/inativas-dieta/`);
+export const getDietaEspecialInativasCODAE = (uuid, sem_paginacao = false) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/codae-solicitacoes/inativas-dieta/?sem_paginacao=true`
+    );
+  }
+  return fetchGet(`${API_URL}/codae-solicitacoes/inativas-dieta/`);
+};
 
 // TERCEIRIZADA
-export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {
-  const url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+export const getDietaEspecialPendenteAutorizacaoTerceirizada = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -260,8 +408,14 @@ export const getDietaEspecialPendenteAutorizacaoTerceirizada = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasTerceirizada = uuid => {
-  const url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/`;
+export const getDietaEspecialAutorizadasTerceirizada = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -276,8 +430,14 @@ export const getDietaEspecialAutorizadasTerceirizada = uuid => {
     });
 };
 
-export const getDietaEspecialNegadasTerceirizada = uuid => {
-  const url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/`;
+export const getDietaEspecialNegadasTerceirizada = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -292,8 +452,14 @@ export const getDietaEspecialNegadasTerceirizada = uuid => {
     });
 };
 
-export const getDietaEspecialCanceladasTerceirizada = uuid => {
-  const url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/`;
+export const getDietaEspecialCanceladasTerceirizada = (
+  uuid,
+  sem_paginacao = false
+) => {
+  let url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/`;
+  if (sem_paginacao) {
+    url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/?sem_paginacao=true`;
+  }
 
   const OBJ_REQUEST = {
     headers: authToken,
@@ -308,18 +474,59 @@ export const getDietaEspecialCanceladasTerceirizada = uuid => {
     });
 };
 
-export const getDietaEspecialAutorizadasTemporariamenteTerceirizada = async uuid =>
-  axios.get(
+export const getDietaEspecialAutorizadasTemporariamenteTerceirizada = async (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return axios.get(
+      `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/?sem_paginacao=true/`
+    );
+  }
+  return axios.get(
     `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialInativasTemporariamenteTerceirizada = async uuid =>
-  axios.get(
+export const getDietaEspecialInativasTemporariamenteTerceirizada = async (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return axios.get(
+      `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/?sem_paginacao=true/`
+    );
+  }
+  return axios.get(
     `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
   );
+};
 
-export const getDietaEspecialInativasTerceirizada = async uuid =>
-  axios.get(`/terceirizada-solicitacoes/inativas-dieta/${uuid}/`);
+export const getDietaEspecialInativasTerceirizada = async (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return axios.get(
+      `/terceirizada-solicitacoes/inativas-dieta/${uuid}/?sem_paginacao=true/`
+    );
+  }
+  return axios.get(`/terceirizada-solicitacoes/inativas-dieta/${uuid}/`);
+};
+
+export const getDietaEspecialAguardandoVigenciaTerceirizada = async (
+  uuid,
+  sem_paginacao = false
+) => {
+  if (sem_paginacao) {
+    return fetchGet(
+      `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/?sem_paginacao=true/`
+    );
+  }
+  return fetchGet(
+    `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
+  );
+};
 
 export const getPaginacaoSolicitacoesDietaEspecial = (
   urlPaginacao,
@@ -363,8 +570,3 @@ export const getPaginacaoSolicitacoesDietaEspecialCODAE = (
       console.log(error);
     });
 };
-
-export const getDietaEspecialAguardandoVigenciaTerceirizada = async uuid =>
-  fetchGet(
-    `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
-  );

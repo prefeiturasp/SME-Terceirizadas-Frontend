@@ -82,7 +82,11 @@ export default () => {
         <div className="nav-link text-center">
           <div className="icone-verde-fundo">
             <i className="fas fa-bell icone-verde" />
-            <span className="span-notificacoes-menor-que-10">{quantidade}</span>
+            {quantidade > 0 && (
+              <span className="span-notificacoes-menor-que-10">
+                {quantidade}
+              </span>
+            )}
           </div>
         </div>
         <p className="title">Notificações</p>

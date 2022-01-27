@@ -1,6 +1,9 @@
 import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem } from "../../../../helpers/utilities";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao
+} from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -18,6 +21,10 @@ export const CorpoRelatorio = props => {
     prazoDoPedidoMensagem,
     escolaDaInversao
   } = props;
+
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    inversaoDiaCardapio.logs
+  );
   return (
     <div>
       <div className="row">
@@ -163,6 +170,19 @@ export const CorpoRelatorio = props => {
             </div>
           </div>
         )}
+      {justificativaNegacao && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Justificativa da rejeição</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
