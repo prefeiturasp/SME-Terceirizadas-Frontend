@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
   gerarPDFDistribuidorSolicitacoes,
-  gerarExcelSolicitacoes
+  gerarExcelSolicitacoes,
+  confirmaCancelamento
 } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import "./styles.scss";
@@ -15,6 +17,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ConfirmaTodos from "./components/ConfirmarTodos";
 
 export default () => {
@@ -46,6 +49,33 @@ export default () => {
       setSolicitacoes();
     }
     setAtivos([]);
+    setCarregando(false);
+  };
+
+  const atualizaTabela = () => {
+    buscarSolicitacoes(page ? page : 1);
+  };
+
+  const confirmaCancelamentoGuias = async (
+    solicitacao,
+    setModal,
+    setCarregando
+  ) => {
+    setCarregando(true);
+    let guias = solicitacao.guias
+      .filter(x => x.status === "Aguardando cancelamento")
+      .map(x => x.numero_guia);
+    let numero_requisicao = solicitacao.numero_solicitacao;
+    const payload = { guias, numero_requisicao };
+    let textoToast = "Guia(s) de Remessa cancelada(s) com sucesso";
+    let response = await confirmaCancelamento(payload);
+    if (response.status === HTTP_STATUS.OK) {
+      atualizaTabela();
+      toastSuccess(textoToast);
+      setModal(false);
+    } else {
+      toastError("Erro ao arquivar a guia");
+    }
     setCarregando(false);
   };
 
@@ -98,6 +128,7 @@ export default () => {
                 ativos={ativos}
                 setAtivos={setAtivos}
                 updatePage={updatePage}
+                confirmaCancelamentoGuias={confirmaCancelamentoGuias}
               />
               <div className="row">
                 <div className="col">
