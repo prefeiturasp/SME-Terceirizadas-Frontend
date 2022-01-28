@@ -176,3 +176,8 @@ export const imprimirGuiasDaSolicitacao = async uuid => {
   const { data } = await axios.get(url, { responseType: "blob" });
   saveAs(data, "guias_da_requisicao.pdf");
 };
+
+export const confirmaCancelamento = async payload => {
+  const url = `/solicitacao-remessa/confirmar-cancelamento/`;
+  return await axios.post(url, payload);
+};
