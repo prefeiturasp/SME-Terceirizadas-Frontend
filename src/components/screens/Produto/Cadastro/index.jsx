@@ -131,11 +131,11 @@ class cadastroProduto extends Component {
     });
   }
 
-  setBlockProximo() {
+  setBlockProximo = () => {
     this.setState({ blockProximoStep3: true });
-  }
+  };
 
-  removerRascunho(id_externo, uuid) {
+  removerRascunho = (id_externo, uuid) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       excluirRascunhoDeProduto(uuid).then(
         res => {
@@ -151,7 +151,7 @@ class cadastroProduto extends Component {
         }
       );
     }
-  }
+  };
 
   carregarRascunho(param) {
     const produtoRaw = deepCopy(param.produto);
@@ -178,7 +178,7 @@ class cadastroProduto extends Component {
       });
     });
     produto.imagens_salvas = produtoRaw.imagens;
-    produto.imagens = [];
+    produto.imagens = produtoRaw.imagens;
     produto.informacoes_nutricionais = informacoes_nutricionais;
     this.setState({
       renderBuscaProduto: false,
@@ -253,13 +253,13 @@ class cadastroProduto extends Component {
     });
   };
 
-  removeFile(index) {
+  removeFile = index => {
     let { payload } = this.state;
     payload.imagens.splice(index, 1);
     this.setState({ payload });
-  }
+  };
 
-  setFiles(imagens) {
+  setFiles = imagens => {
     if (imagens.length > 0) {
       const img = imagens.map(imagem => {
         return {
@@ -271,7 +271,7 @@ class cadastroProduto extends Component {
       payload.imagens = img;
       this.setState({ payload });
     }
-  }
+  };
 
   setaAtributosPrimeiroStep = ({
     protocolos,
