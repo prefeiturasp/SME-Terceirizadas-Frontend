@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -20,6 +20,7 @@ import {
   getProtocoloPadrao
 } from "services/dietaEspecial.service";
 import SubstituicoesField from "./componentes/SubstituicoesField";
+import ModalCancelaCopia from "./componentes/ModalCancelaCopia";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
@@ -34,9 +35,15 @@ export default ({ uuid }) => {
   const [carregando, setCarregando] = useState(true);
   const [protocoloPadrao, setProcoloPadrao] = useState(undefined);
   const [visible, setVisible] = useState(false);
+  const [showModalCancelaCopia, setShowModalCancelaCopia] = useState(false);
   const [historico, setHistorico] = useState([]);
+  const [valoresIniciais, setValoresIniciais] = useState({
+    substituicoes: [{}]
+  });
 
   const history = useHistory();
+  const location = useLocation();
+  const ehCopia = location.pathname.includes("criar-copia");
 
   async function fetchData() {
     const respAlimentos = await getAlimentos({
@@ -55,6 +62,7 @@ export default ({ uuid }) => {
     if (uuid) {
       const respProtocolo = await getProtocoloPadrao(uuid);
       setProcoloPadrao(respProtocolo.data);
+      setValoresIniciais(getInitialValues(respProtocolo.data));
     }
     setCarregando(false);
   }
@@ -63,9 +71,9 @@ export default ({ uuid }) => {
     fetchData();
   }, []);
 
-  function getInitialValues() {
-    if (protocoloPadrao) {
-      const substituicoes = protocoloPadrao.substituicoes.map(substituicao => {
+  function getInitialValues(protocolo) {
+    if (protocolo) {
+      const substituicoes = protocolo.substituicoes.map(substituicao => {
         const alimentos_substitutos = substituicao.alimentos_substitutos.map(
           alimento => alimento.uuid
         );
@@ -79,11 +87,10 @@ export default ({ uuid }) => {
         };
       });
       return {
-        uuid: protocoloPadrao.uuid,
-        nome_protocolo: protocoloPadrao.nome_protocolo,
-        orientacoes_gerais: protocoloPadrao.orientacoes_gerais,
-        status:
-          protocoloPadrao.status === "Liberado" ? "LIBERADO" : "NAO_LIBERADO",
+        uuid: protocolo.uuid,
+        nome_protocolo: protocolo.nome_protocolo,
+        orientacoes_gerais: protocolo.orientacoes_gerais,
+        status: protocolo.status === "Liberado" ? "LIBERADO" : "NAO_LIBERADO",
         substituicoes: substituicoes
       };
     } else {
@@ -102,25 +109,52 @@ export default ({ uuid }) => {
 
   async function resetForm(form) {
     await form.reset({});
-    await form.reset(getInitialValues());
+    await form.reset(getInitialValues(protocoloPadrao));
     await form.restart();
   }
 
   const onSubmit = async values => {
     if (protocoloPadrao) {
-      try {
-        const response = await editaProtocoloPadraoDietaEspecial(values);
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Protocolo Padrão de dieta especial salvo com sucesso");
-          history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
-        } else {
-          toastError("Houve um erro ao editar protocolo de dieta especial");
+      if (ehCopia) {
+        try {
+          const response = await cadastraProtocoloPadraoDietaEspecial(values);
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess(
+              "Cópia do protocolo padrão da dieta especial salvo com sucesso"
+            );
+            history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
+          } else {
+            toastError(
+              "Houve um erro ao cadastrar cópia do protocolo de dieta especial"
+            );
+          }
+        } catch (e) {
+          if (e.response.status === HTTP_STATUS.BAD_REQUEST) {
+            // setValoresIniciais(getInitialValues(values));
+            toastError(getError(e.response));
+          } else {
+            toastError(
+              "Houve um erro ao cadastrar cópia do protocolo de dieta especial"
+            );
+          }
         }
-      } catch (e) {
-        if (e.response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(getError(e.response));
-        } else {
-          toastError("Houve um erro ao editar protocolo de dieta especial");
+      } else {
+        try {
+          const response = await editaProtocoloPadraoDietaEspecial(values);
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess(
+              "Protocolo Padrão de dieta especial salvo com sucesso"
+            );
+            history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
+          } else {
+            toastError("Houve um erro ao editar protocolo de dieta especial");
+          }
+        } catch (e) {
+          if (e.response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(getError(e.response));
+          } else {
+            toastError("Houve um erro ao editar protocolo de dieta especial");
+          }
         }
       }
     } else {
@@ -128,6 +162,7 @@ export default ({ uuid }) => {
         const response = await cadastraProtocoloPadraoDietaEspecial(values);
         if (response.status === HTTP_STATUS.CREATED) {
           toastSuccess("Protocolo Padrão de dieta especial criado com sucesso");
+          history.push("/dieta-especial/consultar-protocolo-padrao-dieta");
         } else {
           toastError("Houve um erro ao cadastrar protocolo de dieta especial");
         }
@@ -148,22 +183,24 @@ export default ({ uuid }) => {
           {protocoloPadrao && (
             <div className="row">
               <div className="col-12">
-                <Botao
-                  texto="Histórico"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right"
-                  onClick={() => {
-                    setHistorico(protocoloPadrao.historico);
-                    setVisible(true);
-                  }}
-                />
+                {!ehCopia && (
+                  <Botao
+                    texto="Histórico"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-right"
+                    onClick={() => {
+                      setHistorico(protocoloPadrao.historico);
+                      setVisible(true);
+                    }}
+                  />
+                )}
               </div>
             </div>
           )}
           <Form
             onSubmit={onSubmit}
-            initialValues={getInitialValues()}
+            initialValues={valoresIniciais}
             mutators={{ ...arrayMutators }}
             render={({ form, handleSubmit, submitting, values }) => (
               <form
@@ -171,7 +208,7 @@ export default ({ uuid }) => {
                   const promise = handleSubmit(event);
                   promise &&
                     promise.then(() => {
-                      resetForm(form);
+                      // resetForm(form);
                     });
                   return promise;
                 }}
@@ -238,7 +275,7 @@ export default ({ uuid }) => {
                 </div>
                 <div className="mt-4 mb-4">
                   <Botao
-                    texto="Salvar"
+                    texto={ehCopia ? "Salvar cópia" : "Salvar"}
                     type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
@@ -246,17 +283,29 @@ export default ({ uuid }) => {
                       submitting || checaSeEditou(values, getInitialValues())
                     }
                   />
-                  <Botao
-                    texto={
-                      protocoloPadrao ? "Cancelar edição" : "Limpar campos"
-                    }
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
-                    onClick={() => {
-                      resetForm(form);
-                    }}
-                  />
+                  {ehCopia ? (
+                    <Botao
+                      texto={"Cancelar cópia"}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right ml-3"
+                      onClick={() => {
+                        setShowModalCancelaCopia(true);
+                      }}
+                    />
+                  ) : (
+                    <Botao
+                      texto={
+                        protocoloPadrao ? "Cancelar edição" : "Limpar campos"
+                      }
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right ml-3"
+                      onClick={() => {
+                        resetForm(form);
+                      }}
+                    />
+                  )}
                 </div>
               </form>
             )}
@@ -270,6 +319,10 @@ export default ({ uuid }) => {
             history={historico}
           />
         )}
+        <ModalCancelaCopia
+          showModal={showModalCancelaCopia}
+          closeModal={() => setShowModalCancelaCopia(false)}
+        />
       </div>
     </div>
   );
