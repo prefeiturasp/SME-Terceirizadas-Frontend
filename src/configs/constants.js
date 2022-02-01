@@ -54,7 +54,8 @@ export const ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO = {
   AGUARDANDO_ANALISE_SENSORIAL: "aguardando-analise-sensorial",
   SOLICITACOES_PENDENTE_HOMOLOGACAO: "solicitacoes-pendente-homologacao",
   SOLICITACOES_HOMOLOGADAS: "solicitacoes-homologadas",
-  SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas"
+  SOLICITACOES_NAO_HOMOLOGADAS: "solicitacoes-nao-homologadas",
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "responder-questionamentos-da-codae"
 };
 
 export const AUTORIZADOS_DIETA = "autorizados-dieta";
@@ -82,7 +83,8 @@ export const GESTAO_PRODUTO_CARDS = {
   AGUARDANDO_ANALISE_SENSORIAL: "Aguardando análise sensoriais",
   PENDENTE_HOMOLOGACAO: "Pendentes de homologação",
   HOMOLOGADOS: "Homologados",
-  NAO_HOMOLOGADOS: "Não homologados"
+  NAO_HOMOLOGADOS: "Não homologados",
+  RESPONDER_QUESTIONAMENTOS_DA_CODAE: "Responder Questionamentos da CODAE"
 };
 
 export const SOLICITACOES_CODAE = "codae-solicitacoes";
