@@ -94,6 +94,19 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
             </tbody>
           </table>
           <Botao
+            texto="Criar cópia"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            className="float-right mt-3 mb-3 ml-3"
+            onClick={() => {
+              history.push(
+                `/dieta-especial/protocolo-padrao/${
+                  protocoloPadrao.uuid
+                }/criar-copia`
+              );
+            }}
+          />
+          <Botao
             texto="Editar"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
