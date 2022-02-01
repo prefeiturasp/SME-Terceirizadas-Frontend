@@ -10,6 +10,11 @@ import {
   usuarioEhAdministradorDRE,
   usuarioEhTerceirizada
 } from "helpers/utilities";
+import {
+  ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
+  TIPO_PERFIL
+} from "constants/shared";
+import { GESTAO_PRODUTO_CARDS } from "configs/constants";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -107,6 +112,8 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
+    const nomeUsuario = localStorage.getItem("nome");
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
     const url = window.location.href;
     let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
     this.setState({ tipoSolicitacao });
@@ -122,11 +129,46 @@ export class StatusSolicitacoes extends Component {
       retorno =>
         (solicitacoes = solicitacoes.concat(
           formatarDadosSolicitacao(
-            retorno.data ? retorno.data.results : retorno.results
+            retorno.data ? retorno.data.results : retorno.results,
+            null,
+            this.props.titulo
           )
         ))
     );
-    solicitacoes = solicitacoes.sort(ordenaPorDate);
+    if (
+      this.props.titulo ===
+      GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    ) {
+      if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
+        solicitacoes = solicitacoes
+          .filter(
+            solicitacao =>
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
+              solicitacao.status
+          )
+          .sort(ordenaPorDate);
+      } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+        solicitacoes = solicitacoes
+          .filter(
+            solicitacao =>
+              nomeUsuario ===
+                `"${solicitacao.nome_usuario_log_de_reclamacao}"` &&
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
+                solicitacao.status
+          )
+          .sort(ordenaPorDate);
+      } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
+        solicitacoes = solicitacoes
+          .filter(
+            solicitacao =>
+              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
+              solicitacao.status
+          )
+          .sort(ordenaPorDate);
+      }
+    } else {
+      solicitacoes = solicitacoes.sort(ordenaPorDate);
+    }
     if (usuarioEhTerceirizada() || usuarioEhAdministradorDRE()) {
       await getMeusLotes().then(response => {
         this.setState({
