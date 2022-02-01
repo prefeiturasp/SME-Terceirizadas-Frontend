@@ -33,6 +33,7 @@ import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecia
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
 import EditaProtocoloPadraoDieta from "pages/DietaEspecial/EditaProtocoloPadraoDieta";
+import CriarCopiaProtocoloPadraoDieta from "pages/DietaEspecial/CriarCopiaProtocoloPadraoDieta";
 import ConsultaProtocoloPadraoDietaEspecial from "../pages/DietaEspecial/ConsultaProtocoloPadraoDietaEspecial.jsx";
 import PainelPedidosAlteracaoDeCardapioDREPage from "../pages/DRE/AlteracaoDeCardapio/PainelPedidosPage";
 import PainelPedidosInclusaoDeAlimentacaoDREPage from "../pages/DRE/InclusaoDeAlimentacao/PainelPedidosPage";
@@ -1121,6 +1122,12 @@ const routesConfig = [
   {
     path: `/${constants.DIETA_ESPECIAL}/protocolo-padrao/:uuid/editar`,
     component: EditaProtocoloPadraoDieta,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/protocolo-padrao/:uuid/criar-copia`,
+    component: CriarCopiaProtocoloPadraoDieta,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
