@@ -924,6 +924,18 @@ const routesConfig = [
   {
     path: `/${constants.GESTAO_PRODUTO}/${
       constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
+        .RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    }`,
+    component: StatusSolicitacoesGestaoProduto.ResponderQuestionamentoDaCodae,
+    exact: true,
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhNutricionistaSupervisao() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/${
+      constants.ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO
         .AGUARDANDO_ANALISE_SENSORIAL
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,

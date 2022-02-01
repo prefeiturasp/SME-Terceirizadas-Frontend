@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -27,7 +27,8 @@ const TabelaProdutos = ({
   filtros,
   setTotal,
   setProdutos,
-  setShowBuscaVazia
+  setShowBuscaVazia,
+  filtradoPorParametro
 }) => {
   const [indiceProdutoAtivo, setIndiceProdutoAtivo] = useState();
   const [uuid, setUuid] = useState();
@@ -57,6 +58,12 @@ const TabelaProdutos = ({
     }
     setCarregando(false);
   };
+
+  useEffect(() => {
+    if (filtradoPorParametro) {
+      setIndiceProdutoAtivo(0);
+    }
+  }, [filtradoPorParametro]);
 
   return (
     <>

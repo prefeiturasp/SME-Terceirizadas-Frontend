@@ -1,5 +1,7 @@
 import {
   truncarString,
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
   parseDataHoraBrToMoment,
@@ -13,6 +15,7 @@ import {
   ATIVACAO_DE_PRODUTO
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
+import { CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE } from "helpers/gestaoDeProdutos";
 const {
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
@@ -23,7 +26,8 @@ const {
   CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_NAO_HOMOLOGADO,
   CODAE_QUESTIONADO,
-  UE_RESPONDEU_QUESTIONAMENTO
+  UE_RESPONDEU_QUESTIONAMENTO,
+  CODAE_QUESTIONOU_UE
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
 export const CARDS_CONFIG = {
@@ -43,7 +47,7 @@ export const incluirDados = (statuses, arr) => {
   return result;
 };
 
-const gerarLinkDoItem = (item, apontaParaEdicao) => {
+const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
     usuarioEhTerceirizada()
@@ -83,6 +87,22 @@ const gerarLinkDoItem = (item, apontaParaEdicao) => {
     ].includes(item.status.toLowerCase())
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
+  } else if (
+    (usuarioEhEscola() || usuarioEhTerceirizada()) &&
+    item.status.toLowerCase() === CODAE_QUESTIONOU_UE
+  ) {
+    return CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
+      ? `/${GESTAO_PRODUTO}/responder-questionamento-ue/?nome_produto=${
+          item.nome_produto
+        }`
+      : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
+  } else if (
+    usuarioEhCoordenadorNutriSupervisao() &&
+    CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
+  ) {
+    return `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor/?nome_produto=${
+      item.nome_produto
+    }`;
   }
 
   return apontaParaEdicao
@@ -123,10 +143,12 @@ const getText = item => {
   )}${appendix}`;
 };
 
-export const formataCards = (items, apontaParaEdicao) => {
+export const formataCards = (items, apontaParaEdicao, titulo) => {
   return items.sort(ordenaPorLogMaisRecente).map(item => ({
     text: getText(item),
     date: item.log_mais_recente,
-    link: gerarLinkDoItem(item, apontaParaEdicao)
+    link: gerarLinkDoItem(item, apontaParaEdicao, titulo),
+    nome_usuario_log_de_reclamacao: item.nome_usuario_log_de_reclamacao,
+    status: item.status
   }));
 };

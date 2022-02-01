@@ -32,6 +32,9 @@ const Filtros = ({
   const [opcoesMarcas, setOpcoesMarcas] = useState();
   const [opcoesFabricantes, setOpcoesFabricantes] = useState();
 
+  const parameters = new URLSearchParams(window.location.search);
+  const nome_produto_param = parameters.get("nome_produto");
+
   const fetchData = async () => {
     const responseProdutos = await getNomesProdutos();
     if (responseProdutos.status === HTTP_STATUS.OK) {
@@ -45,10 +48,23 @@ const Filtros = ({
     if (responseFabricantes.status === HTTP_STATUS.OK) {
       setOpcoesFabricantes(formataOpcoes(responseFabricantes.data.results));
     }
+    if (nome_produto_param) {
+      const responseProdutosFiltrados = await filtrarReclamacoesEscola(
+        `?nome_produto=${nome_produto_param}&page=1&page_size=${PAGE_SIZE}`
+      );
+      if (responseProdutosFiltrados) {
+        setProdutos(responseProdutosFiltrados.results);
+        setTotal(responseProdutosFiltrados.count);
+        setPage(1);
+        setCarregando(false);
+        return;
+      }
+    }
     setCarregando(false);
   };
 
   const onSubmit = async formValues => {
+    window.history.replaceState(null, null, window.location.pathname);
     let params = "";
     setProdutos(undefined);
     setCarregando(true);

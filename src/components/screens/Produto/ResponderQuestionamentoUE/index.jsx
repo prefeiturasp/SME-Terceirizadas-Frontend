@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Spin, Pagination } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
@@ -12,10 +12,20 @@ const ResponderQuestionamentoUE = () => {
   const [produtos, setProdutos] = useState();
   const [carregando, setCarregando] = useState();
   const [showBuscaVazia, setShowBuscaVazia] = useState(false);
+  const [filtradoPorParametro, setFiltradoPorParametro] = useState(false);
   const [filtros, setFiltros] = useState();
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
   const PAGE_SIZE = 10;
+
+  const parameters = new URLSearchParams(window.location.search);
+  const nome_produto = parameters.get("nome_produto");
+
+  useEffect(() => {
+    if (nome_produto) {
+      setFiltradoPorParametro(true);
+    }
+  }, [nome_produto]);
 
   const changePage = async page => {
     try {
@@ -66,6 +76,7 @@ const ResponderQuestionamentoUE = () => {
                 setTotal={setTotal}
                 setProdutos={setProdutos}
                 setShowBuscaVazia={setShowBuscaVazia}
+                filtradoPorParametro={filtradoPorParametro}
               />,
               <Pagination
                 className="mt-3 mb-3"

@@ -109,3 +109,12 @@ export const NaoHomologados = () => (
     titulo={GESTAO_PRODUTO_CARDS.NAO_HOMOLOGADOS}
   />
 );
+
+export const ResponderQuestionamentoDaCodae = () => (
+  <StatusSolicitacoesBase
+    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO}
+    tipoCard={CARD_TYPE_ENUM.PENDENTE}
+    icone={ICON_CARD_TYPE_ENUM.PENDENTE}
+    titulo={GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE}
+  />
+);
