@@ -431,6 +431,9 @@ class cadastroProduto extends Component {
             toastSuccess("Rascunho salvo com sucesso.");
             payload.uuid = response.data.uuid;
             this.setState({ payload });
+            setTimeout(function() {
+              window.location.reload();
+            }, 2000);
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError(getError(response.data));
           } else {
@@ -443,6 +446,9 @@ class cadastroProduto extends Component {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Rascunho atualizado com sucesso.");
             resolve();
+            setTimeout(function() {
+              window.location.reload();
+            }, 2000);
           } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
             toastError(getError(response.data));
             reject();
