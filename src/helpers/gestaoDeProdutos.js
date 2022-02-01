@@ -89,6 +89,19 @@ const CARD_CORRECAO_DE_PRODUTO = {
   incluir_status: [CODAE_QUESTIONADO]
 };
 
+export const CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE = {
+  id: CARD_ID.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
+  titulo: "Responder Questionamentos da CODAE",
+  icon: "fa-exclamation-triangle",
+  style: "card-pending",
+  rota: ROTA.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
+  incluir_status: [
+    CODAE_QUESTIONOU_UE,
+    CODAE_PEDIU_ANALISE_RECLAMACAO,
+    CODAE_QUESTIONOU_NUTRISUPERVISOR
+  ]
+};
+
 export const TODOS_OS_CARDS = [
   CARD_PRODUTOS_SUSPENSOS,
   CARD_CORRECAO_DE_PRODUTO,
@@ -96,7 +109,8 @@ export const TODOS_OS_CARDS = [
   CARD_AGUARDANDO_ANALISE_SENSORIAL,
   CARD_PENDENTE_HOMOLOGACAO,
   CARD_HOMOLOGADOS,
-  CARD_NAO_HOMOLOGADOS
+  CARD_NAO_HOMOLOGADOS,
+  CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
 ];
 
 export const listarCardsPermitidos = () => {
@@ -146,7 +160,8 @@ export const listarCardsPermitidos = () => {
       CARD_AGUARDANDO_ANALISE_SENSORIAL,
       CARD_PENDENTE_HOMOLOGACAO,
       CARD_HOMOLOGADOS,
-      CARD_NAO_HOMOLOGADOS
+      CARD_NAO_HOMOLOGADOS,
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
   } else if (
     [TIPO_PERFIL.SUPERVISAO_NUTRICAO, TIPO_PERFIL.ESCOLA].includes(perfil)
@@ -170,7 +185,8 @@ export const listarCardsPermitidos = () => {
       cardAguardandoAnaliseReclamacao,
       CARD_PRODUTOS_SUSPENSOS,
       CARD_NAO_HOMOLOGADOS,
-      CARD_HOMOLOGADOS
+      CARD_HOMOLOGADOS,
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
   }
 
