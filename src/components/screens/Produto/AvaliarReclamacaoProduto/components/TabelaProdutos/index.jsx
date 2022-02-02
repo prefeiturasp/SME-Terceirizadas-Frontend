@@ -72,7 +72,7 @@ export default class TabelaProdutos extends Component {
       case this.QUESTIONAR_NUTRISUPERVISOR:
         return "Questionar Nutrisupervisor sobre reclamação de produto";
       case this.RESPONDER:
-        return "Responder reclamação de produto";
+        return "Responder Questionamento da CODAE";
       default:
         return "";
     }
