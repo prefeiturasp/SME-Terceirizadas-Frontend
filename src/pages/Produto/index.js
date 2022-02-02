@@ -62,7 +62,7 @@ export const AtivacaoDeProdutoPage = () => {
 export const ConsultaResponderReclamacaoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-reclamacao/consulta`,
-    titulo: "Responder reclamação de produto"
+    titulo: "Responder Questionamento da CODAE"
   };
 
   return (
@@ -76,7 +76,7 @@ export const ConsultaResponderReclamacaoPage = () => {
 export const ResponderReclamacaoPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
-    titulo: "Responder reclamação de produto"
+    titulo: "Responder Questionamento da CODAE"
   };
 
   return (
@@ -90,7 +90,7 @@ export const ResponderReclamacaoPage = () => {
 export const ResponderQuestionamentoUEPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-questionamento-ue`,
-    titulo: "Responder Questionamento"
+    titulo: "Responder Questionamento da CODAE"
   };
 
   return (
@@ -104,7 +104,7 @@ export const ResponderQuestionamentoUEPage = () => {
 export const ResponderQuestionamentoNutrisupervisorPage = () => {
   const atual = {
     href: `/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`,
-    titulo: "Responder Questionamento"
+    titulo: "Responder Questionamento da CODAE"
   };
 
   return (
