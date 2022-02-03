@@ -4,7 +4,6 @@ import { produtoJaExiste } from "services/produto.service";
 
 export const validaFormularioStep1 = async ({
   eh_para_alunos_com_dieta,
-  protocolos,
   nome,
   marca,
   fabricante,
@@ -18,10 +17,6 @@ export const validaFormularioStep1 = async ({
     arrayValidacao.push(
       "Informe se produto se destina a alunos com dieta especial."
     );
-  } else if (eh_para_alunos_com_dieta !== null) {
-    if (eh_para_alunos_com_dieta && protocolos.length === 0) {
-      arrayValidacao.push("Precisa informar ao menos uma patologia");
-    }
   }
   if (nome === null) {
     arrayValidacao.push("Informe o nome do produto.");
@@ -86,7 +81,6 @@ export const Step1EstaValido = ({
 
 export const retornaObjetoRequest = ({
   eh_para_alunos_com_dieta,
-  protocolos,
   detalhes_da_dieta,
   nome,
   marca,
@@ -98,7 +92,6 @@ export const retornaObjetoRequest = ({
 }) => {
   return {
     eh_para_alunos_com_dieta: eh_para_alunos_com_dieta,
-    protocolos: protocolos,
     detalhes_da_dieta: detalhes_da_dieta,
     nome: nome,
     marca: marca,
@@ -112,7 +105,6 @@ export const retornaObjetoRequest = ({
 
 export const retornaPayloadDefault = () => {
   return {
-    protocolos: [],
     marca: null,
     fabricante: null,
     imagens: [],
