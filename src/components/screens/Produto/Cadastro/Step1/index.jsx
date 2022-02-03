@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Field } from "redux-form";
 import { TextArea } from "../../../../Shareable/TextArea/TextArea";
 import { Select } from "antd";
@@ -30,14 +30,12 @@ class Step1 extends Component {
     super(props);
     this.state = {
       loading: true,
-      protocolosDieta: [],
       nomeDeProdutosEditalArray: [],
       marcasArray: [],
       fabricantesArray: [],
       showModalCadastrarItem: false,
       payloadStep1: {
         eh_para_alunos_com_dieta: null,
-        protocolos: [],
         detalhes_da_dieta: null,
         nome: null,
         nomeDeProdutosEdital: null,
@@ -71,7 +69,6 @@ class Step1 extends Component {
       condicao = false;
     }
     payloadStep1.eh_para_alunos_com_dieta = condicao;
-    this.props.mostrarFormDieta(condicao);
     this.setState({
       payloadStep1
     });
@@ -159,16 +156,8 @@ class Step1 extends Component {
 
   componentDidMount = async () => {
     let { marcasArray, fabricantesArray, dafaultArrayProtocolo } = this.state;
-    const { payload, protocolosDieta } = this.props;
+    const { payload } = this.props;
     if (dafaultArrayProtocolo.length === 0) {
-      payload.protocolos.forEach(protocoloPayload => {
-        protocolosDieta.forEach(protocolo => {
-          if (protocoloPayload === protocolo.uuid) {
-            dafaultArrayProtocolo.push(`${protocolo.nome}+${protocolo.uuid}`);
-          }
-        });
-      });
-
       this.setState({
         payloadStep1: retornaObjetoRequest(payload),
         dafaultArrayProtocolo,
@@ -201,7 +190,7 @@ class Step1 extends Component {
   };
 
   componentDidUpdate = async () => {
-    const { protocolosDieta, payload, concluidoStep1 } = this.props;
+    const { payload, concluidoStep1 } = this.props;
     const {
       loading,
       marcasArray,
@@ -209,19 +198,10 @@ class Step1 extends Component {
       dafaultArrayProtocolo,
       retornadoAoStep
     } = this.state;
-    let listaProtocolos = [];
     let listaNomeDeProdutosEdital = [];
     let listaMarcas = [];
     let listaFabricantes = [];
     if (Step1EstaValido(payload) && concluidoStep1 && !retornadoAoStep) {
-      payload.protocolos.forEach(protocoloPayload => {
-        protocolosDieta.forEach(protocolo => {
-          if (protocoloPayload === protocolo.uuid) {
-            dafaultArrayProtocolo.push(`${protocolo.nome}+${protocolo.uuid}`);
-          }
-        });
-      });
-
       this.setState({
         payloadStep1: retornaObjetoRequest(payload),
         dafaultArrayProtocolo,
@@ -261,40 +241,10 @@ class Step1 extends Component {
         loading: false
       });
     }
-    if (this.state.protocolosDieta.length === 0) {
-      protocolosDieta.forEach(protocolo => {
-        listaProtocolos.push(
-          <Option key={`${protocolo.nome}+${protocolo.uuid}`}>
-            {protocolo.nome}
-          </Option>
-        );
-      });
-
-      this.setState({
-        protocolosDieta: listaProtocolos
-      });
-    }
   };
 
   extrairUuidString = string => {
     return string.split("+")[1];
-  };
-
-  addProtocolo = value => {
-    let { payloadStep1 } = this.state;
-    const uuid = this.extrairUuidString(value);
-    payloadStep1.protocolos.push(uuid);
-    this.setState({ payloadStep1 });
-    this.props.setaAtributosPrimeiroStep(payloadStep1);
-  };
-
-  delProtocolo = value => {
-    let { payloadStep1 } = this.state;
-    const uuid = this.extrairUuidString(value);
-    const index = payloadStep1.protocolos.indexOf(uuid);
-    payloadStep1.protocolos.splice(index, 1);
-    this.setState({ payloadStep1 });
-    this.props.setaAtributosPrimeiroStep(payloadStep1);
   };
 
   setaCampoDetalhesDieta = value => {
@@ -345,14 +295,11 @@ class Step1 extends Component {
 
   render() {
     const {
-      protocolosDieta,
       nomeDeProdutosEditalArray,
       marcasArray,
-      fabricantesArray,
-      dafaultArrayProtocolo
+      fabricantesArray
     } = this.state;
     const {
-      renderizaFormDietaEspecial,
       renderizaFormAlergenicos,
       defaultNomeDeProdutosEditalStep1,
       defaultMarcaStep1,
@@ -400,30 +347,6 @@ class Step1 extends Component {
             </div>
           </div>
         </div>
-        {renderizaFormDietaEspecial && (
-          <Fragment>
-            <div className="row">
-              <div className="col-6 pt-3">
-                <label className="label-formulario-produto">
-                  <nav>*</nav>Nome do protocolo de Dieta Especial
-                </label>
-                <Field
-                  component={ASelect}
-                  className={"select-form-produto"}
-                  mode="multiple"
-                  name="protocolos"
-                  placeholder="Digite o nome do protocolo"
-                  onSelect={this.addProtocolo}
-                  onDeselect={this.delProtocolo}
-                  defaultValue={dafaultArrayProtocolo}
-                >
-                  {protocolosDieta}
-                </Field>
-              </div>
-            </div>
-          </Fragment>
-        )}
-
         <div className="row">
           <div className="col-12 pt-3">
             <label className="label-formulario-produto">

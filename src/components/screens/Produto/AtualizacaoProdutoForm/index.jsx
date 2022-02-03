@@ -20,7 +20,6 @@ import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHo
 import MotivoDaCorrecaoDeHomologacao from "components/Shareable/MotivoDaCorrecaoDeHomologacao";
 import MotivoCacelamentoSolicitacao from "components/Shareable/MotivoCancelamentoSolicitacao";
 import {
-  getProtocolosDietaEspecial,
   getHomologacao,
   getMarcasProdutos,
   getFabricantesProdutos,
@@ -39,12 +38,10 @@ class AtualizacaoProdutoForm extends Component {
     super(props);
     this.nextPage = this.nextPage.bind(this);
     this.previousPage = this.previousPage.bind(this);
-    this.limpaProtocolos = this.limpaProtocolos.bind(this);
     this.passouPrimeiroStep = this.passouPrimeiroStep.bind(this);
     this.passouSegundoStep = this.passouSegundoStep.bind(this);
     this.passouTerceiroStep = this.passouTerceiroStep.bind(this);
     this.state = {
-      arrayProtocolos: [],
       arrayMarcas: [],
       arrayFabricantes: [],
       page: 0,
@@ -53,7 +50,6 @@ class AtualizacaoProdutoForm extends Component {
       produto: null,
       logs: [],
       informacoesNutricionais: null,
-      protocolos: [],
       erro: false,
       primeiroStep: false,
       segundoStep: false,
@@ -82,10 +78,6 @@ class AtualizacaoProdutoForm extends Component {
         }
       ]
     };
-  }
-
-  limpaProtocolos() {
-    this.setState({ protocolos: [] });
   }
 
   passouSegundoStep(values) {
@@ -161,11 +153,9 @@ class AtualizacaoProdutoForm extends Component {
         erro: true
       });
     }
-    let protocolos = await getProtocolosDietaEspecial();
     let marcas = await getMarcasProdutos();
     let fabricantes = await getFabricantesProdutos();
     let response = await getInformacoesGrupo();
-    let arrayProtocolos = this.montaOptions(protocolos.data.results);
     let arrayMarcas = this.montaOptions(marcas.data.results);
     let arrayFabricantes = this.montaOptions(fabricantes.data.results);
     informacoesNutricionais = response.data.results.map(item => {
@@ -173,7 +163,6 @@ class AtualizacaoProdutoForm extends Component {
       return item;
     });
     this.setState({
-      arrayProtocolos,
       arrayMarcas,
       arrayFabricantes,
       produto,
@@ -184,27 +173,20 @@ class AtualizacaoProdutoForm extends Component {
 
   componentDidUpdate() {
     const {
-      arrayProtocolos,
       produto,
       erro,
       loading,
-      protocolos,
       arrayMarcas,
       arrayFabricantes
     } = this.state;
     if (
-      arrayProtocolos.length > 0 &&
       arrayMarcas.length > 0 &&
       arrayFabricantes.length > 0 &&
       produto !== null &&
       !erro &&
       loading
     ) {
-      produto.protocolos.map(protocolo => {
-        protocolos.push(`${protocolo.uuid}`);
-      });
-
-      this.setState({ loading: false, protocolos });
+      this.setState({ loading: false });
     }
   }
 
@@ -225,11 +207,9 @@ class AtualizacaoProdutoForm extends Component {
     const {
       page,
       wizardSteps,
-      arrayProtocolos,
       loading,
       erro,
       produto,
-      protocolos,
       arrayMarcas,
       arrayFabricantes,
       primeiroStep,
@@ -311,12 +291,9 @@ class AtualizacaoProdutoForm extends Component {
               {page === 0 && (
                 <WizardFormPrimeiraPagina
                   onSubmit={this.nextPage}
-                  limpaProtocolos={this.limpaProtocolos}
                   passouPrimeiroStep={this.passouPrimeiroStep}
-                  arrayProtocolos={arrayProtocolos}
                   arrayMarcas={arrayMarcas}
                   arrayFabricantes={arrayFabricantes}
-                  protocolos={protocolos}
                   produto={produto}
                   loading={loading}
                   primeiroStep={primeiroStep}

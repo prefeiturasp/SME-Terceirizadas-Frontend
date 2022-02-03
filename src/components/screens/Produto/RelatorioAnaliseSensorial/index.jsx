@@ -261,15 +261,6 @@ class RelatorioAnaliseSensorial extends Component {
                         : "NÃO"}
                     </p>
                   </div>
-
-                  {homologacao.produto.eh_para_alunos_com_dieta && (
-                    <div>
-                      <label>Nome dos protocolos de dieta especial</label>
-                      {homologacao.produto.protocolos.map(
-                        this.exibir_protocolo_dieta
-                      )}
-                    </div>
-                  )}
                 </section>
 
                 <section className="duas-colunas">
