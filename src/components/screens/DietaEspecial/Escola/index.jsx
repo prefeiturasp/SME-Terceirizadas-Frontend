@@ -410,10 +410,11 @@ class solicitacaoDietaEspecial extends Component {
                       className="form-control"
                       minDate={dateDelta(-360 * 99)}
                       maxDate={dateDelta(-1)}
+                      validate={required}
+                      visitedError={true}
                       showMonthDropdown
                       showYearDropdown
-                      required
-                      validate={required}
+                      writable
                     />
                   </div>
                 </div>
