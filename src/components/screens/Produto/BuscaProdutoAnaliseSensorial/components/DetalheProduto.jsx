@@ -29,12 +29,6 @@ export default class DetalheProduto extends Component {
             </label>
             <p>{produto.eh_para_alunos_com_dieta ? "SIM" : "NÃO"}</p>
           </div>
-          {produto.eh_para_alunos_com_dieta && (
-            <div>
-              <label>Nome dos protocolos de dieta especial</label>
-              {produto.protocolos.map(this.exibir_protocolo_dieta)}
-            </div>
-          )}
         </section>
 
         <section>
