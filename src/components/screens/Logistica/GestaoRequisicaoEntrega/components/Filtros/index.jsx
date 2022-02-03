@@ -31,7 +31,8 @@ export default ({
       "CANCELADA",
       "DISTRIBUIDOR_CONFIRMA",
       "DISTRIBUIDOR_SOLICITA_ALTERACAO",
-      "DILOG_ACEITA_ALTERACAO"
+      "DILOG_ACEITA_ALTERACAO",
+      "AGUARDANDO_CANCELAMENTO"
     ];
   };
 
@@ -111,6 +112,10 @@ export default ({
                     { uuid: "", nome: "Selecione" },
                     { uuid: undefined, nome: "Todos" },
                     { uuid: "DILOG_ENVIA", nome: "Recebida" },
+                    {
+                      uuid: "AGUARDANDO_CANCELAMENTO",
+                      nome: "Aguardando cancelamento"
+                    },
                     { uuid: "CANCELADA", nome: "Cancelada" },
                     { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
                     { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },

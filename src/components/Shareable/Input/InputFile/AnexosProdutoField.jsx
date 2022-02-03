@@ -122,7 +122,7 @@ export class AnexosProdutoField extends Component {
                 <a
                   rel="noopener noreferrer"
                   target="_blank"
-                  href={file.arquivo}
+                  onClick={() => this.openFile(file)}
                   className="link ml-1 mr-5"
                 >
                   {file.nome}

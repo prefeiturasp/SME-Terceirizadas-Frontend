@@ -53,7 +53,7 @@ export default class ModalResponderReclamacao extends Component {
         onHide={closeModal}
       >
         <Modal.Header className="border-0">
-          <Modal.Title>Responder reclamação de produto</Modal.Title>
+          <Modal.Title>Responder Questionamento da CODAE</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form

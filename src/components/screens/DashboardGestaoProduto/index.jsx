@@ -124,7 +124,8 @@ export default class DashboardGestaoProduto extends Component {
                           cardType={card.style}
                           solicitations={formataCards(
                             card.items,
-                            this.apontaParaFormularioDeAlteracao(card.titulo)
+                            this.apontaParaFormularioDeAlteracao(card.titulo),
+                            card.titulo
                           )}
                           icon={card.icon}
                           href={`/${GESTAO_PRODUTO}/${card.rota}`}
@@ -138,7 +139,10 @@ export default class DashboardGestaoProduto extends Component {
                             cardType={card2.style}
                             solicitations={formataCards(
                               card2.items,
-                              this.apontaParaFormularioDeAlteracao(card2.titulo)
+                              this.apontaParaFormularioDeAlteracao(
+                                card2.titulo
+                              ),
+                              card.titulo
                             )}
                             icon={card2.icon}
                             href={`/${GESTAO_PRODUTO}/${card2.rota}`}

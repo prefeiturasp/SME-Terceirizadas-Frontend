@@ -63,6 +63,8 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
       {exibirReclamacaoUE && (
         <LeafItem to={`/${GESTAO_PRODUTO}/responder-questionamento-ue`}>
           Responder Questionamento
+          <br />
+          da CODAE
         </LeafItem>
       )}
       {exibirReclamacaoNutrisupervisao && (
@@ -70,6 +72,8 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
           to={`/${GESTAO_PRODUTO}/responder-questionamento-nutrisupervisor`}
         >
           Responder Questionamento
+          <br />
+          da CODAE
         </LeafItem>
       )}
       {exibirAvaliarReclamacao && (
@@ -84,7 +88,9 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
       )}
       {exibirResponderReclamacao && (
         <LeafItem to={`/${GESTAO_PRODUTO}/responder-reclamacao/consulta`}>
-          Responder Reclamação
+          Responder Questionamento
+          <br />
+          da CODAE
         </LeafItem>
       )}
       <SubMenu

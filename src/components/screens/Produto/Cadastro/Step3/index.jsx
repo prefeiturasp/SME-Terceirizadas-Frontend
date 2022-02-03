@@ -34,6 +34,22 @@ class Step3 extends Component {
     });
   };
 
+  openFile = file => {
+    if (file.arquivo && file.arquivo.startsWith("http")) {
+      window.open(file.arquivo);
+    } else if (file.nome.includes(".doc")) {
+      const link = document.createElement("a");
+      link.href = file.base64;
+      link.download = file.nome;
+      link.click();
+    } else {
+      let pdfWindow = window.open("");
+      pdfWindow.document.write(
+        "<iframe width='100%' height='100%' src='" + file.base64 + "'></iframe>"
+      );
+    }
+  };
+
   maxLengthCaracteres = max => value =>
     value && value.length > max
       ? `Limite máximo de ${max} caracteres`

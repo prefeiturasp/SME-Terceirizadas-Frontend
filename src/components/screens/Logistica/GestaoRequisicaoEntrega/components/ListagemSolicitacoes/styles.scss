@@ -101,6 +101,42 @@
       font-style: normal;
       font-weight: normal;
       border-bottom: 1px solid #e9eaea;
+      margin-top: 0;
+
+      .title-guias {
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 22px;
+        color: #198459;
+        padding-bottom: 14px;
+      }
+
+      .button-row {
+        display: flex;
+        button {
+          margin-left: auto;
+        }
+      }
+
+      .grid-table {
+        line-height: 12px;
+        height: 36px;
+        grid-template-columns: 0.25fr 0.5fr 0.25fr;
+        border-left: 1px solid #e9eaea;
+
+        div {
+          border-right: 1px solid #e9eaea;
+        }
+      }
+
+      .header-table {
+        background: #f3f3f3;
+        color: #42474a;
+      }
+
+      .body-table:hover {
+        background: #f9f9f9;
+      }
     }
 
     .acoes {
