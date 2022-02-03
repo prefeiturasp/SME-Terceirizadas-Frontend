@@ -169,12 +169,12 @@ class solicitacaoDietaEspecial extends Component {
 
     if (!resposta) return;
 
-    if (!resposta.count) {
-      change("aluno_nao_matriculado_data.nome_escola", "");
-      toastError("Código EOL informado inválido");
-    } else {
+    if (resposta && resposta.results.length) {
       const escola = resposta.results[0];
       change("aluno_nao_matriculado_data.nome_escola", escola.nome);
+    } else {
+      change("aluno_nao_matriculado_data.nome_escola", "");
+      toastError("Código EOL informado inválido");
     }
   };
 
