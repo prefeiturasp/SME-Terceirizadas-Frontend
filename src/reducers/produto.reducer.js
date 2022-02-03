@@ -19,11 +19,6 @@ export default function reducer(state = {}, action) {
           action.data.marca !== null ? action.data.marca.nome : "";
         action.data.fabricante =
           action.data.fabricante !== null ? action.data.fabricante.nome : "";
-        let protocolos = [];
-        action.data.protocolos.forEach(protocolo => {
-          protocolos.push(protocolo.nome);
-        });
-        action.data.protocolos = protocolos;
         if (
           action.data.especificacoes &&
           action.data.especificacoes.length > 0
