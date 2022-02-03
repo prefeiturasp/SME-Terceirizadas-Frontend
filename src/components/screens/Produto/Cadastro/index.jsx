@@ -11,7 +11,6 @@ import Step3 from "./Step3";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  getProtocolosDietaEspecial,
   submitProduto,
   getInformacoesGrupo,
   updateProduto,
@@ -33,7 +32,6 @@ class cadastroProduto extends Component {
     super(props);
     this.state = {
       rascunhos: [],
-      protocolosDieta: [],
       currentStep: 0,
       wizardSteps: [
         {
@@ -55,7 +53,6 @@ class cadastroProduto extends Component {
 
       payload: {
         uuid: null,
-        protocolos: [],
         nome_de_produto_edital: null,
         marca: null,
         fabricante: null,
@@ -76,7 +73,6 @@ class cadastroProduto extends Component {
         porcao: null,
         unidade_caseira: null
       },
-      renderizaFormDietaEspecial: false,
       renderizaFormAlergenicos: false,
       arrayErrosStep1: [],
       concluidoStep1: false,
@@ -89,7 +85,6 @@ class cadastroProduto extends Component {
     };
     this.exibeFormularioInicial = this.exibeFormularioInicial.bind(this);
     this.setaAtributosPrimeiroStep = this.setaAtributosPrimeiroStep.bind(this);
-    this.mostrarFormDieta = this.mostrarFormDieta.bind(this);
     this.mostrarFormAlergenico = this.mostrarFormAlergenico.bind(this);
     this.setArrayErrosStep1 = this.setArrayErrosStep1.bind(this);
     this.setDefaultNomeDeProdutosEditalStep1 = this.setDefaultNomeDeProdutosEditalStep1.bind(
@@ -163,11 +158,6 @@ class cadastroProduto extends Component {
     produto.marca = produtoRaw.marca !== null ? produtoRaw.marca.uuid : null;
     produto.fabricante =
       produtoRaw.fabricante !== null ? produtoRaw.fabricante.uuid : null;
-    let protocolos = [];
-    produtoRaw.protocolos.forEach(protocolo => {
-      protocolos.push(protocolo.uuid);
-    });
-    produto.protocolos = protocolos;
     let informacoes_nutricionais = [];
     produtoRaw.informacoes_nutricionais.forEach(informacaoNutricional => {
       informacoes_nutricionais.push({
@@ -183,7 +173,6 @@ class cadastroProduto extends Component {
     this.setState({
       renderBuscaProduto: false,
       payload: produto,
-      renderizaFormDietaEspecial: produtoRaw.eh_para_alunos_com_dieta,
       renderizaFormAlergenicos: produtoRaw.tem_aditivos_alergenicos
     });
   }
@@ -210,9 +199,7 @@ class cadastroProduto extends Component {
 
   componentDidMount = async () => {
     const infoAgrupada = await getInformacoesGrupo();
-    const response = await getProtocolosDietaEspecial();
     this.setState({
-      protocolosDieta: response.data.results,
       informacoesAgrupadas: infoAgrupada.data.results
     });
     this.getRascunhos();
@@ -221,12 +208,6 @@ class cadastroProduto extends Component {
   exibeFormularioInicial = () => {
     this.props.loadProduto(null);
     this.setState({ renderBuscaProduto: false });
-  };
-
-  mostrarFormDieta = value => {
-    this.setState({
-      renderizaFormDietaEspecial: value
-    });
   };
 
   mostrarFormAlergenico = value => {
@@ -274,7 +255,6 @@ class cadastroProduto extends Component {
   };
 
   setaAtributosPrimeiroStep = ({
-    protocolos,
     nome_de_produto_edital,
     marca,
     fabricante,
@@ -288,7 +268,6 @@ class cadastroProduto extends Component {
   }) => {
     let { payload } = this.state;
 
-    payload.protocolos = protocolos;
     payload.nome_de_produto_edital = nome_de_produto_edital;
     payload.marca = marca;
     payload.fabricante = fabricante;
@@ -489,7 +468,6 @@ class cadastroProduto extends Component {
       currentStep,
       informacoesAgrupadas,
       renderBuscaProduto,
-      protocolosDieta,
       renderizaFormDietaEspecial,
       renderizaFormAlergenicos,
       payload,
@@ -530,10 +508,8 @@ class cadastroProduto extends Component {
                 />
                 {currentStep === 0 && (
                   <Step1
-                    protocolosDieta={protocolosDieta}
                     setaAtributosPrimeiroStep={this.setaAtributosPrimeiroStep}
                     renderizaFormDietaEspecial={renderizaFormDietaEspecial}
-                    mostrarFormDieta={this.mostrarFormDieta}
                     mostrarFormAlergenico={this.mostrarFormAlergenico}
                     renderizaFormAlergenicos={renderizaFormAlergenicos}
                     setArrayErrosStep1={this.setArrayErrosStep1}
