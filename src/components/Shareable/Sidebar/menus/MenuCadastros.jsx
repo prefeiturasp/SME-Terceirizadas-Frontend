@@ -52,9 +52,6 @@ const MenuCadastros = () => {
           <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${FAIXAS_ETARIAS}`}>
             Faixas Etárias
           </LeafItem>
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${CONSULTA_KITS}`}>
-            Consulta de Kits
-          </LeafItem>
         </>
       )}
     </Menu>
