@@ -8,8 +8,7 @@ import {
   EDITAIS_CONTRATOS,
   TIPOS_ALIMENTACAO,
   FAIXAS_ETARIAS,
-  HORARIO_COMBOS_ALIMENTACAO,
-  CONSULTA_KITS
+  HORARIO_COMBOS_ALIMENTACAO
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
