@@ -301,6 +301,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     onClick={() => {
                       this.dietaEspecialCheck("1");
                     }}
+                    disabled={true}
                     required
                   />
                   <span className="checkmark" />
@@ -315,6 +316,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     onClick={() => {
                       this.dietaEspecialCheck("0");
                     }}
+                    disabled={true}
                   />
                   <span className="checkmark" />
                 </label>
@@ -333,6 +335,7 @@ class WizardFormPrimeiraPagina extends React.Component {
               name="nome"
               onSelect={this.addNome}
               validate={required}
+              disabled={true}
             >
               {nomeDeProdutosEditalArray}
             </Field>

@@ -234,6 +234,15 @@ export class SolicitacaoDeKitLanche extends Component {
     if (values.confirmar) {
       solicitacao_kit_lanche.confirmar = values.confirmar;
     }
+    if (
+      solicitacao_kit_lanche.quantidade_alunos <
+      solicitacao_kit_lanche.alunos_com_dieta_especial_participantes.length
+    ) {
+      toastError(
+        "O número de alunos selecionados com Dieta Especial é maior que a quantidade de alunos prevista para o evento."
+      );
+      return;
+    }
     try {
       validateFormKitLanchePasseio(values);
       if (ehCei) {
