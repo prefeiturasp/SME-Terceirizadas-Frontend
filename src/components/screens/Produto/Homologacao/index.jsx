@@ -36,7 +36,6 @@ import ModalCancelarHomologacaoProduto from "./components";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
 import {
   corrigeLinkAnexo,
-  stringSeparadaPorVirgulas,
   usuarioEhCODAEGestaoProduto,
   usuarioEhTerceirizada
 } from "../../../../helpers/utilities";
@@ -467,18 +466,6 @@ class HomologacaoProduto extends Component {
                   </p>
                 </div>
               </div>
-              {produto.eh_para_alunos_com_dieta && (
-                <Fragment>
-                  <div className="row">
-                    <div className="col-12 report-label-value">
-                      <p>Protocolos</p>
-                      <p className="value">
-                        {stringSeparadaPorVirgulas(produto.protocolos, "nome")}
-                      </p>
-                    </div>
-                  </div>
-                </Fragment>
-              )}
               <div className="row">
                 <div className="col-12 report-label-value">
                   <p>Nome do Produto</p>

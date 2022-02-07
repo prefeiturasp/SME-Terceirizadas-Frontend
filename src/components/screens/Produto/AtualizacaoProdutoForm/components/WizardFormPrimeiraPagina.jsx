@@ -2,11 +2,7 @@ import React from "react";
 import { Field, reduxForm } from "redux-form";
 import { Select } from "antd";
 import { ASelect } from "components/Shareable/MakeField";
-import {
-  required,
-  requiredMultiselect,
-  maxLengthProduto
-} from "helpers/fieldValidators";
+import { required, maxLengthProduto } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   getNomeDeProdutosEdital,
@@ -214,12 +210,9 @@ class WizardFormPrimeiraPagina extends React.Component {
 
   dietaEspecialCheck = valor => {
     let { produtoForm } = this.state;
-    const { change } = this.props;
     produtoForm.eh_para_alunos_com_dieta = valor === "1" ? true : false;
     if (valor === "0") {
       this.setState({ produtoForm });
-      change("protocolos", []);
-      this.props.limpaProtocolos();
     } else if (valor === "1") {
       this.setState({ produtoForm });
     }
@@ -277,7 +270,7 @@ class WizardFormPrimeiraPagina extends React.Component {
   };
 
   render() {
-    const { handleSubmit, arrayProtocolos, valuesForm } = this.props;
+    const { handleSubmit, valuesForm } = this.props;
 
     const {
       produtoForm,
@@ -327,29 +320,6 @@ class WizardFormPrimeiraPagina extends React.Component {
                 </label>
               </div>
             </article>
-
-            {produtoForm !== null && produtoForm.eh_para_alunos_com_dieta && (
-              <article>
-                <label className="label-formulario-produto">
-                  Nome do protocolo de dieta especial
-                </label>
-                <Field
-                  component={ASelect}
-                  showSearch
-                  filterOption={(inputValue, option) =>
-                    option.props.children
-                      .toString()
-                      .toLowerCase()
-                      .includes(inputValue.toLowerCase())
-                  }
-                  mode="multiple"
-                  name="protocolos"
-                  validate={requiredMultiselect}
-                >
-                  {arrayProtocolos}
-                </Field>
-              </article>
-            )}
           </section>
 
           <div className="section-produto-nome">
