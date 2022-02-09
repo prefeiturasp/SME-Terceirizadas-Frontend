@@ -17,19 +17,23 @@ export class ModalNaoValidarSolicitacao extends Component {
   async naoValidarSolicitacao(uuid) {
     const { justificativa, motivoCancelamento } = this.state;
     const { endpoint, tipoSolicitacao } = this.props;
-    const resp = await endpoint(
-      uuid,
-      `${motivoCancelamento} - ${justificativa}`,
-      tipoSolicitacao
-    );
-    if (resp.status === HTTP_STATUS.OK) {
-      this.props.closeModal();
-      toastSuccess("Solicitação não validada com sucesso!");
-      if (this.props.loadSolicitacao) {
-        this.props.loadSolicitacao(uuid, tipoSolicitacao);
-      }
+    if (justificativa === "" || justificativa === undefined) {
+      toastError("O campo Justificativa é obrigatório");
     } else {
-      toastError(resp.detail);
+      const resp = await endpoint(
+        uuid,
+        `${motivoCancelamento} - ${justificativa}`,
+        tipoSolicitacao
+      );
+      if (resp.status === HTTP_STATUS.OK) {
+        this.props.closeModal();
+        toastSuccess("Solicitação não validada com sucesso!");
+        if (this.props.loadSolicitacao) {
+          this.props.loadSolicitacao(uuid, tipoSolicitacao);
+        }
+      } else {
+        toastError(resp.detail);
+      }
     }
   }
   componentDidUpdate(prevProps) {
@@ -56,6 +60,7 @@ export class ModalNaoValidarSolicitacao extends Component {
                 name="motivo_cancelamento"
                 label="Motivo"
                 //TODO: criar campos a mais no backend?
+                naoDesabilitarPrimeiraOpcao
                 options={[
                   {
                     nome: "Sem motivo",
@@ -75,6 +80,8 @@ export class ModalNaoValidarSolicitacao extends Component {
                 placeholder="Obrigatório"
                 label="Justificativa"
                 name="justificativa"
+                validate={required}
+                required
               />
             </div>
           </div>
