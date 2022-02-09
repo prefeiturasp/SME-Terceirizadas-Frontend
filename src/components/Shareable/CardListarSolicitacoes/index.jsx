@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { Field } from "redux-form";
 import { NavLink } from "react-router-dom";
-import { Checkbox } from "../Checkbox";
 import "./style.scss";
 import { RELATORIO } from "../../../configs/constants";
 import { caminhoURL } from "../CardStatusDeSolicitacao/helper";
@@ -16,14 +14,7 @@ export class CardListarSolicitacoes extends Component {
   }
 
   render() {
-    const {
-      titulo,
-      tipo,
-      selecionarTodos,
-      solicitacoes,
-      icone,
-      onCheckClicked
-    } = this.props;
+    const { titulo, tipo, solicitacoes, icone } = this.props;
     return (
       <Fragment>
         <div className={`card card-list-panel card-colored ${tipo} mb-4 mr-4`}>
@@ -34,41 +25,24 @@ export class CardListarSolicitacoes extends Component {
           </div>
           <hr />
           <div className="card-body card-body-sme">
-            <Field
-              className="small"
-              component={Checkbox}
-              name="selecionar_todos"
-              onClick={() => selecionarTodos(solicitacoes)}
-            >
-              <p className="data ml-4">{"Selecionar todos"}</p>
-            </Field>
             <div className="card-listagem-solicitacoes">
               {solicitacoes.map((value, key) => {
                 let conferida = conferidaClass(value, titulo);
                 return (
                   <div key={key} className="row">
                     <div className="col-9">
-                      <Field
-                        className="small"
-                        component={Checkbox}
-                        name={`check_${key}`}
-                        onClick={() => onCheckClicked(solicitacoes, key)}
+                      <NavLink
+                        key={key}
+                        to={
+                          value.link ||
+                          `${caminhoURL(value.tipo_doc)}/${RELATORIO}?uuid=${
+                            value.uuid
+                          }&ehInclusaoContinua=${value.tipo_doc ===
+                            "INC_ALIMENTA_CONTINUA"}`
+                        }
                       >
-                        <NavLink
-                          key={key}
-                          to={
-                            value.link ||
-                            `${caminhoURL(value.tipo_doc)}/${RELATORIO}?uuid=${
-                              value.uuid
-                            }&ehInclusaoContinua=${value.tipo_doc ===
-                              "INC_ALIMENTA_CONTINUA"}`
-                          }
-                        >
-                          <p className={`data ml-4 ${conferida}`}>
-                            {value.text}
-                          </p>
-                        </NavLink>
-                      </Field>
+                        <p className={`data ml-4 ${conferida}`}>{value.text}</p>
+                      </NavLink>
                     </div>
                     <span className={`date-time col-3 text-right ${conferida}`}>
                       {value.date}
