@@ -431,10 +431,17 @@ export const getDashboardGestaoProdutos = async () => {
   return await axios.get(`/painel-gerencial-homologacoes-produtos/dashboard/`);
 };
 
-export const getHomologacoesDeProdutoPorStatus = async status => {
-  return await axios.get(
-    `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`
-  );
+export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
+  const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
+  if (page > 0) {
+    return await axios.get(url, {
+      params: {
+        page: page
+      }
+    });
+  }
+
+  return await axios.get(url);
 };
 
 export const getTodosOsProdutos = async () => {
