@@ -16,7 +16,6 @@
 
 .card-listagem-solicitacoes {
   overflow-x: hidden;
-  height: 300px;
   &::-webkit-scrollbar {
     width: 3px;
   }
@@ -30,7 +29,6 @@
 
 .card-list-panel {
   overflow: auto;
-  height: 380px;
   border: none !important;
   i {
     padding: 0 10px;
