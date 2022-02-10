@@ -62,6 +62,13 @@ export class StatusSolicitacoes extends Component {
           link: "..."
         }
       ],
+      solicitacoesCardRespQuest: [
+        {
+          text: "...",
+          date: "...",
+          link: "..."
+        }
+      ],
       originalCount: null
     };
 
@@ -71,6 +78,7 @@ export class StatusSolicitacoes extends Component {
   onPesquisarChanged(values) {
     let solicitacoesFiltrados = this.state.solicitacoes;
     let todasSolicitacoesCardAtual = this.state.todasSolicitacoesCardAtual;
+    let solicitacoesCardRespQuest = this.state.solicitacoesCardRespQuest;
     if (values.lote && values.lote.length > 0) {
       solicitacoesFiltrados = this.filtrarLote(
         solicitacoesFiltrados,
@@ -83,22 +91,45 @@ export class StatusSolicitacoes extends Component {
         values.status
       );
     }
-    if (values.titulo && values.titulo.length > 0) {
-      solicitacoesFiltrados = this.filtrarNome(
-        todasSolicitacoesCardAtual,
-        values.titulo
-      );
-      this.setState({
-        count: solicitacoesFiltrados.length,
-        currentPage: 1
-      });
-    }
-    if (values.titulo === undefined) {
-      solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
-      this.setState({
-        count: this.state.originalCount,
-        currentPage: this.state.originalCurrentPage
-      });
+    if (
+      this.props.titulo !==
+      GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    ) {
+      if (values.titulo && values.titulo.length > 0) {
+        solicitacoesFiltrados = this.filtrarNome(
+          todasSolicitacoesCardAtual,
+          values.titulo
+        );
+        this.setState({
+          count: 1,
+          currentPage: 1
+        });
+      }
+      if (values.titulo === undefined) {
+        solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
+        this.setState({
+          count: this.state.originalCount,
+          currentPage: this.state.originalCurrentPage
+        });
+      }
+    } else {
+      if (values.titulo && values.titulo.length > 0) {
+        solicitacoesFiltrados = this.filtrarNome(
+          solicitacoesCardRespQuest,
+          values.titulo
+        );
+        this.setState({
+          count: 1,
+          currentPage: 1
+        });
+      }
+      if (values.titulo === undefined) {
+        solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
+        this.setState({
+          count: this.state.originalCount,
+          currentPage: this.state.originalCurrentPage
+        });
+      }
     }
     this.setState({ solicitacoesFiltrados });
   }
@@ -132,6 +163,7 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
+    const { solicitacoesCardRespQuest, pageSize } = this.state;
 
     this.setState({
       originalCurrentPage: paginaAtual
@@ -139,6 +171,23 @@ export class StatusSolicitacoes extends Component {
 
     const listaStatus = Array.isArray(status) ? status : [status];
     let solicitacoes = [];
+
+    if (
+      this.props.titulo ===
+      GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    ) {
+      const solicitacoesPaginaAtual = solicitacoesCardRespQuest.slice(
+        paginaAtual * pageSize - pageSize,
+        paginaAtual * pageSize
+      );
+      this.setState({
+        solicitacoesPaginaAtual: solicitacoesPaginaAtual,
+        solicitacoesFiltrados: solicitacoesPaginaAtual,
+        currentPage: paginaAtual,
+        loading: false
+      });
+      return;
+    }
 
     try {
       this.setState({
@@ -248,16 +297,18 @@ export class StatusSolicitacoes extends Component {
       this.props.titulo ===
       GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ) {
+      let solicitacoesCardRespQuest = [];
       if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
-        solicitacoes = solicitacoes
+        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
           .filter(
             solicitacao =>
               ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
               solicitacao.status
           )
           .sort(ordenaPorDate);
+        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
       } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
-        solicitacoes = solicitacoes
+        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
           .filter(
             solicitacao =>
               nomeUsuario ===
@@ -266,15 +317,22 @@ export class StatusSolicitacoes extends Component {
                 solicitacao.status
           )
           .sort(ordenaPorDate);
+        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
       } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
-        solicitacoes = solicitacoes
+        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
           .filter(
             solicitacao =>
               ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
               solicitacao.status
           )
           .sort(ordenaPorDate);
+        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
       }
+      this.setState({
+        count: solicitacoesCardRespQuest.length,
+        originalCount: solicitacoesCardRespQuest.length,
+        solicitacoesCardRespQuest
+      });
     } else {
       solicitacoes = solicitacoes.sort(ordenaPorDate);
     }
