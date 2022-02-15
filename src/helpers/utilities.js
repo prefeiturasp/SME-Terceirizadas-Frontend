@@ -418,6 +418,11 @@ export const usuarioEhCODAEGestaoAlimentacao = () => {
   return tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA;
 };
 
+export const usuarioEhCODAENutriManifestacao = () => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  return tipoPerfil === TIPO_PERFIL.NUTRICAO_MANIFESTACAO;
+};
+
 export const usuarioEhCoordenadorCODAE = () => {
   return (
     localStorage.getItem("perfil") ===
