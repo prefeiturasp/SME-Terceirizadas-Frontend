@@ -11,13 +11,15 @@ import {
   usuarioEhDRE,
   usuarioEhEscola,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhCODAEGestaoAlimentacao
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
 const MenuDietaEspecial = () => {
   const exibePainelInicial =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
     usuarioEhEscola() ||
@@ -25,6 +27,7 @@ const MenuDietaEspecial = () => {
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
