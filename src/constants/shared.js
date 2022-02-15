@@ -60,7 +60,8 @@ export const TIPO_PERFIL = {
   DIETA_ESPECIAL: `"dieta_especial"`,
   GESTAO_PRODUTO: `"gestao_produto"`,
   TERCEIRIZADA: `"terceirizada"`,
-  LOGISTICA: `"logistica_abastecimento"`
+  LOGISTICA: `"logistica_abastecimento"`,
+  NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`
 };
 
 export const TIPO_USUARIO = {

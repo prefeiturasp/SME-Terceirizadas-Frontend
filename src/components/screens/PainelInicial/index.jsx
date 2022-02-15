@@ -10,6 +10,7 @@ import {
   usuarioEhTerceirizada,
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhNutricionistaSupervisao,
@@ -38,6 +39,7 @@ const PainelInicial = ({ history }) => {
           </Col>
         )}
       {(usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhCODAENutriManifestacao() ||
         usuarioEhCODAEDietaEspecial() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhTerceirizada() ||

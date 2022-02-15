@@ -94,6 +94,7 @@ import {
   usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
@@ -666,6 +667,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -680,6 +682,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -694,6 +697,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -708,6 +712,7 @@ const routesConfig = [
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
