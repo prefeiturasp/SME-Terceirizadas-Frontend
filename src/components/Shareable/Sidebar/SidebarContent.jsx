@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import {
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
@@ -60,6 +61,7 @@ export const SidebarContent = () => {
       usuarioEhNutricionistaSupervisao());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||

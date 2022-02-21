@@ -21,7 +21,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
-import { statusEnum } from "constants/shared";
+import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
 import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
@@ -240,7 +240,10 @@ const Relatorio = ({ visao }) => {
                 visao === ESCOLA &&
                 !dietaCancelada &&
                 dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
-                tipoUsuario !== '"gestao_alimentacao_terceirizada"' && (
+                ![
+                  TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+                  TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+                ].includes(tipoUsuario) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}
                     onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
