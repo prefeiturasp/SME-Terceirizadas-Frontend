@@ -70,6 +70,7 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
