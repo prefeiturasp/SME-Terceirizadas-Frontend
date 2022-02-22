@@ -25,6 +25,7 @@ const PainelInicial = ({ history }) => {
     <Row className="mt-3" gutter={[16, 16]}>
       {exibeMenuValidandoAmbiente &&
         (usuarioEhCODAEGestaoAlimentacao() ||
+          usuarioEhCODAENutriManifestacao() ||
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
           usuarioEhNutricionistaSupervisao() ||
@@ -56,6 +57,7 @@ const PainelInicial = ({ history }) => {
       )}
 
       {(usuarioEhQualquerCODAE() ||
+        usuarioEhCODAENutriManifestacao() ||
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||

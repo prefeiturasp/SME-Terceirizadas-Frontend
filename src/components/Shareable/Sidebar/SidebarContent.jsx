@@ -55,6 +55,7 @@ export const SidebarContent = () => {
   const exibirGestaoAlimentacao =
     exibeMenuValidandoAmbiente &&
     (usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhTerceirizada() ||
@@ -69,6 +70,7 @@ export const SidebarContent = () => {
     usuarioEhTerceirizada();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||

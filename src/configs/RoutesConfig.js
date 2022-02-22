@@ -23,9 +23,12 @@ import StatusSolicitacoesPendentesCODAEPage from "../pages/CODAE/Solicitacoes/St
 import StatusSolicitacoesRecusadasCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesRecusadasCODAEPage";
 import StatusSolicitacoesComQuestionamentosCODAEPage from "../pages/CODAE/Solicitacoes/StatusSolicitacoesComQuestionamentosCODAEPage";
 import StatusSolicitacoesAutorizadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutrisupervisaoPage";
+import StatusSolicitacoesAutorizadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesAutorizadasNutriManifestacaoPage";
 import StatusSolicitacoesCanceladasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutrisupervisaoPage";
+import StatusSolicitacoesCanceladasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesCanceladasNutriManifestacaoPage";
 import StatusSolicitacoesPendentesNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesPendentesNutrisupervisaoPage";
 import StatusSolicitacoesRecusadasNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutrisupervisaoPage";
+import StatusSolicitacoesRecusadasNutriManifestacaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesRecusadasNutriManifestacaoPage";
 import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
@@ -179,6 +182,7 @@ const routesConfig = [
       (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada()
   },
@@ -338,7 +342,8 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasCODAEPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_PENDENTES}`,
@@ -356,13 +361,15 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasCODAEPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasCODAEPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.CODAE}/${constants.INCLUSAO_ALIMENTACAO}`,
@@ -419,6 +426,28 @@ const routesConfig = [
     component: StatusSolicitacoesComQuestionamentosNutrisupervisaoPage,
     exact: false,
     tipoUsuario: usuarioEhNutricionistaSupervisao()
+  },
+  {
+    path: `/${constants.NUTRIMANIFESTACAO}/${
+      constants.SOLICITACOES_AUTORIZADAS
+    }`,
+    component: StatusSolicitacoesAutorizadasNutriManifestacaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhCODAENutriManifestacao()
+  },
+  {
+    path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_NEGADAS}`,
+    component: StatusSolicitacoesRecusadasNutriManifestacaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhCODAENutriManifestacao()
+  },
+  {
+    path: `/${constants.NUTRIMANIFESTACAO}/${
+      constants.SOLICITACOES_CANCELADAS
+    }`,
+    component: StatusSolicitacoesCanceladasNutriManifestacaoPage,
+    exact: false,
+    tipoUsuario: usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
@@ -870,6 +899,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -899,6 +929,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -965,6 +996,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
@@ -981,6 +1013,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
@@ -993,6 +1026,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
