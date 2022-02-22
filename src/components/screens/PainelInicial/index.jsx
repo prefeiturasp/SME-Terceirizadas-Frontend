@@ -57,6 +57,7 @@ const PainelInicial = ({ history }) => {
       )}
 
       {(usuarioEhQualquerCODAE() ||
+        usuarioEhCODAENutriManifestacao() ||
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||

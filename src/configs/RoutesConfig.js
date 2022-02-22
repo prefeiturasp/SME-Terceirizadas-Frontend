@@ -899,6 +899,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -928,6 +929,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -994,6 +996,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
@@ -1010,6 +1013,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
@@ -1022,6 +1026,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
