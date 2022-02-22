@@ -2,6 +2,7 @@ import { API_URL } from "../constants/config";
 import { AUTH_TOKEN, SOLICITACOES, SOLICITACOES_DIETA } from "./constants";
 
 const TODAS_SOLICITACOES_NUTRISUPERVISAO_URL = `${API_URL}/nutrisupervisao-solicitacoes`;
+const SOLICITACOES_NUTRIMANIFESTACAO_URL = `${API_URL}/nutrimanifestacao-solicitacoes`;
 
 // TODO: colocar essa função num arquivo separado, está sendo copiada/colada
 const retornoBase = async url => {
@@ -148,6 +149,58 @@ export const getSolicitacoesComQuestionamentoNutrisupervisao = async () => {
   const url = `${TODAS_SOLICITACOES_NUTRISUPERVISAO_URL}/${
     SOLICITACOES.QUESTIONAMENTOS
   }/`;
+
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesAutorizadasNutrimanifestacao = async () => {
+  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${
+    SOLICITACOES.AUTORIZADOS
+  }/`;
+
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesCanceladasNutrimanifestacao = async () => {
+  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${
+    SOLICITACOES.CANCELADOS
+  }/`;
+
+  const OBJ_REQUEST = {
+    headers: AUTH_TOKEN,
+    method: "GET"
+  };
+  try {
+    const result = await fetch(url, OBJ_REQUEST);
+    const json = await result.json();
+    return json.results;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getSolicitacoesNegadasNutrimanifestacao = async () => {
+  const url = `${SOLICITACOES_NUTRIMANIFESTACAO_URL}/${SOLICITACOES.NEGADOS}/`;
 
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
