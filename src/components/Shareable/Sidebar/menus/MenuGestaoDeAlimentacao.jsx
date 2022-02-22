@@ -12,6 +12,7 @@ import {
   SOLICITACAO_KIT_LANCHE,
   INVERSAO_CARDAPIO,
   SUSPENSAO_ALIMENTACAO,
+  NUTRIMANIFESTACAO,
   NUTRISUPERVISAO,
   TERCEIRIZADA,
   DRE,
@@ -22,6 +23,7 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
   usuarioEhEscola,
   usuarioEscolaEhGestaoMistaParceira,
@@ -38,6 +40,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     ? DRE
     : usuarioEhCODAEGestaoAlimentacao()
     ? CODAE
+    : usuarioEhCODAENutriManifestacao()
+    ? NUTRIMANIFESTACAO
     : usuarioEhNutricionistaSupervisao()
     ? NUTRISUPERVISAO
     : TERCEIRIZADA;
@@ -101,9 +105,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
             Questionamentos da CODAE
           </LeafItem>
         ) : (
-          <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
-            Aguardando autorização
-          </LeafItem>
+          !usuarioEhCODAENutriManifestacao() && (
+            <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
+              Aguardando autorização
+            </LeafItem>
+          )
         )}
 
         <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
