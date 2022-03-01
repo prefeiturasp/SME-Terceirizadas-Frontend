@@ -121,6 +121,7 @@ export const tipoDeStatus = status => {
     case "CODAE homologou":
       return "prosseguiu";
     case "CODAE não homologou":
+    case "CODAE cancelou análise sensorial":
       return "cancelado";
     case "CODAE pediu correção":
     case "Terceirizada respondeu questionamento":
