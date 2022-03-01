@@ -44,6 +44,7 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import TabelaEspecificacoesProduto from "components/Shareable/TabelaEspecificacoesProduto";
+import ModalCodaeCancelaAnaliseSensorial from "components/Shareable/ModalCodaeCancelaAnaliseSensorial";
 
 const {
   CODAE_HOMOLOGADO,
@@ -67,9 +68,15 @@ class HomologacaoProduto extends Component {
       ativo: false,
       acao: null,
       mostraModalCancelar: false,
-      terceirizadas: null
+      terceirizadas: null,
+      showCancelarAnaliseSensorialModal: false,
+      disableBotaoCancelar: false
     };
     this.closeModal = this.closeModal.bind(this);
+    this.closeCancelarAnaliseSensorialModal = this.closeCancelarAnaliseSensorialModal.bind(
+      this
+    );
+    this.setDisableBotaoCancelar = this.setDisableBotaoCancelar.bind(this);
   }
 
   closeModal = () => {
@@ -142,7 +149,8 @@ class HomologacaoProduto extends Component {
         status: response.data.status,
         logs: response.data.logs,
         ativo: this.checaStatus(response.data),
-        acao: null
+        acao: null,
+        disableBotaoCancelar: false
       });
     });
   };
@@ -222,6 +230,18 @@ class HomologacaoProduto extends Component {
     return this.state.logs;
   };
 
+  showCancelarAnaliseSensorialModal() {
+    this.setState({ showCancelarAnaliseSensorialModal: true });
+  }
+
+  closeCancelarAnaliseSensorialModal() {
+    this.setState({ showCancelarAnaliseSensorialModal: false });
+  }
+
+  setDisableBotaoCancelar() {
+    this.setState({ disableBotaoCancelar: true });
+  }
+
   render() {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
@@ -236,7 +256,9 @@ class HomologacaoProduto extends Component {
       logs,
       ativo,
       acao,
-      terceirizadas
+      terceirizadas,
+      showCancelarAnaliseSensorialModal,
+      disableBotaoCancelar
     } = this.state;
     const {
       necessita_analise_sensorial,
@@ -246,8 +268,21 @@ class HomologacaoProduto extends Component {
     const { ultima_homologacao } = produto !== null && produto;
     const logAnaliseSensorial =
       ultima_homologacao && ultima_homologacao.ultimo_log;
+
+    const handleClickBotaoCancela = () => {
+      this.showCancelarAnaliseSensorialModal();
+    };
+
     return (
       <div className="card">
+        <ModalCodaeCancelaAnaliseSensorial
+          showModal={showCancelarAnaliseSensorialModal}
+          produto={produto}
+          closeModal={this.closeCancelarAnaliseSensorialModal}
+          uuid={uuid}
+          loadSolicitacao={this.loadHomologacao}
+          setDisableBotaoCancelar={this.setDisableBotaoCancelar}
+        />
         <div className="card-body">
           {!produto ? (
             <div>Carregando...</div>
@@ -801,6 +836,21 @@ class HomologacaoProduto extends Component {
                           })
                         }
                         style={BUTTON_STYLE.GREEN}
+                      />
+                    </div>
+                  </div>
+                )}
+              {tipoPerfil === TIPO_PERFIL.GESTAO_PRODUTO &&
+                status === "CODAE_PEDIU_ANALISE_SENSORIAL" && (
+                  <div className="row">
+                    <div className="col-12 text-right pt-3">
+                      <Botao
+                        texto={"Cancelar"}
+                        className="mr-3"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => handleClickBotaoCancela()}
+                        style={BUTTON_STYLE.GREEN}
+                        disabled={disableBotaoCancelar}
                       />
                     </div>
                   </div>
