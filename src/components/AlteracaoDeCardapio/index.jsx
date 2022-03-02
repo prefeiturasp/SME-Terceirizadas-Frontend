@@ -47,7 +47,7 @@ import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/h
 import "./style.scss";
 import { validateSubmit } from "./validacao";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
-import { TIPO_SOLICITACAO } from "constants/shared";
+import { PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import { InputText } from "components/Shareable/Input/InputText";
 
 const ENTER = 13;
@@ -846,32 +846,38 @@ class AlteracaoCardapio extends Component {
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
                   />
-                  <div className="opcao-data">Ou</div>
-                  <Field
-                    component={InputComData}
-                    name="data_inicial"
-                    label="De"
-                    minDate={
-                      this.state.motivo.nome === "Merenda Seca"
-                        ? moment().toDate()
-                        : proximos_dois_dias_uteis
-                    }
-                    maxDate={moment()
-                      .endOf("year")
-                      .toDate()}
-                    disabled={this.props.alterar_dia}
-                    onChange={value => this.obtemDataInicial(value)}
-                  />
-                  <Field
-                    component={InputComData}
-                    name="data_final"
-                    label="Até"
-                    disabled={dataInicial === null || this.props.alterar_dia}
-                    minDate={dataInicial}
-                    maxDate={moment()
-                      .endOf("year")
-                      .toDate()}
-                  />
+                  {localStorage.getItem("perfil") !== PERFIL.DIRETOR_CEI && (
+                    <>
+                      <div className="opcao-data">Ou</div>
+                      <Field
+                        component={InputComData}
+                        name="data_inicial"
+                        label="De"
+                        minDate={
+                          this.state.motivo.nome === "Merenda Seca"
+                            ? moment().toDate()
+                            : proximos_dois_dias_uteis
+                        }
+                        maxDate={moment()
+                          .endOf("year")
+                          .toDate()}
+                        disabled={this.props.alterar_dia}
+                        onChange={value => this.obtemDataInicial(value)}
+                      />
+                      <Field
+                        component={InputComData}
+                        name="data_final"
+                        label="Até"
+                        disabled={
+                          dataInicial === null || this.props.alterar_dia
+                        }
+                        minDate={dataInicial}
+                        maxDate={moment()
+                          .endOf("year")
+                          .toDate()}
+                      />
+                    </>
+                  )}
                 </section>
               </div>
               <div className="card-body">
