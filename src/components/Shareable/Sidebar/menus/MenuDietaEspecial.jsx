@@ -23,7 +23,8 @@ const MenuDietaEspecial = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
     usuarioEhEscola() ||
-    usuarioEhTerceirizada();
+    usuarioEhTerceirizada() ||
+    usuarioEhNutricionistaSupervisao();
   const exibeNovaSolicitacao = usuarioEhEscola();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
