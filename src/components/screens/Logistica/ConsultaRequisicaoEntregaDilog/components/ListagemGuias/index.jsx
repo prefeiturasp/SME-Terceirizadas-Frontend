@@ -203,7 +203,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
         </Modal.Body>
         <Modal.Footer>
           <Botao
-            texto="Cancelar"
+            texto="Fechar"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => {
               setShowModalGuia(false);
