@@ -3,7 +3,7 @@ const DESCRICAO_SOLICITACAO = {
   CODAE_NEGOU_PEDIDO: "Negada a Inclusão",
   CODAE_AUTORIZADO: "Autorizada",
   ESCOLA_SOLICITOU_INATIVACAO: "Solicitação de Cancelamento",
-  CODAE_NEGOU_INATIVACAO: "Negada o Cancelamento",
+  CODAE_NEGOU_INATIVACAO: "Negado o Cancelamento",
   CODAE_AUTORIZOU_INATIVACAO: "Cancelamento Autorizado",
   ESCOLA_CANCELOU: "Cancelada pela Unidade Educacional",
   TERMINADA_AUTOMATICAMENTE_SISTEMA:
@@ -12,7 +12,7 @@ const DESCRICAO_SOLICITACAO = {
     "Cancelamento para aluno não matriculado na Unidade Educacional",
   CANCELADO_ALUNO_NAO_PERTENCE_REDE:
     "Cancelamento para aluno não matriculado na rede municipal",
-  CODAE_NEGOU_CANCELAMENTO: "Negada o Cancelamento"
+  CODAE_NEGOU_CANCELAMENTO: "Negado o Cancelamento"
 };
 
 export const cabecalhoDieta = (dietaEspecial, card) => {
@@ -53,13 +53,16 @@ export const formataJustificativa = dietaEspecial => {
   let justificativa = null;
   if (dietaEspecial.status_solicitacao === "ESCOLA_CANCELOU") {
     if (dietaEspecial.logs.length === 2) {
-      justificativa =
-        dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa;
+      justificativa = dietaEspecial.logs[0].justificativa;
     } else {
       justificativa = dietaEspecial.logs[2].justificativa;
     }
   }
-  if (dietaEspecial.status_solicitacao === "ESCOLA_SOLICITOU_INATIVACAO") {
+  if (
+    ["ESCOLA_SOLICITOU_INATIVACAO", "CODAE_NEGOU_CANCELAMENTO"].includes(
+      dietaEspecial.status_solicitacao
+    )
+  ) {
     justificativa = dietaEspecial.logs.filter(
       log => log.status_evento_explicacao === "Escola solicitou inativação"
     )[0].justificativa;
