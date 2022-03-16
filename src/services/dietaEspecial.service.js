@@ -159,7 +159,7 @@ export const escolaInativaDietaEspecial = async (uuid, payload) => {
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/escola-solicita-inativacao/`;
   let status = 0;
   return fetch(url, {
-    method: "PATCH",
+    method: "POST",
     body: JSON.stringify(payload),
     headers: authToken
   })

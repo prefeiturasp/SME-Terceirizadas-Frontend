@@ -192,8 +192,12 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
-      dietaEspecial.tipo_solicitacao === "COMUM" &&
-      ["ESCOLA_SOLICITOU_INATIVACAO"].includes(dietaEspecial.status_solicitacao)
+      ["COMUM", "CANCELAMENTO_DIETA"].includes(
+        dietaEspecial.tipo_solicitacao
+      ) &&
+      ["ESCOLA_SOLICITOU_INATIVACAO", "CODAE_NEGOU_CANCELAMENTO"].includes(
+        dietaEspecial.status_solicitacao
+      )
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
@@ -274,10 +278,11 @@ const CorpoRelatorio = ({
             />
           ]}
           {card &&
-            ((["pendentes-aut"].includes(card) &&
-              ["ESCOLA_SOLICITOU_INATIVACAO"].includes(
-                dietaEspecial.status_solicitacao
-              )) ||
+            ((["pendentes-aut", "negadas"].includes(card) &&
+              [
+                "ESCOLA_SOLICITOU_INATIVACAO",
+                "CODAE_NEGOU_CANCELAMENTO"
+              ].includes(dietaEspecial.status_solicitacao)) ||
               (!["inativas", "inativas-temp"].includes(card) &&
                 dietaCancelada)) && [
               <JustificativaCancelamento
