@@ -37,7 +37,7 @@ export const FluxoDeStatus = props => {
       logFormatado = "Escola solicitou cancelamento";
     }
     if (log.status_evento_explicacao === "Escola cancelou") {
-      logFormatado = "NUTRICODAE autorizou cancelamento";
+      logFormatado = "CODAE autorizou cancelamento";
     }
     return logFormatado;
   });
@@ -54,7 +54,7 @@ export const FluxoDeStatus = props => {
           return "Escola solicitou cancelamento";
         }
         if (log.status_evento_explicacao === "Escola cancelou") {
-          return "NUTRICODAE autorizou cancelamento";
+          return "CODAE autorizou cancelamento";
         }
         return log.status_evento_explicacao;
       }
