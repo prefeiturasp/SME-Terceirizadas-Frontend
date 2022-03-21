@@ -38,24 +38,6 @@ export const fluxoDietaEspecialPartindoEscola = [
 
 export const fluxoDietaEspecialComInativacao = [
   {
-    titulo: "Solicitação Realizada",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "CODAE",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
-    titulo: "Terceirizada",
-    status: "",
-    criado_em: "",
-    usuario: null
-  },
-  {
     titulo: "Escola solicitou inativação",
     status: "",
     criado_em: "",
@@ -121,6 +103,7 @@ export const tipoDeStatus = status => {
     case "CODAE homologou":
       return "prosseguiu";
     case "CODAE não homologou":
+    case "CODAE cancelou análise sensorial":
       return "cancelado";
     case "CODAE pediu correção":
     case "Terceirizada respondeu questionamento":
@@ -161,10 +144,7 @@ export const tipoDeStatusClasse = status => {
     : "pending";
 };
 
-export const formatarFluxoDietaEspecial = logs => {
-  if (!logs[2].status_evento_explicacao.includes("Terceirizada")) {
-    fluxoDietaEspecialComInativacao.splice(2, 1);
-  }
+export const formatarFluxoDietaEspecial = () => {
   return fluxoDietaEspecialComInativacao;
 };
 

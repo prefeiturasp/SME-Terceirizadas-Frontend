@@ -13,18 +13,35 @@ export const FluxoDeStatus = props => {
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
     cloneListaDeStatus && existeAlgumStatusFimDeFluxo(cloneListaDeStatus);
-  const fluxoUtilizado =
+  let fluxoUtilizado =
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
+  let ultimoStatus = cloneListaDeStatus.slice(-1)[0];
+  let temStatusDeAnaliseSensorialCancelada = false;
+
+  if (
+    cloneListaDeStatus.length > fluxo.length &&
+    ultimoStatus.status_evento_explicacao === "Solicitação Realizada"
+  ) {
+    fluxoUtilizado.push({
+      status_evento_explicacao: "CODAE",
+      status: "",
+      criado_em: "",
+      usuario: null
+    });
+    temStatusDeAnaliseSensorialCancelada = true;
+  }
+
   const fluxoUtilizadoEFormatado = fluxoUtilizado.map(log => {
     let logFormatado = log;
     if (log.status_evento_explicacao === "Escola solicitou inativação") {
       logFormatado = "Escola solicitou cancelamento";
     }
     if (log.status_evento_explicacao === "Escola cancelou") {
-      logFormatado = "NUTRICODAE autorizou cancelamento";
+      logFormatado = "CODAE autorizou cancelamento";
     }
     return logFormatado;
   });
+
   const getTitulo = log => {
     if (log) {
       if (
@@ -37,12 +54,13 @@ export const FluxoDeStatus = props => {
           return "Escola solicitou cancelamento";
         }
         if (log.status_evento_explicacao === "Escola cancelou") {
-          return "NUTRICODAE autorizou cancelamento";
+          return "CODAE autorizou cancelamento";
         }
         return log.status_evento_explicacao;
       }
     }
   };
+
   return (
     <div className="w-100">
       <div className="row">
@@ -67,7 +85,8 @@ export const FluxoDeStatus = props => {
                   className={`${
                     tipoDeStatusClasse(novoStatus) !== "pending"
                       ? tipoDeStatusClasse(novoStatus)
-                      : fluxoNaoFinalizado
+                      : fluxoNaoFinalizado ||
+                        temStatusDeAnaliseSensorialCancelada
                       ? "pending"
                       : ""
                   }`}
