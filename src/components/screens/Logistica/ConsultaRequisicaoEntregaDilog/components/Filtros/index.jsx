@@ -17,9 +17,13 @@ import { debounce } from "lodash";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, setSolicitacoes }) => {
+export default ({
+  setFiltros,
+  setSolicitacoes,
+  initialValues,
+  setInitialValues
+}) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
-  const [initialValues, setInitialValues] = useState({});
 
   const onSubmit = async values => {
     const filtros = { ...values };

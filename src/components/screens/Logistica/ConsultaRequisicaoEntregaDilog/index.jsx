@@ -36,6 +36,7 @@ export default () => {
   const [carregandoExcel, setCarregandoExcel] = useState(false);
   const [selecionados, setSelecionados] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [initialValues, setInitialValues] = useState({});
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
@@ -124,8 +125,23 @@ export default () => {
   };
 
   useEffect(() => {
+    const queryString = window.location.search;
+
+    if (queryString) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const codigo = urlParams.get("numero_requisicao");
+      const filtro = {
+        numero_requisicao: codigo
+      };
+      setFiltros({ ...filtro });
+      setInitialValues({ ...filtro });
+    }
+  }, []);
+
+  useEffect(() => {
     if (filtros) {
       buscarSolicitacoes(1);
+      setPage(1);
     }
   }, [filtros]);
 
@@ -138,8 +154,12 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-consulta-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
-          <Filtros setFiltros={setFiltros} setSolicitacoes={setSolicitacoes} />
-
+          <Filtros
+            setFiltros={setFiltros}
+            setSolicitacoes={setSolicitacoes}
+            initialValues={initialValues}
+            setInitialValues={setInitialValues}
+          />
           {solicitacoes && (
             <>
               <br /> <hr /> <br />
