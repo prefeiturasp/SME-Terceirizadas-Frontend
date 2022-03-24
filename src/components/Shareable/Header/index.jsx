@@ -4,6 +4,8 @@ import authService from "../../../services/auth";
 import "./style.scss";
 import { ENVIRONMENT } from "constants/config";
 import NotificacoesNavbar from "../NotificacoesNavbar";
+import DownloadsNavbar from "../DownloadsNavbar";
+import { CENTRAL_DOWNLOADS } from "configs/constants";
 
 export class Header extends Component {
   render() {
@@ -72,6 +74,15 @@ export class Header extends Component {
                 </li>
                 <li className="nav-item">
                   <NotificacoesNavbar />
+                </li>
+                <li className="nav-item">
+                  <Link
+                    to={{
+                      pathname: `/${CENTRAL_DOWNLOADS}`
+                    }}
+                  >
+                    <DownloadsNavbar />
+                  </Link>
                 </li>
                 <li onClick={() => authService.logout()} className="nav-item">
                   <div className="nav-link">
