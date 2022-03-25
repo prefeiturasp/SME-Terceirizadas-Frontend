@@ -16,7 +16,9 @@ import reducers from "./reducers";
 import * as serviceWorker from "./serviceWorker";
 import "./styles/custom.css";
 import "./styles/sb-admin-2.css";
+import "./styles/_overrides.scss";
 import * as Sentry from "@sentry/browser";
+import { CentralDeDownloadContextProvider } from "./context/CentralDeDownloads";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -65,11 +67,13 @@ const store = applyMiddleware(thunk, multi, promise)(createStore)(
 
 // store é o carinha que recebe todos os estados
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <App />
-    </Router>
-  </Provider>,
+  <CentralDeDownloadContextProvider>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
+  </CentralDeDownloadContextProvider>,
   document.getElementById("root")
 );
 
