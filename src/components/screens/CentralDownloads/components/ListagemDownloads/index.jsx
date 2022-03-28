@@ -27,11 +27,18 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
     return moment().diff(dataDownload, "hours") < 96;
   };
 
-  const retornaTextoTooltip = download => {
-    if (download.status !== STATUS_DOWNLOAD.CONCLUIDO)
-      return "Houve erro no download. Favor solicitar novamente.";
-    else if (!verificaDataDownload(download))
+  const retornaTextoTooltipDownload = download => {
+    if (
+      !verificaDataDownload(download) &&
+      download.status === STATUS_DOWNLOAD.CONCLUIDO
+    )
       return "O prazo para download expirou. Solicite novamente.";
+    else return "";
+  };
+
+  const retornaTextoTooltipIcone = download => {
+    if (download.status === STATUS_DOWNLOAD.ERRO)
+      return "Houve erro no download. Favor solicitar novamente.";
     else return "";
   };
 
@@ -51,7 +58,9 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
               <div className="grid-table body-table">
                 <div>{download.identificador}</div>
                 <div className="flex-container">
-                  <i className={retornaIconeStatus(download.status)} />
+                  <Tooltip title={retornaTextoTooltipIcone(download)}>
+                    <i className={retornaIconeStatus(download.status)} />
+                  </Tooltip>
                 </div>
                 <div>
                   {download.status === STATUS_DOWNLOAD.EM_PROCESSAMENTO
@@ -71,7 +80,7 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
                   )}
                 </div>
                 <div className="flex-container">
-                  <Tooltip title={retornaTextoTooltip(download)}>
+                  <Tooltip title={retornaTextoTooltipDownload(download)}>
                     <button
                       disabled={
                         download.status !== STATUS_DOWNLOAD.CONCLUIDO ||
