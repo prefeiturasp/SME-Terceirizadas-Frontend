@@ -1,0 +1,107 @@
+import moment from "moment";
+import React from "react";
+import { Form, Field } from "react-final-form";
+import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
+import { InputComData } from "components/Shareable/DatePicker";
+import { InputText } from "components/Shareable/Input/InputText";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE
+} from "components/Shareable/Botao/constants";
+import "./styles.scss";
+import {
+  OPTIONS_STATUS_DOWNLOAD,
+  OPTIONS_VISTO_DOWNLOAD
+} from "constants/shared";
+import Select from "components/Shareable/Select";
+
+const FORM_NAME = "buscaDownloads";
+
+export default ({ setFiltros }) => {
+  const initialValues = {};
+
+  const onSubmit = async values => {
+    const filtros = { ...values };
+    if (filtros.data_geracao)
+      filtros.data_geracao = moment(filtros.data_geracao).format("DD/MM/YYYY");
+    setFiltros({ ...filtros });
+  };
+
+  return (
+    <div className="filtros-downloads">
+      <Form
+        onSubmit={onSubmit}
+        initialValues={initialValues}
+        render={({ form, handleSubmit, submitting }) => (
+          <form onSubmit={handleSubmit}>
+            <FinalFormToRedux form={FORM_NAME} />
+
+            <div className="row">
+              <div className="col-3">
+                <Field
+                  component={InputText}
+                  label="Identificador"
+                  name="identificador"
+                  placeholder="Escreva uma palavra"
+                  className="input-busca-produto"
+                />
+              </div>
+
+              <div className="col-3">
+                <Field
+                  label="Status"
+                  component={Select}
+                  placeholder="Selecione o Status"
+                  name="status"
+                  options={OPTIONS_STATUS_DOWNLOAD}
+                />
+              </div>
+              <div className="col-3">
+                <Field
+                  component={InputComData}
+                  label="Data de Criação"
+                  name="data_geracao"
+                  placeholder="Selecione a Data"
+                  minDate={null}
+                  maxDate={null}
+                  writable
+                />
+              </div>
+              <div className="col-3">
+                <Field
+                  label="Visto"
+                  component={Select}
+                  placeholder="Selecione"
+                  name="visto"
+                  options={OPTIONS_VISTO_DOWNLOAD}
+                />
+              </div>
+            </div>
+
+            <div className="mt-4 mb-4">
+              <Botao
+                texto="Consultar"
+                type={BUTTON_TYPE.SUBMIT}
+                style={BUTTON_STYLE.GREEN}
+                className="float-right ml-3"
+                disabled={submitting}
+              />
+
+              <Botao
+                texto="Limpar Filtros"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                className="float-right ml-3"
+                onClick={() => {
+                  form.reset(initialValues);
+                  setFiltros(initialValues);
+                }}
+              />
+            </div>
+          </form>
+        )}
+      />
+    </div>
+  );
+};

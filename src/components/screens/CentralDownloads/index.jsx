@@ -10,20 +10,21 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemDownloads from "./components/ListagemDownloads";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import Filtros from "./components/Filtros";
 
 export default () => {
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const [carregando, setCarregando] = useState(false);
   const [downloads, setDownloads] = useState([]);
-
+  const [filtros, setFiltros] = useState();
   const [totalDownloads, setTotalDownloads] = useState(0);
 
   const [page, setPage] = useState(1);
 
   const buscarDownloads = async page => {
     setCarregando(true);
-    let payload = gerarParametrosConsulta({ page });
+    let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getDownloads(payload);
 
     setDownloads(data.results);
@@ -68,12 +69,13 @@ export default () => {
   useEffect(() => {
     buscarDownloads(1);
     setPage(1);
-  }, []);
+  }, [filtros]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-downloads">
         <div className="card-body downloads">
+          <Filtros setFiltros={setFiltros} />
           {downloads && (
             <>
               <ListagemDownloads

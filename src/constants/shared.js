@@ -345,3 +345,37 @@ export const STATUS_DOWNLOAD = {
   EM_PROCESSAMENTO: "Em processamento",
   ERRO: "Erro"
 };
+
+export const OPTIONS_STATUS_DOWNLOAD = [
+  {
+    uuid: "",
+    nome: "Selecione um Status"
+  },
+  {
+    uuid: "CONCLUIDO",
+    nome: STATUS_DOWNLOAD.CONCLUIDO
+  },
+  {
+    uuid: "EM_PROCESSAMENTO",
+    nome: STATUS_DOWNLOAD.EM_PROCESSAMENTO
+  },
+  {
+    uuid: "ERRO",
+    nome: STATUS_DOWNLOAD.ERRO
+  }
+];
+
+export const OPTIONS_VISTO_DOWNLOAD = [
+  {
+    uuid: "",
+    nome: "Selecione"
+  },
+  {
+    uuid: true,
+    nome: "Visto"
+  },
+  {
+    uuid: false,
+    nome: "Não Visto"
+  }
+];
