@@ -9,7 +9,7 @@ const SubstituicoesTable = substituicoes => {
           <thead>
             <tr className="table-head-alimentacao">
               <th>Alimento</th>
-              <th>Isenções/Substituições</th>
+              <th>Isenção/Substituição</th>
               <th>Alimento/Ingrediente</th>
             </tr>
           </thead>

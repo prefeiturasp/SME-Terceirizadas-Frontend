@@ -326,7 +326,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             key={`${index}_tipo`}
                                             className="table-body-alimentacao"
                                           >
-                                            <td>Isenções/Substituições</td>
+                                            <td>Isenção/Substituição</td>
                                             <td>
                                               <div
                                                 dangerouslySetInnerHTML={{
