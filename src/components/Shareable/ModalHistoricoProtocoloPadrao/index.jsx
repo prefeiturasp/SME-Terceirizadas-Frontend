@@ -326,7 +326,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             key={`${index}_tipo`}
                                             className="table-body-alimentacao"
                                           >
-                                            <td>Tipo</td>
+                                            <td>Isenções/Substituições</td>
                                             <td>
                                               <div
                                                 dangerouslySetInnerHTML={{
@@ -384,7 +384,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             key={`${index}_substitutos`}
                                             className="table-body-alimentacao"
                                           >
-                                            <td>Isenções/Substituições</td>
+                                            <td>Alimento/Ingrediente</td>
                                             <td>
                                               <ul>
                                                 {change.substitutos.from
