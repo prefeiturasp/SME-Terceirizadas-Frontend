@@ -73,9 +73,6 @@ export class Header extends Component {
                   <p className="title">Ajuda</p>
                 </li>
                 <li className="nav-item">
-                  <NotificacoesNavbar />
-                </li>
-                <li className="nav-item">
                   <Link
                     to={{
                       pathname: `/${CENTRAL_DOWNLOADS}`
@@ -83,6 +80,9 @@ export class Header extends Component {
                   >
                     <DownloadsNavbar />
                   </Link>
+                </li>
+                <li className="nav-item">
+                  <NotificacoesNavbar />
                 </li>
                 <li onClick={() => authService.logout()} className="nav-item">
                   <div className="nav-link">
