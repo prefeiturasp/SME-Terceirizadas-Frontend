@@ -45,8 +45,7 @@ export const distribuidorAltera = async payload => {
 
 export const gerarPDFDistribuidorSolicitacao = async uuid => {
   const url = `/solicitacao-remessa/${uuid}/gerar-pdf-distribuidor/`;
-  const { data } = await axios.get(url, { responseType: "blob" });
-  saveAs(data, "guia_de_remessa.pdf");
+  return await axios.get(url);
 };
 
 export const gerarPDFDistribuidorSolicitacoes = async params => {
@@ -173,8 +172,7 @@ export const imprimirGuiaRemessa = async uuid => {
 
 export const imprimirGuiasDaSolicitacao = async uuid => {
   const url = `/solicitacao-remessa/${uuid}/relatorio-guias-da-requisicao/`;
-  const { data } = await axios.get(url, { responseType: "blob" });
-  saveAs(data, "guias_da_requisicao.pdf");
+  return await axios.get(url);
 };
 
 export const confirmaCancelamento = async payload => {
