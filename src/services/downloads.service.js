@@ -1,5 +1,6 @@
 import axios from "./_base";
 import { saveAs } from "file-saver";
+import { ENVIRONMENT } from "constants/config";
 
 export const getDownloads = async params =>
   (await axios.get("/downloads/", { params })).data;
@@ -15,7 +16,10 @@ export const deletarDownload = async uuid =>
 
 export const baixarArquivoCentral = async download => {
   let status = 0;
-  return fetch(download.arquivo, {
+  let url = download.arquivo;
+  if (ENVIRONMENT === "homolog" || ENVIRONMENT === "production")
+    url = url.replace("http://", "https://");
+  return fetch(url, {
     method: "GET"
   })
     .then(res => {
