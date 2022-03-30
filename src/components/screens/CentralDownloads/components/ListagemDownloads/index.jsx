@@ -39,6 +39,8 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
   const retornaTextoTooltipIcone = download => {
     if (download.status === STATUS_DOWNLOAD.ERRO)
       return "Houve erro no download. Favor solicitar novamente.";
+    else if (download.status === STATUS_DOWNLOAD.CONCLUIDO)
+      return "O download ficará disponível por 96 horas desde sua geração.";
     else return "";
   };
 
