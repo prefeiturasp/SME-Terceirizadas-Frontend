@@ -1,7 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
 import "antd/dist/antd.css";
-import "./styles.scss";
 
 const ModalSolicitacaoDownload = ({ show, setShow }) => {
   const handleClose = () => {
