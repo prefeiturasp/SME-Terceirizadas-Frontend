@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import FiltrosExcel from "../FiltrosExcel";
 import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { Spin } from "antd";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
   const [carregando, setCarregando] = useState(false);
+  const [show, setShow] = useState(false);
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const baixarPDFGuiasRemessa = solicitacao => {
     setCarregando(true);
@@ -15,6 +19,8 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
     imprimirGuiasDaSolicitacao(uuid)
       .then(() => {
         setCarregando(false);
+        setShow(true);
+        centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -24,6 +30,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <section
         className={`resultado-busca-entregas ${
           dilog ? "dilog" : "distribuidor"

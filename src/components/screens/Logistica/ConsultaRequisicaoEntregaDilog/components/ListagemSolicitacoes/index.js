@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
@@ -7,6 +7,8 @@ import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
 import ListagemGuias from "../ListagemGuias";
 import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default ({
   solicitacoes,
@@ -18,6 +20,8 @@ export default ({
 }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [carregando, setCarregando] = useState(false);
+  const [show, setShow] = useState(false);
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const baixarPDFGuiasRemessa = solicitacao => {
     setCarregando(true);
@@ -25,6 +29,8 @@ export default ({
     imprimirGuiasDaSolicitacao(uuid)
       .then(() => {
         setCarregando(false);
+        setShow(true);
+        centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -66,6 +72,7 @@ export default ({
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <section className="resultado-busca-requisicao-entrega-dilog">
         <header>Veja requisições disponibilizadas</header>
         <article>

@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { Spin } from "antd";
-import { gerarPDFDistribuidorSolicitacao } from "services/logistica.service";
 import Confirmar from "../Confirmar";
 import Alterar from "../Alterar";
 import ListagemGuias from "../ListagemGuias";
@@ -13,7 +12,8 @@ const ListagemSolicitacoes = ({
   ativos,
   setAtivos,
   updatePage,
-  confirmaCancelamentoGuias
+  confirmaCancelamentoGuias,
+  imprimirRequisicao
 }) => {
   const [carregandoPDFSolicitacao, setCarregandoPDFSolicitacao] = useState([]);
   return (
@@ -94,20 +94,17 @@ const ListagemSolicitacoes = ({
                     <Button
                       className="acoes text-dark"
                       variant="link"
-                      onClick={() => {
+                      onClick={async () => {
                         setCarregandoPDFSolicitacao([
                           ...carregandoPDFSolicitacao,
                           solicitacao.uuid
                         ]);
-                        gerarPDFDistribuidorSolicitacao(solicitacao.uuid).then(
-                          () => {
-                            const index = carregandoPDFSolicitacao.indexOf(
-                              solicitacao.uuid
-                            );
-                            setCarregandoPDFSolicitacao(
-                              carregandoPDFSolicitacao.splice(index, 1)
-                            );
-                          }
+                        await imprimirRequisicao(solicitacao.uuid);
+                        const index = carregandoPDFSolicitacao.indexOf(
+                          solicitacao.uuid
+                        );
+                        setCarregandoPDFSolicitacao(
+                          carregandoPDFSolicitacao.splice(index, 1)
                         );
                       }}
                       disabled={solicitacao.status !== "Confirmada"}
