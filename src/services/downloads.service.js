@@ -14,8 +14,19 @@ export const deletarDownload = async uuid =>
   await axios.delete(`/downloads/${uuid}/`);
 
 export const baixarArquivoCentral = async download => {
-  const { data } = await axios.get(download.arquivo + "/", {
-    responseType: "blob"
-  });
-  saveAs(data, download.identificador);
+  let status = 0;
+  return fetch(download.arquivo, {
+    method: "GET"
+  })
+    .then(res => {
+      status = res.status;
+      return res.blob();
+    })
+    .then(data => {
+      saveAs(data, download.identificador);
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
 };
