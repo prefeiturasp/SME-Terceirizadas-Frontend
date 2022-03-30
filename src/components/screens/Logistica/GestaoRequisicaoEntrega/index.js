@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
@@ -22,6 +21,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ConfirmaTodos from "./components/ConfirmarTodos";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -131,21 +131,9 @@ export default () => {
     buscarSolicitacoes(page);
   };
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <Modal show={show} onHide={handleClose} dialogClassName="modal-entregas">
-        <Modal.Header closeButton>
-          <Modal.Title>Geração solicitada com sucesso.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          A geração foi solicitada. Em breve você receberá um aviso na central
-          de downloads com o resultado.
-        </Modal.Body>
-      </Modal>
+      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
           <Filtros

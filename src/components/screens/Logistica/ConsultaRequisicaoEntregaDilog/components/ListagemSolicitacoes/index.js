@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Modal } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
@@ -9,6 +8,7 @@ import ListagemGuias from "../ListagemGuias";
 import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default ({
   solicitacoes,
@@ -70,21 +70,9 @@ export default ({
     setSelecionados([]);
   }, [solicitacoes]);
 
-  const handleClose = () => {
-    setShow(false);
-  };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <Modal show={show} onHide={handleClose} dialogClassName="modal-entregas">
-        <Modal.Header closeButton>
-          <Modal.Title>Geração solicitada com sucesso.</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          A geração foi solicitada. Em breve você receberá um aviso na central
-          de downloads com o resultado.
-        </Modal.Body>
-      </Modal>
+      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <section className="resultado-busca-requisicao-entrega-dilog">
         <header>Veja requisições disponibilizadas</header>
         <article>
