@@ -74,7 +74,7 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
                     "----"
                   ) : (
                     <Checkbox
-                      defaultChecked={download.visto}
+                      checked={download.visto}
                       onChange={() => {
                         marcarVisto(download, index);
                       }}
