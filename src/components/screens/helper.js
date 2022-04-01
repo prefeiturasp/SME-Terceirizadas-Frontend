@@ -1,3 +1,4 @@
+import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
   DIETA_ESPECIAL,
@@ -191,4 +192,12 @@ export const mapeiaStatusAlimento = str => {
   if (str === "Recebido") return STATUS_ALIMENTO.RECEBIDO;
   if (str === "Parcial") return STATUS_ALIMENTO.PARCIAL;
   if (str === "Não Recebido") return STATUS_ALIMENTO.NAO_RECEBIDO;
+};
+
+export const getDataHomologacao = logs => {
+  const arr = filter(
+    propEq("status_evento_explicacao", "CODAE homologou"),
+    logs
+  );
+  return arr[0] ? arr[0].criado_em : "--";
 };
