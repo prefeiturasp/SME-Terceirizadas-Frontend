@@ -9,6 +9,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
+import { getDataHomologacao } from "../helper";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 import { gerarLabelPorFiltro } from "helpers/produto";
@@ -59,7 +60,9 @@ const TabelaProdutosHomologados = ({ dadosProdutos, filtros }) => {
                   <div>{produto.eh_para_alunos_com_dieta ? "Sim" : "Não"}</div>
                   <div>{produto.tem_aditivos_alergenicos ? "Sim" : "Não"}</div>
                   <div>{produto.criado_em}</div>
-                  <div>{produto.ultima_homologacao.criado_em}</div>
+                  <div>
+                    {getDataHomologacao(produto.ultima_homologacao.logs)}
+                  </div>
                 </div>
               );
             })}

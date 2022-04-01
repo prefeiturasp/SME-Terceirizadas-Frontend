@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
+  gerarPDFDistribuidorSolicitacao,
   gerarPDFDistribuidorSolicitacoes,
   gerarExcelSolicitacoes,
   confirmaCancelamento
@@ -19,6 +20,8 @@ import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ConfirmaTodos from "./components/ConfirmarTodos";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -34,6 +37,9 @@ export default () => {
   const [numConfirmadas, setNumConfirmadas] = useState();
   const [page, setPage] = useState();
   const [initialValues, setInitialValues] = useState({});
+  const [show, setShow] = useState(false);
+
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const buscarSolicitacoes = async page => {
     setCarregando(true);
@@ -79,6 +85,22 @@ export default () => {
     setCarregando(false);
   };
 
+  const imprimirRequisicao = async uuid => {
+    await gerarPDFDistribuidorSolicitacao(uuid);
+    setShow(true);
+    centralDownloadContext.getQtdeDownloadsNaoLidas();
+  };
+
+  const imprimirRequisicoesConfirmadas = () => {
+    setCarregandoPDFConfirmados(true);
+    const params = gerarParametrosConsulta({ ...filtros });
+    gerarPDFDistribuidorSolicitacoes(params).then(() => {
+      setCarregandoPDFConfirmados(false);
+      setShow(true);
+      centralDownloadContext.getQtdeDownloadsNaoLidas();
+    });
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
@@ -111,6 +133,7 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
           <Filtros
@@ -129,6 +152,7 @@ export default () => {
                 setAtivos={setAtivos}
                 updatePage={updatePage}
                 confirmaCancelamentoGuias={confirmaCancelamentoGuias}
+                imprimirRequisicao={imprimirRequisicao}
               />
               <div className="row">
                 <div className="col">
@@ -148,13 +172,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.PRINT}
-                      onClick={() => {
-                        setCarregandoPDFConfirmados(true);
-                        const params = gerarParametrosConsulta({ ...filtros });
-                        gerarPDFDistribuidorSolicitacoes(params).then(() => {
-                          setCarregandoPDFConfirmados(false);
-                        });
-                      }}
+                      onClick={imprimirRequisicoesConfirmadas}
                       disabled={numConfirmadas === 0}
                     />
                   </Spin>
