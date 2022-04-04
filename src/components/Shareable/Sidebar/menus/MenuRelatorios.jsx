@@ -4,6 +4,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
   usuarioEhEscola,
@@ -19,7 +20,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada();
+    usuarioEhTerceirizada() ||
+    usuarioEhCODAENutriManifestacao();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -31,6 +33,14 @@ const MenuRelatorios = () => {
     usuarioEhTerceirizada() ||
     (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
     usuarioEhCODAEDietaEspecial();
+
+  const exibirProdutosSuspensos =
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhTerceirizada() ||
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAENutriManifestacao();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
@@ -56,7 +66,7 @@ const MenuRelatorios = () => {
           Quantitativo Por Terceirizada
         </LeafItem>
       )}
-      {exibirMenuTodosPerfis && (
+      {exibirProdutosSuspensos && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorio-produtos-suspensos`}
         >

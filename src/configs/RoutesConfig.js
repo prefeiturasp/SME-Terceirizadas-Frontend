@@ -1053,7 +1053,8 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1079,7 +1080,8 @@ const routesConfig = [
       usuarioEhQualquerCODAE() ||
       usuarioEhTerceirizada() ||
       (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
-      usuarioEhNutricionistaSupervisao()
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
