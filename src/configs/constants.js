@@ -167,6 +167,7 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 
 export const NOTIFICACOES = "notificacoes";
+export const CENTRAL_DOWNLOADS = "central-downloads";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

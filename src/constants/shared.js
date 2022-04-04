@@ -339,3 +339,43 @@ export const TIPO_SOLICITACAO_DIETA = {
   ALUNO_NAO_MATRICULADO: "ALUNO_NAO_MATRICULADO",
   ALTERACAO_UE: "ALTERACAO_UE"
 };
+
+export const STATUS_DOWNLOAD = {
+  CONCLUIDO: "Concluído",
+  EM_PROCESSAMENTO: "Em processamento",
+  ERRO: "Erro"
+};
+
+export const OPTIONS_STATUS_DOWNLOAD = [
+  {
+    uuid: "",
+    nome: "Selecione um Status"
+  },
+  {
+    uuid: "CONCLUIDO",
+    nome: STATUS_DOWNLOAD.CONCLUIDO
+  },
+  {
+    uuid: "EM_PROCESSAMENTO",
+    nome: STATUS_DOWNLOAD.EM_PROCESSAMENTO
+  },
+  {
+    uuid: "ERRO",
+    nome: STATUS_DOWNLOAD.ERRO
+  }
+];
+
+export const OPTIONS_VISTO_DOWNLOAD = [
+  {
+    uuid: "",
+    nome: "Selecione"
+  },
+  {
+    uuid: true,
+    nome: "Visto"
+  },
+  {
+    uuid: false,
+    nome: "Não Visto"
+  }
+];
