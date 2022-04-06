@@ -80,7 +80,7 @@ export default ({
             <div className="col-6">
               <Field
                 label="Nome do Protocolo Padrão"
-                component={AutoCompleteField} //
+                component={AutoCompleteField}
                 dataSource={getNomesProtocolosFiltrado(values.nome_protocolo)}
                 name="nome_protocolo"
                 placeholder="Insira o Nome do Protocolo Padrão"
