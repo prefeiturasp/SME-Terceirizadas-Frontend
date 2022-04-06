@@ -25,6 +25,7 @@ jobs:
     
       - name: Build the Docker image    
         run: | 
+             docker login ${{ secrets.REGISTRY_HOST }}
              docker build . --tag ${{ secrets.REGISTRY_HOST }}/${GITHUB_REF##*/}/sigpae-frontend
              docker push ${{ secrets.REGISTRY_HOST }}/${GITHUB_REF##*/}/sigpae-frontend
              
