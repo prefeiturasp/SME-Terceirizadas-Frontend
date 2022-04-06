@@ -25,16 +25,18 @@ export default ({
 
   const getNomesProtocolosFiltrado = nomeProtocolo => {
     if (nomeProtocolo) {
-      const reg = new RegExp(nomeProtocolo, "i");
-      return nomes.filter(a => reg.test(a));
+      return nomes.filter(nome =>
+        nome.toUpperCase().includes(nomeProtocolo.toUpperCase())
+      );
     }
     return [];
   };
 
   const getStatusProtocolosFiltrado = statusProtocolo => {
     if (statusProtocolo) {
-      const reg = new RegExp(statusProtocolo, "i");
-      return status.filter(a => reg.test(a));
+      return status.filter(status =>
+        status.toUpperCase().includes(statusProtocolo.toUpperCase())
+      );
     }
     return [];
   };
@@ -78,7 +80,7 @@ export default ({
             <div className="col-6">
               <Field
                 label="Nome do Protocolo Padrão"
-                component={AutoCompleteField}
+                component={AutoCompleteField} //
                 dataSource={getNomesProtocolosFiltrado(values.nome_protocolo)}
                 name="nome_protocolo"
                 placeholder="Insira o Nome do Protocolo Padrão"
