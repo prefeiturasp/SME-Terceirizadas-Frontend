@@ -193,7 +193,7 @@ export const CorpoRelatorio = props => {
       {justificativaNegacao && (
         <table className="table-periods">
           <tr>
-            <th>Justificativa da rejeição</th>
+            <th>Justificativa da negação</th>
           </tr>
           <tr>
             <td>

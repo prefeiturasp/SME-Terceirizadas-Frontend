@@ -227,7 +227,7 @@ export class CorpoRelatorio extends Component {
         {justificativaNegacao && (
           <div className="row">
             <div className="col-12 report-label-value">
-              <p>Justificativa da rejeição</p>
+              <p>Justificativa da negação</p>
               <p
                 className="value"
                 dangerouslySetInnerHTML={{
