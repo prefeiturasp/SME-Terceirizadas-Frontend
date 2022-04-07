@@ -107,6 +107,7 @@ import {
   usuarioEhDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira
 } from "../helpers/utilities";
@@ -180,7 +181,9 @@ const routesConfig = [
     component: painelGestaoAlimentacao(),
     exact: true,
     tipoUsuario:
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
@@ -228,25 +231,37 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/status-solicitacoes`,
@@ -258,32 +273,46 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoCardapio(),
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
-    //AQUI POW
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: suspensaoAlimentacao(),
     exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES}`,
@@ -808,7 +837,8 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
     component: BuscaAvancadaProdutoPage,
     exact: true,
-    tipoUsuario: validaPerfilEscolaMistaParceira()
+    tipoUsuario:
+      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -856,7 +886,8 @@ const routesConfig = [
     }`,
     component: RelatorioSituacaoProduto,
     exact: true,
-    tipoUsuario: validaPerfilEscolaMistaParceira()
+    tipoUsuario:
+      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -869,13 +900,18 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
     component: ResponderQuestionamentoUEPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
+    tipoUsuario:
+      usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${
@@ -919,7 +955,9 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -935,7 +973,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -956,7 +996,9 @@ const routesConfig = [
       usuarioEhTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -968,7 +1010,9 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1002,7 +1046,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1019,7 +1065,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: "/painel-gestao-produto",
@@ -1032,7 +1080,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhDRE()
   },
   {
@@ -1042,7 +1092,9 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
@@ -1053,7 +1105,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhCODAENutriManifestacao()
   },
   {
@@ -1079,7 +1133,9 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhQualquerCODAE() ||
       usuarioEhTerceirizada() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+      (usuarioEhEscola() &&
+        !usuarioEscolaEhGestaoMistaParceira() &&
+        !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao()
   },
@@ -1157,7 +1213,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      usuarioEhEscola()
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta())
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1191,7 +1247,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.LOGISTICA}/${
