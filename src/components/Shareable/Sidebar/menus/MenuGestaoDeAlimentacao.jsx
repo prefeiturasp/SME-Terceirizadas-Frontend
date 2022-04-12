@@ -26,14 +26,18 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
   usuarioEhEscola,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibeMenuNovasSolicitacoes =
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhDRE();
+  const exibeMenuConsultaDeSolicitacoes = !usuarioEscolaEhGestaoDireta();
   const PERFIL = usuarioEhEscola()
     ? ESCOLA
     : usuarioEhDRE()
@@ -88,38 +92,41 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           )}
         </SubMenu>
       )}
-      <SubMenu
-        icon="fa-chevron-down"
-        path="consulta-solicitacoes"
-        onClick={onSubmenuClick}
-        title="Consulta de Solicitações"
-        activeMenu={activeMenu}
-      >
-        {PERFIL === "nutrisupervisao" && (
-          <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
-            Aguardando resposta da empresa
-          </LeafItem>
-        )}
-        {PERFIL === "terceirizada" ? (
-          <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
-            Questionamentos da CODAE
-          </LeafItem>
-        ) : (
-          !usuarioEhCODAENutriManifestacao() && (
-            <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
-              Aguardando autorização
+      {exibeMenuConsultaDeSolicitacoes && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="consulta-solicitacoes"
+          onClick={onSubmenuClick}
+          title="Consulta de Solicitações"
+          activeMenu={activeMenu}
+        >
+          {PERFIL === "nutrisupervisao" && (
+            <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
+              Aguardando resposta da empresa
             </LeafItem>
-          )
-        )}
+          )}
+          {PERFIL === "terceirizada" ? (
+            <LeafItem to={`/${PERFIL}/${SOLICITACOES_COM_QUESTIONAMENTO}`}>
+              Questionamentos da CODAE
+            </LeafItem>
+          ) : (
+            !usuarioEhCODAENutriManifestacao() &&
+            !usuarioEscolaEhGestaoDireta() && (
+              <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
+                Aguardando autorização
+              </LeafItem>
+            )
+          )}
 
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
-          Autorizadas
-        </LeafItem>
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_NEGADAS}`}>Negadas</LeafItem>
-        <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
-          Canceladas
-        </LeafItem>
-      </SubMenu>
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_AUTORIZADAS}`}>
+            Autorizadas
+          </LeafItem>
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_NEGADAS}`}>Negadas</LeafItem>
+          <LeafItem to={`/${PERFIL}/${SOLICITACOES_CANCELADAS}`}>
+            Canceladas
+          </LeafItem>
+        </SubMenu>
+      )}
       {usuarioEhCODAEGestaoAlimentacao() && (
         <SubMenu
           icon="fa-chevron-down"
