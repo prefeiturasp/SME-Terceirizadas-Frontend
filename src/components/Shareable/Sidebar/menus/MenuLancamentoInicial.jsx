@@ -4,10 +4,14 @@ import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL
 } from "configs/constants";
-import { usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhEscola,
+  usuarioEscolaEhGestaoDireta
+} from "helpers/utilities";
 
 export default () => {
-  const exibirLancamentoMedicaoInicial = usuarioEhEscola();
+  const exibirLancamentoMedicaoInicial =
+    usuarioEhEscola() && !usuarioEscolaEhGestaoDireta();
 
   return (
     <Menu

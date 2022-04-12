@@ -354,6 +354,10 @@ export const validaPerfilEscolaMistaParceira = () => {
   }
 };
 
+export const usuarioEscolaEhGestaoDireta = () => {
+  return [TIPO_GESTAO.DIRETA].includes(localStorage.getItem("tipo_gestao"));
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,

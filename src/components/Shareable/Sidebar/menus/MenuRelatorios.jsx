@@ -9,6 +9,7 @@ import {
   usuarioEhTerceirizada,
   usuarioEhEscola,
   usuarioEhDRE,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 import * as constants from "configs/constants";
@@ -18,7 +19,9 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
     usuarioEhCODAENutriManifestacao();
@@ -31,14 +34,18 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhCODAEDietaEspecial();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao();
 
@@ -46,7 +53,7 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhDRE() ||
-    usuarioEhEscola();
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
