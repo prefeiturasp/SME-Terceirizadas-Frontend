@@ -3,7 +3,8 @@ import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import { CONFERIR_ENTREGA, LOGISTICA } from "configs/constants";
 import {
@@ -71,6 +72,8 @@ export default ({ values, disabled, uuidEdicao }) => {
         texto="Salvar e Continuar"
         type={BUTTON_TYPE.SUBMIT}
         style={BUTTON_STYLE.GREEN}
+        icon={BUTTON_ICON.ARROW_RIGHT}
+        iconPosition="right"
         className="float-right ml-3"
         onClick={handleShow}
         disabled={disabled}
