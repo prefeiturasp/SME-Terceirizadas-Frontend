@@ -229,7 +229,6 @@ export default () => {
                     value={existeOcorrencia}
                   >
                     <Radio className="radio-entrega-sim" value={false}>
-                      {" "}
                       Sim, alimentos recebidos corretamente
                     </Radio>
                     <Radio className="radio-entrega-nao" value={true}>
