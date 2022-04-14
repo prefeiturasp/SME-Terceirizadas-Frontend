@@ -12,6 +12,31 @@
         padding-right: 8px;
       }
     }
+    .radio-entrega-sim {
+      padding: 5px;
+      border: 1px solid green !important;
+      border-radius: 4px;
+    }
+    .radio-entrega-nao {
+      padding: 5px;
+      border: 1px solid red !important;
+      border-radius: 4px;
+      margin-left: 10px;
+      .ant-radio-wrapper:hover .ant-radio,
+      .ant-radio:hover .ant-radio-inner,
+      .ant-radio-input:focus + .ant-radio-inner {
+        border-color: $red;
+      }
+      .ant-radio-inner::after {
+        background-color: $red;
+      }
+      .ant-radio-checked::after {
+        border: 1px solid $red;
+      }
+      .ant-radio-checked .ant-radio-inner {
+        border-color: $red;
+      }
+    }
 
     .ant-radio-inner::after {
       background-color: $green;

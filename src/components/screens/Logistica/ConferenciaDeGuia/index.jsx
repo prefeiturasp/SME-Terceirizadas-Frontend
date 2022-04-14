@@ -23,7 +23,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import ReceberSemOcorrencia from "./components/ReceberSemOcorrencia";
 import moment from "moment";
@@ -215,10 +216,10 @@ export default () => {
                 <div className="mt-4 mb-4">
                   <div className="texto-confirma-entrega">
                     <i className="fas fa-exclamation-triangle" />
+                    <strong>A entrega foi bem sucedida? </strong>
+                    <br />
                     <strong>
-                      Todos os alimentos descritos nesta Guia de Remessa foram
-                      entregues no prazo, na quantidade prevista e em boa
-                      qualidade para consumo?
+                      (No prazo, na quantidade correta e em boas condições)
                     </strong>
                   </div>
 
@@ -227,8 +228,13 @@ export default () => {
                     onChange={onChangeCampos}
                     value={existeOcorrencia}
                   >
-                    <Radio value={false}>Sim</Radio>
-                    <Radio value={true}>Não</Radio>
+                    <Radio className="radio-entrega-sim" value={false}>
+                      {" "}
+                      Sim, alimentos recebidos corretamente
+                    </Radio>
+                    <Radio className="radio-entrega-nao" value={true}>
+                      Não, há um ou mais alimentos com problemas
+                    </Radio>
                   </Radio.Group>
 
                   {existeOcorrencia === false && (
@@ -339,6 +345,8 @@ export default () => {
                             texto="Continuar"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN}
+                            icon={BUTTON_ICON.ARROW_RIGHT}
+                            iconPosition="right"
                             disabled={submitting || alimentos.length < 1}
                           />
                         </NavLink>

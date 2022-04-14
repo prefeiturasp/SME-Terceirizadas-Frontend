@@ -12,6 +12,7 @@ export const BUTTON_STYLE = {
 
 export const BUTTON_ICON = {
   ARROW_LEFT: "fas fa-arrow-left",
+  ARROW_RIGHT: "fas fa-arrow-right",
   ATTACH: "fas fa-file-upload",
   CHART_LINE: "fas fa-chart-line",
   CHECK_CIRCLE: "fas fa-check-circle",
