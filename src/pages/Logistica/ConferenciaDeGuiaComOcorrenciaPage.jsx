@@ -14,7 +14,7 @@ export default () => {
   const [uuid, setUuid] = useState();
   const atual = {
     href: `/${LOGISTICA}${CONFERENCIA_GUIA_COM_OCORRENCIA}`,
-    titulo: "Conferência individual de itens"
+    titulo: "Conferência da guia de remessa"
   };
 
   const anteriores = [
