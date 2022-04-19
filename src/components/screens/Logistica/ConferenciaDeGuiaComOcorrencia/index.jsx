@@ -843,7 +843,6 @@ export default () => {
                                     }
                                   ]}
                                   className="input-busca-produto"
-                                  //validate={validaOcorrencias(values, index)}
                                   onChange={checaAtraso(values, index)}
                                   disabled={
                                     !["Parcial", "Não Recebido"].includes(
