@@ -17,16 +17,18 @@ export const construirPeriodosECombos = periodos => {
       nome: periodo.periodo_escolar.nome,
       uuid: periodo.periodo_escolar.uuid,
       style: backgroundLabelPeriodo(periodo.periodo_escolar.nome),
-      tipos_alimentacao: periodo.combos.map(combo => {
+      tipos_alimentacao: periodo.tipos_alimentacao.map(alimento => {
         return {
-          nome: combo.label,
-          uuid: combo.uuid,
-          substituicoes: combo.substituicoes.map(substituicao => {
-            return {
-              nome: substituicao.label,
-              uuid: substituicao.uuid
-            };
-          })
+          nome: alimento.nome,
+          uuid: alimento.uuid,
+          substituicoes: periodo.tipos_alimentacao
+            .filter(substituto => substituto.uuid !== alimento.uuid)
+            .map(substituto => {
+              return {
+                nome: substituto.nome,
+                uuid: substituto.uuid
+              };
+            })
         };
       })
     };
