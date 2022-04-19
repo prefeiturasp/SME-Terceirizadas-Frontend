@@ -28,12 +28,12 @@ export const montatiposAlimentacaoPorPeriodo = (
         periodo,
         vinculosTPAlimentacaoResponse
       );
-      periodo.tipos_alimentacao = periodoAtual.combos;
+      periodo.tipos_alimentacao = periodoAtual.tipos_alimentacao;
     } else {
       const periodoIntegral = buscaCombosDoPeriodoIntegral(
         vinculosTPAlimentacaoResponse
       );
-      periodo.tipos_alimentacao = periodoIntegral.combos;
+      periodo.tipos_alimentacao = periodoIntegral.tipos_alimentacao;
     }
   });
   return periodos;
