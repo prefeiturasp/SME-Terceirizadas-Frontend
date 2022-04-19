@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, Fragment } from "react";
 import { Spin } from "antd";
 import {
   getGuiaParaConferencia,
@@ -564,143 +564,127 @@ export default () => {
                 </div>
 
                 <hr />
-
-                <table className={`table table-bordered table-reposicao`}>
-                  <thead>
-                    <tr>
-                      <th scope="col" colSpan="4" className="text-center">
-                        EMBALAGEM FECHADA
-                      </th>
-                      <th scope="col" colSpan="4" className="text-center">
-                        EMBALAGEM FRACIONADA
-                      </th>
-                    </tr>
-                    <tr>
-                      <th scope="col" colSpan="2" className="text-center">
-                        Previsto
-                      </th>
-                      <th scope="col">
-                        A receber{" "}
-                        <TooltipIcone tooltipText={TOOLTIP_A_RECEBER} />
-                      </th>
-                      <th scope="col" className="th-recebido">
-                        Recebido <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
-                      </th>
-                      <th scope="col" colSpan="2" className="text-center">
-                        Previsto
-                      </th>
-                      <th scope="col">
-                        A receber{" "}
-                        <TooltipIcone tooltipText={TOOLTIP_A_RECEBER} />
-                      </th>
-                      <th scope="col" className="th-recebido">
-                        Recebido <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
-                      </th>
-                    </tr>
-                    <tr>
-                      <th scope="col">Quantidade</th>
-                      <th scope="col">Capacidade</th>
-                      <th scope="col">Quantidade</th>
-                      <th scope="col" className="th-recebido">
-                        Quantidade de Embalagens
-                      </th>
-                      <th scope="col">Quantidade</th>
-                      <th scope="col">Capacidade</th>
-                      <th scope="col">Quantidade</th>
-                      <th scope="col" className="th-recebido">
-                        Quantidade de Embalagens
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(() => {
-                      if (!guia.alimentos || !guia.alimentos[alimentoAtual])
-                        return;
-                      const item = guia.alimentos[alimentoAtual];
-                      const embalagens = item.total_embalagens
-                        ? item.total_embalagens
-                        : item.embalagens;
-                      const fracionada = filtraEmbalagemPorTipo(
-                        embalagens,
-                        "FRACIONADA"
-                      );
-                      const fechada = filtraEmbalagemPorTipo(
-                        embalagens,
-                        "FECHADA"
-                      );
-                      setFracionada(fracionada);
-                      setFechada(fechada);
-                      return (
-                        <>
-                          <tr>
-                            <td>{fechada ? fechada.qtd_volume : "--"}</td>
-                            <td>
-                              {fechada ? (
-                                <>
-                                  {fechada.descricao_embalagem}.{" "}
-                                  {fechada.capacidade_embalagem}
-                                  {fechada.unidade_medida}
-                                </>
-                              ) : (
-                                "--"
-                              )}
-                            </td>
-                            <td>{fechada ? fechada.qtd_a_receber : "--"}</td>
-                            <td>
-                              {fechada ? (
-                                <div className="form-tabela">
-                                  <Field
-                                    component={InputText}
-                                    name="recebidos_fechada"
-                                    className="input-busca-produto"
-                                    validate={composeValidators(
-                                      required,
-                                      numericInteger
-                                    )}
-                                  />
-                                </div>
-                              ) : (
-                                "--"
-                              )}
-                            </td>
-                            <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
-                            <td>
-                              {fracionada ? (
-                                <>
-                                  {fracionada.descricao_embalagem}.{" "}
-                                  {fracionada.capacidade_embalagem}
-                                  {fracionada.unidade_medida}
-                                </>
-                              ) : (
-                                "--"
-                              )}
-                            </td>
-                            <td>
-                              {fracionada ? fracionada.qtd_a_receber : "--"}
-                            </td>
-                            <td>
-                              {fracionada ? (
-                                <div className="form-tabela">
-                                  <Field
-                                    component={InputText}
-                                    name="recebidos_fracionada"
-                                    className="input-busca-produto"
-                                    validate={composeValidators(
-                                      required,
-                                      numericInteger
-                                    )}
-                                  />
-                                </div>
-                              ) : (
-                                "--"
-                              )}
-                            </td>
-                          </tr>
-                        </>
-                      );
-                    })()}
-                  </tbody>
-                </table>
+                <Fragment>
+                  {(() => {
+                    if (!guia.alimentos || !guia.alimentos[alimentoAtual])
+                      return;
+                    const item = guia.alimentos[alimentoAtual];
+                    const embalagens = item.total_embalagens
+                      ? item.total_embalagens
+                      : item.embalagens;
+                    const fracionada = filtraEmbalagemPorTipo(
+                      embalagens,
+                      "FRACIONADA"
+                    );
+                    const fechada = filtraEmbalagemPorTipo(
+                      embalagens,
+                      "FECHADA"
+                    );
+                    setFracionada(fracionada);
+                    setFechada(fechada);
+                    return (
+                      <>
+                        <table
+                          className={`table table-bordered table-reposicao`}
+                        >
+                          <thead>
+                            <tr>
+                              <th
+                                scope="col"
+                                colSpan="4"
+                                className="text-center"
+                              >
+                                {fechada ? (
+                                  <>EMBALAGEM FECHADA</>
+                                ) : (
+                                  <>EMBALAGEM FRACIONADA</>
+                                )}
+                              </th>
+                            </tr>
+                            <tr>
+                              <th
+                                scope="col"
+                                colSpan="2"
+                                className="text-center"
+                              >
+                                Previsto
+                              </th>
+                              <th scope="col">
+                                A receber{" "}
+                                <TooltipIcone tooltipText={TOOLTIP_A_RECEBER} />
+                              </th>
+                              <th scope="col" className="th-recebido">
+                                Recebido{" "}
+                                <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
+                              </th>
+                            </tr>
+                            <tr>
+                              <th scope="col">Quantidade</th>
+                              <th scope="col">Capacidade</th>
+                              <th scope="col">Quantidade</th>
+                              <th scope="col" className="th-recebido">
+                                Quantidade de Embalagens
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <>
+                              <tr>
+                                {fechada ? (
+                                  <>
+                                    <td>{fechada.qtd_volume}</td>
+                                    <td>
+                                      {fechada.descricao_embalagem}.{" "}
+                                      {fechada.capacidade_embalagem}
+                                      {fechada.unidade_medida}
+                                    </td>
+                                    <td>{fechada.qtd_a_receber}</td>
+                                    <td>
+                                      <div className="form-tabela">
+                                        <Field
+                                          component={InputText}
+                                          name="recebidos_fechada"
+                                          className="input-busca-produto"
+                                          validate={composeValidators(
+                                            required,
+                                            numericInteger
+                                          )}
+                                        />
+                                      </div>
+                                    </td>
+                                  </>
+                                ) : (
+                                  <>
+                                    <td>{fracionada.qtd_volume}</td>
+                                    <td>
+                                      {fracionada.descricao_embalagem}.{" "}
+                                      {fracionada.capacidade_embalagem}
+                                      {fracionada.unidade_medida}
+                                    </td>
+                                    <td>{fracionada.qtd_a_receber}</td>
+                                    <td>
+                                      <div className="form-tabela">
+                                        <Field
+                                          component={InputText}
+                                          name="recebidos_fracionada"
+                                          className="input-busca-produto"
+                                          validate={composeValidators(
+                                            required,
+                                            numericInteger
+                                          )}
+                                        />
+                                      </div>
+                                    </td>
+                                  </>
+                                )}
+                              </tr>
+                            </>
+                          </tbody>
+                        </table>
+                      </>
+                    );
+                  })()}
+                </Fragment>
 
                 <div className="row">
                   <div className="col-6">
