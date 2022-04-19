@@ -234,12 +234,14 @@ class FoodSuspensionEditor extends Component {
         if (periodoProps.nome === periodoResp.periodo_escolar.nome) {
           periodoProps.validador = [];
           periodoProps.checked = false;
-          periodoProps.tipos_alimentacao = periodoResp.combos.map(combo => {
-            return {
-              uuid: combo.uuid,
-              nome: combo.label
-            };
-          });
+          periodoProps.tipos_alimentacao = periodoResp.tipos_alimentacao.map(
+            tipo_alimentacao => {
+              return {
+                uuid: tipo_alimentacao.uuid,
+                nome: tipo_alimentacao.nome
+              };
+            }
+          );
         }
       });
     });
@@ -346,6 +348,7 @@ class FoodSuspensionEditor extends Component {
   }
 
   onSubmit(values) {
+    // Refatorar aqui.
     values.dias_razoes = deepCopy(this.state.dias_razoes);
     values.dias_razoes.forEach(value => {
       const idx = values.dias_razoes.findIndex(
