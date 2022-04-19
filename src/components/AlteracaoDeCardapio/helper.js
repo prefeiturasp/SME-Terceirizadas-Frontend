@@ -21,7 +21,14 @@ export const construirPeriodosECombos = periodos => {
         return {
           nome: alimento.nome,
           uuid: alimento.uuid,
-          substituicoes: []
+          substituicoes: periodo.tipos_alimentacao
+            .filter(substituto => substituto.uuid !== alimento.uuid)
+            .map(substituto => {
+              return {
+                nome: substituto.nome,
+                uuid: substituto.uuid
+              };
+            })
         };
       })
     };
