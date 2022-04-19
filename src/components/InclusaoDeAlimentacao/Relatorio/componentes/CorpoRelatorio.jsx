@@ -200,7 +200,7 @@ export class CorpoRelatorio extends Component {
                     <td>
                       {stringSeparadaPorVirgulas(
                         quantidade_por_periodo.tipos_alimentacao,
-                        "label"
+                        "nome"
                       )}
                     </td>
                     <td>{quantidade_por_periodo.numero_alunos}</td>
@@ -227,7 +227,7 @@ export class CorpoRelatorio extends Component {
         {justificativaNegacao && (
           <div className="row">
             <div className="col-12 report-label-value">
-              <p>Justificativa da rejeição</p>
+              <p>Justificativa da negação</p>
               <p
                 className="value"
                 dangerouslySetInnerHTML={{

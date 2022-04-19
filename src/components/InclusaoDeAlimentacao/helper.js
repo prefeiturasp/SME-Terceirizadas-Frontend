@@ -22,10 +22,10 @@ export const construirPeriodosECombos = periodos => {
       numero_alunos: null,
       nome: periodo.periodo_escolar.nome,
       uuid: periodo.periodo_escolar.uuid,
-      tipos_alimentacao: periodo.combos.map(combo => {
+      tipos_alimentacao: periodo.tipos_alimentacao.map(alimento => {
         return {
-          nome: combo.label,
-          uuid: combo.uuid
+          nome: alimento.nome,
+          uuid: alimento.uuid
         };
       })
     };

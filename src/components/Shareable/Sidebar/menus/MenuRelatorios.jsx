@@ -4,10 +4,12 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
   usuarioEhEscola,
   usuarioEhDRE,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 import * as constants from "configs/constants";
@@ -17,9 +19,12 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada();
+    usuarioEhTerceirizada() ||
+    usuarioEhCODAENutriManifestacao();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -29,14 +34,26 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()) ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhCODAEDietaEspecial();
+
+  const exibirProdutosSuspensos =
+    usuarioEhCODAEGestaoProduto() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhTerceirizada() ||
+    (usuarioEhEscola() &&
+      !usuarioEscolaEhGestaoMistaParceira() &&
+      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAENutriManifestacao();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhDRE() ||
-    usuarioEhEscola();
+    (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
@@ -56,7 +73,7 @@ const MenuRelatorios = () => {
           Quantitativo Por Terceirizada
         </LeafItem>
       )}
-      {exibirMenuTodosPerfis && (
+      {exibirProdutosSuspensos && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/relatorio-produtos-suspensos`}
         >

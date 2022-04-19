@@ -14,6 +14,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhNutricionistaSupervisao,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   exibirGA
 } from "helpers/utilities";
@@ -29,7 +30,9 @@ const PainelInicial = ({ history }) => {
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
           usuarioEhNutricionistaSupervisao() ||
-          (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())) && (
+          (usuarioEhEscola() &&
+            !usuarioEscolaEhGestaoMistaParceira() &&
+            !usuarioEscolaEhGestaoDireta())) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
@@ -61,7 +64,9 @@ const PainelInicial = ({ history }) => {
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
-        (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())) && (
+        (usuarioEhEscola() &&
+          !usuarioEscolaEhGestaoMistaParceira() &&
+          !usuarioEscolaEhGestaoDireta())) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
