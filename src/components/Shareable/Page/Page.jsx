@@ -30,6 +30,13 @@ export default class Page extends Component {
           JSON.stringify(meusDados.crn_numero)
         );
       }
+      if (
+        meusDados.tipo_usuario === "terceirizada" ||
+        meusDados.tipo_usuario === "logistica_abastecimento"
+      ) {
+        this.setState({ tipo_usuario: true });
+      }
+
       const nome_instituicao =
         (meusDados.vinculo_atual &&
           meusDados.vinculo_atual.instituicao &&
@@ -50,7 +57,13 @@ export default class Page extends Component {
   }
 
   render() {
-    const { nome, nome_instituicao, registro_funcional, toggled } = this.state;
+    const {
+      nome,
+      nome_instituicao,
+      registro_funcional,
+      toggled,
+      tipo_usuario
+    } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">
@@ -75,6 +88,15 @@ export default class Page extends Component {
               )}
               {botaoVoltar && voltarPara === undefined && <BotaoVoltarGoBack />}
             </h1>
+            {tipo_usuario ? (
+              <img
+                className="marca-dagua"
+                src="/assets/image/marca-dagua-sigpae.svg"
+                alt=""
+              />
+            ) : (
+              <></>
+            )}
             {children.map((child, key) => {
               return <div key={key}>{key > 0 && child}</div>;
             })}
