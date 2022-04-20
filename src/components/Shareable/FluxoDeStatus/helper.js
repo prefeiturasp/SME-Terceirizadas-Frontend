@@ -116,6 +116,8 @@ export const tipoDeStatus = status => {
     case "Escola cancelou":
     case "DRE cancelou":
     case "Cancelada por atingir data de término":
+    case "Cancelamento por alteração de unidade educacional":
+    case "Cancelamento para aluno não matriculado na rede municipal":
       return "cancelado";
     case "DRE não validou":
     case "CODAE negou":
