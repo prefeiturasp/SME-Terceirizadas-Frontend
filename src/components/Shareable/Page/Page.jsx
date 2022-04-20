@@ -11,7 +11,8 @@ export default class Page extends Component {
     super(props);
     this.state = {
       nome: null,
-      toggled: false
+      toggled: false,
+      tipo_usuario_eh_dilog: false
     };
     this.toggle = this.toggle.bind(this);
   }
@@ -30,11 +31,14 @@ export default class Page extends Component {
           JSON.stringify(meusDados.crn_numero)
         );
       }
+
       if (
-        meusDados.tipo_usuario === "terceirizada" ||
-        meusDados.tipo_usuario === "logistica_abastecimento"
+        ["terceirizada", "logistica_abastecimento"].includes(
+          meusDados.tipo_usuario
+        ) &&
+        window.location.pathname === "/"
       ) {
-        this.setState({ tipo_usuario: true });
+        this.setState({ tipo_usuario_eh_dilog: true });
       }
 
       const nome_instituicao =
@@ -62,7 +66,7 @@ export default class Page extends Component {
       nome_instituicao,
       registro_funcional,
       toggled,
-      tipo_usuario
+      tipo_usuario_eh_dilog
     } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
@@ -88,14 +92,12 @@ export default class Page extends Component {
               )}
               {botaoVoltar && voltarPara === undefined && <BotaoVoltarGoBack />}
             </h1>
-            {tipo_usuario ? (
+            {tipo_usuario_eh_dilog && (
               <img
                 className="marca-dagua"
                 src="/assets/image/marca-dagua-sigpae.svg"
                 alt=""
               />
-            ) : (
-              <></>
             )}
             {children.map((child, key) => {
               return <div key={key}>{key > 0 && child}</div>;
