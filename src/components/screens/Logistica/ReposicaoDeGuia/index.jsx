@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import {
   getGuiaParaConferencia,
@@ -49,27 +49,25 @@ const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimento faltantes (isto 
                           na Unidade Educacional) em relação à quantidade prevista na Guia de Remessa.`;
 const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
 
+let ocorrenciasApagadas = [];
+
 export default () => {
   const [guia, setGuia] = useState({});
   const [uuid, setUuid] = useState();
   const [carregando, setCarregando] = useState(false);
+  const [collapseAlimentos, setCollapseAlimentos] = useState(false);
   const [HoraRecebimento, setHoraRecebimento] = useState("00:00");
   const [HoraRecebimentoAlterada, setHoraRecebimentoAlterada] = useState(false);
   const [initialValues, setInitialValues] = useState({});
-  const [alimentoAtual, setAlimentoAtual] = useState(0);
-  const [valoresForm, setValoresForm] = useState([]);
-  const [fechada, setFechada] = useState({});
-  const [fracionada, setFracionada] = useState({});
-  const [status, setStatus] = useState({});
   const [arquivoAtual, setArquivoAtual] = useState([]);
   const [edicao, setEdicao] = useState(false);
-  const inputFile = useRef(null);
+  const inputFile = useRef([]);
   const autoFillButton = useRef(null);
   const editarButton = useRef(null);
   const history = useHistory();
 
   const [flagAtraso, setFlagAtraso] = useState(false);
-  const [flagAlimento, setFlagAlimento] = useState(false);
+  const [flagAlimento, setFlagAlimento] = useState([]);
 
   const carregarGuia = async uuid => {
     let response;
@@ -152,37 +150,14 @@ export default () => {
     let valoresConf = conferencia.conferencia_dos_alimentos;
     let guiaConf = conferencia.guia;
 
-    let primeiroItem = valoresConf[0];
-
-    for (let i = 0; i < valoresConf.length; i++) {
-      let item = valoresConf[i];
-
-      if (
-        valoresConf.length !== guiaConf.alimentos.length &&
-        i < valoresConf.length - 1
-      ) {
-        let proxItem = valoresConf[i + 1];
-        if (
-          item.nome_alimento === proxItem.nome_alimento &&
-          item.tipo_embalagem !== proxItem.tipo_embalagem
-        ) {
-          if (item.tipo_embalagem === "Fechada") {
-            item.recebidos_fechada = item.qtd_recebido;
-            item.recebidos_fracionada = proxItem.qtd_recebido;
-          } else if (item.tipo_embalagem === "Fracionada") {
-            item.recebidos_fechada = proxItem.qtd_recebido;
-            item.recebidos_fracionada = item.qtd_recebido;
-          }
-          valoresConf.splice(i + 1, 1);
-        }
-      }
-
+    valoresConf.map((item, index) => {
       if (item.tipo_embalagem === "Fechada")
-        item.recebidos_fechada = item.qtd_recebido;
+        values[`recebidos_fechada_${index}`] = item.qtd_recebido;
       if (item.tipo_embalagem === "Fracionada")
-        item.recebidos_fracionada = item.qtd_recebido;
-      item.ocorrencias = item.ocorrencia;
-      item.observacoes = item.observacao;
+        values[`recebidos_fracionada_${index}`] = item.qtd_recebido;
+      values[`status_${index}`] = item.status_alimento;
+      values[`ocorrencias_${index}`] = item.ocorrencia;
+      values[`observacoes_${index}`] = item.observacao;
       if (item.arquivo) {
         item.arquivo = [
           {
@@ -190,25 +165,13 @@ export default () => {
             arquivo: item.arquivo
           }
         ];
-      } else {
-        item.arquivo = [];
+        let arquivos = arquivoAtual;
+        arquivos[index] = item.arquivo;
+        setArquivoAtual(arquivos);
       }
-    }
+    });
 
-    if (primeiroItem) {
-      values.recebidos_fechada = primeiroItem.recebidos_fechada;
-      values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
-      values.status = primeiroItem.status;
-      values.ocorrencias = primeiroItem.ocorrencias;
-      values.observacoes = primeiroItem.observacoes;
-
-      let newArquivo = primeiroItem.arquivo;
-      setArquivoAtual(newArquivo);
-      if (newArquivo) {
-        inputFile.current.setState({ files: newArquivo });
-      }
-    }
-
+    values.numero_guia = guiaConf.numero_guia;
     values.data_entrega = guiaConf.data_entrega;
     values.nome_motorista = conferencia.nome_motorista;
     values.hora_recebimento = conferencia.hora_recebimento;
@@ -223,7 +186,6 @@ export default () => {
     setHoraRecebimento(conferencia.hora_recebimento);
     setHoraRecebimentoAlterada(true);
 
-    setValoresForm(valoresConf);
     setGuia(guiaConf);
 
     setCarregando(false);
@@ -267,9 +229,26 @@ export default () => {
     values.guia = uuid;
     values.arquivo = arquivoAtual;
 
-    let newValoresForm = valoresForm;
-    newValoresForm[alimentoAtual] = Object.assign({}, values);
-    setValoresForm(newValoresForm);
+    let valoresForm = [];
+
+    for (let i = 0; i < guia.alimentos.length; i++) {
+      let x = {};
+      if (edicao) x.uuid_conferencia = values.uuid_conferencia;
+      x.data_entrega = values.data_entrega;
+      x.arquivo = values.arquivo[i];
+      x.data_recebimento = values.data_recebimento;
+      x.data_entrega_real = values.data_entrega_real;
+      x.hora_recebimento = values.hora_recebimento;
+      x.nome_motorista = values.nome_motorista;
+      x.placa_veiculo = values.placa_veiculo;
+      x.ocorrencias = values[`ocorrencias_${i}`];
+      x.recebidos_fechada = values[`recebidos_fechada_${i}`];
+      x.recebidos_fracionada = values[`recebidos_fracionada_${i}`];
+      x.status = values[`status_${i}`];
+      x.observacoes = values[`observacoes_${i}`];
+
+      valoresForm[i] = x;
+    }
 
     localStorage.setItem("valoresReposicao", JSON.stringify(valoresForm));
     localStorage.setItem("guiaReposicao", JSON.stringify(guia));
@@ -291,11 +270,20 @@ export default () => {
     if (guia.status === "Insucesso de entrega") return undefined;
   };
 
-  const validaOcorrencias = value => {
-    if (status === "Recebido") return undefined;
-    if (!value || value.length === 0) return "Selecione uma ocorrência";
-    if (flagAtraso && flagAlimento && value.length === 1)
-      return "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
+  const validaOcorrencias = (values, index, errors) => {
+    let value = values[`ocorrencias_${index}`];
+
+    if (values[`status_${index}`] === "Recebido") {
+      if (errors[`ocorrencias_${index}`]) delete errors[`ocorrencias_${index}`];
+      return;
+    }
+    if (!value || value.length === 0) {
+      errors[`ocorrencias_${index}`] = "Selecione uma ocorrência";
+      return;
+    }
+    if (flagAtraso && flagAlimento[index] && value.length === 1)
+      errors[`ocorrencias_${index}`] =
+        "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
   const validaObservacoes = values => value => {
@@ -335,70 +323,80 @@ export default () => {
     else return false;
   };
 
-  const changePage = (values, change) => {
-    let newValoresForm = valoresForm;
-    let newAlimento = alimentoAtual + change;
-    values.arquivo = arquivoAtual;
-    newValoresForm[alimentoAtual] = Object.assign({}, values);
-    setValoresForm(newValoresForm);
-
-    values.recebidos_fechada = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].recebidos_fechada
-      : undefined;
-    values.recebidos_fracionada = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].recebidos_fracionada
-      : undefined;
-    values.status = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].status
-      : undefined;
-    values.ocorrencias = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].ocorrencias
-      : undefined;
-    values.observacoes = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].observacoes
-      : undefined;
-    let newArquivo = valoresForm[newAlimento]
-      ? valoresForm[newAlimento].arquivo
-      : [];
-
-    setArquivoAtual(newArquivo);
-    if (newArquivo) {
-      inputFile.current.setState({ files: newArquivo });
-    }
-    setAlimentoAtual(newAlimento);
-  };
-
   const validaStatus = values => {
-    let recebidos_fechada = parseInt(values.recebidos_fechada);
-    let recebidos_fracionada = parseInt(values.recebidos_fracionada);
-    let dataEhDepois = comparaDataEntrega(values.data_entrega_real);
-    if (guia.status === "Insucesso de entrega") dataEhDepois = false;
-    let alimentoParcial =
-      recebidos_fechada < fechada.qtd_a_receber ||
-      recebidos_fracionada < fracionada.qtd_a_receber;
-    let alimentoFaltante =
-      recebidos_fechada === 0 || recebidos_fracionada === 0;
+    if (guia.alimentos)
+      guia.alimentos.map((item, index) => {
+        let recebidos_fechada = parseInt(values[`recebidos_fechada_${index}`]);
+        let recebidos_fracionada = parseInt(
+          values[`recebidos_fracionada_${index}`]
+        );
+        let dataEhDepois = comparaDataEntrega(values.data_entrega_real);
+        let embalagensAlimento = guia.alimentos[index].embalagens;
+        let fechada;
+        let fracionada;
+        if (embalagensAlimento.length > 1) {
+          fechada =
+            embalagensAlimento[0].tipo_embalagem === "Fechada"
+              ? embalagensAlimento[0]
+              : embalagensAlimento[1];
+          fracionada =
+            embalagensAlimento[0].tipo_embalagem === "Fracionada"
+              ? embalagensAlimento[0]
+              : embalagensAlimento[1];
+        } else {
+          fechada =
+            embalagensAlimento[0].tipo_embalagem === "Fechada"
+              ? embalagensAlimento[0]
+              : {};
+          fracionada =
+            embalagensAlimento[0].tipo_embalagem === "Fracionada"
+              ? embalagensAlimento[0]
+              : {};
+        }
 
-    setFlagAlimento(alimentoFaltante || alimentoParcial);
-    setFlagAtraso(dataEhDepois);
+        if (guia.status === "Insucesso de entrega") dataEhDepois = false;
 
-    if (alimentoParcial) values.status = "Parcial";
+        let alimentoParcial =
+          recebidos_fechada < fechada.qtd_a_receber ||
+          recebidos_fracionada < fracionada.qtd_a_receber;
+        let alimentoFaltante =
+          recebidos_fechada === 0 || recebidos_fracionada === 0;
 
-    if (alimentoFaltante) values.status = "Não Recebido";
+        let newFlagAlimento = flagAlimento;
+        newFlagAlimento[index] = alimentoFaltante || alimentoParcial;
+        setFlagAlimento(newFlagAlimento);
+        setFlagAtraso(dataEhDepois);
 
-    if (values.data_entrega_real && !alimentoParcial && !alimentoFaltante)
-      values.status = "Recebido";
+        if (alimentoParcial) values[`status_${index}`] = "Parcial";
 
-    if (
-      values.recebidos_fechada === undefined &&
-      values.recebidos_fracionada === undefined &&
-      !dataEhDepois
-    )
-      values.status = undefined;
+        if (alimentoFaltante) values[`status_${index}`] = "Não Recebido";
 
-    if (!values.data_entrega_real) values.status = undefined;
+        if (values.data_entrega_real && !alimentoParcial && !alimentoFaltante) {
+          values[`status_${index}`] = "Recebido";
+          if (
+            values[`ocorrencias_${index}`] &&
+            values[`ocorrencias_${index}`].length
+          )
+            ocorrenciasApagadas = [
+              ...ocorrenciasApagadas,
+              ...values[`ocorrencias_${index}`]
+            ];
+          values[`ocorrencias_${index}`] = [];
+        } else if (ocorrenciasApagadas.length) {
+          values[`ocorrencias_${index}`] = ocorrenciasApagadas;
+          ocorrenciasApagadas = [];
+        }
 
-    setStatus(values.status);
+        if (
+          values[`recebidos_fechada_${index}`] === undefined &&
+          values[`recebidos_fracionada_${index}`] === undefined
+        )
+          values[`status_${index}`] = undefined;
+
+        if (!values.data_entrega_real) {
+          values[`status_${index}`] = undefined;
+        }
+      });
   };
 
   const carregarLocalStorage = values => {
@@ -406,14 +404,19 @@ export default () => {
 
     let valoresConf = JSON.parse(localStorage.getItem("valoresReposicao"));
     let guiaConf = JSON.parse(localStorage.getItem("guiaReposicao"));
-    let primeiroItem = valoresConf[0];
     let ultimoItem = valoresConf[valoresConf.length - 1];
+    let arquivos = arquivoAtual;
 
-    values.recebidos_fechada = primeiroItem.recebidos_fechada;
-    values.recebidos_fracionada = primeiroItem.recebidos_fracionada;
-    values.status = primeiroItem.status;
-    values.ocorrencias = primeiroItem.ocorrencias;
-    values.observacoes = primeiroItem.observacoes;
+    valoresConf.map((item, index) => {
+      values[`recebidos_fechada_${index}`] = item.recebidos_fechada;
+      values[`recebidos_fracionada_${index}`] = item.recebidos_fracionada;
+      values[`status_${index}`] = item.status;
+      values[`ocorrencias_${index}`] = item.ocorrencias;
+      values[`observacoes_${index}`] = item.observacoes;
+      arquivos[index] = item.arquivo;
+    });
+
+    setArquivoAtual(arquivos);
 
     values.data_entrega = ultimoItem.data_entrega;
     values.nome_motorista = ultimoItem.nome_motorista;
@@ -421,19 +424,32 @@ export default () => {
     values.placa_veiculo = ultimoItem.placa_veiculo;
     values.data_entrega_real = moment(ultimoItem.data_entrega_real);
 
-    let newArquivo = primeiroItem.arquivo;
-    setArquivoAtual(newArquivo);
-    if (newArquivo) {
-      inputFile.current.setState({ files: newArquivo });
-    }
-
     setHoraRecebimento(ultimoItem.hora_recebimento);
     setHoraRecebimentoAlterada(true);
 
-    setValoresForm(valoresConf);
     setGuia(guiaConf);
 
     setCarregando(false);
+  };
+
+  const checaErrosCard = (errors, index) => {
+    const errorsNameList = [
+      `recebidos_fechada_${index}`,
+      `recebidos_fracionada_${index}`,
+      `ocorrencias_${index}`,
+      `observacoes_${index}`,
+      `status_${index}`
+    ];
+    if (errorsNameList.some(r => Object.keys(errors).includes(r))) return "red";
+    else return "green";
+  };
+
+  const toggleBtnAlimentos = (uuid, index) => {
+    if (arquivoAtual[index])
+      inputFile.current[index].setState({ files: arquivoAtual[index] });
+    setCollapseAlimentos({
+      [uuid]: !collapseAlimentos[uuid]
+    });
   };
 
   useEffect(() => {
@@ -468,19 +484,22 @@ export default () => {
             render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
-                <div className="subtitulo text-right">
-                  <span>{`Guia número: ${guia.numero_guia}`}</span>
-                </div>
+                <span className="subtitulo">
+                  Conferência individual dos itens da guia
+                </span>
                 <hr />
-                <div className="card mt-3 header-alimento">
-                  {guia.alimentos && guia.alimentos[alimentoAtual] && (
-                    <span>{`Alimento: ${
-                      guia.alimentos[alimentoAtual].nome_alimento
-                    }`}</span>
-                  )}
-                </div>
+
                 <div className="row mt-2">
-                  <div className="col-6">
+                  <div className="col-4">
+                    <Field
+                      component={InputText}
+                      label="Número da guia de remessa"
+                      name="numero_guia"
+                      className="input-busca-produto"
+                      disabled
+                    />
+                  </div>
+                  <div className="col-4">
                     <Field
                       component={InputText}
                       label="Data de Entrega Prevista"
@@ -489,7 +508,7 @@ export default () => {
                       disabled
                     />
                   </div>
-                  <div className="col-6">
+                  <div className="col-4">
                     <Field
                       component={InputComData}
                       label="Data de recebimento na Unidade Educacional"
@@ -564,240 +583,345 @@ export default () => {
                 </div>
 
                 <hr />
-                <Fragment>
-                  {(() => {
-                    if (!guia.alimentos || !guia.alimentos[alimentoAtual])
-                      return;
-                    const item = guia.alimentos[alimentoAtual];
-                    const embalagens = item.total_embalagens
-                      ? item.total_embalagens
-                      : item.embalagens;
-                    const fracionada = filtraEmbalagemPorTipo(
-                      embalagens,
-                      "FRACIONADA"
-                    );
-                    const fechada = filtraEmbalagemPorTipo(
-                      embalagens,
-                      "FECHADA"
-                    );
-                    setFracionada(fracionada);
-                    setFechada(fechada);
-                    return (
-                      <>
-                        <table
-                          className={`table table-bordered table-reposicao`}
+
+                <div className="aviso-alimentos">
+                  Atenção: Os itens marcados em{" "}
+                  <span className="green"> verde </span> são os que foram
+                  preenchidos corretamente, os{" "}
+                  <span className="red"> vermelhos </span> são os que estão
+                  pendentes ou que possuem erros no preenchimento.
+                </div>
+
+                <div className="accordion mt-1" id="accordionAlimentos">
+                  {guia.alimentos &&
+                    guia.alimentos.map((alimento, index) => (
+                      <div className="card mt-3" key={alimento.uuid}>
+                        <div
+                          className={`card-header card-tipo-${checaErrosCard(
+                            errors,
+                            index
+                          )}`}
+                          id={`heading_${alimento.uuid}`}
                         >
-                          <thead>
-                            <tr>
-                              <th
-                                scope="col"
-                                colSpan="4"
-                                className="text-center"
+                          <div className="row card-header-content">
+                            <span className="nome-alimento">{`${
+                              alimento.nome_alimento
+                            }`}</span>
+                            <div className="col-1 align-self-center">
+                              <button
+                                onClick={() =>
+                                  toggleBtnAlimentos(alimento.uuid, index)
+                                }
+                                className="btn btn-link btn-block text-left px-0"
+                                type="button"
+                                data-toggle="collapse"
+                                data-target={`#collapse_${alimento.uuid}`}
+                                aria-expanded="true"
+                                aria-controls={`collapse_${alimento.uuid}`}
                               >
-                                {fechada ? (
-                                  <>EMBALAGEM FECHADA</>
-                                ) : (
-                                  <>EMBALAGEM FRACIONADA</>
-                                )}
-                              </th>
-                            </tr>
-                            <tr>
-                              <th
-                                scope="col"
-                                colSpan="2"
-                                className="text-center"
-                              >
-                                Previsto
-                              </th>
-                              <th scope="col">
-                                A receber{" "}
-                                <TooltipIcone tooltipText={TOOLTIP_A_RECEBER} />
-                              </th>
-                              <th scope="col" className="th-recebido">
-                                Recebido{" "}
-                                <TooltipIcone tooltipText={TOOLTIP_RECEBIDO} />
-                              </th>
-                            </tr>
-                            <tr>
-                              <th scope="col">Quantidade</th>
-                              <th scope="col">Capacidade</th>
-                              <th scope="col">Quantidade</th>
-                              <th scope="col" className="th-recebido">
-                                Quantidade de Embalagens
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <>
-                              <tr>
-                                {fechada ? (
-                                  <>
-                                    <td>{fechada.qtd_volume}</td>
-                                    <td>
-                                      {fechada.descricao_embalagem}.{" "}
-                                      {fechada.capacidade_embalagem}
-                                      {fechada.unidade_medida}
-                                    </td>
-                                    <td>{fechada.qtd_a_receber}</td>
-                                    <td>
-                                      <div className="form-tabela">
-                                        <Field
-                                          component={InputText}
-                                          name="recebidos_fechada"
-                                          className="input-busca-produto"
-                                          validate={composeValidators(
-                                            required,
-                                            numericInteger
+                                <span className="span-icone-toogle">
+                                  <i
+                                    className={
+                                      collapseAlimentos[alimento.uuid]
+                                        ? "fas fa-chevron-up"
+                                        : "fas fa-chevron-down"
+                                    }
+                                  />
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div
+                          id={`collapse_${alimento.uuid}`}
+                          className="collapse"
+                          aria-labelledby="headingOne"
+                          data-parent="#accordionAlimentos"
+                        >
+                          <div className="card-body">
+                            <div className="row">
+                              <>
+                                {(() => {
+                                  if (!guia.alimentos) return;
+                                  const item = alimento;
+                                  const embalagens = item.total_embalagens
+                                    ? item.total_embalagens
+                                    : item.embalagens;
+                                  const fechada = filtraEmbalagemPorTipo(
+                                    embalagens,
+                                    "FECHADA"
+                                  );
+                                  const fracionada = filtraEmbalagemPorTipo(
+                                    embalagens,
+                                    "FRACIONADA"
+                                  );
+                                  return (
+                                    <>
+                                      <div className="col-6">
+                                        <div className="titulo-tabela">
+                                          {fechada ? (
+                                            <>Embalagem Fechada</>
+                                          ) : (
+                                            <>Embalagem Fracionada</>
                                           )}
-                                        />
+                                        </div>
+                                        <table
+                                          className={`table table-bordered table-reposicao`}
+                                        >
+                                          <thead>
+                                            <tr>
+                                              <th scope="col">Qtde Prevista</th>
+                                              <th scope="col">Capacidade</th>
+                                              <th scope="col">
+                                                A receber{" "}
+                                                <TooltipIcone
+                                                  tooltipText={
+                                                    TOOLTIP_A_RECEBER
+                                                  }
+                                                />
+                                              </th>
+                                              <th
+                                                scope="col"
+                                                className="th-recebido"
+                                              >
+                                                Recebido{" "}
+                                                <TooltipIcone
+                                                  tooltipText={TOOLTIP_RECEBIDO}
+                                                />
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {fechada ? (
+                                              <>
+                                                <tr>
+                                                  <td>
+                                                    {fechada.qtd_volume}{" "}
+                                                    {
+                                                      fechada.descricao_embalagem
+                                                    }
+                                                    .
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      fechada.descricao_embalagem
+                                                    }
+                                                    .{" "}
+                                                    {
+                                                      fechada.capacidade_embalagem
+                                                    }
+                                                    {fechada.unidade_medida}
+                                                  </td>
+                                                  <td>
+                                                    {fechada.qtd_a_receber}
+                                                  </td>
+                                                  <td>
+                                                    <div className="form-tabela">
+                                                      <Field
+                                                        component={InputText}
+                                                        name={`recebidos_fechada_${index}`}
+                                                        className="input-busca-produto"
+                                                        placeholder={
+                                                          fechada.descricao_embalagem
+                                                        }
+                                                        validate={composeValidators(
+                                                          required,
+                                                          numericInteger
+                                                        )}
+                                                        onChange={validaOcorrencias(
+                                                          values,
+                                                          index,
+                                                          errors
+                                                        )}
+                                                      />
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              </>
+                                            ) : (
+                                              <>
+                                                <tr>
+                                                  <td>
+                                                    {fracionada.qtd_volume}{" "}
+                                                    {
+                                                      fracionada.descricao_embalagem
+                                                    }
+                                                    .
+                                                  </td>
+                                                  <td>
+                                                    {
+                                                      fracionada.descricao_embalagem
+                                                    }
+                                                    .{" "}
+                                                    {
+                                                      fracionada.capacidade_embalagem
+                                                    }
+                                                    {fracionada.unidade_medida}
+                                                  </td>
+                                                  <td>
+                                                    {fracionada.qtd_a_receber}
+                                                  </td>
+                                                  <td>
+                                                    <div className="form-tabela">
+                                                      <Field
+                                                        component={InputText}
+                                                        name={`recebidos_fracionada_${index}`}
+                                                        className="input-busca-produto"
+                                                        placeholder={
+                                                          fracionada.descricao_embalagem
+                                                        }
+                                                        validate={composeValidators(
+                                                          required,
+                                                          numericInteger
+                                                        )}
+                                                        onChange={validaOcorrencias(
+                                                          values,
+                                                          index,
+                                                          errors
+                                                        )}
+                                                      />
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              </>
+                                            )}
+                                          </tbody>
+                                        </table>
                                       </div>
-                                    </td>
-                                  </>
-                                ) : (
-                                  <>
-                                    <td>{fracionada.qtd_volume}</td>
-                                    <td>
-                                      {fracionada.descricao_embalagem}.{" "}
-                                      {fracionada.capacidade_embalagem}
-                                      {fracionada.unidade_medida}
-                                    </td>
-                                    <td>{fracionada.qtd_a_receber}</td>
-                                    <td>
-                                      <div className="form-tabela">
-                                        <Field
-                                          component={InputText}
-                                          name="recebidos_fracionada"
-                                          className="input-busca-produto"
-                                          validate={composeValidators(
-                                            required,
-                                            numericInteger
-                                          )}
-                                        />
-                                      </div>
-                                    </td>
-                                  </>
-                                )}
-                              </tr>
-                            </>
-                          </tbody>
-                        </table>
-                      </>
-                    );
-                  })()}
-                </Fragment>
+                                    </>
+                                  );
+                                })()}
+                              </>
+                            </div>
+                            <div className="row">
+                              <div className="col-6">
+                                <Field
+                                  component={InputText}
+                                  label="Status de recebimento de alimento"
+                                  name={`status_${index}`}
+                                  className="input-busca-produto"
+                                  placeholder="---"
+                                  validate={composeValidators(
+                                    required,
+                                    maxLength(100)
+                                  )}
+                                  disabled
+                                />
+                              </div>
 
-                <div className="row">
-                  <div className="col-6">
-                    <Field
-                      component={InputText}
-                      label="Status de recebimento de alimento"
-                      name="status"
-                      className="input-busca-produto"
-                      placeholder="---"
-                      validate={composeValidators(required, maxLength(100))}
-                      disabled
-                    />
-                  </div>
+                              <div className="col-6">
+                                <Field
+                                  component={MultiSelect}
+                                  label="Ocorrências"
+                                  name={`ocorrencias_${index}`}
+                                  disableSearch
+                                  multiple
+                                  nomeDoItemNoPlural="ocorrências"
+                                  options={[
+                                    {
+                                      value: "QTD_MENOR",
+                                      label: "Quantidade menor que a prevista"
+                                    },
+                                    {
+                                      value: "PROBLEMA_QUALIDADE",
+                                      label: "Problema de qualidade do produto"
+                                    },
+                                    {
+                                      value: "ALIMENTO_DIFERENTE",
+                                      label: "Alimento diferente do previsto"
+                                    },
+                                    {
+                                      value: "EMBALAGEM_DANIFICADA",
+                                      label: "Embalagem danificada"
+                                    },
+                                    {
+                                      value: "EMBALAGEM_VIOLADA",
+                                      label: "Embalagem violada"
+                                    },
+                                    {
+                                      value: "VALIDADE_EXPIRADA",
+                                      label: "Prazo de validade expirado"
+                                    },
+                                    {
+                                      value: "ATRASO_ENTREGA",
+                                      label: "Atraso na entrega"
+                                    },
+                                    {
+                                      value: "AUSENCIA_PRODUTO",
+                                      label: "Ausência do produto"
+                                    }
+                                  ]}
+                                  className="input-busca-produto"
+                                  onChange={checaAtraso(values, index)}
+                                  disabled={
+                                    !["Parcial", "Não Recebido"].includes(
+                                      values[`status_${index}`]
+                                    )
+                                  }
+                                />
+                              </div>
+                            </div>
 
-                  <div className="col-6">
-                    <Field
-                      component={MultiSelect}
-                      label="Ocorrências"
-                      name="ocorrencias"
-                      disableSearch
-                      multiple
-                      nomeDoItemNoPlural="ocorrências"
-                      options={[
-                        {
-                          value: "QTD_MENOR",
-                          label: "Quantidade menor que a prevista"
-                        },
-                        {
-                          value: "PROBLEMA_QUALIDADE",
-                          label: "Problema de qualidade do produto"
-                        },
-                        {
-                          value: "ALIMENTO_DIFERENTE",
-                          label: "Alimento diferente do previsto"
-                        },
-                        {
-                          value: "EMBALAGEM_DANIFICADA",
-                          label: "Embalagem danificada"
-                        },
-                        {
-                          value: "EMBALAGEM_VIOLADA",
-                          label: "Embalagem violada"
-                        },
-                        {
-                          value: "VALIDADE_EXPIRADA",
-                          label: "Prazo de validade expirado"
-                        },
-                        {
-                          value: "ATRASO_ENTREGA",
-                          label: "Atraso na entrega"
-                        },
-                        {
-                          value: "AUSENCIA_PRODUTO",
-                          label: "Ausência do produto"
-                        }
-                      ]}
-                      className="input-busca-produto"
-                      validate={validaOcorrencias}
-                      onChange={checaAtraso(values)}
-                    />
-                  </div>
-                </div>
+                            <div className="mt-4 mb-4">
+                              <div className="row">
+                                <article className="col-9 produto">
+                                  <label className="mb-3">
+                                    Se possível, insira uma foto que demonstre a
+                                    ocorrência apontada.
+                                    <TooltipIcone
+                                      tooltipText={
+                                        "Os formatos de imagem aceitos são: " +
+                                        FORMATOS_IMAGEM
+                                      }
+                                    />
+                                  </label>
+                                  <InputFile
+                                    ref={inputFile}
+                                    className="inputfile"
+                                    texto="Inserir Imagem"
+                                    name="files"
+                                    accept={FORMATOS_IMAGEM}
+                                    setFiles={setFiles}
+                                    removeFile={removeFile}
+                                    toastSuccess={
+                                      "Imagem incluída com sucesso!"
+                                    }
+                                    alignLeft
+                                    disabled={arquivoAtual.length > 0}
+                                  />
+                                </article>
+                              </div>
+                            </div>
 
-                <div className="mt-4 mb-4">
-                  <div className="row">
-                    <article className="col-9 produto">
-                      <label className="mb-3">
-                        Se possível, insira uma foto que demonstre a ocorrência
-                        apontada.
-                        <TooltipIcone
-                          tooltipText={
-                            "Os formatos de imagem aceitos são: " +
-                            FORMATOS_IMAGEM
-                          }
-                        />
-                      </label>
-                      <InputFile
-                        ref={inputFile}
-                        className="inputfile"
-                        texto="Inserir Imagem"
-                        name="files"
-                        accept={FORMATOS_IMAGEM}
-                        setFiles={setFiles}
-                        removeFile={removeFile}
-                        toastSuccess={"Imagem incluída com sucesso!"}
-                        alignLeft
-                        disabled={arquivoAtual.length > 0}
-                      />
-                    </article>
-                  </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-12">
-                    <Field
-                      component={TextArea}
-                      label="Observações"
-                      name="observacoes"
-                      placeholder="Digite seus comentários aqui..."
-                      required
-                      contador={500}
-                      validate={composeValidators(
-                        validaObservacoes(values),
-                        maxLength(500)
-                      )}
-                      disabled={
-                        !values.ocorrencias || !values.ocorrencias.length
-                      }
-                    />
-                  </div>
+                            <div className="row">
+                              <div className="col-12">
+                                <Field
+                                  component={TextArea}
+                                  label="Observações"
+                                  name={`observacoes_${index}`}
+                                  placeholder="Digite seus comentários aqui..."
+                                  required
+                                  contador={500}
+                                  validate={composeValidators(
+                                    validaObservacoes(values, index),
+                                    maxLength(500)
+                                  )}
+                                  disabled={
+                                    !values[`ocorrencias_${index}`] ||
+                                    !values[`ocorrencias_${index}`].length
+                                  }
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                 </div>
 
                 <hr />
+
                 <div>
                   <button
                     onClick={event => {
@@ -816,40 +940,13 @@ export default () => {
                     ref={editarButton}
                   />
 
-                  <Botao
-                    texto="< Item Anterior"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled={alimentoAtual === 0}
-                    onClick={() => {
-                      changePage(values, -1);
-                    }}
-                  />
-
-                  <Botao
-                    texto="Próximo Item >"
-                    className="ml-3"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    disabled={
-                      Object.keys(errors).length > 0 ||
-                      !guia.alimentos ||
-                      alimentoAtual === guia.alimentos.length - 1
-                    }
-                    onClick={() => {
-                      changePage(values, 1);
-                    }}
-                  />
-
                   <span className="float-right tooltip-botao">
                     <Botao
                       texto="Finalizar reposição"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       disabled={
-                        Object.keys(errors).length > 0 ||
-                        !guia.alimentos ||
-                        alimentoAtual !== guia.alimentos.length - 1
+                        Object.keys(errors).length > 0 || !guia.alimentos
                       }
                       onClick={() => onSubmit(values)}
                     />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Fragment } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin } from "antd";
 import { getGuiaParaConferencia } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
@@ -603,7 +603,7 @@ export default () => {
                         >
                           <div className="card-body">
                             <div className="row">
-                              <Fragment>
+                              <>
                                 {(() => {
                                   if (!guia.alimentos) return;
                                   const item = alimento;
@@ -740,7 +740,7 @@ export default () => {
                                     </>
                                   );
                                 })()}
-                              </Fragment>
+                              </>
                             </div>
                             <div className="row">
                               <div className="col-6">
@@ -801,7 +801,6 @@ export default () => {
                                     }
                                   ]}
                                   className="input-busca-produto"
-                                  //validate={validaOcorrencias(values, index)}
                                   onChange={checaAtraso(values, index)}
                                   disabled={
                                     !["Parcial", "Não Recebido"].includes(
