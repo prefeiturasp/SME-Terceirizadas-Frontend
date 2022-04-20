@@ -618,125 +618,146 @@ export default () => {
                                     embalagens,
                                     "FRACIONADA"
                                   );
+                                  const value_col =
+                                    fechada && fracionada ? "col-6" : "col-12";
                                   return (
                                     <>
-                                      <div className="col-6">
-                                        <div className="titulo-tabela">
-                                          {fechada ? (
-                                            <>Embalagem Fechada</>
-                                          ) : (
-                                            <>Embalagem Fracionada</>
-                                          )}
+                                      {fechada && (
+                                        <div className={value_col}>
+                                          <div className="titulo-tabela">
+                                            Embalagem Fechada
+                                          </div>
+                                          <table
+                                            className={`table table-bordered table-conferencia`}
+                                          >
+                                            <thead>
+                                              <tr>
+                                                <th scope="col">
+                                                  Qtde Prevista
+                                                </th>
+                                                <th scope="col">Capacidade</th>
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Recebido{" "}
+                                                  <TooltipIcone
+                                                    tooltipText={
+                                                      TOOLTIP_RECEBIDO
+                                                    }
+                                                  />
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td>
+                                                  {fechada.qtd_volume}{" "}
+                                                  {fechada.descricao_embalagem}.
+                                                </td>
+                                                <td>
+                                                  {fechada.descricao_embalagem}.{" "}
+                                                  {fechada.capacidade_embalagem}
+                                                  {fechada.unidade_medida}
+                                                </td>
+                                                <td>
+                                                  <div className="form-tabela">
+                                                    <Field
+                                                      component={InputText}
+                                                      name={`recebidos_fechada_${index}`}
+                                                      className="input-busca-produto"
+                                                      placeholder={
+                                                        fechada.descricao_embalagem
+                                                      }
+                                                      validate={composeValidators(
+                                                        required,
+                                                        numericInteger
+                                                      )}
+                                                      onChange={validaOcorrencias(
+                                                        values,
+                                                        index,
+                                                        errors
+                                                      )}
+                                                    />
+                                                  </div>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
                                         </div>
-                                        <table
-                                          className={`table table-bordered table-conferencia`}
-                                        >
-                                          <thead>
-                                            <tr>
-                                              <th scope="col">Qtde Prevista</th>
-                                              <th scope="col">Capacidade</th>
-                                              <th
-                                                scope="col"
-                                                className="th-recebido"
-                                              >
-                                                Recebido{" "}
-                                                <TooltipIcone
-                                                  tooltipText={TOOLTIP_RECEBIDO}
-                                                />
-                                              </th>
-                                            </tr>
-                                          </thead>
-                                          <tbody>
-                                            {fechada ? (
-                                              <>
-                                                <tr>
-                                                  <td>
-                                                    {fechada.qtd_volume}{" "}
-                                                    {
-                                                      fechada.descricao_embalagem
+                                      )}
+                                      {fracionada && (
+                                        <div className={value_col}>
+                                          <div className="titulo-tabela">
+                                            Embalagem Fracionada
+                                          </div>
+                                          <table
+                                            className={`table table-bordered table-conferencia`}
+                                          >
+                                            <thead>
+                                              <tr>
+                                                <th scope="col">
+                                                  Qtde Prevista
+                                                </th>
+                                                <th scope="col">Capacidade</th>
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Recebido{" "}
+                                                  <TooltipIcone
+                                                    tooltipText={
+                                                      TOOLTIP_RECEBIDO
                                                     }
-                                                    .
-                                                  </td>
-                                                  <td>
-                                                    {
-                                                      fechada.descricao_embalagem
-                                                    }
-                                                    .{" "}
-                                                    {
-                                                      fechada.capacidade_embalagem
-                                                    }
-                                                    {fechada.unidade_medida}
-                                                  </td>
-                                                  <td>
-                                                    <div className="form-tabela">
-                                                      <Field
-                                                        component={InputText}
-                                                        name={`recebidos_fechada_${index}`}
-                                                        className="input-busca-produto"
-                                                        placeholder={
-                                                          fechada.descricao_embalagem
-                                                        }
-                                                        validate={composeValidators(
-                                                          required,
-                                                          numericInteger
-                                                        )}
-                                                        onChange={validaOcorrencias(
-                                                          values,
-                                                          index,
-                                                          errors
-                                                        )}
-                                                      />
-                                                    </div>
-                                                  </td>
-                                                </tr>
-                                              </>
-                                            ) : (
-                                              <>
-                                                <tr>
-                                                  <td>
-                                                    {fracionada.qtd_volume}{" "}
-                                                    {
-                                                      fracionada.descricao_embalagem
-                                                    }
-                                                    .
-                                                  </td>
-                                                  <td>
-                                                    {
-                                                      fracionada.descricao_embalagem
-                                                    }
-                                                    .{" "}
-                                                    {
-                                                      fracionada.capacidade_embalagem
-                                                    }
-                                                    {fracionada.unidade_medida}
-                                                  </td>
-                                                  <td>
-                                                    <div className="form-tabela">
-                                                      <Field
-                                                        component={InputText}
-                                                        name={`recebidos_fracionada_${index}`}
-                                                        className="input-busca-produto"
-                                                        placeholder={
-                                                          fracionada.descricao_embalagem
-                                                        }
-                                                        validate={composeValidators(
-                                                          required,
-                                                          numericInteger
-                                                        )}
-                                                        onChange={validaOcorrencias(
-                                                          values,
-                                                          index,
-                                                          errors
-                                                        )}
-                                                      />
-                                                    </div>
-                                                  </td>
-                                                </tr>
-                                              </>
-                                            )}
-                                          </tbody>
-                                        </table>
-                                      </div>
+                                                  />
+                                                </th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr>
+                                                <td>
+                                                  {fracionada.qtd_volume}{" "}
+                                                  {
+                                                    fracionada.descricao_embalagem
+                                                  }
+                                                  .
+                                                </td>
+                                                <td>
+                                                  {
+                                                    fracionada.descricao_embalagem
+                                                  }
+                                                  .{" "}
+                                                  {
+                                                    fracionada.capacidade_embalagem
+                                                  }
+                                                  {fracionada.unidade_medida}
+                                                </td>
+                                                <td>
+                                                  <div className="form-tabela">
+                                                    <Field
+                                                      component={InputText}
+                                                      name={`recebidos_fracionada_${index}`}
+                                                      className="input-busca-produto"
+                                                      placeholder={
+                                                        fracionada.descricao_embalagem
+                                                      }
+                                                      validate={composeValidators(
+                                                        required,
+                                                        numericInteger
+                                                      )}
+                                                      onChange={validaOcorrencias(
+                                                        values,
+                                                        index,
+                                                        errors
+                                                      )}
+                                                    />
+                                                  </div>
+                                                </td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      )}
                                     </>
                                   );
                                 })()}
