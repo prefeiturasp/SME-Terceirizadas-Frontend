@@ -286,8 +286,12 @@ export default () => {
         "Selecionar ocorrência que justifique o recebimento menor que o previsto.";
   };
 
-  const validaObservacoes = values => value => {
-    if (!values.ocorrencias || !values.ocorrencias.length) return undefined;
+  const validaObservacoes = (values, index) => value => {
+    if (
+      !values[`ocorrencias_${index}`] ||
+      !values[`ocorrencias_${index}`].length
+    )
+      return undefined;
     if (value === undefined)
       return "Campo obrigatório caso existam uma ou mais ocorrências";
   };
