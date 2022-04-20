@@ -200,7 +200,7 @@ export class CorpoRelatorio extends Component {
                     <td>
                       {stringSeparadaPorVirgulas(
                         quantidade_por_periodo.tipos_alimentacao,
-                        "label"
+                        "nome"
                       )}
                     </td>
                     <td>{quantidade_por_periodo.numero_alunos}</td>
