@@ -7,6 +7,7 @@ import { usuarioEhTerceirizada } from "helpers/utilities";
 
 const CardBody = props => {
   const ehTerceirizada = usuarioEhTerceirizada();
+  const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
 
   return (
     <div className="card mt-3">
@@ -20,7 +21,10 @@ const CardBody = props => {
                 <div className="row">
                   <div
                     className={`${
-                      ehTerceirizada && props.listaStatus && props.listaLotes
+                      (ehTerceirizada &&
+                        props.listaStatus &&
+                        props.listaLotes) ||
+                      ehDashboardGestaoProduto
                         ? "col-3"
                         : "col-6"
                     }`}
@@ -48,6 +52,20 @@ const CardBody = props => {
                       }}
                     </OnChange>
                   </div>
+                  {ehDashboardGestaoProduto && (
+                    <div className="col-3">
+                      <Field
+                        component={InputText}
+                        name="marca"
+                        placeholder="Busca da Marca"
+                      />
+                      <OnChange name="marca">
+                        {() => {
+                          props.onChange(values);
+                        }}
+                      </OnChange>
+                    </div>
+                  )}
                   {ehTerceirizada && (
                     <>
                       {props.listaStatus && (
