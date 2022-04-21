@@ -253,7 +253,9 @@ class DashBoardDietaEspecial extends Component {
     if (value && value.length > 0) {
       listaFiltro = listaFiltro.filter(function(item) {
         const wordToFilter = slugify(value.toLowerCase());
-        return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
+        return (
+          slugify(item.texto_inteiro.toLowerCase()).search(wordToFilter) !== -1
+        );
       });
       return listaFiltro;
     } else {
