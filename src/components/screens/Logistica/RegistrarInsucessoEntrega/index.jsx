@@ -4,7 +4,6 @@ import { getGuiaParaInsucesso } from "../../../../services/logistica.service.js"
 import { Form, Field } from "react-final-form";
 import Select from "components/Shareable/Select";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-import TooltipIcone from "components/Shareable/TooltipIcone";
 import { InputText } from "components/Shareable/Input/InputText";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
