@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -107,10 +107,10 @@ export default ({ solicitacao }) => {
 
   return (
     <>
-      <i
-        className="fas fa-download download-icon"
-        onClick={() => handleShow()}
-      />
+      <Button className="acoes" variant="link" onClick={() => handleShow()}>
+        <i className="fas fa-file-excel green" />
+        <span className="link-exportar">XLSX</span>
+      </Button>
 
       <Modal show={show} onHide={handleClose} dialogClassName="modal-entregas">
         <Spin tip="Carregando..." spinning={loading}>

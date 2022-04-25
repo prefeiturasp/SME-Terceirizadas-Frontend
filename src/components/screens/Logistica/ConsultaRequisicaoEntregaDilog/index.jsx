@@ -195,10 +195,10 @@ export default () => {
                   />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Exportar Relatório"
+                      texto="Relatório Consolidado XLSX"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.EYE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
                       onClick={() => {
                         setCarregandoExcel(true);
