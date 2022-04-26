@@ -3,9 +3,11 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import {
-  peloMenosUmCaractere,
   alphaNumeric,
-  required
+  composeValidators,
+  peloMenosUmCaractere,
+  required,
+  requiredOptionSearchSelect
 } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import InputText from "components/Shareable/Input/InputText";
@@ -110,7 +112,7 @@ export default class ModalReclamacaoProduto extends Component {
 
   render() {
     const { showModal, closeModal, produto } = this.props;
-    const { meusDados } = this.state;
+    const { meusDados, escolas } = this.state;
     const escola = meusDados ? meusDados.vinculo_atual.instituicao : undefined;
     const deveEscolherUmaEscola =
       usuarioEhNutricionistaSupervisao() || usuarioEhCODAEDietaEspecial();
@@ -191,7 +193,10 @@ export default class ModalReclamacaoProduto extends Component {
                         label="Escola"
                         placeholder="Digite um nome"
                         className="input-busca-nome-item"
-                        validate={required}
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(escolas)
+                        )}
                         required
                       />
                     </div>
