@@ -33,7 +33,7 @@ export const FluxoDeStatus = props => {
 
   const fluxoUtilizadoEFormatado = fluxoUtilizado.map(log => {
     let logFormatado = log;
-    if (log.status_evento_explicacao === "Escola solicitou inativação") {
+    if (log.status_evento_explicacao === "Escola solicitou cancelamento") {
       logFormatado = "Escola solicitou cancelamento";
     }
     if (log.status_evento_explicacao === "Escola cancelou") {
@@ -50,7 +50,7 @@ export const FluxoDeStatus = props => {
       ) {
         return log.justificativa;
       } else {
-        if (log.status_evento_explicacao === "Escola solicitou inativação") {
+        if (log.status_evento_explicacao === "Escola solicitou cancelamento") {
           return "Escola solicitou cancelamento";
         }
         if (log.status_evento_explicacao === "Escola cancelou") {

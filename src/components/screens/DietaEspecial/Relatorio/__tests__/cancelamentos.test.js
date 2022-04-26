@@ -372,7 +372,7 @@ test("Relatorio para cancelamento quando a escola cancela após da aprovação p
       resposta_sim_nao: false
     },
     {
-      status_evento_explicacao: "Escola solicitou inativação",
+      status_evento_explicacao: "Escola solicitou cancelamento",
       usuario: {
         uuid: "36750ded-5790-433e-b765-0507303828df",
         cpf: null,

@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 2.5fr;
+      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 2fr 1fr 1fr;
     }
 
     .header-table {
@@ -56,22 +56,6 @@
         border-left: 0px solid #e9eaea;
         color: #42474a;
         font-weight: 900;
-      }
-
-      .fas {
-        cursor: pointer;
-        font-weight: 900;
-        font-size: 16px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        letter-spacing: 0.01em;
-        font-size: 12px !important;
-
-        /* $neutral/dark */
-
-        color: #42474a;
       }
 
       div {
@@ -141,7 +125,24 @@
 
     .acoes {
       font-size: 14px !important;
+      padding: 0;
       display: inline-block;
+
+      .fas {
+        font-size: 16px;
+      }
+
+      .link-exportar {
+        padding-left: 8px;
+      }
+    }
+
+    .green {
+      color: $green;
+    }
+
+    .red {
+      color: #fc2122;
     }
 
     .confirmar {

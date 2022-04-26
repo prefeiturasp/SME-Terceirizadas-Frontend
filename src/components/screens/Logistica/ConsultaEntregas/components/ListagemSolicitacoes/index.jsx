@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import FiltrosExcel from "../FiltrosExcel";
@@ -111,10 +112,14 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                     <FiltrosExcel solicitacao={solicitacao} />
                   </div>
                   <div>
-                    <i
-                      className="fas fa-download download-icon"
+                    <Button
+                      className="acoes"
+                      variant="link"
                       onClick={() => baixarPDFGuiasRemessa(solicitacao)}
-                    />
+                    >
+                      <i className="fas fa-file-pdf red" />
+                      <span className="link-exportar">PDF</span>
+                    </Button>
                   </div>
                 </div>
                 {ativos && ativos.includes(solicitacao.uuid) && (

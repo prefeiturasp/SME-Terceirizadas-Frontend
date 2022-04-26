@@ -38,7 +38,7 @@ export const fluxoDietaEspecialPartindoEscola = [
 
 export const fluxoDietaEspecialComInativacao = [
   {
-    titulo: "Escola solicitou inativação",
+    titulo: "Escola solicitou cancelamento",
     status: "",
     criado_em: "",
     usuario: null
@@ -109,9 +109,9 @@ export const tipoDeStatus = status => {
     case "Terceirizada respondeu questionamento":
       return "questionado";
     case "Terceirizada tomou ciência":
-    case "Escola solicitou inativação":
-    case "CODAE autorizou inativação":
-    case "Terceirizada tomou ciência da inativação":
+    case "Escola solicitou cancelamento":
+    case "CODAE autorizou cancelamento":
+    case "Terceirizada tomou ciência do cancelamento":
       return "prosseguiu";
     case "Escola cancelou":
     case "DRE cancelou":
@@ -121,9 +121,8 @@ export const tipoDeStatus = status => {
       return "cancelado";
     case "DRE não validou":
     case "CODAE negou":
-    case "CODAE negou inativação":
-    case "Terceirizada recusou":
     case "CODAE negou cancelamento":
+    case "Terceirizada recusou":
       return "reprovado";
     case "Questionamento pela CODAE":
       return "questionado";
