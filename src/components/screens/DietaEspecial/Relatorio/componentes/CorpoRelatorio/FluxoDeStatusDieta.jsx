@@ -14,7 +14,7 @@ const FluxoDeStatusDieta = ({ logs, eh_importado = false }) => {
           fluxo={
             logs.find(
               log =>
-                log.status_evento_explicacao === "Escola solicitou inativação"
+                log.status_evento_explicacao === "Escola solicitou cancelamento"
             ) !== undefined
               ? formatarFluxoDietaEspecial()
               : fluxoDietaEspecialPartindoEscola
