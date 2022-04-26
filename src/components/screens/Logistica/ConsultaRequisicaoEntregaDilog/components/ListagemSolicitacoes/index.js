@@ -3,12 +3,16 @@ import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { Checkbox } from "antd";
-import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
+import {
+  gerarExcelSolicitacoes,
+  imprimirGuiasDaSolicitacao
+} from "services/logistica.service.js";
 import ListagemGuias from "../ListagemGuias";
 import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default ({
   solicitacoes,
@@ -31,6 +35,21 @@ export default ({
         setCarregando(false);
         setShow(true);
         centralDownloadContext.getQtdeDownloadsNaoLidas();
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setCarregando(false);
+      });
+  };
+
+  const baixarExcelGuiasRemessa = solicitacao => {
+    setCarregando(true);
+    const params = gerarParametrosConsulta({
+      numero_requisicao: solicitacao.numero_solicitacao
+    });
+    gerarExcelSolicitacoes(params)
+      .then(() => {
+        setCarregando(false);
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -85,7 +104,8 @@ export default ({
             <div>Distribuidor</div>
             <div>Status</div>
             <div>Data de entrega</div>
-            <div />
+            <div>Exportar relatório</div>
+            <div>Exportar guia</div>
             <div />
           </div>
           {solicitacoes.map(solicitacao => {
@@ -125,9 +145,21 @@ export default ({
                     <Button
                       className="acoes"
                       variant="link"
+                      onClick={() => baixarExcelGuiasRemessa(solicitacao)}
+                    >
+                      <i className="fas fa-file-excel green" />
+                      <span className="link-exportar">XLSX</span>
+                    </Button>
+                  </div>
+
+                  <div>
+                    <Button
+                      className="acoes"
+                      variant="link"
                       onClick={() => baixarPDFGuiasRemessa(solicitacao)}
                     >
-                      Exportar Guias
+                      <i className="fas fa-file-pdf red" />
+                      <span className="link-exportar">PDF</span>
                     </Button>
                   </div>
 

@@ -46,7 +46,7 @@ const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimento
 const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
                           Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
                           será aberta ocorrência a ser detalhada pelo usuário.`;
-const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
+const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
 
 let ocorrenciasApagadas = [];
 
@@ -838,12 +838,6 @@ export default () => {
                                   <label className="mb-3">
                                     Se possível, insira uma foto que demonstre a
                                     ocorrência apontada.
-                                    <TooltipIcone
-                                      tooltipText={
-                                        "Os formatos de imagem aceitos são: " +
-                                        FORMATOS_IMAGEM
-                                      }
-                                    />
                                   </label>
                                   <InputFile
                                     ref={ref =>
@@ -866,6 +860,9 @@ export default () => {
                                       )
                                     }
                                   />
+                                  <label className="mb-3">
+                                    {"Formatos aceitos: " + FORMATOS_IMAGEM}
+                                  </label>
                                 </article>
                               </div>
                             </div>

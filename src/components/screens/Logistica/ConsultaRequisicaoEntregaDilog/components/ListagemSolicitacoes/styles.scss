@@ -44,12 +44,12 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.15fr 0.6fr 0.6fr 0.8fr 0.7fr 0.5fr 0.5fr 0.1fr;
+      grid-template-columns: 0.15fr 0.6fr 0.6fr 1fr 0.5fr 0.5fr 0.5fr 0.5fr 0.1fr;
     }
 
     .header-table {
-      background: #198459;
-      color: #ffffff;
+      background: #f5f6f8;
+      color: #42474a;
       font-weight: bold;
       div {
         text-align: left;
@@ -140,22 +140,24 @@
 
     .acoes {
       font-size: 14px !important;
+      padding: 0;
       display: inline-block;
+
+      .fas {
+        font-size: 16px;
+      }
+
+      .link-exportar {
+        padding-left: 8px;
+      }
     }
 
-    .confirmar {
-      color: $green !important;
-      display: inline !important;
-      padding-left: 0;
+    .green {
+      color: $green;
     }
 
-    .alterar {
-      color: $blue !important;
-      display: inline !important;
-    }
-
-    .imprimir {
-      display: inline !important;
+    .red {
+      color: #fc2122;
     }
   }
 }
