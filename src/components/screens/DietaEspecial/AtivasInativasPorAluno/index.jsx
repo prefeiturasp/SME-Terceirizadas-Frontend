@@ -44,6 +44,7 @@ const AtivasInativasPorAluno = ({
       if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData({ ...filtros, page: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const fetchData = async filtros => {

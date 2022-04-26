@@ -49,6 +49,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
       carregaHomologacao(uuid);
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

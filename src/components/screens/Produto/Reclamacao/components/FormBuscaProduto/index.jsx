@@ -75,7 +75,7 @@ const FormBuscaProduto = ({
       });
     }
     fetchData();
-  }, []);
+  }, [novaReclamacao]);
 
   return (
     <Form

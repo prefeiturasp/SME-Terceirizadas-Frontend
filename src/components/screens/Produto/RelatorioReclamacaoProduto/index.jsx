@@ -39,6 +39,7 @@ const RelatorioReclamacaoProduto = () => {
       setCarregando(false);
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   return (

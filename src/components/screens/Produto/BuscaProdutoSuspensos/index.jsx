@@ -35,6 +35,7 @@ const BuscaProdutoSuspensos = () => {
       setCarregando(false);
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const onSubmitForm = formValues => {
