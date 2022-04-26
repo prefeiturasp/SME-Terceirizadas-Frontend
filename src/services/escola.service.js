@@ -87,6 +87,9 @@ export const getEscolasSimplissimaComDRE = () => {
 export const getEscolasSimplissimaComDREUnpaginated = async () =>
   axios.get("escolas-simplissima-com-dre-unpaginated/");
 
+export const getEscolasTrecTotal = async () =>
+  axios.get("escolas-simplissima-com-dre-unpaginated/terc-total/");
+
 export const getEscolasSimplissimaPorDiretoriaRegional = dre_uuid => {
   const url = `${API_URL}/escolas-simplissima/${dre_uuid}/`;
   const OBJ_REQUEST = {
