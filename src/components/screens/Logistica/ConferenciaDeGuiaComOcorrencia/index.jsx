@@ -224,7 +224,7 @@ export default () => {
 
   const validaStatus = values => {
     if (guia.alimentos)
-      guia.alimentos.map((item, index) => {
+      guia.alimentos.forEach((item, index) => {
         let recebidos_fechada = parseInt(values[`recebidos_fechada_${index}`]);
         let recebidos_fracionada = parseInt(
           values[`recebidos_fracionada_${index}`]
@@ -314,7 +314,7 @@ export default () => {
     let ultimoItem = valoresConf[valoresConf.length - 1];
     let arquivos = arquivoAtual;
 
-    valoresConf.map((item, index) => {
+    valoresConf.forEach((item, index) => {
       values[`recebidos_fechada_${index}`] = item.recebidos_fechada;
       values[`recebidos_fracionada_${index}`] = item.recebidos_fracionada;
       values[`status_${index}`] = item.status;
@@ -347,7 +347,7 @@ export default () => {
     let valoresConf = conferencia.conferencia_dos_alimentos;
     let guiaConf = filtrarAlimentos(conferencia.guia);
 
-    valoresConf.map((item, index) => {
+    valoresConf.forEach((item, index) => {
       if (item.tipo_embalagem === "Fechada")
         values[`recebidos_fechada_${index}`] = item.qtd_recebido;
       if (item.tipo_embalagem === "Fracionada")
@@ -432,6 +432,7 @@ export default () => {
         carregarGuia(param);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

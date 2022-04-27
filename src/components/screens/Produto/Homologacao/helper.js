@@ -1,6 +1,6 @@
 export const formataInformacoesNutricionais = produto => {
   let informacoesFormatadas = [];
-  produto.informacoes_nutricionais.map(informacao => {
+  produto.informacoes_nutricionais.forEach(informacao => {
     if (
       informacoesFormatadas.length === 0 ||
       !informacoesFormatadas.find(

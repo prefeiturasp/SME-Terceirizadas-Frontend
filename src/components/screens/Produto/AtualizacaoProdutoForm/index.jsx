@@ -114,7 +114,7 @@ class AtualizacaoProdutoForm extends Component {
 
   montaOptions = options => {
     let optionsArray = [];
-    options.map(option => {
+    options.forEach(option => {
       optionsArray.push(<Option key={option.uuid}>{`${option.nome}`}</Option>);
     });
     return optionsArray;

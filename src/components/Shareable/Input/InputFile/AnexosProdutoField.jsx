@@ -120,6 +120,7 @@ export class AnexosProdutoField extends Component {
                   <i className="fas fa-paperclip" />
                 </span>
                 <a
+                  href="#!"
                   rel="noopener noreferrer"
                   target="_blank"
                   onClick={() => this.openFile(file)}

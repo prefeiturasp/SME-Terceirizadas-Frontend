@@ -37,6 +37,7 @@ const RelatorioDietaEspecial = () => {
       setCarregando(false);
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const getTodosStatus = () => {

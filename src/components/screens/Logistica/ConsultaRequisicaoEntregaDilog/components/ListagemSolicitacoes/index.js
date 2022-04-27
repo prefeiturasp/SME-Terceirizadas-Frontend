@@ -76,7 +76,7 @@ export default ({
 
   const checkAll = () => {
     let newSelecionados = [];
-    solicitacoes.map(solicitacao => {
+    solicitacoes.forEach(solicitacao => {
       solicitacao.checked = !allChecked;
       if (!allChecked) newSelecionados.push(solicitacao);
     });
@@ -87,6 +87,7 @@ export default ({
   useEffect(() => {
     setAllChecked(false);
     setSelecionados([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [solicitacoes]);
 
   return (
