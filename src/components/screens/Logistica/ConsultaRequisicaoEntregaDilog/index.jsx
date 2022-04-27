@@ -90,7 +90,7 @@ export default () => {
     return (
       selecionados.find(
         selecionado => selecionado.status !== "Aguardando envio"
-      ) || selecionados.length === 0
+      ) !== undefined || selecionados.length === 0
     );
   };
 

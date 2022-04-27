@@ -75,7 +75,8 @@ const FormBuscaProduto = ({
       });
     }
     fetchData();
-  }, [novaReclamacao]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Form

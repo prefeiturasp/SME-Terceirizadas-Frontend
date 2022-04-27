@@ -112,7 +112,7 @@ export default ({ uuid }) => {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [carregando]);
+  }, [editais]);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
