@@ -1,6 +1,7 @@
 import axios from "../_base";
 import { ENDPOINT } from "../../constants/shared";
 import { PEDIDOS } from "../constants";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 /*
     TODO: A funcionalidade provida por esse arquivo 
@@ -61,7 +62,13 @@ export const getQuantidadeAlunosPeriodoEscolar = async uuidEscola => {
 
 export const criarInclusoesDaCEI = async payload => {
   // escola
-  return await axios.post(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/`, payload);
+  const response = await axios
+    .post(`/${INCLUSOES_ALIMENTACAO_DA_CEI}/`, payload)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const excluirInclusoesDaCei = async uuid => {
