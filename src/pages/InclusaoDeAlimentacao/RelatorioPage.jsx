@@ -25,11 +25,6 @@ import {
 } from "services/inclusaoDeAlimentacao";
 
 class RelatorioBase extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount() {
     const urlParams = new URLSearchParams(window.location.search);
     const tipoSolicitacao = urlParams.get("tipoSolicitacao"); //
@@ -54,9 +49,6 @@ class RelatorioBase extends Component {
 
 // Escola
 export class RelatorioEscola extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <RelatorioBase
@@ -104,9 +96,6 @@ export class RelatorioDRE extends Component {
 
 // CODAE
 export class RelatorioCODAE extends Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     // TODO: Remove unused
     ///const urlParams = new URLSearchParams(window.location.search);
@@ -142,9 +131,6 @@ export class RelatorioCODAE extends Component {
 
 // Terceirizada
 export class RelatorioTerceirizada extends Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <RelatorioBase

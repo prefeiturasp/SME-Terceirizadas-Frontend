@@ -63,6 +63,7 @@ export const FormBuscaProduto = ({
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
+
   useEffect(() => {
     const endpoints = [
       getNomesUnicosProdutos(),
@@ -89,6 +90,7 @@ export const FormBuscaProduto = ({
       );
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSearch = (filtro, searchText) => {

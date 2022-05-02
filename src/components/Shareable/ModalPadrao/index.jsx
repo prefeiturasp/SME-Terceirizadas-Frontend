@@ -58,11 +58,10 @@ export class ModalPadrao extends Component {
 
   getSelectedItem = terceirizada => {
     const { terceirizadas } = this.props;
-    const item = terceirizadas.find(opt => {
-      if (opt.nome_fantasia === terceirizada.nome_fantasia)
-        return opt.nome_fantasia;
-    });
-    return item || {};
+    const item = terceirizadas.find(
+      opt => opt.nome_fantasia === terceirizada.nome_fantasia
+    );
+    return item ? item.nome_fantasia : {};
   };
 
   render() {

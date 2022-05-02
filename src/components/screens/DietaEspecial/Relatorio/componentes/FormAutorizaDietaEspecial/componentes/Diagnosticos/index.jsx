@@ -5,10 +5,6 @@ import $ from "jquery";
 import { slugify } from "../../../../../../helper";
 
 export class MultiselectDiagnosticos extends Multiselect {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidUpdate(prevProps) {
     // sobreescreve o método de update para ajustar
     // o negrito dos diagnósticos selecionados

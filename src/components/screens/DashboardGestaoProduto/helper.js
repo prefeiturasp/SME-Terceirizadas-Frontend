@@ -39,7 +39,7 @@ export const CARDS_CONFIG = {
 
 export const incluirDados = (statuses, arr) => {
   const result = [];
-  arr.map(el => {
+  arr.forEach(el => {
     if (el.dados.length && statuses.includes(el.status.toLowerCase())) {
       result.push(...el.dados);
     }

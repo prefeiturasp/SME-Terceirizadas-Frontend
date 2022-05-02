@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
 export default class DetalheProduto extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   exibir_protocolo_dieta = (protocolo, posicao, lista) => {
     const ultimo_item = lista.length === posicao + 1;
     return (

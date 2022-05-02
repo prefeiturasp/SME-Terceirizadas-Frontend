@@ -16,6 +16,7 @@ export default ({ solicitacao }) => {
     if (!alimentosConsolidado) {
       getAlimentos();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -52,6 +52,7 @@ export default ({ onSubmit, loading, setLoading }) => {
       setLoading(false);
     }
     effect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getEscolasFiltrado = dre => {

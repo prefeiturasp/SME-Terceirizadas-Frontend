@@ -43,7 +43,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
 
   const checkAll = () => {
     let newSelecionados = [];
-    guias.map(guia => {
+    guias.forEach(guia => {
       guia.checked = !allChecked;
       if (!allChecked) newSelecionados.push(guia);
     });
