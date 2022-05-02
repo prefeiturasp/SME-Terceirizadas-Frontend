@@ -32,7 +32,12 @@ class Container extends Component {
   }
 
   render() {
-    return <CadastroTipoAlimentacao {...this.state} />;
+    return (
+      <CadastroTipoAlimentacao
+        meusDados={this.state.meusDados}
+        tiposUnidadesEscolar={this.state.tiposUnidadesEscolar}
+      />
+    );
   }
 }
 

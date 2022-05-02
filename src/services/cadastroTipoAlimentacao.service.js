@@ -34,6 +34,27 @@ export const getVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async uuid => {
   });
 };
 
+export const updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values => {
+  try {
+    const response = await fetch(
+      `${CONFIG.API_URL}/vinculos-tipo-alimentacao-u-e-periodo-escolar/${
+        values.uuid
+      }/`,
+      {
+        method: "PUT",
+        headers: authHeader,
+        body: JSON.stringify(values)
+      }
+    );
+    let json = await response.json();
+    const status = await response.status;
+    json.status = status;
+    return json;
+  } catch (err) {
+    return err;
+  }
+};
+
 export const getVinculosTipoAlimentacaoPorEscola = async uuid => {
   const OBJ_REQUEST = {
     headers: authHeader,
