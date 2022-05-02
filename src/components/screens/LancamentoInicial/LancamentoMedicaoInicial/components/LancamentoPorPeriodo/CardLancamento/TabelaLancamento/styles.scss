@@ -159,7 +159,7 @@
   .cabecalho-tabela {
     > div {
       display: flex;
-      justify-content: end;
+      justify-content: flex-end;
       padding-left: 2em;
       border-radius: 4px 4px 0px 0px !important;
     }

@@ -4,7 +4,6 @@ import { getGuiaParaInsucesso } from "../../../../services/logistica.service.js"
 import { Form, Field } from "react-final-form";
 import Select from "components/Shareable/Select";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-import TooltipIcone from "components/Shareable/TooltipIcone";
 import { InputText } from "components/Shareable/Input/InputText";
 import { InputHorario } from "components/Shareable/Input/InputHorario";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -32,7 +31,7 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "registrarInsucessoEntrega";
-const FORMATOS_IMAGEM = ".png, .jpeg, .jpg";
+const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
 
 export default () => {
   const [uuid, setUuid] = useState();
@@ -254,12 +253,6 @@ export default () => {
                       <label className="mb-3">
                         Se possível, insira uma foto que demonstre o motivo do
                         insucesso de entrega.
-                        <TooltipIcone
-                          tooltipText={
-                            "Os formatos de imagem aceitos são: " +
-                            FORMATOS_IMAGEM
-                          }
-                        />
                       </label>
                       <Field
                         component={InputFile}
@@ -273,6 +266,9 @@ export default () => {
                         alignLeft
                         disabled={arquivo.length > 0}
                       />
+                      <label className="mb-3">
+                        {"Formatos aceitos: " + FORMATOS_IMAGEM}
+                      </label>
                     </article>
                   </div>
 

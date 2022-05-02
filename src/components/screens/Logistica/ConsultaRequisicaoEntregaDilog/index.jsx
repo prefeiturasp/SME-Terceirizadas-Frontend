@@ -87,13 +87,11 @@ export default () => {
   };
 
   const confereSolicitacoesSelecionadas = () => {
-    let desabilitar = false;
-    selecionados.map(solicitacao => {
-      if (solicitacao.status !== "Aguardando envio") {
-        desabilitar = true;
-      }
-    });
-    return desabilitar || selecionados.length === 0;
+    return (
+      selecionados.find(
+        selecionado => selecionado.status !== "Aguardando envio"
+      ) !== undefined || selecionados.length === 0
+    );
   };
 
   const arquivaDesarquivaGuias = async (
@@ -143,6 +141,7 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -195,10 +194,10 @@ export default () => {
                   />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Exportar Relatório"
+                      texto="Relatório Consolidado XLSX"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.EYE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
                       onClick={() => {
                         setCarregandoExcel(true);

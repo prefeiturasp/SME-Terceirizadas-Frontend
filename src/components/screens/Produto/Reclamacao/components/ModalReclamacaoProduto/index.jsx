@@ -3,14 +3,17 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import {
-  peloMenosUmCaractere,
   alphaNumeric,
-  required
+  composeValidators,
+  peloMenosUmCaractere,
+  required,
+  requiredOptionSearchSelect
 } from "helpers/fieldValidators";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import InputText from "components/Shareable/Input/InputText";
 import { InputComData } from "components/Shareable/DatePicker";
 import { OnChange } from "react-final-form-listeners";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import moment from "moment";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -22,7 +25,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import { escolaOuNutriReclamaDoProduto } from "services/produto.service";
-import { getEscolasSimplissimaComDREUnpaginated } from "services/escola.service";
+import { getEscolasTrecTotal } from "services/escola.service";
 
 import "./style.scss";
 
@@ -32,7 +35,6 @@ import {
   usuarioEhEscola,
   usuarioEhCODAEDietaEspecial
 } from "helpers/utilities";
-import SelectSelecione from "components/Shareable/SelectSelecione";
 //import { CODAENegaDietaEspecial } from "services/produto.service";
 
 export default class ModalReclamacaoProduto extends Component {
@@ -40,16 +42,25 @@ export default class ModalReclamacaoProduto extends Component {
     super(props);
     this.state = {
       meusDados: undefined,
-      escolas: undefined
+      escolas: [],
+      nomesEscolas: []
     };
   }
 
   componentWillMount = async () => {
     const meusDadosResposta = await meusDados();
-    const escolasResposta = await getEscolasSimplissimaComDREUnpaginated();
+    const escolasResposta = await getEscolasTrecTotal();
     this.setState({
       meusDados: meusDadosResposta,
-      escolas: escolasResposta.data.sort((a, b) => (a.nome > b.nome ? 1 : -1))
+      escolas: escolasResposta.data.map(escola => {
+        return {
+          uuid: escola.uuid,
+          label: `${escola.codigo_eol} - ${escola.nome}`
+        };
+      }),
+      nomesEscolas: escolasResposta.data.map(
+        escola => `${escola.codigo_eol} - ${escola.nome}`
+      )
     });
   };
 
@@ -71,7 +82,17 @@ export default class ModalReclamacaoProduto extends Component {
     return {};
   };
 
+  getNomesItemsFiltrado = value => {
+    const { nomesEscolas } = this.state;
+    if (value) {
+      return nomesEscolas.filter(a => a.includes(value.toUpperCase()));
+    }
+    return [];
+  };
+
   onSubmit = async values => {
+    const { escolas } = this.state;
+    values.escola = escolas.find(escola => escola.label === values.escola).uuid;
     return new Promise(async (resolve, reject) => {
       const response = await escolaOuNutriReclamaDoProduto(
         this.props.produto.ultima_homologacao.uuid,
@@ -107,7 +128,7 @@ export default class ModalReclamacaoProduto extends Component {
         <Form
           onSubmit={this.onSubmit}
           initialValues={this.getDadosIniciais()}
-          render={({ handleSubmit, submitting, form }) => (
+          render={({ handleSubmit, submitting, form, values }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
                 <div className="form-row">
@@ -166,12 +187,17 @@ export default class ModalReclamacaoProduto extends Component {
                   <div className="form-row">
                     <div className="col-12">
                       <Field
-                        component={SelectSelecione}
-                        label="Escola"
+                        dataSource={this.getNomesItemsFiltrado(values.escola)}
+                        component={AutoCompleteField}
                         name="escola"
+                        label="Escola"
+                        placeholder="Digite um nome"
+                        className="input-busca-nome-item"
+                        validate={composeValidators(
+                          required,
+                          requiredOptionSearchSelect(escolas)
+                        )}
                         required
-                        validate={required}
-                        options={escolas}
                       />
                     </div>
                   </div>

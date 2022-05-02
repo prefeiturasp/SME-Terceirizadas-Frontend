@@ -55,6 +55,7 @@ const FaqPage = () => {
       };
     });
     setFilteredCategories(filtered);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pattern]);
 
   return (

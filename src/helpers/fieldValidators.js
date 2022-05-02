@@ -4,6 +4,14 @@ import strip_tags from "locutus/php/strings/strip_tags";
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
 
+export const composeValidators = (...validators) => value =>
+  validators.reduce((error, validator) => error || validator(value), undefined);
+
+export const requiredOptionSearchSelect = escolas => value =>
+  escolas.find(escola => escola.label === value)
+    ? undefined
+    : "Selecione uma opção válida";
+
 export const requiredMultiselect = array =>
   array !== [] ? undefined : "Campo obrigatório";
 

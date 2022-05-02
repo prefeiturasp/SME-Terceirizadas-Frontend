@@ -60,6 +60,7 @@ export const AvaliarReclamacaoProduto = ({
         setIndiceProdutoAtivo(undefined);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues, page]);
 
   useEffect(() => {
@@ -87,6 +88,7 @@ export const AvaliarReclamacaoProduto = ({
     getNomesTerceirizadas().then(response => {
       setTerceirizadas(response.data.results);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = values => {

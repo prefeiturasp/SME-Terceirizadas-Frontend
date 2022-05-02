@@ -34,6 +34,7 @@ export default () => {
       buscarGuias(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {

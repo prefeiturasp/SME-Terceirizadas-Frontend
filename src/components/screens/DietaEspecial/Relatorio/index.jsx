@@ -94,6 +94,7 @@ const Relatorio = ({ visao }) => {
     if (uuid) {
       fetchData(uuid);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const gerarProtocolo = async (uuid, eh_importado) => {

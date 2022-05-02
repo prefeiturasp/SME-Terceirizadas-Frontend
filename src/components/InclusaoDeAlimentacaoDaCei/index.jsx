@@ -1,42 +1,40 @@
-import React, { Component } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
+import React, { Component } from "react";
 import { Field, reduxForm } from "redux-form";
+import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import {
-  meusRascunhosDeInclusaoDeAlimentacao,
-  minhasFaixasEtarias,
+  atualizarInclusoesDaCEI,
+  criarInclusoesDaCEI,
   getQuantidadeAlunosFaixaEtaria,
   getQuantidadeAlunosPeriodoEscolar,
-  criarInclusoesDaCEI,
-  atualizarInclusoesDaCEI,
-  iniciarInclusoesDaCEI
+  iniciarInclusoesDaCEI,
+  meusRascunhosDeInclusaoDeAlimentacao,
+  minhasFaixasEtarias
 } from "services/inclusaoDeAlimentacao/cei.legacy.service";
-import Rascunho from "./Rascunhos";
-import { InputComData } from "../Shareable/DatePicker";
-import { Select } from "../Shareable/Select";
+import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
 import { faixaToString } from "../../helpers/faixasEtarias";
-import { required, maxValue } from "../../helpers/fieldValidators";
-import "./style.scss";
+import { maxValue, required } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
   formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
-import {
-  montatiposAlimentacaoPorPeriodo,
-  montaNomeCombosAlimentacao,
-  retornaUuidEscolaPeriodoEscolar,
-  renderizarLabelTipoAlimentacao
-} from "./helper";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import InputText from "../Shareable/Input/InputText";
-import moment from "moment";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import Botao from "../Shareable/Botao";
-import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
-import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import { TIPO_SOLICITACAO } from "constants/shared";
-import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { InputComData } from "../Shareable/DatePicker";
+import InputText from "../Shareable/Input/InputText";
+import { Select } from "../Shareable/Select";
+import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import {
+  renderizarLabelTipoAlimentacao,
+  retornaUuidEscolaPeriodoEscolar
+} from "./helper";
+import Rascunho from "./Rascunhos";
+import "./style.scss";
 
 const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
@@ -48,7 +46,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     this.state = {
       loading: true,
       meusRascunhos: null,
-      tiposAlimentacoesPorPeriodo: null,
       tiposAlimentacao: [],
       diaInclusao: null,
       faixasEtarias: null,
@@ -58,6 +55,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       periodoEscolarDaEscola: null,
       periodoSelecionado: null,
       tiposAlimentacaoSelecionados: [],
+      vinculosPorTipoAlimentacaoEPeriodoEscolar: null,
       uuidRascunho: null,
       ehOutroMotivo: false
     };
@@ -174,10 +172,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     }
     let resposta = null;
     if (payload.quantidade_alunos_por_faixas_etarias.length === 0) {
-      toastError("Selecione ao menos uma faixa etaria");
+      toastError("Selecione ao menos uma faixa etária");
       errors = true;
-    }
-    if (payload.periodo_escolar === undefined) {
+    } else if (payload.periodo_escolar === undefined) {
       toastError("Selecione o periodo escolar");
       errors = true;
     } else if (
@@ -217,20 +214,21 @@ class InclusaoDeAlimentacaoDaCei extends Component {
         if (uuidRascunho === null && !errors) {
           payload.status = "RASCUNHO";
           resposta = await criarInclusoesDaCEI(payload);
-          const respInicio = await iniciarInclusoesDaCEI(resposta.data.uuid);
-          if (
-            resposta.status === HTTP_STATUS.CREATED &&
-            respInicio.status === HTTP_STATUS.OK
-          ) {
-            toastSuccess("Solicitação enviada com sucesso!");
-            this.refresh();
-            this.resetForm();
+          if (resposta.status !== HTTP_STATUS.CREATED) {
+            toastError(getError(resposta.data));
           } else {
-            toastError(
-              `Erro ao enviar solicitação ${toastError(
-                getError(resposta.data)
-              )}`
-            );
+            const respInicio = await iniciarInclusoesDaCEI(resposta.data.uuid);
+            if (respInicio.status === HTTP_STATUS.OK) {
+              toastSuccess("Solicitação enviada com sucesso!");
+              this.refresh();
+              this.resetForm();
+            } else {
+              toastError(
+                `Erro ao enviar solicitação ${toastError(
+                  getError(resposta.data)
+                )}`
+              );
+            }
           }
         } else {
           if (!errors) {
@@ -310,7 +308,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
 
   buscarFaixasEtariasEQuantidadesNoPeriodo = async periodoUuid => {
     let { diaInclusao, faixasEtarias, totalFaixasEtarias } = this.state;
-    this.setState({ periodoEscolarDaEscola: periodoUuid });
+    this.setState({
+      periodoEscolarDaEscola: periodoUuid
+    });
     const dataInclusao = moment(diaInclusao, "DD/MM/YYYY").format("YYYY-MM-DD");
     const qtdAlunosFaixa = await getQuantidadeAlunosFaixaEtaria(
       periodoUuid,
@@ -325,12 +325,16 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       });
 
       faixasEtarias.forEach(faixa => {
-        results.forEach(result => {
-          if (faixa.uuid === result.faixa_etaria.uuid) {
-            faixa.total_matriculados = result.count;
-            faixa.validade = maxValue(result.count);
-          }
-        });
+        const faixaEtariaExistente = results.find(
+          result => result.faixa_etaria.uuid === faixa.uuid
+        );
+        if (faixaEtariaExistente) {
+          faixa.total_matriculados = faixaEtariaExistente.count;
+          faixa.validade = maxValue(faixaEtariaExistente.count);
+        } else {
+          faixa.total_matriculados = 0;
+          faixa.validade = maxValue(0);
+        }
       });
       this.setState({ faixasEtarias, totalFaixasEtarias });
     }
@@ -339,7 +343,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
   componentDidUpdate = async (prevProps, prevState) => {
     let {
       meusRascunhos,
-      tiposAlimentacoesPorPeriodo,
       loading,
       faixasEtarias,
       diaInclusao,
@@ -363,7 +366,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     if (
       meusRascunhos === null &&
       loading &&
-      tiposAlimentacoesPorPeriodo === null &&
       faixasEtarias === null &&
       tpUnidadeEscolar
     ) {
@@ -384,14 +386,9 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       });
       getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(tpUnidadeEscolar).then(
         response => {
-          let tiposAlimentacao = montatiposAlimentacaoPorPeriodo(
-            response.results,
-            periodos
-          );
-          tiposAlimentacoesPorPeriodo = montaNomeCombosAlimentacao(
-            tiposAlimentacao
-          );
-          this.setState({ tiposAlimentacoesPorPeriodo });
+          this.setState({
+            vinculosPorTipoAlimentacaoEPeriodoEscolar: response.results
+          });
         }
       );
     }
@@ -399,7 +396,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
     if (
       meusRascunhos !== null &&
       loading &&
-      tiposAlimentacoesPorPeriodo !== null &&
       faixasEtarias !== null &&
       tpUnidadeEscolar
     ) {
@@ -423,11 +419,10 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tiposAlimentacaoSelecionados: []
     });
     this.props.change("tipos_alimentacao", null);
-    const { periodos } = this.props;
-    periodos.forEach(periodo => {
-      if (periodo.uuid === uuid) {
-        this.setState({ tiposAlimentacao: periodo.tipos_alimentacao });
-      }
+    this.setState({
+      tiposAlimentacao: this.state.vinculosPorTipoAlimentacaoEPeriodoEscolar.find(
+        vinculo => vinculo.periodo_escolar.uuid === uuid
+      ).tipos_alimentacao
     });
   };
 
@@ -534,6 +529,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                     name="data"
                     required
                     validate={required}
+                    minDate={this.props.proximos_dois_dias_uteis}
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
@@ -554,7 +550,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                   </div>
                 )}
                 <div className="periodo-e-tipo-de-alimentacoes mt-3">
-                  <div>Periodos</div>
+                  <div>Períodos</div>
                   <div>Tipos de Alimentação</div>
 
                   <div className="periodos-da-cei">
@@ -574,7 +570,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                                   diaInclusao
                                 );
                               }}
-                              disabled={diaInclusao === null ? true : false}
                             />
                             <span className="checkmark" />
                             <nav>{periodo.nome}</nav>
@@ -583,7 +578,6 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                       );
                     })}
                   </div>
-
                   <div>
                     <Field
                       component={StatefulMultiSelect}
@@ -644,7 +638,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                   })}
 
                   <article>
-                    <div className="faixa-etaria">Total {">>"} </div>
+                    <div className="faixa-etaria">Total </div>
                     <div className="alunos-matriculados">
                       {totalFaixasEtarias}
                     </div>

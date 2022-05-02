@@ -91,6 +91,7 @@ export default () => {
       buscarNotificacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   return (

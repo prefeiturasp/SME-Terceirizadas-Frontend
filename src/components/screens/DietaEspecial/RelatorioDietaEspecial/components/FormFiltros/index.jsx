@@ -84,6 +84,7 @@ export default ({ onSubmit, setCarregando }) => {
       setCarregando(false);
     }
     effect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getAlunos = async dadosIniciais => {

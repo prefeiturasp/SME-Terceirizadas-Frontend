@@ -23,12 +23,6 @@ import "./style.scss";
 const maxLength500 = maxLengthProduto(500);
 
 export default class ModalCancelarHomologacaoProduto extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentWillMount = async () => {};
-
   getDadosIniciais = () => {
     const produto = this.props.produto;
     if (produto) {

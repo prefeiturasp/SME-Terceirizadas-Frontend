@@ -57,9 +57,15 @@ export default class DashboardGestaoProduto extends Component {
 
   onPesquisaChanged = values => {
     if (values.titulo === undefined) values.titulo = "";
+    if (values.marca === undefined) values.marca = "";
     const { cards } = this.state;
     let cardsFiltered = deepCopy(cards);
-    cardsFiltered = this.filtrarNome(cardsFiltered, values.titulo);
+    if (values.titulo) {
+      cardsFiltered = this.filtrarNome(cardsFiltered, values.titulo);
+    }
+    if (values.marca) {
+      cardsFiltered = this.filtrarMarca(cardsFiltered, values.marca);
+    }
     this.setState({ cardsFiltered });
   };
 
@@ -75,6 +81,19 @@ export default class DashboardGestaoProduto extends Component {
       return card;
     });
   };
+
+  filtrarMarca(listaFiltro, value) {
+    const wordToFilter = slugify(value.toLowerCase());
+    return listaFiltro.map(card => {
+      card.items = card.items.filter(
+        item =>
+          slugify(item.marca_produto.toLowerCase()).search(wordToFilter) !==
+            -1 ||
+          slugify(item.id_externo.toLowerCase()).search(wordToFilter) !== -1
+      );
+      return card;
+    });
+  }
 
   retornaCenarioPorTitulo = titulo => {
     switch (titulo) {
@@ -109,6 +128,7 @@ export default class DashboardGestaoProduto extends Component {
             titulo="Acompanhamento de produtos cadastrados"
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
+            ehDashboardGestaoProduto={true}
           >
             {cardsFiltered.map((card, index) => {
               const card2 = cardsFiltered[index + 1]

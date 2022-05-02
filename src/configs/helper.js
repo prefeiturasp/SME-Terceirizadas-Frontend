@@ -194,28 +194,17 @@ export const painelInicial = () => {
 };
 
 export const inclusaoCardapio = () => {
-  switch (localStorage.getItem("perfil")) {
-    case escolaEhCei():
-      return InclusaoDeAlimentacaoCEIPage;
-    default:
-      return InclusaoDeAlimentacaoPage;
-  }
+  return escolaEhCei()
+    ? InclusaoDeAlimentacaoCEIPage
+    : InclusaoDeAlimentacaoPage;
 };
 
 export const alteracaoCardapio = () => {
-  switch (localStorage.getItem("perfil")) {
-    case escolaEhCei():
-      return AlteracaoDeCardapioCEIPage;
-    default:
-      return AlteracaoDeCardapioPage;
-  }
+  return escolaEhCei() ? AlteracaoDeCardapioCEIPage : AlteracaoDeCardapioPage;
 };
 
 export const suspensaoAlimentacao = () => {
-  switch (localStorage.getItem("perfil")) {
-    case escolaEhCei():
-      return SuspensaoDeAlimentacaoDeCEI;
-    default:
-      return SuspensaoDeAlimentacaoPage;
-  }
+  return escolaEhCei()
+    ? SuspensaoDeAlimentacaoDeCEI
+    : SuspensaoDeAlimentacaoPage;
 };
