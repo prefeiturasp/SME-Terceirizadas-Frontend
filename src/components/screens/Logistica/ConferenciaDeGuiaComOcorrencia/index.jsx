@@ -665,6 +665,7 @@ export default () => {
                                                   <div className="form-tabela">
                                                     <Field
                                                       component={InputText}
+                                                      apenasNumeros
                                                       name={`recebidos_fechada_${index}`}
                                                       className="input-busca-produto"
                                                       placeholder={
@@ -737,6 +738,7 @@ export default () => {
                                                   <div className="form-tabela">
                                                     <Field
                                                       component={InputText}
+                                                      apenasNumeros
                                                       name={`recebidos_fracionada_${index}`}
                                                       className="input-busca-produto"
                                                       placeholder={
