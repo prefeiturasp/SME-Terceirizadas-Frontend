@@ -31,7 +31,8 @@ export const InputText = props => {
     pattern,
     icone,
     contador,
-    toUppercaseActive
+    toUppercaseActive,
+    apenasNumeros
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -71,6 +72,9 @@ export const InputText = props => {
         onInput={e => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
+            : e.target.value;
+          e.target.value = apenasNumeros
+            ? e.target.value.replace(/\D/g, "")
             : e.target.value;
         }}
       />
