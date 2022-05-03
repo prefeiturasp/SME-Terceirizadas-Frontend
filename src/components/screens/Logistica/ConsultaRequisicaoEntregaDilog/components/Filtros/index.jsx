@@ -21,7 +21,8 @@ export default ({
   setFiltros,
   setSolicitacoes,
   initialValues,
-  setInitialValues
+  setInitialValues,
+  inicioResultado
 }) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
 
@@ -203,7 +204,7 @@ export default ({
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}

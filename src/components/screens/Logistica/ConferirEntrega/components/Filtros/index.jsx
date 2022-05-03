@@ -14,7 +14,7 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, initialValuesProp }) => {
+export default ({ setFiltros, initialValuesProp, inicioResultado }) => {
   const [initialValuesDefault] = useState({
     status: ["PENDENTE_DE_CONFERENCIA"]
   });
@@ -125,7 +125,7 @@ export default ({ setFiltros, initialValuesProp }) => {
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
