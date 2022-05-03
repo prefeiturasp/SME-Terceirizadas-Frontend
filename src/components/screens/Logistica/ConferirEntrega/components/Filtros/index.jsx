@@ -14,7 +14,7 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros }) => {
+export default ({ setFiltros, inicioResultado }) => {
   const onSubmit = async values => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
