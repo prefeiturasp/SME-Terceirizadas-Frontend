@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin, Pagination } from "antd";
 import { getListagemSolicitacaoAlteracao } from "../../../../services/logistica.service.js";
 import "./styles.scss";
@@ -17,6 +17,8 @@ export default () => {
   const [numeroSolicitacaoInicial, setNumeroSolicitacaoInicial] = useState("");
   const queryString = window.location.search;
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -25,6 +27,7 @@ export default () => {
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -78,6 +81,7 @@ export default () => {
             solicitacoes={solicitacoes}
             numeroSolicitacaoInicial={numeroSolicitacaoInicial}
             page={page}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>
