@@ -13,7 +13,6 @@ export default () => {
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
-  const [initialValues, setInitialValues] = useState();
 
   const buscarGuias = async page => {
     setCarregando(true);
@@ -40,12 +39,6 @@ export default () => {
         numero_guia: codigo
       };
       setFiltros({ ...filtro });
-      setInitialValues({ ...filtro });
-    } else {
-      const filtro = {
-        status: ["PENDENTE_DE_CONFERENCIA"]
-      };
-      setFiltros({ ...filtro });
     }
   }, []);
 
@@ -70,7 +63,7 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
-          <Filtros setFiltros={setFiltros} initialValuesProp={initialValues} />
+          <Filtros setFiltros={setFiltros} />
           {guias && (
             <>
               <br /> <hr /> <br />
