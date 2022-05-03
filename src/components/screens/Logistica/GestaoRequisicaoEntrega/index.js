@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
@@ -41,6 +41,8 @@ export default () => {
 
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -50,6 +52,7 @@ export default () => {
       setTotal(response.data.count);
       setNumEnviadas(response.data.num_enviadas);
       setNumConfirmadas(response.data.num_confirmadas);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -143,6 +146,7 @@ export default () => {
             setTotal={setTotal}
             initialValues={initialValues}
             setInitialValues={setInitialValues}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>

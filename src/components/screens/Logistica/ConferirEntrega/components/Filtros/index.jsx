@@ -116,7 +116,7 @@ export default ({ setFiltros }) => {
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}

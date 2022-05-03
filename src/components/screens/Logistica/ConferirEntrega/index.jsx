@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin, Pagination } from "antd";
 import { getGuiasEscola } from "../../../../services/logistica.service.js";
 import ListagemGuias from "./components/ListagemGuias";
@@ -14,6 +14,8 @@ export default () => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
+  const inicioResultado = useRef();
+
   const buscarGuias = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -21,6 +23,7 @@ export default () => {
     if (response.data.count) {
       setGuias(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setGuias();
