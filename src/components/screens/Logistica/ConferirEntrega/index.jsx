@@ -13,6 +13,7 @@ export default () => {
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
+  const [initialValues, setInitialValues] = useState();
 
   const inicioResultado = useRef();
 
@@ -42,6 +43,7 @@ export default () => {
         numero_guia: codigo
       };
       setFiltros({ ...filtro });
+      setInitialValues({ ...filtro });
     }
   }, []);
 
@@ -61,12 +63,16 @@ export default () => {
   const updatePage = () => {
     buscarGuias(page);
   };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
-          <Filtros setFiltros={setFiltros} inicioResultado={inicioResultado} />
+          <Filtros
+            setFiltros={setFiltros}
+            setGuias={setGuias}
+            initialValuesProp={initialValues}
+            inicioResultado={inicioResultado}
+          />
           {guias && (
             <>
               <br /> <hr /> <br />

@@ -1,5 +1,5 @@
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -14,7 +14,18 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, inicioResultado }) => {
+export default ({
+  setFiltros,
+  initialValuesProp,
+  inicioResultado,
+  setGuias
+}) => {
+  const [initialValuesDefault] = useState({});
+
+  const initialValues = initialValuesProp
+    ? initialValuesProp
+    : initialValuesDefault;
+
   const onSubmit = async values => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
@@ -24,6 +35,7 @@ export default ({ setFiltros, inicioResultado }) => {
     <div className="filtros-conferir-entrega">
       <Form
         onSubmit={onSubmit}
+        initialValues={initialValues}
         render={({ form, handleSubmit, submitting, values }) => (
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
@@ -130,6 +142,10 @@ export default ({ setFiltros, inicioResultado }) => {
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3"
+                onClick={() => {
+                  form.reset({});
+                  setGuias(undefined);
+                }}
               />
             </div>
           </form>
