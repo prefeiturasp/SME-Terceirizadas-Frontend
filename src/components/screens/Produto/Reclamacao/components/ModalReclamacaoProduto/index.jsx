@@ -35,6 +35,8 @@ import {
   usuarioEhEscola,
   usuarioEhCODAEDietaEspecial
 } from "helpers/utilities";
+import { TIPO_PERFIL } from "constants/shared";
+
 //import { CODAENegaDietaEspecial } from "services/produto.service";
 
 export default class ModalReclamacaoProduto extends Component {
@@ -92,7 +94,12 @@ export default class ModalReclamacaoProduto extends Component {
 
   onSubmit = async values => {
     const { escolas } = this.state;
-    values.escola = escolas.find(escola => escola.label === values.escola).uuid;
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
+      values.escola = escolas.find(
+        escola => escola.label === values.escola
+      ).uuid;
+    }
     return new Promise(async (resolve, reject) => {
       const response = await escolaOuNutriReclamaDoProduto(
         this.props.produto.ultima_homologacao.uuid,
