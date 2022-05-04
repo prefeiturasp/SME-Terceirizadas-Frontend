@@ -38,7 +38,7 @@ export default function reducer(state = {}, action) {
         substituicoes.forEach(function(substituicao) {
           const {
             periodo_escolar,
-            tipo_alimentacao_de,
+            tipos_alimentacao_de,
             tipo_alimentacao_para,
             faixas_etarias
           } = substituicao;
@@ -46,10 +46,17 @@ export default function reducer(state = {}, action) {
             periodo: periodo_escolar.uuid,
             check: true,
             tipo_alimentacao_para: tipo_alimentacao_para.uuid,
-            tipo_alimentacao_de: tipo_alimentacao_de.uuid
+            tipos_alimentacao_de: tipos_alimentacao_de.map(
+              tipo_alimentacao_de => {
+                return tipo_alimentacao_de.uuid;
+              }
+            ),
+            faixas_etarias: {}
           };
           faixas_etarias.forEach(faixaEtaria => {
             dadosSubstituicao[`qtde-faixa-${faixaEtaria.faixa_etaria.uuid}`] =
+              faixaEtaria.quantidade;
+            dadosSubstituicao.faixas_etarias[faixaEtaria.faixa_etaria.uuid] =
               faixaEtaria.quantidade;
           });
           dadosRetornados[
