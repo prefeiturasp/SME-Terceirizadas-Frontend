@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin, Pagination } from "antd";
 import { getGuiasEscola } from "../../../../services/logistica.service.js";
 import ListagemGuias from "./components/ListagemGuias";
@@ -15,6 +15,8 @@ export default () => {
   const [page, setPage] = useState();
   const [initialValues, setInitialValues] = useState();
 
+  const inicioResultado = useRef();
+
   const buscarGuias = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -22,6 +24,7 @@ export default () => {
     if (response.data.count) {
       setGuias(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setGuias();
@@ -41,11 +44,6 @@ export default () => {
       };
       setFiltros({ ...filtro });
       setInitialValues({ ...filtro });
-    } else {
-      const filtro = {
-        status: ["PENDENTE_DE_CONFERENCIA"]
-      };
-      setFiltros({ ...filtro });
     }
   }, []);
 
@@ -65,12 +63,16 @@ export default () => {
   const updatePage = () => {
     buscarGuias(page);
   };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
-          <Filtros setFiltros={setFiltros} initialValuesProp={initialValues} />
+          <Filtros
+            setFiltros={setFiltros}
+            setGuias={setGuias}
+            initialValuesProp={initialValues}
+            inicioResultado={inicioResultado}
+          />
           {guias && (
             <>
               <br /> <hr /> <br />

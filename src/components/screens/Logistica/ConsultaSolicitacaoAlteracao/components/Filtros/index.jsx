@@ -14,7 +14,12 @@ import "./styles.scss";
 
 const FORM_NAME = "buscaSolicitacaoAlteracao";
 
-export default ({ setFiltros, setSolicitacoes, numeroSolicitacaoInicial }) => {
+export default ({
+  setFiltros,
+  setSolicitacoes,
+  numeroSolicitacaoInicial,
+  inicioResultado
+}) => {
   const onSubmit = async values => {
     const filtros = { ...values };
     if (filtros.motivos) {
@@ -119,7 +124,7 @@ export default ({ setFiltros, setSolicitacoes, numeroSolicitacaoInicial }) => {
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
