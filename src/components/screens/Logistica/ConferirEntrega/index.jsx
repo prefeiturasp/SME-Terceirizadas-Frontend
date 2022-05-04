@@ -44,11 +44,6 @@ export default () => {
       };
       setFiltros({ ...filtro });
       setInitialValues({ ...filtro });
-    } else {
-      const filtro = {
-        status: ["PENDENTE_DE_CONFERENCIA"]
-      };
-      setFiltros({ ...filtro });
     }
   }, []);
 
@@ -68,13 +63,13 @@ export default () => {
   const updatePage = () => {
     buscarGuias(page);
   };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-conferir-entrega">
         <div className="card-body conferir-entrega">
           <Filtros
             setFiltros={setFiltros}
+            setGuias={setGuias}
             initialValuesProp={initialValues}
             inicioResultado={inicioResultado}
           />

@@ -14,10 +14,13 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, initialValuesProp, inicioResultado }) => {
-  const [initialValuesDefault] = useState({
-    status: ["PENDENTE_DE_CONFERENCIA"]
-  });
+export default ({
+  setFiltros,
+  initialValuesProp,
+  inicioResultado,
+  setGuias
+}) => {
+  const [initialValuesDefault] = useState({});
 
   const initialValues = initialValuesProp
     ? initialValuesProp
@@ -58,7 +61,7 @@ export default ({ setFiltros, initialValuesProp, inicioResultado }) => {
                   options={[
                     {
                       value: "PENDENTE_DE_CONFERENCIA",
-                      label: "Pendente"
+                      label: "Pendente de conferência"
                     },
                     {
                       value: "RECEBIDA",
@@ -140,8 +143,8 @@ export default ({ setFiltros, initialValuesProp, inicioResultado }) => {
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3"
                 onClick={() => {
-                  form.reset(initialValues);
-                  setFiltros(initialValues);
+                  form.reset({});
+                  setGuias(undefined);
                 }}
               />
             </div>
