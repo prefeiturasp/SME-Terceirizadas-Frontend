@@ -22,12 +22,9 @@ export default class DashboardGestaoProduto extends Component {
       dashboardDataFiltered: null,
       erro: false,
       ehTerceirizada: false,
-      filtroPorTituloAtivo: false,
-      filtroPorMarcaAtivo: false,
-      tituloToBeFiltered: "",
-      marcaToBeFiltered: "",
       loading: true,
-      filtrosDesabilitados: true
+      filtrosDesabilitados: true,
+      filtroAtivo: false
     };
     this.typingTimeout = null;
   }
@@ -79,17 +76,32 @@ export default class DashboardGestaoProduto extends Component {
     this.loadDashBoardGestaoProdutos();
   }
 
-  filtraHomologacoesPorTituloMarca = () => {
-    const { marcaToBeFiltered, tituloToBeFiltered } = this.state;
-
-    return new Promise(async (resolve, reject) => {
-      let data = {};
-      marcaToBeFiltered &&
-        marcaToBeFiltered.length >= 3 &&
-        (data.marca_produto = marcaToBeFiltered);
-      tituloToBeFiltered &&
-        tituloToBeFiltered.length >= 3 &&
-        (data.titulo_produto = tituloToBeFiltered);
+  onPesquisaChanged = values => {
+    clearTimeout(this.typingTimeout);
+    this.typingTimeout = setTimeout(async () => {
+      const data = {};
+      if (
+        (!values.titulo && !values.marca) ||
+        (!values.titulo && values.marca && values.marca.length < 3) ||
+        (!values.marca && values.titulo && values.titulo.length < 3) ||
+        (values.marca &&
+          values.titulo &&
+          values.titulo.length < 3 &&
+          values.marca.length < 3)
+      ) {
+        if (this.state.filtroAtivo) {
+          this.loadDashBoardGestaoProdutos();
+          this.setState({ filtroAtivo: false });
+        }
+        return;
+      }
+      this.setState({ filtroAtivo: true });
+      if (values.titulo && values.titulo.length > 2) {
+        data["titulo_produto"] = values.titulo;
+      }
+      if (values.marca && values.marca.length > 2) {
+        data["marca_produto"] = values.marca;
+      }
       this.setState({ loading: true });
       const response = await getHomologacoesPorTituloMarca(data);
       if (response.status === HTTP_STATUS.OK) {
@@ -104,106 +116,10 @@ export default class DashboardGestaoProduto extends Component {
           ehTerceirizada,
           loading: false
         });
-        resolve();
       } else {
-        this.setState({ loading: false });
-        reject(response.errors);
-      }
-    });
-  };
-
-  filtrarTitulo = () => {
-    const {
-      filtroPorTituloAtivo,
-      tituloToBeFiltered,
-      marcaToBeFiltered
-    } = this.state;
-    if (tituloToBeFiltered.length >= 3) {
-      try {
-        this.filtraHomologacoesPorTituloMarca();
         this.setState({
-          filtroPorTituloAtivo: true
-        });
-      } catch (e) {
-        this.setState({ erro: true });
-      }
-    } else if (
-      tituloToBeFiltered.length < 3 &&
-      marcaToBeFiltered.length >= 3 &&
-      filtroPorTituloAtivo
-    ) {
-      this.filtraHomologacoesPorTituloMarca();
-      this.setState({
-        filtroPorTituloAtivo: false,
-        filtroPorMarcaAtivo: true
-      });
-    } else {
-      if (this.state.filtroPorTituloAtivo) {
-        this.loadDashBoardGestaoProdutos();
-        this.setState({
-          filtroPorTituloAtivo: false
-        });
-      }
-    }
-  };
-
-  filtrarMarca() {
-    const {
-      marcaToBeFiltered,
-      tituloToBeFiltered,
-      filtroPorMarcaAtivo
-    } = this.state;
-    if (marcaToBeFiltered.length >= 3) {
-      try {
-        this.filtraHomologacoesPorTituloMarca();
-        this.setState({
-          filtroPorMarcaAtivo: true
-        });
-      } catch (e) {
-        this.setState({ erro: true });
-      }
-    } else if (
-      marcaToBeFiltered.length < 3 &&
-      tituloToBeFiltered.length >= 3 &&
-      filtroPorMarcaAtivo
-    ) {
-      this.filtraHomologacoesPorTituloMarca();
-      this.setState({
-        filtroPorMarcaAtivo: false,
-        filtroPorTituloAtivo: true
-      });
-    } else {
-      if (this.state.filtroPorMarcaAtivo) {
-        this.loadDashBoardGestaoProdutos();
-        this.setState({
-          filtroPorMarcaAtivo: false
-        });
-      }
-    }
-  }
-
-  onPesquisaChanged = values => {
-    const { marcaToBeFiltered, tituloToBeFiltered } = this.state;
-    clearTimeout(this.typingTimeout);
-    this.typingTimeout = setTimeout(() => {
-      if (values.titulo === undefined) {
-        values.titulo = "";
-        this.setState({ tituloToBeFiltered: "" });
-      }
-      if (values.marca === undefined) {
-        values.marca = "";
-        this.setState({ marcaToBeFiltered: "" });
-      }
-      if (values.titulo !== tituloToBeFiltered) {
-        const tituloToBeFiltered = values.titulo;
-        this.setState({ tituloToBeFiltered, userTyping: true }, () => {
-          this.filtrarTitulo();
-        });
-      }
-      if (values.marca !== marcaToBeFiltered) {
-        const marcaToBeFiltered = values.marca;
-        this.setState({ marcaToBeFiltered, userTyping: true }, () => {
-          this.filtrarMarca();
+          loading: false,
+          erro: true
         });
       }
     }, 1000);
