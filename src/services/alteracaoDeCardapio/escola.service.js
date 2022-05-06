@@ -91,22 +91,10 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
   uuid,
   tipoSolicitacao
 ) => {
-  const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
-
-  if (tipoSolicitacao) {
-    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
+  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
+    return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${uuid}/`);
   }
-
-  return fetch(url, {
-    method: "DELETE",
-    headers: AUTH_TOKEN
-  })
-    .then(result => {
-      return result.status;
-    })
-    .catch(error => {
-      return error.json();
-    });
+  return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
 };
 
 export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicitacao => {
