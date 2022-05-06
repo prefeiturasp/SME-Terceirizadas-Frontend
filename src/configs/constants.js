@@ -118,7 +118,8 @@ export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
 export const RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP =
   "relatorio-quantitativo-classificacao-dieta-esp";
-export const RELATORIO_DIETA_ESPECIAL = "relatorio-dieta-especial";
+export const RELATORIO_GESTAO_DIETA_ESPECIAL =
+  "relatorio-gestao-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
 export const PANORAMA_ESCOLA = "panorama-escola";

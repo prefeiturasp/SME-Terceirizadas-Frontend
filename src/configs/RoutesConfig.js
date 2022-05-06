@@ -139,7 +139,7 @@ import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
-import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
+import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
@@ -1206,8 +1206,10 @@ const routesConfig = [
     tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp
   },
   {
-    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
-    component: RelatorioDietaEspecial,
+    path: `/${constants.DIETA_ESPECIAL}/${
+      constants.RELATORIO_GESTAO_DIETA_ESPECIAL
+    }`,
+    component: RelatorioGestaoDietaEspecial,
     exact: true,
     tipoUsuario:
       usuarioEhCODAEDietaEspecial() ||

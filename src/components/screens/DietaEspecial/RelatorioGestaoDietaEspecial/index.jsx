@@ -7,7 +7,7 @@ import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.serv
 import FormFiltros from "./components/FormFiltros";
 import ModalRelatorioDietaEspecial from "./components/ModalRelatorioDietaEspecial";
 
-const RelatorioDietaEspecial = () => {
+const RelatorioGestaoDietaEspecial = () => {
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResultados, setTotalResultados] = useState(0);
@@ -89,4 +89,4 @@ const RelatorioDietaEspecial = () => {
   );
 };
 
-export default RelatorioDietaEspecial;
+export default RelatorioGestaoDietaEspecial;
