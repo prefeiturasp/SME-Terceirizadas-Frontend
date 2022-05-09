@@ -1,43 +1,56 @@
-import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
-import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config";
-import { ESCOLA, DRE, CODAE, TERCEIRIZADA } from "../../configs/constants";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
 import {
-  // escola
-  escolaCancelarSolicitacaoDeAlteracaoDeCardapio,
-  // DRE
-  dreValidarSolicitacaoDeAlteracaoDeCardapio,
-  dreReprovarSolicitacaoDeAlteracaoDeCardapio,
   // CODAE
   codaeAutorizarSolicitacaoDeAlteracaoDeCardapio,
   codaeNegarSolicitacaoDeAlteracaoDeCardapio,
   codaeQuestionarSolicitacaoDeAlteracaoDeCardapio,
-  TerceirizadaTomaCienciaAlteracaoCardapio,
-  terceirizadaRespondeQuestionamentoAlteracaoCardapio
+  dreReprovarSolicitacaoDeAlteracaoDeCardapio,
+  // DRE
+  dreValidarSolicitacaoDeAlteracaoDeCardapio,
+  // escola
+  escolaCancelarSolicitacaoDeAlteracaoDeCardapio,
+  terceirizadaRespondeQuestionamentoAlteracaoCardapio,
+  TerceirizadaTomaCienciaAlteracaoCardapio
 } from "services/alteracaoDeCardapio";
+import { getMotivosDREnaoValida } from "services/relatorios";
+import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
+import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
-import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+import Page from "../../components/Shareable/Page/Page";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
+import { HOME } from "../../constants/config";
 
-class RelatorioBase extends React.Component {
-  render() {
-    const atual = {
-      href: "#",
-      titulo: "Relatório"
+export const RelatorioBase = ({ ...props }) => {
+  const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
+
+  useEffect(() => {
+    const getMotivosDREnaoValidaData = async () => {
+      const response = await getMotivosDREnaoValida();
+      if (response.status === HTTP_STATUS.OK) {
+        setMotivosDREnaoValida(response.data.results);
+      }
     };
 
-    return (
-      <Page>
-        <Breadcrumb home={HOME} atual={atual} />
-        <Relatorio {...this.props} />
-      </Page>
-    );
-  }
-}
+    getMotivosDREnaoValidaData();
+  }, []);
+
+  const atual = {
+    href: "#",
+    titulo: "Relatório"
+  };
+
+  return (
+    <Page>
+      <Breadcrumb home={HOME} atual={atual} />
+      <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
+    </Page>
+  );
+};
 
 // Escola
 export const RelatorioEscola = () => (

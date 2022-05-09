@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
 import {
   // CODAE
   codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao,
@@ -53,23 +53,19 @@ export const RelatorioBase = ({ ...props }) => {
 };
 
 // Escola
-export class RelatorioEscola extends Component {
-  render() {
-    return (
-      <RelatorioBase
-        visao={ESCOLA}
-        ModalNaoAprova={ModalCancelarSolicitacao}
-        toastNaoAprovaMensagem={
-          "Inclusão de Alimentação cancelada com sucesso!"
-        }
-        endpointNaoAprovaSolicitacao={
-          escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
-        }
-        textoBotaoNaoAprova="Cancelar"
-      />
-    );
-  }
-}
+export const RelatorioEscola = () => {
+  return (
+    <RelatorioBase
+      visao={ESCOLA}
+      ModalNaoAprova={ModalCancelarSolicitacao}
+      toastNaoAprovaMensagem={"Inclusão de Alimentação cancelada com sucesso!"}
+      endpointNaoAprovaSolicitacao={
+        escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
+      }
+      textoBotaoNaoAprova="Cancelar"
+    />
+  );
+};
 
 // DRE
 export const RelatorioDRE = () => {

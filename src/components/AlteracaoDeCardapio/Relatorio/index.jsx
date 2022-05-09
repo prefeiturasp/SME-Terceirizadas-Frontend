@@ -160,6 +160,7 @@ class Relatorio extends Component {
     } = this.state;
     const {
       justificativa,
+      motivo_cancelamento,
       textoBotaoNaoAprova,
       textoBotaoAprova,
       endpointAprovaSolicitacao,
@@ -167,7 +168,8 @@ class Relatorio extends Component {
       endpointQuestionamento,
       ModalNaoAprova,
       ModalQuestionamento,
-      visao
+      visao,
+      motivosDREnaoValida
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -237,9 +239,11 @@ class Relatorio extends Component {
             solicitacao={alteracaoDeCardapio}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
+            motivoCancelamento={motivo_cancelamento}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
             tipoSolicitacao={this.state.tipoSolicitacao}
+            motivosDREnaoValida={motivosDREnaoValida}
           />
         )}
         {ModalQuestionamento && (
