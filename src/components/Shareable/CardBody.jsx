@@ -8,6 +8,7 @@ import { usuarioEhTerceirizada } from "helpers/utilities";
 const CardBody = props => {
   const ehTerceirizada = usuarioEhTerceirizada();
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
+  const filtrosDesabilitados = props.filtrosDesabilitados || false;
 
   return (
     <div className="card mt-3">
@@ -45,7 +46,13 @@ const CardBody = props => {
                       component={InputText}
                       name="titulo"
                       placeholder="Pesquisar"
+                      disabled={filtrosDesabilitados}
                     />
+                    {ehDashboardGestaoProduto && (
+                      <div className="warning-num-charac">
+                        * mínimo de 3 caracteres
+                      </div>
+                    )}
                     <OnChange name="titulo">
                       {() => {
                         props.onChange(values);
@@ -58,7 +65,11 @@ const CardBody = props => {
                         component={InputText}
                         name="marca"
                         placeholder="Busca da Marca"
+                        disabled={filtrosDesabilitados}
                       />
+                      <div className="warning-num-charac">
+                        * mínimo de 3 caracteres
+                      </div>
                       <OnChange name="marca">
                         {() => {
                           props.onChange(values);
