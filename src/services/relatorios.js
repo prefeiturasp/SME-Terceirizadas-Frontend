@@ -13,6 +13,8 @@ import {
   RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
 } from "configs/constants";
+import { ErrorHandlerFunction } from "./service-helpers";
+import { TIPO_MOTIVO } from "./constants";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -307,4 +309,15 @@ export const imprimeRelatorioDietaEspecial = async (filtros, params) => {
     { params: params, responseType: "blob" }
   );
   saveAs(data, "relatorio_dieta_especial.pdf");
+};
+
+export const getMotivosDREnaoValida = async () => {
+  // escola
+  const response = await axios
+    .get(`/${TIPO_MOTIVO.DRE_NAO_VALIDA}/`)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
