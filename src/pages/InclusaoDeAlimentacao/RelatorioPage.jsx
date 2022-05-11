@@ -1,3 +1,4 @@
+import { ModalCancelarInclusaoAlimentacao } from "components/Shareable/ModalCancelarInclusaoAlimentacao";
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,7 +17,6 @@ import {
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacao";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -57,7 +57,7 @@ export const RelatorioEscola = () => {
   return (
     <RelatorioBase
       visao={ESCOLA}
-      ModalNaoAprova={ModalCancelarSolicitacao}
+      ModalNaoAprova={ModalCancelarInclusaoAlimentacao}
       toastNaoAprovaMensagem={"Inclusão de Alimentação cancelada com sucesso!"}
       endpointNaoAprovaSolicitacao={
         escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
