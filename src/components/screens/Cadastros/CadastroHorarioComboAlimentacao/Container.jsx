@@ -4,7 +4,7 @@ import {
   getHorariosCombosPorEscola,
   getVinculosTipoAlimentacaoPorEscola
 } from "../../../../services/cadastroTipoAlimentacao.service";
-import { montavinculosDeCombosInicial } from "./helper";
+import { montaVinculosDeHorariosInicial } from "./helper";
 
 import CadastroHorarioComboAlimentacao from ".";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../../../services/escola.service";
@@ -14,9 +14,9 @@ class Container extends Component {
     super(props);
     this.state = {
       meusDados: null,
-      vinculosTipoDeAlimentacao: null,
-      horariosDosCombos: null,
-      vinculosDeCombos: null,
+      vinculosPeriodoEscolarUnidadeEscolar: null,
+      horarioDosAlimentos: null,
+      vinculosDeHorarios: null,
       uuidEscola: null,
       naoPermitido: false,
       periodosEQuantidadeAlunos: null
@@ -34,10 +34,10 @@ class Container extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { meusDados } = this.state;
     let {
-      vinculosTipoDeAlimentacao,
-      horariosDosCombos,
+      vinculosPeriodoEscolarUnidadeEscolar,
+      horarioDosAlimentos,
       uuidEscola,
-      vinculosDeCombos,
+      vinculosDeHorarios,
       periodosEQuantidadeAlunos
     } = this.state;
     if (meusDados !== prevState.meusDados) {
@@ -57,19 +57,19 @@ class Container extends Component {
       });
     } else {
       if (
-        !vinculosDeCombos &&
-        vinculosTipoDeAlimentacao &&
-        horariosDosCombos &&
+        !vinculosDeHorarios &&
+        vinculosPeriodoEscolarUnidadeEscolar &&
+        horarioDosAlimentos &&
         uuidEscola &&
         periodosEQuantidadeAlunos
       ) {
-        vinculosDeCombos = montavinculosDeCombosInicial(
-          vinculosTipoDeAlimentacao,
-          horariosDosCombos,
+        vinculosDeHorarios = montaVinculosDeHorariosInicial(
+          vinculosPeriodoEscolarUnidadeEscolar,
+          horarioDosAlimentos,
           uuidEscola,
           periodosEQuantidadeAlunos
         );
-        this.setState({ vinculosDeCombos });
+        this.setState({ vinculosDeHorarios });
       }
     }
   }
@@ -84,18 +84,19 @@ class Container extends Component {
   };
 
   buscaVinculosTipoAlimentacaoPorUnidadeEscolar = uuidEscola => {
-    let vinculosTipoDeAlimentacao = this.state.vinculosTipoDeAlimentacao;
+    let vinculosPeriodoEscolarUnidadeEscolar = this.state
+      .vinculosPeriodoEscolarUnidadeEscolar;
     getVinculosTipoAlimentacaoPorEscola(uuidEscola).then(response => {
-      vinculosTipoDeAlimentacao = response.results;
-      this.setState({ vinculosTipoDeAlimentacao });
+      vinculosPeriodoEscolarUnidadeEscolar = response.results;
+      this.setState({ vinculosPeriodoEscolarUnidadeEscolar });
     });
   };
 
   buscaHorariosDosCombos = escolaUuid => {
-    let horariosDosCombos = this.state.horariosDosCombos;
+    let horarioDosAlimentos = this.state.horarioDosAlimentos;
     getHorariosCombosPorEscola(escolaUuid).then(response => {
-      horariosDosCombos = response.results;
-      this.setState({ horariosDosCombos });
+      horarioDosAlimentos = response.results;
+      this.setState({ horarioDosAlimentos });
     });
   };
 

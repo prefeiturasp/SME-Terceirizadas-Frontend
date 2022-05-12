@@ -1,58 +1,63 @@
 import moment from "moment";
 
-const temHorariosDeCombosParaEscola = horariosDosCombos => {
-  return horariosDosCombos.length > 0;
+const temHorariosDeAlimentacaoCadastrado = horarioDosAlimentos => {
+  return horarioDosAlimentos.length > 0;
 };
 
-const retornaArrayDeCombosComHorarios = (combos, uuidEscola) => {
-  let arrayCombos = [];
-  combos.forEach(combo => {
-    arrayCombos.push({
+const montarArrayHorariosIniciais = (vinculo, uuidEscola, uuidPeriodo) => {
+  let arrayDosHorarios = [];
+  vinculo.tipos_alimentacao.forEach(tipo_alimentacao => {
+    arrayDosHorarios.push({
       uuid: null,
-      combo_tipos_alimentacao: combo.uuid,
+      tipo_alimentacao: tipo_alimentacao.uuid,
       escola: uuidEscola,
+      periodo_escolar: uuidPeriodo,
       hora_inicial: "00:00",
       hora_final: "00:00",
-      label: combo.label
+      label: tipo_alimentacao.nome
     });
   });
-  return arrayCombos;
+  return arrayDosHorarios;
 };
 
-const comboPossuiHorario = (combo, horariosDosCombos) => {
-  let arrayHorario = [];
-  horariosDosCombos.forEach(horario => {
-    if (horario.combo_tipos_alimentacao.uuid === combo.uuid) {
-      arrayHorario.push(horario);
+const alimentoPossuiHorario = (tipo_alimentacao, horarioDosAlimentos) => {
+  return horarioDosAlimentos.find(
+    horario => horario.tipo_alimentacao.uuid === tipo_alimentacao.uuid
+  );
+};
+
+const montaArrayHorarios = (
+  vinculo,
+  horarioDosAlimentos,
+  uuidEscola,
+  uuidPeriodo
+) => {
+  let arrayDosHorarios = [];
+  vinculo.tipos_alimentacao.forEach(tipo_alimentacao => {
+    let horario = alimentoPossuiHorario(tipo_alimentacao, horarioDosAlimentos);
+    if (horario) {
+      arrayDosHorarios.push({
+        uuid: horario.uuid,
+        tipo_alimentacao: horario.tipo_alimentacao.uuid,
+        escola: horario.escola.uuid,
+        periodo_escolar: horario.periodo_escolar.uuid,
+        hora_inicial: horario.hora_inicial,
+        hora_final: horario.hora_final,
+        label: horario.tipo_alimentacao.nome
+      });
+    } else {
+      arrayDosHorarios.push({
+        uuid: null,
+        tipo_alimentacao: tipo_alimentacao.uuid,
+        escola: uuidEscola,
+        periodo_escolar: uuidPeriodo,
+        hora_inicial: "00:00",
+        hora_final: "00:00",
+        label: tipo_alimentacao.nome
+      });
     }
   });
-  return arrayHorario;
-};
-
-const montaArrayDeCombos = (combos, horariosDosCombos, uuidEscola) => {
-  let arrayDosCombos = [];
-  combos.forEach(combo => {
-    let arrayTempCombo = comboPossuiHorario(combo, horariosDosCombos);
-    arrayTempCombo.length > 0
-      ? arrayDosCombos.push({
-          uuid: arrayTempCombo[0].uuid,
-          combo_tipos_alimentacao:
-            arrayTempCombo[0].combo_tipos_alimentacao.uuid,
-          escola: uuidEscola,
-          hora_inicial: arrayTempCombo[0].hora_inicial,
-          hora_final: arrayTempCombo[0].hora_final,
-          label: arrayTempCombo[0].combo_tipos_alimentacao.label
-        })
-      : arrayDosCombos.push({
-          uuid: null,
-          combo_tipos_alimentacao: combo.uuid,
-          escola: uuidEscola,
-          hora_inicial: "00:00",
-          hora_final: "00:00",
-          label: combo.label
-        });
-  });
-  return arrayDosCombos;
+  return arrayDosHorarios;
 };
 
 const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
@@ -79,13 +84,13 @@ const obtemQuantidadeDeAlunosPeloPeriodoEscolar = (
   return periodo_alunos;
 };
 
-const montaVinculosDeCombosIniciais = (
-  vinculosTipoAlimentacaoDaEscola,
+const montaVinculosDeHorariosIniciais = (
+  vinculosPeriodoEscolarUnidadeEscolar,
   uuidEscola,
   periodosEQuantidadeAlunos
 ) => {
   let arrayVinculos = [];
-  vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
+  vinculosPeriodoEscolarUnidadeEscolar.forEach(vinculo => {
     const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
       vinculo.periodo_escolar.uuid,
       periodosEQuantidadeAlunos
@@ -93,21 +98,25 @@ const montaVinculosDeCombosIniciais = (
     arrayVinculos.push({
       ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
-      combos: retornaArrayDeCombosComHorarios(vinculo.combos, uuidEscola),
+      horarios_alimentacao: montarArrayHorariosIniciais(
+        vinculo,
+        uuidEscola,
+        vinculo.periodo_escolar.uuid
+      ),
       quantidade_alunos: info_alunos
     });
   });
   return arrayVinculos;
 };
 
-const montaVinculosDeCombosExistentes = (
-  vinculosTipoAlimentacaoDaEscola,
-  horariosDosCombos,
+const montaVinculosDeHorariosExistentes = (
+  vinculosPeriodoEscolarUnidadeEscolar,
+  horarioDosAlimentos,
   uuidEscola,
   periodosEQuantidadeAlunos
 ) => {
   let arrayVinculos = [];
-  vinculosTipoAlimentacaoDaEscola.forEach(vinculo => {
+  vinculosPeriodoEscolarUnidadeEscolar.forEach(vinculo => {
     const info_alunos = obtemQuantidadeDeAlunosPeloPeriodoEscolar(
       vinculo.periodo_escolar.uuid,
       periodosEQuantidadeAlunos
@@ -115,100 +124,101 @@ const montaVinculosDeCombosExistentes = (
     arrayVinculos.push({
       ativo: false,
       periodo_escolar: vinculo.periodo_escolar,
-      combos: montaArrayDeCombos(vinculo.combos, horariosDosCombos, uuidEscola),
+      horarios_alimentacao: montaArrayHorarios(
+        vinculo,
+        horarioDosAlimentos,
+        uuidEscola,
+        vinculo.periodo_escolar.uuid
+      ),
       quantidade_alunos: info_alunos
     });
   });
   return arrayVinculos;
 };
 
-export const montavinculosDeCombosInicial = (
-  vinculosTipoAlimentacaoDaEscola,
-  horariosDosCombos,
+export const montaVinculosDeHorariosInicial = (
+  vinculosPeriodoEscolarUnidadeEscolar,
+  horarioDosAlimentos,
   uuidEscola,
   periodosEQuantidadeAlunos
 ) => {
-  let vinculosDeCombos = null;
-  temHorariosDeCombosParaEscola(horariosDosCombos)
-    ? (vinculosDeCombos = montaVinculosDeCombosExistentes(
-        vinculosTipoAlimentacaoDaEscola,
-        horariosDosCombos,
+  let vinculosDeHorarios = null;
+  temHorariosDeAlimentacaoCadastrado(horarioDosAlimentos)
+    ? (vinculosDeHorarios = montaVinculosDeHorariosExistentes(
+        vinculosPeriodoEscolarUnidadeEscolar,
+        horarioDosAlimentos,
         uuidEscola,
         periodosEQuantidadeAlunos
       ))
-    : (vinculosDeCombos = montaVinculosDeCombosIniciais(
-        vinculosTipoAlimentacaoDaEscola,
+    : (vinculosDeHorarios = montaVinculosDeHorariosIniciais(
+        vinculosPeriodoEscolarUnidadeEscolar,
         uuidEscola,
         periodosEQuantidadeAlunos
       ));
-  return vinculosDeCombos;
+  return vinculosDeHorarios;
 };
 
 export const verificaSeCampoEhValido = (
-  vinculosDeCombos,
+  vinculosDeHorarios,
   periodoEscolar,
   comboAlimentacaoAtual
 ) => {
   const hora_inicial = moment(
-    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_inicial,
+    vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
+      comboAlimentacaoAtual
+    ].hora_inicial,
     "HH:mm"
   );
   const hora_final = moment(
-    vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
+    vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
+      comboAlimentacaoAtual
+    ].hora_final,
     "h:mm"
   );
   return hora_inicial <= hora_final;
 };
 
 export const todosOsCamposValidos = (
-  vinculosDeCombos,
+  vinculosDeHorarios,
   periodoEscolar,
   comboAlimentacaoAtual
 ) => {
-  if (vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]) {
-    const ultimo_horario = moment(
-      vinculosDeCombos[periodoEscolar].combos[
-        comboAlimentacaoAtual === 0 ? 0 : comboAlimentacaoAtual - 1
-      ].hora_final,
-      "HH:mm"
-    );
+  if (
+    vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
+      comboAlimentacaoAtual
+    ]
+  ) {
     const hora_inicial = moment(
-      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual]
-        .hora_inicial,
+      vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
+        comboAlimentacaoAtual
+      ].hora_inicial,
       "HH:mm"
     );
     const hora_final = moment(
-      vinculosDeCombos[periodoEscolar].combos[comboAlimentacaoAtual].hora_final,
+      vinculosDeHorarios[periodoEscolar].horarios_alimentacao[
+        comboAlimentacaoAtual
+      ].hora_final,
       "HH:mm"
     );
     const horaZero = moment("00:00", "HH:mm");
-
-    if (comboAlimentacaoAtual === 0) {
-      return (
-        hora_final > horaZero &&
-        hora_inicial > horaZero &&
-        hora_inicial < hora_final
-      );
-    } else {
-      return (
-        hora_final > horaZero &&
-        hora_inicial > horaZero &&
-        hora_inicial < hora_final &&
-        hora_inicial > ultimo_horario
-      );
-    }
+    return (
+      hora_final > horaZero &&
+      hora_inicial > horaZero &&
+      hora_inicial < hora_final
+    );
   }
 };
 
-export const ultimoComboDisponivel = (
-  vinculosDeCombos,
+export const ultimoHorarioDisponivel = (
+  vinculosDeHorarios,
   periodoEscolar,
   comboAlimentacaoAtual
 ) => {
-  const quantidadeDeCombos = vinculosDeCombos[periodoEscolar].combos.length;
+  const quantidadeDeCombos =
+    vinculosDeHorarios[periodoEscolar].horarios_alimentacao.length;
   return quantidadeDeCombos === comboAlimentacaoAtual + 1;
 };
 
-export const ultimoPeriodoDaEscola = (vinculosDeCombos, periodoEscolar) => {
-  return vinculosDeCombos.length === periodoEscolar + 1;
+export const ultimoPeriodoDaEscola = (vinculosDeHorarios, periodoEscolar) => {
+  return vinculosDeHorarios.length === periodoEscolar + 1;
 };
