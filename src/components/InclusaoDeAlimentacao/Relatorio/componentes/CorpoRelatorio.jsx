@@ -22,31 +22,55 @@ export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
     const diasMotivosFormatados = formataMotivosDias(inclusoes);
     return (
-      <table className="table-reasons">
-        <tbody>
-          {Object.entries(diasMotivosFormatados).map((dadosMotivo, key) => {
-            const [motivo, datas] = dadosMotivo;
-            return (
-              <Fragment key={key}>
-                <tr className="row">
-                  <th className="col-2">Motivo</th>
-                  <th className="col-10">Dia(s) de inclusão</th>
-                </tr>
-                <tr className="row">
-                  <td className="col-2">{motivo}</td>
-                  {datas.map((dia, key) => {
-                    return (
-                      <td key={key} className="col-2">
-                        {dia}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </Fragment>
-            );
-          })}
-        </tbody>
-      </table>
+      <>
+        <table className="table-reasons">
+          <tbody>
+            {Object.entries(diasMotivosFormatados).map((dadosMotivo, key) => {
+              const [motivo, datas] = dadosMotivo;
+              return (
+                <Fragment key={key}>
+                  <tr className="row">
+                    <th className="col-2">Motivo</th>
+                    <th className="col-10">Dia(s) de inclusão</th>
+                  </tr>
+                  <tr className="row">
+                    <td className="col-2">{motivo}</td>
+                    {datas.map((dia, key) => {
+                      return (
+                        <td
+                          key={key}
+                          className={`col-2 ${
+                            this.props.inclusaoDeAlimentacao.inclusoes.find(
+                              i => i.data === dia
+                            ).cancelado
+                              ? `red`
+                              : ""
+                          }`}
+                        >
+                          {dia}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                </Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+        {this.props.inclusaoDeAlimentacao.inclusoes &&
+          this.props.inclusaoDeAlimentacao.inclusoes.find(i => i).cancelado && (
+            <>
+              <div className="mt-auto">
+                <span className="dot mr-3" />
+                Solicitação ativa
+              </div>
+              <div>
+                <span className="dot red mr-3" />
+                Solicitação cancelada
+              </div>
+            </>
+          )}
+      </>
     );
   }
 
