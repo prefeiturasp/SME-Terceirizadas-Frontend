@@ -139,6 +139,7 @@ import { podeAcessarRelatorioQuantSolicDietaEsp } from "helpers/permissions";
 import RelatorioQuantitativoSolicDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoSolicDietaEspPage";
 import RelatorioQuantitativoClassificacaoDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoClassificacaoDietaEspPage";
 import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/RelatorioQuantitativoDiagDietaEspPage";
+import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
@@ -1204,6 +1205,12 @@ const routesConfig = [
     component: RelatorioQuantitativoDiagDietaEspPage,
     exact: true,
     tipoUsuario: podeAcessarRelatorioQuantSolicDietaEsp
+  },
+  {
+    path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
+    component: RelatorioDietaEspecial,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
