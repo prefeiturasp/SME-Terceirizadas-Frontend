@@ -384,12 +384,12 @@ class CadastroHorarioComboAlimentacao extends Component {
                         <nav>Tipos de alimentos atuais</nav>
                         <nav>Horário Inicio</nav>
                         <nav>Horário Término</nav>
-                        {element.horarios_alimentacao.map((combo, index) => {
+                        {element.horarios_alimentacao.map((horario, index) => {
                           return (
                             <Fragment key={index}>
-                              <div>{combo.label}</div>
-                              <div>{combo.hora_inicial}</div>
-                              <div>{combo.hora_final}</div>
+                              <div>{horario.label}</div>
+                              <div>{horario.hora_inicial.substring(0, 5)}</div>
+                              <div>{horario.hora_final.substring(0, 5)}</div>
                             </Fragment>
                           );
                         })}
@@ -429,7 +429,7 @@ class CadastroHorarioComboAlimentacao extends Component {
               <nav className="mb-2">Horário Início</nav>
               <nav className="mb-2">Horário de Término </nav>
               {vinculosDeHorarios[periodoEscolar].horarios_alimentacao.map(
-                (combo, index) => {
+                (horario, index) => {
                   return (
                     <Fragment key={index}>
                       <div
@@ -442,7 +442,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                             : "proximo-combo"
                         }`}
                       >
-                        <nav>{combo.label}</nav>{" "}
+                        <nav>{horario.label}</nav>{" "}
                         <div
                           className={
                             horarioAlimentacaoAtual > index
@@ -465,7 +465,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                             : "combo-inativo"
                         }`}
                         placeholder={"Hora Inicial"}
-                        horaAtual={combo.hora_inicial}
+                        horaAtual={horario.hora_inicial}
                         component={InputHorario}
                         onChange={date => this.obterHoraInicio(date)}
                         disabled={
@@ -482,7 +482,7 @@ class CadastroHorarioComboAlimentacao extends Component {
                             : "combo-inativo"
                         }`}
                         placeholder={"Hora Término"}
-                        horaAtual={combo.hora_final}
+                        horaAtual={horario.hora_final}
                         component={InputHorario}
                         onChange={date => this.obterHoraFim(date)}
                         disabled={
