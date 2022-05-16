@@ -24,7 +24,13 @@ import {
 import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
 import { Spin } from "antd";
 
-const BuscaDietasForm = ({ setCarregando, reset }) => {
+const BuscaDietasForm = ({
+  setCarregando,
+  setDietasFiltradas,
+  setStatusSelecionado,
+  setFiltragemRealizada,
+  reset
+}) => {
   const [dietasEspeciais, setDietasEspeciais] = useState([]);
   const [mostrarFiltrosAutorizadas, setMostrarFiltrosAutorizadas] = useState(
     false
@@ -125,6 +131,7 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
     setClassificacoesSelecionadas([]);
     setProtocolosNoFiltro([]);
     setProtocolosSelecionados([]);
+    setStatusSelecionado(true);
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
       const response = await getSolicitacoesRelatorioDietasEspeciais(data);
@@ -341,11 +348,16 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
     setProtocolosSelecionados([]);
     setMostrarFiltrosAutorizadas(false);
     setMostrarFiltrosCanceladas(false);
+    setDietasFiltradas([]);
+    setStatusSelecionado(false);
+    setFiltragemRealizada(false);
   };
 
   let dietasEspeciaisCopy = [...dietasEspeciais];
 
   const gerarTabela = () => {
+    setDietasFiltradas(dietasEspeciaisCopy);
+    setFiltragemRealizada(true);
     if (lotesSelecionados.length) {
       dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
         lotesSelecionados.includes(dieta.rastro_lote.uuid)
@@ -361,6 +373,7 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
         protocolosSelecionados.includes(dieta.nome_protocolo)
       );
     }
+    setDietasFiltradas(dietasEspeciaisCopy);
     if (dataInicial && dataFinal) {
       dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
         moment(dieta.data_ultimo_log, "DD/MM/YYYY").isBetween(
@@ -370,6 +383,7 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
           "[]"
         )
       );
+      setDietasFiltradas(dietasEspeciaisCopy);
       return;
     }
     if (dataInicial) {
@@ -378,6 +392,7 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
           moment(dataInicial, "DD/MM/YYYY")
         )
       );
+      setDietasFiltradas(dietasEspeciaisCopy);
       return;
     }
     if (dataFinal) {
@@ -386,13 +401,14 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
           moment(dataFinal, "DD/MM/YYYY")
         )
       );
+      setDietasFiltradas(dietasEspeciaisCopy);
       return;
     }
   };
 
   return (
     <Spin tip="Carregando filtros..." spinning={carregandoFiltros}>
-      <div className="filtros-downloads">
+      <div className="filtros-relatorio-dietas">
         <form>
           <div className="row">
             <div className="col-4">
@@ -547,7 +563,6 @@ const BuscaDietasForm = ({ setCarregando, reset }) => {
                   icon={BUTTON_ICON.FILTER}
                   className="float-right ml-3"
                   onClick={() => gerarTabela()}
-                  disabled
                 />
                 <Botao
                   texto="Limpar Filtros"
