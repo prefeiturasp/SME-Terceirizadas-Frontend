@@ -132,6 +132,8 @@ const BuscaDietasForm = ({
     setProtocolosNoFiltro([]);
     setProtocolosSelecionados([]);
     setStatusSelecionado(true);
+    setDietasFiltradas([]);
+    setFiltragemRealizada(false);
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
       const response = await getSolicitacoesRelatorioDietasEspeciais(data);
