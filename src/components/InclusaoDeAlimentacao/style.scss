@@ -80,6 +80,22 @@
 }
 
 .report {
+  .red {
+    color: #fc2122;
+  }
+
+  .dot {
+    height: 15px;
+    width: 15px;
+    background-color: #42474a;
+    border-radius: 50%;
+    display: inline-block;
+
+    &.red {
+      background-color: #fc2122;
+    }
+  }
+
   .title-message {
     color: $gray;
     font-size: 14px;

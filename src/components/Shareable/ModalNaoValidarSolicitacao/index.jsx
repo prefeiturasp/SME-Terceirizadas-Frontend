@@ -1,110 +1,105 @@
-import React, { Component } from "react";
+import { agregarDefault } from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React from "react";
+import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { required } from "../../../helpers/fieldValidators";
-import { Modal } from "react-bootstrap";
-import HTTP_STATUS from "http-status-codes";
-import { toastSuccess, toastError } from "../Toast/dialogs";
 import Botao from "../Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import Select from "../Select";
 import { TextArea } from "../TextArea/TextArea";
+import { toastError, toastSuccess } from "../Toast/dialogs";
 
-export class ModalNaoValidarSolicitacao extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { justificativa: "", motivoCancelamento: "" };
-  }
-  async naoValidarSolicitacao(uuid) {
-    const { justificativa, motivoCancelamento } = this.state;
-    const { endpoint, tipoSolicitacao } = this.props;
-    if (justificativa === "" || justificativa === undefined) {
+export const ModalNaoValidarSolicitacao = ({ ...props }) => {
+  const {
+    showModal,
+    closeModal,
+    uuid,
+    motivosDREnaoValida,
+    motivoCancelamento,
+    tipoSolicitacao,
+    justificativa,
+    endpoint,
+    loadSolicitacao
+  } = props;
+
+  const naoValidarSolicitacao = async uuid => {
+    if (!motivoCancelamento) {
+      toastError("O campo motivo é obrigatório");
+      return;
+    }
+    if (!justificativa) {
       toastError("O campo Justificativa é obrigatório");
-    } else {
-      const resp = await endpoint(
-        uuid,
-        `${motivoCancelamento} - ${justificativa}`,
-        tipoSolicitacao
-      );
-      if (resp.status === HTTP_STATUS.OK) {
-        this.props.closeModal();
-        toastSuccess("Solicitação não validada com sucesso!");
-        if (this.props.loadSolicitacao) {
-          this.props.loadSolicitacao(uuid, tipoSolicitacao);
-        }
-      } else {
-        toastError(resp.detail);
-      }
+      return;
     }
-  }
-  componentDidUpdate(prevProps) {
-    if (prevProps.justificativa !== this.props.justificativa) {
-      this.setState({ justificativa: this.props.justificativa });
-    }
-    if (prevProps.motivoCancelamento !== this.props.motivoCancelamento) {
-      this.setState({ motivoCancelamento: this.props.motivoCancelamento });
-    }
-  }
-
-  render() {
-    const { showModal, closeModal, uuid } = this.props;
-    return (
-      <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Deseja não validar solicitação?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="form-row">
-            <div className="form-group col-12">
-              <Field
-                component={Select}
-                name="motivo_cancelamento"
-                label="Motivo"
-                //TODO: criar campos a mais no backend?
-                naoDesabilitarPrimeiraOpcao
-                options={[
-                  {
-                    nome: "Sem motivo",
-                    uuid: "Sem motivo"
-                  },
-                  {
-                    nome: "Em desacordo com o contrato",
-                    uuid: "Em desacordo com o contrato"
-                  }
-                ]}
-                validate={required}
-              />
-            </div>
-            <div className="form-group col-12">
-              <Field
-                component={TextArea}
-                placeholder="Obrigatório"
-                label="Justificativa"
-                name="justificativa"
-                validate={required}
-                required
-              />
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Botao
-            texto="Não"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={closeModal}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
-            className="ml-3"
-          />
-          <Botao
-            texto="Sim"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={() => {
-              this.naoValidarSolicitacao(uuid);
-            }}
-            style={BUTTON_STYLE.BLUE}
-            className="ml-3"
-          />
-        </Modal.Footer>
-      </Modal>
+    const resp = await endpoint(
+      uuid,
+      `${
+        motivosDREnaoValida.find(motivo => motivo.uuid === motivoCancelamento)
+          .nome
+      } - ${justificativa}`,
+      tipoSolicitacao
     );
-  }
-}
+    if (resp.status === HTTP_STATUS.OK) {
+      closeModal();
+      toastSuccess("Solicitação não validada com sucesso!");
+      if (loadSolicitacao) {
+        loadSolicitacao(uuid, tipoSolicitacao);
+      }
+    } else {
+      toastError(resp.detail);
+    }
+  };
+
+  return (
+    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Deseja não validar solicitação?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="form-row">
+          <div className="form-group col-12">
+            <Field
+              component={Select}
+              name="motivo_cancelamento"
+              label="Motivo"
+              //TODO: criar campos a mais no backend?
+              naoDesabilitarPrimeiraOpcao
+              options={agregarDefault(motivosDREnaoValida)}
+              required
+              validate={required}
+            />
+          </div>
+          <div className="form-group col-12">
+            <Field
+              component={TextArea}
+              placeholder="Obrigatório"
+              label="Justificativa"
+              name="justificativa"
+              validate={required}
+              required
+            />
+          </div>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Botao
+          texto="Não"
+          type={BUTTON_TYPE.BUTTON}
+          onClick={closeModal}
+          style={BUTTON_STYLE.BLUE_OUTLINE}
+          className="ml-3"
+        />
+        <Botao
+          texto="Sim"
+          type={BUTTON_TYPE.BUTTON}
+          onClick={() => {
+            naoValidarSolicitacao(uuid);
+          }}
+          style={BUTTON_STYLE.BLUE}
+          className="ml-3"
+        />
+      </Modal.Footer>
+    </Modal>
+  );
+};
