@@ -19,11 +19,13 @@ export const BUTTON_ICON = {
   FILE_EXCEL: "fas fa-file-excel",
   FILE_PDF: "far fa-file-pdf",
   FILE_ALT: "far fa-file-alt",
+  FILTER: "fas fa-filter",
   PLUS: "fas fa-plus-circle",
   PRINT: "fas fa-print",
   SAIR: "fas fa-door-open",
   SHARE_SQUARE: "fas fa-share-square",
   SEARCH: "fas fa-search",
+  TIMES: "fas fa-times",
   TIMES_CIRCLE: "fas fa-times-circle",
   TRASH: "fas fa-trash-alt",
   EYE: "fas fa-eye"

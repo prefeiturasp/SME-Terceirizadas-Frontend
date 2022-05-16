@@ -55,6 +55,8 @@ const MenuRelatorios = () => {
     usuarioEhDRE() ||
     (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
 
+  const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
+
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
       {exibirProdutosHomologados && (
@@ -137,10 +139,19 @@ const MenuRelatorios = () => {
       {exibirRelatorioQuantitativoSolicDietaEsp && (
         <LeafItem
           to={`/${constants.DIETA_ESPECIAL}/${
+            constants.RELATORIO_GESTAO_DIETA_ESPECIAL
+          }`}
+        >
+          Relatório de gestão de dieta esp.
+        </LeafItem>
+      )}
+      {exibeRelatorioDietasEspeciais && (
+        <LeafItem
+          to={`/${constants.DIETA_ESPECIAL}/${
             constants.RELATORIO_DIETA_ESPECIAL
           }`}
         >
-          Relatório de dieta especial
+          Relatório de Dietas Especiais
         </LeafItem>
       )}
     </Menu>

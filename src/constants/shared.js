@@ -379,3 +379,23 @@ export const OPTIONS_VISTO_DOWNLOAD = [
     nome: "Não Visto"
   }
 ];
+
+export const STATUS_DIETAS = {
+  AUTORIZADAS: "Autorizadas",
+  CANCELADAS: "Canceladas"
+};
+
+export const OPTIONS_STATUS_DIETA = [
+  {
+    uuid: "",
+    nome: "Selecione"
+  },
+  {
+    uuid: "AUTORIZADAS",
+    nome: STATUS_DIETAS.AUTORIZADAS
+  },
+  {
+    uuid: "CANCELADAS",
+    nome: STATUS_DIETAS.CANCELADAS
+  }
+];

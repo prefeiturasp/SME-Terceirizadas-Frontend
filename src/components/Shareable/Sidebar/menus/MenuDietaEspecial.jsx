@@ -3,7 +3,8 @@ import { Menu, LeafItem } from "./shared";
 import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
+  RELATORIO_DIETA_ESPECIAL
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -35,6 +36,7 @@ const MenuDietaEspecial = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
+  const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
@@ -67,6 +69,11 @@ const MenuDietaEspecial = () => {
       {usuarioEhCODAEDietaEspecial() && (
         <LeafItem to={`/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`}>
           Consultar Protocolo Padrão
+        </LeafItem>
+      )}
+      {exibeRelatorioDietasEspeciais && (
+        <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
+          Relatórios
         </LeafItem>
       )}
     </Menu>
