@@ -1,58 +1,61 @@
-import moment from "moment";
-import React, { useState, useEffect } from "react";
-import { Field, reduxForm } from "redux-form";
-import { InputComData } from "components/Shareable/DatePicker";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
-  BUTTON_STYLE,
-  BUTTON_ICON
+  BUTTON_ICON,
+  BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import "./styles.scss";
+import { InputComData } from "components/Shareable/DatePicker";
+import Select from "components/Shareable/Select";
 import {
   OPTIONS_STATUS_DIETA,
   STATUS_DIETAS,
   TIPO_USUARIO
 } from "constants/shared";
-import Select from "components/Shareable/Select";
-import { meusDados } from "services/perfil.service";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import {
-  formataLotes,
   formataClassificacoes,
+  formataLotes,
   formataProtocolos
 } from "helpers/terceirizadas";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Field, reduxForm } from "redux-form";
 import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
-import { Spin } from "antd";
+import { meusDados } from "services/perfil.service";
+import "./styles.scss";
 
 const BuscaDietasForm = ({
   setCarregando,
   setDietasFiltradas,
   setStatusSelecionado,
   setFiltragemRealizada,
+  lotesSelecionados,
+  setLotesSelecionados,
+  classificacoesSelecionadas,
+  setClassificacoesSelecionadas,
+  protocolosSelecionados,
+  setProtocolosSelecionados,
+  terceirizadaUuid,
+  setTerceirizadaUuid,
+  dataInicial,
+  setDataInicial,
+  dataFinal,
+  setDataFinal,
+  setMostrarFiltrosAutorizadas,
+  mostrarFiltrosAutorizadas,
   reset
 }) => {
   const [dietasEspeciais, setDietasEspeciais] = useState([]);
-  const [mostrarFiltrosAutorizadas, setMostrarFiltrosAutorizadas] = useState(
-    false
-  );
   const [mostrarFiltrosCanceladas, setMostrarFiltrosCanceladas] = useState(
     false
   );
   const [carregandoFiltros, setCarregandoFiltros] = useState(false);
-  const [terceirizadaUuid, setTerceirizadaUuid] = useState(null);
-  const [dataInicial, setDataInicial] = useState(null);
-  const [dataFinal, setDataFinal] = useState(null);
   const [lotesInicio, setLotesInicio] = useState([]);
   const [lotesNoFiltro, setLotesNoFiltro] = useState([]);
-  const [lotesSelecionados, setLotesSelecionados] = useState([]);
   const [protocolosInicio, setProtocolosInicio] = useState([]);
   const [protocolosNoFiltro, setProtocolosNoFiltro] = useState([]);
-  const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
   const [classificacoesInicio, setClassificacoesInicio] = useState([]);
   const [classificacoesNoFiltro, setClassificacoesNoFiltro] = useState([]);
-  const [classificacoesSelecionadas, setClassificacoesSelecionadas] = useState(
-    []
-  );
 
   const getMeusDados = async () => {
     setCarregando(true);
@@ -86,13 +89,15 @@ const BuscaDietasForm = ({
 
   const classificacoesRelacionadasADietas = dietas => {
     let classificacoesRelacionadas = [];
-    dietas.forEach(dieta => {
-      !(
-        classificacoesRelacionadas.filter(
-          classificacao => classificacao.id === dieta.classificacao.id
-        ).length > 0
-      ) && classificacoesRelacionadas.push(dieta.classificacao);
-    });
+    dietas
+      .filter(dieta => dieta.classificacao)
+      .forEach(dieta => {
+        !(
+          classificacoesRelacionadas.filter(
+            classificacao => classificacao.id === dieta.classificacao.id
+          ).length > 0
+        ) && classificacoesRelacionadas.push(dieta.classificacao);
+      });
     const classificacoesFormatadas = formataClassificacoes(
       classificacoesRelacionadas
     );
@@ -181,7 +186,9 @@ const BuscaDietasForm = ({
     values.forEach(value => {
       classificacoesFiltradasPorProtocolos.push(
         dietasEspeciais
-          .filter(dieta => dieta.rastro_lote.uuid === value)
+          .filter(
+            dieta => dieta.rastro_lote.uuid === value && dieta.classificacao
+          )
           .map(dieta => dieta.classificacao.id)
       );
       dietasEspeciais
@@ -244,13 +251,17 @@ const BuscaDietasForm = ({
 
     values.forEach(value => {
       dietasEspeciais
-        .filter(dieta => dieta.classificacao.id === value)
+        .filter(
+          dieta => dieta.classificacao && dieta.classificacao.id === value
+        )
         .map(dieta => dieta.nome_protocolo)
         .forEach(protocolo => {
           protocolosFiltradosPorClassificacoes.push(protocolo);
         });
       dietasEspeciais
-        .filter(dieta => dieta.classificacao.id === value)
+        .filter(
+          dieta => dieta.classificacao && dieta.classificacao.id === value
+        )
         .map(dieta => dieta.rastro_lote.nome)
         .forEach(lote => {
           lotesFiltradosPorProtocolos.push(lote);
