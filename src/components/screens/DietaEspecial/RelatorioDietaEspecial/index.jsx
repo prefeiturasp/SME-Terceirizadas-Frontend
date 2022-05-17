@@ -23,14 +23,22 @@ const RelatorioDietaEspecial = () => {
               setFiltragemRealizada={setFiltragemRealizada}
             />
             {dietasFiltradas.length ? (
-              <ListagemDietas dietasFiltradas={dietasFiltradas} />
+              <>
+                <div className="total-dietas">
+                  Total de dietas:
+                  <div className="numero-total-dietas">
+                    {dietasFiltradas.length}
+                  </div>
+                </div>
+                <ListagemDietas dietasFiltradas={dietasFiltradas} />
+              </>
             ) : null}
             {!dietasFiltradas.length && !statusSelecionado ? (
               <div className="text-center mt-5">Selecione um Status</div>
             ) : null}
             {!dietasFiltradas.length && filtragemRealizada ? (
               <div className="text-center mt-5">
-                Não existem dietas para os filtros selecionados
+                Nenhum resultado encontrado.
               </div>
             ) : null}
           </div>
