@@ -1,5 +1,5 @@
-import React, { Fragment } from "react";
 import "antd/dist/antd.css";
+import React, { Fragment } from "react";
 import "./styles.scss";
 
 const ListagemDietas = ({ dietasFiltradas }) => {

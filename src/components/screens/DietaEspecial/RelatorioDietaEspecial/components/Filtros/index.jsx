@@ -21,8 +21,13 @@ import {
   formataClassificacoes,
   formataProtocolos
 } from "helpers/terceirizadas";
-import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
+import {
+  gerarExcelRelatorioDietaEspecial,
+  getSolicitacoesRelatorioDietasEspeciais
+} from "services/dietaEspecial.service";
 import { Spin } from "antd";
+import { Button } from "react-bootstrap";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const BuscaDietasForm = ({
   setCarregando,
@@ -66,6 +71,21 @@ const BuscaDietasForm = ({
     }
   };
 
+  const exportarXLSX = () => {
+    const params = {
+      status: mostrarFiltrosAutorizadas ? "AUTORIZADAS" : "CANCELADAS",
+      lotes: lotesSelecionados.join(),
+      classificacoes: classificacoesSelecionadas.join(),
+      protocolos: protocolosSelecionados.join(),
+      terceirizada_uuid: terceirizadaUuid
+    };
+    gerarExcelRelatorioDietaEspecial(params)
+      .then(() => {})
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+      });
+  };
+
   useEffect(() => {
     getMeusDados();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,13 +106,15 @@ const BuscaDietasForm = ({
 
   const classificacoesRelacionadasADietas = dietas => {
     let classificacoesRelacionadas = [];
-    dietas.forEach(dieta => {
-      !(
-        classificacoesRelacionadas.filter(
-          classificacao => classificacao.id === dieta.classificacao.id
-        ).length > 0
-      ) && classificacoesRelacionadas.push(dieta.classificacao);
-    });
+    dietas
+      .filter(dieta => dieta.classificacao)
+      .forEach(dieta => {
+        !(
+          classificacoesRelacionadas.filter(
+            classificacao => classificacao.id === dieta.classificacao.id
+          ).length > 0
+        ) && classificacoesRelacionadas.push(dieta.classificacao);
+      });
     const classificacoesFormatadas = formataClassificacoes(
       classificacoesRelacionadas
     );
@@ -179,7 +201,9 @@ const BuscaDietasForm = ({
     values.forEach(value => {
       classificacoesFiltradasPorProtocolos.push(
         dietasEspeciais
-          .filter(dieta => dieta.rastro_lote.uuid === value)
+          .filter(
+            dieta => dieta.rastro_lote.uuid === value && dieta.classificacao
+          )
           .map(dieta => dieta.classificacao.id)
       );
       dietasEspeciais
@@ -242,13 +266,17 @@ const BuscaDietasForm = ({
 
     values.forEach(value => {
       dietasEspeciais
-        .filter(dieta => dieta.classificacao.id === value)
+        .filter(
+          dieta => dieta.classificacao && dieta.classificacao.id === value
+        )
         .map(dieta => dieta.nome_protocolo)
         .forEach(protocolo => {
           protocolosFiltradosPorClassificacoes.push(protocolo);
         });
       dietasEspeciais
-        .filter(dieta => dieta.classificacao.id === value)
+        .filter(
+          dieta => dieta.classificacao && dieta.classificacao.id === value
+        )
         .map(dieta => dieta.rastro_lote.nome)
         .forEach(lote => {
           lotesFiltradosPorProtocolos.push(lote);
@@ -571,6 +599,14 @@ const BuscaDietasForm = ({
                   className="float-right ml-3"
                   onClick={() => limparFiltros()}
                 />
+                <Button
+                  className="acoes float-right ml-3"
+                  variant="link"
+                  onClick={() => exportarXLSX()}
+                >
+                  <i className="fas fa-file-excel green" />
+                  <span className="link-exportar">XLSX</span>
+                </Button>
               </div>
             </>
           )}
