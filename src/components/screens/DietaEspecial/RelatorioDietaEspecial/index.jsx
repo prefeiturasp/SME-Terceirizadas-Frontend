@@ -72,7 +72,15 @@ const RelatorioDietaEspecial = () => {
               setMostrarFiltrosAutorizadas={setMostrarFiltrosAutorizadas}
             />
             {dietasFiltradas.length > 0 && (
-              <ListagemDietas dietasFiltradas={dietasFiltradas} />
+              <>
+                <div className="total-dietas">
+                  Total de dietas:
+                  <div className="numero-total-dietas">
+                    {dietasFiltradas.length}
+                  </div>
+                </div>
+                <ListagemDietas dietasFiltradas={dietasFiltradas} />
+              </>
             )}
             {dietasFiltradas.length > 0 && (
               <Botao
@@ -88,7 +96,7 @@ const RelatorioDietaEspecial = () => {
             )}
             {!dietasFiltradas.length > 0 && filtragemRealizada && (
               <div className="text-center mt-5">
-                Não existem dietas para os filtros selecionados
+                Nenhum resultado encontrado.
               </div>
             )}
           </div>
