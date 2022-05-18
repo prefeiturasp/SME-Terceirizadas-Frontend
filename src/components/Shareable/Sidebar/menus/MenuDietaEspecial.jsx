@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
@@ -17,7 +17,7 @@ import {
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
-const MenuDietaEspecial = () => {
+const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
   const exibePainelInicial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -72,9 +72,16 @@ const MenuDietaEspecial = () => {
         </LeafItem>
       )}
       {exibeRelatorioDietasEspeciais && (
-        <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
-          Relatórios
-        </LeafItem>
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Relatórios"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
+            Relatório de Dietas Especiais
+          </LeafItem>
+        </SubMenu>
       )}
     </Menu>
   );

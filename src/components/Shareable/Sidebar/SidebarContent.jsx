@@ -129,7 +129,7 @@ export const SidebarContent = () => {
       </ListItem>
     ),
     exibirGestaoAlimentacao && <MenuGestaoDeAlimentacao key={1} {..._props} />,
-    exibirDietaEspecial && <MenuDietaEspecial key={2} />,
+    exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
     exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
