@@ -13,7 +13,7 @@ import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants/shared";
+import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
@@ -147,13 +147,15 @@ class Relatorio extends Component {
     const {
       endpointAprovaSolicitacao,
       justificativa,
+      motivo_cancelamento,
       visao,
       textoBotaoNaoAprova,
       textoBotaoAprova,
       endpointNaoAprovaSolicitacao,
       endpointQuestionamento,
       ModalNaoAprova,
-      ModalQuestionamento
+      ModalQuestionamento,
+      motivosDREnaoValida
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -223,9 +225,11 @@ class Relatorio extends Component {
             solicitacao={inclusaoDeAlimentacao}
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
+            motivoCancelamento={motivo_cancelamento}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
             tipoSolicitacao={this.state.tipoSolicitacao}
+            motivosDREnaoValida={motivosDREnaoValida}
           />
         )}
         {ModalQuestionamento && (
@@ -286,12 +290,35 @@ class Relatorio extends Component {
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={tipoSolicitacao}
                 />
+                {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
+                  inclusaoDeAlimentacao.inclusoes.find(
+                    inclusao => inclusao.cancelado
+                  ) && (
+                    <>
+                      <hr />
+                      <p>
+                        <strong>Histórico de cancelamento parcial</strong>
+                        {inclusaoDeAlimentacao.inclusoes
+                          .filter(inclusao => inclusao.cancelado)
+                          .map((inclusao, key) => {
+                            return (
+                              <div key={key}>
+                                {inclusao.data}
+                                {" - "}
+                                {inclusao.cancelado_justificativa}
+                              </div>
+                            );
+                          })}
+                      </p>
+                    </>
+                  )}
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={inclusaoDeAlimentacao}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inclusaoDeAlimentacao}
                 />
+
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (

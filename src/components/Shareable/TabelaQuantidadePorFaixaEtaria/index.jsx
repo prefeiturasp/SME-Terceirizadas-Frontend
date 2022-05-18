@@ -5,7 +5,6 @@ import { Field } from "redux-form";
 import { faixaToString } from "../../../helpers/faixasEtarias";
 import InputText from "../Input/InputText";
 import "./style.scss";
-import { minValue, maxValue } from "../../../helpers/fieldValidators";
 
 export default class TabelaQuantidadePorFaixaEtaria extends Component {
   defaultProps = {
@@ -42,7 +41,6 @@ export default class TabelaQuantidadePorFaixaEtaria extends Component {
                   <Field
                     component={InputText}
                     name={`faixas_etarias.${faixa.faixa_etaria.uuid}`}
-                    validate={[minValue(0), maxValue(faixa.count)]}
                     type="number"
                   />
                 </td>

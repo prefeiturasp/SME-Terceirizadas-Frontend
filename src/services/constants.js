@@ -38,7 +38,8 @@ export const TIPO_MOTIVO = {
   INCLUSAO_CONTINUA: "motivos-inclusao-continua",
   ALTERACAO_TIPO_ALIMENTACAO: "motivos-alteracao-tipo-alimentacao",
   NEGACAO: "motivos-negacao",
-  SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio"
+  SUSPENSAO_CARDAPIO: "motivos-suspensao-cardapio",
+  DRE_NAO_VALIDA: "motivos-dre-nao-valida"
 };
 
 export const RESUMO_POR = {

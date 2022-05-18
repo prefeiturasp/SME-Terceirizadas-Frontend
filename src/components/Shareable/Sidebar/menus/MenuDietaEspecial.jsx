@@ -1,9 +1,10 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   DIETA_ESPECIAL,
   CANCELAMENTO,
-  CONSULTA_PROTOCOLO_PADRAO_DIETA
+  CONSULTA_PROTOCOLO_PADRAO_DIETA,
+  RELATORIO_DIETA_ESPECIAL
 } from "configs/constants";
 import {
   usuarioEhTerceirizada,
@@ -16,7 +17,7 @@ import {
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
-const MenuDietaEspecial = () => {
+const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
   const exibePainelInicial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -35,6 +36,7 @@ const MenuDietaEspecial = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
+  const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
 
   return (
     <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
@@ -68,6 +70,18 @@ const MenuDietaEspecial = () => {
         <LeafItem to={`/${DIETA_ESPECIAL}/${CONSULTA_PROTOCOLO_PADRAO_DIETA}`}>
           Consultar Protocolo Padrão
         </LeafItem>
+      )}
+      {exibeRelatorioDietasEspeciais && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Relatórios"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${DIETA_ESPECIAL}/${RELATORIO_DIETA_ESPECIAL}`}>
+            Relatório de Dietas Especiais
+          </LeafItem>
+        </SubMenu>
       )}
     </Menu>
   );

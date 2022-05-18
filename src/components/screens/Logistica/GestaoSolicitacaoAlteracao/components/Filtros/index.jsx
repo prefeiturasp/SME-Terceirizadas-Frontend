@@ -18,7 +18,8 @@ export default ({
   setFiltros,
   setSolicitacoes,
   setTotal,
-  numeroSolicitacaoInicial
+  numeroSolicitacaoInicial,
+  inicioResultado
 }) => {
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -124,7 +125,7 @@ export default ({
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}

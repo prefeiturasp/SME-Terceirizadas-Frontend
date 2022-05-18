@@ -12,7 +12,7 @@ export const parseFormValues = ({
     const {
       periodo,
       check,
-      tipo_alimentacao_de,
+      tipos_alimentacao_de,
       tipo_alimentacao_para,
       ...dadosFaixasEtarias
     } = dadosSubstituicao;
@@ -29,7 +29,7 @@ export const parseFormValues = ({
     });
     substituicoes.push({
       periodo_escolar: periodo,
-      tipo_alimentacao_de,
+      tipos_alimentacao_de,
       tipo_alimentacao_para,
       faixas_etarias
     });
