@@ -367,3 +367,9 @@ export const gerarExcelRelatorioDietaEspecial = async params => {
   const { data } = await axios.get(url, { params, responseType: "blob" });
   saveAs(data, "relatorio_dieta_especial.xlsx");
 };
+
+export const gerarPdfRelatorioDietaEspecial = async params => {
+  const url = `/solicitacoes-dieta-especial/exportar-pdf/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_dieta_especial.pdf");
+};

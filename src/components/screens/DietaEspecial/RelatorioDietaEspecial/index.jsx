@@ -5,8 +5,11 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import React, { useState } from "react";
-import { gerarExcelRelatorioDietaEspecial } from "services/dietaEspecial.service";
+import React, { useState, Fragment } from "react";
+import {
+  gerarExcelRelatorioDietaEspecial,
+  gerarPdfRelatorioDietaEspecial
+} from "services/dietaEspecial.service";
 import Filtros from "./components/Filtros";
 import ListagemDietas from "./components/ListagemDietas";
 import "./styles.scss";
@@ -39,6 +42,23 @@ const RelatorioDietaEspecial = () => {
       data_final: dataFinal
     };
     gerarExcelRelatorioDietaEspecial(params)
+      .then(() => {})
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+      });
+  };
+
+  const exportarPDF = () => {
+    const params = {
+      status: mostrarFiltrosAutorizadas ? "AUTORIZADAS" : "CANCELADAS",
+      lotes: lotesSelecionados.join(),
+      classificacoes: classificacoesSelecionadas.join(),
+      protocolos: protocolosSelecionados.join(),
+      terceirizada_uuid: terceirizadaUuid,
+      data_inicial: dataInicial,
+      data_final: dataFinal
+    };
+    gerarPdfRelatorioDietaEspecial(params)
       .then(() => {})
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -83,13 +103,22 @@ const RelatorioDietaEspecial = () => {
               </>
             )}
             {dietasFiltradas.length > 0 && (
-              <Botao
-                texto="Exportar XLSX"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                icon={BUTTON_ICON.FILE_EXCEL}
-                className="float-right ml-3"
-                onClick={() => exportarXLSX()}
-              />
+              <Fragment>
+                <Botao
+                  texto="Exportar PDF"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  icon={BUTTON_ICON.FILE_PDF}
+                  className="float-right ml-3"
+                  onClick={() => exportarPDF()}
+                />
+                <Botao
+                  texto="Exportar XLSX"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  icon={BUTTON_ICON.FILE_EXCEL}
+                  className="float-right ml-3"
+                  onClick={() => exportarXLSX()}
+                />
+              </Fragment>
             )}
             {!dietasFiltradas.length > 0 && !statusSelecionado && (
               <div className="text-center mt-5">Selecione um Status</div>
