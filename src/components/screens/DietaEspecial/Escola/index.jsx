@@ -74,6 +74,7 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     meusDados().then(meusDados => {
       this.setState({
         quantidadeAlunos: meusDados.vinculo_atual.instituicao.quantidade_alunos,
