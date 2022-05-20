@@ -93,7 +93,7 @@ export class SolicitacaoVigente extends Component {
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
           !uuid && (
             <div className="pt-2 no-diets">
-              Não há solicitações vigentes para este aluno.
+              Não há dieta autorizada para este aluno.
             </div>
           )
         ) : (

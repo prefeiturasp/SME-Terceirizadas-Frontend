@@ -41,7 +41,8 @@ class CadastroLote extends Component {
       loading: true,
       uuid: null,
       redirect: false,
-      deactivate: true
+      deactivate: true,
+      escolasParaEdicaoCarregadas: false
     };
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
@@ -50,13 +51,16 @@ class CadastroLote extends Component {
   }
 
   componentDidUpdate() {
-    const { loading, loteCarregado } = this.state;
+    const { loading, loteCarregado, escolasParaEdicaoCarregadas } = this.state;
     const {
       meusDados,
       lotes,
       diretoriasRegionais,
       tiposGestao,
-      subprefeituras
+      subprefeituras,
+      location,
+      diretoria_regional,
+      getEscolasPorDre
     } = this.props;
     if (
       lotes !== [] &&
@@ -100,7 +104,7 @@ class CadastroLote extends Component {
           let escolasSelecionadasNomes = [];
           response.data.escolas.forEach(escola => {
             escolasSelecionadasNomes.push(
-              `${escola.codigo_eol} - ${escola.nome} - ${escola.lote}`
+              `${escola.codigo_eol} - ${escola.nome} - ${escola.lote.nome}`
             );
           });
           this.setState({
@@ -121,6 +125,16 @@ class CadastroLote extends Component {
           this.setState({ loteCarregado: true });
         }
       });
+    }
+
+    if (
+      location &&
+      location.state &&
+      diretoria_regional &&
+      !escolasParaEdicaoCarregadas
+    ) {
+      getEscolasPorDre(diretoria_regional);
+      this.setState({ escolasParaEdicaoCarregadas: true });
     }
   }
 
