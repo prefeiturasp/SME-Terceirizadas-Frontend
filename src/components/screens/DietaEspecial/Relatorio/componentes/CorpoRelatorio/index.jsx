@@ -25,6 +25,12 @@ import { obtemIdentificacaoNutricionistaDieta } from "helpers/utilities";
 import { ehCanceladaSegundoStep } from "../../helpers";
 import "./styles.scss";
 import JustificativaNegacao from "./JustificativaNegacao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
 
 const CorpoRelatorio = ({
   dietaEspecial,
@@ -39,6 +45,33 @@ const CorpoRelatorio = ({
   const canceladaSegundoStep = dietaEspecial
     ? ehCanceladaSegundoStep(dietaEspecial)
     : false;
+
+  const downloadAnexo = url => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.target = "_blank";
+    a.download = url.split("/").pop();
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const anexos = dietaEspecial.anexos.map((anexo, key) => {
+    return (
+      <div className="col-2 mb-3" key={key}>
+        <p>
+          <b>Anexo {key + 1}</b>
+        </p>
+        <Botao
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          icon={BUTTON_ICON.ATTACH}
+          className="w-100"
+          onClick={() => downloadAnexo(anexo.arquivo_url)}
+        />
+      </div>
+    );
+  });
 
   const montaCorpoRelatorio = () => {
     if (
@@ -162,6 +195,12 @@ const CorpoRelatorio = ({
         <ProtocoloLeitura key={2} />,
         dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
           <PeriodoVigencia key={3} />
+        ),
+        dietaEspecial.anexos && (
+          <div className="mt-0" key={4}>
+            <p className="mt-1 mb-2">Anexos</p>
+            <div className="row">{anexos}</div>
+          </div>
         )
       ];
     } else if (
