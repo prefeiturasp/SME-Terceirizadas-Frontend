@@ -14,7 +14,7 @@ import "./style.scss";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
-export default ({ setFiltros, setGuias, setTotal }) => {
+export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
   const [initialValues] = useState({});
 
   const onSubmit = async values => {
@@ -94,7 +94,7 @@ export default ({ setFiltros, setGuias, setTotal }) => {
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}

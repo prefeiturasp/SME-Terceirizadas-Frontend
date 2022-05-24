@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin, Pagination } from "antd";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
@@ -17,6 +17,8 @@ export default () => {
   const [numeroSolicitacaoInicial, setNumeroSolicitacaoInicial] = useState("");
   const queryString = window.location.search;
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -26,6 +28,7 @@ export default () => {
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -48,6 +51,7 @@ export default () => {
       setNumeroSolicitacaoInicial(codigo);
       setFiltros({ ...filtro });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -55,6 +59,7 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -71,6 +76,7 @@ export default () => {
             setSolicitacoes={setSolicitacoes}
             solicitacoes={solicitacoes}
             numeroSolicitacaoInicial={numeroSolicitacaoInicial}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>

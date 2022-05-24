@@ -13,14 +13,20 @@ import "./styles.scss";
 
 const FORM_NAME = "entregasDilog";
 
-export default ({ setFiltros, setSolicitacoes, setTotal, dilog, dre }) => {
+export default ({
+  setFiltros,
+  setSolicitacoes,
+  setTotal,
+  dilog,
+  dre,
+  inicioResultado
+}) => {
   const [initialValues] = useState({});
 
   const onSubmit = async values => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
-
   return (
     <div className="filtros-entregas-dilog">
       <Form
@@ -93,7 +99,7 @@ export default ({ setFiltros, setSolicitacoes, setTotal, dilog, dre }) => {
                 </div>
               )}
             </div>
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}

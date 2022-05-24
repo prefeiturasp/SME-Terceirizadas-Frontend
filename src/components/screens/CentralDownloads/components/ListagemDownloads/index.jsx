@@ -15,6 +15,8 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
         return "fas fa-sync laranja";
       case STATUS_DOWNLOAD.ERRO:
         return "fas fa-times-circle vermelho";
+      default:
+        return "fas fa-check-circle verde";
     }
   };
 

@@ -47,7 +47,7 @@ export default ({ reposicao }) => {
     payload.data_recebimento = ultimoItem.data_recebimento;
     payload.hora_recebimento = ultimoItem.hora_recebimento;
     payload.conferencia_dos_alimentos = [];
-    valoresForm.map((item, index) => {
+    valoresForm.forEach((item, index) => {
       let conferencia = {};
 
       if (item.status !== "Recebido") flagOcorrencia = true;
@@ -166,6 +166,7 @@ export default ({ reposicao }) => {
     setValoresForm(valoresConf);
 
     if (reposicao) validaReposicao(valoresConf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const subtitulo = reposicao
@@ -260,7 +261,6 @@ export default ({ reposicao }) => {
               <tbody>
                 {guia.alimentos &&
                   guia.alimentos.map((item, index) => {
-                    if (!guia.alimentos) return;
                     const embalagens = item.total_embalagens
                       ? item.total_embalagens
                       : item.embalagens;

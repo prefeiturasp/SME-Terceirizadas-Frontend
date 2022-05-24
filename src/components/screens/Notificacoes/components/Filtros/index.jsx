@@ -1,5 +1,5 @@
 import moment from "moment";
-import React from "react";
+import React, { useRef } from "react";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -16,6 +16,7 @@ const FORM_NAME = "buscaNotificações";
 
 export default ({ filtros, setFiltros }) => {
   const initialValues = {};
+  const inicioResultado = useRef();
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -143,13 +144,14 @@ export default ({ filtros, setFiltros }) => {
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="float-right ml-3"
                 disabled={submitting}
+                onClick={() => inicioResultado.current.scrollIntoView()}
               />
 
               <Botao

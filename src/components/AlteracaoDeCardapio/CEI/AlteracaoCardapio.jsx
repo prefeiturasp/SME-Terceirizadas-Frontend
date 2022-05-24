@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Select } from "../../Shareable/Select";
 import { Botao } from "../../Shareable/Botao";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -20,6 +21,7 @@ import {
 } from "../../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect,
   getError
 } from "../../../helpers/utilities";
 import { InputComData } from "../../Shareable/DatePicker";
@@ -112,6 +114,7 @@ class AlteracaoCardapio extends Component {
       });
     }
     if (data_alteracao && ultimaDataAlteracao !== data_alteracao) {
+      this.setState({ ultimaDataAlteracao: data_alteracao });
       for (let periodo of periodos) {
         const response = await getAlunosPorFaixaEtariaNumaData(
           periodo.uuid,
@@ -127,6 +130,7 @@ class AlteracaoCardapio extends Component {
             maxValue(faixa.count)
           ];
         });
+
         this.props.change(
           `substituicoes_${periodo.nome}.alunosPorFaixaEtaria`,
           periodo.alunosPorFaixaEtaria
@@ -138,6 +142,26 @@ class AlteracaoCardapio extends Component {
 
   componentDidMount() {
     this.refresh();
+  }
+
+  removerOpcoesSubstitutos(value, periodo, indice) {
+    let periodos = this.state.periodos;
+    let opcoesSubstitutos = [];
+    if (value && value.length) {
+      opcoesSubstitutos = periodo.tipos_alimentacao.filter(
+        substituto => !value.includes(substituto.uuid)
+      );
+      opcoesSubstitutos = opcoesSubstitutos.map(substituto => {
+        return {
+          nome: substituto.nome,
+          uuid: substituto.uuid
+        };
+      });
+    }
+    periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+    this.setState({
+      periodos: periodos
+    });
   }
 
   montaObjetoDeSubstituicoesEdit = periodo => {
@@ -155,7 +179,7 @@ class AlteracaoCardapio extends Component {
     let periodos = this.state.periodos;
     substituicoesEdit.forEach((item, indice) => {
       if (item.turno === substituicao.periodo_escolar.nome) {
-        item.substituicoes = substituicao.tipo_alimentacao_de.substituicoes;
+        item.substituicoes = substituicao.tipos_alimentacao_de.substituicoes;
       }
       if (
         periodos[indice] &&
@@ -185,15 +209,24 @@ class AlteracaoCardapio extends Component {
 
   OnEditButtonClicked(param) {
     const alteracaoDeCardapio = param.alteracaoDeCardapio;
-    this.props.loadAlteracaoCardapioCei(alteracaoDeCardapio);
     const periodos = this.state.periodos.map(periodo => {
       const index = alteracaoDeCardapio.substituicoes.findIndex(
         substituicao => substituicao.periodo_escolar.nome === periodo.nome
       );
       periodo.checked = index > -1;
+      periodo.substituicoes =
+        periodo.tipos_alimentacao.length > 0
+          ? agregarDefault([
+              alteracaoDeCardapio.substituicoes.find(
+                substituicao =>
+                  substituicao.periodo_escolar.nome === periodo.nome
+              ).tipo_alimentacao_para
+            ])
+          : agregarDefault([]);
       return periodo;
     });
     this.setState({ periodos });
+    this.props.loadAlteracaoCardapioCei(alteracaoDeCardapio);
   }
 
   refresh = async () => {
@@ -367,7 +400,10 @@ class AlteracaoCardapio extends Component {
 
   limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
     if (periodo.checked) {
-      this.props.change(`substituicoes_${periodoNome}.tipo_alimentacao_de`, "");
+      this.props.change(
+        `substituicoes_${periodoNome}.tipos_alimentacao_de`,
+        ""
+      );
       this.props.change(
         `substituicoes_${periodoNome}.tipo_alimentacao_para`,
         ""
@@ -408,13 +444,7 @@ class AlteracaoCardapio extends Component {
   }
 
   render() {
-    const {
-      loading,
-      alteracaoCardapioList,
-      showModal,
-      periodos,
-      substituicoesAlimentacao
-    } = this.state;
+    const { loading, alteracaoCardapioList, showModal, periodos } = this.state;
     const {
       data_alteracao,
       formValues,
@@ -463,8 +493,8 @@ class AlteracaoCardapio extends Component {
                 >
                   Descrição da Alteração do Tipo de Alimentação
                 </div>
-                <div className="header-alteracao-cei">
-                  <section className="section-form-motivo">
+                <div className="row">
+                  <section className="col-12 col-sm-8">
                     <Field
                       component={Select}
                       name="motivo"
@@ -473,7 +503,7 @@ class AlteracaoCardapio extends Component {
                       validate={required}
                     />
                   </section>
-                  <section className="section-form-datas">
+                  <section className="col-12 col-sm-4">
                     <Field
                       component={InputComData}
                       onBlur={event => this.onAlterarDiaChanged(event)}
@@ -509,12 +539,13 @@ class AlteracaoCardapio extends Component {
                     formValues &&
                     data_alteracao &&
                     periodo.checked &&
-                    periodo.alunosPorFaixaEtaria
+                    periodo.alunosPorFaixaEtaria &&
+                    formValues[formSectionName]["faixas_etarias"]
                   ) {
-                    for (let [faixa, valor] of Object.entries(
-                      formValues[formSectionName]
+                    for (let [, valor] of Object.entries(
+                      formValues[formSectionName]["faixas_etarias"]
                     )) {
-                      if (faixa.startsWith("qtde-faixa")) {
+                      if (valor) {
                         totalSelecionados += parseInt(valor);
                       }
                     }
@@ -539,35 +570,28 @@ class AlteracaoCardapio extends Component {
                           nomePeriodo={periodo.nome}
                         />
                         <Field
-                          component={Select}
-                          name="tipo_alimentacao_de"
-                          options={agregarDefault(periodo.tipos_alimentacao)}
-                          disabled={!periodo.checked}
-                          onChange={event => {
-                            this.resetAlteracaoDoPeriodo(
-                              event.target.value,
-                              periodo.nome,
+                          component={MultiSelect}
+                          disableSearch
+                          name="tipos_alimentacao_de"
+                          multiple
+                          options={formatarParaMultiselect(
+                            periodo.tipos_alimentacao
+                          )}
+                          nomeDoItemNoPlural="Alimentos"
+                          onChange={value =>
+                            this.removerOpcoesSubstitutos(
+                              value,
+                              periodo,
                               indice
-                            );
-                            this.selectSubstituicoesAlimentacaoAPartirDe(
-                              event.target.value,
-                              indice
-                            );
-                          }}
-                          validate={periodo.checked ? [required] : []}
-                          required={periodo.checked}
+                            )
+                          }
                         />
 
                         <Field
                           component={Select}
                           name="tipo_alimentacao_para"
-                          disabled={!periodo.checked}
-                          options={agregarDefault(
-                            substituicoesAlimentacao.length > 0
-                              ? substituicoesAlimentacao[indice].substituicoes
-                              : []
-                          )}
-                          validate={periodo.checked ? [required] : []}
+                          options={periodo.substituicoes}
+                          validate={periodo.checked && required}
                           required={periodo.checked}
                         />
                       </div>
@@ -636,6 +660,7 @@ const AlteracaoCardapioForm = reduxForm({
       return {};
     }
     const errors = {};
+
     if (!props.formValues.data_alteracao) {
       errors.data_alteracao =
         "É necessária uma data de alteração do tipo de alimentação";
@@ -710,8 +735,7 @@ const mapStateToProps = state => {
     formValues:
       state.form.alteracaoCardapio && state.form.alteracaoCardapio.values,
     data_alteracao: selector(state, "data_alteracao"),
-    motivo: selector(state, "motivo"),
-    observacao: selector(state, "observacao")
+    motivo: selector(state, "motivo")
   };
 };
 

@@ -141,7 +141,9 @@ class Relatorio extends Component {
     } = this.state;
     const {
       visao,
+      motivo_cancelamento,
       endpointAprovaSolicitacao,
+      motivosDREnaoValida,
       justificativa,
       textoBotaoNaoAprova,
       textoBotaoAprova,
@@ -220,6 +222,8 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
+            motivosDREnaoValida={motivosDREnaoValida}
+            motivoCancelamento={motivo_cancelamento}
             uuid={uuid}
             tipoSolicitacao={this.state.tipoSolicitacao}
           />

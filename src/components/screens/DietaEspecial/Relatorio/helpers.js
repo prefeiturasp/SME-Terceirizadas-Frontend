@@ -64,7 +64,7 @@ export const formataJustificativa = dietaEspecial => {
     )
   ) {
     justificativa = dietaEspecial.logs.filter(
-      log => log.status_evento_explicacao === "Escola solicitou inativação"
+      log => log.status_evento_explicacao === "Escola solicitou cancelamento"
     )[0].justificativa;
   }
   if (

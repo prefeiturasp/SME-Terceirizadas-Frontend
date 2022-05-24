@@ -74,8 +74,8 @@ export class OpcoesKits extends Component {
         <div className="row">
           {kitsLanche &&
             kitsLanche.map((kitLanche, key) => {
-              if (kitLanche.status !== "INATIVO") {
-                return (
+              return (
+                kitLanche.status !== "INATIVO" && (
                   <div key={key} className="col-lg-4 col-md-12">
                     <CardKit
                       onCardChange={this.onCardChange}
@@ -86,8 +86,8 @@ export class OpcoesKits extends Component {
                       {...this.props}
                     />
                   </div>
-                );
-              }
+                )
+              );
             })}
         </div>
       </div>

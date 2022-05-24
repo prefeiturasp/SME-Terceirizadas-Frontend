@@ -149,7 +149,7 @@ export const CorpoRelatorio = props => {
           </div>
           {justificativaNegacao && (
             <div>
-              <div className="descricao-titulo">Justificativa da rejeição</div>
+              <div className="descricao-titulo">Justificativa da negação</div>
               <div
                 className="descricao-texto"
                 dangerouslySetInnerHTML={{

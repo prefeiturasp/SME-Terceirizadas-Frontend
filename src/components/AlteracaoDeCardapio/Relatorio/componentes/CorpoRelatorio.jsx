@@ -148,19 +148,28 @@ export const CorpoRelatorio = props => {
           (
             {
               periodo_escolar,
-              tipo_alimentacao_de,
+              tipos_alimentacao_de,
               tipo_alimentacao_para,
               qtd_alunos,
               faixas_etarias
             },
             key
           ) => {
+            let alimentos = tipos_alimentacao_de.map(alimento => alimento.nome);
+            let tipos_alimentos_formatados = "";
+            for (let i = 0; i < alimentos.length; i++) {
+              tipos_alimentos_formatados =
+                tipos_alimentos_formatados + alimentos[i];
+              if (i + 1 !== alimentos.length) {
+                tipos_alimentos_formatados = tipos_alimentos_formatados + ", ";
+              }
+            }
             return (
               <Fragment key={key}>
                 <tr>
                   <td>{periodo_escolar && periodo_escolar.nome}</td>
-                  <td>{tipo_alimentacao_de.label}</td>
-                  <td>{tipo_alimentacao_para.label}</td>
+                  <td>{tipos_alimentos_formatados}</td>
+                  <td>{tipo_alimentacao_para.nome}</td>
                   <td>{qtd_alunos}</td>
                 </tr>
                 {ehInclusaoCei(tipoSolicitacao) && (
@@ -193,7 +202,7 @@ export const CorpoRelatorio = props => {
       {justificativaNegacao && (
         <table className="table-periods">
           <tr>
-            <th>Justificativa da rejeição</th>
+            <th>Justificativa da negação</th>
           </tr>
           <tr>
             <td>

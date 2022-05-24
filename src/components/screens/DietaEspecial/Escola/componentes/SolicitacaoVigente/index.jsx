@@ -68,7 +68,7 @@ export class SolicitacaoVigente extends Component {
     this.setState({ submitted: true });
     escolaInativaDietaEspecial(values.uuid, values).then(response => {
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Inativação de solicitação realizada com sucesso.");
+        toastSuccess("Cancelamento de solicitação realizada com sucesso.");
         this.setState({
           submitted: false,
           solicitacoesVigentes: null

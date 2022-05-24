@@ -65,6 +65,7 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
         `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
         41
       ),
+      texto_inteiro: `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid

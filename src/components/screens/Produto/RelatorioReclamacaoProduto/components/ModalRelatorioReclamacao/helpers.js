@@ -83,5 +83,7 @@ const retornaStatusFrontend = status => {
       return "CODAE recusou";
     case "CODAE_RESPONDEU":
       return "CODAE respondeu";
+    default:
+      return "STATUS NÃO ENCONTRADO";
   }
 };

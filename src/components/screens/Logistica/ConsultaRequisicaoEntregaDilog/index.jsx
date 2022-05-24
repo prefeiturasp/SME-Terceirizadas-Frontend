@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
@@ -38,6 +38,8 @@ export default () => {
   const [showModal, setShowModal] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -45,6 +47,7 @@ export default () => {
     if (response.data.count) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setSolicitacoes(null);
       setTotal(response.data.count);
@@ -87,13 +90,11 @@ export default () => {
   };
 
   const confereSolicitacoesSelecionadas = () => {
-    let desabilitar = false;
-    selecionados.map(solicitacao => {
-      if (solicitacao.status !== "Aguardando envio") {
-        desabilitar = true;
-      }
-    });
-    return desabilitar || selecionados.length === 0;
+    return (
+      selecionados.find(
+        selecionado => selecionado.status !== "Aguardando envio"
+      ) !== undefined || selecionados.length === 0
+    );
   };
 
   const arquivaDesarquivaGuias = async (
@@ -143,6 +144,7 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -159,6 +161,7 @@ export default () => {
             setSolicitacoes={setSolicitacoes}
             initialValues={initialValues}
             setInitialValues={setInitialValues}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>
@@ -195,10 +198,10 @@ export default () => {
                   />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Exportar Relatório"
+                      texto="Relatório Consolidado XLSX"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.EYE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
                       onClick={() => {
                         setCarregandoExcel(true);

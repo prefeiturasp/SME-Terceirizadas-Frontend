@@ -77,14 +77,7 @@
       }
 
       .fas {
-        cursor: pointer;
-        font-weight: 900;
         font-size: 16px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        letter-spacing: 0.01em;
       }
 
       .expand {
@@ -181,12 +174,22 @@
       }
     }
 
-    .download-icon {
-      padding: 2px;
-      color: #198459;
-      border: 1px solid #198459;
-      box-sizing: border-box;
-      border-radius: 4px;
+    .acoes {
+      font-size: 14px !important;
+      padding: 0;
+      display: inline-block;
+    }
+
+    .link-exportar {
+      padding-left: 8px;
+    }
+
+    .green {
+      color: $green;
+    }
+
+    .red {
+      color: #fc2122;
     }
   }
 }

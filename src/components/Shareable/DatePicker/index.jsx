@@ -107,7 +107,7 @@ export class InputComData extends Component {
     return (
       <div className="datepicker">
         {label && [
-          required && <span className="required-asterisk">*</span>,
+          required && <span className="required-asterisk float-left">*</span>,
           <label
             key={1}
             htmlFor={name}

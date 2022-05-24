@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
@@ -41,6 +41,8 @@ export default () => {
 
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -50,6 +52,7 @@ export default () => {
       setTotal(response.data.count);
       setNumEnviadas(response.data.num_enviadas);
       setNumConfirmadas(response.data.num_confirmadas);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -120,6 +123,7 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -142,6 +146,7 @@ export default () => {
             setTotal={setTotal}
             initialValues={initialValues}
             setInitialValues={setInitialValues}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>
@@ -168,20 +173,20 @@ export default () => {
                 <div className="d-flex align-items-end">
                   <Spin size="small" spinning={carregandoPDFConfirmados}>
                     <Botao
-                      texto="Imprimir requisições confirmadas"
+                      texto="Exportar requisições confirmadas"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.PRINT}
+                      icon={BUTTON_ICON.FILE_PDF}
                       onClick={imprimirRequisicoesConfirmadas}
                       disabled={numConfirmadas === 0}
                     />
                   </Spin>
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Exportar"
+                      texto="Relatório Consolidado XLSX"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.EYE}
+                      icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
                       onClick={() => {
                         setCarregandoExcel(true);

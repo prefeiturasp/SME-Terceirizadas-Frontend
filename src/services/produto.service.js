@@ -126,7 +126,6 @@ export const getProdutosPorFabricante = async nomeFabricante => {
 };
 
 export const getProdutosPorParametros = async (parametros, page, pageSize) => {
-  console.log("getProdutosPorParametros", { page, parametros });
   return await axios.post(
     `/produtos/filtro-homologados-por-parametros/`,
     parametros,
@@ -449,6 +448,13 @@ export const excluirRascunhoDeProduto = async uuid => {
 
 export const getDashboardGestaoProdutos = async () => {
   return await axios.get(`/painel-gerencial-homologacoes-produtos/dashboard/`);
+};
+
+export const getHomologacoesPorTituloMarca = async parametros => {
+  return await axios.post(
+    `/painel-gerencial-homologacoes-produtos/filtro-homologacoes-por-titulo-marca/`,
+    parametros
+  );
 };
 
 export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {

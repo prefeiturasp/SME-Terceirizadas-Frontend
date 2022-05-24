@@ -123,7 +123,7 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
       } else if (formValues.status.length === 1 && formValues.status[0] === "")
         formValues.status = getTodasOpcoesStatusPorPerfil();
       else {
-        formValues.status.map((status, index) => {
+        formValues.status.forEach((status, index) => {
           if (status !== "") {
             const statusBackend = retornaStatusBackend(status);
             if (Array.isArray(statusBackend)) {

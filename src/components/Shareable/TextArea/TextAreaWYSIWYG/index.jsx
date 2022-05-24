@@ -51,7 +51,7 @@ export class TextAreaWYSIWYG extends Component {
     if (
       input.value &&
       input.value !== this.props.value &&
-      !input.value.replace(/\s/g, "") === "<p></p>"
+      input.value.replace(/\s/g, "") !== "<p></p>"
     ) {
       const contentBlock = htmlToDraft(input.value);
       const contentState = ContentState.createFromBlockArray(
@@ -106,7 +106,7 @@ export class TextAreaWYSIWYG extends Component {
       <div className="textarea" id="react-wysiwyg">
         {label && [
           required && (
-            <span key={0} className="required-asterisk">
+            <span key={0} className="required-asterisk float-left">
               *
             </span>
           ),

@@ -15,7 +15,7 @@ export const TODOS = "TODOS";
 
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,
-  DIRETOR_CEI: `"DIRETOR CEI"`,
+  DIRETOR_CEI: `"DIRETOR_CEI"`,
   COORDENADOR_ESCOLA: `"COORDENADOR_ESCOLA"`,
   ADMINISTRADOR_ESCOLA: `"ADMINISTRADOR_ESCOLA"`,
   ADMINISTRADOR_ESCOLA_ABASTECIMENTO: `"ADMINISTRADOR_ESCOLA_ABASTECIMENTO"`,
@@ -377,5 +377,25 @@ export const OPTIONS_VISTO_DOWNLOAD = [
   {
     uuid: false,
     nome: "Não Visto"
+  }
+];
+
+export const STATUS_DIETAS = {
+  AUTORIZADAS: "Autorizadas",
+  CANCELADAS: "Canceladas"
+};
+
+export const OPTIONS_STATUS_DIETA = [
+  {
+    uuid: "",
+    nome: "Selecione"
+  },
+  {
+    uuid: "AUTORIZADAS",
+    nome: STATUS_DIETAS.AUTORIZADAS
+  },
+  {
+    uuid: "CANCELADAS",
+    nome: STATUS_DIETAS.CANCELADAS
   }
 ];

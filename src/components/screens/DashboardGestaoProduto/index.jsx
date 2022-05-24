@@ -1,13 +1,16 @@
 import React, { Component } from "react";
+import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import CardStatusDeSolicitacao from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardBody from "components/Shareable/CardBody";
 import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
-import { slugify } from "../helper";
-import { dataAtual, deepCopy } from "helpers/utilities";
+import { dataAtual } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
-import { getDashboardGestaoProdutos } from "services/produto.service";
+import {
+  getDashboardGestaoProdutos,
+  getHomologacoesPorTituloMarca
+} from "services/produto.service";
 import { TIPO_PERFIL } from "constants/shared";
 
 export default class DashboardGestaoProduto extends Component {
@@ -18,8 +21,12 @@ export default class DashboardGestaoProduto extends Component {
       dashboardData: null,
       dashboardDataFiltered: null,
       erro: false,
-      ehTerceirizada: false
+      ehTerceirizada: false,
+      loading: true,
+      filtrosDesabilitados: true,
+      filtroAtivo: false
     };
+    this.typingTimeout = null;
   }
 
   ehPerfilTerceirizada = () => {
@@ -27,7 +34,11 @@ export default class DashboardGestaoProduto extends Component {
     return tipoPerfil === TIPO_PERFIL.TERCEIRIZADA;
   };
 
-  componentDidMount() {
+  loadDashBoardGestaoProdutos = () => {
+    this.setState({
+      loading: true,
+      filtrosDesabilitados: true
+    });
     getDashboardGestaoProdutos()
       .then(response => {
         if (response.status === HTTP_STATUS.OK) {
@@ -42,10 +53,16 @@ export default class DashboardGestaoProduto extends Component {
           this.setState({
             cards: cards,
             cardsFiltered: cards.concat(),
-            ehTerceirizada
+            ehTerceirizada,
+            loading: false,
+            filtrosDesabilitados: false
           });
         } else {
-          this.setState({ erro: true });
+          this.setState({
+            erro: true,
+            loading: false,
+            filtrosDesabilitados: false
+          });
         }
       })
       .catch(error => {
@@ -53,27 +70,59 @@ export default class DashboardGestaoProduto extends Component {
         console.error(error);
         this.setState({ erro: true });
       });
+  };
+
+  componentDidMount() {
+    this.loadDashBoardGestaoProdutos();
   }
 
   onPesquisaChanged = values => {
-    if (values.titulo === undefined) values.titulo = "";
-    const { cards } = this.state;
-    let cardsFiltered = deepCopy(cards);
-    cardsFiltered = this.filtrarNome(cardsFiltered, values.titulo);
-    this.setState({ cardsFiltered });
-  };
-
-  filtrarNome = (listaFiltro, value) => {
-    const wordToFilter = slugify(value.toLowerCase());
-    return listaFiltro.map(card => {
-      card.items = card.items.filter(
-        item =>
-          slugify(item.nome_produto.toLowerCase()).search(wordToFilter) !==
-            -1 ||
-          slugify(item.id_externo.toLowerCase()).search(wordToFilter) !== -1
-      );
-      return card;
-    });
+    clearTimeout(this.typingTimeout);
+    this.typingTimeout = setTimeout(async () => {
+      const data = {};
+      if (
+        (!values.titulo && !values.marca) ||
+        (!values.titulo && values.marca && values.marca.length < 3) ||
+        (!values.marca && values.titulo && values.titulo.length < 3) ||
+        (values.marca &&
+          values.titulo &&
+          values.titulo.length < 3 &&
+          values.marca.length < 3)
+      ) {
+        if (this.state.filtroAtivo) {
+          this.loadDashBoardGestaoProdutos();
+          this.setState({ filtroAtivo: false });
+        }
+        return;
+      }
+      this.setState({ filtroAtivo: true });
+      if (values.titulo && values.titulo.length > 2) {
+        data["titulo_produto"] = values.titulo;
+      }
+      if (values.marca && values.marca.length > 2) {
+        data["marca_produto"] = values.marca;
+      }
+      this.setState({ loading: true });
+      const response = await getHomologacoesPorTituloMarca(data);
+      if (response.status === HTTP_STATUS.OK) {
+        const cards = listarCardsPermitidos();
+        const ehTerceirizada = this.ehPerfilTerceirizada();
+        cards.forEach(card => {
+          card.items = incluirDados(card.incluir_status, response.data.results);
+        });
+        this.setState({
+          cards: cards,
+          cardsFiltered: cards.concat(),
+          ehTerceirizada,
+          loading: false
+        });
+      } else {
+        this.setState({
+          loading: false,
+          erro: true
+        });
+      }
+    }, 1000);
   };
 
   retornaCenarioPorTitulo = titulo => {
@@ -99,7 +148,7 @@ export default class DashboardGestaoProduto extends Component {
   };
 
   render() {
-    const { cardsFiltered, erro } = this.state;
+    const { cardsFiltered, erro, loading, filtrosDesabilitados } = this.state;
     return (
       <div>
         {erro && <div>Erro ao carregar painel gerencial</div>}
@@ -109,52 +158,62 @@ export default class DashboardGestaoProduto extends Component {
             titulo="Acompanhamento de produtos cadastrados"
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
+            ehDashboardGestaoProduto={true}
+            filtrosDesabilitados={filtrosDesabilitados}
           >
-            {cardsFiltered.map((card, index) => {
-              const card2 = cardsFiltered[index + 1]
-                ? cardsFiltered[index + 1]
-                : null;
-              return (
-                <div key={index}>
-                  {index % 2 === 0 && (
-                    <div className="row pt-3">
-                      <div className="col-6">
-                        <CardStatusDeSolicitacao
-                          cardTitle={card.titulo}
-                          cardType={card.style}
-                          solicitations={formataCards(
-                            card.items,
-                            this.apontaParaFormularioDeAlteracao(card.titulo),
-                            card.titulo
-                          )}
-                          icon={card.icon}
-                          href={`/${GESTAO_PRODUTO}/${card.rota}`}
-                          hrefCard={card.href_card}
-                        />
-                      </div>
-                      {card2 && (
+            {!loading && !filtrosDesabilitados && !erro ? (
+              cardsFiltered.map((card, index) => {
+                const card2 = cardsFiltered[index + 1]
+                  ? cardsFiltered[index + 1]
+                  : null;
+                return (
+                  <div key={index}>
+                    {index % 2 === 0 && (
+                      <div className="row pt-3">
                         <div className="col-6">
                           <CardStatusDeSolicitacao
-                            cardTitle={card2.titulo}
-                            cardType={card2.style}
+                            cardTitle={card.titulo}
+                            cardType={card.style}
                             solicitations={formataCards(
-                              card2.items,
-                              this.apontaParaFormularioDeAlteracao(
-                                card2.titulo
-                              ),
+                              card.items,
+                              this.apontaParaFormularioDeAlteracao(card.titulo),
                               card.titulo
                             )}
-                            icon={card2.icon}
-                            href={`/${GESTAO_PRODUTO}/${card2.rota}`}
-                            hrefCard={card2.href_card}
+                            icon={card.icon}
+                            href={`/${GESTAO_PRODUTO}/${card.rota}`}
+                            hrefCard={card.href_card}
                           />
                         </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                        {card2 && (
+                          <div className="col-6">
+                            <CardStatusDeSolicitacao
+                              cardTitle={card2.titulo}
+                              cardType={card2.style}
+                              solicitations={formataCards(
+                                card2.items,
+                                this.apontaParaFormularioDeAlteracao(
+                                  card2.titulo
+                                ),
+                                card.titulo
+                              )}
+                              icon={card2.icon}
+                              href={`/${GESTAO_PRODUTO}/${card2.rota}`}
+                              hrefCard={card2.href_card}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            ) : !erro ? (
+              <div className="carregando-conteudo">
+                <Spin tip="Carregando..." />
+              </div>
+            ) : (
+              <div>Erro ao carregar as Solicitações</div>
+            )}
           </CardBody>
         )}
       </div>

@@ -96,14 +96,14 @@ export const escolaExcluirSolicitacaoDeInclusaoDeAlimentacao = async (
 
 export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "PATCH",
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify(payload)
   };
   let status = 0;
   try {

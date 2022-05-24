@@ -1,16 +1,16 @@
-import { API_URL } from "../constants/config";
-import { ENDPOINT } from "../constants/shared";
-import { SOLICITACOES_DIETA } from "./constants";
-import authService from "./auth";
-
-import axios from "./_base";
 import {
   PANORAMA_ESCOLA,
+  RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
   RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP,
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
-  RELATORIO_QUANTITATIVO_CLASSIFICACAO_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
 } from "configs/constants";
+import { saveAs } from "file-saver";
+import { API_URL } from "../constants/config";
+import { ENDPOINT } from "../constants/shared";
+import authService from "./auth";
+import { SOLICITACOES_DIETA } from "./constants";
+import axios from "./_base";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -353,4 +353,23 @@ export const editaProtocoloPadraoDietaEspecial = async payload => {
 
 export const consultaHistoricoProtocoloPadrao = async uuid => {
   return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
+};
+
+export const getSolicitacoesRelatorioDietasEspeciais = async parametros => {
+  return await axios.post(
+    `/solicitacoes-dieta-especial/relatorio-dieta-especial-terceirizada/`,
+    parametros
+  );
+};
+
+export const gerarExcelRelatorioDietaEspecial = async params => {
+  const url = `/solicitacoes-dieta-especial/exportar-xlsx/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_dieta_especial.xlsx");
+};
+
+export const gerarPdfRelatorioDietaEspecial = async params => {
+  const url = `/solicitacoes-dieta-especial/exportar-pdf/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_dieta_especial.pdf");
 };

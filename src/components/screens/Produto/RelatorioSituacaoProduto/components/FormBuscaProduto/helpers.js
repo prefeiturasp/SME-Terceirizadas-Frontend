@@ -45,5 +45,7 @@ export const retornaStatusBackend = status => {
       return "CODAE_HOMOLOGADO";
     case "Não homologado":
       return "CODAE_NAO_HOMOLOGADO";
+    default:
+      return "STATUS NÃO ENCONTRADO";
   }
 };

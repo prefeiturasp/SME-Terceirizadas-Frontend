@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Spin, Pagination } from "antd";
 import { getEntregasDilog } from "../../../../services/logistica.service.js";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
@@ -14,6 +14,8 @@ export default ({ dilog, dre }) => {
   const [total, setTotal] = useState();
   const [page, setPage] = useState();
 
+  const inicioResultado = useRef();
+
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
@@ -21,6 +23,7 @@ export default ({ dilog, dre }) => {
     if (response.data.results.length) {
       setSolicitacoes(response.data.results);
       setTotal(response.data.count);
+      inicioResultado.current.scrollIntoView();
     } else {
       setTotal(response.data.count);
       setSolicitacoes();
@@ -47,6 +50,7 @@ export default ({ dilog, dre }) => {
       buscarSolicitacoes(1);
       setPage(1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -57,7 +61,6 @@ export default ({ dilog, dre }) => {
   const updatePage = () => {
     buscarSolicitacoes(page);
   };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-entregas-dilog">
@@ -68,6 +71,7 @@ export default ({ dilog, dre }) => {
             setTotal={setTotal}
             dilog={dilog}
             dre={dre}
+            inicioResultado={inicioResultado}
           />
           {solicitacoes && (
             <>

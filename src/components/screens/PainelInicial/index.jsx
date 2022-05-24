@@ -5,6 +5,7 @@ import CardLogo from "../../Shareable/CardLogo/CardLogo";
 import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimentacao";
 import IconeGestaoDeProduto from "../../Shareable/Icones/IconeGestaoDeProduto";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
+import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
 import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
@@ -14,7 +15,9 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhNutricionistaSupervisao,
+  usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
+  usuarioEhEscolaAbastecimento,
   exibirGA
 } from "helpers/utilities";
 
@@ -29,7 +32,9 @@ const PainelInicial = ({ history }) => {
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
           usuarioEhNutricionistaSupervisao() ||
-          (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())) && (
+          (usuarioEhEscola() &&
+            !usuarioEscolaEhGestaoMistaParceira() &&
+            !usuarioEscolaEhGestaoDireta())) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
@@ -55,19 +60,40 @@ const PainelInicial = ({ history }) => {
           </CardLogo>
         </Col>
       )}
-
       {(usuarioEhQualquerCODAE() ||
         usuarioEhCODAENutriManifestacao() ||
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
-        (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())) && (
+        (usuarioEhEscola() &&
+          !usuarioEscolaEhGestaoMistaParceira() &&
+          !usuarioEscolaEhGestaoDireta())) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
             onClick={() => history.push("/painel-gestao-produto")}
           >
             <IconeGestaoDeProduto />
+          </CardLogo>
+        </Col>
+      )}
+      {usuarioEhDRE() && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Abastecimento"}
+            onClick={() => history.push("/logistica/entregas-dre")}
+          >
+            <IconeAbastecimento />
+          </CardLogo>
+        </Col>
+      )}
+      {usuarioEhEscolaAbastecimento() && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Abastecimento"}
+            onClick={() => history.push("/logistica/conferir-entrega")}
+          >
+            <IconeAbastecimento />
           </CardLogo>
         </Col>
       )}
