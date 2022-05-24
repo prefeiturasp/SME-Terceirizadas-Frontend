@@ -35,22 +35,28 @@ export class CorpoRelatorio extends Component {
                   </tr>
                   <tr className="row">
                     <td className="col-2">{motivo}</td>
-                    {datas.map((dia, key) => {
-                      return (
-                        <td
-                          key={key}
-                          className={`col-2 ${
-                            this.props.inclusaoDeAlimentacao.inclusoes.find(
-                              i => i.data === dia
-                            ).cancelado
-                              ? `red`
-                              : ""
-                          }`}
-                        >
-                          {dia}
-                        </td>
-                      );
-                    })}
+                    {!ehInclusaoCei(this.props.tipoSolicitacao) ? (
+                      datas.map((dia, key) => {
+                        return (
+                          <td
+                            key={key}
+                            className={`col-2 ${
+                              this.props.inclusaoDeAlimentacao.inclusoes.find(
+                                i => i.data === dia
+                              ).cancelado
+                                ? `red`
+                                : ""
+                            }`}
+                          >
+                            {dia}
+                          </td>
+                        );
+                      })
+                    ) : (
+                      <td className="col-2">
+                        {this.props.inclusaoDeAlimentacao.data}
+                      </td>
+                    )}
                   </tr>
                 </Fragment>
               );
@@ -205,16 +211,15 @@ export class CorpoRelatorio extends Component {
                 }
               ]
             )}
-
-        {!ehInclusaoCei(tipoSolicitacao) && (
-          <table className="table-report mt-3">
-            <tbody>
-              <tr>
-                <th>Período</th>
-                <th>Tipos de Alimentação</th>
-                <th>Nº de Alunos</th>
-              </tr>
-              {quantidades_periodo.map((quantidade_por_periodo, key) => {
+        <table className="table-report mt-3">
+          <tbody>
+            <tr>
+              <th>Período</th>
+              <th>Tipos de Alimentação</th>
+              {!ehInclusaoCei(tipoSolicitacao) && <th>Nº de Alunos</th>}
+            </tr>
+            {!ehInclusaoCei(tipoSolicitacao) ? (
+              quantidades_periodo.map((quantidade_por_periodo, key) => {
                 return (
                   <tr key={key}>
                     <td>
@@ -230,10 +235,23 @@ export class CorpoRelatorio extends Component {
                     <td>{quantidade_por_periodo.numero_alunos}</td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            ) : (
+              <tr>
+                <td>
+                  {this.props.inclusaoDeAlimentacao.periodo_escolar &&
+                    this.props.inclusaoDeAlimentacao.periodo_escolar.nome}
+                </td>
+                <td>
+                  {stringSeparadaPorVirgulas(
+                    this.props.inclusaoDeAlimentacao.tipos_alimentacao,
+                    "nome"
+                  )}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
         {ehInclusaoCei(tipoSolicitacao) && (
           <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
         )}
