@@ -10,13 +10,18 @@ import InputText from "components/Shareable/Input/InputText";
 import { Select } from "components/Shareable/Select";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { required, selectValidate } from "helpers/fieldValidators";
+import {
+  required,
+  selectValidate,
+  alphaNumericAndSingleSpaceBetweenCharacters,
+  noSpaceStartOrEnd
+} from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { composeValidators, usuarioEhTerceirizada } from "helpers/utilities";
 import "./style.scss";
 
 export default ({ closeModal, showModal, item, changePage }) => {
@@ -114,7 +119,12 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       defaultValue={item ? item.nome : undefined}
                       component={InputText}
                       required
-                      validate={required}
+                      validate={composeValidators(
+                        required,
+                        alphaNumericAndSingleSpaceBetweenCharacters,
+                        noSpaceStartOrEnd
+                      )}
+                      toUppercaseActive
                     />
                   </div>
                 </div>

@@ -117,6 +117,18 @@ export const peloMenosUmNumeroEUmaLetra = value =>
 export const alphaNumeric = value =>
   value && /[^a-zA-Z0-9]/i.test(value) ? "Apenas letras e números" : undefined;
 
+export const noSpaceStartOrEnd = value =>
+  value && /^\s+|\s+$/.test(value)
+    ? "Remover espaço do início e/ou final"
+    : undefined;
+
+export const alphaNumericAndSingleSpaceBetweenCharacters = value =>
+  value && /[^a-zA-Z0-9\s]/.test(value)
+    ? "Apenas letras e números"
+    : /[^a-zA-Z0-9]+[\s{2,}]/.test(value)
+    ? "Remover excesso de espaços"
+    : undefined;
+
 export const apenasLetras = value =>
   value && /[^a-zA-Zà-úÀ-Ú ]/i.test(value)
     ? "Não digite números ou caracteres especiais"
