@@ -508,7 +508,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
             <div className="card mt-2">
               <div className="card-body formulario-inclusao-alimentacao-cei">
                 <div className="titulo-solicitacao">
-                  Descrição da Inclusão de Alimentacção
+                  Descrição da Inclusão de Alimentação
                 </div>
                 <div className="motivo-data mt-3">
                   <Field

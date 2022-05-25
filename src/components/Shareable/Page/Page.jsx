@@ -37,10 +37,6 @@ export default class Page extends Component {
           meusDados.vinculo_atual.instituicao &&
           meusDados.vinculo_atual.instituicao.nome) ||
         "Não vinculado à uma instituição";
-      localStorage.setItem(
-        "nome_instituicao",
-        JSON.stringify(nome_instituicao)
-      );
       this.setState({
         nome: meusDados.nome,
         nome_instituicao,
