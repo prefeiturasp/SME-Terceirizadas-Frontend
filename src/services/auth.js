@@ -48,6 +48,10 @@ const login = async (email, password) => {
             "tipo_gestao",
             JSON.stringify(result.vinculo_atual.instituicao.tipo_gestao)
           );
+          localStorage.setItem(
+            "nome_instituicao",
+            JSON.stringify(result.vinculo_atual.instituicao.nome)
+          );
           window.location.href = "/";
         });
       });

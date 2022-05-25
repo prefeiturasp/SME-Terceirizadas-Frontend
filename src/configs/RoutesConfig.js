@@ -89,7 +89,7 @@ import {
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoCardapio
+  inclusaoAlimentacao
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
@@ -272,7 +272,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
-    component: inclusaoCardapio(),
+    component: inclusaoAlimentacao(),
     exact: false,
     tipoUsuario:
       usuarioEhEscola() &&
