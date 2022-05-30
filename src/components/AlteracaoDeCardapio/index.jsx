@@ -320,9 +320,13 @@ class AlteracaoCardapio extends Component {
     this.atualizaEverificaSeEhAlteracaoRepetida(
       param.alteracaoDeCardapio.substituicoes
     );
-    periodos.forEach(periodo => {
+    periodos.forEach((periodo, indice) => {
       periodo.checked =
         param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
+      periodo.checked &&
+        periodo.checked.tipos_alimentacao_de.forEach(tipo => {
+          this.removerOpcoesSubstitutos(tipo, periodo, indice);
+        });
     });
     let optionsAlimentacaoDe = {
       MANHA:
