@@ -49,6 +49,7 @@ import { montaObjetoRequisicao } from "./helper";
 import "./style.scss";
 import { isEqual } from "lodash";
 import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
+import { Spin } from "antd";
 
 const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
 
@@ -73,7 +74,8 @@ export class SolicitacaoDeKitLanche extends Component {
       modalConfirmation: false,
       modalMessage: "",
       botaoConfirma: true,
-      alunosComDietaEspecial: []
+      alunosComDietaEspecial: [],
+      carregandoRascunhos: false
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -338,6 +340,7 @@ export class SolicitacaoDeKitLanche extends Component {
               toastSuccess(
                 "Solicitação de Kit Lanche Passeio atualizada com sucesso!"
               );
+              this.setState({ carregandoRascunhos: true });
               this.resetForm();
             }
           } else if (resp.data.tipo_error) {
@@ -414,11 +417,17 @@ export class SolicitacaoDeKitLanche extends Component {
     if (this.state.ehCei) {
       // FIXME: remove duplicated code
       getSolicitacoesKitLanche(SOLICITACAO_CEI).then(resp => {
-        this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
+        this.setState({
+          rascunhosSolicitacoesKitLanche: resp.data.results,
+          carregandoRascunhos: false
+        });
       });
     } else {
       getSolicitacoesKitLanche(SOLICITACAO_NORMAL).then(resp => {
-        this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
+        this.setState({
+          rascunhosSolicitacoesKitLanche: resp.results,
+          carregandoRascunhos: false
+        });
       });
     }
   }
@@ -473,7 +482,8 @@ export class SolicitacaoDeKitLanche extends Component {
       botaoConfirma,
       loading,
       kitsChecked,
-      alunosComDietaEspecial
+      alunosComDietaEspecial,
+      carregandoRascunhos
     } = this.state;
     return (
       <div>
@@ -485,15 +495,17 @@ export class SolicitacaoDeKitLanche extends Component {
             {!ehCei && (
               <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />
             )}
-            <Rascunhos
-              rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
-              OnDeleteButtonClicked={(id_externo, uuid) =>
-                this.OnDeleteButtonClicked(id_externo, uuid)
-              }
-              resetForm={event => this.resetForm(event)}
-              refreshComponent={this.refresh.bind(this)}
-              OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-            />
+            <Spin tip="Carregando Rascunhos..." spinning={carregandoRascunhos}>
+              <Rascunhos
+                rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
+                OnDeleteButtonClicked={(id_externo, uuid) =>
+                  this.OnDeleteButtonClicked(id_externo, uuid)
+                }
+                resetForm={event => this.resetForm(event)}
+                refreshComponent={this.refresh.bind(this)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
+            </Spin>
             <br />
             {!ehCei && <h3 className="page-title">{this.state.title}</h3>}
             <div className="card mt-3 p-4">
