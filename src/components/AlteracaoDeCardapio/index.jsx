@@ -74,7 +74,14 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao: null,
       ehAlteracaoComLancheRepetida: false,
       verificado: false,
-      values: null
+      values: null,
+      uuidRascunhoEmEdicao: null,
+      optionsAlimentacaoDe: {
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      }
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -261,37 +268,40 @@ class AlteracaoCardapio extends Component {
   atualizaEverificaSeEhAlteracaoRepetida = substituicoes => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
     substituicoes.forEach(substituicao => {
-      substituicao.tipos_alimentacao_de.substituicoes.forEach(
-        tipo_alimentacao_sub => {
-          if (
-            substituicao.tipo_alimentacao_para.uuid ===
-            tipo_alimentacao_sub.uuid
-          ) {
-            if (tipo_alimentacao_sub.label.includes("lanche")) {
+      substituicao.tipos_alimentacao_de.forEach(tipo_alimentacao_sub => {
+        if (
+          substituicao.tipo_alimentacao_para.uuid === tipo_alimentacao_sub.uuid
+        ) {
+          if (tipo_alimentacao_sub.label.includes("lanche")) {
+            periodosQuePossuemLancheNaAlteracao[
+              `${substituicao.periodo_escolar.nome}`
+            ].temNaSolicitacao = true;
+            if (
               periodosQuePossuemLancheNaAlteracao[
                 `${substituicao.periodo_escolar.nome}`
-              ].temNaSolicitacao = true;
-              if (
-                periodosQuePossuemLancheNaAlteracao[
-                  `${substituicao.periodo_escolar.nome}`
-                ].temNaSolicitacao &&
-                periodosQuePossuemLancheNaAlteracao[
-                  `${substituicao.periodo_escolar.nome}`
-                ].status
-              ) {
-                periodosQuePossuemLancheNaAlteracao.temRestricao = true;
-              } else {
-                periodosQuePossuemLancheNaAlteracao.temRestricao = false;
-              }
+              ].temNaSolicitacao &&
+              periodosQuePossuemLancheNaAlteracao[
+                `${substituicao.periodo_escolar.nome}`
+              ].status
+            ) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+            } else {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = false;
             }
           }
         }
-      );
+      });
     });
     this.setState({ periodosQuePossuemLancheNaAlteracao });
   };
 
   OnEditButtonClicked(param) {
+    if (
+      this.state.uuidRascunhoEmEdicao &&
+      this.state.uuidRascunhoEmEdicao === param.alteracaoDeCardapio.uuid
+    )
+      return;
+    this.props.reset("alteracaoCardapio");
     let dataInicial = this.state.dataInicial;
     let {
       substituicoesAlimentacao,
@@ -301,23 +311,11 @@ class AlteracaoCardapio extends Component {
     ehAlteracaoComLancheRepetida =
       param["alteracaoDeCardapio"].eh_alteracao_com_lanche_repetida;
     dataInicial = param["alteracaoDeCardapio"].data_inicial;
-    this.props.reset("alteracaoCardapio");
-    param.alteracaoDeCardapio.substituicoes.forEach(substituicao => {
-      substituicao.tipos_alimentacao_de["nome"] =
-        substituicao.tipos_alimentacao_de.label;
-      substituicao.tipo_alimentacao_para["nome"] =
-        substituicao.tipo_alimentacao_para.label;
-      substituicao.tipos_alimentacao_de.substituicoes.forEach(
-        substituicao_sub => {
-          substituicao_sub["nome"] = substituicao_sub.label;
-        }
-      );
-    });
     this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
     param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
       substituicoesAlimentacao[index].substituicoes =
-        substituicao.tipos_alimentacao_de.substituicoes;
+        substituicao.tipo_alimentacao_para;
     });
     this.atualizaEverificaSeEhAlteracaoRepetida(
       param.alteracaoDeCardapio.substituicoes
@@ -326,17 +324,39 @@ class AlteracaoCardapio extends Component {
       periodo.checked =
         param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
     });
+    let optionsAlimentacaoDe = {
+      MANHA:
+        param.alteracaoDeCardapio.substituicoes_MANHA !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_MANHA.tipos_alimentacao_de
+          : [],
+      TARDE:
+        param.alteracaoDeCardapio.substituicoes_TARDE !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_TARDE.tipos_alimentacao_de
+          : [],
+      NOITE:
+        param.alteracaoDeCardapio.substituicoes_NOITE !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_NOITE.tipos_alimentacao_de
+          : [],
+      INTEGRAL:
+        param.alteracaoDeCardapio.substituicoes_INTEGRAL !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_INTEGRAL
+              .tipos_alimentacao_de
+          : []
+    };
+
     this.setState({
       dataInicial,
       status: param.alteracaoDeCardapio.status,
       title: `Alteração do Tipo de Alimentação # ${
         param.alteracaoDeCardapio.id_externo
       }`,
+      uuidRascunhoEmEdicao: param.alteracaoDeCardapio.uuid,
       salvarAtualizarLbl: "Atualizar",
       id: param.alteracaoDeCardapio.id_externo,
       substituicoesAlimentacao,
       periodos,
-      ehAlteracaoComLancheRepetida
+      ehAlteracaoComLancheRepetida,
+      optionsAlimentacaoDe
     });
   }
 
@@ -376,7 +396,14 @@ class AlteracaoCardapio extends Component {
       dataInicial: null,
       periodos,
       motivo: {},
-      alimentacaoDe: {}
+      alimentacaoDe: {},
+      uuidRascunhoEmEdicao: null,
+      optionsAlimentacaoDe: {
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      }
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
@@ -776,9 +803,24 @@ class AlteracaoCardapio extends Component {
       });
     }
     periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+
+    let optionsAlimentacaoDe = this.state.optionsAlimentacaoDe;
+    optionsAlimentacaoDe[periodo.nome] = value;
+
     this.setState({
+      ...this.state,
+      optionsAlimentacaoDe: optionsAlimentacaoDe,
       periodos: periodos
     });
+    this.props.change(
+      `substituicoes_${periodo.nome}.tipos_alimentacao_de`,
+      value
+    );
+    opcoesSubstitutos.length === 0 &&
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
+        null
+      );
   }
 
   render() {
@@ -790,7 +832,8 @@ class AlteracaoCardapio extends Component {
       dataInicial,
       periodos,
       substituicoesAlimentacao,
-      values
+      values,
+      optionsAlimentacaoDe
     } = this.state;
     const {
       handleSubmit,
@@ -955,6 +998,7 @@ class AlteracaoCardapio extends Component {
                           indice
                         )}
                         multiple
+                        selected={optionsAlimentacaoDe[periodo.nome] || []}
                         options={formatarParaMultiselect(
                           periodo.tipos_alimentacao
                         )}
@@ -997,7 +1041,6 @@ class AlteracaoCardapio extends Component {
                         validate={
                           periodo.checked && [
                             naoPodeSerZero,
-                            numericInteger,
                             maxValue(periodos[indice].maximo_alunos)
                           ]
                         }
@@ -1079,7 +1122,11 @@ const mapStateToProps = state => {
     data_final: selector(state, "data_final"),
     alterar_dia: selector(state, "alterar_dia"),
     motivo: selector(state, "motivo"),
-    observacao: selector(state, "observacao")
+    observacao: selector(state, "observacao"),
+    substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
+    substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
+    substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
+    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL")
   };
 };
 

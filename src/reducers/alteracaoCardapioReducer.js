@@ -6,12 +6,16 @@ export default function reducer(state = {}, action) {
   switch (action.type) {
     case LOAD_ALTERACAO_TIPO_ALIMENTACAO:
       if (action.data !== null) {
-        if (action.data.data_inicial === action.data.data_final) {
+        if (
+          action.data.data_inicial === action.data.data_final &&
+          action.data.data_inicial !== null &&
+          action.data.data_final !== null
+        ) {
           action.data.alterar_dia = action.data.data_final;
           action.data.data_inicial = null;
           action.data.data_final = null;
+          action.data.motivo = action.data.motivo.uuid;
         }
-        action.data.motivo = action.data.motivo.uuid;
         action.data.substituicoes.forEach(function(substituicao) {
           action.data[`substituicoes_${substituicao.periodo_escolar.nome}`] = {
             check: true,
