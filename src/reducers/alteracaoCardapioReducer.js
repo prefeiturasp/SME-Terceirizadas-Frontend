@@ -1,3 +1,5 @@
+import { extrairTiposALimentacao } from "components/InclusaoDeAlimentacao/helper";
+
 const LOAD_ALTERACAO_TIPO_ALIMENTACAO = "LOAD_ALTERACAO_TIPO_ALIMENTACAO";
 const LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI =
   "LOAD_ALTERACAO_TIPO_ALIMENTACAO_CEI";
@@ -19,7 +21,9 @@ export default function reducer(state = {}, action) {
         action.data.substituicoes.forEach(function(substituicao) {
           action.data[`substituicoes_${substituicao.periodo_escolar.nome}`] = {
             check: true,
-            tipo_alimentacao_de: substituicao.tipo_alimentacao_de.uuid,
+            tipos_alimentacao_de: extrairTiposALimentacao(
+              substituicao.tipos_alimentacao_de
+            ),
             tipo_alimentacao_para: substituicao.tipo_alimentacao_para.uuid,
             numero_de_alunos: substituicao.qtd_alunos
           };
