@@ -11,8 +11,7 @@ import {
   required,
   textAreaRequired,
   maxValue,
-  naoPodeSerZero,
-  numericInteger
+  naoPodeSerZero
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
@@ -199,25 +198,26 @@ class AlteracaoCardapio extends Component {
     nomePeriodo
   ) => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
-    substituicoes.forEach(substituicao => {
-      if (substituicao.uuid === uuidTPAlimentacao) {
-        if (substituicao.nome.includes("lanche")) {
-          periodosQuePossuemLancheNaAlteracao[
-            `${nomePeriodo}`
-          ].temNaSolicitacao = true;
-          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
-            periodosQuePossuemLancheNaAlteracao.temRestricao = true;
-          }
-        } else {
-          periodosQuePossuemLancheNaAlteracao[
-            `${nomePeriodo}`
-          ].temNaSolicitacao = false;
-          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
-            periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+    substituicoes.length > 0 &&
+      substituicoes.forEach(substituicao => {
+        if (substituicao.uuid === uuidTPAlimentacao) {
+          if (substituicao.nome.includes("lanche")) {
+            periodosQuePossuemLancheNaAlteracao[
+              `${nomePeriodo}`
+            ].temNaSolicitacao = true;
+            if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+            }
+          } else {
+            periodosQuePossuemLancheNaAlteracao[
+              `${nomePeriodo}`
+            ].temNaSolicitacao = false;
+            if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+            }
           }
         }
-      }
-    });
+      });
     this.setState({ periodosQuePossuemLancheNaAlteracao });
   };
 
@@ -327,6 +327,9 @@ class AlteracaoCardapio extends Component {
         periodo.checked.tipos_alimentacao_de.forEach(tipo => {
           this.removerOpcoesSubstitutos(tipo, periodo, indice);
         });
+      periodo.validador = periodo.checked
+        ? [naoPodeSerZero, maxValue(periodo.maximo_alunos), required]
+        : [];
     });
     let optionsAlimentacaoDe = {
       MANHA:
@@ -451,6 +454,7 @@ class AlteracaoCardapio extends Component {
       const erros = validateSubmit(values, this.props.meusDados);
       if (!erros) {
         this.resetaTodoPeriodoCheck();
+        this.resetForm("alteracaoCardapio");
         if (!values.uuid) {
           escolaCriarSolicitacaoDeAlteracaoCardapio(
             values,
@@ -586,7 +590,7 @@ class AlteracaoCardapio extends Component {
   };
 
   limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
-    if (periodo.checked) {
+    if (!periodo.checked) {
       this.props.change(
         `substituicoes_${periodoNome}.tipos_alimentacao_de`,
         null
@@ -663,15 +667,11 @@ class AlteracaoCardapio extends Component {
         );
       }
     }
-
-    periodos[indice].validador = [
-      naoPodeSerZero,
-      numericInteger,
-      maxValue(periodos[indice].maximo_alunos)
-    ];
-    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
-
     periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].validador = periodos[indice].checked
+      ? [naoPodeSerZero, maxValue(periodos[indice].maximo_alunos), required]
+      : [];
+    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
     this.props.change(input, periodos[indice].checked);
     this.setState({ periodos });
   }
@@ -1010,6 +1010,7 @@ class AlteracaoCardapio extends Component {
                         onChange={value =>
                           this.removerOpcoesSubstitutos(value, periodo, indice)
                         }
+                        validate={periodo.validador}
                       />
                       <Field
                         component={Select}
@@ -1025,8 +1026,7 @@ class AlteracaoCardapio extends Component {
                             periodo.nome
                           );
                         }}
-                        validate={periodo.checked && required}
-                        required={periodo.checked}
+                        validate={periodo.validador}
                       />
                       <Field
                         component={InputText}
@@ -1042,12 +1042,7 @@ class AlteracaoCardapio extends Component {
                         step="1"
                         className="form-control quantidade-aluno"
                         required={periodo.checked}
-                        validate={
-                          periodo.checked && [
-                            naoPodeSerZero,
-                            maxValue(periodos[indice].maximo_alunos)
-                          ]
-                        }
+                        validate={periodo.validador}
                       />
                     </FormSection>
                   );
