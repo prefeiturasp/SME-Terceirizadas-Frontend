@@ -196,7 +196,11 @@ export class CorpoRelatorio extends Component {
         <hr />
         {logs && (
           <div className="row">
-            <FluxoDeStatus listaDeStatus={logs} fluxo={fluxoPartindoEscola} />
+            <FluxoDeStatus
+              listaDeStatus={logs}
+              fluxo={fluxoPartindoEscola}
+              eh_gestao_alimentacao={true}
+            />
           </div>
         )}
         <hr />

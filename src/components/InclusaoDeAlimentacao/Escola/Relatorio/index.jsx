@@ -249,6 +249,7 @@ class Relatorio extends Component {
                       <FluxoDeStatus
                         listaDeStatus={inclusaoDeAlimentacao.logs}
                         fluxo={fluxoPartindoEscola}
+                        eh_gestao_alimentacao={true}
                       />
                     </div>
                   )}
