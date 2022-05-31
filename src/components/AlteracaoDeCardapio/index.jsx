@@ -163,7 +163,10 @@ class AlteracaoCardapio extends Component {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
-          if (substituicao.tipo_alimentacao_para.label.includes("lanche")) {
+          if (
+            substituicao.tipo_alimentacao_para &&
+            substituicao.tipo_alimentacao_para.nome.includes("lanche")
+          ) {
             periodosQuePossuemLancheNaAlteracao[
               `${substituicao.periodo_escolar.nome}`
             ].status = true;
