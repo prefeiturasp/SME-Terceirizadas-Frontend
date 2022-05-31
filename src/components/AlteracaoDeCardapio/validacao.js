@@ -79,6 +79,23 @@ export const validateSubmit = (values, meusDados) => {
   )
     return "Informe um período completo.";
 
+  if (
+    values.substituicoes.some(sub =>
+      ["", null].includes(sub.tipos_alimentacao_de)
+    )
+  )
+    return 'Preencher corretamente o campo "Alterar alimentação de"';
+
+  if (
+    values.substituicoes.some(sub =>
+      ["", null].includes(sub.tipo_alimentacao_para)
+    )
+  )
+    return 'Preencher corretamente o campo "Para alimentação"';
+
+  if (values.substituicoes.some(sub => [0, "", null].includes(sub.qtd_alunos)))
+    return 'Preencher corretamente o campo "Nº de Alunos"';
+
   return false;
 };
 function temPeriodosEscolares(values) {
