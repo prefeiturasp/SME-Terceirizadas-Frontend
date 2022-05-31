@@ -228,6 +228,11 @@ class AlteracaoCardapio extends Component {
     this.refresh();
   }
 
+  componentWillUnmount() {
+    this.resetForm();
+    this.props.reset();
+  }
+
   montaObjetoDeSubstituicoesEdit = periodo => {
     let substituicoesEdit = this.state.substituicoesEdit;
     substituicoesEdit.push({
