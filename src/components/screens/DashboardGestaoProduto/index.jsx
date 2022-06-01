@@ -227,7 +227,7 @@ export default class DashboardGestaoProduto extends Component {
                   "Quando houver necessidade de registrar" +
                   " Reclamação de Produtos para os produtos homologados"
                 }
-                textoLink={"Novo pedido"}
+                textoLink={"Nova Reclamação"}
                 href={"/gestao-produto/nova-reclamacao-de-produto"}
               />
             </div>
@@ -239,7 +239,7 @@ export default class DashboardGestaoProduto extends Component {
                   "Quando houver necessidade de responder os questionamentos " +
                   "da CODAE referente a uma reclamação de produto. "
                 }
-                textoLink={"Novo pedido"}
+                textoLink={"Responder Questionamentos"}
                 href={"/gestao-produto/responder-questionamento-ue"}
               />
             </div>
