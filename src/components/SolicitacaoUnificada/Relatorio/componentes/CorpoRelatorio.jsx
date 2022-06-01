@@ -74,6 +74,7 @@ export const CorpoRelatorio = props => {
         <FluxoDeStatus
           fluxo={fluxoPartindoDRE}
           listaDeStatus={solicitacaoUnificada.logs}
+          eh_gestao_alimentacao={true}
         />
         <hr />
 

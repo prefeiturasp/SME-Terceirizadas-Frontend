@@ -105,6 +105,7 @@ export const CorpoRelatorio = props => {
           <FluxoDeStatus
             listaDeStatus={inversaoDiaCardapio.logs}
             fluxo={fluxoPartindoEscola}
+            eh_gestao_alimentacao={true}
           />
         </div>
       )}
