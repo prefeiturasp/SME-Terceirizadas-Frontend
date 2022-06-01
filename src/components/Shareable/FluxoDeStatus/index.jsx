@@ -8,7 +8,12 @@ import "./style.scss";
 import { deepCopy } from "../../../helpers/utilities";
 
 export const FluxoDeStatus = props => {
-  const { listaDeStatus, fluxo, eh_importado = false } = props;
+  const {
+    listaDeStatus,
+    fluxo,
+    eh_importado = false,
+    eh_gestao_alimentacao = false
+  } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
   const fluxoNaoFinalizado =
@@ -36,7 +41,10 @@ export const FluxoDeStatus = props => {
     if (log.status_evento_explicacao === "Escola solicitou cancelamento") {
       logFormatado = "Escola solicitou cancelamento";
     }
-    if (log.status_evento_explicacao === "Escola cancelou") {
+    if (
+      log.status_evento_explicacao === "Escola cancelou" &&
+      !eh_gestao_alimentacao
+    ) {
       logFormatado = "CODAE autorizou cancelamento";
     }
     return logFormatado;
@@ -53,7 +61,10 @@ export const FluxoDeStatus = props => {
         if (log.status_evento_explicacao === "Escola solicitou cancelamento") {
           return "Escola solicitou cancelamento";
         }
-        if (log.status_evento_explicacao === "Escola cancelou") {
+        if (
+          log.status_evento_explicacao === "Escola cancelou" &&
+          !eh_gestao_alimentacao
+        ) {
           return "CODAE autorizou cancelamento";
         }
         return log.status_evento_explicacao;

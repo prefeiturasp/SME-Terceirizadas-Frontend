@@ -32,7 +32,7 @@ export class ModalCancelarSolicitacao extends Component {
         this.props.loadSolicitacao(uuid, this.props.tipoSolicitacao);
     } else {
       this.props.closeModal();
-      toastError(resp.data.detail);
+      toastError(resp.data ? resp.data.detail : resp.detail);
     }
   }
 
