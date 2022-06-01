@@ -193,7 +193,7 @@ export const painelInicial = () => {
   //}
 };
 
-export const inclusaoCardapio = () => {
+export const inclusaoAlimentacao = () => {
   return escolaEhCei()
     ? InclusaoDeAlimentacaoCEIPage
     : InclusaoDeAlimentacaoPage;

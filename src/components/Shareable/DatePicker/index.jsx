@@ -56,11 +56,13 @@ export class InputComData extends Component {
 
   handleChange(date) {
     this.props.input.onChange(
-      this.props.writable
-        ? date
-        : moment(date).format(
-            this.props.dateFormat || this.defaultProps.dateFormat
-          )
+      date
+        ? this.props.writable
+          ? date
+          : moment(date).format(
+              this.props.dateFormat || this.defaultProps.dateFormat
+            )
+        : null
     );
   }
 

@@ -160,7 +160,7 @@ export class DashboardEscola extends Component {
           </div>
         </CardBody>
         <div className="row row-shortcuts">
-          <div className="col-3">
+          <div className="col-sm-3 col-12">
             <CardAtalho
               titulo={"Inclusão de Alimentação"}
               nome="card-inclusao"
@@ -173,7 +173,7 @@ export class DashboardEscola extends Component {
               href={"/escola/inclusao-de-alimentacao"}
             />
           </div>
-          <div className="col-3">
+          <div className="col-sm-3 col-12">
             <CardAtalho
               titulo={"Alteração do Tipo de Alimentação"}
               nome="card-alteracao"
@@ -186,7 +186,7 @@ export class DashboardEscola extends Component {
               href={"/escola/alteracao-do-tipo-de-alimentacao"}
             />
           </div>
-          <div className="col-3">
+          <div className="col-sm-3 col-12">
             <CardAtalho
               titulo={"Kit Lanche Passeio"}
               nome="card-kit-lanche"
@@ -200,7 +200,7 @@ export class DashboardEscola extends Component {
               href="/escola/solicitacao-de-kit-lanche"
             />
           </div>
-          <div className="col-3">
+          <div className="col-sm-3 col-12">
             <CardAtalho
               titulo={"Inversão de dia de Cardápio"}
               nome="card-inversao"
