@@ -10,8 +10,8 @@ export default props => (
     </Modal.Header>
     <Modal.Body>
       A solicitação está fora do prazo contratual de cinco dias úteis. Sendo
-      assim, a autorização dependerá da disponibilidade dos alimentos adequados
-      para o cumprimento do cardápio.
+      assim, a autorização dependerá de confirmação por parte da empresa
+      terceirizada.
     </Modal.Body>
     <Modal.Footer>
       <Botao
