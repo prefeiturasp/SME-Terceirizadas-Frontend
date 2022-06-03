@@ -26,6 +26,7 @@ import {
 } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import "./style.scss";
+import { formatarSubmissao } from "./helper";
 
 const SolicitacaoUnificada = ({
   dadosUsuario,
@@ -64,7 +65,7 @@ const SolicitacaoUnificada = ({
           let label =
             escola.nome.length > 35 ? escola.nome.slice(0, 35) : escola.nome;
           let dado = escola;
-          dado["quantiade_kits"] = "";
+          dado["quantidade_kits"] = "";
           dado["kits_selecionados"] = [];
           return { label: label, uuid: escola.uuid, value: dado };
         });
@@ -86,7 +87,9 @@ const SolicitacaoUnificada = ({
   // }
 
   const onSubmit = async formValues => {
-    await criarSolicitacaoUnificada(JSON.stringify(formValues)).then(
+    await criarSolicitacaoUnificada(
+      JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+    ).then(
       res => {
         if (res.status === HTTP_STATUS.CREATED) {
           if (formValues.status === "DRE_A_VALIDAR") {
@@ -360,7 +363,7 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="1"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -368,7 +371,7 @@ const SolicitacaoUnificada = ({
                                                     e => e.uuid !== ue.uuid
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -385,7 +388,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "1"
                                                 );
                                                 setTotalKits(total + 1);
@@ -401,7 +404,7 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="2"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -409,11 +412,11 @@ const SolicitacaoUnificada = ({
                                                     e =>
                                                       e.uuid !== ue.uuid &&
                                                       ![undefined, ""].includes(
-                                                        e.quantiade_kits
+                                                        e.quantidade_kits
                                                       )
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -430,7 +433,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "2"
                                                 );
                                                 setTotalKits(total + 2);
@@ -446,7 +449,7 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="3"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -454,7 +457,7 @@ const SolicitacaoUnificada = ({
                                                     e => e.uuid !== ue.uuid
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -471,7 +474,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "3"
                                                 );
                                                 setTotalKits(total + 3);
@@ -519,9 +522,9 @@ const SolicitacaoUnificada = ({
                                                             undefined,
                                                             ""
                                                           ].includes(
-                                                            ue.quantiade_kits
+                                                            ue.quantidade_kits
                                                           ) ||
-                                                          (ue.quantiade_kits ===
+                                                          (ue.quantidade_kits ===
                                                             `${
                                                               ue
                                                                 .kits_selecionados
