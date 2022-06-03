@@ -107,31 +107,36 @@ const SolicitacaoUnificada = ({
   // }
 
   const onSubmit = async (formValues, form) => {
-    await criarSolicitacaoUnificada(
-      JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
-    ).then(
-      res => {
-        if (res.status === HTTP_STATUS.CREATED) {
-          if (formValues.status === "DRE_A_VALIDAR") {
-            toastSuccess("Inicia Pedido");
-            // this.iniciarPedido(res.data.uuid);
+    if (unidadesEscolaresSelecionadas.length === 0) {
+      toastError("Selecione ao menos uma unidade escolar");
+    } else {
+      await criarSolicitacaoUnificada(
+        JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.CREATED) {
+            if (formValues.status === "DRE_A_VALIDAR") {
+              toastSuccess("Inicia Pedido");
+              // this.iniciarPedido(res.data.uuid);
+            } else {
+              toastSuccess("Solicitação Unificada salva com sucesso!");
+              setTimeout(() => form.restart());
+              setUnidadesEscolaresSelecionadas([]);
+              fetchData();
+            }
           } else {
-            toastSuccess("Solicitação Unificada salva com sucesso!");
-            setTimeout(() => form.restart());
-            fetchData();
+            toastError(
+              `Houve um erro ao salvar a solicitação unificada: ${getError(
+                res.data
+              )}`
+            );
           }
-        } else {
-          toastError(
-            `Houve um erro ao salvar a solicitação unificada: ${getError(
-              res.data
-            )}`
-          );
+        },
+        function() {
+          toastError("Houve um erro ao salvar a solicitação unificada");
         }
-      },
-      function() {
-        toastError("Houve um erro ao salvar a solicitação unificada");
-      }
-    );
+      );
+    }
   };
 
   const removerRascunho = (id_externo, uuid) => {
@@ -230,6 +235,7 @@ const SolicitacaoUnificada = ({
                         minDate={proximosDoisDiasUteis}
                         label="Dia"
                         className="form-control"
+                        validate={required}
                         required
                       />
                     </div>
@@ -401,6 +407,8 @@ const SolicitacaoUnificada = ({
                                             <Field
                                               component={"input"}
                                               type="radio"
+                                              required
+                                              validate={required}
                                               value="1"
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
@@ -443,6 +451,8 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="2"
+                                              required
+                                              validate={required}
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
@@ -488,6 +498,8 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="3"
+                                              required
+                                              validate={required}
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
@@ -550,6 +562,8 @@ const SolicitacaoUnificada = ({
                                                       <Field
                                                         component={"input"}
                                                         type="checkbox"
+                                                        required
+                                                        validate={required}
                                                         value={kit.uuid}
                                                         id={`${ue.codigo_eol}-${
                                                           kit.uuid
