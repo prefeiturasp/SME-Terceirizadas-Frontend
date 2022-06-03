@@ -41,6 +41,7 @@ const SolicitacaoUnificada = ({
   const [totalKits, setTotalKits] = useState(0);
   const [opcoes, setOpcoes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [submeteu, setSubmeteu] = useState(false);
 
   async function fetchData() {
     await solicitacoesUnificadasSalvas().then(
@@ -102,6 +103,7 @@ const SolicitacaoUnificada = ({
     if (unidadesEscolaresSelecionadas.length === 0) {
       toastError("Selecione ao menos uma unidade escolar");
     } else {
+      setSubmeteu(true);
       if (!formValues.uuid) {
         await criarSolicitacaoUnificada(
           JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
@@ -720,7 +722,8 @@ const SolicitacaoUnificada = ({
                         texto="Enviar"
                         onClick={() => {
                           values["status"] = "DRE_A_VALIDAR";
-                          handleSubmit(values => onSubmit(values, form));
+                          !submeteu &&
+                            handleSubmit(values => onSubmit(values, form));
                         }}
                         className="w-100"
                       />
