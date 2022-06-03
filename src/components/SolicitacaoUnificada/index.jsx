@@ -7,8 +7,9 @@ import { required } from "../../helpers/fieldValidators";
 import {
   solicitacoesUnificadasSalvas,
   criarSolicitacaoUnificada,
-  removerSolicitacaoUnificada
-  // inicioPedido
+  atualizarSolicitacaoUnificada,
+  removerSolicitacaoUnificada,
+  inicioPedido
 } from "../../services/solicitacaoUnificada.service";
 import { InputText } from "../Shareable/Input/InputText";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
@@ -26,8 +27,8 @@ import {
   getError
 } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import "./style.scss";
 import { formatarSubmissao } from "./helper";
+import "./style.scss";
 
 const SolicitacaoUnificada = ({
   dadosUsuario,
@@ -82,6 +83,11 @@ const SolicitacaoUnificada = ({
   const carregarRascunho = (solicitacaoUnificada, form) => {
     form.change("data", solicitacaoUnificada.data);
     form.change("local", solicitacaoUnificada.local);
+    form.change("uuid", solicitacaoUnificada.uuid);
+    form.change(
+      "descricao",
+      solicitacaoUnificada.solicitacao_kit_lanche.descricao
+    );
     let escolas_quantidades = opcoes
       .filter(opcao =>
         solicitacaoUnificada.escolas_quantidades.find(
@@ -107,31 +113,76 @@ const SolicitacaoUnificada = ({
   // }
 
   const onSubmit = async (formValues, form) => {
-    await criarSolicitacaoUnificada(
-      JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
-    ).then(
-      res => {
-        if (res.status === HTTP_STATUS.CREATED) {
-          if (formValues.status === "DRE_A_VALIDAR") {
-            toastSuccess("Inicia Pedido");
-            // this.iniciarPedido(res.data.uuid);
+    if (!formValues.uuid) {
+      await criarSolicitacaoUnificada(
+        JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.CREATED) {
+            if (formValues.status === "DRE_A_VALIDAR") {
+              toastSuccess("Inicia Pedido");
+              iniciarPedido(res.data.uuid);
+              setTimeout(() => {
+                form.restart();
+                setUnidadesEscolaresSelecionadas([]);
+              });
+              fetchData();
+            } else {
+              toastSuccess("Solicitação Unificada salva com sucesso!");
+              setTimeout(() => {
+                form.restart();
+                setUnidadesEscolaresSelecionadas([]);
+              });
+              fetchData();
+            }
           } else {
-            toastSuccess("Solicitação Unificada salva com sucesso!");
-            setTimeout(() => form.restart());
-            fetchData();
+            toastError(
+              `Houve um erro ao salvar a solicitação unificada: ${getError(
+                res.data
+              )}`
+            );
           }
-        } else {
-          toastError(
-            `Houve um erro ao salvar a solicitação unificada: ${getError(
-              res.data
-            )}`
-          );
+        },
+        function() {
+          toastError("Houve um erro ao salvar a solicitação unificada");
         }
-      },
-      function() {
-        toastError("Houve um erro ao salvar a solicitação unificada");
-      }
-    );
+      );
+    } else {
+      atualizarSolicitacaoUnificada(
+        formValues.uuid,
+        JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+      ).then(
+        res => {
+          if (res.status === HTTP_STATUS.OK) {
+            if (formValues.status === "DRE_A_VALIDAR") {
+              toastSuccess("Inicia Pedido");
+              iniciarPedido(res.data.uuid);
+              setTimeout(() => {
+                form.restart();
+                setUnidadesEscolaresSelecionadas([]);
+              });
+              fetchData();
+            } else {
+              toastSuccess("Solicitação Unificada atualizada com sucesso!");
+              setTimeout(() => {
+                form.restart();
+                setUnidadesEscolaresSelecionadas([]);
+              });
+              fetchData();
+            }
+          } else {
+            toastError(
+              `Houve um erro ao salvar a solicitação unificada: ${getError(
+                res.data
+              )}`
+            );
+          }
+        },
+        function() {
+          toastError("Houve um erro ao atualizar a solicitação unificada");
+        }
+      );
+    }
   };
 
   const removerRascunho = (id_externo, uuid) => {
@@ -156,25 +207,34 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  // const iniciarPedido = uuid => {
-  //   inicioPedido(uuid).then(
-  //     res => {
-  //       if (res.status === HTTP_STATUS.OK) {
-  //         toastSuccess("Solicitação Unificada enviada com sucesso!");
-  //         resetForm();
-  //       } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-  //         toastError(
-  //           `Houve um erro ao salvar a solicitação unificada: ${getError(
-  //             res.data
-  //           )}`
-  //         );
-  //       }
-  //     },
-  //     function() {
-  //       toastError("Houve um erro ao enviar a solicitação unificada");
-  //     }
-  //   );
-  // };
+  const iniciarPedido = uuid => {
+    inicioPedido(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação Unificada enviada com sucesso!");
+          resetForm();
+        } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(
+            `Houve um erro ao salvar a solicitação unificada: ${getError(
+              res.data
+            )}`
+          );
+        }
+      },
+      function() {
+        toastError("Houve um erro ao enviar a solicitação unificada");
+      }
+    );
+  };
+
+  const removerEscola = (ue, form, values) => {
+    let resultado = values.unidades_escolares.filter(v => v.uuid !== ue.uuid);
+    let resultadoLabels = unidadesEscolaresSelecionadas.filter(
+      v => v.uuid !== ue.uuid
+    );
+    setUnidadesEscolaresSelecionadas(resultadoLabels);
+    form.change("unidades_escolares", resultado);
+  };
 
   const renderizarLabelUnidadesEscolares = (selected, options) => {
     if (selected.length === 0) {
@@ -219,7 +279,9 @@ const SolicitacaoUnificada = ({
                   />
                 </div>
               )}
-              <span className="page-title">Nova Solicitação</span>
+              <div className="mt-3">
+                <span className="page-title">Nova Solicitação</span>
+              </div>
               <div className="card mt-3">
                 <div className="card-body">
                   <div className="row">
@@ -313,7 +375,9 @@ const SolicitacaoUnificada = ({
                                     <div className="col-1">
                                       <Botao
                                         type={BUTTON_TYPE.BUTTON}
-                                        // onClick={() => removerEscola(ue)}
+                                        onClick={() =>
+                                          removerEscola(ue, form, values)
+                                        }
                                         style={BUTTON_STYLE.RED_OUTLINE}
                                         icon={BUTTON_ICON.TRASH}
                                         className="botao-remover-escola mt-1"
@@ -630,11 +694,24 @@ const SolicitacaoUnificada = ({
                         name="descricao"
                       />
                     </div>
-                    <div className="offset-10 col-2">
+                    <div className="offset-7 col-3 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        texto={"Salvar Rascunho"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-2 mt-3">
                       <Botao
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN}
                         texto="Salvar"
+                        onClick={() => {
+                          values["status"] = "DRE_A_VALIDAR";
+                          handleSubmit(values => onSubmit(values, form));
+                        }}
+                        className="w-100"
                       />
                     </div>
                   </div>
