@@ -71,8 +71,6 @@ const SolicitacaoUnificada = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [escolas]);
 
-  const resetForm = () => {};
-
   const carregarRascunho = (solicitacaoUnificada, form) => {
     form.change("data", solicitacaoUnificada.data);
     form.change("local", solicitacaoUnificada.local);
@@ -111,18 +109,18 @@ const SolicitacaoUnificada = ({
           res => {
             if (res.status === HTTP_STATUS.CREATED) {
               if (formValues.status === "DRE_A_VALIDAR") {
-                toastSuccess("Inicia Pedido");
                 iniciarPedido(res.data.uuid);
                 setTimeout(() => {
                   form.restart();
                   setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
                 });
-                fetchData();
               } else {
                 toastSuccess("Solicitação Unificada salva com sucesso!");
                 setTimeout(() => {
                   form.restart();
                   setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
                 });
                 fetchData();
               }
@@ -146,11 +144,11 @@ const SolicitacaoUnificada = ({
           res => {
             if (res.status === HTTP_STATUS.OK) {
               if (formValues.status === "DRE_A_VALIDAR") {
-                toastSuccess("Inicia Pedido");
                 iniciarPedido(res.data.uuid);
                 setTimeout(() => {
                   form.restart();
                   setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
                 });
                 fetchData();
               } else {
@@ -158,6 +156,7 @@ const SolicitacaoUnificada = ({
                 setTimeout(() => {
                   form.restart();
                   setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
                 });
                 fetchData();
               }
@@ -204,7 +203,7 @@ const SolicitacaoUnificada = ({
       res => {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Solicitação Unificada enviada com sucesso!");
-          resetForm();
+          fetchData();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
             `Houve um erro ao salvar a solicitação unificada: ${getError(
@@ -265,7 +264,6 @@ const SolicitacaoUnificada = ({
                     unifiedSolicitationList={rascunhosSalvos}
                     OnDeleteButtonClicked={removerRascunho}
                     form={form}
-                    resetForm={event => resetForm(event)}
                     OnEditButtonClicked={carregarRascunho}
                   />
                 </div>
@@ -694,7 +692,20 @@ const SolicitacaoUnificada = ({
                         name="descricao"
                       />
                     </div>
-                    <div className="offset-7 col-3 mt-3">
+                    <div className="offset-6 col-2 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() => {
+                          form.restart();
+                          setUnidadesEscolaresSelecionadas([]);
+                          setTotalKits(0);
+                        }}
+                        texto={"Cancelar"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-2 mt-3">
                       <Botao
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -706,7 +717,7 @@ const SolicitacaoUnificada = ({
                       <Botao
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN}
-                        texto="Salvar"
+                        texto="Enviar"
                         onClick={() => {
                           values["status"] = "DRE_A_VALIDAR";
                           handleSubmit(values => onSubmit(values, form));
