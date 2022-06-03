@@ -22,10 +22,7 @@ import {
   BUTTON_TYPE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import {
-  // checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../helpers/utilities";
+import { getError } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { formatarSubmissao } from "./helper";
 import "./style.scss";
@@ -33,9 +30,7 @@ import "./style.scss";
 const SolicitacaoUnificada = ({
   dadosUsuario,
   proximosDoisDiasUteis,
-  // proximosCincoDiasUteis,
   escolas,
-  // lotes,
   kits
 }) => {
   const [rascunhosSalvos, setRascunhosSalvos] = useState([]);
@@ -44,8 +39,6 @@ const SolicitacaoUnificada = ({
     setUnidadesEscolaresSelecionadas
   ] = useState([]);
   const [totalKits, setTotalKits] = useState(0);
-  // const [localPasseio, setLocalPasseio] = useState(undefined);
-  // const [dataPasseio, setDataPasseio] = useState(undefined);
   const [opcoes, setOpcoes] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
@@ -107,81 +100,80 @@ const SolicitacaoUnificada = ({
     form.change("unidades_escolares", escolas_quantidades);
   };
 
-  // const loadInitialValues = () => {
-  //   console.log('chamei esse cara aqui')
-  //   return ()
-  // }
-
   const onSubmit = async (formValues, form) => {
-    if (!formValues.uuid) {
-      await criarSolicitacaoUnificada(
-        JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
-      ).then(
-        res => {
-          if (res.status === HTTP_STATUS.CREATED) {
-            if (formValues.status === "DRE_A_VALIDAR") {
-              toastSuccess("Inicia Pedido");
-              iniciarPedido(res.data.uuid);
-              setTimeout(() => {
-                form.restart();
-                setUnidadesEscolaresSelecionadas([]);
-              });
-              fetchData();
-            } else {
-              toastSuccess("Solicitação Unificada salva com sucesso!");
-              setTimeout(() => {
-                form.restart();
-                setUnidadesEscolaresSelecionadas([]);
-              });
-              fetchData();
-            }
-          } else {
-            toastError(
-              `Houve um erro ao salvar a solicitação unificada: ${getError(
-                res.data
-              )}`
-            );
-          }
-        },
-        function() {
-          toastError("Houve um erro ao salvar a solicitação unificada");
-        }
-      );
+    if (unidadesEscolaresSelecionadas.length === 0) {
+      toastError("Selecione ao menos uma unidade escolar");
     } else {
-      atualizarSolicitacaoUnificada(
-        formValues.uuid,
-        JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
-      ).then(
-        res => {
-          if (res.status === HTTP_STATUS.OK) {
-            if (formValues.status === "DRE_A_VALIDAR") {
-              toastSuccess("Inicia Pedido");
-              iniciarPedido(res.data.uuid);
-              setTimeout(() => {
-                form.restart();
-                setUnidadesEscolaresSelecionadas([]);
-              });
-              fetchData();
+      if (!formValues.uuid) {
+        await criarSolicitacaoUnificada(
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+        ).then(
+          res => {
+            if (res.status === HTTP_STATUS.CREATED) {
+              if (formValues.status === "DRE_A_VALIDAR") {
+                toastSuccess("Inicia Pedido");
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                });
+                fetchData();
+              } else {
+                toastSuccess("Solicitação Unificada salva com sucesso!");
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                });
+                fetchData();
+              }
             } else {
-              toastSuccess("Solicitação Unificada atualizada com sucesso!");
-              setTimeout(() => {
-                form.restart();
-                setUnidadesEscolaresSelecionadas([]);
-              });
-              fetchData();
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
             }
-          } else {
-            toastError(
-              `Houve um erro ao salvar a solicitação unificada: ${getError(
-                res.data
-              )}`
-            );
+          },
+          function() {
+            toastError("Houve um erro ao salvar a solicitação unificada");
           }
-        },
-        function() {
-          toastError("Houve um erro ao atualizar a solicitação unificada");
-        }
-      );
+        );
+      } else {
+        atualizarSolicitacaoUnificada(
+          formValues.uuid,
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+        ).then(
+          res => {
+            if (res.status === HTTP_STATUS.OK) {
+              if (formValues.status === "DRE_A_VALIDAR") {
+                toastSuccess("Inicia Pedido");
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                });
+                fetchData();
+              } else {
+                toastSuccess("Solicitação Unificada atualizada com sucesso!");
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                });
+                fetchData();
+              }
+            } else {
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
+            }
+          },
+          function() {
+            toastError("Houve um erro ao atualizar a solicitação unificada");
+          }
+        );
+      }
     }
   };
 
@@ -263,7 +255,6 @@ const SolicitacaoUnificada = ({
       <div className="mt-3">
         <Form
           onSubmit={onSubmit}
-          // initialValues={}
           render={({ handleSubmit, values, form }) => (
             <form onSubmit={handleSubmit}>
               {rascunhosSalvos && rascunhosSalvos.length > 0 && (
@@ -292,6 +283,7 @@ const SolicitacaoUnificada = ({
                         minDate={proximosDoisDiasUteis}
                         label="Dia"
                         className="form-control"
+                        validate={required}
                         required
                       />
                     </div>
@@ -465,6 +457,8 @@ const SolicitacaoUnificada = ({
                                             <Field
                                               component={"input"}
                                               type="radio"
+                                              required
+                                              validate={required}
                                               value="1"
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
@@ -507,6 +501,8 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="2"
+                                              required
+                                              validate={required}
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
@@ -552,6 +548,8 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="3"
+                                              required
+                                              validate={required}
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
@@ -614,6 +612,8 @@ const SolicitacaoUnificada = ({
                                                       <Field
                                                         component={"input"}
                                                         type="checkbox"
+                                                        required
+                                                        validate={required}
                                                         value={kit.uuid}
                                                         id={`${ue.codigo_eol}-${
                                                           kit.uuid
