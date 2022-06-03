@@ -80,7 +80,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
             {guias.map(guia => {
               return (
                 <>
-                  <div className="grid-table body-table">
+                  <div className="grid-table body-table hand-cursor">
                     <div>
                       <Checkbox
                         checked={guia.checked}
