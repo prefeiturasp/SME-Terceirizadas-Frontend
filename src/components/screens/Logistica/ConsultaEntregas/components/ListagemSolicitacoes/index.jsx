@@ -53,7 +53,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
             <div>Insucesso</div>
             <div>Pendentes</div>
             <div>Relatório</div>
-            <div>Guias de Remessa</div>
+            <div>Exportar Requisição</div>
           </div>
           {solicitacoes.map(solicitacao => {
             const bordas =
