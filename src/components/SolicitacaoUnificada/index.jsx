@@ -6,7 +6,8 @@ import { InputComData } from "../Shareable/DatePicker";
 import { required } from "../../helpers/fieldValidators";
 import {
   solicitacoesUnificadasSalvas,
-  criarSolicitacaoUnificada
+  criarSolicitacaoUnificada,
+  removerSolicitacaoUnificada
   // inicioPedido
 } from "../../services/solicitacaoUnificada.service";
 import { InputText } from "../Shareable/Input/InputText";
@@ -47,39 +48,38 @@ const SolicitacaoUnificada = ({
   const [opcoes, setOpcoes] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    async function fetchData() {
-      await solicitacoesUnificadasSalvas().then(
-        res => {
-          setRascunhosSalvos(res.results);
-        },
-        function(error) {
-          toastError(
-            `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
-          );
-        }
-      );
-
-      if (escolas) {
-        const opcoesEscolas = escolas.map(escola => {
-          let label =
-            escola.nome.length > 35 ? escola.nome.slice(0, 35) : escola.nome;
-          let dado = escola;
-          dado["quantidade_kits"] = "";
-          dado["kits_selecionados"] = [];
-          return { label: label, uuid: escola.uuid, value: dado };
-        });
-        setOpcoes(opcoesEscolas);
+  async function fetchData() {
+    await solicitacoesUnificadasSalvas().then(
+      res => {
+        setRascunhosSalvos(res.results);
+      },
+      function(error) {
+        toastError(
+          `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
+        );
       }
-    }
+    );
+  }
+
+  useEffect(() => {
     fetchData();
+    if (escolas) {
+      const opcoesEscolas = escolas.map(escola => {
+        let label =
+          escola.nome.length > 35 ? escola.nome.slice(0, 35) : escola.nome;
+        let dado = escola;
+        dado["quantidade_kits"] = "";
+        dado["kits_selecionados"] = [];
+        return { label: label, uuid: escola.uuid, value: dado };
+      });
+      setOpcoes(opcoesEscolas);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [escolas]);
 
   const resetForm = () => {};
 
   const carregarRascunho = () => {};
-
-  const removerRascunho = () => {};
 
   // const loadInitialValues = () => {
   //   console.log('chamei esse cara aqui')
@@ -97,6 +97,7 @@ const SolicitacaoUnificada = ({
             // this.iniciarPedido(res.data.uuid);
           } else {
             toastSuccess("Solicitação Unificada salva com sucesso!");
+            fetchData();
             resetForm();
           }
         } else {
@@ -111,6 +112,28 @@ const SolicitacaoUnificada = ({
         toastError("Houve um erro ao salvar a solicitação unificada");
       }
     );
+  };
+
+  const removerRascunho = (id_externo, uuid) => {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerSolicitacaoUnificada(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            fetchData();
+          } else {
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
+          }
+        },
+        function(error) {
+          toastError(
+            `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
+          );
+        }
+      );
+    }
   };
 
   // const iniciarPedido = uuid => {
