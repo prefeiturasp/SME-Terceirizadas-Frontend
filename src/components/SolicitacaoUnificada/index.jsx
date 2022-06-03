@@ -79,14 +79,34 @@ const SolicitacaoUnificada = ({
 
   const resetForm = () => {};
 
-  const carregarRascunho = () => {};
+  const carregarRascunho = (solicitacaoUnificada, form) => {
+    form.change("data", solicitacaoUnificada.data);
+    form.change("local", solicitacaoUnificada.local);
+    let escolas_quantidades = opcoes
+      .filter(opcao =>
+        solicitacaoUnificada.escolas_quantidades.find(
+          eq => eq.escola.uuid === opcao.uuid
+        )
+      )
+      .map(opcao => opcao.value);
+    setUnidadesEscolaresSelecionadas(escolas_quantidades);
+    escolas_quantidades.forEach(eq => {
+      const eq_back = solicitacaoUnificada.escolas_quantidades.find(
+        equ => equ.escola.uuid === eq.uuid
+      );
+      eq.nmr_alunos = eq_back.quantidade_alunos;
+      eq.quantidade_kits = (eq_back.tempo_passeio + 1).toString();
+      eq.kits_selecionados = eq_back.kits.map(kit => kit.uuid);
+    });
+    form.change("unidades_escolares", escolas_quantidades);
+  };
 
   // const loadInitialValues = () => {
   //   console.log('chamei esse cara aqui')
   //   return ()
   // }
 
-  const onSubmit = async formValues => {
+  const onSubmit = async (formValues, form) => {
     await criarSolicitacaoUnificada(
       JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
     ).then(
@@ -97,8 +117,8 @@ const SolicitacaoUnificada = ({
             // this.iniciarPedido(res.data.uuid);
           } else {
             toastSuccess("Solicitação Unificada salva com sucesso!");
+            setTimeout(() => form.restart());
             fetchData();
-            resetForm();
           }
         } else {
           toastError(
@@ -171,9 +191,6 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  // const removerEscola = _escola => {
-  // };
-
   return (
     <>
       <CardMatriculados
@@ -183,27 +200,26 @@ const SolicitacaoUnificada = ({
             : 0
         }
       />
-
-      {rascunhosSalvos && rascunhosSalvos.length > 0 && (
-        <div className="mt-3">
-          <span className="page-title">Rascunhos</span>
-          <Rascunhos
-            schoolsLoaded={escolas.length > 0}
-            unifiedSolicitationList={rascunhosSalvos}
-            OnDeleteButtonClicked={removerRascunho}
-            resetForm={event => resetForm(event)}
-            OnEditButtonClicked={params => carregarRascunho(params)}
-          />
-        </div>
-      )}
-
       <div className="mt-3">
-        <span className="page-title">Nova Solicitação</span>
         <Form
           onSubmit={onSubmit}
           // initialValues={}
           render={({ handleSubmit, values, form }) => (
             <form onSubmit={handleSubmit}>
+              {rascunhosSalvos && rascunhosSalvos.length > 0 && (
+                <div className="mt-3">
+                  <span className="page-title">Rascunhos</span>
+                  <Rascunhos
+                    schoolsLoaded={escolas.length > 0}
+                    unifiedSolicitationList={rascunhosSalvos}
+                    OnDeleteButtonClicked={removerRascunho}
+                    form={form}
+                    resetForm={event => resetForm(event)}
+                    OnEditButtonClicked={carregarRascunho}
+                  />
+                </div>
+              )}
+              <span className="page-title">Nova Solicitação</span>
               <div className="card mt-3">
                 <div className="card-body">
                   <div className="row">
