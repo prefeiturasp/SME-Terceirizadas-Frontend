@@ -106,7 +106,7 @@ export default ({
             <div>Status</div>
             <div>Data de entrega</div>
             <div>Exportar relatório</div>
-            <div>Exportar guia</div>
+            <div>Exportar Requisição</div>
             <div />
           </div>
           {solicitacoes.map(solicitacao => {
@@ -149,7 +149,7 @@ export default ({
                       onClick={() => baixarExcelGuiasRemessa(solicitacao)}
                     >
                       <i className="fas fa-file-excel green" />
-                      <span className="link-exportar">XLSX</span>
+                      <span className="link-exportar">Planilha</span>
                     </Button>
                   </div>
 
