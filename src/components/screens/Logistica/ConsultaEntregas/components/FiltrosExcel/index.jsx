@@ -109,7 +109,7 @@ export default ({ solicitacao }) => {
     <>
       <Button className="acoes" variant="link" onClick={() => handleShow()}>
         <i className="fas fa-file-excel green" />
-        <span className="link-exportar">XLSX</span>
+        <span className="link-exportar">Planilha</span>
       </Button>
 
       <Modal show={show} onHide={handleClose} dialogClassName="modal-entregas">
