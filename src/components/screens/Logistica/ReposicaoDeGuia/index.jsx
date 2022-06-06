@@ -117,6 +117,13 @@ export default () => {
         });
       });
     }
+
+    guiaResponse.alimentos = guiaResponse.alimentos.filter(alimento => {
+      alimento.embalagens = alimento.embalagens.filter(
+        embalagem => embalagem.qtd_a_receber !== 0
+      );
+      return alimento.embalagens.length !== 0;
+    });
   };
 
   const carregarReposicaoEdicao = async uuid => {

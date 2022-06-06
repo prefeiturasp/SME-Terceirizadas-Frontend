@@ -53,7 +53,8 @@ const ListagemSolicitacoes = ({
             <div>Status</div>
             <div>Data de entrega</div>
             <div>Ações</div>
-            <div>Exportar</div>
+            <div>Exportar relatório</div>
+            <div>Exportar Requisição</div>
           </div>
           {solicitacoes.map(solicitacao => {
             const bordas =
@@ -119,7 +120,7 @@ const ListagemSolicitacoes = ({
                       onClick={() => baixarExcel(solicitacao)}
                     >
                       <i className="fas fa-file-excel green" />
-                      <span className="link-exportar">XLSX</span>
+                      <span className="link-exportar">Planilha</span>
                     </Button>
                   </div>
                   <div className={`${bordas}`}>

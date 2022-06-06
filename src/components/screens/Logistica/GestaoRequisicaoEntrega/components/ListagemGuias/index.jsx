@@ -42,7 +42,7 @@ export default ({ solicitacao, confirmaCancelamentoGuias }) => {
             {guias.map(guia => {
               return (
                 <>
-                  <div className="grid-table body-table">
+                  <div className="grid-table body-table hand-cursor">
                     <div onClick={() => abrirModalGuia(guia)}>
                       {guia.numero_guia}
                     </div>
