@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import { getNomesDistribuidores } from "services/logistica.service.js";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 
-const MultiSelectDistribuidores = ({ nome, label, classname }) => {
+const MultiSelectDistribuidores = ({ name, label, classname }) => {
   const [distribuidoresSelecionados, setDistribuidoresSelecionados] = useState(
     []
   );
@@ -40,7 +40,7 @@ const MultiSelectDistribuidores = ({ nome, label, classname }) => {
       className={classname}
       label={label}
       component={MultiSelect}
-      name={nome}
+      name={name}
       nomeDoItemNoPlural="distribuidores"
       selected={distribuidoresSelecionados}
       options={distribuidores}

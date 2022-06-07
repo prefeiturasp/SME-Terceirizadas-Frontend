@@ -138,7 +138,7 @@ export default ({
               <div className="col">
                 <MultiSelectDistribuidores
                   classname="input-busca-produto"
-                  nome="distribuidor"
+                  name="distribuidor"
                   label="Nome dos Distribuidores"
                 />
               </div>
