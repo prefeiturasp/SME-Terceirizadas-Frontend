@@ -10,6 +10,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
+import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
 
 const FORM_NAME = "entregasDilog";
 
@@ -48,13 +49,7 @@ export default ({
 
               {(dilog || dre) && (
                 <div className="col-6">
-                  <Field
-                    component={InputText}
-                    label="Nome do Distribuidor"
-                    name="nome_distribuidor"
-                    placeholder="Digite o nome do distribuidor"
-                    className="input-busca-produto"
-                  />
+                  <MultiSelectDistribuidores />
                 </div>
               )}
               <div className="col-3">

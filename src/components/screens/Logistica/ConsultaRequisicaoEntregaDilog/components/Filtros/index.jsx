@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
@@ -12,12 +12,9 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import {
-  getNomesDistribuidores,
-  getNomesUnidadesEscolares
-} from "services/logistica.service.js";
+import { getNomesUnidadesEscolares } from "services/logistica.service.js";
 import { debounce } from "lodash";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
@@ -29,10 +26,6 @@ export default ({
   inicioResultado
 }) => {
   const [desabilitarAluno, setDesabilitarAluno] = useState(false);
-  const [distribuidorasSelecionadas, setDistribuidorasSelecionadas] = useState(
-    []
-  );
-  const [distribuidoras, setDistribuidoras] = useState([]);
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -77,32 +70,6 @@ export default ({
   };
 
   const getNomeUnidadeEscolaDebounced = debounce(getNomeUnidadeEscola, 1000);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const listaDistribuidoras = await getNomesDistribuidores();
-        let listaRsultados = listaDistribuidoras.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element.uuid, label: element.nome_fantasia };
-        });
-        setDistribuidoras(listaFormatada);
-      } catch (erro) {
-        throw erro;
-      }
-    })();
-  }, []);
-
-  const onDistribuidorasSelected = values => {
-    let distribuidorasSelecionadasNomes = [];
-    values.forEach(value => {
-      const indice = distribuidoras.findIndex(
-        distribuidora => distribuidora.value === value
-      );
-      distribuidorasSelecionadasNomes.push(distribuidoras[indice].label);
-    });
-    setDistribuidorasSelecionadas(values);
-  };
 
   return (
     <div className="filtros-requisicoes-dilog">
@@ -169,17 +136,7 @@ export default ({
                 />
               </div>
               <div className="col">
-                <div className="input-busca-produto">
-                  <Field
-                    label="Nome dos Distribuidores"
-                    component={MultiSelect}
-                    name="distribuidor"
-                    nomeDoItemNoPlural="distribuidores"
-                    selected={distribuidorasSelecionadas}
-                    options={distribuidoras}
-                    onSelectedChanged={value => onDistribuidorasSelected(value)}
-                  />
-                </div>
+                <MultiSelectDistribuidores />
               </div>
             </div>
             <div className="row">

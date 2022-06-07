@@ -11,6 +11,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
 
 const FORM_NAME = "buscaSolicitacaoAlteracao";
 
@@ -89,13 +90,7 @@ export default ({
             </div>
             <div className="row mt-3">
               <div className="col">
-                <Field
-                  component={InputText}
-                  label="Nome do distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
-                  className="input-busca-produto"
-                />
+                <MultiSelectDistribuidores />
               </div>
               <div className="col">
                 <Field
