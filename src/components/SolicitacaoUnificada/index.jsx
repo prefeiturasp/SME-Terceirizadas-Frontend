@@ -60,8 +60,9 @@ const SolicitacaoUnificada = ({
     fetchData();
     if (escolas) {
       const opcoesEscolas = escolas.map(escola => {
-        let label =
-          escola.nome.length > 35 ? escola.nome.slice(0, 35) : escola.nome;
+        let label = `${escola.codigo_eol} - ${
+          escola.nome.length > 28 ? escola.nome.slice(0, 28) : escola.nome
+        }`;
         let dado = escola;
         dado["quantidade_kits"] = "";
         dado["kits_selecionados"] = [];
@@ -225,6 +226,19 @@ const SolicitacaoUnificada = ({
     let resultadoLabels = unidadesEscolaresSelecionadas.filter(
       v => v.uuid !== ue.uuid
     );
+    let total = 0;
+    let listaQuantidadeKits = resultado.filter(
+      v => ![""].includes(v.quantidade_kits)
+    );
+    if (listaQuantidadeKits.length !== 0) {
+      listaQuantidadeKits = listaQuantidadeKits.map(v =>
+        parseInt(v.quantidade_kits)
+      );
+      for (let index = 0; index < listaQuantidadeKits.length; index++) {
+        total = total + listaQuantidadeKits[index];
+      }
+    }
+    setTotalKits(total);
     setUnidadesEscolaresSelecionadas(resultadoLabels);
     form.change("unidades_escolares", resultado);
   };
@@ -325,6 +339,23 @@ const SolicitacaoUnificada = ({
                             }
                             return v;
                           });
+                          let total = 0;
+                          let listaQuantidadeKits = resultado.filter(
+                            v => ![""].includes(v.quantidade_kits)
+                          );
+                          if (listaQuantidadeKits.length !== 0) {
+                            listaQuantidadeKits = listaQuantidadeKits.map(v =>
+                              parseInt(v.quantidade_kits)
+                            );
+                            for (
+                              let index = 0;
+                              index < listaQuantidadeKits.length;
+                              index++
+                            ) {
+                              total = total + listaQuantidadeKits[index];
+                            }
+                          }
+                          setTotalKits(total);
                           form.change("unidades_escolares", resultado);
                           setUnidadesEscolaresSelecionadas(value);
                         }}
@@ -694,7 +725,7 @@ const SolicitacaoUnificada = ({
                         name="descricao"
                       />
                     </div>
-                    <div className="offset-6 col-2 mt-3">
+                    <div className="offset-5 col-2 mt-3">
                       <Botao
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -707,7 +738,7 @@ const SolicitacaoUnificada = ({
                         className="w-100"
                       />
                     </div>
-                    <div className="col-2 mt-3">
+                    <div className="col-3 mt-3">
                       <Botao
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
