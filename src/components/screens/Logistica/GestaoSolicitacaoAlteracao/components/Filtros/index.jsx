@@ -90,7 +90,11 @@ export default ({
             </div>
             <div className="row mt-3">
               <div className="col">
-                <MultiSelectDistribuidores />
+                <MultiSelectDistribuidores
+                  classname="input-busca-produto"
+                  nome="distribuidor"
+                  label="Nome dos Distribuidores"
+                />
               </div>
               <div className="col">
                 <Field

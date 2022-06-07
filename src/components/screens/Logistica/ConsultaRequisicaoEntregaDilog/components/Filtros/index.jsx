@@ -136,7 +136,11 @@ export default ({
                 />
               </div>
               <div className="col">
-                <MultiSelectDistribuidores />
+                <MultiSelectDistribuidores
+                  classname="input-busca-produto"
+                  nome="distribuidor"
+                  label="Nome dos Distribuidores"
+                />
               </div>
             </div>
             <div className="row">

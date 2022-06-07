@@ -49,7 +49,11 @@ export default ({
 
               {(dilog || dre) && (
                 <div className="col-6">
-                  <MultiSelectDistribuidores />
+                  <MultiSelectDistribuidores
+                    classname="input-busca-produto"
+                    nome="distribuidor"
+                    label="Nome dos Distribuidores"
+                  />
                 </div>
               )}
               <div className="col-3">

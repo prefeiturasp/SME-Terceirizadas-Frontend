@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import { getNomesDistribuidores } from "services/logistica.service.js";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 
-const MultiSelectDistribuidores = () => {
+const MultiSelectDistribuidores = ({ nome, label, classname }) => {
   const [distribuidoresSelecionados, setDistribuidoresSelecionados] = useState(
     []
   );
@@ -37,10 +37,10 @@ const MultiSelectDistribuidores = () => {
 
   return (
     <Field
-      className="input-busca-produto"
-      label="Nome dos Distribuidores"
+      className={classname}
+      label={label}
       component={MultiSelect}
-      name="distribuidor"
+      name={nome}
       nomeDoItemNoPlural="distribuidores"
       selected={distribuidoresSelecionados}
       options={distribuidores}
