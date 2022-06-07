@@ -1,380 +1,52 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Field, formValueSelector, FormSection, reduxForm } from "redux-form";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
-import { Botao } from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { InputComData } from "../Shareable/DatePicker";
-import { InputText } from "../Shareable/Input/InputText";
-import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
-import { Collapse } from "react-collapse";
-import { required, naoPodeSerZero } from "../../helpers/fieldValidators";
-import CardMatriculados from "../Shareable/CardMatriculados";
-import TabelaHistoricoLotes from "../Shareable/TabelaHistoricoLotes";
-import { getKitLanches } from "../../services/kitLanche";
-import "../Shareable/style.scss";
-import "./style.scss";
-import {
-  criarSolicitacaoUnificada,
-  inicioPedido,
-  atualizarSolicitacaoUnificada,
-  solicitacoesUnificadasSalvas,
-  removerSolicitacaoUnificada
-} from "../../services/solicitacaoUnificada.service";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
+import { InputComData } from "../Shareable/DatePicker";
+import { required } from "../../helpers/fieldValidators";
 import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../helpers/utilities";
+  solicitacoesUnificadasSalvas,
+  criarSolicitacaoUnificada,
+  atualizarSolicitacaoUnificada,
+  removerSolicitacaoUnificada,
+  inicioPedido
+} from "../../services/solicitacaoUnificada.service";
+import { InputText } from "../Shareable/Input/InputText";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
-import { loadUnifiedSolicitation } from "../../reducers/unifiedSolicitation.reducer";
-import { validateSubmit } from "./validacao";
-import { formatarSubmissao, extrairKitsLanche } from "./helper";
-import PedidoKitLanche from "../Shareable/PedidoKitLanche";
-import { ToggleExpandir } from "../Shareable/ToggleExpandir";
+import { Form, Field } from "react-final-form";
+import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "components/Shareable/Botao/constants";
+import { getError } from "../../helpers/utilities";
+import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { formatarSubmissao } from "./helper";
+import "./style.scss";
 
-const ENTER = 13;
+const SolicitacaoUnificada = ({
+  dadosUsuario,
+  proximosDoisDiasUteis,
+  escolas,
+  kits
+}) => {
+  const [rascunhosSalvos, setRascunhosSalvos] = useState([]);
+  const [
+    unidadesEscolaresSelecionadas,
+    setUnidadesEscolaresSelecionadas
+  ] = useState([]);
+  const [totalKits, setTotalKits] = useState(0);
+  const [opcoes, setOpcoes] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [submeteu, setSubmeteu] = useState(false);
 
-class SolicitacaoUnificada extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      status: "RASCUNHO",
-      title: "Nova Solicitação",
-      salvarAtualizarLbl: "Salvar Rascunho",
-      showModal: false,
-      schoolExists: false,
-      schoolsExistArray: [],
-      schoolsFiltered: [],
-      schoolsTotal: 0,
-      kitsLanche: null,
-      kitsTotal: 0,
-      collapsed: true,
-      kitsChecked: [],
-      studentsTotal: 0,
-      unifiedSolicitationList: []
-    };
-    this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
-    this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.handleCheck = this.handleCheck.bind(this);
-    this.filterList = this.filterList.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.refresh = this.refresh.bind(this);
-    this.titleRef = React.createRef();
-    this.pedidoMultiploRef = React.createRef();
-    this.escolasRef = React.createRef();
-    this.alterarCollapse = this.alterarCollapse.bind(this);
-    this.updateKitsChecked = this.updateKitsChecked.bind(this);
-  }
-
-  OnEditButtonClicked(param) {
-    this.resetForm();
-    this.props.loadUnifiedSolicitation(param.solicitacaoUnificada);
-    const listaKitLancheIgual =
-      param.solicitacaoUnificada.lista_kit_lanche_igual;
-    let schoolsFiltered = this.state.schoolsFiltered;
-    let kitsTotal = 0;
-    let studentsTotal = 0;
-    let schoolsTotal = 0;
-    param.solicitacaoUnificada.escolas_quantidades.forEach(function(
-      escola_quantidade
-    ) {
-      let foundIndex = schoolsFiltered.findIndex(
-        escola => escola.codigo_eol === escola_quantidade.escola.codigo_eol
-      );
-      schoolsFiltered[foundIndex].checked = true;
-      schoolsFiltered[foundIndex].tempo_passeio = listaKitLancheIgual
-        ? param.solicitacaoUnificada.solicitacao_kit_lanche.tempo_passeio
-        : escola_quantidade.tempo_passeio;
-      schoolsFiltered[foundIndex].quantidade_alunos =
-        escola_quantidade.quantidade_alunos;
-      schoolsFiltered[foundIndex].nro_alunos =
-        escola_quantidade.quantidade_alunos;
-      schoolsFiltered[foundIndex].kit_lanche = extrairKitsLanche(
-        escola_quantidade.kits
-      );
-      schoolsFiltered[foundIndex].kitsChecked = extrairKitsLanche(
-        escola_quantidade.kits
-      );
-      schoolsFiltered[foundIndex].number_of_choices =
-        escola_quantidade.tempo_passeio;
-      schoolsFiltered[foundIndex].limit_of_meal_kits =
-        escola_quantidade.tempo_passeio;
-      if (schoolsFiltered[foundIndex].kit_lanche.length) {
-        schoolsFiltered[foundIndex].number_of_meal_kits =
-          schoolsFiltered[foundIndex].kit_lanche.length *
-          escola_quantidade.quantidade_alunos;
-        kitsTotal +=
-          escola_quantidade.kits.length * escola_quantidade.quantidade_alunos;
-      }
-      schoolsTotal += 1;
-      if (escola_quantidade.quantidade_alunos)
-        studentsTotal += escola_quantidade.quantidade_alunos;
-    });
-    //this.props.change(`school_${escola_quantidade.escola.codigo_eol}.check`, true);
-    this.props.change(
-      "lista_kit_lanche_igual",
-      param.solicitacaoUnificada.lista_kit_lanche_igual
-    );
-    this.setState({
-      schoolsFiltered: schoolsFiltered,
-      kitsTotal: kitsTotal,
-      studentsTotal: studentsTotal,
-      schoolsTotal: schoolsTotal,
-      status: "RASCUNHO",
-      title: `Solicitação Unificada # ${param.solicitacaoUnificada.id_externo}`,
-      salvarAtualizarLbl: "Atualizar",
-      kitsChecked: listaKitLancheIgual
-        ? extrairKitsLanche(
-            param.solicitacaoUnificada.solicitacao_kit_lanche.kits
-          )
-        : []
-    });
-    window.scrollTo(0, this.titleRef.current.offsetTop - 90);
-  }
-
-  OnDeleteButtonClicked(id_externo, uuid) {
-    if (window.confirm("Deseja remover este rascunho?")) {
-      removerSolicitacaoUnificada(uuid).then(
-        res => {
-          if (res.status === HTTP_STATUS.NO_CONTENT) {
-            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-            this.resetForm();
-          } else {
-            toastError(
-              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
-            );
-          }
-        },
-        function(error) {
-          toastError(
-            `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
-          );
-        }
-      );
-    }
-  }
-
-  cancelForm() {
-    this.resetForm();
-    window.scrollTo(0, this.titleRef.current.offsetTop - 90);
-  }
-
-  resetForm() {
-    this.props.reset("unifiedSolicitation");
-    this.props.loadUnifiedSolicitation(null);
-    let escolas = this.props.escolas;
-
-    escolas.forEach(function(escola) {
-      escola["burger_active"] = false;
-      escola["limit_of_meal_kits"] = 0;
-      escola["number_of_choices"] = 0;
-      escola["number_of_meal_kits"] = 0;
-      escola["nro_alunos"] = 0;
-      escola["numero_alunos"] = 0;
-      escola["tempo_passeio"] = null;
-      escola["kit_lanche"] = null;
-      escola["checked"] = false;
-      escola["kitsChecked"] = [];
-    });
-    this.setState({
-      status: "SEM STATUS",
-      title: "Nova Solicitação",
-      showModal: false,
-      schoolExists: false,
-      schoolsExistArray: [],
-      salvarAtualizarLbl: "Salvar Rascunho",
-      schoolsFiltered: escolas,
-      schoolsTotal: 0,
-      kitsTotal: 0,
-      studentsTotal: 0
-    });
-    this.refresh();
-  }
-
-  componentDidMount() {
-    this.props.change("schools_total", 0);
-    this.props.change("kits_total", 0);
-
-    getKitLanches().then(response => {
-      this.setState({
-        kitsLanche: response.results
-      });
-    });
-
-    this.refresh();
-  }
-
-  handleMultipleOrder() {
-    this.props.change("lista_kit_lanche_igual", !this.props.multipleOrder);
-    window.scrollTo(
-      0,
-      this.pedidoMultiploRef.current.offsetTop +
-        295 +
-        120 * this.state.unifiedSolicitationList.length
-    );
-  }
-
-  handleNumberOfStudents(school, event) {
-    const foundIndex = this.state.schoolsFiltered.findIndex(
-      escola => escola.codigo_eol === school.codigo_eol
-    );
-    let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[foundIndex].nro_alunos = event.target.value;
-    schoolsFiltered = this.setNumberOfMealKits(school);
-    this.setState({
-      ...this.state,
-      schoolsFiltered: schoolsFiltered
-    });
-    this.handleKitsTotal();
-  }
-
-  handleStudentsTotal() {
-    const schoolsFiltered = this.state.schoolsFiltered;
-    let studentsTotal = 0;
-    schoolsFiltered.forEach(function(school) {
-      if (school.checked) {
-        studentsTotal += parseInt(school.quantidade_alunos);
-      }
-    });
-    return studentsTotal;
-  }
-
-  handleNumberOfStudentsPerSchool(school, event) {
-    const foundIndex = this.state.schoolsFiltered.findIndex(
-      escola => escola.codigo_eol === school.codigo_eol
-    );
-    let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[foundIndex].quantidade_alunos = event.target.value || 0;
-    schoolsFiltered = this.setNumberOfMealKits(school);
-    this.setState({
-      ...this.state,
-      studentsTotal: this.handleStudentsTotal(),
-      schoolsFiltered: schoolsFiltered
-    });
-  }
-
-  setNumberOfMealKits(school) {
-    const foundIndex = this.state.schoolsFiltered.findIndex(
-      escola => escola.codigo_eol === school.codigo_eol
-    );
-    let schoolsFiltered = this.state.schoolsFiltered;
-    if (schoolsFiltered[foundIndex].checked) {
-      schoolsFiltered[foundIndex].number_of_meal_kits =
-        schoolsFiltered[foundIndex].number_of_choices *
-        schoolsFiltered[foundIndex].nro_alunos;
-    } else {
-      schoolsFiltered[foundIndex].number_of_meal_kits = 0;
-    }
-    return schoolsFiltered;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.escolas.length !== prevProps.escolas.length) {
-      this.setState({
-        schoolsFiltered: this.props.escolas
-      });
-    }
-    const { meusDados, proximos_dois_dias_uteis } = this.props;
-    const { loading } = this.state;
-    if (meusDados !== null && proximos_dois_dias_uteis !== null && loading) {
-      this.setState({
-        loading: false
-      });
-    }
-  }
-
-  handleCheck(school) {
-    const foundIndex = this.state.schoolsFiltered.findIndex(
-      escola => escola.codigo_eol === school.codigo_eol
-    );
-    let schoolsFiltered = this.state.schoolsFiltered;
-    school.checked = !school.checked;
-    schoolsFiltered[foundIndex].checked = school.checked;
-    schoolsFiltered[foundIndex].burger_active =
-      school.checked && !this.props.multipleOrder;
-    this.props.change(`school_${school.codigo_eol}.check`, school.checked);
-    if (this.props.multipleOrder) {
-      schoolsFiltered[foundIndex].quantidade_alunos = this.props.max_alunos;
-    }
-    schoolsFiltered = this.setNumberOfMealKits(school);
-    let studentsTotal = 0;
-    let kitsTotal = 0;
-    let schoolsTotal = 0;
-    schoolsFiltered.forEach(function(school) {
-      if (school.checked) {
-        studentsTotal += school.quantidade_alunos
-          ? parseInt(school.quantidade_alunos)
-          : 0;
-        kitsTotal += school.number_of_choices * school.nro_alunos;
-        schoolsTotal += 1;
-      }
-    });
-    this.setState({
-      ...this.state,
-      schoolsFiltered: schoolsFiltered,
-      studentsTotal: studentsTotal,
-      kitsTotal: kitsTotal,
-      schoolsTotal: schoolsTotal
-    });
-  }
-
-  handleKitsTotal() {
-    const schoolsFiltered = this.state.schoolsFiltered;
-    let kitsTotal = 0;
-    let schoolsTotal = 0;
-    schoolsFiltered.forEach(function(school) {
-      if (school.checked) {
-        kitsTotal += school.kitsChecked.length * school.nro_alunos;
-        schoolsTotal += 1;
-      }
-    });
-    this.setState({
-      ...this.state,
-      kitsTotal: kitsTotal,
-      schoolsTotal: schoolsTotal
-    });
-  }
-
-  handleDate(event) {
-    const value = event.target.value;
-    if (
-      checaSeDataEstaEntre2e5DiasUteis(
-        value,
-        this.props.proximos_dois_dias_uteis,
-        this.props.proximos_cinco_dias_uteis
-      )
-    )
-      this.showModal();
-    this.props.change("dia", value);
-  }
-
-  changeBurger(school, key) {
-    school.burger_active = !school.burger_active;
-    this.refs.escolas.scrollTop = 47 * key;
-    this.forceUpdate();
-    window.scrollTo(0, this.escolasRef.current.offsetTop + 295);
-  }
-
-  closeModal() {
-    this.setState({ showModal: false });
-  }
-
-  showModal() {
-    this.setState({ showModal: true });
-  }
-
-  refresh() {
-    solicitacoesUnificadasSalvas().then(
+  async function fetchData() {
+    await solicitacoesUnificadasSalvas().then(
       res => {
-        this.setState({
-          ...this.state,
-          unifiedSolicitationList: res.results
-        });
+        setRascunhosSalvos(res.results);
       },
       function(error) {
         toastError(
@@ -384,44 +56,76 @@ class SolicitacaoUnificada extends Component {
     );
   }
 
-  iniciarPedido(uuid) {
-    inicioPedido(uuid).then(
-      res => {
-        if (res.status === HTTP_STATUS.OK) {
-          toastSuccess("Solicitação Unificada enviada com sucesso!");
-          this.resetForm();
-        } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            `Houve um erro ao salvar a solicitação unificada: ${getError(
-              res.data
-            )}`
-          );
-        }
-      },
-      function() {
-        toastError("Houve um erro ao enviar a solicitação unificada");
-      }
-    );
-  }
+  useEffect(() => {
+    fetchData();
+    if (escolas) {
+      const opcoesEscolas = escolas.map(escola => {
+        let label = `${escola.codigo_eol} - ${
+          escola.nome.length > 28 ? escola.nome.slice(0, 28) : escola.nome
+        }`;
+        let dado = escola;
+        dado["quantidade_kits"] = "";
+        dado["kits_selecionados"] = [];
+        return { label: label, uuid: escola.uuid, value: dado };
+      });
+      setOpcoes(opcoesEscolas);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [escolas]);
 
-  handleSubmit(values) {
-    values.escolas = this.state.schoolsFiltered;
-    values.diretoria_regional = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    values.kits_total = this.state.kitsTotal;
-    values.kit_lanche = this.state.kitsChecked;
-    const error = validateSubmit(values, this.state);
-    if (!error) {
-      if (!values.uuid) {
-        criarSolicitacaoUnificada(
-          JSON.stringify(formatarSubmissao(values))
+  const carregarRascunho = (solicitacaoUnificada, form) => {
+    form.change("data", solicitacaoUnificada.data);
+    form.change("local", solicitacaoUnificada.local);
+    form.change("uuid", solicitacaoUnificada.uuid);
+    form.change(
+      "descricao",
+      solicitacaoUnificada.solicitacao_kit_lanche.descricao
+    );
+    let escolas_quantidades = opcoes
+      .filter(opcao =>
+        solicitacaoUnificada.escolas_quantidades.find(
+          eq => eq.escola.uuid === opcao.uuid
+        )
+      )
+      .map(opcao => opcao.value);
+    setUnidadesEscolaresSelecionadas(escolas_quantidades);
+    escolas_quantidades.forEach(eq => {
+      const eq_back = solicitacaoUnificada.escolas_quantidades.find(
+        equ => equ.escola.uuid === eq.uuid
+      );
+      eq.nmr_alunos = eq_back.quantidade_alunos;
+      eq.quantidade_kits = (eq_back.tempo_passeio + 1).toString();
+      eq.kits_selecionados = eq_back.kits.map(kit => kit.uuid);
+    });
+    form.change("unidades_escolares", escolas_quantidades);
+  };
+
+  const onSubmit = async (formValues, form) => {
+    if (unidadesEscolaresSelecionadas.length === 0) {
+      toastError("Selecione ao menos uma unidade escolar");
+    } else {
+      setSubmeteu(true);
+      if (!formValues.uuid) {
+        await criarSolicitacaoUnificada(
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
         ).then(
           res => {
             if (res.status === HTTP_STATUS.CREATED) {
-              if (values.status === "DRE_A_VALIDAR") {
-                this.iniciarPedido(res.data.uuid);
+              if (formValues.status === "DRE_A_VALIDAR") {
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
               } else {
                 toastSuccess("Solicitação Unificada salva com sucesso!");
-                this.resetForm();
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
               }
             } else {
               toastError(
@@ -437,16 +141,27 @@ class SolicitacaoUnificada extends Component {
         );
       } else {
         atualizarSolicitacaoUnificada(
-          values.uuid,
-          JSON.stringify(formatarSubmissao(values))
+          formValues.uuid,
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
         ).then(
           res => {
             if (res.status === HTTP_STATUS.OK) {
-              if (values.status === "DRE_A_VALIDAR") {
-                this.iniciarPedido(res.data.uuid);
+              if (formValues.status === "DRE_A_VALIDAR") {
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
               } else {
                 toastSuccess("Solicitação Unificada atualizada com sucesso!");
-                this.resetForm();
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
               }
             } else {
               toastError(
@@ -461,436 +176,602 @@ class SolicitacaoUnificada extends Component {
           }
         );
       }
-    } else {
-      toastError(error);
     }
-  }
+  };
 
-  filterList(event) {
-    if (event === undefined) event = { target: { value: "" } };
-    let schoolsFiltered = this.props.escolas;
-    schoolsFiltered = schoolsFiltered.filter(function(item) {
-      const wordToFilter = event.target.value.toLowerCase();
-      return (
-        item.nome.toLowerCase().search(wordToFilter) !== -1 ||
-        item.codigo_eol.includes(wordToFilter)
+  const removerRascunho = (id_externo, uuid) => {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerSolicitacaoUnificada(uuid).then(
+        res => {
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            fetchData();
+          } else {
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
+          }
+        },
+        function(error) {
+          toastError(
+            `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
+          );
+        }
       );
-    });
-    this.setState({ schoolsFiltered });
-  }
-
-  alterarCollapse() {
-    this.setState({ collapsed: !this.state.collapsed });
-  }
-
-  onKeyPress(event) {
-    if (event.which === ENTER) {
-      event.preventDefault();
     }
-  }
+  };
 
-  updateKitsChecked(kitsChecked) {
-    this.setState({ kitsChecked });
-  }
+  const iniciarPedido = uuid => {
+    inicioPedido(uuid).then(
+      res => {
+        if (res.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação Unificada enviada com sucesso!");
+          fetchData();
+        } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(
+            `Houve um erro ao salvar a solicitação unificada: ${getError(
+              res.data
+            )}`
+          );
+        }
+      },
+      function() {
+        toastError("Houve um erro ao enviar a solicitação unificada");
+      }
+    );
+  };
 
-  updateEscolaKitsChecked(value, key) {
-    let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[key].kitsChecked = value;
-    this.setState({ schoolsFiltered });
-    this.handleKitsTotal();
-  }
+  const removerEscola = (ue, form, values) => {
+    let resultado = values.unidades_escolares.filter(v => v.uuid !== ue.uuid);
+    let resultadoLabels = unidadesEscolaresSelecionadas.filter(
+      v => v.uuid !== ue.uuid
+    );
+    let total = 0;
+    let listaQuantidadeKits = resultado.filter(
+      v => ![""].includes(v.quantidade_kits)
+    );
+    if (listaQuantidadeKits.length !== 0) {
+      listaQuantidadeKits = listaQuantidadeKits.map(v =>
+        parseInt(v.quantidade_kits)
+      );
+      for (let index = 0; index < listaQuantidadeKits.length; index++) {
+        total = total + listaQuantidadeKits[index];
+      }
+    }
+    setTotalKits(total);
+    setUnidadesEscolaresSelecionadas(resultadoLabels);
+    form.change("unidades_escolares", resultado);
+  };
 
-  updateEscolaTempoPasseio(value, key) {
-    let schoolsFiltered = this.state.schoolsFiltered;
-    schoolsFiltered[key].tempo_passeio = value;
-    this.setState({ schoolsFiltered });
-  }
+  const renderizarLabelUnidadesEscolares = (selected, options) => {
+    if (selected.length === 0) {
+      return "Selecione";
+    }
+    if (selected.length === options.length) {
+      return "Todos as unidades escolares selecionados";
+    }
+    if (selected.length === 1) {
+      return `${selected[0].nome}`;
+    }
+    if (selected.length > 1) {
+      return `${selected[0].nome}; +${selected.length - 1}`;
+    }
+  };
 
-  render() {
-    const {
-      handleSubmit,
-      meusDados,
-      proximos_dois_dias_uteis,
-      multipleOrder,
-      prosseguir,
-      lotes
-    } = this.props;
-    const {
-      loading,
-      schoolExists,
-      schoolsExistArray,
-      showModal,
-      schoolsFiltered,
-      studentsTotal,
-      schoolsTotal,
-      unifiedSolicitationList,
-      collapsed,
-      kitsChecked,
-      salvarAtualizarLbl,
-      kitsLanche
-    } = this.state;
-    return (
-      <div className="unified-solicitation">
-        {loading ? (
-          <div>Carregando...</div>
-        ) : (
-          <form
-            onSubmit={handleSubmit(this.props.handleSubmit)}
-            onKeyPress={this.onKeyPress}
-          >
-            <Field component={"input"} type="hidden" name="uuid" />
-            <CardMatriculados
-              collapsed={collapsed}
-              alterarCollapse={this.alterarCollapse}
-              numeroAlunos={
-                meusDados.vinculo_atual.instituicao.quantidade_alunos
-              }
-            >
-              <Collapse isOpened={!collapsed}>
-                <TabelaHistoricoLotes lotes={lotes} />
-              </Collapse>
-            </CardMatriculados>
-            {unifiedSolicitationList && unifiedSolicitationList.length > 0 && (
-              <div className="mt-3">
-                <span className="page-title">Rascunhos</span>
-                <Rascunhos
-                  schoolsLoaded={schoolsFiltered.length > 0}
-                  unifiedSolicitationList={unifiedSolicitationList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                  resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
-                />
-              </div>
-            )}
-            <h3 ref={this.titleRef} className="page-title">
-              {this.state.title}
-            </h3>
-            <div className="card">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-3">
-                    <Field
-                      component={InputComData}
-                      name="data"
-                      onBlur={event => this.handleDate(event)}
-                      minDate={proximos_dois_dias_uteis}
-                      label="Dia"
-                      required
-                      validate={required}
-                    />
-                  </div>
-                  <div className="col-9 pb-3">
-                    <Field
-                      component={InputText}
-                      label="Local do passeio"
-                      placeholder="Insira o local do passeio"
-                      name="local"
-                      className="form-control"
-                      required
-                      validate={required}
-                    />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 pb-3">
-                    <Field
-                      component={InputText}
-                      label="Unidades Escolares"
-                      name="pesquisar"
-                      placeholder="Pesquisar"
-                      onChange={this.filterList}
-                      className="form-control"
-                    />
-                  </div>
-                </div>
-                <div
-                  ref={this.pedidoMultiploRef}
-                  className="col-md-12 pt-2 pb-2"
-                  style={{ paddingLeft: "2rem" }}
-                >
-                  <label htmlFor="check" className="checkbox-label">
-                    <Field
-                      component={"input"}
-                      type="checkbox"
-                      name="lista_kit_lanche_igual"
-                      data-cy="checkbox-lista-igual"
-                    />
-                    <span
-                      onClick={() => this.handleMultipleOrder()}
-                      className="checkbox-custom"
-                    />{" "}
-                    Realizar para várias unidades escolares
-                  </label>
-                </div>
-                <Collapse isOpened={multipleOrder}>
-                  <PedidoKitLanche
-                    nameTempoPasseio="tempo_passeio"
-                    nomeKitsLanche="kit_lanche"
-                    updateKitsChecked={this.updateKitsChecked}
-                    kitsChecked={kitsChecked}
-                    kitsLanche={kitsLanche}
-                    esconderDetalhamentoKits
-                    validate={required}
+  return (
+    <>
+      <CardMatriculados
+        numeroAlunos={
+          dadosUsuario
+            ? dadosUsuario.vinculo_atual.instituicao.quantidade_alunos
+            : 0
+        }
+      />
+      <div className="mt-3">
+        <Form
+          onSubmit={onSubmit}
+          render={({ handleSubmit, values, form }) => (
+            <form onSubmit={handleSubmit}>
+              {rascunhosSalvos && rascunhosSalvos.length > 0 && (
+                <div className="mt-3">
+                  <span className="page-title">Rascunhos</span>
+                  <Rascunhos
+                    schoolsLoaded={escolas.length > 0}
+                    unifiedSolicitationList={rascunhosSalvos}
+                    OnDeleteButtonClicked={removerRascunho}
+                    form={form}
+                    OnEditButtonClicked={carregarRascunho}
                   />
-                </Collapse>
-                <span ref={this.escolasRef} />
-                <div scrollTop={100} ref="escolas" className="schools-group">
-                  {schoolsFiltered.length === 0 && (
-                    <p>
-                      Carregando escolas...{" "}
-                      <img
-                        src="/assets/image/ajax-loader.gif"
-                        alt="ajax-loader"
-                      />
-                    </p>
-                  )}
-                  {schoolsFiltered.length > 0 &&
-                    schoolsFiltered.map((school, key) => {
-                      return (
-                        <FormSection
-                          name={`school_${school.codigo_eol}`}
-                          key={key}
-                        >
-                          <div
-                            className={`${school.checked &&
-                              !school.burger_active &&
-                              "school-checked"}`}
-                          >
-                            <div
-                              className="school-container col-md-12 mr-4"
-                              style={
-                                school.burger_active
-                                  ? { background: "#F2FBFE" }
-                                  : {}
-                              }
-                            >
-                              <div
-                                className="col-md-12 pt-2 pb-2"
-                                style={{ paddingLeft: "2rem" }}
-                              >
-                                <label
-                                  htmlFor="check"
-                                  className="checkbox-label"
-                                >
-                                  <Field
-                                    component={"input"}
-                                    type="checkbox"
-                                    name="check"
-                                  />
-                                  <span
-                                    onClick={() => this.handleCheck(school)}
-                                    className="checkbox-custom"
-                                    data-cy={`checkbox-${school.nome}`}
-                                  />{" "}
-                                  {school.codigo_eol + " - " + school.nome}
-                                </label>
-                                {!multipleOrder && (
-                                  <ToggleExpandir
-                                    onClick={() =>
-                                      this.changeBurger(school, key)
-                                    }
-                                    ativo={school.burger_active}
-                                    className="float-right"
-                                  />
-                                )}
-                                {multipleOrder && school.checked && (
-                                  <div className="label-n-alunos float-right">
-                                    <span>Nº de Alunos</span>
-                                    <Field
-                                      component={"input"}
-                                      type={"number"}
-                                      onChange={event =>
-                                        this.handleNumberOfStudentsPerSchool(
-                                          school,
-                                          event
-                                        )
-                                      }
-                                      min={0}
-                                      max={studentsTotal}
-                                      style={{
-                                        width: "70px",
-                                        textAlign: "center"
-                                      }}
-                                      name="quantidade_alunos"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                              <Collapse isOpened={school.burger_active}>
-                                <div className="form-group row">
-                                  <div className="col-3">
-                                    <Field
-                                      component={InputText}
-                                      name="nro_alunos"
-                                      type="number"
-                                      onChange={event =>
-                                        this.handleNumberOfStudents(
-                                          school,
-                                          event
-                                        )
-                                      }
-                                      label="Nº padrão por unidade educacional"
-                                      validate={
-                                        school.checked &&
-                                        !multipleOrder && [
-                                          required,
-                                          naoPodeSerZero
-                                        ]
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                                <PedidoKitLanche
-                                  nameTempoPasseio="tempo_passeio"
-                                  nomeKitsLanche="kit_lanche"
-                                  updateKitsChecked={value =>
-                                    this.updateEscolaKitsChecked(value, key)
-                                  }
-                                  onPasseioChanged={event =>
-                                    this.updateEscolaTempoPasseio(
-                                      event.target.value,
-                                      key
-                                    )
-                                  }
-                                  kitsChecked={school.kitsChecked}
-                                  kitsLanche={kitsLanche}
-                                  esconderDetalhamentoKits
-                                  validate={required}
-                                />
-                                <div className="row number-students-per-school">
-                                  <div className="col-12">
-                                    <label>
-                                      Número de kits dessa escola:{" "}
-                                      {school.kitsChecked.length *
-                                        school.nro_alunos}
-                                    </label>
-                                  </div>
-                                </div>
-                              </Collapse>
-                            </div>
-                          </div>
-                        </FormSection>
-                      );
-                    })}
                 </div>
-                <div className="row form-group pt-4">
-                  <div className="col-12">
-                    <div className="d-grid float-left">
-                      <label className="default-label">
-                        Total de Unidades Escolares
+              )}
+              <div className="mt-3">
+                <span className="page-title">Nova Solicitação</span>
+              </div>
+              <div className="card mt-3">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-2 pb-3">
+                      <Field
+                        component={InputComData}
+                        name="data"
+                        minDate={proximosDoisDiasUteis}
+                        label="Dia"
+                        className="form-control"
+                        validate={required}
+                        required
+                      />
+                    </div>
+                    <div className="col-5 pb-3">
+                      <Field
+                        component={InputText}
+                        label="Local do passeio"
+                        placeholder="Insira o local do passeio"
+                        name="local"
+                        className="form-control"
+                        required
+                        validate={required}
+                      />
+                    </div>
+                    <div className="col-5 pb-3 input undefined">
+                      <span className="required-asterisk">*</span>
+                      <label
+                        htmlFor="unidades_escolares"
+                        className="col-form-label"
+                      >
+                        Unidades Escolares
                       </label>
-                      <label className="default-label">
-                        {schoolsTotal || 0}
-                      </label>
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="unidades_escolares"
+                        options={opcoes}
+                        className="form-control"
+                        valueRenderer={renderizarLabelUnidadesEscolares}
+                        selected={unidadesEscolaresSelecionadas}
+                        onSelectedChanged={value => {
+                          let resultado = value.map(v => {
+                            if (values.unidades_escolares) {
+                              let elementFromForm = values.unidades_escolares.find(
+                                e => e.uuid === v.uuid
+                              );
+                              if (elementFromForm) {
+                                return elementFromForm;
+                              }
+                            }
+                            return v;
+                          });
+                          let total = 0;
+                          let listaQuantidadeKits = resultado.filter(
+                            v => ![""].includes(v.quantidade_kits)
+                          );
+                          if (listaQuantidadeKits.length !== 0) {
+                            listaQuantidadeKits = listaQuantidadeKits.map(v =>
+                              parseInt(v.quantidade_kits)
+                            );
+                            for (
+                              let index = 0;
+                              index < listaQuantidadeKits.length;
+                              index++
+                            ) {
+                              total = total + listaQuantidadeKits[index];
+                            }
+                          }
+                          setTotalKits(total);
+                          form.change("unidades_escolares", resultado);
+                          setUnidadesEscolaresSelecionadas(value);
+                        }}
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todas as escolas estão selecionadas",
+                          selectAll: "Todas"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <hr />
+
+                  {values.unidades_escolares &&
+                    values.unidades_escolares.length > 0 && (
+                      <div className="row mt-3">
+                        {values.unidades_escolares.map((ue, idx) => {
+                          return (
+                            <div
+                              className="col-12 lista-escolas"
+                              key={ue.codigo_eol}
+                            >
+                              <div className="card pb-0">
+                                <div className="card-body">
+                                  <div className="row">
+                                    <div className="col-6">
+                                      <p className="escola">
+                                        {ue.codigo_eol} - {ue.nome}
+                                      </p>
+                                      <p className="local">{values.local}</p>
+                                    </div>
+                                    <div className="col-4">
+                                      <p className="float-right mt-3">
+                                        {values.data}
+                                      </p>
+                                    </div>
+                                    <div className="col-1">
+                                      <Botao
+                                        type={BUTTON_TYPE.BUTTON}
+                                        onClick={() =>
+                                          removerEscola(ue, form, values)
+                                        }
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        icon={BUTTON_ICON.TRASH}
+                                        className="botao-remover-escola mt-1"
+                                      />
+                                    </div>
+                                    <div className="col-1">
+                                      <Botao
+                                        type={BUTTON_TYPE.BUTTON}
+                                        onClick={() => {
+                                          let e = document.getElementById(
+                                            ue.uuid
+                                          );
+                                          let i = document.getElementById(
+                                            `${ue.uuid}-angle`
+                                          );
+                                          if (e.classList.contains("d-none")) {
+                                            e.classList.remove("d-none");
+                                          } else {
+                                            e.classList.add("d-none");
+                                          }
+
+                                          if (
+                                            i.classList.contains(
+                                              "fa-angle-down"
+                                            )
+                                          ) {
+                                            i.classList.remove("fa-angle-down");
+                                            i.classList.add("fa-angle-up");
+                                          } else {
+                                            i.classList.remove("fa-angle-up");
+                                            i.classList.add("fa-angle-down");
+                                          }
+                                        }}
+                                        iconId={`${ue.uuid}-angle`}
+                                        style={BUTTON_STYLE.GRAY_OUTLINE}
+                                        icon={BUTTON_ICON.ANGLE_DOWN}
+                                        className="botao-remover-escola mt-1"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div
+                                    className="row mt-3 wrapper-solicitacao d-none p-3"
+                                    id={ue.uuid}
+                                  >
+                                    <div className="col-4">
+                                      <label
+                                        htmlFor={`unidades_escolares[${idx}].nmr_alunos`}
+                                        className="col-form-label"
+                                      >
+                                        <span className="required-asterisk">
+                                          *
+                                        </span>
+                                        Nº padrão por unidade educacional
+                                      </label>
+                                      <Field
+                                        component="input"
+                                        type="number"
+                                        min={0}
+                                        max={ue.quantidade_alunos}
+                                        placeholder="Quantidade de alunos"
+                                        name={`unidades_escolares[${idx}].nmr_alunos`}
+                                        className="form-control"
+                                        onChange={event => {
+                                          form.change(
+                                            `unidades_escolares[${idx}].nmr_alunos`,
+                                            event.target.value
+                                          );
+                                        }}
+                                        required
+                                        validate={required}
+                                      />
+                                    </div>
+                                    <div className="col-8" />
+                                    <div className="col-12 mt-3">
+                                      <div className="label">
+                                        <span className="required-asterisk">
+                                          *{" "}
+                                        </span>
+                                        Tempo previsto do passeio
+                                      </div>
+                                      <div className="row mt-3">
+                                        <div className="col-4">
+                                          <label className="container-radio">
+                                            até 4 horas (1 Kit)
+                                            <Field
+                                              component={"input"}
+                                              type="radio"
+                                              required
+                                              validate={required}
+                                              value="1"
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
+                                              onChange={() => {
+                                                let total = 0;
+                                                let listaQuantidadeKits = values.unidades_escolares
+                                                  .filter(
+                                                    e => e.uuid !== ue.uuid
+                                                  )
+                                                  .map(e =>
+                                                    parseInt(e.quantidade_kits)
+                                                  );
+                                                for (
+                                                  let i = 0;
+                                                  i <
+                                                  listaQuantidadeKits.length;
+                                                  i++
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    listaQuantidadeKits[i];
+                                                }
+                                                form.change(
+                                                  `unidades_escolares[${idx}].kits_selecionados`,
+                                                  []
+                                                );
+                                                form.change(
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
+                                                  "1"
+                                                );
+                                                setTotalKits(total + 1);
+                                              }}
+                                            />
+                                            <span className="checkmark" />
+                                          </label>
+                                        </div>
+                                        <div className="col-4">
+                                          <label className="container-radio">
+                                            de 5 á 7 horas (2 Kits)
+                                            <Field
+                                              component={"input"}
+                                              type="radio"
+                                              value="2"
+                                              required
+                                              validate={required}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
+                                              onChange={() => {
+                                                let total = 0;
+                                                let listaQuantidadeKits = values.unidades_escolares
+                                                  .filter(
+                                                    e =>
+                                                      e.uuid !== ue.uuid &&
+                                                      ![undefined, ""].includes(
+                                                        e.quantidade_kits
+                                                      )
+                                                  )
+                                                  .map(e =>
+                                                    parseInt(e.quantidade_kits)
+                                                  );
+                                                for (
+                                                  let i = 0;
+                                                  i <
+                                                  listaQuantidadeKits.length;
+                                                  i++
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    listaQuantidadeKits[i];
+                                                }
+                                                form.change(
+                                                  `unidades_escolares[${idx}].kits_selecionados`,
+                                                  []
+                                                );
+                                                form.change(
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
+                                                  "2"
+                                                );
+                                                setTotalKits(total + 2);
+                                              }}
+                                            />
+                                            <span className="checkmark" />
+                                          </label>
+                                        </div>
+                                        <div className="col-4">
+                                          <label className="container-radio">
+                                            8 horas ou mais (3 Kits)
+                                            <Field
+                                              component={"input"}
+                                              type="radio"
+                                              value="3"
+                                              required
+                                              validate={required}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
+                                              onChange={() => {
+                                                let total = 0;
+                                                let listaQuantidadeKits = values.unidades_escolares
+                                                  .filter(
+                                                    e => e.uuid !== ue.uuid
+                                                  )
+                                                  .map(e =>
+                                                    parseInt(e.quantidade_kits)
+                                                  );
+                                                for (
+                                                  let i = 0;
+                                                  i <
+                                                  listaQuantidadeKits.length;
+                                                  i++
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    listaQuantidadeKits[i];
+                                                }
+                                                form.change(
+                                                  `unidades_escolares[${idx}].kits_selecionados`,
+                                                  []
+                                                );
+                                                form.change(
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
+                                                  "3"
+                                                );
+                                                setTotalKits(total + 3);
+                                              }}
+                                            />
+                                            <span className="checkmark" />
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 mt-3">
+                                      <div className="label">
+                                        <span className="required-asterisk">
+                                          *{" "}
+                                        </span>
+                                        Selecione a opção desejada
+                                      </div>
+                                      <div className="row mt-3">
+                                        {kits.map((kit, indice) => {
+                                          return (
+                                            <div
+                                              className="col-4 d-flex"
+                                              key={indice}
+                                            >
+                                              <div className="card card-kits w-100">
+                                                <div className="card-body p-2">
+                                                  <div className="row">
+                                                    <div className="col-6">
+                                                      <span className="nome-kit">
+                                                        {kit.nome}
+                                                      </span>
+                                                    </div>
+                                                    <div className="col-6 form-check">
+                                                      <Field
+                                                        component={"input"}
+                                                        type="checkbox"
+                                                        required
+                                                        validate={required}
+                                                        value={kit.uuid}
+                                                        id={`${ue.codigo_eol}-${
+                                                          kit.uuid
+                                                        }`}
+                                                        className="float-right"
+                                                        name={`unidades_escolares[${idx}].kits_selecionados`}
+                                                        disabled={
+                                                          [
+                                                            undefined,
+                                                            ""
+                                                          ].includes(
+                                                            ue.quantidade_kits
+                                                          ) ||
+                                                          (ue.quantidade_kits ===
+                                                            `${
+                                                              ue
+                                                                .kits_selecionados
+                                                                .length
+                                                            }` &&
+                                                            !ue.kits_selecionados.includes(
+                                                              kit.uuid
+                                                            ))
+                                                        }
+                                                      />
+                                                      <span className="checkmark" />
+                                                    </div>
+                                                    <div className="col-12 kit-itens mt-3">
+                                                      <div
+                                                        dangerouslySetInnerHTML={{
+                                                          __html: kit.descricao
+                                                        }}
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                    <div className="col-12 mt-3">
+                                      <p>
+                                        Número de kits dessa escola:{" "}
+                                        {ue.kits_selecionados.length}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                  <div className="row">
+                    <div className="col-6">
+                      <p>
+                        Total de Unidades Escolares:{" "}
+                        {unidadesEscolaresSelecionadas.length}
+                      </p>
+                    </div>
+                    <div className="col-6">
+                      <p className="float-right">
+                        Total de Kits Lanche: {totalKits}
+                      </p>
+                    </div>
+                  </div>
+
+                  <hr />
+
+                  <div className="row">
+                    <div className="col-12">
+                      <Field
+                        component={TextAreaWYSIWYG}
+                        label="Observações"
+                        name="descricao"
+                      />
+                    </div>
+                    <div className="offset-5 col-2 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() => {
+                          form.restart();
+                          setUnidadesEscolaresSelecionadas([]);
+                          setTotalKits(0);
+                        }}
+                        texto={"Cancelar"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-3 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        texto={"Salvar Rascunho"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-2 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN}
+                        texto="Enviar"
+                        onClick={() => {
+                          values["status"] = "DRE_A_VALIDAR";
+                          !submeteu &&
+                            handleSubmit(values => onSubmit(values, form));
+                        }}
+                        className="w-100"
+                      />
                     </div>
                   </div>
                 </div>
-                <hr className="w-100" />
-                <div className="form-group">
-                  <Field
-                    component={TextAreaWYSIWYG}
-                    label="Observações"
-                    name="descricao"
-                  />
-                </div>
-                {schoolExists && (
-                  <div
-                    className="col-md-12 pt-2 pb-2"
-                    style={{ paddingLeft: "2rem" }}
-                  >
-                    <label htmlFor="check" className="checkbox-label">
-                      <Field
-                        component={"input"}
-                        type="checkbox"
-                        name="prosseguir"
-                      />
-                      <span
-                        onClick={() =>
-                          this.props.change("prosseguir", !prosseguir)
-                        }
-                        className="checkbox-custom"
-                        style={{ borderRadius: "15px" }}
-                      />{" "}
-                      Reconheço que já existe um evento para as escolas abaixo e
-                      desejo continuar mesmo assim
-                    </label>
-                    <ul>
-                      {schoolsExistArray.map((school, key) => {
-                        return <li key={key}>{school}</li>;
-                      })}
-                    </ul>
-                  </div>
-                )}
-                <div className="form-group row text-right mt-5">
-                  <div className="col-12 mt-2">
-                    <Botao
-                      texto="Cancelar"
-                      onClick={event => this.cancelForm(event)}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      type={BUTTON_TYPE.BUTTON}
-                    />
-                    <Botao
-                      texto={salvarAtualizarLbl}
-                      onClick={handleSubmit(values =>
-                        this.handleSubmit(values)
-                      )}
-                      className="ml-3"
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Enviar"
-                      type={BUTTON_TYPE.SUBMIT}
-                      onClick={handleSubmit(values =>
-                        this.handleSubmit({
-                          ...values,
-                          status: "DRE_A_VALIDAR"
-                        })
-                      )}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
-            <ModalDataPrioritaria
-              showModal={showModal}
-              closeModal={this.closeModal}
-            />
-          </form>
-        )}
+            </form>
+          )}
+        />
       </div>
-    );
-  }
-}
-
-const UnifiedSolicitationForm = reduxForm({
-  form: "unifiedSolicitation",
-  enableReinitialize: true
-})(SolicitacaoUnificada);
-
-const selector = formValueSelector("unifiedSolicitation");
-const mapStateToProps = state => {
-  return {
-    initialValues: state.unifiedSolicitation.data,
-    multipleOrder: selector(state, "lista_kit_lanche_igual"),
-    kitsTotal: selector(state, "kits_total"),
-    prosseguir: selector(state, "prosseguir")
-  };
+      <ModalDataPrioritaria
+        showModal={showModal}
+        closeModal={() => setShowModal(false)}
+      />
+    </>
+  );
 };
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      loadUnifiedSolicitation
-    },
-    dispatch
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UnifiedSolicitationForm);
+export default SolicitacaoUnificada;

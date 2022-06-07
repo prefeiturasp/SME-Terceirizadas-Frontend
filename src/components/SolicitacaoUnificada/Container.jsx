@@ -1,61 +1,57 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
+import { getKitLanches } from "../../services/kitLanche";
+
 import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoUnificada from ".";
 
-class SolicitacaoUnificadaContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meusDados: null,
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null,
-      escolas: [],
-      lotes: []
-    };
-  }
+export default () => {
+  const [dadosUsuario, setDadosUsuario] = useState(null);
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [escolas, setEscolas] = useState(undefined);
+  const [lotes, setLotes] = useState([]);
+  const [kits, setKits] = useState([]);
 
-  componentDidMount() {
+  async function fetchData() {
     meusDados().then(response => {
       let escolas = response.vinculo_atual.instituicao.escolas;
-      escolas.forEach(function(escola) {
-        escola["total_alunos"] = escola.quantidade_alunos;
-        escola["burger_active"] = false;
-        escola["limit_of_meal_kits"] = 0;
-        escola["number_of_choices"] = 0;
-        escola["number_of_meal_kits"] = 0;
-        escola["nro_alunos"] = 0;
-        escola["numero_alunos"] = 0;
-        escola["tempo_passeio"] = null;
-        escola["kit_lanche"] = null;
-        escola["checked"] = false;
-        escola["kitsChecked"] = [];
-      });
-      this.setState({
-        meusDados: response,
-        escolas,
-        lotes: response.vinculo_atual.instituicao.lotes
-      });
+      setDadosUsuario(response);
+      setEscolas(escolas);
+      setLotes(response.vinculo_atual.instituicao.lotes);
     });
 
     getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
-      );
       const proximos_dois_dias_uteis = dataParaUTC(
         new Date(response.proximos_dois_dias_uteis)
       );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
+      const proximos_cinco_dias_uteis = dataParaUTC(
+        new Date(response.proximos_cinco_dias_uteis)
+      );
+      setProximosDoisDiasUteis(proximos_dois_dias_uteis);
+      setProximosCincoDiasUteis(proximos_cinco_dias_uteis);
+    });
+
+    getKitLanches().then(response => {
+      setKits(response.results);
     });
   }
 
-  render() {
-    return <SolicitacaoUnificada {...this.state} />;
-  }
-}
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-export default SolicitacaoUnificadaContainer;
+  return escolas && kits ? (
+    <SolicitacaoUnificada
+      dadosUsuario={dadosUsuario}
+      proximosDoisDiasUteis={proximosDoisDiasUteis}
+      proximosCincoDiasUteis={proximosCincoDiasUteis}
+      escolas={escolas}
+      lotes={lotes}
+      kits={kits}
+    />
+  ) : (
+    <p>Loading...</p>
+  );
+};
