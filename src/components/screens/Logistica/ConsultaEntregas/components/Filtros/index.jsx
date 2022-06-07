@@ -50,7 +50,7 @@ export default ({
               {(dilog || dre) && (
                 <div className="col-6">
                   <MultiSelectDistribuidores
-                    classname="input-busca-produto"
+                    className="input-busca-produto"
                     name="distribuidor"
                     label="Nome dos Distribuidores"
                   />

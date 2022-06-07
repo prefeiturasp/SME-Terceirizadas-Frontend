@@ -91,7 +91,7 @@ export default ({
             <div className="row mt-3">
               <div className="col">
                 <MultiSelectDistribuidores
-                  classname="input-busca-produto"
+                  className="input-busca-produto"
                   name="distribuidor"
                   label="Nome dos Distribuidores"
                 />
