@@ -104,8 +104,8 @@ export default ({
             <div>Qtde. de Guias Remessa</div>
             <div>Distribuidor</div>
             <div>Status</div>
-            <div>Data de entrega</div>
-            <div>Exportar relatório</div>
+            <div>Data de Entrega</div>
+            <div>Exportar Relatório</div>
             <div>Exportar Requisição</div>
             <div />
           </div>

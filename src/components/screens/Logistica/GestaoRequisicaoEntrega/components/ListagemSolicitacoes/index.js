@@ -51,9 +51,9 @@ const ListagemSolicitacoes = ({
             <div>N° da Requisição de Entrega</div>
             <div>Qtde. de Guias Remessa</div>
             <div>Status</div>
-            <div>Data de entrega</div>
+            <div>Data de Entrega</div>
             <div>Ações</div>
-            <div>Exportar relatório</div>
+            <div>Exportar Relatório</div>
             <div>Exportar Requisição</div>
           </div>
           {solicitacoes.map(solicitacao => {
