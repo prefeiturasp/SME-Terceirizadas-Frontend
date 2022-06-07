@@ -6,8 +6,10 @@ import { InputComData } from "../Shareable/DatePicker";
 import { required } from "../../helpers/fieldValidators";
 import {
   solicitacoesUnificadasSalvas,
-  criarSolicitacaoUnificada
-  // inicioPedido
+  criarSolicitacaoUnificada,
+  atualizarSolicitacaoUnificada,
+  removerSolicitacaoUnificada,
+  inicioPedido
 } from "../../services/solicitacaoUnificada.service";
 import { InputText } from "../Shareable/Input/InputText";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
@@ -20,19 +22,15 @@ import {
   BUTTON_TYPE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import {
-  // checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../helpers/utilities";
+import { getError } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
+import { formatarSubmissao } from "./helper";
 import "./style.scss";
 
 const SolicitacaoUnificada = ({
   dadosUsuario,
   proximosDoisDiasUteis,
-  // proximosCincoDiasUteis,
   escolas,
-  // lotes,
   kits
 }) => {
   const [rascunhosSalvos, setRascunhosSalvos] = useState([]);
@@ -41,62 +39,175 @@ const SolicitacaoUnificada = ({
     setUnidadesEscolaresSelecionadas
   ] = useState([]);
   const [totalKits, setTotalKits] = useState(0);
-  // const [localPasseio, setLocalPasseio] = useState(undefined);
-  // const [dataPasseio, setDataPasseio] = useState(undefined);
   const [opcoes, setOpcoes] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [submeteu, setSubmeteu] = useState(false);
+
+  async function fetchData() {
+    await solicitacoesUnificadasSalvas().then(
+      res => {
+        setRascunhosSalvos(res.results);
+      },
+      function(error) {
+        toastError(
+          `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
+        );
+      }
+    );
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      await solicitacoesUnificadasSalvas().then(
+    fetchData();
+    if (escolas) {
+      const opcoesEscolas = escolas.map(escola => {
+        let label = `${escola.codigo_eol} - ${
+          escola.nome.length > 28 ? escola.nome.slice(0, 28) : escola.nome
+        }`;
+        let dado = escola;
+        dado["quantidade_kits"] = "";
+        dado["kits_selecionados"] = [];
+        return { label: label, uuid: escola.uuid, value: dado };
+      });
+      setOpcoes(opcoesEscolas);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [escolas]);
+
+  const carregarRascunho = (solicitacaoUnificada, form) => {
+    form.change("data", solicitacaoUnificada.data);
+    form.change("local", solicitacaoUnificada.local);
+    form.change("uuid", solicitacaoUnificada.uuid);
+    form.change(
+      "descricao",
+      solicitacaoUnificada.solicitacao_kit_lanche.descricao
+    );
+    let escolas_quantidades = opcoes
+      .filter(opcao =>
+        solicitacaoUnificada.escolas_quantidades.find(
+          eq => eq.escola.uuid === opcao.uuid
+        )
+      )
+      .map(opcao => opcao.value);
+    setUnidadesEscolaresSelecionadas(escolas_quantidades);
+    escolas_quantidades.forEach(eq => {
+      const eq_back = solicitacaoUnificada.escolas_quantidades.find(
+        equ => equ.escola.uuid === eq.uuid
+      );
+      eq.nmr_alunos = eq_back.quantidade_alunos;
+      eq.quantidade_kits = (eq_back.tempo_passeio + 1).toString();
+      eq.kits_selecionados = eq_back.kits.map(kit => kit.uuid);
+    });
+    form.change("unidades_escolares", escolas_quantidades);
+  };
+
+  const onSubmit = async (formValues, form) => {
+    if (unidadesEscolaresSelecionadas.length === 0) {
+      toastError("Selecione ao menos uma unidade escolar");
+    } else {
+      setSubmeteu(true);
+      if (!formValues.uuid) {
+        await criarSolicitacaoUnificada(
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+        ).then(
+          res => {
+            if (res.status === HTTP_STATUS.CREATED) {
+              if (formValues.status === "DRE_A_VALIDAR") {
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+              } else {
+                toastSuccess("Solicitação Unificada salva com sucesso!");
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
+              }
+            } else {
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
+            }
+          },
+          function() {
+            toastError("Houve um erro ao salvar a solicitação unificada");
+          }
+        );
+      } else {
+        atualizarSolicitacaoUnificada(
+          formValues.uuid,
+          JSON.stringify(formatarSubmissao(formValues, dadosUsuario))
+        ).then(
+          res => {
+            if (res.status === HTTP_STATUS.OK) {
+              if (formValues.status === "DRE_A_VALIDAR") {
+                iniciarPedido(res.data.uuid);
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
+              } else {
+                toastSuccess("Solicitação Unificada atualizada com sucesso!");
+                setTimeout(() => {
+                  form.restart();
+                  setUnidadesEscolaresSelecionadas([]);
+                  setTotalKits(0);
+                });
+                fetchData();
+              }
+            } else {
+              toastError(
+                `Houve um erro ao salvar a solicitação unificada: ${getError(
+                  res.data
+                )}`
+              );
+            }
+          },
+          function() {
+            toastError("Houve um erro ao atualizar a solicitação unificada");
+          }
+        );
+      }
+    }
+  };
+
+  const removerRascunho = (id_externo, uuid) => {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      removerSolicitacaoUnificada(uuid).then(
         res => {
-          setRascunhosSalvos(res.results);
+          if (res.status === HTTP_STATUS.NO_CONTENT) {
+            toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+            fetchData();
+          } else {
+            toastError(
+              `Houve um erro ao excluir o rascunho: ${getError(res.data)}`
+            );
+          }
         },
         function(error) {
           toastError(
-            `Erro ao carregar as inclusões salvas: ${getError(error.data)}`
+            `Houve um erro ao excluir o rascunho: ${getError(error.data)}`
           );
         }
       );
-
-      if (escolas) {
-        const opcoesEscolas = escolas.map(escola => {
-          let label =
-            escola.nome.length > 35 ? escola.nome.slice(0, 35) : escola.nome;
-          let dado = escola;
-          dado["quantiade_kits"] = "";
-          dado["kits_selecionados"] = [];
-          return { label: label, uuid: escola.uuid, value: dado };
-        });
-        setOpcoes(opcoesEscolas);
-      }
     }
-    fetchData();
-  }, [escolas]);
+  };
 
-  const resetForm = () => {};
-
-  const carregarRascunho = () => {};
-
-  const removerRascunho = () => {};
-
-  // const loadInitialValues = () => {
-  //   console.log('chamei esse cara aqui')
-  //   return ()
-  // }
-
-  const onSubmit = async formValues => {
-    await criarSolicitacaoUnificada(JSON.stringify(formValues)).then(
+  const iniciarPedido = uuid => {
+    inicioPedido(uuid).then(
       res => {
-        if (res.status === HTTP_STATUS.CREATED) {
-          if (formValues.status === "DRE_A_VALIDAR") {
-            toastSuccess("Inicia Pedido");
-            // this.iniciarPedido(res.data.uuid);
-          } else {
-            toastSuccess("Solicitação Unificada salva com sucesso!");
-            resetForm();
-          }
-        } else {
+        if (res.status === HTTP_STATUS.OK) {
+          toastSuccess("Solicitação Unificada enviada com sucesso!");
+          fetchData();
+        } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
             `Houve um erro ao salvar a solicitação unificada: ${getError(
               res.data
@@ -105,30 +216,32 @@ const SolicitacaoUnificada = ({
         }
       },
       function() {
-        toastError("Houve um erro ao salvar a solicitação unificada");
+        toastError("Houve um erro ao enviar a solicitação unificada");
       }
     );
   };
 
-  // const iniciarPedido = uuid => {
-  //   inicioPedido(uuid).then(
-  //     res => {
-  //       if (res.status === HTTP_STATUS.OK) {
-  //         toastSuccess("Solicitação Unificada enviada com sucesso!");
-  //         resetForm();
-  //       } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
-  //         toastError(
-  //           `Houve um erro ao salvar a solicitação unificada: ${getError(
-  //             res.data
-  //           )}`
-  //         );
-  //       }
-  //     },
-  //     function() {
-  //       toastError("Houve um erro ao enviar a solicitação unificada");
-  //     }
-  //   );
-  // };
+  const removerEscola = (ue, form, values) => {
+    let resultado = values.unidades_escolares.filter(v => v.uuid !== ue.uuid);
+    let resultadoLabels = unidadesEscolaresSelecionadas.filter(
+      v => v.uuid !== ue.uuid
+    );
+    let total = 0;
+    let listaQuantidadeKits = resultado.filter(
+      v => ![""].includes(v.quantidade_kits)
+    );
+    if (listaQuantidadeKits.length !== 0) {
+      listaQuantidadeKits = listaQuantidadeKits.map(v =>
+        parseInt(v.quantidade_kits)
+      );
+      for (let index = 0; index < listaQuantidadeKits.length; index++) {
+        total = total + listaQuantidadeKits[index];
+      }
+    }
+    setTotalKits(total);
+    setUnidadesEscolaresSelecionadas(resultadoLabels);
+    form.change("unidades_escolares", resultado);
+  };
 
   const renderizarLabelUnidadesEscolares = (selected, options) => {
     if (selected.length === 0) {
@@ -145,9 +258,6 @@ const SolicitacaoUnificada = ({
     }
   };
 
-  // const removerEscola = _escola => {
-  // };
-
   return (
     <>
       <CardMatriculados
@@ -157,27 +267,26 @@ const SolicitacaoUnificada = ({
             : 0
         }
       />
-
-      {rascunhosSalvos && rascunhosSalvos.length > 0 && (
-        <div className="mt-3">
-          <span className="page-title">Rascunhos</span>
-          <Rascunhos
-            schoolsLoaded={escolas.length > 0}
-            unifiedSolicitationList={rascunhosSalvos}
-            OnDeleteButtonClicked={removerRascunho}
-            resetForm={event => resetForm(event)}
-            OnEditButtonClicked={params => carregarRascunho(params)}
-          />
-        </div>
-      )}
-
       <div className="mt-3">
-        <span className="page-title">Nova Solicitação</span>
         <Form
           onSubmit={onSubmit}
-          // initialValues={}
           render={({ handleSubmit, values, form }) => (
             <form onSubmit={handleSubmit}>
+              {rascunhosSalvos && rascunhosSalvos.length > 0 && (
+                <div className="mt-3">
+                  <span className="page-title">Rascunhos</span>
+                  <Rascunhos
+                    schoolsLoaded={escolas.length > 0}
+                    unifiedSolicitationList={rascunhosSalvos}
+                    OnDeleteButtonClicked={removerRascunho}
+                    form={form}
+                    OnEditButtonClicked={carregarRascunho}
+                  />
+                </div>
+              )}
+              <div className="mt-3">
+                <span className="page-title">Nova Solicitação</span>
+              </div>
               <div className="card mt-3">
                 <div className="card-body">
                   <div className="row">
@@ -188,6 +297,7 @@ const SolicitacaoUnificada = ({
                         minDate={proximosDoisDiasUteis}
                         label="Dia"
                         className="form-control"
+                        validate={required}
                         required
                       />
                     </div>
@@ -229,6 +339,23 @@ const SolicitacaoUnificada = ({
                             }
                             return v;
                           });
+                          let total = 0;
+                          let listaQuantidadeKits = resultado.filter(
+                            v => ![""].includes(v.quantidade_kits)
+                          );
+                          if (listaQuantidadeKits.length !== 0) {
+                            listaQuantidadeKits = listaQuantidadeKits.map(v =>
+                              parseInt(v.quantidade_kits)
+                            );
+                            for (
+                              let index = 0;
+                              index < listaQuantidadeKits.length;
+                              index++
+                            ) {
+                              total = total + listaQuantidadeKits[index];
+                            }
+                          }
+                          setTotalKits(total);
                           form.change("unidades_escolares", resultado);
                           setUnidadesEscolaresSelecionadas(value);
                         }}
@@ -271,7 +398,9 @@ const SolicitacaoUnificada = ({
                                     <div className="col-1">
                                       <Botao
                                         type={BUTTON_TYPE.BUTTON}
-                                        // onClick={() => removerEscola(ue)}
+                                        onClick={() =>
+                                          removerEscola(ue, form, values)
+                                        }
                                         style={BUTTON_STYLE.RED_OUTLINE}
                                         icon={BUTTON_ICON.TRASH}
                                         className="botao-remover-escola mt-1"
@@ -359,8 +488,10 @@ const SolicitacaoUnificada = ({
                                             <Field
                                               component={"input"}
                                               type="radio"
+                                              required
+                                              validate={required}
                                               value="1"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -368,7 +499,7 @@ const SolicitacaoUnificada = ({
                                                     e => e.uuid !== ue.uuid
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -385,7 +516,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "1"
                                                 );
                                                 setTotalKits(total + 1);
@@ -401,7 +532,9 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="2"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              required
+                                              validate={required}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -409,11 +542,11 @@ const SolicitacaoUnificada = ({
                                                     e =>
                                                       e.uuid !== ue.uuid &&
                                                       ![undefined, ""].includes(
-                                                        e.quantiade_kits
+                                                        e.quantidade_kits
                                                       )
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -430,7 +563,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "2"
                                                 );
                                                 setTotalKits(total + 2);
@@ -446,7 +579,9 @@ const SolicitacaoUnificada = ({
                                               component={"input"}
                                               type="radio"
                                               value="3"
-                                              name={`unidades_escolares[${idx}].quantiade_kits`}
+                                              required
+                                              validate={required}
+                                              name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
                                                 let listaQuantidadeKits = values.unidades_escolares
@@ -454,7 +589,7 @@ const SolicitacaoUnificada = ({
                                                     e => e.uuid !== ue.uuid
                                                   )
                                                   .map(e =>
-                                                    parseInt(e.quantiade_kits)
+                                                    parseInt(e.quantidade_kits)
                                                   );
                                                 for (
                                                   let i = 0;
@@ -471,7 +606,7 @@ const SolicitacaoUnificada = ({
                                                   []
                                                 );
                                                 form.change(
-                                                  `unidades_escolares[${idx}].quantiade_kits`,
+                                                  `unidades_escolares[${idx}].quantidade_kits`,
                                                   "3"
                                                 );
                                                 setTotalKits(total + 3);
@@ -508,6 +643,8 @@ const SolicitacaoUnificada = ({
                                                       <Field
                                                         component={"input"}
                                                         type="checkbox"
+                                                        required
+                                                        validate={required}
                                                         value={kit.uuid}
                                                         id={`${ue.codigo_eol}-${
                                                           kit.uuid
@@ -519,9 +656,9 @@ const SolicitacaoUnificada = ({
                                                             undefined,
                                                             ""
                                                           ].includes(
-                                                            ue.quantiade_kits
+                                                            ue.quantidade_kits
                                                           ) ||
-                                                          (ue.quantiade_kits ===
+                                                          (ue.quantidade_kits ===
                                                             `${
                                                               ue
                                                                 .kits_selecionados
@@ -588,11 +725,38 @@ const SolicitacaoUnificada = ({
                         name="descricao"
                       />
                     </div>
-                    <div className="offset-10 col-2">
+                    <div className="offset-5 col-2 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() => {
+                          form.restart();
+                          setUnidadesEscolaresSelecionadas([]);
+                          setTotalKits(0);
+                        }}
+                        texto={"Cancelar"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-3 mt-3">
+                      <Botao
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        texto={"Salvar Rascunho"}
+                        className="w-100"
+                      />
+                    </div>
+                    <div className="col-2 mt-3">
                       <Botao
                         type={BUTTON_TYPE.SUBMIT}
                         style={BUTTON_STYLE.GREEN}
-                        texto="Salvar"
+                        texto="Enviar"
+                        onClick={() => {
+                          values["status"] = "DRE_A_VALIDAR";
+                          !submeteu &&
+                            handleSubmit(values => onSubmit(values, form));
+                        }}
+                        className="w-100"
                       />
                     </div>
                   </div>
