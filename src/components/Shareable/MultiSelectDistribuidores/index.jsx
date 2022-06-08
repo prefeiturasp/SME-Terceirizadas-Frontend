@@ -15,7 +15,7 @@ const MultiSelectDistribuidores = ({ name, label, className }) => {
         const listaDistribuidores = await getNomesDistribuidores();
         let listaRsultados = listaDistribuidores.data.results;
         let listaFormatada = listaRsultados.map(element => {
-          return { value: element.uuid, label: element.nome_fantasia };
+          return { value: element.uuid, label: element.razao_social };
         });
         setDistribuidores(listaFormatada);
       } catch (erro) {
