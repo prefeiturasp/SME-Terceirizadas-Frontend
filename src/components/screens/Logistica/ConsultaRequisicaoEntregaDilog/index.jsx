@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
@@ -24,6 +24,8 @@ import {
   toastSuccess
 } from "components/Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads/index.js";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -36,7 +38,10 @@ export default () => {
   const [carregandoExcel, setCarregandoExcel] = useState(false);
   const [selecionados, setSelecionados] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const [initialValues, setInitialValues] = useState({});
+
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const inicioResultado = useRef();
 
@@ -125,6 +130,16 @@ export default () => {
     setCarregando(false);
   };
 
+  const solicitaExcelGuias = () => {
+    setCarregandoExcel(true);
+    const params = gerarParametrosConsulta({ ...filtros });
+    gerarExcelSolicitacoes(params).then(() => {
+      setCarregandoExcel(false);
+      setShowDownload(true);
+      centralDownloadContext.getQtdeDownloadsNaoLidas();
+    });
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
@@ -154,6 +169,7 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalSolicitacaoDownload show={showDownload} setShow={setShowDownload} />
       <div className="card mt-3 card-consulta-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
           <Filtros
@@ -203,13 +219,7 @@ export default () => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
-                      onClick={() => {
-                        setCarregandoExcel(true);
-                        const params = gerarParametrosConsulta({ ...filtros });
-                        gerarExcelSolicitacoes(params).then(() => {
-                          setCarregandoExcel(false);
-                        });
-                      }}
+                      onClick={solicitaExcelGuias}
                     />
                   </Spin>
                 </div>

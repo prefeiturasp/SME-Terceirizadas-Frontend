@@ -104,6 +104,16 @@ export default () => {
     });
   };
 
+  const solicitaExcelGuias = () => {
+    setCarregandoExcel(true);
+    const params = gerarParametrosConsulta({ ...filtros });
+    gerarExcelSolicitacoes(params).then(() => {
+      setCarregandoExcel(false);
+      setShow(true);
+      centralDownloadContext.getQtdeDownloadsNaoLidas();
+    });
+  };
+
   useEffect(() => {
     const queryString = window.location.search;
 
@@ -188,13 +198,7 @@ export default () => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
                       className="ml-2 mr-2"
-                      onClick={() => {
-                        setCarregandoExcel(true);
-                        const params = gerarParametrosConsulta({ ...filtros });
-                        gerarExcelSolicitacoes(params).then(() => {
-                          setCarregandoExcel(false);
-                        });
-                      }}
+                      onClick={solicitaExcelGuias}
                     />
                   </Spin>
                   <ConfirmaTodos
