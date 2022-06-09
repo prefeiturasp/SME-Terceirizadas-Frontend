@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
@@ -7,14 +7,18 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
 import { gerarParametrosConsulta } from "helpers/utilities";
-import { gerarExcelEntregas } from "services/logistica.service.js";
+import {
+  gerarExcelEntregas,
+  imprimirGuiasDaSolicitacao
+} from "services/logistica.service.js";
 import { Switch, Checkbox } from "antd";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { STATUS_GUIA } from "../../../../const.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 
-export default ({ solicitacao }) => {
+export default ({ solicitacao, excel, pdf }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [conferidas, setConferidas] = useState(false);
@@ -26,20 +30,35 @@ export default ({ solicitacao }) => {
   const [repoParcial, setRepoParcial] = useState(false);
   const [repoTotal, setRepoTotal] = useState(false);
 
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
+
   const handleDownload = () => {
     setLoading(true);
     let uuid = solicitacao.uuid;
     let payload = montaPayload(uuid);
     const params = gerarParametrosConsulta(payload);
-    gerarExcelEntregas(params)
-      .then(() => {
-        setLoading(false);
-        handleClose();
-      })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
-        setLoading(false);
-      });
+    if (excel) {
+      gerarExcelEntregas(params)
+        .then(() => {
+          setLoading(false);
+          handleClose();
+        })
+        .catch(error => {
+          error.response.data.text().then(text => toastError(text));
+          setLoading(false);
+        });
+    } else if (pdf) {
+      imprimirGuiasDaSolicitacao(params)
+        .then(() => {
+          setLoading(false);
+          handleClose();
+          centralDownloadContext.getQtdeDownloadsNaoLidas();
+        })
+        .catch(error => {
+          error.response.data.text().then(text => toastError(text));
+          setLoading(false);
+        });
+    }
   };
 
   const montaPayload = uuid => {
@@ -107,10 +126,19 @@ export default ({ solicitacao }) => {
 
   return (
     <>
-      <Button className="acoes" variant="link" onClick={() => handleShow()}>
-        <i className="fas fa-file-excel green" />
-        <span className="link-exportar">Planilha</span>
-      </Button>
+      {excel && (
+        <Button className="acoes" variant="link" onClick={() => handleShow()}>
+          <i className="fas fa-file-excel green" />
+          <span className="link-exportar">Planilha</span>
+        </Button>
+      )}
+
+      {pdf && (
+        <Button className="acoes" variant="link" onClick={() => handleShow()}>
+          <i className="fas fa-file-pdf red" />
+          <span className="link-exportar">PDF</span>
+        </Button>
+      )}
 
       <Modal show={show} onHide={handleClose} dialogClassName="modal-entregas">
         <Spin tip="Carregando..." spinning={loading}>

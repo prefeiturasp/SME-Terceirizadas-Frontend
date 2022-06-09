@@ -1,36 +1,15 @@
-import React, { useState, useContext } from "react";
-import { Button } from "react-bootstrap";
+import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import FiltrosExcel from "../FiltrosExcel";
-import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
-import { toastError } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
-import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
-  const [carregando, setCarregando] = useState(false);
   const [show, setShow] = useState(false);
-  const centralDownloadContext = useContext(CentralDeDownloadContext);
-
-  const baixarPDFGuiasRemessa = solicitacao => {
-    setCarregando(true);
-    let uuid = solicitacao.uuid;
-    imprimirGuiasDaSolicitacao(uuid)
-      .then(() => {
-        setCarregando(false);
-        setShow(true);
-        centralDownloadContext.getQtdeDownloadsNaoLidas();
-      })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
-        setCarregando(false);
-      });
-  };
 
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
+    <>
       <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <section
         className={`resultado-busca-entregas ${
@@ -109,17 +88,18 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                   </div>
 
                   <div>
-                    <FiltrosExcel solicitacao={solicitacao} />
+                    <FiltrosExcel solicitacao={solicitacao} excel={true} />
                   </div>
                   <div>
-                    <Button
+                    <FiltrosExcel solicitacao={solicitacao} pdf={true} />
+                    {/* <Button
                       className="acoes"
                       variant="link"
                       onClick={() => baixarPDFGuiasRemessa(solicitacao)}
                     >
                       <i className="fas fa-file-pdf red" />
                       <span className="link-exportar">PDF</span>
-                    </Button>
+                    </Button> */}
                   </div>
                 </div>
                 {ativos && ativos.includes(solicitacao.uuid) && (
@@ -174,7 +154,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
           })}
         </article>
       </section>
-    </Spin>
+    </>
   );
 };
 

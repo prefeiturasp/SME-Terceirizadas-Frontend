@@ -30,7 +30,7 @@ export default ({
   const baixarPDFGuiasRemessa = solicitacao => {
     setCarregando(true);
     let uuid = solicitacao.uuid;
-    imprimirGuiasDaSolicitacao(uuid)
+    imprimirGuiasDaSolicitacao({ uuid })
       .then(() => {
         setCarregando(false);
         setShow(true);
