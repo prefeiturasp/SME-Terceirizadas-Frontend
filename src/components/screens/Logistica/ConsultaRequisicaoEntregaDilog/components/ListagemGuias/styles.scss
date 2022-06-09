@@ -81,7 +81,7 @@
 }
 .tooltip-botao .tooltiptext {
   visibility: hidden;
-  width: 150%;
+  width: 200%;
   background-color: rgba(0, 0, 0, 0.75);
   color: #fff;
 
@@ -90,7 +90,7 @@
   position: absolute;
   z-index: 1000;
   bottom: 125%;
-  left: -25%;
+  left: -50%;
   opacity: 0;
   transition: opacity 0.1s;
   font-size: 14px;

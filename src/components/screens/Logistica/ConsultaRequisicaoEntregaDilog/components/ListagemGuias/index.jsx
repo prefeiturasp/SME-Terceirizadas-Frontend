@@ -20,7 +20,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
 
   const guias = solicitacao.guias.filter(x => x.situacao === situacao);
 
-  const textoBotao = situacao === "ATIVA" ? "Arquivar Guia" : "Desarquivar";
+  const textoBotao = situacao === "ATIVA" ? "Arquivar" : "Desarquivar";
   const textoTitulo =
     situacao === "ATIVA" ? "Guia(s) Ativa(s)" : "Guia(s) Arquivada(s)";
 
