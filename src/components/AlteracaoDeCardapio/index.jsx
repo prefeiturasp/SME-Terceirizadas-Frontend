@@ -1,53 +1,51 @@
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { InputText } from "components/Shareable/Input/InputText";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
+  maxValue,
+  naoPodeSerZero,
   peloMenosUmCaractere,
   required,
-  textAreaRequired,
-  maxValue,
-  naoPodeSerZero
+  textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
-  formatarParaMultiselect,
   checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
-  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
-  escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
   escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
-import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
-
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
+import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/helper";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Rascunhos } from "./Rascunhos";
-
 import { InputComData } from "../Shareable/DatePicker";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
-import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/helper";
+import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
+import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
-import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
-import { PERFIL, TIPO_SOLICITACAO } from "constants/shared";
-import { InputText } from "components/Shareable/Input/InputText";
 
 const ENTER = 13;
 
@@ -851,6 +849,7 @@ class AlteracaoCardapio extends Component {
       handleSubmit,
       meusDados,
       proximos_dois_dias_uteis,
+      motivo,
       motivos,
       pristine,
       submitting
@@ -922,38 +921,39 @@ class AlteracaoCardapio extends Component {
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
                   />
-                  {localStorage.getItem("perfil") !== PERFIL.DIRETOR_CEI && (
-                    <>
-                      <div className="opcao-data">Ou</div>
-                      <Field
-                        component={InputComData}
-                        name="data_inicial"
-                        label="De"
-                        minDate={
-                          this.state.motivo.nome === "Merenda Seca"
-                            ? moment().toDate()
-                            : proximos_dois_dias_uteis
-                        }
-                        maxDate={moment()
-                          .endOf("year")
-                          .toDate()}
-                        disabled={this.props.alterar_dia}
-                        onChange={value => this.obtemDataInicial(value)}
-                      />
-                      <Field
-                        component={InputComData}
-                        name="data_final"
-                        label="Até"
-                        disabled={
-                          dataInicial === null || this.props.alterar_dia
-                        }
-                        minDate={dataInicial}
-                        maxDate={moment()
-                          .endOf("year")
-                          .toDate()}
-                      />
-                    </>
-                  )}
+                  <>
+                    <div className="opcao-data">Ou</div>
+                    <Field
+                      component={InputComData}
+                      name="data_inicial"
+                      label="De"
+                      minDate={
+                        this.state.motivo.nome === "Merenda Seca"
+                          ? moment().toDate()
+                          : proximos_dois_dias_uteis
+                      }
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
+                      disabled={
+                        this.props.alterar_dia ||
+                        (motivo &&
+                          motivos.find(motivo_ => motivo_.uuid === motivo)
+                            .nome !== "Merenda Seca")
+                      }
+                      onChange={value => this.obtemDataInicial(value)}
+                    />
+                    <Field
+                      component={InputComData}
+                      name="data_final"
+                      label="Até"
+                      disabled={dataInicial === null || this.props.alterar_dia}
+                      minDate={dataInicial}
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
+                    />
+                  </>
                 </section>
               </div>
               <div className="card-body">
