@@ -91,6 +91,7 @@ export default ({
             {solicitacoesVigentes && (
               <SolicitacaoVigente
                 titulo="Dietas Inativas"
+                semSolicitacoesTexto="Não há dietas inativas para este aluno."
                 solicitacoesVigentes={solicitacoesVigentes}
               />
             )}
