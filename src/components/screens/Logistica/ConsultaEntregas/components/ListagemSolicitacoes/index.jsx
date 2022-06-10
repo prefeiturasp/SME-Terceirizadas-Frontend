@@ -6,11 +6,11 @@ import FiltrosExcel from "../FiltrosExcel";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
-  const [show, setShow] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
 
   return (
     <>
-      <ModalSolicitacaoDownload show={show} setShow={setShow} />
+      <ModalSolicitacaoDownload show={showDownload} setShow={setShowDownload} />
       <section
         className={`resultado-busca-entregas ${
           dilog ? "dilog" : "distribuidor"
@@ -91,7 +91,11 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                     <FiltrosExcel solicitacao={solicitacao} excel={true} />
                   </div>
                   <div>
-                    <FiltrosExcel solicitacao={solicitacao} pdf={true} />
+                    <FiltrosExcel
+                      solicitacao={solicitacao}
+                      pdf={true}
+                      showModal={setShowDownload}
+                    />
                     {/* <Button
                       className="acoes"
                       variant="link"

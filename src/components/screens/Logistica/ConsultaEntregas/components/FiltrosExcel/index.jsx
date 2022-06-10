@@ -18,7 +18,7 @@ import { STATUS_GUIA } from "../../../../const.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 
-export default ({ solicitacao, excel, pdf }) => {
+export default ({ solicitacao, excel, pdf, showModal }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [conferidas, setConferidas] = useState(false);
@@ -36,8 +36,8 @@ export default ({ solicitacao, excel, pdf }) => {
     setLoading(true);
     let uuid = solicitacao.uuid;
     let payload = montaPayload(uuid);
-    const params = gerarParametrosConsulta(payload);
     if (excel) {
+      const params = gerarParametrosConsulta({ uuid, ...payload });
       gerarExcelEntregas(params)
         .then(() => {
           setLoading(false);
@@ -48,8 +48,10 @@ export default ({ solicitacao, excel, pdf }) => {
           setLoading(false);
         });
     } else if (pdf) {
-      imprimirGuiasDaSolicitacao(params)
+      const params = gerarParametrosConsulta(payload);
+      imprimirGuiasDaSolicitacao(uuid, params)
         .then(() => {
+          showModal(true);
           setLoading(false);
           handleClose();
           centralDownloadContext.getQtdeDownloadsNaoLidas();
@@ -61,7 +63,7 @@ export default ({ solicitacao, excel, pdf }) => {
     }
   };
 
-  const montaPayload = uuid => {
+  const montaPayload = () => {
     let status_guia = [];
     let tem_insucesso = insucesso;
     let tem_conferencia = conferidas || pendentes;
@@ -87,7 +89,7 @@ export default ({ solicitacao, excel, pdf }) => {
       ];
     }
 
-    return { uuid, status_guia, tem_conferencia, tem_insucesso };
+    return { status_guia, tem_conferencia, tem_insucesso };
   };
 
   const handleClose = () => {
