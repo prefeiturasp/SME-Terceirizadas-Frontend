@@ -189,6 +189,7 @@ export default () => {
                 ativos={ativos}
                 setAtivos={setAtivos}
                 arquivaDesarquivaGuias={arquivaDesarquivaGuias}
+                setShowDownload={setShowDownload}
               />
               <div className="row">
                 <div className="col">

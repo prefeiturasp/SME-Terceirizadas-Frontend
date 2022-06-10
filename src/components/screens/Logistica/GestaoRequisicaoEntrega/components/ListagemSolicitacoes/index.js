@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
@@ -9,6 +9,7 @@ import ListagemGuias from "../ListagemGuias";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { gerarExcelSolicitacoes } from "services/logistica.service";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -16,9 +17,11 @@ const ListagemSolicitacoes = ({
   setAtivos,
   updatePage,
   confirmaCancelamentoGuias,
-  imprimirRequisicao
+  imprimirRequisicao,
+  setShowDownload
 }) => {
   const [carregando, setCarregando] = useState(false);
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const baixarPDF = async solicitacao => {
     setCarregando(true);
@@ -34,6 +37,8 @@ const ListagemSolicitacoes = ({
     gerarExcelSolicitacoes(params)
       .then(() => {
         setCarregando(false);
+        setShowDownload(true);
+        centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));

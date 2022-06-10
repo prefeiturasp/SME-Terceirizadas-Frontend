@@ -37,7 +37,7 @@ export default () => {
   const [numConfirmadas, setNumConfirmadas] = useState();
   const [page, setPage] = useState();
   const [initialValues, setInitialValues] = useState({});
-  const [show, setShow] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
 
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
@@ -90,7 +90,7 @@ export default () => {
 
   const imprimirRequisicao = async uuid => {
     await gerarPDFDistribuidorSolicitacao(uuid);
-    setShow(true);
+    setShowDownload(true);
     centralDownloadContext.getQtdeDownloadsNaoLidas();
   };
 
@@ -99,7 +99,7 @@ export default () => {
     const params = gerarParametrosConsulta({ ...filtros });
     gerarPDFDistribuidorSolicitacoes(params).then(() => {
       setCarregandoPDFConfirmados(false);
-      setShow(true);
+      setShowDownload(true);
       centralDownloadContext.getQtdeDownloadsNaoLidas();
     });
   };
@@ -109,7 +109,7 @@ export default () => {
     const params = gerarParametrosConsulta({ ...filtros });
     gerarExcelSolicitacoes(params).then(() => {
       setCarregandoExcel(false);
-      setShow(true);
+      setShowDownload(true);
       centralDownloadContext.getQtdeDownloadsNaoLidas();
     });
   };
@@ -147,7 +147,7 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <ModalSolicitacaoDownload show={show} setShow={setShow} />
+      <ModalSolicitacaoDownload show={showDownload} setShow={setShowDownload} />
       <div className="card mt-3 card-gestao-requisicao-entrega">
         <div className="card-body gestao-requisicao-entrega">
           <Filtros
@@ -168,6 +168,7 @@ export default () => {
                 updatePage={updatePage}
                 confirmaCancelamentoGuias={confirmaCancelamentoGuias}
                 imprimirRequisicao={imprimirRequisicao}
+                setShowDownload={setShowDownload}
               />
               <div className="row">
                 <div className="col">

@@ -11,7 +11,6 @@ import ListagemGuias from "../ListagemGuias";
 import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
-import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 export default ({
@@ -20,11 +19,11 @@ export default ({
   setAtivos,
   selecionados,
   setSelecionados,
-  arquivaDesarquivaGuias
+  arquivaDesarquivaGuias,
+  setShowDownload
 }) => {
   const [allChecked, setAllChecked] = useState(false);
   const [carregando, setCarregando] = useState(false);
-  const [show, setShow] = useState(false);
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const baixarPDFGuiasRemessa = solicitacao => {
@@ -33,7 +32,7 @@ export default ({
     imprimirGuiasDaSolicitacao(uuid)
       .then(() => {
         setCarregando(false);
-        setShow(true);
+        setShowDownload(true);
         centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
@@ -50,6 +49,8 @@ export default ({
     gerarExcelSolicitacoes(params)
       .then(() => {
         setCarregando(false);
+        setShowDownload(true);
+        centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -92,7 +93,6 @@ export default ({
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <ModalSolicitacaoDownload show={show} setShow={setShow} />
       <section className="resultado-busca-requisicao-entrega-dilog">
         <header>Veja requisições disponibilizadas</header>
         <article>
