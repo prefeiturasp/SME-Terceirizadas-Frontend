@@ -87,13 +87,14 @@ export class SolicitacaoVigente extends Component {
 
   render() {
     const { solicitacoesVigentes } = this.state;
-    const { uuid, handleSubmit, titulo } = this.props;
+    const { uuid, handleSubmit, titulo, semSolicitacoesTexto } = this.props;
     return (
       <div className="current-diets">
         {!solicitacoesVigentes || solicitacoesVigentes.length === 0 ? (
           !uuid && (
             <div className="pt-2 no-diets">
-              Não há dieta autorizada para este aluno.
+              {semSolicitacoesTexto ||
+                "Não há dieta autorizada para este aluno"}
             </div>
           )
         ) : (
