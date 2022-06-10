@@ -43,6 +43,7 @@ const BuscaDietasForm = ({
   setDataFinal,
   setMostrarFiltrosAutorizadas,
   mostrarFiltrosAutorizadas,
+  dietasFiltradas,
   reset
 }) => {
   const [dietasEspeciais, setDietasEspeciais] = useState([]);
@@ -569,7 +570,13 @@ const BuscaDietasForm = ({
                 </div>
               </div>
 
-              <div className="mt-4 mb-4">
+              <div
+                className={
+                  dietasFiltradas && dietasFiltradas.length > 0
+                    ? "mt-4"
+                    : "botoes"
+                }
+              >
                 <Botao
                   texto="Filtrar"
                   style={BUTTON_STYLE.GREEN}
