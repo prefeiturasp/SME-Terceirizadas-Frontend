@@ -1,12 +1,11 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 
-export const getDiasUteis = () => {
+export const getDiasUteis = async params => {
   const url = `${API_URL}/dias-uteis/`;
-  return fetch(url)
-    .then(resultado => {
-      return resultado.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  try {
+    return await axios.get(url, { params });
+  } catch (error) {
+    console.log(error);
+  }
 };

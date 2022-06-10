@@ -7,6 +7,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { getDiasUteis } from "services/diasUteis.service";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
   maxValue,
@@ -40,7 +41,11 @@ import { InputComData } from "../Shareable/DatePicker";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import {
+  toastError,
+  toastSuccess,
+  toastWarn
+} from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
 import { Rascunhos } from "./Rascunhos";
@@ -78,7 +83,10 @@ class AlteracaoCardapio extends Component {
         TARDE: [],
         NOITE: [],
         INTEGRAL: []
-      }
+      },
+      limiteDataFinal: moment()
+        .endOf("year")
+        .toDate()
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -305,8 +313,12 @@ class AlteracaoCardapio extends Component {
     if (
       this.state.uuidRascunhoEmEdicao &&
       this.state.uuidRascunhoEmEdicao === param.alteracaoDeCardapio.uuid
-    )
+    ) {
+      toastWarn(
+        `Rascunho # ${param.alteracaoDeCardapio.id_externo} já está em edição`
+      );
       return;
+    }
     this.props.reset("alteracaoCardapio");
     let dataInicial = this.state.dataInicial;
     let {
@@ -593,6 +605,16 @@ class AlteracaoCardapio extends Component {
     let dataInicial = this.state.dataInicial;
     dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
     this.setState({ dataInicial });
+    const dataDe = {
+      data: value
+    };
+    getDiasUteis(dataDe).then(response => {
+      const limiteDataFinal = moment(
+        response.data.data_apos_quatro_dias_uteis,
+        "YYYY-MM-DD"
+      )._d;
+      this.setState({ limiteDataFinal });
+    });
   };
 
   limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
@@ -814,23 +836,22 @@ class AlteracaoCardapio extends Component {
     }
     periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
 
-    let optionsAlimentacaoDe = this.state.optionsAlimentacaoDe;
-    optionsAlimentacaoDe[periodo.nome] = value;
-
     this.setState({
       ...this.state,
-      optionsAlimentacaoDe: optionsAlimentacaoDe,
       periodos: periodos
     });
-    this.props.change(
-      `substituicoes_${periodo.nome}.tipos_alimentacao_de`,
-      value
-    );
     opcoesSubstitutos.length === 0 &&
       this.props.change(
         `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
         null
       );
+  }
+
+  DisabledDataInicial(motivo) {
+    return (
+      this.props.motivos.find(motivo_ => motivo_.uuid === motivo).nome !==
+      "Merenda Seca"
+    );
   }
 
   render() {
@@ -840,6 +861,7 @@ class AlteracaoCardapio extends Component {
       showModal,
       showModalConfirm,
       dataInicial,
+      limiteDataFinal,
       periodos,
       substituicoesAlimentacao,
       values,
@@ -937,9 +959,7 @@ class AlteracaoCardapio extends Component {
                         .toDate()}
                       disabled={
                         this.props.alterar_dia ||
-                        (motivo &&
-                          motivos.find(motivo_ => motivo_.uuid === motivo)
-                            .nome !== "Merenda Seca")
+                        (motivo && this.DisabledDataInicial(motivo))
                       }
                       onChange={value => this.obtemDataInicial(value)}
                     />
@@ -949,9 +969,7 @@ class AlteracaoCardapio extends Component {
                       label="Até"
                       disabled={dataInicial === null || this.props.alterar_dia}
                       minDate={dataInicial}
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={limiteDataFinal}
                     />
                   </>
                 </section>
