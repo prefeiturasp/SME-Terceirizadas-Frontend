@@ -17,6 +17,8 @@ export default function reducer(state = {}, action) {
           action.data.data_inicial = null;
           action.data.data_final = null;
           action.data.motivo = action.data.motivo.uuid;
+        } else if (typeof action.data.motivo === "object") {
+          action.data.motivo = action.data.motivo.uuid;
         }
         action.data.substituicoes.forEach(function(substituicao) {
           action.data[`substituicoes_${substituicao.periodo_escolar.nome}`] = {
