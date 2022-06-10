@@ -23,10 +23,10 @@ class Container extends Component {
 
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.proximos_cinco_dias_uteis)
+        new Date(response.data.proximos_cinco_dias_uteis)
       );
       const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.proximos_dois_dias_uteis)
+        new Date(response.data.proximos_dois_dias_uteis)
       );
       this.setState({
         proximos_dois_dias_uteis,
