@@ -69,11 +69,12 @@ const RelatorioDietaEspecial = () => {
     <>
       <div className="sub-titulo">Filtrar dietas</div>
       <Spin tip="Carregando..." spinning={carregando}>
-        <div className="card mt-3">
+        <div className="card relatorio-dietas-especiais mt-3">
           <div className="card-body">
             <Filtros
               setCarregando={setCarregando}
               setDietasFiltradas={setDietasFiltradas}
+              dietasFiltradas={dietasFiltradas}
               setStatusSelecionado={setStatusSelecionado}
               setFiltragemRealizada={setFiltragemRealizada}
               lotesSelecionados={lotesSelecionados}

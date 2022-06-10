@@ -55,8 +55,7 @@ export const gerarPDFDistribuidorSolicitacoes = async params => {
 
 export const gerarExcelSolicitacoes = async params => {
   const url = `/solicitacao-remessa/exporta-excel-visao-analitica/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "visao_analitica.xlsx");
+  return await axios.get(url, { params });
 };
 
 export const gerarPDFDistribuidorGuia = async uuid => {
