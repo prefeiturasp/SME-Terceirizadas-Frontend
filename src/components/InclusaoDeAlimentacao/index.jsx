@@ -170,6 +170,7 @@ class InclusaoDeAlimentacao extends Component {
 
   onDataChanged(value) {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
         value,
         this.props.proximos_dois_dias_uteis,
@@ -814,9 +815,10 @@ class InclusaoDeAlimentacao extends Component {
                             <Field
                               component={InputComData}
                               name="data"
-                              onChange={value =>
-                                this.handleField("data", value, diaMotivo.id)
-                              }
+                              onChange={value => {
+                                this.handleField("data", value, diaMotivo.id);
+                                this.onDataChanged(value);
+                              }}
                               onBlur={event =>
                                 this.onDataChanged(event.target.value)
                               }
@@ -859,13 +861,14 @@ class InclusaoDeAlimentacao extends Component {
                           <div className={"grid-motivo-continuo"}>
                             <Field
                               component={InputComData}
-                              onChange={value =>
+                              onChange={value => {
                                 this.handleField(
                                   "data_inicial",
                                   value,
                                   diaMotivo.id
-                                )
-                              }
+                                );
+                                this.onDataChanged(value);
+                              }}
                               onBlur={event =>
                                 this.onDataChanged(event.target.value)
                               }

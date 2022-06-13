@@ -211,10 +211,11 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
-  validaDiasUteis = event => {
+  validaDiasUteis = value => {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -518,13 +519,14 @@ export class SolicitacaoDeKitLanche extends Component {
                     component={InputComData}
                     label="Data do passeio"
                     name="evento_data"
-                    onBlur={event => this.validaDiasUteis(event)}
+                    onBlur={event => this.validaDiasUteis(event.target.value)}
                     minDate={proximos_dois_dias_uteis}
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
                     required
                     validate={required}
+                    onChange={value => this.validaDiasUteis(value)}
                   />
                 </div>
                 <div className="col-9">
