@@ -168,9 +168,9 @@ export const imprimirGuiaRemessa = async uuid => {
   saveAs(data, "guia_de_remessa.pdf");
 };
 
-export const imprimirGuiasDaSolicitacao = async uuid => {
+export const imprimirGuiasDaSolicitacao = async (uuid, params) => {
   const url = `/solicitacao-remessa/${uuid}/relatorio-guias-da-requisicao/`;
-  return await axios.get(url);
+  return await axios.get(url, { params });
 };
 
 export const confirmaCancelamento = async payload => {
