@@ -125,10 +125,11 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
-  validaDiasUteis = event => {
+  validaDiasUteis = value => {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -254,7 +255,8 @@ export class InversaoDeDiaDeCardapio extends Component {
                       placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
-                      onBlur={event => this.validaDiasUteis(event)}
+                      onBlur={event => this.validaDiasUteis(event.target.value)}
+                      onChange={value => this.validaDiasUteis(value)}
                       minDate={proximos_dois_dias_uteis}
                       maxDate={dateDelta(60)}
                     />
@@ -271,7 +273,8 @@ export class InversaoDeDiaDeCardapio extends Component {
                       placeholder="Cardápio dia"
                       required
                       validate={[required, deveSerNoAnoCorrente]}
-                      onBlur={event => this.validaDiasUteis(event)}
+                      onBlur={event => this.validaDiasUteis(event.target.value)}
+                      onChange={value => this.validaDiasUteis(value)}
                       minDate={proximos_dois_dias_uteis}
                       maxDate={dateDelta(60)}
                     />
