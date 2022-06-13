@@ -555,6 +555,7 @@ class AlteracaoCardapio extends Component {
   onAlterarDiaChanged(value) {
     if (
       value &&
+      this.state.motivo.nome !== "Merenda Seca" &&
       checaSeDataEstaEntre2e5DiasUteis(
         value,
         this.props.proximos_dois_dias_uteis,
