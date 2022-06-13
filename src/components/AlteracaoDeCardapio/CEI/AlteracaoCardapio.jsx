@@ -345,10 +345,11 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
-  onAlterarDiaChanged(event) {
+  onAlterarDiaChanged(value) {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -506,7 +507,10 @@ class AlteracaoCardapio extends Component {
                   <section className="col-12 col-sm-4">
                     <Field
                       component={InputComData}
-                      onBlur={event => this.onAlterarDiaChanged(event)}
+                      onBlur={event =>
+                        this.onAlterarDiaChanged(event.target.value)
+                      }
+                      onChange={value => this.onAlterarDiaChanged(value)}
                       name="data_alteracao"
                       minDate={proximos_dois_dias_uteis}
                       maxDate={moment()

@@ -552,10 +552,12 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModalConfirm: false });
   }
 
-  onAlterarDiaChanged(event) {
+  onAlterarDiaChanged(value) {
     if (
+      value &&
+      this.state.motivo.nome !== "Merenda Seca" &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -930,7 +932,10 @@ class AlteracaoCardapio extends Component {
                 <section className="section-form-datas mt-4">
                   <Field
                     component={InputComData}
-                    onBlur={event => this.onAlterarDiaChanged(event)}
+                    onBlur={event =>
+                      this.onAlterarDiaChanged(event.target.value)
+                    }
+                    onChange={value => this.onAlterarDiaChanged(value)}
                     name="alterar_dia"
                     minDate={
                       this.state.motivo.nome === "Merenda Seca"
@@ -961,7 +966,10 @@ class AlteracaoCardapio extends Component {
                         this.props.alterar_dia ||
                         (motivo && this.DisabledDataInicial(motivo))
                       }
-                      onChange={value => this.obtemDataInicial(value)}
+                      onChange={value => {
+                        this.obtemDataInicial(value);
+                        this.onAlterarDiaChanged(value);
+                      }}
                     />
                     <Field
                       component={InputComData}
