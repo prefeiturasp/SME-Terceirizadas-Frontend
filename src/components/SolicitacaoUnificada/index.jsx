@@ -105,6 +105,14 @@ const SolicitacaoUnificada = ({
     form.change("unidades_escolares", escolas_quantidades);
   };
 
+  const filterOptions = (options, filter) => {
+    if (!filter) {
+      return options;
+    }
+    const re = new RegExp(filter, "i");
+    return options.filter(({ label }) => label && label.match(re));
+  };
+
   const onSubmit = async (formValues, form) => {
     if (unidadesEscolaresSelecionadas.length === 0) {
       toastError("Selecione ao menos uma unidade escolar");
@@ -346,6 +354,7 @@ const SolicitacaoUnificada = ({
                       <Field
                         component={StatefulMultiSelect}
                         name="unidades_escolares"
+                        filterOptions={filterOptions}
                         options={opcoes}
                         className="form-control"
                         valueRenderer={renderizarLabelUnidadesEscolares}
