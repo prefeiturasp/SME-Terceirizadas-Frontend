@@ -46,7 +46,8 @@ class DashBoardDietaEspecial extends Component {
         { nome: "Conferência Status", uuid: "" },
         { nome: "Conferida", uuid: "1" },
         { nome: "Não Conferida", uuid: "0" }
-      ]
+      ],
+      loadingDietas: true
     };
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
   }
@@ -57,6 +58,7 @@ class DashBoardDietaEspecial extends Component {
         instituicao: response.vinculo_atual.instituicao
       });
     });
+    this.loadDietas();
     if (usuarioEhTerceirizada()) {
       await getMeusLotes().then(response => {
         this.setState({
@@ -68,128 +70,102 @@ class DashBoardDietaEspecial extends Component {
     }
   }
 
-  componentDidUpdate(prevState) {
-    let {
-      autorizadasList,
-      pendentesList,
-      negadasList,
-      canceladasList,
-      inativasList,
-      autorizadasTemporariamenteList,
-      aguardandoVigenciaList,
-      inativasTemporariamenteList,
-      instituicao
-    } = this.state;
+  async loadDietas() {
+    let { instituicao } = this.state;
 
-    if (autorizadasList !== prevState.autorizadasList && !autorizadasList) {
-      this.props
-        .getDietaEspecialAutorizadas(instituicao.uuid, true)
-        .then(response => {
-          this.setState({
-            autorizadasList: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "autorizadas"
-            ),
-            autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "autorizadas"
-            )
-          });
+    await this.props
+      .getDietaEspecialAutorizadas(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          autorizadasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "autorizadas"
+          ),
+          autorizadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "autorizadas"
+          )
         });
-    }
-    if (pendentesList !== prevState.pendentesList && !pendentesList) {
-      this.props
-        .getDietaEspecialPendenteAutorizacao(instituicao.uuid, true)
-        .then(response => {
-          this.setState({
-            pendentesList: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "pendentes-aut"
-            ),
-            pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "pendentes-aut"
-            )
-          });
-        });
-    }
-    if (negadasList !== prevState.negadasList && !negadasList) {
-      this.props
-        .getDietaEspecialNegadas(instituicao.uuid, true)
-        .then(response => {
-          this.setState({
-            negadasList: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "negadas"
-            ),
-            negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "negadas"
-            )
-          });
-        });
-    }
-    if (canceladasList !== prevState.canceladasList && !canceladasList) {
-      this.props
-        .getDietaEspecialCanceladas(instituicao.uuid, true)
-        .then(response => {
-          this.setState({
-            canceladasList: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "canceladas"
-            ),
-            canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.results,
-              "canceladas"
-            )
-          });
-        });
-    }
-    if (inativasList !== prevState.inativasList && !inativasList) {
-      this.props.getDietaEspecialInativas &&
-        this.props
-          .getDietaEspecialInativas(instituicao.uuid, true)
-          .then(response => {
-            this.setState({
-              inativasList: ajustaFormatoLogPainelDietaEspecial(
-                response.data.results,
-                "inativas"
-              ),
-              inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
-                response.data.results,
-                "inativas"
-              )
-            });
-          });
-    }
+      });
 
-    if (
-      autorizadasTemporariamenteList !==
-        prevState.autorizadasTemporariamenteList &&
-      !autorizadasTemporariamenteList
-    ) {
-      this.props
-        .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, true)
+    await this.props
+      .getDietaEspecialPendenteAutorizacao(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          pendentesList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "pendentes-aut"
+          ),
+          pendentesListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "pendentes-aut"
+          )
+        });
+      });
+
+    await this.props
+      .getDietaEspecialNegadas(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          negadasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "negadas"
+          ),
+          negadasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "negadas"
+          )
+        });
+      });
+
+    await this.props
+      .getDietaEspecialCanceladas(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          canceladasList: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "canceladas"
+          ),
+          canceladasListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.results,
+            "canceladas"
+          )
+        });
+      });
+
+    this.props.getDietaEspecialInativas &&
+      (await this.props
+        .getDietaEspecialInativas(instituicao.uuid, true)
         .then(response => {
           this.setState({
-            autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+            inativasList: ajustaFormatoLogPainelDietaEspecial(
               response.data.results,
-              "autorizadas-temp"
+              "inativas"
             ),
-            autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            inativasListFiltered: ajustaFormatoLogPainelDietaEspecial(
               response.data.results,
-              "autorizadas-temp"
+              "inativas"
             )
           });
-        });
-    }
+        }));
 
-    if (
-      (usuarioEhEscola() || usuarioEhTerceirizada()) &&
-      aguardandoVigenciaList !== prevState.aguardandoVigenciaList &&
-      !aguardandoVigenciaList
-    ) {
-      this.props
+    await this.props
+      .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          autorizadasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+            response.data.results,
+            "autorizadas-temp"
+          ),
+          autorizadasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.data.results,
+            "autorizadas-temp"
+          )
+        });
+      });
+
+    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+      await this.props
         .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
         .then(response => {
           this.setState({
@@ -205,25 +181,22 @@ class DashBoardDietaEspecial extends Component {
         });
     }
 
-    if (
-      inativasTemporariamenteList !== prevState.inativasTemporariamenteList &&
-      !inativasTemporariamenteList
-    ) {
-      this.props
-        .getDietaEspecialInativasTemporariamente(instituicao.uuid, true)
-        .then(response => {
-          this.setState({
-            inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results,
-              "inativas-temp"
-            ),
-            inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
-              response.data.results,
-              "inativas-temp"
-            )
-          });
+    await this.props
+      .getDietaEspecialInativasTemporariamente(instituicao.uuid, true)
+      .then(response => {
+        this.setState({
+          inativasTemporariamenteList: ajustaFormatoLogPainelDietaEspecial(
+            response.data.results,
+            "inativas-temp"
+          ),
+          inativasTemporariamenteListFiltered: ajustaFormatoLogPainelDietaEspecial(
+            response.data.results,
+            "inativas-temp"
+          )
         });
-    }
+      });
+
+    this.setState({ loadingDietas: false });
   }
 
   filtrarStatus(listaFiltro, value) {
@@ -369,7 +342,8 @@ class DashBoardDietaEspecial extends Component {
       inativasListFiltered,
       instituicao,
       listaLotes,
-      listaStatus
+      listaStatus,
+      loadingDietas
     } = this.state;
 
     const podeIncluirDietaEspecial = usuarioEhEscola();
@@ -388,6 +362,7 @@ class DashBoardDietaEspecial extends Component {
               onChange={this.onPesquisaChanged}
               listaLotes={listaLotes}
               listaStatus={listaStatus}
+              loadingDietas={loadingDietas}
             >
               <div className="row">
                 <div className="col-6">
