@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import FiltrosExcel from "../FiltrosExcel";
+import FiltrosExcel from "../FiltrosRelatorios";
 
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
@@ -96,14 +96,6 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                       pdf={true}
                       showModal={setShowDownload}
                     />
-                    {/* <Button
-                      className="acoes"
-                      variant="link"
-                      onClick={() => baixarPDFGuiasRemessa(solicitacao)}
-                    >
-                      <i className="fas fa-file-pdf red" />
-                      <span className="link-exportar">PDF</span>
-                    </Button> */}
                   </div>
                 </div>
                 {ativos && ativos.includes(solicitacao.uuid) && (

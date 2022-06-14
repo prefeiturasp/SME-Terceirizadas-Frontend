@@ -22,13 +22,18 @@ import {
   BUTTON_TYPE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { getError } from "../../helpers/utilities";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  getError
+} from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { formatarSubmissao } from "./helper";
 import "./style.scss";
+import { OnChange } from "react-final-form-listeners";
 
 const SolicitacaoUnificada = ({
   dadosUsuario,
+  proximosCincoDiasUteis,
   proximosDoisDiasUteis,
   escolas,
   kits
@@ -258,6 +263,19 @@ const SolicitacaoUnificada = ({
     }
   };
 
+  const validaDiasUteis = value => {
+    if (
+      value &&
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        proximosDoisDiasUteis,
+        proximosCincoDiasUteis
+      )
+    ) {
+      setShowModal(true);
+    }
+  };
+
   return (
     <>
       <CardMatriculados
@@ -300,6 +318,11 @@ const SolicitacaoUnificada = ({
                         validate={required}
                         required
                       />
+                      <OnChange name="data">
+                        {value => {
+                          validaDiasUteis(value);
+                        }}
+                      </OnChange>
                     </div>
                     <div className="col-5 pb-3">
                       <Field
