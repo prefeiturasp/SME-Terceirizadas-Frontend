@@ -345,6 +345,7 @@ export default () => {
         let embalagensAlimento = guia.alimentos[index].embalagens;
         let fechada;
         let fracionada;
+        let alimentoFaltante;
         if (embalagensAlimento.length > 1) {
           fechada =
             embalagensAlimento[0].tipo_embalagem === "Fechada"
@@ -370,8 +371,16 @@ export default () => {
         let alimentoParcial =
           recebidos_fechada < fechada.qtd_a_receber ||
           recebidos_fracionada < fracionada.qtd_a_receber;
-        let alimentoFaltante =
-          recebidos_fechada === 0 || recebidos_fracionada === 0;
+        if (
+          fechada.tipo_embalagem === "Fechada" &&
+          fracionada.tipo_embalagem === "Fracionada"
+        ) {
+          alimentoFaltante =
+            recebidos_fechada === 0 && recebidos_fracionada === 0;
+        } else {
+          alimentoFaltante =
+            recebidos_fechada === 0 || recebidos_fracionada === 0;
+        }
 
         let newFlagAlimento = flagAlimento;
         newFlagAlimento[index] = alimentoFaltante || alimentoParcial;
