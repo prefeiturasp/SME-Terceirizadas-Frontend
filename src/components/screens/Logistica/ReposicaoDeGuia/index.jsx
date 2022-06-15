@@ -93,17 +93,6 @@ export default () => {
   };
 
   const filtrarAlimentos = (conf_alimentos, guiaResponse, edicao) => {
-    conf_alimentos.forEach(conferencia => {
-      if (
-        conferencia.status_alimento === "Recebido" ||
-        conferencia.ocorrencia.includes("ATRASO_ENTREGA")
-      ) {
-        guiaResponse.alimentos = guiaResponse.alimentos.filter(
-          alimento => alimento.nome_alimento !== conferencia.nome_alimento
-        );
-      }
-    });
-
     if (edicao) {
       guiaResponse.alimentos.forEach(alimento => {
         alimento.embalagens.forEach(embalagem => {
