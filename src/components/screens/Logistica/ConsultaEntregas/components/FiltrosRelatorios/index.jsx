@@ -120,11 +120,22 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
     );
   };
 
+  const checkAllConferidas = e => {
+    setRecebidas(e.target.checked);
+    setParciais(e.target.checked);
+    setNaoRecebidas(e.target.checked);
+    setRepoParcial(e.target.checked);
+    setRepoTotal(e.target.checked);
+  };
+
   useEffect(() => {
     if (!conferidas) {
       desligaConferidas();
     }
   }, [conferidas]);
+
+  const verificaConferidas =
+    recebidas && parciais && naoRecebidas && repoParcial && repoTotal;
 
   return (
     <>
@@ -170,19 +181,40 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
                 <div className="checkbox-title">
                   Escolha os tipos de guias conferidas
                 </div>
-                <Checkbox onChange={() => setRecebidas(!recebidas)}>
+                <Checkbox
+                  checked={verificaConferidas}
+                  onChange={checkAllConferidas}
+                >
+                  Todas
+                </Checkbox>
+                <Checkbox
+                  checked={recebidas}
+                  onChange={() => setRecebidas(!recebidas)}
+                >
                   Recebidas
                 </Checkbox>
-                <Checkbox onChange={() => setParciais(!parciais)}>
+                <Checkbox
+                  checked={parciais}
+                  onChange={() => setParciais(!parciais)}
+                >
                   Parciais
                 </Checkbox>
-                <Checkbox onChange={() => setNaoRecebidas(!naoRecebidas)}>
+                <Checkbox
+                  checked={naoRecebidas}
+                  onChange={() => setNaoRecebidas(!naoRecebidas)}
+                >
                   Não Recebidas
                 </Checkbox>
-                <Checkbox onChange={() => setRepoParcial(!repoParcial)}>
+                <Checkbox
+                  checked={repoParcial}
+                  onChange={() => setRepoParcial(!repoParcial)}
+                >
                   Reposição Parcial
                 </Checkbox>
-                <Checkbox onChange={() => setRepoTotal(!repoTotal)}>
+                <Checkbox
+                  checked={repoTotal}
+                  onChange={() => setRepoTotal(!repoTotal)}
+                >
                   Reposição Total
                 </Checkbox>
               </div>
