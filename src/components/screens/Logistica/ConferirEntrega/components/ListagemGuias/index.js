@@ -11,11 +11,12 @@ const ListagemSolicitacoes = ({ guias }) => {
   const [carregando, setCarregando] = useState(false);
 
   const checaReposicao = guia => {
-    let alimentosPendentes = guia.alimentos.filter(
-      alimento =>
-        alimento.embalagens[0].qtd_a_receber > 0 ||
-        (alimento.embalagens[1] && alimento.embalagens[1].qtd_a_receber > 0)
-    );
+    let alimentosPendentes = guia.alimentos.filter(alimento => {
+      return (
+        alimento.embalagens.filter(embalagem => embalagem.qtd_a_receber !== 0)
+          .length > 0
+      );
+    });
     return alimentosPendentes.length > 0;
   };
 
