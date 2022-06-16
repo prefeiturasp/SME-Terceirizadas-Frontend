@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { meusDados } from "../../services/perfil.service";
 import { getDiasUteis } from "../../services/diasUteis.service";
 import { getKitLanches } from "../../services/kitLanche";
-
+import { getEscolasTrecTotal } from "../../services/escola.service";
 import { dataParaUTC } from "../../helpers/utilities";
 import SolicitacaoUnificada from ".";
 
@@ -16,10 +16,12 @@ export default () => {
 
   async function fetchData() {
     meusDados().then(response => {
-      let escolas = response.vinculo_atual.instituicao.escolas;
       setDadosUsuario(response);
-      setEscolas(escolas);
       setLotes(response.vinculo_atual.instituicao.lotes);
+    });
+
+    getEscolasTrecTotal().then(response => {
+      setEscolas(response.data);
     });
 
     getDiasUteis().then(response => {
