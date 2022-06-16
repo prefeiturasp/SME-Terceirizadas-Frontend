@@ -43,13 +43,22 @@ export class Rascunhos extends Component {
               <div className="ml-3">
                 <p>
                   Substituição do dia:{" "}
-                  <b>{inversaoDeDiaDeCardapio.cardapio_de.data}</b>{" "}
+                  <b>
+                    {inversaoDeDiaDeCardapio.cardapio_de
+                      ? inversaoDeDiaDeCardapio.cardapio_de.data
+                      : inversaoDeDiaDeCardapio.data_de_inversao}
+                  </b>{" "}
                   <i
                     className={"fa fa-arrow-right ml-2 mr-2"}
                     style={{ color: "#2881BB" }}
                   />{" "}
                   para o dia:
-                  <b> {inversaoDeDiaDeCardapio.cardapio_para.data}</b>
+                  <b>
+                    {" "}
+                    {inversaoDeDiaDeCardapio.cardapio_para
+                      ? inversaoDeDiaDeCardapio.cardapio_para.data
+                      : inversaoDeDiaDeCardapio.data_para_inversao}
+                  </b>
                 </p>
               </div>
             </div>

@@ -1,321 +1,73 @@
 @import "../../styles/variables.scss";
 
-nav,
-div,
-span,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-label,
-input {
-  font-family: Roboto !important;
-}
+.lista-escolas {
+  margin: 0 3% 3% 0;
+  padding: 0;
 
-.unified-solicitation {
-  .schools-group {
-    height: 520px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: 1000px;
-    .school-container {
-      padding-top: 8px;
-      label.checkbox-label {
-        height: 25px;
-        color: $black;
-      }
-    }
-    .school-checked {
-      .school-container {
-        background-color: $blueSelected;
-      }
-    }
-  }
-  .number-students-per-school {
-    padding: 15px 0;
-    label {
+  .card {
+    .escola {
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
       font-size: 14px;
-      color: $gray;
-    }
-    .col-1 {
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.01em;
       padding: 0;
+      color: #42474a;
     }
-  }
-  .d-grid {
-    display: grid;
-    .default-label {
+
+    .local {
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
       font-size: 14px;
-      color: $gray;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      letter-spacing: 0.01em;
+      padding: 0;
+      color: #929394;
     }
   }
 }
 
-.school-container {
-  padding-left: 1rem !important;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  background: #ffffff;
-  border: 1px solid #eeeeee;
-  box-sizing: border-box;
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-}
-
-table.report-table {
+.botao-remover-escola {
+  border-radius: 50% !important;
   width: 100%;
-  text-align: center;
-  th {
-    background: #333333;
-    color: #ffffff;
-    padding: 10px;
+}
+
+.wrapper-solicitacao {
+  background-color: #f4f4f4;
+}
+
+.required-asterisk {
+  color: $red;
+  padding-right: 5px;
+}
+
+.card-kits {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  color: #42474a;
+  border: 1px solid #929394 !important;
+  background-color: #f4f4f4 !important;
+
+  .nome-kit {
+    font-weight: 900;
   }
-  td {
-    color: #353535;
-    border-bottom: 1px solid #353535;
+
+  .kit-itens ul {
+    list-style: none;
+    padding: 0;
   }
 }
 
-.label-n-alunos {
-  span {
-    font-size: 14px;
-    font-weight: 600;
-    padding-right: 10px;
-  }
-  input {
-    font-size: 14px;
-    height: 25px;
-    border-radius: 4px;
-    border: 1px solid $grayLight;
-    background-color: $grayInputBackground;
-    font-weight: bold;
-    color: $black;
-  }
-}
-
-.container-detail {
-  .container-title {
-    display: grid;
-    grid-template-columns: 20% auto 5%;
-    grid-template-rows: auto;
-
-    .identificador {
-      background: #d9d8d8;
-      width: 90%;
-      height: 100%;
-      border: 0.5px solid #e8e8e8;
-      box-sizing: border-box;
-      border-radius: 4px;
-      display: grid;
-      grid-row: 50% 50%;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 1em;
-      line-height: 23px;
-
-      div {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: bold;
-        color: #353535;
-      }
-    }
-
-    .titulo-descricao-top {
-      width: 431px;
-      height: 17px;
-      left: 555px;
-      top: 192px;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 13px;
-      line-height: 16px;
-      color: #a8a8a8;
-      span {
-        color: #853cb6;
-      }
-    }
-
-    .titulo-solicitante-lote {
-      div {
-        display: grid;
-        grid-template-columns: 50% 50%;
-        grid-template-rows: auto;
-        margin-top: 5px;
-      }
-
-      .solicitante,
-      .lote {
-        font-family: Roboto !important;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 16px;
-        /* identical to box height */
-
-        color: #686868;
-      }
-
-      .prop-solicitante,
-      .prop-lote {
-        font-family: Roboto !important;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 15px;
-        line-height: 18px;
-
-        color: #353535;
-      }
-    }
-
-    .impressora {
-      display: flex;
-      justify-content: flex-end;
-
-      i {
-        font-style: normal;
-        font-weight: 900;
-        font-size: 15px;
-        line-height: 17px;
-        /* identical to box height */
-
-        color: #c8c8c8;
-      }
-    }
-  }
-  .descricao-evento {
-    display: grid;
-    grid-template-columns: 50% 50%;
-
-    .direita,
-    .esquerda {
-      .descricao-container {
-        margin-bottom: 1em;
-        .descricao-titulo {
-          color: $gray;
-        }
-        .descricao-texto,
-        .descricao-observacao {
-          color: $blackInput;
-          font-weight: bold;
-        }
-      }
-      div {
-        margin: 0 0 0.5em 0;
-      }
-    }
-
-    .descricao-titulo {
-      //color: #686868;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 16px;
-    }
-    .descricao-texto {
-      //color: #686868;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 16px;
-    }
-  }
-
-  .header-tabela {
-    background: #333333;
-    color: #fff;
-    font-family: Roboto !important;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 0.875em;
-    line-height: 16px;
-
-    div {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      padding: 0.5em 0.5em 0.5em 0.5em;
-    }
-  }
-
-  .tabela-escolas {
-    display: grid;
-    font-size: 14px;
-    grid-template-columns: 8% auto 10% 15% 15% 10%;
-    grid-auto-rows: 47px auto;
-    border-bottom: 1px solid #353535;
-    &:not(.header-tabela) {
-      color: $blackSubtle;
-    }
-
-    div {
-      padding: 0.5em;
-    }
-  }
-
-  .tabela-escolas:nth-last-child(-n + 1) {
-    border-bottom: 2px solid #353535;
-    margin-bottom: 1.5em;
-  }
-
-  .observacoes-solicitacao {
-    margin-top: 15px;
-    display: grid;
-    grid-template-rows: 80px 80px;
-    grid-row-gap: 10px;
-
-    .div-topo {
-      display: grid;
-      grid-template-columns: 49% 49%;
-      grid-column-gap: 2%;
-    }
-
-    .kits {
-      display: flex;
-      justify-content: flex-end;
-      padding-right: 2em;
-    }
-
-    .descricao-titulo {
-      //color: #686868;
-      color: $gray;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 16px;
-    }
-    .descricao-texto {
-      //color: #686868;
-      color: $blackInput;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 16px;
-      padding-top: 0.8em;
-    }
-
-    .descricao-observacao {
-      //color: #686868;
-      font-family: Roboto !important;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 16px;
-      padding-top: 1em;
-    }
-  }
-
-  .botoes-acao {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 30px;
-  }
+.col-form-label {
+  font-size: 14px !important;
+  line-height: 16px !important;
 }

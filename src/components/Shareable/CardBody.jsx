@@ -4,11 +4,13 @@ import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
 import { usuarioEhTerceirizada } from "helpers/utilities";
+import { Spin } from "antd";
 
 const CardBody = props => {
   const ehTerceirizada = usuarioEhTerceirizada();
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
+  const loadingDietas = props.loadingDietas || false;
 
   return (
     <div className="card mt-3">
@@ -42,11 +44,19 @@ const CardBody = props => {
                         : "offset-3 col-3"
                     }`}
                   >
+                    {loadingDietas && (
+                      <div>
+                        <Spin
+                          className="carregando-filtro"
+                          tip="Carregando Filtro..."
+                        />
+                      </div>
+                    )}
                     <Field
                       component={InputText}
                       name="titulo"
-                      placeholder="Pesquisar"
-                      disabled={filtrosDesabilitados}
+                      placeholder={loadingDietas ? "" : "Pesquisar"}
+                      disabled={loadingDietas || filtrosDesabilitados}
                     />
                     {ehDashboardGestaoProduto && (
                       <div className="warning-num-charac">

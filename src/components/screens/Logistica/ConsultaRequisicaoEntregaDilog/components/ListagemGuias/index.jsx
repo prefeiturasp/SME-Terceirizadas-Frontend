@@ -80,7 +80,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
             {guias.map(guia => {
               return (
                 <>
-                  <div className="grid-table body-table">
+                  <div className="grid-table body-table hand-cursor">
                     <div>
                       <Checkbox
                         checked={guia.checked}
@@ -101,15 +101,22 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
               );
             })}
             <div className="button-row mt-3">
-              <Botao
-                texto={textoBotao}
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => {
-                  setShowModal(true);
-                }}
-                style={BUTTON_STYLE.GREEN}
-                disabled={validaBotao()}
-              />
+              <span className="float-right tooltip-botao ">
+                <Botao
+                  texto={textoBotao}
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                  style={BUTTON_STYLE.GREEN}
+                  disabled={validaBotao()}
+                />
+                <span className="tooltiptext">
+                  O botão arquivar será habilitado para guias de remessa
+                  selecionadas na tabela acima, que estejam em requisições com
+                  status de Confirmada.
+                </span>
+              </span>
             </div>
           </div>
         </section>

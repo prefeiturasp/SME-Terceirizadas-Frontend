@@ -1,30 +1,13 @@
+import { Spin } from "antd";
+import CKEditorField from "components/Shareable/CKEditorField";
 import HTTP_STATUS from "http-status-codes";
+import { isEqual } from "lodash";
 import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import CKEditorField from "components/Shareable/CKEditorField";
-import { TIPO_SOLICITACAO } from "../../../constants/shared";
-import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
-import {
-  maxValue,
-  naoPodeSerZero,
-  required,
-  maxLength
-} from "../../../helpers/fieldValidators";
-import {
-  validateFormKitLanchePasseio,
-  validateFormKitLanchePasseioCei
-} from "./validators";
-import {
-  converterDDMMYYYYparaYYYYMMDD,
-  escolaEhCei
-} from "../../../helpers/utilities";
-import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../../helpers/utilities";
+import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import {
   getSolicitacoesKitLanche,
   inicioPedido,
@@ -32,7 +15,20 @@ import {
   removeKitLanche,
   solicitarKitLanche
 } from "services/kitLanche";
-import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
+import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
+import { TIPO_SOLICITACAO } from "../../../constants/shared";
+import {
+  maxLength,
+  maxValue,
+  naoPodeSerZero,
+  required
+} from "../../../helpers/fieldValidators";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  converterDDMMYYYYparaYYYYMMDD,
+  escolaEhCei,
+  getError
+} from "../../../helpers/utilities";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
@@ -44,12 +40,14 @@ import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
 import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
+import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
 import { Rascunhos } from "../Rascunhos";
 import { montaObjetoRequisicao } from "./helper";
 import "./style.scss";
-import { isEqual } from "lodash";
-import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
-import { Spin } from "antd";
+import {
+  validateFormKitLanchePasseio,
+  validateFormKitLanchePasseioCei
+} from "./validators";
 
 const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
 
@@ -213,10 +211,11 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
-  validaDiasUteis = event => {
+  validaDiasUteis = value => {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -321,9 +320,7 @@ export class SolicitacaoDeKitLanche extends Component {
         } else if (resp.data.tipo_error) {
           this.validaTipoMensagemError(resp.data);
         } else {
-          toastError(
-            `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
-          );
+          toastError(getError(resp.data));
         }
       });
     } else {
@@ -522,13 +519,14 @@ export class SolicitacaoDeKitLanche extends Component {
                     component={InputComData}
                     label="Data do passeio"
                     name="evento_data"
-                    onBlur={event => this.validaDiasUteis(event)}
+                    onBlur={event => this.validaDiasUteis(event.target.value)}
                     minDate={proximos_dois_dias_uteis}
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
                     required
                     validate={required}
+                    onChange={value => this.validaDiasUteis(value)}
                   />
                 </div>
                 <div className="col-9">

@@ -10,6 +10,7 @@ export const Botao = props => {
     disabled,
     icon,
     iconPosition,
+    iconId,
     onClick,
     style,
     titulo,
@@ -29,11 +30,14 @@ export const Botao = props => {
       tabIndex={tabindex}
     >
       {iconPosition !== "right" && icon && (
-        <i className={`${icon} ${texto && "text-and-icon-left"}`} />
+        <i id={iconId} className={`${icon} ${texto && "text-and-icon-left"}`} />
       )}
       {texto}
       {iconPosition === "right" && icon && (
-        <i className={`${icon} ${texto && "text-and-icon-right"}`} />
+        <i
+          id={iconId}
+          className={`${icon} ${texto && "text-and-icon-right"}`}
+        />
       )}
     </button>
   );
@@ -45,6 +49,7 @@ Botao.propTypes = {
   onClick: PropTypes.func,
   icon: PropTypes.string,
   iconPosition: PropTypes.string,
+  iconId: PropTypes.string,
   style: PropTypes.string,
   texto: PropTypes.string,
   titulo: PropTypes.string,

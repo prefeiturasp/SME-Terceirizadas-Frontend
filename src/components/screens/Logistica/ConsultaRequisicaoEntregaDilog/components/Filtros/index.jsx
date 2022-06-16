@@ -14,6 +14,7 @@ import {
 import "./style.scss";
 import { getNomesUnidadesEscolares } from "services/logistica.service.js";
 import { debounce } from "lodash";
+import MultiSelectDistribuidores from "components/Shareable/MultiSelectDistribuidores";
 
 const FORM_NAME = "buscaRequisicoesDilog";
 
@@ -135,12 +136,10 @@ export default ({
                 />
               </div>
               <div className="col">
-                <Field
-                  component={InputText}
-                  label="Nome do Distribuidor"
-                  name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
+                <MultiSelectDistribuidores
                   className="input-busca-produto"
+                  name="distribuidor"
+                  label="Nome dos Distribuidores"
                 />
               </div>
             </div>

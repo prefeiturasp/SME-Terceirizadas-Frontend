@@ -259,17 +259,19 @@ export class CorpoRelatorio extends Component {
         {ehInclusaoCei(tipoSolicitacao) && (
           <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
         )}
-        <div className="row">
-          <div className="col-12 report-label-value">
-            <p>Observações</p>
-            <p
-              className="value"
-              dangerouslySetInnerHTML={{
-                __html: observacao
-              }}
-            />
+        {ehInclusaoContinua(tipoSolicitacao) && (
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>Observações</p>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: observacao
+                }}
+              />
+            </div>
           </div>
-        </div>
+        )}
         {justificativaNegacao && (
           <div className="row">
             <div className="col-12 report-label-value">
