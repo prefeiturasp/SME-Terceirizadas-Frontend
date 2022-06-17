@@ -29,7 +29,10 @@ import {
   getDietasEspeciaisVigentesDeUmAluno,
   getSolicitacoesDietaEspecial
 } from "../../../../services/dietaEspecial.service";
-import { getAlunoPertenceAEscola } from "../../../../services/aluno.service";
+import {
+  getAlunoPertenceAEscola,
+  getFotoAluno
+} from "../../../../services/aluno.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
@@ -65,7 +68,8 @@ class solicitacaoDietaEspecial extends Component {
       submitted: false,
       resumo: null,
       aluno_nao_matriculado: false,
-      pertence_a_escola: null
+      pertence_a_escola: null,
+      fotoAlunoSrc: null
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -143,6 +147,15 @@ class solicitacaoDietaEspecial extends Component {
         }
       }
     );
+
+    const responseFoto = await getFotoAluno(event.target.value);
+    if (responseFoto.status === HTTP_STATUS.OK) {
+      this.setState({
+        fotoAlunoSrc: `data:${responseFoto.data.data.download.item2};base64,${
+          responseFoto.data.data.download.item1
+        }`
+      });
+    }
   };
 
   getEscolaPorEOL = async () => {
@@ -250,7 +263,7 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const { quantidadeAlunos } = this.state;
+    const { quantidadeAlunos, fotoAlunoSrc } = this.state;
     const {
       handleSubmit,
       pristine,
@@ -290,7 +303,7 @@ class solicitacaoDietaEspecial extends Component {
             <>
               <FormSection name="aluno_json">
                 <div className="row">
-                  <div className="col-md-3">
+                  <div className="col-2">
                     <Field
                       component={InputText}
                       name="codigo_eol"
@@ -304,7 +317,16 @@ class solicitacaoDietaEspecial extends Component {
                       onChange={this.onEolBlur}
                     />
                   </div>
-                  <div className="col-md-6">
+                </div>
+                <div className="row">
+                  <div className="col-2">
+                    {fotoAlunoSrc ? (
+                      <img src={fotoAlunoSrc} />
+                    ) : (
+                      <div>Carregando imagem...</div>
+                    )}
+                  </div>
+                  <div className="col-7">
                     <Field
                       component={InputText}
                       name="nome"
@@ -315,7 +337,7 @@ class solicitacaoDietaEspecial extends Component {
                       validate={[required, minLength6]}
                     />
                   </div>
-                  <div className="col-md-3">
+                  <div className="col-3">
                     <Field
                       component={InputComData}
                       label="Data de Nascimento"
