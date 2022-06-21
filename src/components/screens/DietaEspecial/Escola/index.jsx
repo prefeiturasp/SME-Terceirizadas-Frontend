@@ -71,7 +71,7 @@ class solicitacaoDietaEspecial extends Component {
       resumo: null,
       aluno_nao_matriculado: false,
       pertence_a_escola: null,
-      fotoAlunoSrc: undefined,
+      fotoAlunoSrc: null,
       deletandoImagem: false,
       atualizandoImagem: false
     };
@@ -176,13 +176,27 @@ class solicitacaoDietaEspecial extends Component {
     getAlunoPertenceAEscola(event.target.value, codigo_eol_escola).then(
       response => {
         if (response.status === 200) {
-          this.setState({ pertence_a_escola: response.data.pertence_a_escola });
+          this.setState({
+            pertence_a_escola: response.data.pertence_a_escola,
+            fotoAlunoSrc: undefined
+          });
           if (this.state.pertence_a_escola) {
             change("aluno_json.nome", resposta.detail.nm_aluno);
             change(
               "aluno_json.data_nascimento",
               moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
             );
+            getFotoAluno(event.target.value).then(responseFoto => {
+              if (responseFoto.status === HTTP_STATUS.OK) {
+                this.setState({
+                  fotoAlunoSrc: `data:${
+                    responseFoto.data.data.download.item2
+                  };base64,${responseFoto.data.data.download.item1}`
+                });
+              } else {
+                this.setState({ fotoAlunoSrc: null });
+              }
+            });
           } else {
             change("aluno_json.nome", "");
             change("aluno_json.data_nascimento", "");
@@ -190,21 +204,10 @@ class solicitacaoDietaEspecial extends Component {
             change("registro_funcional_pescritor", "");
           }
         } else {
-          this.setState({ pertence_a_escola: null });
+          this.setState({ pertence_a_escola: null, fotoAlunoSrc: null });
         }
       }
     );
-
-    const responseFoto = await getFotoAluno(event.target.value);
-    if (responseFoto.status === HTTP_STATUS.OK) {
-      this.setState({
-        fotoAlunoSrc: `data:${responseFoto.data.data.download.item2};base64,${
-          responseFoto.data.data.download.item1
-        }`
-      });
-    } else {
-      this.setState({ fotoAlunoSrc: null });
-    }
   };
 
   getEscolaPorEOL = async () => {
@@ -316,7 +319,8 @@ class solicitacaoDietaEspecial extends Component {
       quantidadeAlunos,
       fotoAlunoSrc,
       deletandoImagem,
-      atualizandoImagem
+      atualizandoImagem,
+      pertence_a_escola
     } = this.state;
     const {
       handleSubmit,
@@ -387,6 +391,7 @@ class solicitacaoDietaEspecial extends Component {
                         />
                         {codigo_eol &&
                           codigo_eol.length >= 7 &&
+                          pertence_a_escola &&
                           fotoAlunoSrc === undefined && (
                             <div className="foto-legenda">
                               Carregando imagem...
@@ -476,19 +481,18 @@ class solicitacaoDietaEspecial extends Component {
                   </div>
                 </div>
               </FormSection>
-              {this.state.pertence_a_escola === false && (
+              {pertence_a_escola === false && (
                 <div className="current-diets">
                   <div className="pt-2 no-diets">
                     Aluno não pertence a unidade educacional.
                   </div>
                 </div>
               )}
-              {this.state.pertence_a_escola === true &&
-                solicitacoesVigentes && (
-                  <SolicitacaoVigente
-                    solicitacoesVigentes={solicitacoesVigentes}
-                  />
-                )}
+              {pertence_a_escola === true && solicitacoesVigentes && (
+                <SolicitacaoVigente
+                  solicitacoesVigentes={solicitacoesVigentes}
+                />
+              )}
 
               <Prescritor pertence_a_escola={this.state.pertence_a_escola} />
 
