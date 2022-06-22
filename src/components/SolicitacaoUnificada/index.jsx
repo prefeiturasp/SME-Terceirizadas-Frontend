@@ -241,11 +241,13 @@ const SolicitacaoUnificada = ({
     );
     let total = 0;
     let listaQuantidadeKits = resultado.filter(
-      v => ![""].includes(v.quantidade_kits)
+      v =>
+        !["", undefined].includes(v.quantidade_kits) &&
+        !["", undefined].includes(v.nmr_alunos)
     );
     if (listaQuantidadeKits.length !== 0) {
-      listaQuantidadeKits = listaQuantidadeKits.map(v =>
-        parseInt(v.quantidade_kits)
+      listaQuantidadeKits = listaQuantidadeKits.map(
+        v => parseInt(v.quantidade_kits) * parseInt(v.nmr_alunos)
       );
       for (let index = 0; index < listaQuantidadeKits.length; index++) {
         total = total + listaQuantidadeKits[index];
@@ -373,11 +375,15 @@ const SolicitacaoUnificada = ({
                           });
                           let total = 0;
                           let listaQuantidadeKits = resultado.filter(
-                            v => ![""].includes(v.quantidade_kits)
+                            v =>
+                              !["", undefined].includes(v.quantidade_kits) &&
+                              !["", undefined].includes(v.nmr_alunos)
                           );
                           if (listaQuantidadeKits.length !== 0) {
-                            listaQuantidadeKits = listaQuantidadeKits.map(v =>
-                              parseInt(v.quantidade_kits)
+                            listaQuantidadeKits = listaQuantidadeKits.map(
+                              v =>
+                                parseInt(v.quantidade_kits) *
+                                parseInt(v.nmr_alunos)
                             );
                             for (
                               let index = 0;
@@ -477,7 +483,7 @@ const SolicitacaoUnificada = ({
                                     className="row mt-3 wrapper-solicitacao d-none p-3"
                                     id={ue.uuid}
                                   >
-                                    <div className="col-4">
+                                    <div className="col-5">
                                       <label
                                         htmlFor={`unidades_escolares[${idx}].nmr_alunos`}
                                         className="col-form-label"
@@ -485,7 +491,7 @@ const SolicitacaoUnificada = ({
                                         <span className="required-asterisk">
                                           *
                                         </span>
-                                        Nº padrão por unidade educacional
+                                        Nº de alunos por Unidade Educacional
                                       </label>
                                       <Field
                                         component="input"
@@ -500,6 +506,48 @@ const SolicitacaoUnificada = ({
                                             `unidades_escolares[${idx}].nmr_alunos`,
                                             event.target.value
                                           );
+                                          let total = 0;
+                                          let listaQuantidadeKits = values.unidades_escolares.filter(
+                                            e =>
+                                              e.uuid !== ue.uuid &&
+                                              !["", undefined].includes(
+                                                e.quantidade_kits
+                                              ) &&
+                                              !["", undefined].includes(
+                                                e.nmr_alunos
+                                              )
+                                          );
+                                          if (
+                                            listaQuantidadeKits.length !== 0
+                                          ) {
+                                            listaQuantidadeKits = listaQuantidadeKits.map(
+                                              e =>
+                                                parseInt(e.quantidade_kits) *
+                                                parseInt(e.nmr_alunos)
+                                            );
+                                            for (
+                                              let i = 0;
+                                              i < listaQuantidadeKits.length;
+                                              i++
+                                            ) {
+                                              total =
+                                                total + listaQuantidadeKits[i];
+                                            }
+                                          }
+                                          if (
+                                            !["", undefined].includes(
+                                              event.target.value
+                                            ) &&
+                                            !["", undefined].includes(
+                                              ue.quantidade_kits
+                                            )
+                                          ) {
+                                            total =
+                                              total +
+                                              parseInt(event.target.value) *
+                                                parseInt(ue.quantidade_kits);
+                                          }
+                                          setTotalKits(total);
                                         }}
                                         required
                                         validate={required}
@@ -526,22 +574,36 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares
-                                                  .filter(
-                                                    e => e.uuid !== ue.uuid
-                                                  )
-                                                  .map(e =>
-                                                    parseInt(e.quantidade_kits)
-                                                  );
-                                                for (
-                                                  let i = 0;
-                                                  i <
-                                                  listaQuantidadeKits.length;
-                                                  i++
+                                                let listaQuantidadeKits = values.unidades_escolares.filter(
+                                                  e =>
+                                                    e.uuid !== ue.uuid &&
+                                                    !["", undefined].includes(
+                                                      e.quantidade_kits
+                                                    ) &&
+                                                    !["", undefined].includes(
+                                                      e.nmr_alunos
+                                                    )
+                                                );
+                                                if (
+                                                  listaQuantidadeKits.length !==
+                                                  0
                                                 ) {
-                                                  total =
-                                                    total +
-                                                    listaQuantidadeKits[i];
+                                                  listaQuantidadeKits = listaQuantidadeKits.map(
+                                                    e =>
+                                                      parseInt(
+                                                        e.quantidade_kits
+                                                      ) * parseInt(e.nmr_alunos)
+                                                  );
+                                                  for (
+                                                    let i = 0;
+                                                    i <
+                                                    listaQuantidadeKits.length;
+                                                    i++
+                                                  ) {
+                                                    total =
+                                                      total +
+                                                      listaQuantidadeKits[i];
+                                                  }
                                                 }
                                                 form.change(
                                                   `unidades_escolares[${idx}].kits_selecionados`,
@@ -551,7 +613,16 @@ const SolicitacaoUnificada = ({
                                                   `unidades_escolares[${idx}].quantidade_kits`,
                                                   "1"
                                                 );
-                                                setTotalKits(total + 1);
+                                                if (
+                                                  !["", undefined].includes(
+                                                    ue.nmr_alunos
+                                                  )
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    parseInt(ue.nmr_alunos);
+                                                }
+                                                setTotalKits(total);
                                               }}
                                             />
                                             <span className="checkmark" />
@@ -569,26 +640,36 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares
-                                                  .filter(
-                                                    e =>
-                                                      e.uuid !== ue.uuid &&
-                                                      ![undefined, ""].includes(
-                                                        e.quantidade_kits
-                                                      )
-                                                  )
-                                                  .map(e =>
-                                                    parseInt(e.quantidade_kits)
-                                                  );
-                                                for (
-                                                  let i = 0;
-                                                  i <
-                                                  listaQuantidadeKits.length;
-                                                  i++
+                                                let listaQuantidadeKits = values.unidades_escolares.filter(
+                                                  e =>
+                                                    e.uuid !== ue.uuid &&
+                                                    !["", undefined].includes(
+                                                      e.quantidade_kits
+                                                    ) &&
+                                                    !["", undefined].includes(
+                                                      e.nmr_alunos
+                                                    )
+                                                );
+                                                if (
+                                                  listaQuantidadeKits.length !==
+                                                  0
                                                 ) {
-                                                  total =
-                                                    total +
-                                                    listaQuantidadeKits[i];
+                                                  listaQuantidadeKits = listaQuantidadeKits.map(
+                                                    e =>
+                                                      parseInt(
+                                                        e.quantidade_kits
+                                                      ) * parseInt(e.nmr_alunos)
+                                                  );
+                                                  for (
+                                                    let i = 0;
+                                                    i <
+                                                    listaQuantidadeKits.length;
+                                                    i++
+                                                  ) {
+                                                    total =
+                                                      total +
+                                                      listaQuantidadeKits[i];
+                                                  }
                                                 }
                                                 form.change(
                                                   `unidades_escolares[${idx}].kits_selecionados`,
@@ -598,7 +679,16 @@ const SolicitacaoUnificada = ({
                                                   `unidades_escolares[${idx}].quantidade_kits`,
                                                   "2"
                                                 );
-                                                setTotalKits(total + 2);
+                                                if (
+                                                  !["", undefined].includes(
+                                                    ue.nmr_alunos
+                                                  )
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    parseInt(ue.nmr_alunos) * 2;
+                                                }
+                                                setTotalKits(total);
                                               }}
                                             />
                                             <span className="checkmark" />
@@ -616,22 +706,36 @@ const SolicitacaoUnificada = ({
                                               name={`unidades_escolares[${idx}].quantidade_kits`}
                                               onChange={() => {
                                                 let total = 0;
-                                                let listaQuantidadeKits = values.unidades_escolares
-                                                  .filter(
-                                                    e => e.uuid !== ue.uuid
-                                                  )
-                                                  .map(e =>
-                                                    parseInt(e.quantidade_kits)
-                                                  );
-                                                for (
-                                                  let i = 0;
-                                                  i <
-                                                  listaQuantidadeKits.length;
-                                                  i++
+                                                let listaQuantidadeKits = values.unidades_escolares.filter(
+                                                  e =>
+                                                    e.uuid !== ue.uuid &&
+                                                    !["", undefined].includes(
+                                                      e.quantidade_kits
+                                                    ) &&
+                                                    !["", undefined].includes(
+                                                      e.nmr_alunos
+                                                    )
+                                                );
+                                                if (
+                                                  listaQuantidadeKits.length !==
+                                                  0
                                                 ) {
-                                                  total =
-                                                    total +
-                                                    listaQuantidadeKits[i];
+                                                  listaQuantidadeKits = listaQuantidadeKits.map(
+                                                    e =>
+                                                      parseInt(
+                                                        e.quantidade_kits
+                                                      ) * parseInt(e.nmr_alunos)
+                                                  );
+                                                  for (
+                                                    let i = 0;
+                                                    i <
+                                                    listaQuantidadeKits.length;
+                                                    i++
+                                                  ) {
+                                                    total =
+                                                      total +
+                                                      listaQuantidadeKits[i];
+                                                  }
                                                 }
                                                 form.change(
                                                   `unidades_escolares[${idx}].kits_selecionados`,
@@ -641,7 +745,16 @@ const SolicitacaoUnificada = ({
                                                   `unidades_escolares[${idx}].quantidade_kits`,
                                                   "3"
                                                 );
-                                                setTotalKits(total + 3);
+                                                if (
+                                                  !["", undefined].includes(
+                                                    ue.nmr_alunos
+                                                  )
+                                                ) {
+                                                  total =
+                                                    total +
+                                                    parseInt(ue.nmr_alunos) * 3;
+                                                }
+                                                setTotalKits(total);
                                               }}
                                             />
                                             <span className="checkmark" />
@@ -721,7 +834,15 @@ const SolicitacaoUnificada = ({
                                     <div className="col-12 mt-3">
                                       <p>
                                         Número de kits dessa escola:{" "}
-                                        {ue.kits_selecionados.length}
+                                        {!["", undefined].includes(
+                                          ue.nmr_alunos
+                                        ) &&
+                                        !["", undefined].includes(
+                                          ue.quantidade_kits
+                                        )
+                                          ? parseInt(ue.nmr_alunos) *
+                                            parseInt(ue.quantidade_kits)
+                                          : 0}
                                       </p>
                                     </div>
                                   </div>
