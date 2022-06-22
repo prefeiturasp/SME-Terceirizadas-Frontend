@@ -7,7 +7,7 @@ export const getAlunoPertenceAEscola = (codigo_eol, escola_codigo_eol) => {
 };
 
 export const getFotoAluno = async codigo_eol => {
-  const url = `/alunos/${codigo_eol}/pegar-foto/`;
+  const url = `/alunos/${codigo_eol}/ver-foto/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
