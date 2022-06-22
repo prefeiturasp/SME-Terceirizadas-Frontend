@@ -13,3 +13,19 @@
     display: flex;
   }
 }
+
+.info-unid-escolar {
+  border-top: 1px solid #dadada;
+}
+
+.foto-aluno {
+  img {
+    height: 88px;
+    border-radius: 4px;
+  }
+}
+
+.input-info-aluno {
+  color: #6e707e !important;
+  background-color: #eaecf4 !important;
+}
