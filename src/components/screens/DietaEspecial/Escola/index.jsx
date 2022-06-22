@@ -295,7 +295,10 @@ class solicitacaoDietaEspecial extends Component {
           }`
         });
         this.props.loadSolicitacoesVigentes(null);
-        this.setState({ aluno_nao_matriculado: false });
+        this.setState({
+          aluno_nao_matriculado: false,
+          fotoAlunoSrc: undefined
+        });
         this.resetForm();
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
