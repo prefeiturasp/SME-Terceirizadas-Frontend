@@ -19,6 +19,7 @@ import {
   setMeusDados,
   reset
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const AtivasInativasPorAluno = ({
   dadosResultados,
@@ -50,13 +51,18 @@ const AtivasInativasPorAluno = ({
   const fetchData = async filtros => {
     setLoading(true);
     setExibirResultados(false);
-    const response = await getDietasAtivasInativasPorAluno({ ...filtros });
-    setDadosResultados(response.data.results);
-    if (response.data.count) {
-      setTotalResultados(response.data.count);
-      setExibirResultados(true);
+    try {
+      const response = await getDietasAtivasInativasPorAluno({ ...filtros });
+      setDadosResultados(response.data.results);
+      if (response.data.count) {
+        setTotalResultados(response.data.count);
+        setExibirResultados(true);
+      }
+      setLoading(false);
+    } catch (error) {
+      toastError("Houve um erro ao consultar as dietas");
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const nextPage = page => {
