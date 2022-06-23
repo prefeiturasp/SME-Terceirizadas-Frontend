@@ -1,3 +1,5 @@
+import CheckboxField from "components/Shareable/Checkbox/Field";
+import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
@@ -5,8 +7,6 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import Prescritor from "./componentes/Prescritor";
-import Laudo from "./componentes/Laudo";
 import {
   DIETA_ESPECIAL,
   ESCOLA,
@@ -19,32 +19,37 @@ import {
   validaCPF
 } from "../../../../helpers/fieldValidators";
 import {
-  dateDelta,
-  getError,
   cpfMask,
-  gerarParametrosConsulta
+  dateDelta,
+  gerarParametrosConsulta,
+  getError
 } from "../../../../helpers/utilities";
+import {
+  updateFotoAluno,
+  getAlunoPertenceAEscola,
+  getFotoAluno,
+  deleteFotoAluno
+} from "../../../../services/aluno.service";
 import {
   criaDietaEspecial,
   getDietasEspeciaisVigentesDeUmAluno,
   getSolicitacoesDietaEspecial
 } from "../../../../services/dietaEspecial.service";
-import { getAlunoPertenceAEscola } from "../../../../services/aluno.service";
+import { getEscolasSimplissima } from "../../../../services/escola.service";
 import {
   meusDados,
   obtemDadosAlunoPeloEOL
 } from "../../../../services/perfil.service";
-import { getEscolasSimplissima } from "../../../../services/escola.service";
-import Botao from "../../../Shareable/Botao";
+import { Botao } from "../../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../../Shareable/Botao/constants";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
 import { InputComData } from "../../../Shareable/DatePicker";
 import InputText from "../../../Shareable/Input/InputText";
 import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
+import Laudo from "./componentes/Laudo";
+import Prescritor from "./componentes/Prescritor";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
-import CheckboxField from "components/Shareable/Checkbox/Field";
 import { formatarSolicitacoesVigentes } from "./helper";
-import { getStatusSolicitacoesVigentes } from "helpers/dietaEspecial";
 
 import { loadSolicitacoesVigentes } from "reducers/incluirDietaEspecialReducer";
 
@@ -65,7 +70,10 @@ class solicitacaoDietaEspecial extends Component {
       submitted: false,
       resumo: null,
       aluno_nao_matriculado: false,
-      pertence_a_escola: null
+      pertence_a_escola: null,
+      fotoAlunoSrc: null,
+      deletandoImagem: false,
+      atualizandoImagem: false
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -98,9 +106,52 @@ class solicitacaoDietaEspecial extends Component {
     this.setState({ files });
   }
 
+  atualizarFoto = async (codigo_eol, files) => {
+    if (files.length > 0) {
+      this.setState({ atualizandoImagem: true });
+      const response = await updateFotoAluno(codigo_eol, files);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Foto atualizada com sucesso");
+        const responseFoto = await getFotoAluno(codigo_eol);
+        if (responseFoto) {
+          if (responseFoto.status === HTTP_STATUS.OK) {
+            this.setState({
+              fotoAlunoSrc: `data:${
+                responseFoto.data.data.download.item2
+              };base64,${responseFoto.data.data.download.item1}`
+            });
+          } else {
+            this.setState({ fotoAlunoSrc: null });
+          }
+          this.setState({ atualizandoImagem: false });
+        }
+      } else {
+        toastError(getError(response.data));
+      }
+    }
+  };
+
+  deletarFoto = async codigo_eol => {
+    if (window.confirm("Deseja realmente excluir a foto deste aluno?")) {
+      this.setState({ deletandoImagem: true });
+      const response = await deleteFotoAluno(codigo_eol);
+      if (response) {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Foto deletada com sucesso");
+          this.setState({ fotoAlunoSrc: null });
+        } else {
+          toastError(getError(response.data));
+        }
+        this.setState({ deletandoImagem: false });
+      }
+    }
+  };
+
   onEolBlur = async event => {
     const { change } = this.props;
     const { codigo_eol_escola } = this.state;
+    this.setState({ fotoAlunoSrc: undefined });
+    change("codigo_eol", event.target.value);
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
 
@@ -125,13 +176,27 @@ class solicitacaoDietaEspecial extends Component {
     getAlunoPertenceAEscola(event.target.value, codigo_eol_escola).then(
       response => {
         if (response.status === 200) {
-          this.setState({ pertence_a_escola: response.data.pertence_a_escola });
+          this.setState({
+            pertence_a_escola: response.data.pertence_a_escola,
+            fotoAlunoSrc: undefined
+          });
           if (this.state.pertence_a_escola) {
             change("aluno_json.nome", resposta.detail.nm_aluno);
             change(
               "aluno_json.data_nascimento",
               moment(resposta.detail.dt_nascimento_aluno).format("DD/MM/YYYY")
             );
+            getFotoAluno(event.target.value).then(responseFoto => {
+              if (responseFoto.status === HTTP_STATUS.OK) {
+                this.setState({
+                  fotoAlunoSrc: `data:${
+                    responseFoto.data.data.download.item2
+                  };base64,${responseFoto.data.data.download.item1}`
+                });
+              } else {
+                this.setState({ fotoAlunoSrc: null });
+              }
+            });
           } else {
             change("aluno_json.nome", "");
             change("aluno_json.data_nascimento", "");
@@ -139,7 +204,7 @@ class solicitacaoDietaEspecial extends Component {
             change("registro_funcional_pescritor", "");
           }
         } else {
-          this.setState({ pertence_a_escola: null });
+          this.setState({ pertence_a_escola: null, fotoAlunoSrc: null });
         }
       }
     );
@@ -230,7 +295,10 @@ class solicitacaoDietaEspecial extends Component {
           }`
         });
         this.props.loadSolicitacoesVigentes(null);
-        this.setState({ aluno_nao_matriculado: false });
+        this.setState({
+          aluno_nao_matriculado: false,
+          fotoAlunoSrc: undefined
+        });
         this.resetForm();
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
@@ -250,12 +318,19 @@ class solicitacaoDietaEspecial extends Component {
   }
 
   render() {
-    const { quantidadeAlunos } = this.state;
+    const {
+      quantidadeAlunos,
+      fotoAlunoSrc,
+      deletandoImagem,
+      atualizandoImagem,
+      pertence_a_escola
+    } = this.state;
     const {
       handleSubmit,
       pristine,
       submitting,
-      solicitacoesVigentes
+      solicitacoesVigentes,
+      codigo_eol
     } = this.props;
     return (
       <form className="special-diet" onSubmit={handleSubmit}>
@@ -290,7 +365,7 @@ class solicitacaoDietaEspecial extends Component {
             <>
               <FormSection name="aluno_json">
                 <div className="row">
-                  <div className="col-md-3">
+                  <div className="col-sm-2 col-12">
                     <Field
                       component={InputText}
                       name="codigo_eol"
@@ -304,47 +379,123 @@ class solicitacaoDietaEspecial extends Component {
                       onChange={this.onEolBlur}
                     />
                   </div>
-                  <div className="col-md-6">
-                    <Field
-                      component={InputText}
-                      name="nome"
-                      label="Nome completo do Aluno"
-                      className="form-control"
-                      disabled
-                      tabindex="-1"
-                      validate={[required, minLength6]}
-                    />
+                </div>
+                <div className="row mt-3 mb-3">
+                  <div className="col-1 my-auto">
+                    {fotoAlunoSrc && (
+                      <img height="88" src={fotoAlunoSrc} alt="foto-aluno" />
+                    )}
+                    {!fotoAlunoSrc && (
+                      <>
+                        <img
+                          height="88"
+                          src="/assets/image/no-avatar.png"
+                          alt="foto-anonymous"
+                        />
+                        {codigo_eol &&
+                          codigo_eol.length >= 7 &&
+                          pertence_a_escola &&
+                          fotoAlunoSrc === undefined && (
+                            <div className="foto-legenda">
+                              Carregando imagem...
+                              <div className="text-center">
+                                <img
+                                  src="/assets/image/ajax-loader.gif"
+                                  alt="ajax-loader"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        {codigo_eol &&
+                          codigo_eol.length >= 7 &&
+                          fotoAlunoSrc === null && (
+                            <>
+                              <div className="foto-legenda">
+                                Foto não encontrada
+                              </div>
+                            </>
+                          )}
+                      </>
+                    )}
                   </div>
-                  <div className="col-md-3">
-                    <Field
-                      component={InputComData}
-                      label="Data de Nascimento"
-                      name="data_nascimento"
-                      className="form-control color-disabled"
-                      minDate={dateDelta(-360 * 99)}
-                      maxDate={dateDelta(-1)}
-                      showMonthDropdown
-                      showYearDropdown
-                      disabled
-                      tabindex="-1"
-                      validate={required}
+                  <div className={`col-11`}>
+                    <div className="row">
+                      <div className={`col-9`}>
+                        <Field
+                          component={InputText}
+                          name="nome"
+                          label="Nome completo do Aluno"
+                          className="form-control"
+                          disabled
+                          tabindex="-1"
+                          validate={[required, minLength6]}
+                        />
+                      </div>
+                      <div className="col-sm-3 col-12">
+                        <Field
+                          component={InputComData}
+                          label="Data de Nascimento"
+                          name="data_nascimento"
+                          className="form-control color-disabled"
+                          minDate={dateDelta(-360 * 99)}
+                          maxDate={dateDelta(-1)}
+                          showMonthDropdown
+                          showYearDropdown
+                          disabled
+                          tabindex="-1"
+                          validate={required}
+                        />
+                      </div>
+                    </div>
+                    <span className="input-file">
+                      <input
+                        className="inputfile"
+                        name="foto_aluno"
+                        ref={i => (this.inputRef = i)}
+                        accept=".png, .jpeg, .jpg"
+                        type="file"
+                        onChange={e =>
+                          this.atualizarFoto(codigo_eol, e.target.files)
+                        }
+                      />
+                    </span>
+                    <Botao
+                      texto={
+                        !atualizandoImagem ? "Atualizar imagem" : "Aguarde..."
+                      }
+                      className="mr-3"
+                      onClick={() => this.inputRef.click()}
+                      disabled={
+                        fotoAlunoSrc ||
+                        !codigo_eol ||
+                        codigo_eol.length < 7 ||
+                        atualizandoImagem
+                      }
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      disabled={!fotoAlunoSrc || deletandoImagem}
+                      texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
+                      onClick={() => this.deletarFoto(codigo_eol)}
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.RED}
                     />
                   </div>
                 </div>
               </FormSection>
-              {this.state.pertence_a_escola === false && (
+              {pertence_a_escola === false && (
                 <div className="current-diets">
                   <div className="pt-2 no-diets">
                     Aluno não pertence a unidade educacional.
                   </div>
                 </div>
               )}
-              {this.state.pertence_a_escola === true &&
-                solicitacoesVigentes && (
-                  <SolicitacaoVigente
-                    solicitacoesVigentes={solicitacoesVigentes}
-                  />
-                )}
+              {pertence_a_escola === true && solicitacoesVigentes && (
+                <SolicitacaoVigente
+                  solicitacoesVigentes={solicitacoesVigentes}
+                />
+              )}
 
               <Prescritor pertence_a_escola={this.state.pertence_a_escola} />
 
@@ -501,6 +652,7 @@ const selector = formValueSelector("solicitacaoDietaEspecial");
 const mapStateToProps = state => {
   return {
     files: selector(state, "files"),
+    codigo_eol: selector(state, "codigo_eol"),
     aluno_nao_matriculado: selector(state, "aluno_nao_matriculado_data"),
     solicitacoesVigentes: state.incluirDietaEspecial.solicitacoesVigentes
   };

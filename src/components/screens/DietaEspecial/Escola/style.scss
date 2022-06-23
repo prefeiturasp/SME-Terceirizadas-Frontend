@@ -5,9 +5,16 @@ form.special-diet {
     color: $red;
     padding-right: 5px;
   }
+
   .cinza-escuro {
     color: $gray;
   }
+
+  div.foto-legenda {
+    font-size: 0.6rem;
+    margin-top: 0.5em;
+  }
+
   .grid-container {
     margin-top: 1em;
     display: grid;
@@ -15,38 +22,36 @@ form.special-diet {
     column-gap: 2%;
     row-gap: 0.5em;
   }
+
   .ajuste-fonte {
     font-size: 14px;
     font-weight: 500;
     color: #686868;
+
     span {
       color: $red;
     }
   }
+
   .attachments {
     .text {
       font-size: 14px;
       color: #686868;
     }
+
     .card-warning {
       border: 1px solid $red;
       color: $red;
       font-size: 10px;
       padding: 10px;
     }
+
     .btn {
       display: flex;
       margin-top: 2em;
       justify-content: flex-end;
     }
   }
-}
-div.datepicker
-  div.react-datepicker-wrapper
-  .react-datepicker__input-container
-  input {
-  // TODO: Pedro, arrumar o background do input porque esta afetando todos os componentes input
-  // background-color: #dadada;
 }
 
 .color-disabled {
