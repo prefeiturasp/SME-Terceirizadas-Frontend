@@ -89,7 +89,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                         {dados.inativas}
                       </div>
                     </div>
-                    <div className="col-lg-4">
+                    <div className="col-lg-4 pr-0">
                       <Link
                         to={`/aluno/dieta-especial?codigo_eol=${
                           dados.codigo_eol
