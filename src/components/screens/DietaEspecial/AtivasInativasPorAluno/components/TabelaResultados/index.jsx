@@ -5,9 +5,8 @@ import Botao from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
 import "./styles.scss";
-import { TIPO_PERFIL } from "constants/shared";
-
-const tipoPerfil = localStorage.getItem("tipo_perfil");
+import { Form, Field } from "react-final-form";
+import InputText from "components/Shareable/Input/InputText";
 
 const CabecalhoPainel = ({ totalDietasAtivas, totalDietasInativas }) => (
   <div className="row cabecalho-painel">
@@ -29,94 +28,102 @@ const TabelaDietas = ({ solicitacoes }) => {
   return (
     <div className="row">
       <div className="col-12">
-        <table className="table">
-          <thead>
-            <tr>
-              {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL ? (
-                <th scope="col">DRE</th>
-              ) : (
-                ""
-              )}
-              {tipoPerfil !== TIPO_PERFIL.ESCOLA ? (
-                <th scope="col">Unidade Escolar</th>
-              ) : (
-                ""
-              )}
-              <th scope="col">Cód. EOL</th>
-              <th scope="col">Nome do Aluno</th>
-              <th scope="col">Qtde Ativas</th>
-              <th scope="col">Qtde Inativas</th>
-              <th scope="col" />
-            </tr>
-          </thead>
-          <tbody>
-            {solicitacoes.map((dados, key) => {
-              return (
-                <tr key={key}>
-                  {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL ? (
-                    <td>{dados.dre}</td>
-                  ) : (
-                    ""
-                  )}
-                  {tipoPerfil !== TIPO_PERFIL.ESCOLA ? (
-                    <td>{dados.escola}</td>
-                  ) : (
-                    ""
-                  )}
-                  <td>{dados.codigo_eol}</td>
-                  <td>{dados.nome}</td>
-                  <td>{dados.ativas}</td>
-                  <td>{dados.inativas}</td>
-                  <td>
-                    <Link
-                      to={`/aluno/dieta-especial?codigo_eol=${
-                        dados.codigo_eol
-                      }`}
-                    >
-                      <Botao
-                        texto="Visualizar"
-                        icon={undefined}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                      />
-                    </Link>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {solicitacoes.map((dados, key) => {
+          return (
+            <div key={key}>
+              <div className="mt-4 pt-4 info-unid-escolar">
+                <p className="mb-0">Unidade Escolar</p>
+                <p>
+                  {dados.codigo_eol_escola} {dados.escola}
+                </p>
+              </div>
+              <div className="row col-12 m-0 p-0">
+                <div className="col-1 my-auto p-0 foto-aluno">
+                  <img
+                    src={dados.foto_aluno || "/assets/image/no-avatar.png"}
+                    alt="foto-aluno"
+                  />
+                </div>
+                <div className="col-11 p-0">
+                  <div className="mb-3">
+                    <Form
+                      onSubmit={() => {}}
+                      render={() => (
+                        <form className="row">
+                          <div className="col-3">
+                            <Field
+                              label="Cód. EOL do Aluno"
+                              component={InputText}
+                              className="input-info-aluno"
+                              name="cod-eol-aluno"
+                              disabled={true}
+                              defaultValue={dados.codigo_eol}
+                            />
+                          </div>
+                          <div className="col-9">
+                            <Field
+                              label="Nome Completo do Aluno"
+                              component={InputText}
+                              name="nome-aluno"
+                              className="input-info-aluno"
+                              disabled={true}
+                              defaultValue={dados.nome}
+                            />
+                          </div>
+                        </form>
+                      )}
+                    />
+                  </div>
+                  <div className="row">
+                    <div className="row col-4 ml-0">
+                      <div>
+                        <p className="font-weight-bold mb-0">
+                          Quantidade Ativas <br />
+                        </p>
+                        {dados.ativas}
+                      </div>
+                      <div className="pl-4">
+                        <p className="font-weight-bold mb-0">
+                          Quantidade Inativas <br />
+                        </p>
+                        {dados.inativas}
+                      </div>
+                    </div>
+                    <div className="col-8 pr-0">
+                      <Link
+                        to={`/aluno/dieta-especial?codigo_eol=${
+                          dados.codigo_eol
+                        }`}
+                        className="float-right"
+                      >
+                        <Botao
+                          texto="Visualizar"
+                          icon={undefined}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 };
 
-export default ({ dadosDietaPorAluno, dadosUsuario }) => {
+export default ({ dadosDietaPorAluno }) => {
   const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
-  const instituicao = dadosUsuario.vinculo_atual.instituicao;
 
   return (
-    <form>
+    <div>
       <CabecalhoPainel
         totalDietasAtivas={total_ativas}
         totalDietasInativas={total_inativas}
       />
-
-      {tipoPerfil === TIPO_PERFIL.ESCOLA ? (
-        <>
-          <hr />
-          <div className="row">
-            <div className="col-12">
-              <p>Unidade Escolar</p>
-              <p>
-                {instituicao.codigo_eol} {instituicao.nome}
-              </p>
-            </div>
-          </div>
-        </>
-      ) : (
-        <br />
-      )}
       <TabelaDietas solicitacoes={solicitacoes} />
-    </form>
+    </div>
   );
 };
