@@ -118,12 +118,12 @@ export default ({ dadosDietaPorAluno }) => {
   const { total_ativas, total_inativas, solicitacoes } = dadosDietaPorAluno;
 
   return (
-    <di>
+    <div>
       <CabecalhoPainel
         totalDietasAtivas={total_ativas}
         totalDietasInativas={total_inativas}
       />
       <TabelaDietas solicitacoes={solicitacoes} />
-    </di>
+    </div>
   );
 };
