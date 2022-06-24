@@ -38,19 +38,19 @@ const TabelaDietas = ({ solicitacoes }) => {
                 </p>
               </div>
               <div className="row col-12 m-0 p-0">
-                <div className="col-1 my-auto p-0 foto-aluno">
+                <div className="col-xl-1 col-lg-2 my-auto p-0 foto-aluno">
                   <img
                     src={dados.foto_aluno || "/assets/image/no-avatar.png"}
                     alt="foto-aluno"
                   />
                 </div>
-                <div className="col-11 p-0">
+                <div className="col-xl-11 col-lg-10 pr-0 pl-4">
                   <div className="mb-3">
                     <Form
                       onSubmit={() => {}}
                       render={() => (
                         <form className="row">
-                          <div className="col-3">
+                          <div className="col-lg-4">
                             <Field
                               label="Cód. EOL do Aluno"
                               component={InputText}
@@ -60,7 +60,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                               defaultValue={dados.codigo_eol}
                             />
                           </div>
-                          <div className="col-9">
+                          <div className="col-lg-8">
                             <Field
                               label="Nome Completo do Aluno"
                               component={InputText}
@@ -75,7 +75,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     />
                   </div>
                   <div className="row">
-                    <div className="row col-4 ml-0">
+                    <div className="row col-lg-8 ml-0">
                       <div>
                         <p className="font-weight-bold mb-0">
                           Quantidade Ativas <br />
@@ -89,7 +89,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                         {dados.inativas}
                       </div>
                     </div>
-                    <div className="col-8 pr-0">
+                    <div className="col-lg-4 pr-0">
                       <Link
                         to={`/aluno/dieta-especial?codigo_eol=${
                           dados.codigo_eol
