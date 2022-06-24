@@ -33,6 +33,17 @@ form.special-diet {
     }
   }
 
+  @media screen and (min-width: 1200px) and (max-width: 1400px) {
+    .bloco-nome-data {
+      padding-left: 3em;
+    }
+  }
+  @media screen and (min-width: 1401px) and (max-width: 1600px) {
+    .bloco-nome-data {
+      padding-left: 2em;
+    }
+  }
+
   .attachments {
     .text {
       font-size: 14px;
