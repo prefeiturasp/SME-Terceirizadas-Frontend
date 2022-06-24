@@ -381,7 +381,7 @@ class solicitacaoDietaEspecial extends Component {
                   </div>
                 </div>
                 <div className="row mt-3 mb-3">
-                  <div className="col-1 my-auto">
+                  <div className="col-lg-2 col-xl-1 my-auto">
                     {fotoAlunoSrc && (
                       <img height="88" src={fotoAlunoSrc} alt="foto-aluno" />
                     )}
@@ -418,7 +418,7 @@ class solicitacaoDietaEspecial extends Component {
                       </>
                     )}
                   </div>
-                  <div className={`col-11`}>
+                  <div className={`col-lg-10 col-xl-11 bloco-nome-data`}>
                     <div className="row">
                       <div className={`col-9`}>
                         <Field
