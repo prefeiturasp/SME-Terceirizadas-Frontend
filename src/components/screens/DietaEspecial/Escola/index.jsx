@@ -139,6 +139,7 @@ class solicitacaoDietaEspecial extends Component {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Foto deletada com sucesso");
           this.setState({ fotoAlunoSrc: null });
+          this.inputRef.value = "";
         } else {
           toastError(getError(response.data));
         }

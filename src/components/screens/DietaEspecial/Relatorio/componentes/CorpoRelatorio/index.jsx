@@ -330,7 +330,10 @@ const CorpoRelatorio = ({
               />,
               <hr key={2} />
             ]}
-          <InformacoesAluno />
+          <InformacoesAluno
+            aluno={dietaEspecial.aluno}
+            status_solicitacao={dietaEspecial.status_solicitacao}
+          />
           {solicitacaoVigenteAtiva &&
             ["pendentes-aut"].includes(card) &&
             dietaEspecial.tipo_solicitacao === "COMUM" &&
