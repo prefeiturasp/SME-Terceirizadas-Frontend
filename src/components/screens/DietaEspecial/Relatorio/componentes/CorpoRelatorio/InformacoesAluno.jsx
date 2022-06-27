@@ -1,14 +1,94 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
+import {
+  deleteFotoAluno,
+  getFotoAluno,
+  updateFotoAluno
+} from "services/aluno.service";
+import HTTP_STATUS from "http-status-codes";
+import "./styles.scss";
+import Botao from "components/Shareable/Botao";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { getError, usuarioEhEscola } from "helpers/utilities";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { solicitacaoEhDoCardAutorizadas } from "../../helpers";
 
-const InformacoesAluno = () => {
+const InformacoesAluno = ({ aluno, status_solicitacao }) => {
+  const [fotoAlunoSrc, setFotoAlunoSrc] = useState(null);
+  const [deletandoImagem, setDeletandoImagem] = useState(false);
+  const [atualizandoImagem, setAtualizandoImagem] = useState(false);
+  const inputRef = useRef(null);
+
+  async function getFoto() {
+    const responseFoto = await getFotoAluno(aluno.codigo_eol);
+    if (responseFoto.status === HTTP_STATUS.OK) {
+      setFotoAlunoSrc(
+        `data:${responseFoto.data.data.download.item2};base64,${
+          responseFoto.data.data.download.item1
+        }`
+      );
+    } else {
+      setFotoAlunoSrc(null);
+    }
+  }
+
+  useEffect(() => {
+    aluno.codigo_eol && getFoto();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const atualizarFoto = async files => {
+    if (files.length > 0) {
+      setAtualizandoImagem(true);
+      const response = await updateFotoAluno(aluno.codigo_eol, files);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Foto atualizada com sucesso");
+        const responseFoto = await getFotoAluno(aluno.codigo_eol);
+        if (responseFoto) {
+          if (responseFoto.status === HTTP_STATUS.OK) {
+            setFotoAlunoSrc(
+              `data:${responseFoto.data.data.download.item2};base64,${
+                responseFoto.data.data.download.item1
+              }`
+            );
+          } else {
+            setFotoAlunoSrc(null);
+          }
+          setAtualizandoImagem(false);
+        }
+      } else {
+        toastError(getError(response.data));
+      }
+    }
+  };
+
+  const deletarFoto = async () => {
+    if (window.confirm("Deseja realmente excluir a foto deste aluno?")) {
+      setDeletandoImagem(true);
+      const response = await deleteFotoAluno(aluno.codigo_eol);
+      if (response) {
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Foto deletada com sucesso");
+          setFotoAlunoSrc(null);
+          inputRef.current.value = "";
+        } else {
+          toastError(getError(response.data));
+        }
+        setDeletandoImagem(false);
+      }
+    }
+  };
+
   return (
-    <div className="row mb-3">
-      <div className="col-12 mb-3">
+    <div className="mb-3">
+      <div className="col-12 mb-3 p-0">
         <label className="sectionName">Dados do aluno</label>
       </div>
-      <div className="col-3">
+      <div className="row col-3 mb-3">
         <Field
           component={InputText}
           name="aluno.codigo_eol"
@@ -16,21 +96,62 @@ const InformacoesAluno = () => {
           disabled={true}
         />
       </div>
-      <div className="col-3">
-        <Field
-          component={InputText}
-          name="aluno.data_nascimento"
-          label="Data de Nascimento"
-          disabled={true}
-        />
-      </div>
-      <div className="col-6">
-        <Field
-          component={InputText}
-          name="aluno.nome"
-          label="Nome Completo do Aluno"
-          disabled={true}
-        />
+      <div className="row">
+        <div className="col-xl-1 col-lg-2 my-auto foto-aluno">
+          {fotoAlunoSrc ? (
+            <img src={fotoAlunoSrc} alt="foto-aluno" />
+          ) : (
+            <img src="/assets/image/no-avatar.png" alt="foto-anonymous" />
+          )}
+        </div>
+        <div className="row col-xl-11 col-lg-10 pr-0 pl-5">
+          <div className="col-8">
+            <Field
+              component={InputText}
+              name="aluno.nome"
+              label="Nome Completo do Aluno"
+              disabled={true}
+            />
+          </div>
+          <div className="col-4 pr-0">
+            <Field
+              component={InputText}
+              name="aluno.data_nascimento"
+              label="Data de Nascimento"
+              disabled={true}
+            />
+          </div>
+          {usuarioEhEscola() &&
+            solicitacaoEhDoCardAutorizadas(status_solicitacao) && (
+              <div className="row pl-4 mt-2">
+                <span className="input-file">
+                  <input
+                    className="inputfile"
+                    name="foto_aluno"
+                    ref={inputRef}
+                    accept=".png, .jpeg, .jpg"
+                    type="file"
+                    onChange={e => atualizarFoto(e.target.files)}
+                  />
+                </span>
+                <Botao
+                  texto={!atualizandoImagem ? "Atualizar imagem" : "Aguarde..."}
+                  className="mr-3"
+                  onClick={() => inputRef.current.click()}
+                  disabled={fotoAlunoSrc || atualizandoImagem}
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                />
+                <Botao
+                  disabled={!fotoAlunoSrc || deletandoImagem}
+                  texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
+                  onClick={() => deletarFoto()}
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.RED}
+                />
+              </div>
+            )}
+        </div>
       </div>
     </div>
   );
