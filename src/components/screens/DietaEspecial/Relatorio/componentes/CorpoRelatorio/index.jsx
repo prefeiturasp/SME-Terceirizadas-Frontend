@@ -75,8 +75,12 @@ const CorpoRelatorio = ({
 
   const montaCorpoRelatorio = () => {
     if (
-      card &&
-      ["inativas", "inativas-temp"].includes(card) &&
+      ([
+        "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+        "CODAE_AUTORIZADO",
+        "CODAE_AUTORIZOU_INATIVACAO"
+      ].includes(dietaEspecial.status_solicitacao) ||
+        (card && ["inativas", "inativas-temp"].includes(card))) &&
       dietaEspecial.eh_importado === false &&
       dietaEspecial.ativo === false
     ) {
@@ -100,8 +104,9 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
-      (dietaEspecial.status_solicitacao ===
-        "TERMINADA_AUTOMATICAMENTE_SISTEMA" ||
+      (["TERMINADA_AUTOMATICAMENTE_SISTEMA", "CODAE_AUTORIZADO"].includes(
+        dietaEspecial.status_solicitacao
+      ) ||
         (card && ["autorizadas", "autorizadas-temp"].includes(card)))
     ) {
       return [
@@ -179,7 +184,7 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
-      [
+      ([
         "autorizadas",
         "autorizadas-temp",
         "pendentes-aut",
@@ -187,7 +192,12 @@ const CorpoRelatorio = ({
         "inativas-temp",
         "canceladas",
         "aguardando-vigencia"
-      ].includes(card)
+      ].includes(card) ||
+        [
+          "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+          "CODAE_AUTORIZADO",
+          "CODAE_AUTORIZOU_INATIVACAO"
+        ].includes(dietaEspecial.status_solicitacao))
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
@@ -196,7 +206,7 @@ const CorpoRelatorio = ({
         dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
           <PeriodoVigencia key={3} />
         ),
-        dietaEspecial.anexos && (
+        dietaEspecial.anexos.length > 0 && (
           <div className="mt-0" key={4}>
             <p className="mt-1 mb-2">Anexos</p>
             <div className="row">{anexos}</div>
