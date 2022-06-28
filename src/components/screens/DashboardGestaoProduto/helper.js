@@ -31,13 +31,6 @@ const {
   TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
 
-export const CARDS_CONFIG = {
-  "Reclamação de produto": {
-    icone: "blabla", // TODO: check if this is not dummy code
-    style: "blabla"
-  }
-};
-
 export const incluirDados = (statuses, arr) => {
   const result = [];
   arr.forEach(el => {
