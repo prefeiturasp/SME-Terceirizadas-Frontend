@@ -240,12 +240,7 @@ export default class ModalReclamacaoProduto extends Component {
                       label="Lote do produto"
                       name="produto_lote"
                       tooltipText="Inserir o lote do produto conforme especificação contida no rótulo."
-                      validate={value => {
-                        for (let validator of [alphaNumeric]) {
-                          const erro = validator(value);
-                          if (erro) return erro;
-                        }
-                      }}
+                      validate={alphaNumeric}
                     />
                   </div>
                   <div className="col-4">
@@ -284,15 +279,10 @@ export default class ModalReclamacaoProduto extends Component {
                       label="Reclamação"
                       name="reclamacao"
                       required
-                      validate={value => {
-                        for (let validator of [
-                          peloMenosUmCaractere,
-                          required
-                        ]) {
-                          const erro = validator(value);
-                          if (erro) return erro;
-                        }
-                      }}
+                      validate={composeValidators(
+                        required,
+                        peloMenosUmCaractere
+                      )}
                     />
                   </div>
                 </div>
