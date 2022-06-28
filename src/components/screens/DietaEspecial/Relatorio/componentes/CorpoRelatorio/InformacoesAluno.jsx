@@ -99,9 +99,37 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
       <div className="row">
         <div className="col-xl-1 col-lg-2 my-auto foto-aluno">
           {fotoAlunoSrc ? (
-            <img src={fotoAlunoSrc} alt="foto-aluno" />
+            <>
+              <img src={fotoAlunoSrc} alt="foto-aluno" />
+              {deletandoImagem && (
+                <div className="foto-legenda">
+                  Deletando imagem...
+                  <div className="text-center">
+                    <img
+                      src="/assets/image/ajax-loader.gif"
+                      alt="ajax-loader"
+                    />
+                  </div>
+                </div>
+              )}
+            </>
           ) : (
-            <img src="/assets/image/no-avatar.png" alt="foto-anonymous" />
+            <>
+              <img src="/assets/image/no-avatar.png" alt="foto-anonymous" />
+              {atualizandoImagem ? (
+                <div className="foto-legenda">
+                  Carregando imagem...
+                  <div className="text-center">
+                    <img
+                      src="/assets/image/ajax-loader.gif"
+                      alt="ajax-loader"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="foto-legenda">Foto não encontrada</div>
+              )}
+            </>
           )}
         </div>
         <div className="row col-xl-11 col-lg-10 pr-0 pl-5">
