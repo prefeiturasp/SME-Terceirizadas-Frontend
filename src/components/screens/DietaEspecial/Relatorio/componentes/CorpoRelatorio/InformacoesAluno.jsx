@@ -24,6 +24,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
   const inputRef = useRef(null);
 
   async function getFoto() {
+    setAtualizandoImagem(true);
     const responseFoto = await getFotoAluno(aluno.codigo_eol);
     if (responseFoto.status === HTTP_STATUS.OK) {
       setFotoAlunoSrc(
@@ -34,6 +35,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
     } else {
       setFotoAlunoSrc(null);
     }
+    setAtualizandoImagem(false);
   }
 
   useEffect(() => {
