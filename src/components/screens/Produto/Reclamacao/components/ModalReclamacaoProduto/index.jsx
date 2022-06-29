@@ -33,12 +33,10 @@ import { meusDados } from "services/perfil.service";
 import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhEscola,
-  usuarioEhCODAEDietaEspecial
+  usuarioEhCODAEDietaEspecial,
+  deepCopy
 } from "helpers/utilities";
 import { TIPO_PERFIL } from "constants/shared";
-
-//import { CODAENegaDietaEspecial } from "services/produto.service";
-
 export default class ModalReclamacaoProduto extends Component {
   constructor(props) {
     super(props);
@@ -64,6 +62,9 @@ export default class ModalReclamacaoProduto extends Component {
         escola => `${escola.codigo_eol} - ${escola.nome}`
       )
     });
+    if (escolasResposta) {
+      this.props.setEscolasRequisicaoConcluida(true);
+    }
   };
 
   getDadosIniciais = () => {
@@ -93,17 +94,18 @@ export default class ModalReclamacaoProduto extends Component {
   };
 
   onSubmit = async values => {
+    const values_ = deepCopy(values);
     const { escolas } = this.state;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
-      values.escola = escolas.find(
-        escola => escola.label === values.escola
+      values_.escola = escolas.find(
+        escola => escola.label === values_.escola
       ).uuid;
     }
     return new Promise(async (resolve, reject) => {
       const response = await escolaOuNutriReclamaDoProduto(
         this.props.produto.ultima_homologacao.uuid,
-        values
+        values_
       );
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Reclamação de produto registrada com sucesso!");
