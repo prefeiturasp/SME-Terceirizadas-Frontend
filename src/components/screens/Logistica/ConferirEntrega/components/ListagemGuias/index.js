@@ -5,7 +5,8 @@ import { CONFERENCIA_GUIA, LOGISTICA, REPOSICAO_GUIA } from "configs/constants";
 import { NavLink } from "react-router-dom";
 import { imprimirGuiaRemessa } from "services/logistica.service.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
+import { Spin, Tooltip } from "antd";
+import ModalEdicao from "../ModalEdicao";
 
 const ListagemSolicitacoes = ({ guias }) => {
   const [carregando, setCarregando] = useState(false);
@@ -45,12 +46,8 @@ const ListagemSolicitacoes = ({ guias }) => {
             className="float-left"
             to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}`}
           >
-            <span className="link-acoes green">
-              <i className="fas fa-redo" />
-              Repor
-            </span>
+            <span className="link-acoes green">Reposição</span>
           </NavLink>
-          |
         </>
       );
     } else if (
@@ -65,14 +62,53 @@ const ListagemSolicitacoes = ({ guias }) => {
             className="float-left"
             to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${guia.uuid}`}
           >
-            <span className="link-acoes green">
-              <i className="fas fa-eye" />
-              Conferir
-            </span>
+            <span className="link-acoes green">Conferir entrega</span>
           </NavLink>
-          |
         </>
       );
+    }
+  };
+  const retornaBotaoEdicao = (guia, exibir) => {
+    if (exibir) {
+      const editarConferencia = (
+        <>
+          <NavLink
+            className="float-left"
+            to={`/${LOGISTICA}/${CONFERENCIA_GUIA}?uuid=${
+              guia.uuid
+            }&editar=true`}
+          >
+            <span className="link-acoes green">Editar Conferência</span>
+          </NavLink>
+          | &nbsp;
+        </>
+      );
+
+      const editarReposicao = (
+        <>
+          <NavLink
+            className="float-left"
+            to={`/${LOGISTICA}/${REPOSICAO_GUIA}?uuid=${guia.uuid}&editar=true`}
+          >
+            <span className="link-acoes green">Editar Reposição</span>
+          </NavLink>
+          | &nbsp;
+        </>
+      );
+
+      if (
+        ["Recebida", "Recebimento parcial", "Não recebida"].includes(
+          guia.status
+        ) &&
+        guia.situacao === "ATIVA"
+      ) {
+        return editarConferencia;
+      } else if (
+        ["Reposição total", "Reposição parcial"].includes(guia.status) &&
+        guia.situacao === "ATIVA"
+      ) {
+        return [<ModalEdicao uuid={guia.uuid} key={0} />, editarReposicao];
+      }
     }
   };
 
@@ -86,6 +122,7 @@ const ListagemSolicitacoes = ({ guias }) => {
             <div>Data de entrega</div>
             <div>Status</div>
             <div>Ações</div>
+            <div>Opções</div>
           </div>
           {guias.map(guia => {
             return (
@@ -96,14 +133,22 @@ const ListagemSolicitacoes = ({ guias }) => {
                   <div>{guia.data_entrega}</div>
                   <div>{guia.status}</div>
                   <div>
+                    {retornaBotaoEdicao(guia, false)}
                     {retornaBotaoAcao(guia)}
-
+                  </div>
+                  <div className="opcoes-entregas">
+                    <span className="link-acoes px-2">
+                      <Tooltip title="Detalhar guia">
+                        <i className="fas fa-eye" />
+                      </Tooltip>
+                    </span>
                     <span
                       className="link-acoes"
                       onClick={() => baixarPDFGuiaRemessa(guia)}
                     >
-                      <i className="fas fa-print" />
-                      Imprimir
+                      <Tooltip title="Imprimir guia">
+                        <i className="fas fa-print" />
+                      </Tooltip>
                     </span>
                   </div>
                 </div>
