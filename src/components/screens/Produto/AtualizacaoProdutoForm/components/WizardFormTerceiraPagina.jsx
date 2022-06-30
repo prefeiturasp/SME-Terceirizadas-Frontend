@@ -213,8 +213,8 @@ class WizardFormTerceiraPagina extends Component {
           closeModal={() => this.setState({ mostraModalConfimacao: false })}
           corpo={
             <p>
-              Atenção, ao realizar alterações no cadastro um novo processo de
-              homologação será criado. Deseja continuar?
+              Atenção, ao realizar alterações no cadastro, o produto será
+              reenviado para homologação. Deseja continuar?
             </p>
           }
           onSimClick={() => this.enviaDados(this.state.formValues)}
