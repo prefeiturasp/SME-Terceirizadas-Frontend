@@ -4,7 +4,6 @@ import { Modal } from "antd";
 import Botao from "components/Shareable/Botao";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getProdutosReclamacoes } from "services/produto.service";
-import { getStatusHomologacao } from "../../helpers";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -78,7 +77,6 @@ const ModalRelatorioReclamacao = ({
           onClick={() => {
             const params = gerarParametrosConsulta({
               ...filtros,
-              status: getStatusHomologacao(),
               ...configCabecario
             });
             getRelatorioReclamacao(params);
