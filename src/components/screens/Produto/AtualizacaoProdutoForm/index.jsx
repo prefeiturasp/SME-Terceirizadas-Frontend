@@ -221,7 +221,7 @@ class AtualizacaoProdutoForm extends Component {
       terceiroStep,
       logs
     } = this.state;
-    const status = produto ? produto.ultima_homologacao.status : null;
+    const status = produto ? produto.homologacao.status : null;
 
     return (
       <div className="card">
@@ -231,9 +231,7 @@ class AtualizacaoProdutoForm extends Component {
               {!!logs.length &&
                 !!status &&
                 status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
-                  <InformativoReclamacao
-                    homologacao={produto.ultima_homologacao}
-                  />
+                  <InformativoReclamacao homologacao={produto.homologacao} />
                 )}
 
               {!!logs.length &&
