@@ -1,3 +1,5 @@
+import { statusEnum } from "constants/shared";
+
 const DESCRICAO_SOLICITACAO = {
   CODAE_A_AUTORIZAR: "Solicitação de Inclusão",
   CODAE_NEGOU_PEDIDO: "Negada a Inclusão",
@@ -118,3 +120,12 @@ export const ehCanceladaSegundoStep = dieta => {
   }
 };
 // (dietaEspecial && dietaEspecial.logs.length === 2 && status === "ESCOLA_CANCELOU")? true : false;
+
+export const solicitacaoEhDoCardAutorizadas = status => {
+  return [
+    statusEnum.CODAE_AUTORIZADO,
+    statusEnum.TERCEIRIZADA_TOMOU_CIENCIA,
+    statusEnum.CODAE_AUTORIZOU_INATIVACAO,
+    statusEnum.TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO
+  ].includes(status);
+};

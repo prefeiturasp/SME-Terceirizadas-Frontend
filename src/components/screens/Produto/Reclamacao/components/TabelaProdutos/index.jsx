@@ -15,7 +15,8 @@ export default class TabelaProdutos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mostraModalReclamacao: false
+      mostraModalReclamacao: false,
+      escolasRequisicaoConcluida: false
     };
   }
 
@@ -27,6 +28,10 @@ export default class TabelaProdutos extends Component {
     this.setState({ mostraModalReclamacao: false });
   };
 
+  setEscolasRequisicaoConcluida = concluido => {
+    this.setState({ escolasRequisicaoConcluida: concluido });
+  };
+
   render() {
     const {
       listaProdutos,
@@ -34,7 +39,7 @@ export default class TabelaProdutos extends Component {
       indiceProdutoAtivo,
       setIndiceProdutoAtivo
     } = this.props;
-    const { mostraModalReclamacao } = this.state;
+    const { mostraModalReclamacao, escolasRequisicaoConcluida } = this.state;
     return (
       <section className="resultados-busca-produtos-reclamacao">
         <div className="tabela-produto tabela-header-produto">
@@ -96,6 +101,7 @@ export default class TabelaProdutos extends Component {
                     </Link>
                     <Botao
                       texto="Reclamação"
+                      disabled={!escolasRequisicaoConcluida}
                       className="ml-3"
                       onClick={this.abreModalReclamacao}
                       type={BUTTON_TYPE.BUTTON}
@@ -112,6 +118,7 @@ export default class TabelaProdutos extends Component {
           closeModal={this.fechaModalReclamacao}
           produto={listaProdutos[indiceProdutoAtivo]}
           onAtualizarProduto={onAtualizarProduto}
+          setEscolasRequisicaoConcluida={this.setEscolasRequisicaoConcluida}
         />
       </section>
     );
