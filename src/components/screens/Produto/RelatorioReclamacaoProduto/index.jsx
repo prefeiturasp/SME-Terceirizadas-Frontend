@@ -6,7 +6,6 @@ import { getProdutosReclamacoes } from "services/produto.service";
 
 import FormBuscaProduto from "./components/FormBuscaProduto";
 import ModalRelatorioReclamacao from "./components/ModalRelatorioReclamacao";
-import { getStatusHomologacao } from "./helpers";
 
 import "./styles.scss";
 import "antd/dist/antd.css";
@@ -28,7 +27,6 @@ const RelatorioReclamacaoProduto = () => {
       setProdutos(null);
       const params = gerarParametrosConsulta({
         ...filtros,
-        status: getStatusHomologacao(),
         page: page,
         page_size: PAGE_SIZE
       });

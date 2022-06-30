@@ -34,7 +34,6 @@ const ModalRelatorioReclamacao = ({
     setPage(page);
     const params = gerarParametrosConsulta({
       ...filtros,
-      status: getStatusHomologacao(),
       page: page,
       page_size: pageSize
     });
