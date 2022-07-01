@@ -10,7 +10,7 @@ import "./style.scss";
 export const TabelaEspecificacoesProduto = props => {
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   const renderLabel =
-    props.ultima_homologacao.ultimo_log.status_evento_explicacao ===
+    props.homologacao.ultimo_log.status_evento_explicacao ===
       RECLAMACAO_PRODUTO_STATUS_EXPLICACAO.AGUARDANDO_ANALISE_SENSORIAL &&
     tipoPerfil === TIPO_PERFIL.TERCEIRIZADA;
   return (
