@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-export const InclusaoDeAlimentacao = ({ ...props }) => {
+import React from "react";
+export const InclusaoDeAlimentacao = () => {
   return <div>vrau</div>;
 };
 
