@@ -5,7 +5,10 @@ import { Spin } from "antd";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
 import FormBuscaProduto from "./components/FormBuscaProduto";
 import ModalRelatorioProdutoSuspenso from "./components/ModalRelatorioProdutoSuspenso";
-import { STATUS_CODAE_SUSPENDEU } from "configs/constants";
+import {
+  STATUS_CODAE_SUSPENDEU,
+  STATUS_CODAE_AUTORIZOU_RECLAMACAO
+} from "configs/constants";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import "./styles.scss";
 
@@ -40,7 +43,10 @@ const BuscaProdutoSuspensos = () => {
 
   const onSubmitForm = formValues => {
     setPage(1);
-    setFiltros({ ...formValues, status: STATUS_CODAE_SUSPENDEU });
+    setFiltros({
+      ...formValues,
+      status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO]
+    });
   };
 
   return (
