@@ -175,6 +175,7 @@ export default () => {
   const checaAtraso = (values, index) => {
     if (guia.status === "Insucesso de entrega") return;
     if (comparaDataEntrega(values.data_entrega_real)) {
+      setFlagAtraso(true);
       if (!values[`ocorrencias_${index}`]) {
         values[`ocorrencias_${index}`] = [];
         values[`ocorrencias_${index}`].push("ATRASO_ENTREGA");
@@ -186,6 +187,13 @@ export default () => {
       }
       if (values[`ocorrencias_${index}`].length === 0) {
         values[`ocorrencias_${index}`].push("ATRASO_ENTREGA");
+      }
+    } else {
+      if (values[`ocorrencias_${index}`] && flagAtraso) {
+        values[`ocorrencias_${index}`] = values[`ocorrencias_${index}`].filter(
+          o => o !== "ATRASO_ENTREGA"
+        );
+        setFlagAtraso(false);
       }
     }
   };
@@ -271,7 +279,6 @@ export default () => {
         let newFlagAlimento = flagAlimento;
         newFlagAlimento[index] = alimentoFaltante || alimentoParcial;
         setFlagAlimento(newFlagAlimento);
-        setFlagAtraso(dataEhDepois);
 
         if (dataEhDepois || alimentoParcial)
           values[`status_${index}`] = "Parcial";
@@ -282,21 +289,30 @@ export default () => {
           values.data_entrega_real &&
           !dataEhDepois &&
           !alimentoParcial &&
-          !alimentoFaltante
+          !alimentoFaltante &&
+          (!isNaN(recebidos_fechada) || !isNaN(recebidos_fracionada))
         ) {
           values[`status_${index}`] = "Recebido";
           if (
             values[`ocorrencias_${index}`] &&
             values[`ocorrencias_${index}`].length
-          )
-            ocorrenciasApagadas = [
-              ...ocorrenciasApagadas,
+          ) {
+            let oldOcorrenciasApagadas = ocorrenciasApagadas[index]
+              ? ocorrenciasApagadas[index]
+              : [];
+            ocorrenciasApagadas[index] = [
+              ...oldOcorrenciasApagadas,
               ...values[`ocorrencias_${index}`]
             ];
+          }
+
           values[`ocorrencias_${index}`] = [];
-        } else if (ocorrenciasApagadas.length) {
-          values[`ocorrencias_${index}`] = ocorrenciasApagadas;
-          ocorrenciasApagadas = [];
+        } else if (
+          ocorrenciasApagadas[index] &&
+          ocorrenciasApagadas[index].length
+        ) {
+          values[`ocorrencias_${index}`] = ocorrenciasApagadas[index];
+          ocorrenciasApagadas[index] = [];
         }
 
         if (
