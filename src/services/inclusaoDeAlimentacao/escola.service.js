@@ -1,6 +1,8 @@
 import { API_URL } from "../../constants/config";
 import { FLUXO, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
+import { ErrorHandlerFunction } from "services/service-helpers";
+import axios from "../_base";
 
 export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = (
   payload,
@@ -116,32 +118,20 @@ export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacao = async (
   }
 };
 
-export const getMotivosInclusaoNormal = () => {
+export const getMotivosInclusaoNormal = async () => {
   const url = `${API_URL}/motivos-inclusao-normal/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getMotivosInclusaoContinua = () => {
+export const getMotivosInclusaoContinua = async () => {
   const url = `${API_URL}/motivos-inclusao-continua/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

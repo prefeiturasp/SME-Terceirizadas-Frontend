@@ -1,71 +1,96 @@
-import React, { Component } from "react";
-import {
-  getMotivosInclusaoNormal,
-  getMotivosInclusaoContinua
-} from "../../services/inclusaoDeAlimentacao";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { formatarPeriodos } from "./helper";
-import { dataParaUTC, escolaEhCei } from "../../helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { useEffect, useState } from "react";
 import InclusaoDeAlimentacao from ".";
+import { dataParaUTC, escolaEhCei } from "../../helpers/utilities";
+import { getDiasUteis } from "../../services/diasUteis.service";
+import {
+  getMotivosInclusaoContinua,
+  getMotivosInclusaoNormal
+} from "../../services/inclusaoDeAlimentacao";
+import { getMeusDados } from "../../services/perfil.service";
+import { formatarPeriodos } from "./helper";
 
-class Container extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meusDados: null,
-      motivos_simples: [],
-      motivos_continuos: [],
-      periodos: [],
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
-    };
-  }
+export const Container = () => {
+  const [dados, setDados] = useState(null);
+  const [motivosSimples, setMotivosSimples] = useState(null);
+  const [motivosContinuos, setMotivosContinuos] = useState(
+    escolaEhCei() ? [] : null
+  );
+  const [periodos, setPeriodos] = useState(null);
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [erro, setErro] = useState(false);
 
-  componentDidMount() {
-    meusDados().then(response => {
-      const meusDados = response;
-      this.setState({
-        meusDados,
-        periodos: formatarPeriodos(
-          response.vinculo_atual.instituicao.periodos_escolares
+  const getMeusDadosAsync = async () => {
+    const response = await getMeusDados();
+    if (response.status === HTTP_STATUS.OK) {
+      setDados(response.data);
+      setPeriodos(
+        formatarPeriodos(
+          response.data.vinculo_atual.instituicao.periodos_escolares
         )
-      });
-    });
-
-    if (!escolaEhCei()) {
-      getMotivosInclusaoContinua().then(response => {
-        const motivos_continuos = response.results;
-        this.setState({
-          motivos_continuos
-        });
-      });
+      );
+    } else {
+      setErro(true);
     }
+  };
 
-    getMotivosInclusaoNormal().then(response => {
-      const motivos_simples = response.results;
-      this.setState({
-        motivos_simples
-      });
-    });
+  const getMotivosInclusaoContinuaAsync = async () => {
+    const response = await getMotivosInclusaoContinua();
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivosContinuos(response.data.results);
+    } else {
+      setErro(true);
+    }
+  };
 
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
+  const getMotivosInclusaoNormalAsync = async () => {
+    const response = await getMotivosInclusaoNormal();
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivosSimples(response.data.results);
+    } else {
+      setErro(true);
+    }
+  };
+
+  const getDiasUteisAsync = async () => {
+    const response = await getDiasUteis();
+    if (response.status === HTTP_STATUS.OK) {
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
       );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
+      setProximosDoisDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
       );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
-    });
-  }
+    } else {
+      setErro(true);
+    }
+  };
 
-  render() {
-    return <InclusaoDeAlimentacao {...this.state} />;
-  }
-}
+  useEffect(() => {
+    getMeusDadosAsync();
+    !escolaEhCei() && getMotivosInclusaoContinuaAsync();
+    getMotivosInclusaoNormalAsync();
+    getDiasUteisAsync();
+  }, []);
+
+  const REQUISICOES_CONCLUIDAS =
+    dados &&
+    motivosContinuos &&
+    motivosSimples &&
+    periodos &&
+    proximosDoisDiasUteis &&
+    proximosCincoDiasUteis;
+
+  return (
+    <div>
+      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {erro && (
+        <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
+      )}
+      {REQUISICOES_CONCLUIDAS && <InclusaoDeAlimentacao />}
+    </div>
+  );
+};
 
 export default Container;
