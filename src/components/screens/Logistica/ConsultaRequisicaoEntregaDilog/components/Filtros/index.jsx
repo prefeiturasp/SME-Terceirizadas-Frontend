@@ -125,7 +125,7 @@ export default ({
                 />
               </div>
             </div>
-            <div className="row mt-3">
+            <div className="row">
               <div className="col">
                 <Field
                   component={InputText}
