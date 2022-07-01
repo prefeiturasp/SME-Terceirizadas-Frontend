@@ -2,8 +2,9 @@ import React, { Fragment, useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
+import { STATUS_DIETAS } from "constants/shared";
 
-const ListagemDietas = ({ dietasFiltradas }) => {
+const ListagemDietas = ({ dietasFiltradas, status }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dietasFiltradasCopy, setDietasFiltradasCopy] = useState([]);
 
@@ -27,21 +28,34 @@ const ListagemDietas = ({ dietasFiltradas }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
+  const ehStatusCanceladas = () => {
+    return status === STATUS_DIETAS.CANCELADAS.toUpperCase();
+  };
+
   return (
     <section className="tabela-dietas-especiais">
       <article>
-        <div className="grid-table-rel-dietas header-table">
+        <div
+          className={`grid-table-rel-dietas dietas-${
+            ehStatusCanceladas() ? "canceladas" : "autorizadas"
+          } header-table`}
+        >
           <div>Cód. EOL do aluno</div>
           <div>Nome do aluno</div>
           <div>Nome da Escola</div>
           <div>Classificação da dieta</div>
           <div>Protocolo padrão</div>
+          {ehStatusCanceladas() && <div>Data de cancelamento</div>}
         </div>
         {dietasFiltradasCopy.map((dietaEspecial, index) => {
           return (
             <Fragment key={index}>
-              <div className="grid-table-rel-dietas body-table">
-                <div>{dietaEspecial.cod_eol_aluno}</div>
+              <div
+                className={`grid-table-rel-dietas dietas-${
+                  ehStatusCanceladas() ? "canceladas" : "autorizadas"
+                } body-table`}
+              >
+                <div>{dietaEspecial.cod_eol_aluno || "--"}</div>
                 <div>{dietaEspecial.nome_aluno}</div>
                 <div>{dietaEspecial.nome_escola}</div>
                 <div>{dietaEspecial.classificacao.nome}</div>
@@ -50,6 +64,9 @@ const ListagemDietas = ({ dietasFiltradas }) => {
                     dietaEspecial.protocolo_padrao.nome) ||
                     dietaEspecial.nome_protocolo}
                 </div>
+                {ehStatusCanceladas() && (
+                  <div>{dietaEspecial.data_ultimo_log}</div>
+                )}
               </div>
             </Fragment>
           );
