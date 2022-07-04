@@ -37,7 +37,8 @@ const {
   AGUARDANDO_ANALISE_SENSORIAL,
   AGUARDANDO_RESPOSTA_TERCEIRIZADA,
   RESPONDIDO_TERCEIRIZADA,
-  ANALISE_SENSORIAL_RESPONDIDA
+  ANALISE_SENSORIAL_RESPONDIDA,
+  RESPONDIDO_NUTRISUPERVISOR
 } = RECLAMACAO_PRODUTO_STATUS;
 
 export default class TabelaProdutos extends Component {
@@ -301,7 +302,8 @@ export default class TabelaProdutos extends Component {
                           AGUARDANDO_AVALIACAO,
                           RESPONDIDO_TERCEIRIZADA,
                           ANALISE_SENSORIAL_RESPONDIDA,
-                          RESPONDIDO_UE
+                          RESPONDIDO_UE,
+                          RESPONDIDO_NUTRISUPERVISOR
                         ].includes(reclamacao.status);
                       const desabilitaResponder =
                         produtoTemReclacaoAceita ||
@@ -316,7 +318,8 @@ export default class TabelaProdutos extends Component {
                           AGUARDANDO_AVALIACAO,
                           RESPONDIDO_TERCEIRIZADA,
                           ANALISE_SENSORIAL_RESPONDIDA,
-                          RESPONDIDO_UE
+                          RESPONDIDO_UE,
+                          RESPONDIDO_NUTRISUPERVISOR
                         ].includes(reclamacao.status);
                       const desabilitaQuestionarUE =
                         produtoTemReclacaoAceita ||
