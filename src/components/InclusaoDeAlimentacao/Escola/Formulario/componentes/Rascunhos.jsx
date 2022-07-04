@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../Shareable/style.scss";
+import "../../../../Shareable/style.scss";
 import { comoTipo, ehInclusaoContinua } from "helpers/utilities";
 
 export class Rascunhos extends Component {

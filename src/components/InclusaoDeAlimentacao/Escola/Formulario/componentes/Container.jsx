@@ -1,14 +1,14 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
-import InclusaoDeAlimentacao from ".";
-import { dataParaUTC, escolaEhCei } from "../../helpers/utilities";
-import { getDiasUteis } from "../../services/diasUteis.service";
+import InclusaoDeAlimentacao from "..";
+import { dataParaUTC, escolaEhCei } from "../../../../../helpers/utilities";
+import { getDiasUteis } from "../../../../../services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
   getMotivosInclusaoNormal
-} from "../../services/inclusaoDeAlimentacao";
-import { getMeusDados } from "../../services/perfil.service";
-import { formatarPeriodos } from "./helper";
+} from "../../../../../services/inclusaoDeAlimentacao";
+import { getMeusDados } from "../../../../../services/perfil.service";
+import { formatarPeriodos } from "../../../helper";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
@@ -88,7 +88,16 @@ export const Container = () => {
       {erro && (
         <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
       )}
-      {REQUISICOES_CONCLUIDAS && <InclusaoDeAlimentacao />}
+      {REQUISICOES_CONCLUIDAS && (
+        <InclusaoDeAlimentacao
+          meusDados={dados}
+          motivosSimples={motivosSimples}
+          motivosContinuos={motivosContinuos}
+          periodos={periodos}
+          proximosCincoDiasUteis={proximosCincoDiasUteis}
+          proximosDoisDiasUteis={proximosDoisDiasUteis}
+        />
+      )}
     </div>
   );
 };
