@@ -90,7 +90,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const onSubmit = values => {};
+  const onSubmit = () => {};
 
   return (
     <div>
