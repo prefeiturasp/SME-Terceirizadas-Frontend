@@ -162,7 +162,7 @@ class WizardFormTerceiraPagina extends Component {
     return new Promise(async (resolve, reject) => {
       const response = await updateProduto(values);
       if (response.status === HTTP_STATUS.OK) {
-        if (produto.ultima_homologacao.status === STATUS_CODAE_QUESTIONADO)
+        if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
           toastSuccess("Correção efetuada com sucesso.");
         else toastSuccess("Homologação atualizada com sucesso.");
         this.props.history.push("/painel-gestao-produto");
@@ -213,8 +213,8 @@ class WizardFormTerceiraPagina extends Component {
           closeModal={() => this.setState({ mostraModalConfimacao: false })}
           corpo={
             <p>
-              Atenção, ao realizar alterações no cadastro um novo processo de
-              homologação será criado. Deseja continuar?
+              Atenção, ao realizar alterações no cadastro, o produto será
+              reenviado para homologação. Deseja continuar?
             </p>
           }
           onSimClick={() => this.enviaDados(this.state.formValues)}

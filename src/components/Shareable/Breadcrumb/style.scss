@@ -20,7 +20,7 @@
     li {
       color: $blackSubtle;
       display: inline;
-      font-size: 10px;
+      font-size: 13px;
       font-weight: 500;
       a {
         color: $blackSubtle;
@@ -30,6 +30,9 @@
           color: inherit;
           text-decoration: underline;
         }
+      }
+      .home {
+        padding-right: 10px;
       }
     }
     .is-active {
@@ -54,7 +57,7 @@
 
   .contrast {
     cursor: pointer;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     color: $blackSubtle;
   }

@@ -7,11 +7,12 @@ export default class Breadcrumb extends Component {
     const { home, anteriores, atual } = this.props;
     return (
       <div className="breadcrumb-row row">
-        <div className="col-9">
+        <div className="col-10">
           <ul className="br-breadcrumb">
             <li>
               <Link className={`home ${!atual && "is-active"}`} to={home}>
-                <i className="fas fa-home" />
+                <i className="fas fa-home home" />
+                Início
               </Link>
             </li>
             {anteriores &&
@@ -32,7 +33,7 @@ export default class Breadcrumb extends Component {
             )}
           </ul>
         </div>
-        <div className="col-3 text-right contrast">
+        <div className="col-2 text-right contrast">
           <i className="fas fa-adjust" /> Contraste
         </div>
       </div>
