@@ -13,9 +13,17 @@ import arrayMutators from "final-form-arrays";
 import {
   AdicionarDia,
   DataInclusaoNormal,
-  FormularioInclusaoNormal
+  OutroMotivo,
+  PeriodosInclusaoNormal
 } from "./componentes/InclusaoNormal";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { STATUS_DRE_A_VALIDAR } from "configs/constants";
+import { OnChange } from "react-final-form-listeners";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -27,13 +35,33 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     motivosSimples,
     motivosContinuos,
     proximosDoisDiasUteis,
-    proximosCincoDiasUteis
+    proximosCincoDiasUteis,
+    periodos
   } = props;
+
+  const resetForm = form => {
+    form.change("inclusoes", [{ motivo: undefined }]);
+  };
 
   const motivoSimplesSelecionado = values => {
     return (
+      values.inclusoes &&
       values.inclusoes[0].motivo &&
       motivosSimples.find(motivo => motivo.uuid === values.inclusoes[0].motivo)
+    );
+  };
+
+  const outroMotivoSelecionado = (values, index) => {
+    return (
+      values.inclusoes &&
+      values.inclusoes[index] &&
+      values.inclusoes[index].motivo &&
+      motivosSimples.find(
+        motivo => motivo.uuid === values.inclusoes[index].motivo
+      ) &&
+      motivosSimples.find(
+        motivo => motivo.uuid === values.inclusoes[index].motivo
+      ).nome === "Outro"
     );
   };
 
@@ -90,6 +118,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         </div>
       )}
       <Form
+        keepDirtyOnReinitialize
         mutators={{
           ...arrayMutators
         }}
@@ -98,6 +127,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       >
         {({
           handleSubmit,
+          form,
           form: {
             mutators: { push, pop }
           },
@@ -131,6 +161,13 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               validate={required}
                               naoDesabilitarPrimeiraOpcao
                             />
+                            <OnChange name={`${name}.motivo`}>
+                              {value => {
+                                if (value) {
+                                  form.change("quantidades_periodo", periodos);
+                                }
+                              }}
+                            </OnChange>
                           </div>
                           {motivoSimplesSelecionado(values) && (
                             <DataInclusaoNormal
@@ -143,15 +180,53 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                             />
                           )}
                         </div>
+                        {outroMotivoSelecionado(values, index) && (
+                          <div className="mt-3">
+                            <OutroMotivo name={name} />
+                          </div>
+                        )}
+                        <hr />
                       </div>
                     ))
                   }
                 </FieldArray>
                 {motivoSimplesSelecionado(values) && (
-                  <div className="mt-3">
-                    <AdicionarDia push={push} />
-                  </div>
+                  <>
+                    <div className="mt-3">
+                      <AdicionarDia push={push} />
+                    </div>
+                    {values.quantidades_periodo && (
+                      <PeriodosInclusaoNormal form={form} values={values} />
+                    )}
+                  </>
                 )}
+                <div className="row float-right mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Cancelar"
+                      onClick={() => {
+                        resetForm(form);
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto={values.uuid ? "Atualizar" : "Salvar"}
+                      className="ml-3"
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                    />
+                    <Botao
+                      texto="Enviar"
+                      type={BUTTON_TYPE.SUBMIT}
+                      onClick={() => {
+                        values["status"] = STATUS_DRE_A_VALIDAR;
+                        handleSubmit(values => onSubmit(values, form));
+                      }}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             <ModalDataPrioritaria
