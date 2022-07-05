@@ -1,0 +1,149 @@
+@import "../../../../styles/variables.scss";
+
+.card-conferencia-guia {
+  .conferencia-guia {
+    .texto-confirma-entrega {
+      margin-top: calc(1rem + 1px);
+      margin-bottom: calc(1rem + 1px);
+      color: #42474a;
+
+      .fa-exclamation-triangle {
+        color: #ab6701;
+        padding-right: 8px;
+      }
+    }
+    .radio-entrega-sim {
+      padding: 5px;
+      border: 1px solid green !important;
+      border-radius: 4px;
+    }
+    .radio-entrega-nao {
+      padding: 5px;
+      border: 1px solid red !important;
+      border-radius: 4px;
+      margin-left: 10px;
+      .ant-radio-wrapper:hover .ant-radio,
+      .ant-radio:hover .ant-radio-inner,
+      .ant-radio-input:focus + .ant-radio-inner {
+        border-color: $red;
+      }
+      .ant-radio-inner::after {
+        background-color: $red;
+      }
+      .ant-radio-checked::after {
+        border: 1px solid $red;
+      }
+      .ant-radio-checked .ant-radio-inner {
+        border-color: $red;
+      }
+    }
+
+    .ant-radio-inner::after {
+      background-color: $green;
+    }
+
+    .ant-radio-checked::after {
+      border: 1px solid $green;
+    }
+
+    .ant-radio-checked .ant-radio-inner {
+      border-color: $green;
+    }
+
+    .ant-radio-wrapper:hover .ant-radio,
+    .ant-radio:hover .ant-radio-inner,
+    .ant-radio-input:focus + .ant-radio-inner {
+      border-color: $green;
+    }
+
+    .mb-custom {
+      margin-bottom: 5rem;
+    }
+
+    .ant-radio-inner {
+      width: 20px;
+      height: 20px;
+      border-color: #42474a;
+      border-width: 2px;
+    }
+
+    .ant-radio-inner::after {
+      width: 6px;
+      height: 6px;
+      top: 5px;
+      left: 5px;
+    }
+
+    .ant-radio-wrapper {
+      font-size: 16px;
+      line-height: 24px;
+      border-color: #42474a;
+    }
+
+    .ant-switch-checked {
+      background-color: #198459;
+    }
+    .ant-click-animating-node {
+      -webkit-box-shadow: 0 0 0 0 #198459;
+      box-shadow: 0 0 0 0 #198459;
+    }
+
+    .ant-checkbox-checked .ant-checkbox-inner {
+      background-color: #198459;
+      border-color: #198459;
+    }
+
+    .ant-checkbox + span {
+      padding-left: 16px;
+    }
+
+    .checkbox-title {
+      color: #42474a;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 16px;
+    }
+
+    .checkbox-todos {
+      margin-left: 12px;
+      margin-top: 32px;
+    }
+
+    .checkbox-container {
+      .ant-checkbox-group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .ant-checkbox-group-item {
+        display: block;
+        width: 21%;
+      }
+      label {
+        margin-left: 12px;
+        margin-top: 12px;
+      }
+
+      @media screen and (max-width: 990px) {
+        .ant-checkbox-group-item {
+          display: block;
+          width: 40%;
+        }
+      }
+    }
+
+    .tabela-conferencia-guia {
+      thead {
+        background: #20aa73;
+        color: white;
+
+        th {
+          border: 1px solid #e0e0e0;
+        }
+      }
+    }
+  }
+}
