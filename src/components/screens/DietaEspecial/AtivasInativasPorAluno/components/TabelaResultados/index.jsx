@@ -84,7 +84,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                       </div>
                       <div className="pl-4">
                         <p className="font-weight-bold mb-0">
-                          Classificação da dieta especial <br />
+                          Classificação da Dieta Especial <br />
                         </p>
                         {dados.classificacao_dieta_ativa || "--"}
                       </div>
