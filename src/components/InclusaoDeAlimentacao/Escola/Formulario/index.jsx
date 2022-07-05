@@ -4,13 +4,16 @@ import { TIPO_SOLICITACAO } from "constants/shared";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import {
-  escolaCriarSolicitacaoDeInclusaoDeAlimentacao,
-  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
+  updatetInclusaoAlimentacao,
+  createInclusaoAlimentacao,
+  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao,
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao,
+  iniciaFluxoInclusaoAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
 import { required } from "helpers/fieldValidators";
-import { agregarDefault, deepCopy } from "helpers/utilities";
+import { agregarDefault, deepCopy, getError } from "helpers/utilities";
 import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
 import {
@@ -47,6 +50,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
 
   const resetForm = form => {
     form.change("inclusoes", [{ motivo: undefined }]);
+    form.change("quantidades_periodo", []);
   };
 
   const motivoSimplesSelecionado = values => {
@@ -92,11 +96,76 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
+  const removerRascunho = async (id_externo, uuid, tipoSolicitacao, form) => {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      const response = await escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+        uuid,
+        tipoSolicitacao
+      );
+      if (response.status === HTTP_STATUS.NO_CONTENT) {
+        toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+        refresh(form);
+      } else {
+        toastError(
+          `Houve um erro ao excluir o rascunho: ${getError(response.data)}`
+        );
+      }
+    }
+  };
+
+  const carregarRascunho = async (form, values, inclusao) => {
+    await form.change("uuid", inclusao.uuid);
+    await form.change("id_externo", inclusao.id_externo);
+    await form.change("quantidades_periodo", periodos);
+    const inclusao_ = deepCopy(inclusao);
+    inclusao_.inclusoes.forEach(i => {
+      i.motivo = i.motivo.uuid;
+    });
+    await form.change("inclusoes", inclusao_.inclusoes);
+    inclusao_.quantidades_periodo.forEach(async qp => {
+      const index = periodos.findIndex(
+        qp_ => qp_.nome === qp.periodo_escolar.nome
+      );
+      await form.change(`quantidades_periodo[${index}].checked`, true);
+      await form.change(
+        `quantidades_periodo[${index}].multiselect`,
+        "multiselect-wrapper-enabled"
+      );
+      await form.change(
+        `quantidades_periodo[${index}].tipos_alimentacao_selecionados`,
+        qp.tipos_alimentacao.map(t => t.uuid)
+      );
+      await form.change(
+        `quantidades_periodo[${index}].numero_alunos`,
+        qp.numero_alunos
+      );
+    });
+  };
+
+  const refresh = form => {
+    getRascunhos();
+    resetForm(form);
+  };
+
   useEffect(() => {
     getRascunhos();
   }, []);
 
-  const onSubmit = async values => {
+  const iniciarPedido = async (uuid, tipoInclusao, form) => {
+    const response = await iniciaFluxoInclusaoAlimentacao(uuid, tipoInclusao);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Inclusão de Alimentação enviada com sucesso!");
+      refresh(form);
+    } else {
+      toastError(
+        `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
+          response.data
+        )}`
+      );
+    }
+  };
+
+  const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
     const erro = validarSubmissao(values, meusDados);
     if (erro) {
@@ -107,12 +176,35 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
     if (!values.uuid) {
-      const response = await escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
+      const response = await createInclusaoAlimentacao(
         formatarSubmissaoSolicitacaoNormal(values_),
         tipoSolicitacao
       );
-      if (response.status === HTTP_STATUS.OK) {
+      if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Solicitação Rascunho criada com sucesso!");
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(response.data.uuid, tipoSolicitacao, form);
+        }
+        refresh(form);
+      }
+    } else {
+      const response = await updatetInclusaoAlimentacao(
+        values.uuid,
+        formatarSubmissaoSolicitacaoNormal(values_),
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Rascunho atualizado com sucesso");
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(values.uuid, tipoSolicitacao, form);
+        }
+        refresh(form);
+      } else {
+        toastError(
+          `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
+            response.data
+          )}`
+        );
       }
     }
   };
@@ -129,17 +221,6 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       {erroRascunhos && (
         <div className="card mt-3 mb-3">
           Erro ao carregar rascunhos de Inclusão de Alimentação.
-        </div>
-      )}
-      {rascunhos && rascunhos.length > 0 && (
-        <div className="mt-3">
-          <span className="page-title">Rascunhos</span>
-          <Rascunhos
-            rascunhosInclusaoDeAlimentacao={rascunhos}
-            //removerRascunho={this.removerRascunho}
-            //resetForm={() => this.resetForm()}
-            //carregarRascunho={params => this.carregarRascunho(params)}
-          />
         </div>
       )}
       <Form
@@ -163,9 +244,21 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
           values
         }) => (
           <form onSubmit={handleSubmit}>
+            {rascunhos && rascunhos.length > 0 && (
+              <div className="mt-3">
+                <span className="page-title">Rascunhos</span>
+                <Rascunhos
+                  rascunhosInclusaoDeAlimentacao={rascunhos}
+                  removerRascunho={removerRascunho}
+                  carregarRascunho={carregarRascunho}
+                  form={form}
+                  values={values}
+                />
+              </div>
+            )}
             <div className="mt-2 page-title">
               {values.uuid
-                ? `Solicitação # ${values.uuid}`
+                ? `Solicitação # ${values.id_externo}`
                 : "Nova Solicitação"}
             </div>
             <div className="card solicitation mt-2">

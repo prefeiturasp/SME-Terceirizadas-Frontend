@@ -4,10 +4,7 @@ import { getPath } from "./helper";
 import { ErrorHandlerFunction } from "services/service-helpers";
 import axios from "../_base";
 
-export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = async (
-  payload,
-  tipoSolicitacao
-) => {
+export const createInclusaoAlimentacao = async (payload, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
@@ -16,51 +13,26 @@ export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = async (
   }
 };
 
-export const escolaIniciarSolicitacaoDeInclusaoDeAlimentacao = (
-  uuid,
-  tipoSolicitacao
-) => {
+export const iniciaFluxoInclusaoAlimentacao = async (uuid, tipoSolicitacao) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const escolaAlterarSolicitacaoDeInclusaoDeAlimentacao = (
+export const updatetInclusaoAlimentacao = async (
   uuid,
   payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PUT",
-    body: payload,
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.put(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const escolaExcluirSolicitacaoDeInclusaoDeAlimentacao = async (
