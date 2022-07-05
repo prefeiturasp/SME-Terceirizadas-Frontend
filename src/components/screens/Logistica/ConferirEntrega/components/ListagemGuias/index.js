@@ -24,7 +24,8 @@ const ListagemSolicitacoes = ({ guias }) => {
   const baixarPDFGuiaRemessa = guia => {
     setCarregando(true);
     let uuid = guia.uuid;
-    imprimirGuiaRemessa(uuid)
+    let numero = guia.numero_guia;
+    imprimirGuiaRemessa(uuid, numero)
       .then(() => {
         setCarregando(false);
       })
