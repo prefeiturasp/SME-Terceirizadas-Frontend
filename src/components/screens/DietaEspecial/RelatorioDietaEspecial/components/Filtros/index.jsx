@@ -27,6 +27,7 @@ import "./styles.scss";
 const BuscaDietasForm = ({
   setCarregando,
   setDietasFiltradas,
+  setStatus,
   setStatusSelecionado,
   setFiltragemRealizada,
   lotesSelecionados,
@@ -140,6 +141,7 @@ const BuscaDietasForm = ({
     setStatusSelecionado(true);
     setDietasFiltradas([]);
     setFiltragemRealizada(false);
+    setStatus(value.toUpperCase());
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
       const response = await getSolicitacoesRelatorioDietasEspeciais(data);
