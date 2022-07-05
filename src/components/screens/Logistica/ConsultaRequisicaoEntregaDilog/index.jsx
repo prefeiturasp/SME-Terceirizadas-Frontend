@@ -215,7 +215,7 @@ export default () => {
                   />
                   <Spin size="small" spinning={carregandoExcel}>
                     <Botao
-                      texto="Relatório Consolidado XLSX"
+                      texto="Planilha Relatório Consolidado"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_EXCEL}
