@@ -3,11 +3,14 @@ import HTTP_STATUS from "http-status-codes";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
-import { obterMinhasSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import {
+  escolaCriarSolicitacaoDeInclusaoDeAlimentacao,
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
+} from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
 import { required } from "helpers/fieldValidators";
-import { agregarDefault } from "helpers/utilities";
+import { agregarDefault, deepCopy } from "helpers/utilities";
 import { FieldArray } from "react-final-form-arrays";
 import arrayMutators from "final-form-arrays";
 import {
@@ -24,6 +27,9 @@ import {
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import { OnChange } from "react-final-form-listeners";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { validarSubmissao } from "components/InclusaoDeAlimentacao/validacao";
+import { formatarSubmissaoSolicitacaoNormal } from "components/InclusaoDeAlimentacao/helper";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -90,7 +96,26 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const onSubmit = () => {};
+  const onSubmit = async values => {
+    const values_ = deepCopy(values);
+    const erro = validarSubmissao(values, meusDados);
+    if (erro) {
+      toastError(erro);
+      return;
+    }
+    const tipoSolicitacao = motivoSimplesSelecionado(values)
+      ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+    if (!values.uuid) {
+      const response = await escolaCriarSolicitacaoDeInclusaoDeAlimentacao(
+        formatarSubmissaoSolicitacaoNormal(values_),
+        tipoSolicitacao
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Solicitação Rascunho criada com sucesso!");
+      }
+    }
+  };
 
   return (
     <div>
@@ -122,11 +147,15 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         mutators={{
           ...arrayMutators
         }}
-        initialValues={{ inclusoes: [{ motivo: undefined }] }}
+        initialValues={{
+          escola: meusDados.vinculo_atual.instituicao.uuid,
+          inclusoes: [{ motivo: undefined }]
+        }}
         onSubmit={onSubmit}
       >
         {({
           handleSubmit,
+          submitting,
           form,
           form: {
             mutators: { push, pop }
@@ -172,6 +201,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                           {motivoSimplesSelecionado(values) && (
                             <DataInclusaoNormal
                               name={name}
+                              values={values}
                               index={index}
                               proximosDoisDiasUteis={proximosDoisDiasUteis}
                               proximosCincoDiasUteis={proximosCincoDiasUteis}
@@ -212,12 +242,14 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     <Botao
                       texto={values.uuid ? "Atualizar" : "Salvar"}
                       className="ml-3"
+                      disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
+                      disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
                         handleSubmit(values => onSubmit(values, form));

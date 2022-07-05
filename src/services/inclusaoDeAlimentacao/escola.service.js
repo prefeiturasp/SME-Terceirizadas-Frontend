@@ -4,27 +4,16 @@ import { getPath } from "./helper";
 import { ErrorHandlerFunction } from "services/service-helpers";
 import axios from "../_base";
 
-export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = (
+export const escolaCriarSolicitacaoDeInclusaoDeAlimentacao = async (
   payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: payload,
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const escolaIniciarSolicitacaoDeInclusaoDeAlimentacao = (

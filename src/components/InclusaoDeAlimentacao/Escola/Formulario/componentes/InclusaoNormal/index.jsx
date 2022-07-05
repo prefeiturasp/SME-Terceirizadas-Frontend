@@ -8,7 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
-import { maxLength, required } from "helpers/fieldValidators";
+import { dataDuplicada, maxLength, required } from "helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
@@ -28,7 +28,8 @@ export const DataInclusaoNormal = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     name,
-    setShowModal
+    setShowModal,
+    values
   } = props;
 
   const onDataChanged = value => {
@@ -52,14 +53,16 @@ export const DataInclusaoNormal = ({ ...props }) => {
             <Field
               component={InputComData}
               name={`${name}.data`}
-              //onBlur={event => this.onDataChanged(event.target.value)}
               minDate={proximosDoisDiasUteis}
               maxDate={moment()
                 .endOf("year")
                 .toDate()}
               label="Dia"
               required
-              //validate={this.validaData}
+              validate={composeValidators(
+                required,
+                dataDuplicada(values.inclusoes)
+              )}
             />
             <OnChange name={`${name}.data`}>
               {value => {
@@ -130,11 +133,6 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
           fields.map((name, indice) => (
             <div key={indice}>
               <div className="row">
-                <Field
-                  component={"input"}
-                  type="hidden"
-                  name={`${name}.checked`}
-                />
                 <div className="col-3">
                   <div
                     className={`period-quantity number-${indice} pl-5 pt-2 pb-2`}
@@ -146,6 +144,18 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
                         name={`${name}.checked`}
                       />
                       <span
+                        onClick={() => {
+                          form.change(
+                            `${name}.checked`,
+                            !values.quantidades_periodo[indice][`checked`]
+                          );
+                          form.change(
+                            `${name}.multiselect`,
+                            !values.quantidades_periodo[indice][`checked`]
+                              ? "multiselect-wrapper-enabled"
+                              : "multiselect-wrapper-disabled"
+                          );
+                        }}
                         className="checkbox-custom"
                         data-cy={`checkbox-${getPeriodo(indice).nome}`}
                       />{" "}
