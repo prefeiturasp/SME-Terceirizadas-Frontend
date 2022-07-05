@@ -35,10 +35,11 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
   const handleDownload = () => {
     setLoading(true);
     let uuid = solicitacao.uuid;
+    let requisicao = solicitacao.numero_solicitacao;
     let payload = montaPayload(uuid);
     if (excel) {
       const params = gerarParametrosConsulta({ uuid, ...payload });
-      gerarExcelEntregas(params)
+      gerarExcelEntregas(params, requisicao)
         .then(() => {
           setLoading(false);
           handleClose();
@@ -67,6 +68,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
     let status_guia = [];
     let tem_insucesso = insucesso;
     let tem_conferencia = conferidas || pendentes;
+    let nome_arquivo = "entregas_requisicao";
 
     if (pendentes) status_guia.push(STATUS_GUIA.PENDENTE);
     if (recebidas) status_guia.push(STATUS_GUIA.RECEBIDA);
@@ -89,7 +91,7 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
       ];
     }
 
-    return { status_guia, tem_conferencia, tem_insucesso };
+    return { status_guia, tem_conferencia, tem_insucesso, nome_arquivo };
   };
 
   const handleClose = () => {
