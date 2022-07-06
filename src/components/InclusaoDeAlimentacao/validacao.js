@@ -1,4 +1,4 @@
-export const validarSubmissao = (values, meusDados) => {
+export const validarSubmissaoNormal = (values, meusDados) => {
   if (!values.quantidades_periodo.find(qp => qp.checked))
     return "Necessário selecionar ao menos um período";
 
@@ -23,6 +23,13 @@ export const validarSubmissao = (values, meusDados) => {
 
   if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
     return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
+
+  return false;
+};
+
+export const validarSubmissaoContinua = values => {
+  if (!values.quantidades_periodo)
+    return "Necessário adicionar ao menos uma recorrência";
 
   return false;
 };

@@ -102,8 +102,6 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
             <Field
               component={Weekly}
               name={`dias_semana`}
-              required
-              validate={required}
               arrayDiasSemana={values.dias_semana}
               handleWeekly={handleWeekly}
             />
@@ -112,16 +110,14 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
         <div className="col-4">
           <Field
             component={Select}
-            name={`periodo`}
+            name={`periodo_escolar`}
             options={agregarDefault(periodos)}
-            required
-            validate={required}
             naoDesabilitarPrimeiraOpcao
           />
         </div>
         <div
           className={`col-4 multiselect-wrapper-${
-            values.periodo ? "enabled" : "disabled"
+            values.periodo_escolar ? "enabled" : "disabled"
           }`}
         >
           <Field
@@ -129,9 +125,9 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
             name="tipos_alimentacao"
             selected={values.tipos_alimentacao_selecionados || []}
             options={
-              values.periodo
+              values.periodo_escolar
                 ? formatarParaMultiselect(
-                    periodos.find(p => p.uuid === values.periodo)
+                    periodos.find(p => p.uuid === values.periodo_escolar)
                       .tipos_alimentacao
                   )
                 : []
@@ -153,8 +149,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
             name={`numero_alunos`}
             min="0"
             className="form-control quantidade-aluno"
-            disabled={!values.periodo}
-            required
+            disabled={!values.periodo_escolar}
           />
         </div>
       </div>
@@ -172,7 +167,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
                 form.change("quantidades_periodo", [
                   {
                     dias_semana: deepCopy(values.dias_semana),
-                    periodo: deepCopy(values.periodo),
+                    periodo_escolar: deepCopy(values.periodo_escolar),
                     tipos_alimentacao: deepCopy(
                       values.tipos_alimentacao_selecionados
                     ),
@@ -184,7 +179,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
                 await push("quantidades_periodo");
                 [
                   "dias_semana",
-                  "periodo",
+                  "periodo_escolar",
                   "numero_alunos",
                   "observacoes"
                 ].forEach(async item => {

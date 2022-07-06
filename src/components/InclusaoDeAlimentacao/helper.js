@@ -52,30 +52,11 @@ export const formatarDiasSemana = diasSemana => {
   return paraStringDiasSemana;
 };
 
-export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
-  let dataFormatada = {};
-  dataFormatada.escola = meusDados.vinculo_atual.instituicao.uuid;
-  dataFormatada.motivo = values.inclusoes[0].motivo;
-  dataFormatada.data_inicial = values.inclusoes[0].data_inicial;
-  dataFormatada.data_final = values.inclusoes[0].data_final;
-  dataFormatada.dias_semana = values.inclusoes[0].dias_semana;
-  dataFormatada.outro_motivo = values.inclusoes[0].outro_motivo;
-  dataFormatada.observacao = values.inclusoes[0].observacao;
-  let quantidades_periodo = [];
-  values.quantidades_periodo.forEach(quantidade_periodo => {
-    if (quantidade_periodo.checked) {
-      let quantidade_periodo_formatado = {};
-      quantidade_periodo_formatado["numero_alunos"] =
-        quantidade_periodo.numero_alunos;
-      quantidade_periodo_formatado["periodo_escolar"] = quantidade_periodo.uuid;
-      quantidade_periodo_formatado["tipos_alimentacao"] =
-        quantidade_periodo.tipos_alimentacao_selecionados;
-      quantidades_periodo.push(quantidade_periodo_formatado);
-    }
-  });
-  dataFormatada.quantidades_periodo = quantidades_periodo;
-  dataFormatada.descricao = values.descricao;
-  return dataFormatada;
+export const formatarSubmissaoSolicitacaoContinua = values => {
+  values.motivo = values.inclusoes[0].motivo;
+  values.data_inicial = values.inclusoes[0].data_inicial;
+  values.data_final = values.inclusoes[0].data_final;
+  return values;
 };
 
 export const formatarSubmissaoSolicitacaoNormal = values => {

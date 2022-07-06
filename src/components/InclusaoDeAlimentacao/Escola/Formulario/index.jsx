@@ -36,8 +36,14 @@ import {
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { validarSubmissao } from "components/InclusaoDeAlimentacao/validacao";
-import { formatarSubmissaoSolicitacaoNormal } from "components/InclusaoDeAlimentacao/helper";
+import {
+  validarSubmissaoNormal,
+  validarSubmissaoContinua
+} from "components/InclusaoDeAlimentacao/validacao";
+import {
+  formatarSubmissaoSolicitacaoContinua,
+  formatarSubmissaoSolicitacaoNormal
+} from "components/InclusaoDeAlimentacao/helper";
 import {
   DatasInclusaoContinua,
   Recorrencia,
@@ -187,17 +193,22 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
 
   const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
-    const erro = validarSubmissao(values, meusDados);
+    const tipoSolicitacao = motivoSimplesSelecionado(values)
+      ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+    const erro =
+      tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        ? validarSubmissaoNormal(values, meusDados)
+        : validarSubmissaoContinua(values);
     if (erro) {
       toastError(erro);
       return;
     }
-    const tipoSolicitacao = motivoSimplesSelecionado(values)
-      ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-      : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
     if (!values.uuid) {
       const response = await createInclusaoAlimentacao(
-        formatarSubmissaoSolicitacaoNormal(values_),
+        tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+          ? formatarSubmissaoSolicitacaoNormal(values_)
+          : formatarSubmissaoSolicitacaoContinua(values_),
         tipoSolicitacao
       );
       if (response.status === HTTP_STATUS.CREATED) {
