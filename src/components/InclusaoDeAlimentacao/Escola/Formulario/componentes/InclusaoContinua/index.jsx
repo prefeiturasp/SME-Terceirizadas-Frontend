@@ -9,6 +9,7 @@ import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import Weekly from "components/Shareable/Weekly/Weekly";
+import { WEEK } from "configs/constants";
 import { required } from "helpers/fieldValidators";
 import {
   agregarDefault,
@@ -169,15 +170,36 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
             onClick={async () => {
               if (!values.quantidades_periodo) {
                 form.change("quantidades_periodo", [
-                  { dias_semana: deepCopy(values.dias_semana) }
+                  {
+                    dias_semana: deepCopy(values.dias_semana),
+                    periodo: deepCopy(values.periodo),
+                    tipos_alimentacao: deepCopy(
+                      values.tipos_alimentacao_selecionados
+                    ),
+                    numero_alunos: deepCopy(values.numero_alunos),
+                    observacoes: deepCopy(values.observacoes)
+                  }
                 ]);
               } else {
                 await push("quantidades_periodo");
+                [
+                  "dias_semana",
+                  "periodo",
+                  "numero_alunos",
+                  "observacoes"
+                ].forEach(async item => {
+                  await form.change(
+                    `quantidades_periodo[${
+                      values.quantidades_periodo.length
+                    }].${item}`,
+                    deepCopy(values[item])
+                  );
+                });
                 await form.change(
                   `quantidades_periodo[${
                     values.quantidades_periodo.length
-                  }].dias_semana`,
-                  deepCopy(values.dias_semana)
+                  }].tipos_alimentacao`,
+                  deepCopy(values.tipos_alimentacao_selecionados)
                 );
               }
             }}
@@ -190,37 +212,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
   );
 };
 
-export const RecorrenciaTabela = ({ values }) => {
-  const week = [
-    {
-      label: "D",
-      value: "6"
-    },
-    {
-      label: "S",
-      value: "0"
-    },
-    {
-      label: "T",
-      value: "1"
-    },
-    {
-      label: "Q",
-      value: "2"
-    },
-    {
-      label: "Q",
-      value: "3"
-    },
-    {
-      label: "S",
-      value: "4"
-    },
-    {
-      label: "S",
-      value: "5"
-    }
-  ];
+export const RecorrenciaTabela = ({ values, periodos }) => {
   return (
     <div className="recorrencia-e-detalhes">
       <table>
@@ -228,9 +220,9 @@ export const RecorrenciaTabela = ({ values }) => {
           <tr className="row">
             <th className="col-2">Repetir</th>
             <th className="col-2">Período</th>
-            <th className="col-4">Tipos de Alimentação</th>
-            <th className="col-2">Nº de Alunos</th>
-            <th className="col-2">Observações</th>
+            <th className="col-3">Tipos de Alimentação</th>
+            <th className="col-1">Nº de Alunos</th>
+            <th className="col-4">Observações</th>
           </tr>
         </thead>
         <tbody>
@@ -240,8 +232,8 @@ export const RecorrenciaTabela = ({ values }) => {
                 (name, indice) =>
                   values.quantidades_periodo[indice] && (
                     <tr key={indice} className="row">
-                      <td className="col-3 weekly">
-                        {week.map((day, key) => {
+                      <td className="col-2 weekly">
+                        {WEEK.map((day, key) => {
                           return (
                             <span
                               key={key}
@@ -260,6 +252,40 @@ export const RecorrenciaTabela = ({ values }) => {
                           );
                         })}
                       </td>
+                      <td className="col-2">
+                        {values.quantidades_periodo[indice].periodo &&
+                          periodos.find(
+                            periodo =>
+                              periodo.uuid ===
+                              values.quantidades_periodo[indice].periodo
+                          ).nome}
+                      </td>
+                      <td className="col-3">
+                        {values.quantidades_periodo[indice].tipos_alimentacao &&
+                          values.quantidades_periodo[indice].periodo &&
+                          periodos
+                            .find(
+                              p =>
+                                p.uuid ===
+                                values.quantidades_periodo[indice].periodo
+                            )
+                            .tipos_alimentacao.filter(t =>
+                              values.quantidades_periodo[
+                                indice
+                              ].tipos_alimentacao.includes(t.uuid)
+                            )
+                            .map(t => t.nome)
+                            .join(", ")}
+                      </td>
+                      <td className="col-1">
+                        {values.quantidades_periodo[indice].numero_alunos}
+                      </td>
+                      <td
+                        dangerouslySetInnerHTML={{
+                          __html: values.quantidades_periodo[indice].observacoes
+                        }}
+                        className="col-4"
+                      />
                     </tr>
                   )
               )

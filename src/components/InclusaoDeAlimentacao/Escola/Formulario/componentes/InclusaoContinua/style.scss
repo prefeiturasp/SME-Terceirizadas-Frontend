@@ -25,9 +25,6 @@ div.recorrencia-e-detalhes {
           &:not(:last-child) {
             border-right: 1px solid #e9eaea;
           }
-          &:first-child {
-            padding-left: 2em;
-          }
         }
       }
     }
@@ -46,9 +43,6 @@ div.recorrencia-e-detalhes {
           padding: 10px;
           &:not(:last-child) {
             border-right: 1px solid #e9eaea;
-          }
-          &:first-child {
-            padding-left: 2em;
           }
           i {
             cursor: pointer;

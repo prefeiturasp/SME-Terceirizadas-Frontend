@@ -385,7 +385,12 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       push={push}
                     />
                     {values.quantidades_periodo && (
-                      <RecorrenciaTabela values={values} />
+                      <div className="mt-5">
+                        <RecorrenciaTabela
+                          values={values}
+                          periodos={periodos}
+                        />
+                      </div>
                     )}
                   </>
                 )}
