@@ -367,7 +367,8 @@ class Relatorio extends Component {
                           />
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO &&
-                      (alteracaoDeCardapio.motivo.nome !== "Merenda Seca" ? (
+                      (alteracaoDeCardapio.motivo.nome !==
+                      "Lanche Emergencial" ? (
                         <Botao
                           texto={
                             tipoPerfil ===
