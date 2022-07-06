@@ -5,7 +5,13 @@ import FiltrosExcel from "../FiltrosRelatorios";
 
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
+const ListagemSolicitacoes = ({
+  solicitacoes,
+  ativos,
+  setAtivos,
+  dilog,
+  dre
+}) => {
   const [showDownload, setShowDownload] = useState(false);
 
   return (
@@ -13,19 +19,19 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
       <ModalSolicitacaoDownload show={showDownload} setShow={setShowDownload} />
       <section
         className={`resultado-busca-entregas ${
-          dilog ? "dilog" : "distribuidor"
+          dilog || dre ? "dilog" : "distribuidor"
         }`}
       >
         <article>
           <div className={`grid-table header-table top-header`}>
-            <div className={dilog ? "colspan-4" : "colspan-3"} />
+            <div className={dilog || dre ? "colspan-4" : "colspan-3"} />
             <div className="colspan-4">Guias de Remessa</div>
             <div className="colspan-2">Exportar</div>
           </div>
           <div className="grid-table header-table">
             <div />
             <div>Requisição</div>
-            {dilog && <div>Distribuidor</div>}
+            {(dilog || dre) && <div>Distribuidor</div>}
             <div>Data de entrega</div>
             <div>Qtde.</div>
             <div>Conferidas</div>
@@ -66,7 +72,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                   <div className={`${bordas}`}>
                     {solicitacao.numero_solicitacao}
                   </div>
-                  {dilog && (
+                  {(dilog || dre) && (
                     <div className={`${bordas}`}>
                       {solicitacao.distribuidor_nome}
                     </div>
