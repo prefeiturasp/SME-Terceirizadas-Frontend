@@ -82,6 +82,7 @@ export default ({ dilog, dre }) => {
                 setAtivos={setAtivos}
                 updatePage={updatePage}
                 dilog={dilog}
+                dre={dre}
               />
               <div className="row">
                 <div className="col">
