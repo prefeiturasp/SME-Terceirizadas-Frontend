@@ -146,10 +146,10 @@ export const getEntregasDilog = async params => {
   return await axios.get(url, { params });
 };
 
-export const gerarExcelEntregas = async params => {
+export const gerarExcelEntregas = async (params, requisicao) => {
   const url = `/solicitacao-remessa/exporta-excel-visao-entregas/`;
   const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_entregas.xlsx");
+  saveAs(data, "entregas_requisicao_" + requisicao + ".xlsx");
 };
 
 export const arquivaGuias = async payload => {
@@ -162,10 +162,10 @@ export const desarquivaGuias = async payload => {
   return await axios.post(url, payload);
 };
 
-export const imprimirGuiaRemessa = async uuid => {
+export const imprimirGuiaRemessa = async (uuid, numero) => {
   const url = `/guias-da-requisicao/${uuid}/relatorio-guia-remessa/`;
   const { data } = await axios.get(url, { responseType: "blob" });
-  saveAs(data, "guia_de_remessa.pdf");
+  saveAs(data, "guia_" + numero + ".pdf");
 };
 
 export const imprimirGuiasDaSolicitacao = async (uuid, params) => {
