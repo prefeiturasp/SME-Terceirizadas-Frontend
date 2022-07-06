@@ -555,7 +555,7 @@ class AlteracaoCardapio extends Component {
   onAlterarDiaChanged(value) {
     if (
       value &&
-      this.state.motivo.nome !== "Merenda Seca" &&
+      this.state.motivo.nome !== "Lanche Emergencial" &&
       checaSeDataEstaEntre2e5DiasUteis(
         value,
         this.props.proximos_dois_dias_uteis,
@@ -852,7 +852,7 @@ class AlteracaoCardapio extends Component {
   DisabledDataInicial(motivo) {
     return (
       this.props.motivos.find(motivo_ => motivo_.uuid === motivo).nome !==
-      "Merenda Seca"
+      "Lanche Emergencial"
     );
   }
 
@@ -938,7 +938,7 @@ class AlteracaoCardapio extends Component {
                     onChange={value => this.onAlterarDiaChanged(value)}
                     name="alterar_dia"
                     minDate={
-                      this.state.motivo.nome === "Merenda Seca"
+                      this.state.motivo.nome === "Lanche Emergencial"
                         ? moment().toDate()
                         : proximos_dois_dias_uteis
                     }
@@ -955,7 +955,7 @@ class AlteracaoCardapio extends Component {
                       name="data_inicial"
                       label="De"
                       minDate={
-                        this.state.motivo.nome === "Merenda Seca"
+                        this.state.motivo.nome === "Lanche Emergencial"
                           ? moment().toDate()
                           : proximos_dois_dias_uteis
                       }
