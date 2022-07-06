@@ -22,7 +22,7 @@ export const iniciaFluxoInclusaoAlimentacao = async (uuid, tipoSolicitacao) => {
   }
 };
 
-export const updatetInclusaoAlimentacao = async (
+export const updateInclusaoAlimentacao = async (
   uuid,
   payload,
   tipoSolicitacao

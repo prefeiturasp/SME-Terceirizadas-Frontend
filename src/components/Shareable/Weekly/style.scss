@@ -28,5 +28,8 @@
     border-radius: 50%;
     display: inline-block;
     cursor: pointer;
+    &.green {
+      background-color: $green;
+    }
   }
 }

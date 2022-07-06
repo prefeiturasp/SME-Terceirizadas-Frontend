@@ -10,6 +10,7 @@ export const formatarPeriodos = periodos => {
     periodo["tipos_alimentacao_selecionados"] = [];
     periodo["numero_alunos"] = null;
     periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["dias_semana"] = [];
   });
   return periodos;
 };

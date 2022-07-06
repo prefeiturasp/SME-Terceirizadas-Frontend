@@ -9,11 +9,7 @@ import {
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import { dataDuplicada, maxLength, required } from "helpers/fieldValidators";
-import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  composeValidators,
-  formatarParaMultiselect
-} from "helpers/utilities";
+import { composeValidators, formatarParaMultiselect } from "helpers/utilities";
 import moment from "moment";
 import React from "react";
 import { Field } from "react-final-form";
@@ -26,24 +22,10 @@ export const DataInclusaoNormal = ({ ...props }) => {
     index,
     pop,
     proximosDoisDiasUteis,
-    proximosCincoDiasUteis,
     name,
-    setShowModal,
-    values
+    values,
+    onDataChanged
   } = props;
-
-  const onDataChanged = value => {
-    if (
-      value &&
-      checaSeDataEstaEntre2e5DiasUteis(
-        value,
-        proximosDoisDiasUteis,
-        proximosCincoDiasUteis
-      )
-    ) {
-      setShowModal(true);
-    }
-  };
 
   return (
     <>
@@ -144,12 +126,12 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
                         name={`${name}.checked`}
                       />
                       <span
-                        onClick={() => {
-                          form.change(
+                        onClick={async () => {
+                          await form.change(
                             `${name}.checked`,
                             !values.quantidades_periodo[indice][`checked`]
                           );
-                          form.change(
+                          await form.change(
                             `${name}.multiselect`,
                             !values.quantidades_periodo[indice][`checked`]
                               ? "multiselect-wrapper-enabled"
@@ -194,9 +176,9 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
                 <div className="col-3">
                   <Field
                     component={InputText}
-                    onChange={event =>
+                    /*onChange={event =>
                       this.onNumeroAlunosChanged(event, getPeriodo(indice))
-                    }
+                    }*/
                     disabled={!getPeriodo(indice).checked}
                     type="number"
                     name={`${name}.numero_alunos`}

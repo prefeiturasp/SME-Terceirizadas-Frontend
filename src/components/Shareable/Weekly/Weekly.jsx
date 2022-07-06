@@ -1,21 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import "./style.scss";
 
 export const Weekly = ({ ...props }) => {
-  const [clicked, setClicked] = useState([]);
+  const { handleWeekly, arrayDiasSemana } = props;
 
-  const handleClick = value => {
-    if (clicked.includes(value)) {
-      clicked.splice(clicked.indexOf(value), 1);
-    } else {
-      clicked.push(value);
-    }
-    setClicked(clicked);
-
-    props.input.onChange(clicked);
-  };
-
-  const arrayToUse = props.input.value.length ? props.input.value : clicked;
   const week = [
     {
       label: "D",
@@ -59,9 +47,9 @@ export const Weekly = ({ ...props }) => {
           return (
             <span
               key={key}
-              onClick={() => handleClick(day.value)}
+              onClick={async () => await handleWeekly(day.value)}
               className={
-                arrayToUse.includes(day.value)
+                arrayDiasSemana && arrayDiasSemana.includes(day.value)
                   ? "week-circle-clicked"
                   : "week-circle"
               }
