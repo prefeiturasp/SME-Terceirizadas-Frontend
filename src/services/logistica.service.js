@@ -104,6 +104,11 @@ export const getGuiaParaConferencia = async params => {
   return await axios.get(url, { params });
 };
 
+export const getGuiaDetalhe = async uuid => {
+  const url = `/guias-da-requisicao/${uuid}/detalhe-guia-de-remessa/`;
+  return await axios.get(url);
+};
+
 export const getConferenciaParaEdicao = async params => {
   const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-conferencia/`;
   return await axios.get(url, { params });

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Spin } from "antd";
 import {
-  getGuiaParaConferencia,
+  getGuiaDetalhe,
   imprimirGuiaRemessa
 } from "../../../../services/logistica.service.js";
 import { Form, Field } from "react-final-form";
@@ -15,9 +15,9 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import ConferenciaDetalhe from "./components/ConferenciaDetalhe";
 import "./styles.scss";
 
-import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   CONFERENCIA_GUIA,
   LOGISTICA,
@@ -28,6 +28,8 @@ const FORM_NAME = "detalhamentoGuiaRemessa";
 
 export default () => {
   const [guia, setGuia] = useState({});
+  const [conferencia, setConferencia] = useState();
+  //const [reposicao, setReposicao] = useState({});
   const [carregando, setCarregando] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
@@ -35,9 +37,12 @@ export default () => {
     let response;
     try {
       setCarregando(true);
-      const params = gerarParametrosConsulta({ uuid: uuid });
-      response = await getGuiaParaConferencia(params);
+      response = await getGuiaDetalhe(uuid);
       setGuia(response.data);
+      setConferencia(montaConferencia(response.data));
+      //setReposicao(
+      //  response.data.conferencias.find(conf => conf.eh_reposicao === true)
+      //);
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
@@ -48,6 +53,25 @@ export default () => {
       toastError(e.response.data.detail);
       setCarregando(false);
     }
+  };
+
+  const montaConferencia = guia => {
+    let conferencia = guia.conferencias.find(
+      conf => conf.eh_reposicao === false
+    );
+    if (conferencia) {
+      conferencia.conferencia_dos_alimentos = guia.alimentos.map(alimento => {
+        let conf = conferencia.conferencia_dos_alimentos.find(
+          conf => alimento.nome_alimento === conf.nome_alimento
+        );
+        if (guia.status === "Recebida") {
+          conf = {};
+          conf.status_alimento = "Recebido";
+        }
+        return { ...conf, ...alimento };
+      });
+    }
+    return conferencia;
   };
 
   const baixarPDFGuiaRemessa = () => {
@@ -159,11 +183,20 @@ export default () => {
                   </div>
                 </div>
                 <hr />
-                {guia.alimentos && (
-                  <TabelaAlimentoConsolidado
-                    className="table-sm tabela-conferencia-guia"
-                    alimentosConsolidado={guia.alimentos}
-                  />
+                {guia.alimentos &&
+                  ["Recebimento parcial", "Não recebida"].includes(
+                    guia.status
+                  ) && (
+                    <TabelaAlimentoConsolidado
+                      className="table-sm tabela-conferencia-guia"
+                      alimentosConsolidado={guia.alimentos}
+                    />
+                  )}
+
+                <hr />
+
+                {conferencia && (
+                  <ConferenciaDetalhe conferencia={conferencia} guia={guia} />
                 )}
 
                 <hr />
