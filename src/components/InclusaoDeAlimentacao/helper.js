@@ -95,8 +95,6 @@ export const abstraiPeriodosComAlunosMatriculados = (
       periodo.uuid,
       periodosQuantidadeAlunos
     );
-    periodo["multiselect"] = "multiselect-wrapper-disabled";
-    periodo["validador"] = [];
   });
   return periodos;
 };

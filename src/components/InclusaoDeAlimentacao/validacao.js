@@ -27,9 +27,18 @@ export const validarSubmissaoNormal = (values, meusDados) => {
   return false;
 };
 
-export const validarSubmissaoContinua = values => {
+export const validarSubmissaoContinua = (values, meusDados) => {
   if (!values.quantidades_periodo)
     return "Necessário adicionar ao menos uma recorrência";
+
+  let totalAlunos = 0;
+
+  values.quantidades_periodo.forEach(quantidade_periodo => {
+    totalAlunos += parseInt(quantidade_periodo.numero_alunos);
+  });
+
+  if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+    return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
 
   return false;
 };

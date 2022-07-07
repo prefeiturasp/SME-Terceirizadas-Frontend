@@ -1,6 +1,7 @@
 import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -155,3 +156,12 @@ export const getEscolaSimples = async uuidEscola =>
 
 export const updateEscolaSimples = async (uuidEscola, valores) =>
   axios.patch(`/escolas-simples/${uuidEscola}/`, valores);
+
+export const getQuantidadeAlunosEscola = async uuidEscola => {
+  const url = `${API_URL}/quantidade-alunos-por-periodo/escola/${uuidEscola}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

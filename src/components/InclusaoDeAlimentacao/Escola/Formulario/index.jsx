@@ -227,7 +227,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     const erro =
       tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
         ? validarSubmissaoNormal(values, meusDados)
-        : validarSubmissaoContinua(values);
+        : validarSubmissaoContinua(values, meusDados);
     if (erro) {
       toastError(erro);
       return;
@@ -313,7 +313,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
           submitting,
           form,
           form: {
-            mutators: { push, pop }
+            mutators: { push }
           },
           values
         }) => (
@@ -382,7 +382,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               values={values}
                               index={index}
                               proximosDoisDiasUteis={proximosDoisDiasUteis}
-                              pop={pop}
+                              form={form}
                             />
                           )}
                           {motivoContinuoSelecionado(values) && (
@@ -411,7 +411,11 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       <AdicionarDia push={push} />
                     </div>
                     {values.quantidades_periodo && (
-                      <PeriodosInclusaoNormal form={form} values={values} />
+                      <PeriodosInclusaoNormal
+                        form={form}
+                        values={values}
+                        periodos={periodos}
+                      />
                     )}
                   </>
                 )}
@@ -428,6 +432,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                         <RecorrenciaTabela
                           values={values}
                           periodos={periodos}
+                          form={form}
                         />
                       </div>
                     )}

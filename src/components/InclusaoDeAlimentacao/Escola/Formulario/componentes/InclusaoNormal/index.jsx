@@ -8,7 +8,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
-import { dataDuplicada, maxLength, required } from "helpers/fieldValidators";
+import {
+  dataDuplicada,
+  maxLength,
+  maxValue,
+  naoPodeSerZero,
+  numericInteger,
+  required
+} from "helpers/fieldValidators";
 import { composeValidators, formatarParaMultiselect } from "helpers/utilities";
 import moment from "moment";
 import React from "react";
@@ -20,7 +27,7 @@ import "../../style.scss";
 export const DataInclusaoNormal = ({ ...props }) => {
   const {
     index,
-    pop,
+    form,
     proximosDoisDiasUteis,
     name,
     values,
@@ -58,8 +65,13 @@ export const DataInclusaoNormal = ({ ...props }) => {
             <div className="col-4 mt-auto mb-1">
               <Botao
                 texto="Remover dia"
-                type={BUTTON_TYPE.SUBMIT}
-                onClick={() => pop("inclusoes")}
+                type={BUTTON_TYPE.BUTTON}
+                onClick={() =>
+                  form.change(
+                    "inclusoes",
+                    values.inclusoes.filter((_, i) => i !== index)
+                  )
+                }
                 style={BUTTON_STYLE.BLUE_OUTLINE}
                 icon={BUTTON_ICON.TRASH}
                 className="botao-remover-dia"
@@ -98,7 +110,7 @@ export const OutroMotivo = ({ name }) => {
   );
 };
 
-export const PeriodosInclusaoNormal = ({ form, values }) => {
+export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
   const getPeriodo = indice => {
     return values.quantidades_periodo[indice];
   };
@@ -176,9 +188,6 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
                 <div className="col-3">
                   <Field
                     component={InputText}
-                    /*onChange={event =>
-                      this.onNumeroAlunosChanged(event, getPeriodo(indice))
-                    }*/
                     disabled={!getPeriodo(indice).checked}
                     type="number"
                     name={`${name}.numero_alunos`}
@@ -186,7 +195,15 @@ export const PeriodosInclusaoNormal = ({ form, values }) => {
                     className="form-control quantidade-aluno"
                     required={getPeriodo(indice).checked}
                     validate={
-                      getPeriodo(indice).checked && getPeriodo(indice).validador
+                      getPeriodo(indice).checked &&
+                      composeValidators(
+                        naoPodeSerZero,
+                        numericInteger,
+                        maxValue(
+                          periodos.find(p => p.uuid === getPeriodo(indice).uuid)
+                            .maximo_alunos
+                        )
+                      )
                     }
                   />
                 </div>

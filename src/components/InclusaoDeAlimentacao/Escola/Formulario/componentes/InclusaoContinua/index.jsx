@@ -1,6 +1,7 @@
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import Botao from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
@@ -8,12 +9,21 @@ import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
 import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import Weekly from "components/Shareable/Weekly/Weekly";
 import { WEEK } from "configs/constants";
-import { required } from "helpers/fieldValidators";
+import {
+  maxLength,
+  maxValue,
+  naoPodeSerZero,
+  numericInteger,
+  required
+} from "helpers/fieldValidators";
 import {
   agregarDefault,
+  composeValidators,
   deepCopy,
+  deepEqual,
   formatarParaMultiselect,
   getDataObj
 } from "helpers/utilities";
@@ -86,6 +96,62 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
     form.change("reload", !values.reload);
   };
 
+  const adicionarRecorrencia = async (form, values) => {
+    if (
+      !values.dias_semana ||
+      values.dias_semana.length === 0 ||
+      !values.periodo_escolar ||
+      !values.tipos_alimentacao_selecionados ||
+      values.tipos_alimentacao_selecionados.length === 0 ||
+      !values.numero_alunos
+    ) {
+      toastError(
+        "Necessário selecionar ao menos um dia na recorrência, período, um tipo de alimentação e adicionar o número de alunos para adicionar recorrência"
+      );
+      return;
+    } else if (
+      values.quantidades_periodo &&
+      values.quantidades_periodo.find(
+        qp =>
+          deepEqual(qp.dias_semana, values.dias_semana) &&
+          deepEqual(qp.periodo_escolar, values.periodo_escolar) &&
+          deepEqual(qp.tipos_alimentacao, values.tipos_alimentacao_selecionados)
+      )
+    ) {
+      toastError(
+        "Esse tipo de Alimentação já foi selecionado para o mesmo período e dia da semana"
+      );
+      return;
+    }
+    if (!values.quantidades_periodo) {
+      form.change("quantidades_periodo", [
+        {
+          dias_semana: deepCopy(values.dias_semana),
+          periodo_escolar: deepCopy(values.periodo_escolar),
+          tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
+          numero_alunos: deepCopy(values.numero_alunos),
+          observacao: deepCopy(values.observacao)
+        }
+      ]);
+    } else {
+      await push("quantidades_periodo");
+      ["dias_semana", "periodo_escolar", "numero_alunos", "observacao"].forEach(
+        async item => {
+          await form.change(
+            `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
+            deepCopy(values[item])
+          );
+        }
+      );
+      await form.change(
+        `quantidades_periodo[${
+          values.quantidades_periodo.length
+        }].tipos_alimentacao`,
+        deepCopy(values.tipos_alimentacao_selecionados)
+      );
+    }
+  };
+
   return (
     <div className="recorrencia-e-detalhes">
       <div className="card-title">Recorrência e detalhes</div>
@@ -146,6 +212,15 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
         <div className="col-2">
           <Field
             component={InputText}
+            validate={composeValidators(
+              naoPodeSerZero,
+              numericInteger,
+              values.periodo_escolar &&
+                maxValue(
+                  periodos.find(p => p.uuid === values.periodo_escolar)
+                    .maximo_alunos
+                )
+            )}
             name={`numero_alunos`}
             min="0"
             className="form-control quantidade-aluno"
@@ -156,47 +231,15 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
       <Field
         component={TextAreaWYSIWYG}
         label="Observações"
+        validate={maxLength(1000)}
         name={`observacao`}
       />
       <div className="row mt-3">
         <div className="col-12 text-right">
           <Botao
             texto="Adicionar recorrência"
-            onClick={async () => {
-              if (!values.quantidades_periodo) {
-                form.change("quantidades_periodo", [
-                  {
-                    dias_semana: deepCopy(values.dias_semana),
-                    periodo_escolar: deepCopy(values.periodo_escolar),
-                    tipos_alimentacao: deepCopy(
-                      values.tipos_alimentacao_selecionados
-                    ),
-                    numero_alunos: deepCopy(values.numero_alunos),
-                    observacao: deepCopy(values.observacao)
-                  }
-                ]);
-              } else {
-                await push("quantidades_periodo");
-                [
-                  "dias_semana",
-                  "periodo_escolar",
-                  "numero_alunos",
-                  "observacao"
-                ].forEach(async item => {
-                  await form.change(
-                    `quantidades_periodo[${
-                      values.quantidades_periodo.length
-                    }].${item}`,
-                    deepCopy(values[item])
-                  );
-                });
-                await form.change(
-                  `quantidades_periodo[${
-                    values.quantidades_periodo.length
-                  }].tipos_alimentacao`,
-                  deepCopy(values.tipos_alimentacao_selecionados)
-                );
-              }
+            onClick={() => {
+              adicionarRecorrencia(form, values);
             }}
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -207,7 +250,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
   );
 };
 
-export const RecorrenciaTabela = ({ values, periodos }) => {
+export const RecorrenciaTabela = ({ form, values, periodos }) => {
   return (
     <div className="recorrencia-e-detalhes">
       <table>
@@ -280,8 +323,23 @@ export const RecorrenciaTabela = ({ values, periodos }) => {
                         dangerouslySetInnerHTML={{
                           __html: values.quantidades_periodo[indice].observacao
                         }}
-                        className="col-4"
+                        className="col-3"
                       />
+                      <td className="col-1 text-center">
+                        <Botao
+                          onClick={() =>
+                            form.change(
+                              "quantidades_periodo",
+                              values.quantidades_periodo.filter(
+                                (_, i) => i !== indice
+                              )
+                            )
+                          }
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          icon={BUTTON_ICON.TRASH}
+                        />
+                      </td>
                     </tr>
                   )
               )

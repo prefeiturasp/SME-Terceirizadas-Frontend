@@ -1,5 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
+import { getQuantidadeAlunosEscola } from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
 import { dataParaUTC, escolaEhCei } from "../../../../../helpers/utilities";
 import { getDiasUteis } from "../../../../../services/diasUteis.service";
@@ -8,7 +9,10 @@ import {
   getMotivosInclusaoNormal
 } from "../../../../../services/inclusaoDeAlimentacao";
 import { getMeusDados } from "../../../../../services/perfil.service";
-import { formatarPeriodos } from "../../../helper";
+import {
+  abstraiPeriodosComAlunosMatriculados,
+  formatarPeriodos
+} from "../../../helper";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
@@ -21,15 +25,27 @@ export const Container = () => {
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [erro, setErro] = useState(false);
 
+  const getQuantidaDeAlunosPorPeriodoEEscolaAsync = async (
+    periodos,
+    escola_uuid
+  ) => {
+    const response = await getQuantidadeAlunosEscola(escola_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodos(
+        abstraiPeriodosComAlunosMatriculados(periodos, response.data.results)
+      );
+    }
+  };
+
   const getMeusDadosAsync = async () => {
     const response = await getMeusDados();
     if (response.status === HTTP_STATUS.OK) {
       setDados(response.data);
-      setPeriodos(
-        formatarPeriodos(
-          response.data.vinculo_atual.instituicao.periodos_escolares
-        )
+      const periodos = formatarPeriodos(
+        response.data.vinculo_atual.instituicao.periodos_escolares
       );
+      const escola_uuid = response.data.vinculo_atual.instituicao.uuid;
+      getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
     } else {
       setErro(true);
     }
@@ -72,6 +88,7 @@ export const Container = () => {
     !escolaEhCei() && getMotivosInclusaoContinuaAsync();
     getMotivosInclusaoNormalAsync();
     getDiasUteisAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =
