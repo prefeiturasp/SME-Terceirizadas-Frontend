@@ -156,7 +156,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
       <Field
         component={TextAreaWYSIWYG}
         label="Observações"
-        name={`observacoes`}
+        name={`observacao`}
       />
       <div className="row mt-3">
         <div className="col-12 text-right">
@@ -172,7 +172,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
                       values.tipos_alimentacao_selecionados
                     ),
                     numero_alunos: deepCopy(values.numero_alunos),
-                    observacoes: deepCopy(values.observacoes)
+                    observacao: deepCopy(values.observacao)
                   }
                 ]);
               } else {
@@ -181,7 +181,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
                   "dias_semana",
                   "periodo_escolar",
                   "numero_alunos",
-                  "observacoes"
+                  "observacao"
                 ].forEach(async item => {
                   await form.change(
                     `quantidades_periodo[${
@@ -248,21 +248,22 @@ export const RecorrenciaTabela = ({ values, periodos }) => {
                         })}
                       </td>
                       <td className="col-2">
-                        {values.quantidades_periodo[indice].periodo &&
+                        {values.quantidades_periodo[indice].periodo_escolar &&
                           periodos.find(
                             periodo =>
                               periodo.uuid ===
-                              values.quantidades_periodo[indice].periodo
+                              values.quantidades_periodo[indice].periodo_escolar
                           ).nome}
                       </td>
                       <td className="col-3">
                         {values.quantidades_periodo[indice].tipos_alimentacao &&
-                          values.quantidades_periodo[indice].periodo &&
+                          values.quantidades_periodo[indice].periodo_escolar &&
                           periodos
                             .find(
                               p =>
                                 p.uuid ===
-                                values.quantidades_periodo[indice].periodo
+                                values.quantidades_periodo[indice]
+                                  .periodo_escolar
                             )
                             .tipos_alimentacao.filter(t =>
                               values.quantidades_periodo[
@@ -277,7 +278,7 @@ export const RecorrenciaTabela = ({ values, periodos }) => {
                       </td>
                       <td
                         dangerouslySetInnerHTML={{
-                          __html: values.quantidades_periodo[indice].observacoes
+                          __html: values.quantidades_periodo[indice].observacao
                         }}
                         className="col-4"
                       />

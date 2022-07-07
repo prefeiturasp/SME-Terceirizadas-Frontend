@@ -1,6 +1,6 @@
 import React from "react";
+import { comoTipo } from "helpers/utilities";
 import "../../../../Shareable/style.scss";
-import { comoTipo, ehInclusaoContinua } from "helpers/utilities";
 
 export const Rascunhos = ({
   rascunhosInclusaoDeAlimentacao,
@@ -51,7 +51,7 @@ export const Rascunhos = ({
             </div>
             <div className="ml-3">
               <p>
-                {ehInclusaoContinua(inclusaoDeAlimentacao)
+                {inclusaoDeAlimentacao.data_inicial
                   ? `${inclusaoDeAlimentacao.motivo.nome} -
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final

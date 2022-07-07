@@ -146,8 +146,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   const carregarRascunho = async (form, values, inclusao) => {
     await form.change("uuid", inclusao.uuid);
     await form.change("id_externo", inclusao.id_externo);
-    await form.change("quantidades_periodo", periodos);
     const inclusao_ = deepCopy(inclusao);
+    if (inclusao_.inclusoes) {
+      carregarRascunhoNormal(form, inclusao_);
+    } else {
+      carregarRascunhoContinuo(form, values, inclusao_);
+    }
+  };
+
+  const carregarRascunhoNormal = async (form, inclusao_) => {
+    await form.change("quantidades_periodo", periodos);
     inclusao_.inclusoes.forEach(i => {
       i.motivo = i.motivo.uuid;
     });
@@ -170,6 +178,26 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         qp.numero_alunos
       );
     });
+  };
+
+  const carregarRascunhoContinuo = async (form, values, inclusao_) => {
+    const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
+    quantidades_periodo_.forEach(qp => {
+      qp.dias_semana = qp.dias_semana.map(String);
+      qp.periodo_escolar = qp.periodo_escolar.uuid;
+      qp.tipos_alimentacao = qp.tipos_alimentacao.map(t => t.uuid);
+      delete qp.grupo_inclusao_normal;
+      delete qp.inclusao_alimentacao_continua;
+    });
+
+    await form.change("inclusoes", [
+      {
+        motivo: inclusao_.motivo.uuid,
+        data_inicial: inclusao_.data_inicial,
+        data_final: inclusao_.data_final
+      }
+    ]);
+    await form.change("quantidades_periodo", quantidades_periodo_);
   };
 
   const refresh = form => {
@@ -221,8 +249,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     } else {
       const response = await updateInclusaoAlimentacao(
         values.uuid,
-        formatarSubmissaoSolicitacaoNormal(values_),
-        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+          ? formatarSubmissaoSolicitacaoNormal(values_)
+          : formatarSubmissaoSolicitacaoContinua(values_),
+        tipoSolicitacao
       );
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Rascunho atualizado com sucesso");
@@ -341,8 +371,6 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                   )
                                 ) {
                                   form.change("quantidades_periodo", periodos);
-                                } else {
-                                  form.change("quantidades_periodo", undefined);
                                 }
                               }}
                             </OnChange>
