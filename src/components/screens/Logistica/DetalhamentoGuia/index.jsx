@@ -23,52 +23,39 @@ import {
   LOGISTICA,
   REPOSICAO_GUIA
 } from "configs/constants.js";
+import InsucessoDetalhe from "./components/InsucessoDetalhe/index.jsx";
 
 const FORM_NAME = "detalhamentoGuiaRemessa";
 
 export default () => {
   const [guia, setGuia] = useState({});
   const [conferencia, setConferencia] = useState();
-  //const [reposicao, setReposicao] = useState({});
+  const [reposicao, setReposicao] = useState();
   const [carregando, setCarregando] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
-  const carregarGuia = async uuid => {
-    let response;
-    try {
-      setCarregando(true);
-      response = await getGuiaDetalhe(uuid);
-      setGuia(response.data);
-      setConferencia(montaConferencia(response.data));
-      //setReposicao(
-      //  response.data.conferencias.find(conf => conf.eh_reposicao === true)
-      //);
-      setInitialValues({
-        numero_guia: response.data.numero_guia,
-        data_entrega: response.data.data_entrega,
-        status: response.data.status
-      });
-      setCarregando(false);
-    } catch (e) {
-      toastError(e.response.data.detail);
-      setCarregando(false);
-    }
-  };
-
-  const montaConferencia = guia => {
+  const montaConferencia = (guia, reposicao) => {
     let conferencia = guia.conferencias.find(
-      conf => conf.eh_reposicao === false
+      conf => conf.eh_reposicao === reposicao
     );
     if (conferencia) {
       conferencia.conferencia_dos_alimentos = guia.alimentos.map(alimento => {
-        let conf = conferencia.conferencia_dos_alimentos.find(
-          conf => alimento.nome_alimento === conf.nome_alimento
-        );
-        if (guia.status === "Recebida") {
-          conf = {};
-          conf.status_alimento = "Recebido";
-        }
-        return { ...conf, ...alimento };
+        alimento.embalagens = alimento.embalagens.map(emb => {
+          let conf = conferencia.conferencia_dos_alimentos.find(
+            conf =>
+              alimento.nome_alimento === conf.nome_alimento &&
+              emb.tipo_embalagem === conf.tipo_embalagem
+          );
+          if (guia.status === "Recebida") {
+            conf = {};
+            conf.status_alimento = "Recebido";
+            conf.qtd_recebido = emb.qtd_volume;
+          }
+
+          return { ...emb, ...conf };
+        });
+
+        return { ...alimento };
       });
     }
     return conferencia;
@@ -133,6 +120,26 @@ export default () => {
   };
 
   useEffect(() => {
+    const carregarGuia = async uuid => {
+      let response;
+      try {
+        setCarregando(true);
+        response = await getGuiaDetalhe(uuid);
+        setGuia(response.data);
+        setConferencia(montaConferencia(response.data, false));
+        setReposicao(montaConferencia(response.data, true));
+        setInitialValues({
+          numero_guia: response.data.numero_guia,
+          data_entrega: response.data.data_entrega,
+          status: response.data.status
+        });
+        setCarregando(false);
+      } catch (e) {
+        toastError(e.response.data.detail);
+        setCarregando(false);
+      }
+    };
+
     const queryString = window.location.search;
 
     if (queryString) {
@@ -144,8 +151,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-conferencia-guia">
-        <div className="card-body conferencia-guia">
+      <div className="card mt-3 card-detalhamento-guia">
+        <div className="card-body detalhamento-guia">
           <Form
             onSubmit={() => {}}
             initialValues={initialValues}
@@ -182,21 +189,46 @@ export default () => {
                     />
                   </div>
                 </div>
-                <hr />
                 {guia.alimentos &&
-                  ["Recebimento parcial", "Não recebida"].includes(
-                    guia.status
-                  ) && (
-                    <TabelaAlimentoConsolidado
-                      className="table-sm tabela-conferencia-guia"
-                      alimentosConsolidado={guia.alimentos}
-                    />
+                  [
+                    "Pendente de conferência",
+                    "Insucesso de entrega",
+                    "Cancelada"
+                  ].includes(guia.status) && (
+                    <>
+                      <hr />
+                      <div className="titulo-secao">
+                        Alimentos pendentes de conferência:
+                      </div>
+                      <TabelaAlimentoConsolidado
+                        className="table-sm tabela-conferencia-guia"
+                        alimentosConsolidado={guia.alimentos}
+                      />
+                    </>
                   )}
 
-                <hr />
+                {guia && guia.insucessos && guia.insucessos[0] && (
+                  <>
+                    <hr />
+                    <InsucessoDetalhe insucesso={guia.insucessos[0]} />
+                  </>
+                )}
 
                 {conferencia && (
-                  <ConferenciaDetalhe conferencia={conferencia} guia={guia} />
+                  <>
+                    <hr />
+                    <ConferenciaDetalhe conferencia={conferencia} />
+                  </>
+                )}
+
+                {reposicao && (
+                  <>
+                    <hr />
+                    <ConferenciaDetalhe
+                      conferencia={reposicao}
+                      reposicaoFlag={true}
+                    />
+                  </>
                 )}
 
                 <hr />

@@ -1,7 +1,22 @@
 @import "../../../../../../styles/variables.scss";
 
 .conferencia-detalhe {
+  color: black;
+
+  .fas {
+    margin-right: 4px;
+  }
+
+  .fas.ocorrencia {
+    color: $orange;
+  }
+
+  .fas.conferencia {
+    color: $green;
+  }
+
   .table-detalhe {
+    color: $blackInput;
     th {
       background-color: $greenLight;
       color: $white;
@@ -11,10 +26,6 @@
       .text-center {
         padding: 6px 0px;
       }
-    }
-
-    .icone-arquivo {
-      width: 2%;
     }
 
     .nome-alimento {
@@ -39,6 +50,34 @@
 
     .red {
       color: #b40c02;
+    }
+  }
+
+  .relatorio-conferencia {
+    p {
+      display: inline-block;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .titulo-recebimento {
+      font-size: 18px;
+      margin: 16px 0;
+    }
+
+    .titulo-alimento {
+      font-weight: bold;
+      color: $green;
+      font-size: 16px;
+    }
+
+    .titulo-recebimento,
+    .dado-conferencia {
+      font-weight: bold;
+    }
+
+    .dado-conferencia {
+      padding-left: 2px;
     }
   }
 }
