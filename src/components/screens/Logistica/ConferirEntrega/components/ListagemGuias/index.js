@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import { CONFERENCIA_GUIA, LOGISTICA, REPOSICAO_GUIA } from "configs/constants";
+import {
+  CONFERENCIA_GUIA,
+  LOGISTICA,
+  REPOSICAO_GUIA,
+  DETALHAMENTO_GUIA
+} from "configs/constants";
 import { NavLink } from "react-router-dom";
 import { imprimirGuiaRemessa } from "services/logistica.service.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -139,9 +144,16 @@ const ListagemSolicitacoes = ({ guias }) => {
                   </div>
                   <div className="opcoes-entregas">
                     <span className="link-acoes px-2">
-                      <Tooltip title="Detalhar guia">
-                        <i className="fas fa-eye" />
-                      </Tooltip>
+                      <NavLink
+                        className="float-left"
+                        to={`/${LOGISTICA}/${DETALHAMENTO_GUIA}?uuid=${
+                          guia.uuid
+                        }`}
+                      >
+                        <Tooltip title="Detalhar guia">
+                          <i className="fas fa-eye" />
+                        </Tooltip>
+                      </NavLink>
                     </span>
                     <span
                       className="link-acoes"

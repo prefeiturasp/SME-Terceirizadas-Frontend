@@ -1,0 +1,33 @@
+@import "../../../../styles/variables.scss";
+
+.card-detalhamento-guia {
+  .detalhamento-guia {
+    .titulo-secao {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: $blackInput;
+    }
+
+    .tabela-conferencia-guia {
+      thead {
+        th {
+          background-color: $greenLight;
+          color: $white;
+          padding: 6px 4px 6px 8px;
+          font-size: 14px;
+
+          .text-center {
+            padding: 6px 0px;
+          }
+        }
+      }
+
+      td {
+        font-size: 14px;
+        color: $blackInput;
+        padding: 12px;
+      }
+    }
+  }
+}

@@ -38,48 +38,46 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
         </tr>
       </thead>
       <tbody>
-        {alimentosConsolidado.map(item => {
+        {alimentosConsolidado.map((item, index) => {
           const embalagens = item.total_embalagens
             ? item.total_embalagens
             : item.embalagens;
           const fracionada = filtraEmbalagemPorTipo(embalagens, "FRACIONADA");
           const fechada = filtraEmbalagemPorTipo(embalagens, "FECHADA");
           return (
-            <>
-              <tr>
-                <td>{item.nome_alimento}</td>
-                <td>{fechada ? fechada.qtd_volume : "--"}</td>
-                <td>
-                  {fechada ? (
-                    <>
-                      {fechada.descricao_embalagem}.{" "}
-                      {fechada.capacidade_embalagem}
-                      {fechada.unidade_medida}
-                    </>
-                  ) : (
-                    "--"
-                  )}
-                </td>
-                <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
-                <td>
-                  {fracionada ? (
-                    <>
-                      {fracionada.descricao_embalagem}.{" "}
-                      {fracionada.capacidade_embalagem}
-                      {fracionada.unidade_medida}
-                    </>
-                  ) : (
-                    "--"
-                  )}
-                </td>
-                {mostrarPesoTotal && (
-                  <td>
-                    {item.peso_total}
-                    {item.total_embalagens[0].unidade_medida}
-                  </td>
+            <tr key={index}>
+              <td>{item.nome_alimento}</td>
+              <td>{fechada ? fechada.qtd_volume : "--"}</td>
+              <td>
+                {fechada ? (
+                  <>
+                    {fechada.descricao_embalagem}.{" "}
+                    {fechada.capacidade_embalagem}
+                    {fechada.unidade_medida}
+                  </>
+                ) : (
+                  "--"
                 )}
-              </tr>
-            </>
+              </td>
+              <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
+              <td>
+                {fracionada ? (
+                  <>
+                    {fracionada.descricao_embalagem}.{" "}
+                    {fracionada.capacidade_embalagem}
+                    {fracionada.unidade_medida}
+                  </>
+                ) : (
+                  "--"
+                )}
+              </td>
+              {mostrarPesoTotal && (
+                <td>
+                  {item.peso_total}
+                  {item.total_embalagens[0].unidade_medida}
+                </td>
+              )}
+            </tr>
           );
         })}
       </tbody>
