@@ -70,7 +70,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
 
   const resetForm = form => {
     form.change("inclusoes", [{ motivo: undefined }]);
-    form.change("quantidades_periodo", []);
+    form.change("quantidades_periodo", undefined);
   };
 
   const motivoSimplesSelecionado = values => {
@@ -365,12 +365,21 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               {async value => {
                                 if (
                                   value &&
-                                  !values.quantidades_periodo &&
                                   motivosSimples.find(
                                     motivo => motivo.uuid === value
                                   )
                                 ) {
+                                  form.change("quantidades_periodo", undefined);
                                   form.change("quantidades_periodo", periodos);
+                                  form.change("reload", !values.reload);
+                                }
+                                if (
+                                  value &&
+                                  motivosContinuos.find(
+                                    motivo => motivo.uuid === value
+                                  )
+                                ) {
+                                  form.change("quantidades_periodo", undefined);
                                 }
                               }}
                             </OnChange>

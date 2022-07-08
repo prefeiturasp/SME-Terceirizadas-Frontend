@@ -163,7 +163,7 @@ export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
                       component={StatefulMultiSelect}
                       name="tipos_alimentacao"
                       selected={
-                        getPeriodo(indice).tipos_alimentacao_selecionados
+                        getPeriodo(indice).tipos_alimentacao_selecionados || []
                       }
                       options={formatarParaMultiselect(
                         getPeriodo(indice).tipos_alimentacao
