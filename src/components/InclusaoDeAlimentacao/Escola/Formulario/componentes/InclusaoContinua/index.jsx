@@ -330,9 +330,11 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                           onClick={() =>
                             form.change(
                               "quantidades_periodo",
-                              values.quantidades_periodo.filter(
-                                (_, i) => i !== indice
-                              )
+                              values.quantidades_periodo.length > 1
+                                ? values.quantidades_periodo.filter(
+                                    (_, i) => i !== indice
+                                  )
+                                : undefined
                             )
                           }
                           type={BUTTON_TYPE.BUTTON}

@@ -211,11 +211,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       toastSuccess("Inclusão de Alimentação enviada com sucesso!");
       refresh(form);
     } else {
-      toastError(
-        `Houve um erro ao enviar a Inclusão de Alimentação: ${getError(
-          response.data
-        )}`
-      );
+      toastError(getError(response.data));
     }
   };
 
@@ -245,6 +241,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
           iniciarPedido(response.data.uuid, tipoSolicitacao, form);
         }
         refresh(form);
+      } else {
+        toastError(getError(response.data));
       }
     } else {
       const response = await updateInclusaoAlimentacao(
@@ -261,11 +259,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         }
         refresh(form);
       } else {
-        toastError(
-          `Houve um erro ao atualizar a inclusão de alimentação: ${getError(
-            response.data
-          )}`
-        );
+        toastError(getError(response.data));
       }
     }
   };
