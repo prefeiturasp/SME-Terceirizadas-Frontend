@@ -1,52 +1,41 @@
-export const validarSubmissao = (values, meusDados) => {
-  let aoMenosUmPeriodo = false;
+export const validarSubmissaoNormal = (values, meusDados) => {
+  if (!values.quantidades_periodo.find(qp => qp.checked))
+    return "Necessário selecionar ao menos um período";
+
+  let totalAlunos = 0;
+
+  const periodosSemTipoAlimentacao = [];
+
+  values.quantidades_periodo
+    .filter(qp => qp.checked)
+    .forEach(quantidade_periodo => {
+      totalAlunos += parseInt(quantidade_periodo.numero_alunos);
+      if (quantidade_periodo.tipos_alimentacao_selecionados.length === 0) {
+        periodosSemTipoAlimentacao.push(quantidade_periodo.nome);
+      }
+    });
+
+  if (periodosSemTipoAlimentacao.length > 0) {
+    return `Selecione ao menos um tipo de alimentação no(s) período(s) ${String(
+      periodosSemTipoAlimentacao
+    )}`;
+  }
+
+  if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+    return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
+
+  return false;
+};
+
+export const validarSubmissaoContinua = (values, meusDados) => {
+  if (!values.quantidades_periodo)
+    return "Necessário adicionar ao menos uma recorrência";
 
   let totalAlunos = 0;
 
   values.quantidades_periodo.forEach(quantidade_periodo => {
-    if (quantidade_periodo.checked) {
-      aoMenosUmPeriodo = true;
-      totalAlunos += parseInt(quantidade_periodo.numero_alunos);
-    }
+    totalAlunos += parseInt(quantidade_periodo.numero_alunos);
   });
-
-  if (
-    values.quantidades_periodo_MANHA &&
-    values.quantidades_periodo_MANHA.check
-  ) {
-    if (
-      !values.quantidades_periodo_MANHA.tipos_alimentacao ||
-      values.quantidades_periodo_MANHA.tipos_alimentacao.length === 0
-    ) {
-      return "Favor selecione o tipo de alimentação do periodo da manhã";
-    }
-  }
-
-  if (
-    values.quantidades_periodo_TARDE &&
-    values.quantidades_periodo_TARDE.check
-  ) {
-    if (
-      !values.quantidades_periodo_TARDE.tipos_alimentacao ||
-      values.quantidades_periodo_TARDE.tipos_alimentacao.length === 0
-    ) {
-      return "Favor selecione o tipo de alimentação do periodo da tarde";
-    }
-  }
-
-  if (
-    values.quantidades_periodo_INTEGRAL &&
-    values.quantidades_periodo_INTEGRAL.check
-  ) {
-    if (
-      !values.quantidades_periodo_INTEGRAL.tipos_alimentacao ||
-      values.quantidades_periodo_INTEGRAL.tipos_alimentacao.length === 0
-    ) {
-      return "Favor selecione o tipo de alimentação do periodo integral";
-    }
-  }
-
-  if (!aoMenosUmPeriodo) return "Necessário selecionar ao menos um período";
 
   if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
     return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";

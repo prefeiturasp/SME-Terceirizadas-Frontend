@@ -195,3 +195,34 @@ export const STATUS_RECLAMACAO = {
   CODAE_ACEITOU: "CODAE_ACEITOU",
   CODAE_RECUSOU: "CODAE_RECUSOU"
 };
+
+export const WEEK = [
+  {
+    label: "D",
+    value: "6"
+  },
+  {
+    label: "S",
+    value: "0"
+  },
+  {
+    label: "T",
+    value: "1"
+  },
+  {
+    label: "Q",
+    value: "2"
+  },
+  {
+    label: "Q",
+    value: "3"
+  },
+  {
+    label: "S",
+    value: "4"
+  },
+  {
+    label: "S",
+    value: "5"
+  }
+];
