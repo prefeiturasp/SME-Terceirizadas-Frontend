@@ -28,7 +28,7 @@ class Container extends Component {
 
     // TODO: precisa ter Cei?
     getMotivosInclusaoNormal().then(response => {
-      const motivos = response.results;
+      const motivos = response.data.results;
       this.setState({
         motivos
       });
