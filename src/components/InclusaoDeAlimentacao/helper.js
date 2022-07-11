@@ -9,6 +9,8 @@ export const formatarPeriodos = periodos => {
     periodo["checked"] = false;
     periodo["tipos_alimentacao_selecionados"] = [];
     periodo["numero_alunos"] = null;
+    periodo["multiselect"] = "multiselect-wrapper-disabled";
+    periodo["dias_semana"] = [];
   });
   return periodos;
 };
@@ -50,60 +52,25 @@ export const formatarDiasSemana = diasSemana => {
   return paraStringDiasSemana;
 };
 
-export const formatarSubmissaoSolicitacaoContinua = (values, meusDados) => {
-  let dataFormatada = {};
-  dataFormatada.escola = meusDados.vinculo_atual.instituicao.uuid;
-  dataFormatada.motivo = values.inclusoes[0].motivo;
-  dataFormatada.data_inicial = values.inclusoes[0].data_inicial;
-  dataFormatada.data_final = values.inclusoes[0].data_final;
-  dataFormatada.dias_semana = values.inclusoes[0].dias_semana;
-  dataFormatada.outro_motivo = values.inclusoes[0].outro_motivo;
-  dataFormatada.observacao = values.inclusoes[0].observacao;
-  let quantidades_periodo = [];
-  values.quantidades_periodo.forEach(quantidade_periodo => {
-    if (quantidade_periodo.checked) {
-      let quantidade_periodo_formatado = {};
-      quantidade_periodo_formatado["numero_alunos"] =
-        quantidade_periodo.numero_alunos;
-      quantidade_periodo_formatado["periodo_escolar"] = quantidade_periodo.uuid;
-      quantidade_periodo_formatado["tipos_alimentacao"] =
-        quantidade_periodo.tipos_alimentacao_selecionados;
-      quantidades_periodo.push(quantidade_periodo_formatado);
-    }
-  });
-  dataFormatada.quantidades_periodo = quantidades_periodo;
-  dataFormatada.descricao = values.descricao;
-  return dataFormatada;
+export const formatarSubmissaoSolicitacaoContinua = values => {
+  values.motivo = values.inclusoes[0].motivo;
+  values.data_inicial = values.inclusoes[0].data_inicial;
+  values.data_final = values.inclusoes[0].data_final;
+  return values;
 };
 
-export const formatarSubmissaoSolicitacaoNormal = (values, meusDados) => {
-  let dataFormatada = {};
-  dataFormatada.escola = meusDados.vinculo_atual.instituicao.uuid;
-  let inclusoes = [];
-  values.inclusoes.forEach(inclusao => {
-    let inclusao_formatada = {};
-    inclusao_formatada["data"] = inclusao.data;
-    inclusao_formatada["motivo"] = inclusao.motivo;
-    inclusao_formatada["outro_motivo"] = inclusao.outro_motivo;
-    inclusao_formatada["observacao"] = inclusao.observacao;
-    inclusoes.push(inclusao_formatada);
-  });
-  dataFormatada.inclusoes = inclusoes;
-  let quantidades_periodo = [];
-  values.quantidades_periodo.forEach(quantidade_periodo => {
-    if (quantidade_periodo.checked) {
-      let quantidade_periodo_formatado = {};
-      quantidade_periodo_formatado["numero_alunos"] =
-        quantidade_periodo.numero_alunos;
-      quantidade_periodo_formatado["periodo_escolar"] = quantidade_periodo.uuid;
-      quantidade_periodo_formatado["tipos_alimentacao"] =
+export const formatarSubmissaoSolicitacaoNormal = values => {
+  values.quantidades_periodo
+    .filter(qp => qp.checked)
+    .forEach(quantidade_periodo => {
+      quantidade_periodo["periodo_escolar"] = quantidade_periodo.uuid;
+      quantidade_periodo["tipos_alimentacao"] =
         quantidade_periodo.tipos_alimentacao_selecionados;
-      quantidades_periodo.push(quantidade_periodo_formatado);
-    }
-  });
-  dataFormatada.quantidades_periodo = quantidades_periodo;
-  dataFormatada.descricao = values.descricao;
-  return dataFormatada;
+    });
+  values.quantidades_periodo = values.quantidades_periodo.filter(
+    qp => qp.checked
+  );
+  return values;
 };
 
 const retornaQuantidadeDeAlunosNoPeriodoEscolar = (
@@ -128,8 +95,6 @@ export const abstraiPeriodosComAlunosMatriculados = (
       periodo.uuid,
       periodosQuantidadeAlunos
     );
-    periodo["multiselect"] = "multiselect-wrapper-disabled";
-    periodo["validador"] = [];
   });
   return periodos;
 };

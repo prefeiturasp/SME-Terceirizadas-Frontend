@@ -3,6 +3,7 @@ import authService from "./auth";
 import axios from "./_base";
 import { AUTH_TOKEN } from "./constants";
 import Cookies from "js-cookie";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -84,6 +85,15 @@ export const meusDados = () => {
     .catch(error => {
       return error;
     });
+};
+
+export const getMeusDados = async () => {
+  const url = `${API_URL}/usuarios/meus-dados/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const atualizarCargo = () => {
