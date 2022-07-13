@@ -110,6 +110,14 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
       );
       return;
     } else if (
+      /\D/.test(values.numero_alunos) ||
+      values.numero_alunos <= 0 ||
+      values.numero_alunos >
+        periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos
+    ) {
+      toastError("Número de alunos inválido");
+      return;
+    } else if (
       values.quantidades_periodo &&
       values.quantidades_periodo.find(
         qp =>
@@ -212,15 +220,18 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
         <div className="col-2">
           <Field
             component={InputText}
-            validate={composeValidators(
-              naoPodeSerZero,
-              numericInteger,
-              values.periodo_escolar &&
-                maxValue(
-                  periodos.find(p => p.uuid === values.periodo_escolar)
-                    .maximo_alunos
-                )
-            )}
+            validate={
+              values.numero_alunos &&
+              composeValidators(
+                naoPodeSerZero,
+                numericInteger,
+                values.periodo_escolar &&
+                  maxValue(
+                    periodos.find(p => p.uuid === values.periodo_escolar)
+                      .maximo_alunos
+                  )
+              )
+            }
             name={`numero_alunos`}
             min="0"
             className="form-control quantidade-aluno"
