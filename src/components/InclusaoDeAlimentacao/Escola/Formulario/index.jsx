@@ -451,14 +451,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      texto={values.uuid ? "Atualizar" : "Salvar"}
+                      texto={
+                        values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
+                      }
                       className="ml-3"
                       disabled={submitting}
                       type={BUTTON_TYPE.SUBMIT}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      texto="Enviar"
+                      texto="Enviar inclusão"
                       type={BUTTON_TYPE.SUBMIT}
                       disabled={submitting}
                       onClick={() => {
