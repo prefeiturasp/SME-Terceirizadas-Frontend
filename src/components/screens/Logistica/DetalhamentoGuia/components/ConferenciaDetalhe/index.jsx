@@ -54,7 +54,7 @@ export default ({ conferencia, reposicaoFlag }) => {
               Embalagem Fracionada
             </th>
             <th scope="col" colSpan="2" className="text-center">
-              Recebimento do Alimento
+              Recebimento do Produto
             </th>
           </tr>
           <tr>
