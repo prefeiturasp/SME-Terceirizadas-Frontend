@@ -500,7 +500,10 @@ class AlteracaoCardapio extends Component {
                       component={Select}
                       name="motivo"
                       label="Motivo"
-                      options={motivos}
+                      options={motivos.filter(
+                        ({ nome }) =>
+                          nome.toUpperCase() !== "Merenda seca".toUpperCase()
+                      )}
                       validate={required}
                     />
                   </section>
@@ -579,7 +582,11 @@ class AlteracaoCardapio extends Component {
                           name="tipos_alimentacao_de"
                           multiple
                           options={formatarParaMultiselect(
-                            periodo.tipos_alimentacao
+                            periodo.tipos_alimentacao.filter(
+                              ({ nome }) =>
+                                nome.toUpperCase() !==
+                                "Merenda seca".toUpperCase()
+                            )
                           )}
                           nomeDoItemNoPlural="Alimentos"
                           onChange={value =>
@@ -594,7 +601,15 @@ class AlteracaoCardapio extends Component {
                         <Field
                           component={Select}
                           name="tipo_alimentacao_para"
-                          options={periodo.substituicoes}
+                          options={
+                            periodo.substituicoes
+                              ? periodo.substituicoes.filter(
+                                  ({ nome }) =>
+                                    nome.toUpperCase() !==
+                                    "Merenda seca".toUpperCase()
+                                )
+                              : agregarDefault([])
+                          }
                           validate={periodo.checked && required}
                           required={periodo.checked}
                         />
