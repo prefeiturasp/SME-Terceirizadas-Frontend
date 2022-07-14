@@ -51,7 +51,7 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="Nome da Unidade Educacional"
                   name="nome_unidade"
-                  placeholder="Digite o nome da escola"
+                  placeholder="Digite o nome da unidade"
                   className="input-busca-produto"
                 />
               </div>
