@@ -33,6 +33,7 @@ import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
+import { Websocket } from "services/websocket";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
@@ -46,13 +47,29 @@ const Relatorio = ({ visao }) => {
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
   const [card, setCard] = useState(null);
+  const [uuidDieta, setUuidDieta] = useState(null);
   const [solicitacaoVigenteAtiva, setSolicitacaoVigenteAtiva] = useState(null);
+  const [dietasAbertas, setDietasAbertas] = useState([]);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoUsuario = localStorage.getItem("tipo_perfil");
 
   const fetchData = uuid => {
     loadSolicitacao(uuid);
+  };
+
+  const initSocket = () => {
+    return new Websocket(
+      "dietas-em-edicao-abertas/",
+      ({ data }) => {
+        getDietasEspeciaisAbertas(JSON.parse(data));
+      },
+      () => initSocket()
+    );
+  };
+
+  const getDietasEspeciaisAbertas = content => {
+    content && setDietasAbertas(content.message);
   };
 
   const loadSolicitacao = async uuid => {
@@ -93,7 +110,9 @@ const Relatorio = ({ visao }) => {
     }
     if (uuid) {
       fetchData(uuid);
+      setUuidDieta(uuid);
     }
+    initSocket();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -195,6 +214,12 @@ const Relatorio = ({ visao }) => {
     setMostrarHistorico(false);
   };
 
+  const dietasFiltradas = () => {
+    return dietasAbertas.filter(dieta =>
+      dieta.uuid_solicitacao_dieta_especial.includes(uuidDieta)
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       {dietaEspecial && status && (
@@ -205,6 +230,18 @@ const Relatorio = ({ visao }) => {
       <div className="card mt-3">
         <div className="card-body">
           <div className="row">
+            {dietasFiltradas().length > 0 && (
+              <div className="col-12 mb-3" style={{ alignItems: "flex-end" }}>
+                {<div className="float-right">{dietasFiltradas().length}</div>}
+                {dietasFiltradas().map(dieta => (
+                  <div key={dieta.id}>
+                    {`${dieta.email_usuario_com_dieta_aberta} -- ${
+                      dieta.uuid_solicitacao_dieta_especial
+                    }`}
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="col-12 mb-3" style={{ alignItems: "flex-end" }}>
               {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
               {dietaEspecial && historico && (
