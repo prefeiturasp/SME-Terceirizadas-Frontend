@@ -168,12 +168,14 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                   texto={!atualizandoImagem ? "Atualizar imagem" : "Aguarde..."}
                   className="mr-3"
                   onClick={() => inputRef.current.click()}
-                  disabled={fotoAlunoSrc || atualizandoImagem}
+                  //disabled={fotoAlunoSrc || atualizandoImagem}
+                  disabled
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
-                  disabled={!fotoAlunoSrc || deletandoImagem}
+                  //disabled={!fotoAlunoSrc || deletandoImagem}
+                  disabled
                   texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
                   onClick={() => deletarFoto()}
                   type={BUTTON_TYPE.BUTTON}
