@@ -102,7 +102,13 @@ class AlteracaoCardapio extends Component {
       const response = await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
         vinculo
       );
-      periodos = construirPeriodosECombos(response.results);
+      periodos = construirPeriodosECombos(
+        response.results.filter(combo =>
+          this.props.periodos.find(
+            periodo => periodo.uuid === combo.periodo_escolar.uuid
+          )
+        )
+      );
       periodos.forEach(periodo => this.montaObjetoDeSubstituicoesEdit(periodo));
       this.setState({ periodos, loading: false });
     }
