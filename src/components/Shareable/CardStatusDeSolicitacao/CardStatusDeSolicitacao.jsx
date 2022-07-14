@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
 import { conferidaClass } from "helpers/terceirizadas";
@@ -7,6 +7,8 @@ import {
   ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
   TIPO_PERFIL
 } from "constants/shared";
+import { Websocket } from "services/websocket";
+import { Tooltip } from "antd";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
@@ -42,11 +44,32 @@ export const CardStatusDeSolicitacao = props => {
     hrefCard
   } = props;
 
+  const [dietasAbertas, setDietasAbertas] = useState([]);
+
   const nomeUsuario = localStorage.getItem("nome");
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
   let history = useHistory();
   let filteredSolicitations = [];
+
+  const initSocket = () => {
+    return new Websocket(
+      "dietas-em-edicao-abertas/",
+      ({ data }) => {
+        getDietasEspeciaisAbertas(JSON.parse(data));
+      },
+      () => initSocket()
+    );
+  };
+
+  const getDietasEspeciaisAbertas = content => {
+    content && setDietasAbertas(content.message);
+  };
+
+  useEffect(() => {
+    cardTitle.toString() === "Recebidas" && initSocket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {
     if (tipoPerfil === `"${TERCEIRIZADA}"`) {
@@ -71,6 +94,18 @@ export const CardStatusDeSolicitacao = props => {
     }
   }
 
+  const dietasFiltradas = solicitation => {
+    return dietasAbertas.filter(dieta =>
+      solicitation.link.includes(dieta.uuid_solicitacao_dieta_especial)
+    );
+  };
+
+  const textoTooltip = solicitation => {
+    return dietasFiltradas(solicitation)
+      .map(dieta => dieta.email_usuario_com_dieta_aberta)
+      .join(", ");
+  };
+
   const renderSolicitations = solicitations => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
       let conferida = conferidaClass(solicitation, cardTitle);
@@ -82,6 +117,17 @@ export const CardStatusDeSolicitacao = props => {
         >
           <p className={`data ${conferida}`}>
             {solicitation.text}
+            <Tooltip
+              overlayStyle={{ maxWidth: "200px" }}
+              placement="right"
+              title={() => textoTooltip(solicitation)}
+            >
+              <span className="ml-4 dietas-abertas">
+                {cardTitle.toString() === "Recebidas" &&
+                  dietasFiltradas(solicitation).length > 0 &&
+                  `** ${dietasFiltradas(solicitation).length} **`}
+              </span>
+            </Tooltip>
             <span className="float-right">{solicitation.date}</span>
           </p>
         </NavLink>
