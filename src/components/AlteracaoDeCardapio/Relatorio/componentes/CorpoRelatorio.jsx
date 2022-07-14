@@ -16,7 +16,12 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 
 export const CorpoRelatorio = props => {
-  const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
+  const {
+    alteracaoDeCardapio,
+    prazoDoPedidoMensagem,
+    tipoSolicitacao,
+    meusDados
+  } = props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     alteracaoDeCardapio.logs
@@ -143,7 +148,11 @@ export const CorpoRelatorio = props => {
           <th>Período</th>
           <th>Alteração alimentação de:</th>
           <th>Alteração alimentação para:</th>
-          <th>Número de alunos</th>
+          {meusDados &&
+            meusDados.vinculo_atual.instituicao
+              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+              <th>Número de alunos</th>
+            )}
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
           (
@@ -171,7 +180,11 @@ export const CorpoRelatorio = props => {
                   <td>{periodo_escolar && periodo_escolar.nome}</td>
                   <td>{tipos_alimentos_formatados}</td>
                   <td>{tipo_alimentacao_para.nome}</td>
-                  <td>{qtd_alunos}</td>
+                  {meusDados &&
+                    meusDados.vinculo_atual.instituicao
+                      .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                      <td>{qtd_alunos}</td>
+                    )}
                 </tr>
                 {ehInclusaoCei(tipoSolicitacao) && (
                   <tr>

@@ -987,7 +987,10 @@ class AlteracaoCardapio extends Component {
                   <div>Período</div>
                   <div>Alterar alimentação de:</div>
                   <div>Para alimentação:</div>
-                  <div>Nº de Alunos</div>
+                  {meusDados.vinculo_atual.instituicao
+                    .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                    <div>Nº de Alunos</div>
+                  )}
                 </header>
                 {periodos.map((periodo, indice) => {
                   this.props.change(
@@ -1062,22 +1065,25 @@ class AlteracaoCardapio extends Component {
                         }}
                         validate={periodo.validador}
                       />
-                      <Field
-                        component={InputText}
-                        onChange={event =>
-                          this.onNumeroAlunosChanged(event, periodo)
-                        }
-                        disabled={this.deveDesabilitarSeletorDeAlimentacao(
-                          indice
-                        )}
-                        type="number"
-                        name={`numero_de_alunos`}
-                        min="0"
-                        step="1"
-                        className="form-control quantidade-aluno"
-                        required={periodo.checked}
-                        validate={periodo.validador}
-                      />
+                      {meusDados.vinculo_atual.instituicao
+                        .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                        <Field
+                          component={InputText}
+                          onChange={event =>
+                            this.onNumeroAlunosChanged(event, periodo)
+                          }
+                          disabled={this.deveDesabilitarSeletorDeAlimentacao(
+                            indice
+                          )}
+                          type="number"
+                          name={`numero_de_alunos`}
+                          min="0"
+                          step="1"
+                          className="form-control quantidade-aluno"
+                          required={periodo.checked}
+                          validate={periodo.validador}
+                        />
+                      )}
                     </FormSection>
                   );
                 })}
