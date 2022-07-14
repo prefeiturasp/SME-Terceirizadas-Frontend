@@ -68,9 +68,13 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     getRascunhos();
   }, []);
 
-  const resetForm = form => {
-    form.change("inclusoes", [{ motivo: undefined }]);
-    form.change("quantidades_periodo", undefined);
+  const resetForm = async form => {
+    await form.change("inclusoes", [{ motivo: undefined }]);
+    await form.change("quantidades_periodo", undefined);
+    await form.change("dias_semana", undefined);
+    await form.change("tipos_alimentacao_selecionados", []);
+    await form.change("periodo_escolar");
+    await form.change("numero_alunos", undefined);
   };
 
   const motivoSimplesSelecionado = values => {

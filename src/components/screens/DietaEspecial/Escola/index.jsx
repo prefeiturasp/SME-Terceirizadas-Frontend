@@ -466,17 +466,19 @@ class solicitacaoDietaEspecial extends Component {
                       }
                       className="mr-3"
                       onClick={() => this.inputRef.click()}
-                      disabled={
+                      /*disabled={
                         fotoAlunoSrc ||
                         !codigo_eol ||
                         codigo_eol.length < 7 ||
                         atualizandoImagem
-                      }
+                      }*/
+                      disabled
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      disabled={!fotoAlunoSrc || deletandoImagem}
+                      //disabled={!fotoAlunoSrc || deletandoImagem}
+                      disabled
                       texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
                       onClick={() => this.deletarFoto(codigo_eol)}
                       type={BUTTON_TYPE.BUTTON}
