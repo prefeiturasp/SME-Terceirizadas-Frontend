@@ -204,8 +204,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
         <div className="col-2">Repetir</div>
         <div className="col-4">Período</div>
         <div className="col-4">Tipo de Alimentação</div>
-        {meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
-          "CEU GESTAO" && <div className="col-2">Nº de Alunos</div>}
+        <div className="col-2">Nº de Alunos</div>
       </div>
 
       <div className="row">
@@ -256,28 +255,28 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
           />
         </div>
         <div className="col-2">
-          {meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
-            "CEU GESTAO" && (
-            <Field
-              component={InputText}
-              validate={
-                values.numero_alunos &&
-                composeValidators(
-                  naoPodeSerZero,
-                  numericInteger,
-                  values.periodo_escolar &&
-                    maxValue(
-                      periodos.find(p => p.uuid === values.periodo_escolar)
-                        .maximo_alunos
-                    )
-                )
-              }
-              name={`numero_alunos`}
-              min="0"
-              className="form-control quantidade-aluno"
-              disabled={!values.periodo_escolar}
-            />
-          )}
+          <Field
+            component={InputText}
+            validate={
+              meusDados.vinculo_atual.instituicao
+                .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                ? values.numero_alunos &&
+                  composeValidators(
+                    naoPodeSerZero,
+                    numericInteger,
+                    values.periodo_escolar &&
+                      maxValue(
+                        periodos.find(p => p.uuid === values.periodo_escolar)
+                          .maximo_alunos
+                      )
+                  )
+                : false
+            }
+            name={`numero_alunos`}
+            min="0"
+            className="form-control quantidade-aluno"
+            disabled={!values.periodo_escolar}
+          />
         </div>
       </div>
       <Field
