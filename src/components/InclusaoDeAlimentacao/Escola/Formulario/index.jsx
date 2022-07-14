@@ -236,9 +236,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         tipoSolicitacao
       );
       if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess("Solicitação Rascunho criada com sucesso!");
         if (values.status === STATUS_DRE_A_VALIDAR) {
           iniciarPedido(response.data.uuid, tipoSolicitacao, form);
+        } else {
+          toastSuccess("Solicitação Rascunho criada com sucesso!");
         }
         refresh(form);
       } else {
@@ -253,9 +254,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         tipoSolicitacao
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Rascunho atualizado com sucesso");
         if (values.status === STATUS_DRE_A_VALIDAR) {
           iniciarPedido(values.uuid, tipoSolicitacao, form);
+        } else {
+          toastSuccess("Rascunho atualizado com sucesso");
         }
         refresh(form);
       } else {
