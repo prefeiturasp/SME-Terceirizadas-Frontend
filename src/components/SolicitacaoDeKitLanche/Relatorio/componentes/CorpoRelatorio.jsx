@@ -20,8 +20,7 @@ export const CorpoRelatorio = props => {
   const {
     tipoSolicitacao,
     solicitacaoKitLanche,
-    prazoDoPedidoMensagem,
-    meusDados
+    prazoDoPedidoMensagem
   } = props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
@@ -132,25 +131,13 @@ export const CorpoRelatorio = props => {
       </div>
       <table className="table-report">
         <tr>
-          {meusDados &&
-            meusDados.vinculo_atual.instituicao
-              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-              <th>Nº de Alunos</th>
-            )}
+          <th>Nº de Alunos</th>
           <th>Tempo Previsto de Passeio</th>
           <th>Opção Desejada</th>
-          {meusDados &&
-            meusDados.vinculo_atual.instituicao
-              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-              <th>Nº Total de Kits</th>
-            )}
+          <th>Nº Total de Kits</th>
         </tr>
         <tr>
-          {meusDados &&
-            meusDados.vinculo_atual.instituicao
-              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-              <td>{solicitacaoKitLanche.quantidade_alunos}</td>
-            )}
+          <td>{solicitacaoKitLanche.quantidade_alunos}</td>
           <td>
             {
               solicitacaoKitLanche.solicitacao_kit_lanche
@@ -163,14 +150,10 @@ export const CorpoRelatorio = props => {
               "nome"
             )}
           </td>
-          {meusDados &&
-            meusDados.vinculo_atual.instituicao
-              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-              <td>
-                {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
-                  solicitacaoKitLanche.quantidade_alunos}
-              </td>
-            )}
+          <td>
+            {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
+              solicitacaoKitLanche.quantidade_alunos}
+          </td>
         </tr>
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (

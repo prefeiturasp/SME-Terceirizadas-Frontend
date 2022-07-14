@@ -539,27 +539,30 @@ export class SolicitacaoDeKitLanche extends Component {
                   />
                 </div>
               </div>
-              {!ehCei &&
-                meusDados.instituicao &&
-                meusDados.vinculo_atual.instituicao
-                  .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-                  <div className="form-group row">
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        name="quantidade_alunos"
-                        type="number"
-                        label="Número de alunos"
-                        required
-                        validate={[
-                          required,
-                          maxValue(meusDados.quantidade_alunos),
-                          naoPodeSerZero
-                        ]}
-                      />
-                    </div>
+              {!ehCei && meusDados && (
+                <div className="form-group row">
+                  <div className="col-3">
+                    <Field
+                      component={InputText}
+                      name="quantidade_alunos"
+                      type="number"
+                      label="Número de alunos"
+                      required
+                      validate={
+                        meusDados.vinculo_atual &&
+                        meusDados.vinculo_atual.instituicao
+                          .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                          ? [
+                              required,
+                              maxValue(meusDados.quantidade_alunos),
+                              naoPodeSerZero
+                            ]
+                          : false
+                      }
+                    />
                   </div>
-                )}
+                </div>
+              )}
               <PedidoKitLanche
                 nameTempoPasseio="tempo_passeio"
                 nomeKitsLanche="kit_lanche"
@@ -574,18 +577,14 @@ export class SolicitacaoDeKitLanche extends Component {
                   totalSelecionados={totalAlunosSelecionadosCei}
                 />
               )}
-              {meusDados.instituicao &&
-                meusDados.vinculo_atual.instituicao
-                  .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
-                  <div className="kits-total form-group row mt-2 pt-3">
-                    <div className="col-12">
-                      <label>{"Número total de kits:"}</label>
-                      <span className="font-weight-bold pl-2">
-                        {this.getNumeroTotalDeKits()}
-                      </span>
-                    </div>
-                  </div>
-                )}
+              <div className="kits-total form-group row mt-2 pt-3">
+                <div className="col-12">
+                  <label>{"Número total de kits:"}</label>
+                  <span className="font-weight-bold pl-2">
+                    {this.getNumeroTotalDeKits()}
+                  </span>
+                </div>
+              </div>
               {meusDados.instituicao &&
                 meusDados.vinculo_atual.instituicao
                   .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
