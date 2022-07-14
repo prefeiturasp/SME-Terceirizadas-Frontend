@@ -109,6 +109,7 @@ export class CorpoRelatorio extends Component {
     const {
       tipoSolicitacao,
       prazoDoPedidoMensagem,
+      meusDados,
       inclusaoDeAlimentacao: {
         uuid,
         id_externo,
@@ -216,7 +217,12 @@ export class CorpoRelatorio extends Component {
               {ehInclusaoContinua(tipoSolicitacao) && <th>Repetir</th>}
               <th>Período</th>
               <th>Tipos de Alimentação</th>
-              {!ehInclusaoCei(tipoSolicitacao) && <th>Nº de Alunos</th>}
+              {!ehInclusaoCei(tipoSolicitacao) &&
+                meusDados &&
+                meusDados.vinculo_atual.instituicao
+                  .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                  <th>Nº de Alunos</th>
+                )}
             </tr>
             {!ehInclusaoCei(tipoSolicitacao) ? (
               quantidades_periodo.map((quantidade_por_periodo, key) => {
@@ -254,7 +260,11 @@ export class CorpoRelatorio extends Component {
                         "nome"
                       )}
                     </td>
-                    <td>{quantidade_por_periodo.numero_alunos}</td>
+                    {meusDados &&
+                      meusDados.vinculo_atual.instituicao
+                        .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                        <td>{quantidade_por_periodo.numero_alunos}</td>
+                      )}
                   </tr>,
                   ehInclusaoContinua(tipoSolicitacao) && (
                     <tr key={key}>

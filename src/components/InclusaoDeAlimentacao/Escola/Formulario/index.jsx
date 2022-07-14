@@ -418,6 +418,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                         form={form}
                         values={values}
                         periodos={periodos}
+                        meusDados={meusDados}
                       />
                     )}
                   </>
@@ -429,6 +430,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       form={form}
                       periodos={periodos}
                       push={push}
+                      meusDados={meusDados}
                     />
                     {values.quantidades_periodo && (
                       <div className="mt-5">
@@ -436,6 +438,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                           values={values}
                           periodos={periodos}
                           form={form}
+                          meusDados={meusDados}
                         />
                       </div>
                     )}

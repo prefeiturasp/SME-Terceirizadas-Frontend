@@ -110,7 +110,12 @@ export const OutroMotivo = ({ name }) => {
   );
 };
 
-export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
+export const PeriodosInclusaoNormal = ({
+  form,
+  values,
+  periodos,
+  meusDados
+}) => {
   const getPeriodo = indice => {
     return values.quantidades_periodo[indice];
   };
@@ -120,12 +125,13 @@ export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
       <div className="row">
         <div className="col-3">Período</div>
         <div className="col-6">Tipo de Alimentação</div>
-        <div className="col-3">Nº de Alunos</div>
+        {meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+          "CEU GESTAO" && <div className="col-3">Nº de Alunos</div>}
       </div>
       <FieldArray name="quantidades_periodo">
         {({ fields }) =>
           fields.map((name, indice) => (
-            <div key={indice}>
+            <div className="mt-1" key={indice}>
               <div className="row">
                 <div className="col-3">
                   <div
@@ -186,26 +192,30 @@ export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
                   </div>
                 </div>
                 <div className="col-3">
-                  <Field
-                    component={InputText}
-                    disabled={!getPeriodo(indice).checked}
-                    type="number"
-                    name={`${name}.numero_alunos`}
-                    min="0"
-                    className="form-control quantidade-aluno"
-                    required={getPeriodo(indice).checked}
-                    validate={
-                      getPeriodo(indice).checked &&
-                      composeValidators(
-                        naoPodeSerZero,
-                        numericInteger,
-                        maxValue(
-                          periodos.find(p => p.uuid === getPeriodo(indice).uuid)
-                            .maximo_alunos
+                  {meusDados.vinculo_atual.instituicao
+                    .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                    <Field
+                      component={InputText}
+                      disabled={!getPeriodo(indice).checked}
+                      type="number"
+                      name={`${name}.numero_alunos`}
+                      min="0"
+                      className="form-control quantidade-aluno"
+                      required={getPeriodo(indice).checked}
+                      validate={
+                        getPeriodo(indice).checked &&
+                        composeValidators(
+                          naoPodeSerZero,
+                          numericInteger,
+                          maxValue(
+                            periodos.find(
+                              p => p.uuid === getPeriodo(indice).uuid
+                            ).maximo_alunos
+                          )
                         )
-                      )
-                    }
-                  />
+                      }
+                    />
+                  )}
                 </div>
               </div>
             </div>
