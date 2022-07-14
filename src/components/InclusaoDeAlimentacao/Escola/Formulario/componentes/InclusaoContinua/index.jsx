@@ -164,14 +164,14 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
     <div className="recorrencia-e-detalhes">
       <div className="card-title">Recorrência e detalhes</div>
       <div className="row">
-        <div className="col-2">Repetir</div>
-        <div className="col-4">Período</div>
+        <div className="col-3">Repetir</div>
+        <div className="col-3">Período</div>
         <div className="col-4">Tipo de Alimentação</div>
         <div className="col-2">Nº de Alunos</div>
       </div>
 
       <div className="row">
-        <div className="col-2">
+        <div className="col-3">
           {values && (
             <Field
               component={Weekly}
@@ -181,7 +181,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
             />
           )}
         </div>
-        <div className="col-4">
+        <div className="col-3">
           <Field
             component={Select}
             name={`periodo_escolar`}
