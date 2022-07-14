@@ -502,7 +502,8 @@ class AlteracaoCardapio extends Component {
                       label="Motivo"
                       options={motivos.filter(
                         ({ nome }) =>
-                          nome.toUpperCase() !== "Merenda seca".toUpperCase()
+                          nome.toUpperCase() !==
+                          "Lanche emergencial".toUpperCase()
                       )}
                       validate={required}
                     />
@@ -585,7 +586,7 @@ class AlteracaoCardapio extends Component {
                             periodo.tipos_alimentacao.filter(
                               ({ nome }) =>
                                 nome.toUpperCase() !==
-                                "Merenda seca".toUpperCase()
+                                "Lanche emergencial".toUpperCase()
                             )
                           )}
                           nomeDoItemNoPlural="Alimentos"
@@ -606,7 +607,7 @@ class AlteracaoCardapio extends Component {
                               ? periodo.substituicoes.filter(
                                   ({ nome }) =>
                                     nome.toUpperCase() !==
-                                    "Merenda seca".toUpperCase()
+                                    "Lanche emergencial".toUpperCase()
                                 )
                               : agregarDefault([])
                           }
