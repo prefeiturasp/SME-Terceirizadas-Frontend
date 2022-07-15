@@ -1076,7 +1076,12 @@ class AlteracaoCardapio extends Component {
                         step="1"
                         className="form-control quantidade-aluno"
                         required={periodo.checked}
-                        validate={periodo.validador}
+                        validate={
+                          meusDados.vinculo_atual.instituicao
+                            .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                            ? periodo.validador
+                            : false
+                        }
                       />
                     </FormSection>
                   );

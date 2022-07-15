@@ -216,7 +216,7 @@ export class CorpoRelatorio extends Component {
               {ehInclusaoContinua(tipoSolicitacao) && <th>Repetir</th>}
               <th>Período</th>
               <th>Tipos de Alimentação</th>
-              {!ehInclusaoCei(tipoSolicitacao) && <th>Nº de Alunos</th>}
+              <th>Nº de Alunos</th>
             </tr>
             {!ehInclusaoCei(tipoSolicitacao) ? (
               quantidades_periodo.map((quantidade_por_periodo, key) => {

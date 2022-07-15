@@ -6,7 +6,7 @@ import { pontuarValor } from "../../../helpers/utilities";
 export default class CardMatriculados extends Component {
   render() {
     const { collapsed, numeroAlunos } = this.props;
-    return (
+    return numeroAlunos > 0 ? (
       <div className="card">
         <div className="card-body card-enrolled">
           <div className="row title">
@@ -32,6 +32,8 @@ export default class CardMatriculados extends Component {
           <div className="row">{this.props.children}</div>
         </div>
       </div>
+    ) : (
+      <></>
     );
   }
 }

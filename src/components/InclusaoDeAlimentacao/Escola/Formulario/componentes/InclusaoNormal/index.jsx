@@ -110,7 +110,12 @@ export const OutroMotivo = ({ name }) => {
   );
 };
 
-export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
+export const PeriodosInclusaoNormal = ({
+  form,
+  values,
+  periodos,
+  meusDados
+}) => {
   const getPeriodo = indice => {
     return values.quantidades_periodo[indice];
   };
@@ -125,7 +130,7 @@ export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
       <FieldArray name="quantidades_periodo">
         {({ fields }) =>
           fields.map((name, indice) => (
-            <div key={indice}>
+            <div className="mt-1" key={indice}>
               <div className="row">
                 <div className="col-3">
                   <div
@@ -195,15 +200,19 @@ export const PeriodosInclusaoNormal = ({ form, values, periodos }) => {
                     className="form-control quantidade-aluno"
                     required={getPeriodo(indice).checked}
                     validate={
-                      getPeriodo(indice).checked &&
-                      composeValidators(
-                        naoPodeSerZero,
-                        numericInteger,
-                        maxValue(
-                          periodos.find(p => p.uuid === getPeriodo(indice).uuid)
-                            .maximo_alunos
-                        )
-                      )
+                      meusDados.vinculo_atual.instituicao
+                        .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                        ? getPeriodo(indice).checked &&
+                          composeValidators(
+                            naoPodeSerZero,
+                            numericInteger,
+                            maxValue(
+                              periodos.find(
+                                p => p.uuid === getPeriodo(indice).uuid
+                              ).maximo_alunos
+                            )
+                          )
+                        : false
                     }
                   />
                 </div>

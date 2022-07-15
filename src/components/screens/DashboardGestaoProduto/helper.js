@@ -15,7 +15,10 @@ import {
   ATIVACAO_DE_PRODUTO
 } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
-import { CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE } from "helpers/gestaoDeProdutos";
+import {
+  CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE,
+  CARD_AGUARDANDO_ANALISE_RECLAMACAO
+} from "helpers/gestaoDeProdutos";
 const {
   CODAE_PEDIU_ANALISE_RECLAMACAO,
   TERCEIRIZADA_RESPONDEU_RECLAMACAO,
@@ -91,6 +94,16 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
           item.nome_produto
         }`
       : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
+  } else if (
+    CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
+    usuarioEhEscola() &&
+    item.status.toLowerCase() === ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+  ) {
+    return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${
+      item.nome_produto
+    }&marca_produto=${item.marca_produto}&fabricante_produto=${
+      item.fabricante_produto
+    }`;
   } else if (
     usuarioEhCoordenadorNutriSupervisao() &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo

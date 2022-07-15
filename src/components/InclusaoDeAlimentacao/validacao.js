@@ -21,9 +21,13 @@ export const validarSubmissaoNormal = (values, meusDados) => {
     )}`;
   }
 
-  if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
-    return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
-
+  if (
+    meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+    "CEU GESTAO"
+  ) {
+    if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+      return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
+  }
   return false;
 };
 
@@ -37,8 +41,13 @@ export const validarSubmissaoContinua = (values, meusDados) => {
     totalAlunos += parseInt(quantidade_periodo.numero_alunos);
   });
 
-  if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
-    return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
+  if (
+    meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+    "CEU GESTAO"
+  ) {
+    if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+      return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
+  }
 
   return false;
 };
