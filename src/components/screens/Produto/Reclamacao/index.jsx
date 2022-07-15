@@ -34,7 +34,19 @@ class ReclamacaoProduto extends Component {
     if (history && history.action === "PUSH") {
       reset();
     }
+
+    const parameters = new URLSearchParams(window.location.search);
+    const nome_produto = parameters.get("nome_produto");
+    const marca_produto = parameters.get("marca_produto");
+    const fabricante_produto = parameters.get("fabricante_produto");
+    const parametrosBusca = {
+      nome_produto: nome_produto,
+      nome_marca: marca_produto,
+      nome_fabricante: fabricante_produto
+    };
+    this.onSubmitFormBuscaProduto(parametrosBusca);
   }
+
   onAtualizarProduto = page => {
     this.setState({
       loading: true,
@@ -52,6 +64,7 @@ class ReclamacaoProduto extends Component {
       );
       this.setState({ loading: false });
       if (response.status === 200) {
+        this.props.setIndiceProdutoAtivo(0);
         this.props.setProdutos(response.data.results);
         this.props.setProdutosCount(response.data.count);
         resolve();
