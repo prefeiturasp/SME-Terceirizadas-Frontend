@@ -96,7 +96,7 @@ export const abstraiPeriodosComAlunosMatriculados = (
       periodosQuantidadeAlunos
     );
     periodo["tipos_alimentacao"] = periodo.tipos_alimentacao.filter(
-      tipo_alimentacao => tipo_alimentacao.nome !== "Merenda seca"
+      tipo_alimentacao => tipo_alimentacao.nome !== "Lanche Emergencial"
     );
   });
   return periodos;

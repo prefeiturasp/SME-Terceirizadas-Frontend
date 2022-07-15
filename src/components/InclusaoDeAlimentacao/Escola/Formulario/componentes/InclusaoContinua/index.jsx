@@ -84,7 +84,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
   );
 };
 
-export const Recorrencia = ({ form, values, periodos, push }) => {
+export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
   const handleWeekly = async value => {
     const dias_semana = values.dias_semana || [];
     if (dias_semana.includes(value)) {
@@ -97,23 +97,31 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
   };
 
   const adicionarRecorrencia = async (form, values) => {
+    let ehCEU = false;
+    if (
+      meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais ===
+      "CEU GESTAO"
+    ) {
+      ehCEU = true;
+    }
     if (
       !values.dias_semana ||
       values.dias_semana.length === 0 ||
       !values.periodo_escolar ||
       !values.tipos_alimentacao_selecionados ||
       values.tipos_alimentacao_selecionados.length === 0 ||
-      !values.numero_alunos
+      (!ehCEU && !values.numero_alunos)
     ) {
       toastError(
         "Necessário selecionar ao menos um dia na recorrência, período, um tipo de alimentação e adicionar o número de alunos para adicionar recorrência"
       );
       return;
     } else if (
-      /\D/.test(values.numero_alunos) ||
-      values.numero_alunos <= 0 ||
-      values.numero_alunos >
-        periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos
+      !ehCEU &&
+      (/\D/.test(values.numero_alunos) ||
+        values.numero_alunos <= 0 ||
+        values.numero_alunos >
+          periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos)
     ) {
       toastError("Número de alunos inválido");
       return;
@@ -132,31 +140,60 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
       return;
     }
     if (!values.quantidades_periodo) {
-      form.change("quantidades_periodo", [
-        {
-          dias_semana: deepCopy(values.dias_semana),
-          periodo_escolar: deepCopy(values.periodo_escolar),
-          tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
-          numero_alunos: deepCopy(values.numero_alunos),
-          observacao: deepCopy(values.observacao)
-        }
-      ]);
+      if (!ehCEU) {
+        form.change("quantidades_periodo", [
+          {
+            dias_semana: deepCopy(values.dias_semana),
+            periodo_escolar: deepCopy(values.periodo_escolar),
+            tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
+            numero_alunos: deepCopy(values.numero_alunos),
+            observacao: deepCopy(values.observacao)
+          }
+        ]);
+      } else {
+        form.change("quantidades_periodo", [
+          {
+            dias_semana: deepCopy(values.dias_semana),
+            periodo_escolar: deepCopy(values.periodo_escolar),
+            tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
+            observacao: deepCopy(values.observacao)
+          }
+        ]);
+      }
     } else {
       await push("quantidades_periodo");
-      ["dias_semana", "periodo_escolar", "numero_alunos", "observacao"].forEach(
-        async item => {
+      if (!ehCEU) {
+        [
+          "dias_semana",
+          "periodo_escolar",
+          "numero_alunos",
+          "observacao"
+        ].forEach(async item => {
           await form.change(
             `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
             deepCopy(values[item])
           );
-        }
-      );
-      await form.change(
-        `quantidades_periodo[${
-          values.quantidades_periodo.length
-        }].tipos_alimentacao`,
-        deepCopy(values.tipos_alimentacao_selecionados)
-      );
+        });
+        await form.change(
+          `quantidades_periodo[${
+            values.quantidades_periodo.length
+          }].tipos_alimentacao`,
+          deepCopy(values.tipos_alimentacao_selecionados)
+        );
+      } else {
+        ["dias_semana", "periodo_escolar", "observacao"].forEach(async item => {
+          await form.change(
+            `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
+            deepCopy(values[item])
+          );
+        });
+        await form.change(
+          `quantidades_periodo[${
+            values.quantidades_periodo.length
+          }].tipos_alimentacao`,
+          deepCopy(values.tipos_alimentacao_selecionados)
+        );
+      }
     }
   };
 
@@ -221,16 +258,19 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
           <Field
             component={InputText}
             validate={
-              values.numero_alunos &&
-              composeValidators(
-                naoPodeSerZero,
-                numericInteger,
-                values.periodo_escolar &&
-                  maxValue(
-                    periodos.find(p => p.uuid === values.periodo_escolar)
-                      .maximo_alunos
+              meusDados.vinculo_atual.instituicao
+                .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                ? values.numero_alunos &&
+                  composeValidators(
+                    naoPodeSerZero,
+                    numericInteger,
+                    values.periodo_escolar &&
+                      maxValue(
+                        periodos.find(p => p.uuid === values.periodo_escolar)
+                          .maximo_alunos
+                      )
                   )
-              )
+                : false
             }
             name={`numero_alunos`}
             min="0"
@@ -261,7 +301,7 @@ export const Recorrencia = ({ form, values, periodos, push }) => {
   );
 };
 
-export const RecorrenciaTabela = ({ form, values, periodos }) => {
+export const RecorrenciaTabela = ({ form, values, periodos, meusDados }) => {
   return (
     <div className="recorrencia-e-detalhes">
       <table>
@@ -270,7 +310,10 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
             <th className="col-2">Repetir</th>
             <th className="col-2">Período</th>
             <th className="col-3">Tipos de Alimentação</th>
-            <th className="col-1">Nº de Alunos</th>
+            {meusDados.vinculo_atual.instituicao
+              .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+              <th className="col-1">Nº de Alunos</th>
+            )}
             <th className="col-4">Observações</th>
           </tr>
         </thead>
@@ -327,9 +370,12 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                             .map(t => t.nome)
                             .join(", ")}
                       </td>
-                      <td className="col-1">
-                        {values.quantidades_periodo[indice].numero_alunos}
-                      </td>
+                      {meusDados.vinculo_atual.instituicao
+                        .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                        <td className="col-1">
+                          {values.quantidades_periodo[indice].numero_alunos}
+                        </td>
+                      )}
                       <td
                         dangerouslySetInnerHTML={{
                           __html: values.quantidades_periodo[indice].observacao
