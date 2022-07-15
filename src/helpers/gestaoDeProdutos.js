@@ -47,7 +47,7 @@ const CARD_NAO_HOMOLOGADOS = {
     TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
   ]
 };
-const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
+export const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   id: CARD_ID.AGUARDANDO_ANALISE_RECLAMACAO,
   titulo: "Aguardando análise das reclamações",
   titulo_menu: "Ag. análise das reclamações", // FIXME: Confirmar nome no menu
