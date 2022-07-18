@@ -226,3 +226,6 @@ export const WEEK = [
     value: "5"
   }
 ];
+
+export const USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM = "6769195";
+export const USUARIO_PODE_ATUALIZAR_FOTO_PROD = "sigpae.amcom";
