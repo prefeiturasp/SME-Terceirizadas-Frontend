@@ -81,13 +81,12 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   } else if (
     (usuarioEhEscola() || usuarioEhTerceirizada()) &&
-    item.status.toLowerCase() === CODAE_QUESTIONOU_UE
+    item.status.toLowerCase() === CODAE_QUESTIONOU_UE &&
+    CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
-    return CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
-      ? `/${GESTAO_PRODUTO}/responder-questionamento-ue/?nome_produto=${
-          item.nome_produto
-        }`
-      : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
+    return `/${GESTAO_PRODUTO}/responder-questionamento-ue/?nome_produto=${
+      item.nome_produto
+    }`;
   } else if (
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
     usuarioEhEscola()
