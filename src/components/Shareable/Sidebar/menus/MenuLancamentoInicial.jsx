@@ -17,7 +17,7 @@ export default () => {
     <Menu
       id="LancamentoInicial"
       icon="fas fa-pencil-alt"
-      title={"Lançamento Inicial"}
+      title={"Medição Inicial"}
     >
       {exibirLancamentoMedicaoInicial && (
         <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
