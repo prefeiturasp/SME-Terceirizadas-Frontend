@@ -29,7 +29,6 @@ const {
   CODAE_AUTORIZOU_RECLAMACAO,
   CODAE_NAO_HOMOLOGADO,
   CODAE_QUESTIONADO,
-  UE_RESPONDEU_QUESTIONAMENTO,
   CODAE_QUESTIONOU_UE,
   TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
 } = ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS;
@@ -59,12 +58,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     }`;
   } else if (
     usuarioEhCODAEGestaoProduto() &&
-    [
-      TERCEIRIZADA_RESPONDEU_RECLAMACAO,
-      ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
-      CODAE_PEDIU_ANALISE_RECLAMACAO,
-      UE_RESPONDEU_QUESTIONAMENTO
-    ].includes(item.status.toLowerCase())
+    CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo
   ) {
     return `/${GESTAO_PRODUTO}/avaliar-reclamacao-produto?uuid=${item.uuid}
       `;
@@ -96,8 +90,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
       : `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
   } else if (
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
-    usuarioEhEscola() &&
-    item.status.toLowerCase() === ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    usuarioEhEscola()
   ) {
     return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${
       item.nome_produto
