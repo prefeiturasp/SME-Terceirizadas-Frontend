@@ -40,7 +40,7 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
       </LeafItem>
       {exibirCadastro && (
         <LeafItem to={`/${PESQUISA_DESENVOLVIMENTO}/produto`}>
-          Cadastro de Produto
+          Solicitar Homologação do Produto
         </LeafItem>
       )}
       {exibirBusca && (
