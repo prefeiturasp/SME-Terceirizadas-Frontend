@@ -49,7 +49,7 @@ import { toastError, toastSuccess } from "../../../Shareable/Toast/dialogs";
 import Laudo from "./componentes/Laudo";
 import Prescritor from "./componentes/Prescritor";
 import SolicitacaoVigente from "./componentes/SolicitacaoVigente";
-import { formatarSolicitacoesVigentes } from "./helper";
+import { formatarSolicitacoesVigentes, podeAtualizarFoto } from "./helper";
 
 import { loadSolicitacoesVigentes } from "reducers/incluirDietaEspecialReducer";
 
@@ -72,6 +72,7 @@ class solicitacaoDietaEspecial extends Component {
       aluno_nao_matriculado: false,
       pertence_a_escola: null,
       fotoAlunoSrc: null,
+      criadoRf: null,
       deletandoImagem: false,
       atualizandoImagem: false
     };
@@ -118,10 +119,11 @@ class solicitacaoDietaEspecial extends Component {
             this.setState({
               fotoAlunoSrc: `data:${
                 responseFoto.data.data.download.item2
-              };base64,${responseFoto.data.data.download.item1}`
+              };base64,${responseFoto.data.data.download.item1}`,
+              criadoRf: responseFoto.data.data.criadoRf
             });
           } else {
-            this.setState({ fotoAlunoSrc: null });
+            this.setState({ fotoAlunoSrc: null, criadoRf: null });
           }
           this.setState({ atualizandoImagem: false });
         }
@@ -138,7 +140,7 @@ class solicitacaoDietaEspecial extends Component {
       if (response) {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Foto deletada com sucesso");
-          this.setState({ fotoAlunoSrc: null });
+          this.setState({ fotoAlunoSrc: null, criadoRf: null });
           this.inputRef.value = "";
         } else {
           toastError(getError(response.data));
@@ -151,7 +153,7 @@ class solicitacaoDietaEspecial extends Component {
   onEolBlur = async event => {
     const { change } = this.props;
     const { codigo_eol_escola } = this.state;
-    this.setState({ fotoAlunoSrc: undefined });
+    this.setState({ fotoAlunoSrc: undefined, criadoRf: null });
     change("codigo_eol", event.target.value);
     change("aluno_json.nome", "");
     change("aluno_json.data_nascimento", "");
@@ -179,7 +181,8 @@ class solicitacaoDietaEspecial extends Component {
         if (response.status === 200) {
           this.setState({
             pertence_a_escola: response.data.pertence_a_escola,
-            fotoAlunoSrc: undefined
+            fotoAlunoSrc: undefined,
+            criadoRf: null
           });
           if (this.state.pertence_a_escola) {
             change("aluno_json.nome", resposta.detail.nm_aluno);
@@ -192,10 +195,11 @@ class solicitacaoDietaEspecial extends Component {
                 this.setState({
                   fotoAlunoSrc: `data:${
                     responseFoto.data.data.download.item2
-                  };base64,${responseFoto.data.data.download.item1}`
+                  };base64,${responseFoto.data.data.download.item1}`,
+                  criadoRf: responseFoto.data.data.criadoRf
                 });
               } else {
-                this.setState({ fotoAlunoSrc: null });
+                this.setState({ fotoAlunoSrc: null, criadoRf: null });
               }
             });
           } else {
@@ -205,7 +209,11 @@ class solicitacaoDietaEspecial extends Component {
             change("registro_funcional_pescritor", "");
           }
         } else {
-          this.setState({ pertence_a_escola: null, fotoAlunoSrc: null });
+          this.setState({
+            pertence_a_escola: null,
+            fotoAlunoSrc: null,
+            criadoRf: null
+          });
         }
       }
     );
@@ -298,7 +306,8 @@ class solicitacaoDietaEspecial extends Component {
         this.props.loadSolicitacoesVigentes(null);
         this.setState({
           aluno_nao_matriculado: false,
-          fotoAlunoSrc: undefined
+          fotoAlunoSrc: undefined,
+          criadoRf: null
         });
         this.resetForm();
         resolve();
@@ -324,7 +333,8 @@ class solicitacaoDietaEspecial extends Component {
       fotoAlunoSrc,
       deletandoImagem,
       atualizandoImagem,
-      pertence_a_escola
+      pertence_a_escola,
+      criadoRf
     } = this.state;
     const {
       handleSubmit,
@@ -466,19 +476,21 @@ class solicitacaoDietaEspecial extends Component {
                       }
                       className="mr-3"
                       onClick={() => this.inputRef.click()}
-                      /*disabled={
+                      disabled={
                         fotoAlunoSrc ||
                         !codigo_eol ||
                         codigo_eol.length < 7 ||
                         atualizandoImagem
-                      }*/
-                      disabled
+                      }
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                     />
                     <Botao
-                      //disabled={!fotoAlunoSrc || deletandoImagem}
-                      disabled
+                      disabled={
+                        !podeAtualizarFoto(criadoRf) ||
+                        !fotoAlunoSrc ||
+                        deletandoImagem
+                      }
                       texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
                       onClick={() => this.deletarFoto(codigo_eol)}
                       type={BUTTON_TYPE.BUTTON}
