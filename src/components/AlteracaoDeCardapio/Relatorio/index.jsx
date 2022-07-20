@@ -22,6 +22,7 @@ import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import { meusDados } from "services/perfil.service";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class Relatorio extends Component {
       uuid: null,
       showNaoAprovaModal: false,
       showAutorizarModal: false,
+      meusDados: null,
       showModal: false,
       alteracaoDecardapio: null,
       prazoDoPedidoMensagem: null,
@@ -53,6 +55,14 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const tipoSolicitacao = urlParams.get("tipoSolicitacao");
     const uuid = urlParams.get("uuid");
+    meusDados().then(response => {
+      if (response) {
+        this.setState({ meusDados: response });
+      } else {
+        this.setState({ erro: true });
+        toastError("Erro ao carregar dados do usuário");
+      }
+    });
     if (uuid) {
       getAlteracaoCardapio(uuid, tipoSolicitacao).then(response => {
         if (response.status === HTTP_STATUS.OK) {
@@ -152,6 +162,7 @@ class Relatorio extends Component {
       alteracaoDeCardapio,
       prazoDoPedidoMensagem,
       showQuestionamentoModal,
+      meusDados,
       uuid,
       showAutorizarModal,
       erro,
@@ -305,6 +316,7 @@ class Relatorio extends Component {
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={this.state.tipoSolicitacao}
+                  meusDados={meusDados}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={alteracaoDeCardapio}
@@ -367,7 +379,8 @@ class Relatorio extends Component {
                           />
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO &&
-                      (alteracaoDeCardapio.motivo.nome !== "Merenda Seca" ? (
+                      (alteracaoDeCardapio.motivo.nome !==
+                      "Lanche Emergencial" ? (
                         <Botao
                           texto={
                             tipoPerfil ===

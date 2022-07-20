@@ -3,7 +3,8 @@ import { TIPO_SOLICITACAO } from "constants/shared";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import { connect } from "react-redux";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import { escolaExcluirSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import {
   atualizarInclusoesDaCEI,
@@ -487,7 +488,13 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tiposAlimentacaoSelecionados,
       ehOutroMotivo
     } = this.state;
-    const { periodos, motivos, handleSubmit } = this.props;
+    const {
+      periodos,
+      motivos,
+      handleSubmit,
+      periodo_escolar,
+      data
+    } = this.props;
     return (
       <div>
         {loading ? (
@@ -601,50 +608,52 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                   </div>
                 </div>
 
-                <section className="tabela-faixa-etaria-qtd-alunos">
-                  <article>
-                    <div className="faixa-etaria">Faixa Etária</div>
-                    <div className="alunos-matriculados">
-                      Alunos Matriculados
-                    </div>
-                    <div className="quantidade">Quantidade</div>
-                  </article>
+                {periodo_escolar && data && (
+                  <section className="tabela-faixa-etaria-qtd-alunos">
+                    <article>
+                      <div className="faixa-etaria">Faixa Etária</div>
+                      <div className="alunos-matriculados">
+                        Alunos Matriculados
+                      </div>
+                      <div className="quantidade">Quantidade</div>
+                    </article>
 
-                  {faixasEtarias.map((faixa, indice) => {
-                    return (
-                      <article key={indice}>
-                        <div className="faixa-etaria">
-                          {faixaToString(faixa)}
-                        </div>
-                        <div className="alunos-matriculados">
-                          {faixa.total_matriculados}
-                        </div>
-                        <Field
-                          component={InputText}
-                          type="number"
-                          name={faixa.uuid}
-                          min="0"
-                          validate={faixa.validade}
-                          className="quantidade input-qtd-alunos"
-                          onChange={value => {
-                            this.totalQuantidadeInput(
-                              value.target.value,
-                              indice
-                            );
-                          }}
-                        />
-                      </article>
-                    );
-                  })}
+                    {faixasEtarias.map((faixa, indice) => {
+                      return (
+                        <article key={indice}>
+                          <div className="faixa-etaria">
+                            {faixaToString(faixa)}
+                          </div>
+                          <div className="alunos-matriculados">
+                            {faixa.total_matriculados}
+                          </div>
+                          <Field
+                            component={InputText}
+                            type="number"
+                            name={faixa.uuid}
+                            min="0"
+                            validate={faixa.validade}
+                            className="quantidade input-qtd-alunos"
+                            onChange={value => {
+                              this.totalQuantidadeInput(
+                                value.target.value,
+                                indice
+                              );
+                            }}
+                          />
+                        </article>
+                      );
+                    })}
 
-                  <article>
-                    <div className="faixa-etaria">Total </div>
-                    <div className="alunos-matriculados">
-                      {totalFaixasEtarias}
-                    </div>
-                    <div className="quantidade">{totalQuantidade}</div>
-                  </article>
-                </section>
+                    <article>
+                      <div className="faixa-etaria">Total </div>
+                      <div className="alunos-matriculados">
+                        {totalFaixasEtarias}
+                      </div>
+                      <div className="quantidade">{totalQuantidade}</div>
+                    </article>
+                  </section>
+                )}
                 <div className="mt-4">
                   <div className="botoes-submit-inclusoes-cei">
                     <Botao
@@ -687,6 +696,19 @@ class InclusaoDeAlimentacaoDaCei extends Component {
   }
 }
 
-export default reduxForm({
-  form: "inclusaoAlimentacaoDaCei"
+const InclusaoDeAlimentacaoDaCeiForm = reduxForm({
+  form: "inclusaoAlimentacaoDaCei",
+  enableReinitialize: true
 })(InclusaoDeAlimentacaoDaCei);
+
+const selector = formValueSelector("inclusaoAlimentacaoDaCei");
+
+const mapStateToProps = state => {
+  return {
+    motivo: selector(state, "motivo"),
+    data: selector(state, "data"),
+    periodo_escolar: selector(state, "periodo_escolar")
+  };
+};
+
+export default connect(mapStateToProps)(InclusaoDeAlimentacaoDaCeiForm);

@@ -12,6 +12,14 @@ export const requiredOptionSearchSelect = escolas => value =>
     ? undefined
     : "Selecione uma opção válida";
 
+export const dataDuplicada = listaDatas => value => {
+  return value &&
+    listaDatas &&
+    listaDatas.filter(el => el && el.data === value).length > 1
+    ? "Já existe uma solicitação de inclusão de alimento para essa mesma data."
+    : undefined;
+};
+
 export const requiredMultiselect = array =>
   array !== [] ? undefined : "Campo obrigatório";
 

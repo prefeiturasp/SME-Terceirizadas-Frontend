@@ -176,6 +176,15 @@ export default () => {
                           uuid: "UNIDADE_FECHADA",
                           nome: "Unidade Educacional Fechada"
                         },
+                        {
+                          uuid: "UNIDADE_SEM_ENERGIA",
+                          nome: "Unidade Educacional Sem Energia Elétrica"
+                        },
+                        {
+                          uuid: "UNIDADE_SEM_ACESSO",
+                          nome:
+                            "Interdição de Via de Acesso ao Local de Entrega"
+                        },
                         { uuid: "OUTROS", nome: "Outros" }
                       ]}
                       className="input-busca-produto"

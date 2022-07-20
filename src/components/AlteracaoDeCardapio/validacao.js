@@ -47,7 +47,11 @@ export const validateSubmit = (values, meusDados) => {
 
   if (temPeriodosEscolares(values)) return "Obrigatório ao menos um período";
 
-  if (totalAlunos > meusDados.vinculo_atual.instituicao.quantidade_alunos) {
+  if (
+    meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+      "CEU GESTAO" &&
+    totalAlunos > meusDados.vinculo_atual.instituicao.quantidade_alunos
+  ) {
     return "Número de alunos do pedido maior que a quantidade de alunos da escola";
   } else {
     delete values["substituicoes_MANHA"];

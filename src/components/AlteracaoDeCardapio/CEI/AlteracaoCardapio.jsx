@@ -102,7 +102,13 @@ class AlteracaoCardapio extends Component {
       const response = await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
         vinculo
       );
-      periodos = construirPeriodosECombos(response.results);
+      periodos = construirPeriodosECombos(
+        response.results.filter(combo =>
+          this.props.periodos.find(
+            periodo => periodo.uuid === combo.periodo_escolar.uuid
+          )
+        )
+      );
       periodos.forEach(periodo => this.montaObjetoDeSubstituicoesEdit(periodo));
       this.setState({ periodos, loading: false });
     }
@@ -500,7 +506,11 @@ class AlteracaoCardapio extends Component {
                       component={Select}
                       name="motivo"
                       label="Motivo"
-                      options={motivos}
+                      options={motivos.filter(
+                        ({ nome }) =>
+                          nome.toUpperCase() !==
+                          "Lanche emergencial".toUpperCase()
+                      )}
                       validate={required}
                     />
                   </section>
@@ -579,7 +589,11 @@ class AlteracaoCardapio extends Component {
                           name="tipos_alimentacao_de"
                           multiple
                           options={formatarParaMultiselect(
-                            periodo.tipos_alimentacao
+                            periodo.tipos_alimentacao.filter(
+                              ({ nome }) =>
+                                nome.toUpperCase() !==
+                                "Lanche emergencial".toUpperCase()
+                            )
                           )}
                           nomeDoItemNoPlural="Alimentos"
                           onChange={value =>
@@ -594,7 +608,15 @@ class AlteracaoCardapio extends Component {
                         <Field
                           component={Select}
                           name="tipo_alimentacao_para"
-                          options={periodo.substituicoes}
+                          options={
+                            periodo.substituicoes
+                              ? periodo.substituicoes.filter(
+                                  ({ nome }) =>
+                                    nome.toUpperCase() !==
+                                    "Lanche emergencial".toUpperCase()
+                                )
+                              : agregarDefault([])
+                          }
                           validate={periodo.checked && required}
                           required={periodo.checked}
                         />

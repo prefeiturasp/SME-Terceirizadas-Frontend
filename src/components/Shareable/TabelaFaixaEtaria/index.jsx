@@ -34,7 +34,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
             <article key={indice}>
               <div className="faixa-etaria">{faixaToString(faixa_etaria)}</div>
               <div className="alunos-matriculados">
-                {total_alunos_no_periodo || "N/A"}
+                {total_alunos_no_periodo}
               </div>
               <div>{quantidade || quantidade_alunos}</div>
             </article>

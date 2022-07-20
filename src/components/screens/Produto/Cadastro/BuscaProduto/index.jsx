@@ -288,7 +288,7 @@ export default class BuscaProduto extends Component {
                 }}
               />
               <Botao
-                texto={"Cadastrar Produtos"}
+                texto={"Solicitar Homologação"}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 onClick={() => {

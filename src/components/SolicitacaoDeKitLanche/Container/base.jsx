@@ -539,7 +539,7 @@ export class SolicitacaoDeKitLanche extends Component {
                   />
                 </div>
               </div>
-              {!ehCei && (
+              {!ehCei && meusDados && (
                 <div className="form-group row">
                   <div className="col-3">
                     <Field
@@ -548,11 +548,17 @@ export class SolicitacaoDeKitLanche extends Component {
                       type="number"
                       label="Número de alunos"
                       required
-                      validate={[
-                        required,
-                        maxValue(meusDados.quantidade_alunos),
-                        naoPodeSerZero
-                      ]}
+                      validate={
+                        meusDados.vinculo_atual &&
+                        meusDados.vinculo_atual.instituicao
+                          .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                          ? [
+                              required,
+                              maxValue(meusDados.quantidade_alunos),
+                              naoPodeSerZero
+                            ]
+                          : false
+                      }
                     />
                   </div>
                 </div>
@@ -579,16 +585,20 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              <Fragment>
-                <div className="form-group row sub-title">
-                  <p className="dre-name">
-                    Selecionar alunos com dieta especial
-                  </p>
-                </div>
-                <SeletorAlunosDietaEspecial
-                  alunosComDietaEspecial={alunosComDietaEspecial}
-                />
-              </Fragment>
+              {meusDados.instituicao &&
+                meusDados.vinculo_atual.instituicao
+                  .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                  <Fragment>
+                    <div className="form-group row sub-title">
+                      <p className="dre-name">
+                        Selecionar alunos com dieta especial
+                      </p>
+                    </div>
+                    <SeletorAlunosDietaEspecial
+                      alunosComDietaEspecial={alunosComDietaEspecial}
+                    />
+                  </Fragment>
+                )}
               <div className="form-group">
                 <Field
                   component={CKEditorField}

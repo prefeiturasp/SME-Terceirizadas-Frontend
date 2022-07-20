@@ -75,7 +75,7 @@ const TabelaDietas = ({ solicitacoes }) => {
                     />
                   </div>
                   <div className="row">
-                    <div className="row col-lg-8 ml-0">
+                    <div className="row col-lg-10 ml-0">
                       <div>
                         <p className="font-weight-bold mb-0">
                           Quantidade Ativas <br />
@@ -84,12 +84,18 @@ const TabelaDietas = ({ solicitacoes }) => {
                       </div>
                       <div className="pl-4">
                         <p className="font-weight-bold mb-0">
+                          Classificação da Dieta Especial <br />
+                        </p>
+                        {dados.classificacao_dieta_ativa || "--"}
+                      </div>
+                      <div className="pl-4">
+                        <p className="font-weight-bold mb-0">
                           Quantidade Inativas <br />
                         </p>
                         {dados.inativas}
                       </div>
                     </div>
-                    <div className="col-lg-4 pr-0">
+                    <div className="col-lg-2 pr-0">
                       <Link
                         to={`/aluno/dieta-especial?codigo_eol=${
                           dados.codigo_eol
