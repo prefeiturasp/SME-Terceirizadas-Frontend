@@ -50,6 +50,18 @@ export default ({ dadosRelatorio }) => {
                   </div>{" "}
                 </div>
               </div>
+              {item.ultima_homologacao.status === "CODAE_NAO_HOMOLOGADO" && (
+                <div className="row-situacao-status pt-3">
+                  <div className="status-flex-container">
+                    <div>Motivo da recusa de Homologação</div>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.ultima_homologacao.justificativa
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </Fragment>
         );
