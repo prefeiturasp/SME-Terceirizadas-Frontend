@@ -43,6 +43,7 @@ class CadastroEmpresa extends Component {
     super(props);
     this.state = {
       lotes: "",
+      atualizarLotes: false,
       exibirModal: false,
       tituloModal: "Confirma cadastro de Empresa?",
       valoresForm: null,
@@ -706,7 +707,8 @@ class CadastroEmpresa extends Component {
       carregando,
       ehDistribuidor,
       dadosEndereco,
-      qtdField
+      qtdField,
+      atualizarLotes
     } = this.state;
     return (
       <Spin tip="Carregando..." spinning={carregando}>
@@ -1420,6 +1422,16 @@ class CadastroEmpresa extends Component {
                           <div className="col-12">
                             <label className="label font-weight-normal pb-3">
                               Lotes de atendimento
+                              <span
+                                onClick={() =>
+                                  this.setState({
+                                    atualizarLotes: !atualizarLotes
+                                  })
+                                }
+                                className="link editar-lotes ml-3"
+                              >
+                                editar lotes
+                              </span>
                             </label>
 
                             {this.state.lotes.length ? (
@@ -1432,6 +1444,7 @@ class CadastroEmpresa extends Component {
                                 onSelectedChanged={value => {
                                   this.lidarComSelecionados(value);
                                 }}
+                                disabled={!atualizarLotes}
                                 overrideStrings={{
                                   search: "Busca",
                                   selectSomeItems: "Selecione",
