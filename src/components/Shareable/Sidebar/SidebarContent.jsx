@@ -35,12 +35,22 @@ import {
 
 export const SidebarContent = () => {
   const [activeMenu, setActiveMenu] = useState("");
+  const [activeMenuCadastros, setActiveMenuCadastros] = useState("");
 
   const onSubmenuClick = useCallback(
     clickedMenu => {
       setActiveMenu(clickedMenu === activeMenu ? "" : clickedMenu);
     },
     [activeMenu]
+  );
+
+  const onSubmenuCadastroClick = useCallback(
+    clickedMenu => {
+      setActiveMenuCadastros(
+        clickedMenu === activeMenuCadastros ? "" : clickedMenu
+      );
+    },
+    [activeMenuCadastros]
   );
 
   // NOTE: essas condicoes consideram apenas codae e terceirizada.
@@ -119,7 +129,9 @@ export const SidebarContent = () => {
 
   const _props = {
     activeMenu,
-    onSubmenuClick: onSubmenuClick
+    onSubmenuClick: onSubmenuClick,
+    activeMenuCadastros,
+    onSubmenuCadastroClick: onSubmenuCadastroClick
   };
 
   return [

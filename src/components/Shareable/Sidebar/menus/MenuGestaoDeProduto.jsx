@@ -17,7 +17,12 @@ import {
   usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 
-const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
+const MenuGestaoDeProduto = ({
+  activeMenu,
+  onSubmenuClick,
+  activeMenuCadastros,
+  onSubmenuCadastroClick
+}) => {
   const menuItems = listarCardsPermitidos();
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
@@ -30,7 +35,7 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
-  const exibirCadastroGeral =
+  const exibirSubmenuCadastro =
     usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
@@ -106,8 +111,23 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
-      {exibirCadastroGeral && (
-        <LeafItem to="/gestao-produto/cadastro-geral">Cadastro Geral</LeafItem>
+      {exibirSubmenuCadastro && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="consulta-solicitacoes-gp"
+          onClick={onSubmenuCadastroClick}
+          title="Cadastros"
+          activeMenu={activeMenuCadastros}
+        >
+          <LeafItem to="/gestao-produto/cadastro-geral">
+            Cadastro Geral
+          </LeafItem>
+          {usuarioEhCODAEGestaoProduto() && (
+            <LeafItem to="/gestao-produto/vincular-produto-edital">
+              Vincular Produtos aos Editais
+            </LeafItem>
+          )}
+        </SubMenu>
       )}
     </Menu>
   );
