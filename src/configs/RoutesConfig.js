@@ -4,6 +4,7 @@ import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHora
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
+import CadastroProdutosEditaisPage from "../pages/Cadastros/CadastroProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
@@ -1158,6 +1159,12 @@ const routesConfig = [
     component: CadastroGeralPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
+    component: CadastroProdutosEditaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${
