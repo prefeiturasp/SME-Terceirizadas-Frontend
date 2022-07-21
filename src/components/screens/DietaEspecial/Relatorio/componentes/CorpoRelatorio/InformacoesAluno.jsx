@@ -16,9 +16,11 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { solicitacaoEhDoCardAutorizadas } from "../../helpers";
+import { podeAtualizarFoto } from "components/screens/DietaEspecial/Escola/helper";
 
 const InformacoesAluno = ({ aluno, status_solicitacao }) => {
   const [fotoAlunoSrc, setFotoAlunoSrc] = useState(null);
+  const [criadoRf, setCriadoRf] = useState(null);
   const [deletandoImagem, setDeletandoImagem] = useState(false);
   const [atualizandoImagem, setAtualizandoImagem] = useState(false);
   const inputRef = useRef(null);
@@ -32,8 +34,10 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
           responseFoto.data.data.download.item1
         }`
       );
+      setCriadoRf(responseFoto.data.data.criadoRf);
     } else {
       setFotoAlunoSrc(null);
+      setCriadoRf(null);
     }
     setAtualizandoImagem(false);
   }
@@ -57,8 +61,10 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                 responseFoto.data.data.download.item1
               }`
             );
+            setCriadoRf(responseFoto.data.data.criadoRf);
           } else {
             setFotoAlunoSrc(null);
+            setCriadoRf(null);
           }
           setAtualizandoImagem(false);
         }
@@ -76,6 +82,7 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Foto deletada com sucesso");
           setFotoAlunoSrc(null);
+          setCriadoRf(null);
           inputRef.current.value = "";
         } else {
           toastError(getError(response.data));
@@ -168,14 +175,16 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
                   texto={!atualizandoImagem ? "Atualizar imagem" : "Aguarde..."}
                   className="mr-3"
                   onClick={() => inputRef.current.click()}
-                  //disabled={fotoAlunoSrc || atualizandoImagem}
-                  disabled
+                  disabled={fotoAlunoSrc || atualizandoImagem}
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                 />
                 <Botao
-                  //disabled={!fotoAlunoSrc || deletandoImagem}
-                  disabled
+                  disabled={
+                    !podeAtualizarFoto(criadoRf) ||
+                    !fotoAlunoSrc ||
+                    deletandoImagem
+                  }
                   texto={!deletandoImagem ? "Deletar imagem" : "Aguarde..."}
                   onClick={() => deletarFoto()}
                   type={BUTTON_TYPE.BUTTON}
