@@ -493,7 +493,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhMedicao()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -501,7 +501,7 @@ const routesConfig = [
     }`,
     component: StatusQuestionamentosCodaePage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhMedicao()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_PENDENTES}`,
@@ -513,13 +513,13 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesNegadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhMedicao()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhMedicao()
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.DRE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
@@ -1260,9 +1260,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario:
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao()
+    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.LOGISTICA}/${
