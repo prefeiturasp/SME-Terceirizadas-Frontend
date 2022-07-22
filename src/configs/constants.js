@@ -27,6 +27,7 @@ export const ESCOLA = "escola";
 export const ALUNO = "aluno";
 export const NUTRISUPERVISAO = "nutrisupervisao";
 export const NUTRIMANIFESTACAO = "nutrimanifestacao";
+export const MEDICAO = "medicao";
 
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
