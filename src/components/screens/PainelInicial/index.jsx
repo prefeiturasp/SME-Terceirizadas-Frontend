@@ -14,6 +14,7 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
+  usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
@@ -31,6 +32,7 @@ const PainelInicial = ({ history }) => {
           usuarioEhCODAENutriManifestacao() ||
           usuarioEhTerceirizada() ||
           usuarioEhDRE() ||
+          usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
           (usuarioEhEscola() &&
             !usuarioEscolaEhGestaoMistaParceira() &&
@@ -47,6 +49,7 @@ const PainelInicial = ({ history }) => {
       {(usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhCODAENutriManifestacao() ||
         usuarioEhCODAEDietaEspecial() ||
+        usuarioEhMedicao() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||

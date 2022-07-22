@@ -471,6 +471,10 @@ export const usuarioEhTerceirizada = () => {
   );
 };
 
+export const usuarioEhMedicao = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
+};
+
 export const converterDDMMYYYYparaYYYYMMDD = data => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };

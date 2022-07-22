@@ -102,6 +102,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
+  usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
@@ -190,7 +191,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhTerceirizada() ||
+      usuarioEhMedicao()
   },
   {
     path: "/login",
@@ -387,7 +389,7 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACOES_COM_QUESTIONAMENTO}`,
     component: StatusSolicitacoesComQuestionamentosCODAEPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_NEGADAS}`,
@@ -465,13 +467,13 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesAutorizadasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${
@@ -479,7 +481,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesCanceladasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
@@ -730,7 +732,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhTerceirizada() ||
+      usuarioEhMedicao
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
