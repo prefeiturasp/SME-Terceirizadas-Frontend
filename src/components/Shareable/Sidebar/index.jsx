@@ -71,7 +71,7 @@ export class Sidebar extends Component {
             <div className="sidebar-brand-icon mb-3">
               {(usuarioEhQualquerCODAE() ||
                 usuarioEhNutricionistaSupervisao() ||
-                usuarioEhMedicao) && <AvatarCODAE />}
+                usuarioEhMedicao()) && <AvatarCODAE />}
               {usuarioEhDRE() && <AvatarDRE />}
               {usuarioEhEscola() ||
                 (usuarioEhCoordenadorEscola() && <AvatarEscola />)}
