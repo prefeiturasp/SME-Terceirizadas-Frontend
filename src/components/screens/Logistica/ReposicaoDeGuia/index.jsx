@@ -292,20 +292,19 @@ export default () => {
       return "Campo obrigatório caso existam uma ou mais ocorrências";
   };
 
-  const checaAtraso = values => {
-    if (guia.status === "Insucesso de entrega") return;
+  const checaAtraso = (values, index) => {
     if (comparaDataEntrega(values.data_entrega_real)) {
-      if (!values.ocorrencias) {
-        values.ocorrencias = [];
-        values.ocorrencias.push("ATRASO_ENTREGA");
+      if (!values[`ocorrencias_${index}`]) {
+        values[`ocorrencias_${index}`] = [];
+        values[`ocorrencias_${index}`].push("ATRASO_ENTREGA");
       } else if (
-        values.ocorrencias.length &&
-        !values.ocorrencias.includes("ATRASO_ENTREGA")
+        values[`ocorrencias_${index}`].length &&
+        !values[`ocorrencias_${index}`].includes("ATRASO_ENTREGA")
       ) {
-        values.ocorrencias.push("ATRASO_ENTREGA");
+        values[`ocorrencias_${index}`].push("ATRASO_ENTREGA");
       }
-      if (values.ocorrencias.length === 0) {
-        values.ocorrencias.push("ATRASO_ENTREGA");
+      if (values[`ocorrencias_${index}`].length === 0) {
+        values[`ocorrencias_${index}`].push("ATRASO_ENTREGA");
       }
     }
   };
