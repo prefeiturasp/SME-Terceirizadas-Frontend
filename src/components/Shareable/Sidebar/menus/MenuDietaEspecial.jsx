@@ -42,7 +42,7 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
   const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
 
   return (
-    <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
+    <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
       {exibePainelInicial && (
         <LeafItem to="/painel-dieta-especial">Painel de Solicitações</LeafItem>
       )}
