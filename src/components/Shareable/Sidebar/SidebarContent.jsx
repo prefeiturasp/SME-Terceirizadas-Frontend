@@ -19,6 +19,7 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
+  usuarioEhMedicao,
   exibirGA
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
@@ -58,6 +59,7 @@ export const SidebarContent = () => {
     (usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
+      usuarioEhMedicao() ||
       (usuarioEhEscola() &&
         !usuarioEscolaEhGestaoMistaParceira() &&
         !usuarioEscolaEhGestaoDireta()) ||
@@ -70,7 +72,8 @@ export const SidebarContent = () => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
     usuarioEhDRE() ||
-    usuarioEhTerceirizada();
+    usuarioEhTerceirizada() ||
+    usuarioEhMedicao();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -81,11 +84,12 @@ export const SidebarContent = () => {
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhDRE() ||
-    usuarioEhTerceirizada();
+    usuarioEhTerceirizada() ||
+    !usuarioEhMedicao();
   const exibirLancamentoInicial =
     exibeMenuValidandoAmbiente &&
-    usuarioEhEscola() &&
-    !usuarioEscolaEhGestaoDireta();
+    ((usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhMedicao());
   const exibirCadastros =
     usuarioEhLogistica() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
@@ -97,7 +101,8 @@ export const SidebarContent = () => {
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
-    !usuarioEscolaEhGestaoDireta();
+    !usuarioEscolaEhGestaoDireta() &&
+    !usuarioEhMedicao();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&

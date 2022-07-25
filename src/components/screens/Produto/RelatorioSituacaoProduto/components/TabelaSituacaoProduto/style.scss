@@ -93,4 +93,9 @@
       }
     }
   }
+  .row-justificativa {
+    grid-template-columns: 100% !important;
+    height: 100% !important;
+    text-align: justify;
+  }
 }

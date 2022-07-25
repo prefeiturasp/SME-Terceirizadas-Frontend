@@ -12,6 +12,7 @@ import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhDRE,
+  usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCoordenadorEscola
 } from "../../../helpers/utilities";
@@ -69,7 +70,8 @@ export class Sidebar extends Component {
           >
             <div className="sidebar-brand-icon mb-3">
               {(usuarioEhQualquerCODAE() ||
-                usuarioEhNutricionistaSupervisao()) && <AvatarCODAE />}
+                usuarioEhNutricionistaSupervisao() ||
+                usuarioEhMedicao()) && <AvatarCODAE />}
               {usuarioEhDRE() && <AvatarDRE />}
               {usuarioEhEscola() ||
                 (usuarioEhCoordenadorEscola() && <AvatarEscola />)}
