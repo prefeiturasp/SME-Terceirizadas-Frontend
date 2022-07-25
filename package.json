@@ -83,9 +83,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "eslint": "eslint './src/**/**/**/**/*.{jsx,js}'",
-    "prettier": "prettier  --check 'src/**/**/**/*.{jsx,js,scss}'",
-    "prettier-fix": "prettier  --write 'src/**/**/**/*.{jsx,js,scss}'",
+    "eslint": "eslint ./src/**/**/**/**/*.{jsx,js}",
+    "prettier": "prettier  --check src/**/**/**/*.{jsx,js,scss}",
+    "prettier-fix": "prettier  --write src/**/**/**/*.{jsx,js,scss}",
     "coverage": "react-scripts test --coverage --watchAll=false",
     "postinstall": "patch-package"
   },

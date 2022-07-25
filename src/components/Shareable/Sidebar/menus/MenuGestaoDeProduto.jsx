@@ -34,7 +34,11 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
-    <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
+    <Menu
+      id="GestaoProduto"
+      icon="fa-shopping-basket"
+      title={"Gestão de Produto"}
+    >
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
         Painel de Solicitações
       </LeafItem>

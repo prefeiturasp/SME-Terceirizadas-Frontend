@@ -129,7 +129,7 @@ export const SidebarContent = () => {
 
   return [
     exibirPainelInicial && (
-      <ListItem key={0} icon="fa-file-alt" to={"/"}>
+      <ListItem key={0} icon="fa-home" to={"/"}>
         Painel Inicial
       </ListItem>
     ),
