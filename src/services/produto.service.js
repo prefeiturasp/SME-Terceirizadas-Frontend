@@ -470,6 +470,14 @@ export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
   return await axios.get(url);
 };
 
+export const getHomologacoesDeProdutoPorStatusTitulo = async (
+  status,
+  titulo_produto
+) => {
+  const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
+  return await axios.post(url, titulo_produto);
+};
+
 export const getTodosOsProdutos = async () => {
   return await axios.get(`/produtos/todos-produtos/`);
 };
