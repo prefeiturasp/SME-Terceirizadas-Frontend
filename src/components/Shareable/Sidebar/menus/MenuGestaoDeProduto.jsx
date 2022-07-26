@@ -8,7 +8,7 @@ import {
   AVALIAR_RECLAMACAO_PRODUTO,
   ATIVACAO_DE_PRODUTO
 } from "configs/constants";
-import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+import { listarCardsPermitidos, CADASTROS } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
@@ -19,6 +19,7 @@ import {
 
 const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
+  const cadastroItems = CADASTROS;
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
@@ -30,8 +31,6 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
-  const exibirCadastroGeral =
-    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
     <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
@@ -106,9 +105,20 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
-      {exibirCadastroGeral && (
-        <LeafItem to="/gestao-produto/cadastro-geral">Cadastro Geral</LeafItem>
-      )}
+
+      <SubMenu
+        icon="fa-chevron-down"
+        path="cadastros-gp"
+        onClick={onSubmenuClick}
+        title="Cadastros"
+        activeMenu={activeMenu}
+      >
+        {cadastroItems.map((item, index) => (
+          <LeafItem key={index} to={`${item.rota}`}>
+            {item.titulo}
+          </LeafItem>
+        ))}
+      </SubMenu>
     </Menu>
   );
 };

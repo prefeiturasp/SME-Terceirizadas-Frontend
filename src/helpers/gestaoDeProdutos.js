@@ -198,3 +198,17 @@ export const listarCardsPermitidos = () => {
   );
   return [CARD_PRODUTOS_SUSPENSOS, CARD_NAO_HOMOLOGADOS, cardHomologados];
 };
+
+export const CADASTRO_GERAL = {
+  titulo: "Cadastro Geral",
+  rota: "/gestao-produto/cadastro-geral"
+};
+export const CADASTRO_PRODUTOS_PROVINIENTES_EDITAL = {
+  titulo: "Cadastro de Produtos Provenientes do Edital",
+  rota: "/gestao-produto/cadastro-produtos-provinientes-edital"
+};
+
+export const CADASTROS = [
+  CADASTRO_GERAL,
+  CADASTRO_PRODUTOS_PROVINIENTES_EDITAL
+];

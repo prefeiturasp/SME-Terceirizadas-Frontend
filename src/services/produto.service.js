@@ -621,10 +621,16 @@ export const cancelaHomologacao = async (uuid, payload) =>
 export const getNomesItems = async () =>
   axios.get("/itens-cadastros/lista-nomes/");
 
+export const getNomesProtudosEdital = async () =>
+  axios.get("/cadastro-produtos-edital/lista-nomes/");
+
 export const getTiposItems = async () => axios.get("/itens-cadastros/tipos/");
 
 export const consultaItems = async params =>
   axios.get(`/itens-cadastros/`, { params });
+
+export const getCadastroProdutosEdital = async params =>
+  axios.get(`/cadastro-produtos-edital/`, { params });
 
 export const cadastrarItem = async payload =>
   await axios.post(`/itens-cadastros/`, payload);
