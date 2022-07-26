@@ -641,14 +641,21 @@ export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
-  switch (ENVIRONMENT) {
-    case "treinamento":
-      return false;
-    case "production":
-      return false;
-    default:
-      return true;
-  }
+  if (!["treinamento", "production"].includes(ENVIRONMENT)) return true;
+  if (
+    (["treinamento", "production"].includes(ENVIRONMENT) &&
+      (localStorage.getItem("tipo_perfil") === `"diretoriaregional"` &&
+        localStorage.getItem("nome_instituicao").includes("IPIRANGA"))) ||
+    (localStorage.getItem("tipo_perfil") === `"escola"` &&
+      localStorage.getItem("dre_nome").includes("IPIRANGA")) ||
+    (localStorage.getItem("tipo_perfil") === `"terceirizada"` &&
+      localStorage.getItem("lotes") &&
+      JSON.parse(localStorage.getItem("lotes")).find(lote =>
+        lote.diretoria_regional.nome.includes("IPIRANGA")
+      ))
+  )
+    return true;
+  return false;
 };
 
 export const justificativaAoNegarSolicitacao = logs => {
