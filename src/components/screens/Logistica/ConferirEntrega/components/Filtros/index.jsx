@@ -46,13 +46,48 @@ export default ({
                   label="Nº da guia de remessa"
                   name="numero_guia"
                   placeholder="Digite o número da guia"
-                  className="input-busca-produto"
+                  className="input-numero-guia"
                 />
               </div>
-
+              <div className="col-3">
+                <Field
+                  component={InputComData}
+                  label="Selecionar Período de Entrega"
+                  name="data_inicial"
+                  className="data-inicial"
+                  placeholder="De"
+                  writable={false}
+                  minDate={null}
+                  maxDate={
+                    values.data_final
+                      ? moment(values.data_final, "DD/MM/YYYY")._d
+                      : null
+                  }
+                />
+              </div>
+              <div className="col-3">
+                <Field
+                  component={InputComData}
+                  label="&nbsp;"
+                  name="data_final"
+                  className="data-final"
+                  popperPlacement="bottom-end"
+                  placeholder="Até"
+                  writable={false}
+                  strictParsing
+                  minDate={
+                    values.data_inicial
+                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                      : null
+                  }
+                  maxDate={null}
+                />
+              </div>
+            </div>
+            <div className="row">
               <div className="col-6">
                 <Field
-                  label="Status"
+                  label="Status da Entrega"
                   component={MultiSelect}
                   disableSearch
                   name="status"
@@ -92,38 +127,6 @@ export default ({
                       label: "Cancelada"
                     }
                   ]}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-3">
-                <Field
-                  component={InputComData}
-                  label="Período de Entrega"
-                  name="data_inicial"
-                  className="data-inicial"
-                  placeholder="De"
-                  minDate={null}
-                  maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
-                      : null
-                  }
-                />
-              </div>
-              <div className="col-3">
-                <Field
-                  component={InputComData}
-                  label="&nbsp;"
-                  name="data_final"
-                  popperPlacement="bottom-end"
-                  placeholder="Até"
-                  minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
-                  }
-                  maxDate={null}
                 />
               </div>
             </div>
