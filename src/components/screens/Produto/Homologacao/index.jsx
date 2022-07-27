@@ -132,7 +132,12 @@ class HomologacaoProduto extends Component {
           ? "DIETA ESPECIAL"
           : "COMUM"
       );
-      this.props.change("editais", []);
+      this.props.change(
+        "editais",
+        response.data.produto.eh_para_alunos_com_dieta
+          ? response.data.rastro_terceirizada.contratos.map(c => c.edital.uuid)
+          : []
+      );
       this.setState({
         produto: response.data.produto,
         informacoesNutricionais: formataInformacoesNutricionais(
