@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
+import ModalCadastrarProdutosEdital from "components/Shareable/ModalCadastrarProdutosEdital";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
@@ -31,7 +31,7 @@ export default ({
       })
     : [];
 
-  const getNomesItemsFiltrado = nomeItem => {
+  const getNomesProdutosFiltrado = nomeItem => {
     if (nomeItem) {
       const reg = new RegExp(nomeItem, "iu");
       return nomes.filter(a => reg.test(a));
@@ -70,7 +70,7 @@ export default ({
                 <label className="col-form-label mb-1">Nome</label>
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getNomesItemsFiltrado(values.nome_item)}
+                  dataSource={getNomesProdutosFiltrado(values.nome_item)}
                   name="nome_item"
                   placeholder="Digite um nome"
                   className="input-busca-nome-item"
@@ -98,7 +98,7 @@ export default ({
             <div className="row mb-3">
               <div className="col-8">
                 <Botao
-                  texto="Cadastrar Item"
+                  texto="Cadastrar Produto"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => setShowModal(true)}
@@ -128,7 +128,7 @@ export default ({
           </form>
         )}
       />
-      <ModalCadastrarItem
+      <ModalCadastrarProdutosEdital
         closeModal={() => setShowModal(false)}
         showModal={showModal}
         changePage={() => changePage()}

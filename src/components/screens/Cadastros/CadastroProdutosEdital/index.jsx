@@ -9,6 +9,7 @@ import {
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import "./style.scss";
+import { tipoStatus } from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -21,22 +22,11 @@ export default () => {
 
   async function fetchData() {
     const respNomes = await getNomesProtudosEdital();
-    const respItems = await getCadastroProdutosEdital({});
-    const nomeStatus = [
-      {
-        status: "Ativo",
-        uuid: true
-      },
-      {
-        status: "Inativo",
-        uuid: false
-      }
-    ];
+    const respProdutos = await getCadastroProdutosEdital({});
     setNomes(respNomes.data.results);
-
-    setStatus(nomeStatus);
-    setResultado(respItems.data.results);
-    setTotal(respItems.data.count);
+    setStatus(tipoStatus);
+    setResultado(respProdutos.data.results);
+    setTotal(respProdutos.data.count);
     setCarregando(false);
   }
 

@@ -1,25 +1,15 @@
 import React, { Fragment, useState } from "react";
 import { Icon } from "antd";
 import "./style.scss";
-import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
-import ModalExcluirItem from "../ModalExcluirItem";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import ModalCadastrarProdutosEdital from "components/Shareable/ModalCadastrarProdutosEdital";
 
 export default ({ resultado, changePage }) => {
   const [selecionado, setSelecionado] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
-  const [showModalExcluir, setShowModalExcluir] = useState(false);
 
-  const permissao = usuarioEhTerceirizada();
-
-  const openModal = item => {
-    setSelecionado(item);
+  const openModal = produto => {
+    setSelecionado(produto);
     setShowModal(true);
-  };
-
-  const openModalExcluir = item => {
-    setSelecionado(item);
-    setShowModalExcluir(true);
   };
 
   return (
@@ -36,50 +26,28 @@ export default ({ resultado, changePage }) => {
             </p>
           </div>
           <div className="col-12">
-            <table className="table table-bordered table-items">
+            <table className="table table-bordered table-produtos">
               <thead>
-                <tr className="table-head-items">
+                <tr className="table-head-produtos">
                   <th className="nome">Nome</th>
                   <th className="tipo">Status</th>
                   <th className="acoes">Ações</th>
                 </tr>
               </thead>
               <tbody>
-                {resultado.map((item, idx) => {
+                {resultado.map((produto, idx) => {
                   return (
                     <Fragment key={idx}>
-                      <tr className="table-body-items">
-                        <td>{item.nome}</td>
-                        <td>{item.status}</td>
+                      <tr className="table-body-produtos">
+                        <td>{produto.nome}</td>
+                        <td>{produto.status}</td>
                         <td className="acoes">
                           <button
                             className="botaoEditar mr-2"
-                            onClick={() => openModal(item)}
-                            disabled={
-                              (item.tipo === "UNIDADE_MEDIDA" ||
-                                item.tipo === "EMBALAGEM") &&
-                              permissao
-                                ? true
-                                : false
-                            }
+                            onClick={() => openModal(produto)}
                           >
                             <Icon className="mr-1" type="form" />
                             Editar
-                          </button>
-                          |
-                          <button
-                            className="botaoExcluir ml-2"
-                            onClick={() => openModalExcluir(item)}
-                            disabled={
-                              (item.tipo === "UNIDADE_MEDIDA" ||
-                                item.tipo === "EMBALAGEM") &&
-                              permissao
-                                ? true
-                                : false
-                            }
-                          >
-                            <Icon className="mr-1" type="delete" />
-                            Excluir
                           </button>
                         </td>
                       </tr>
@@ -91,16 +59,10 @@ export default ({ resultado, changePage }) => {
           </div>
         </div>
       )}
-      <ModalCadastrarItem
+      <ModalCadastrarProdutosEdital
         closeModal={() => setShowModal(false)}
         showModal={showModal}
-        item={selecionado}
-        changePage={() => changePage()}
-      />
-      <ModalExcluirItem
-        closeModal={() => setShowModalExcluir(false)}
-        showModal={showModalExcluir}
-        item={selecionado}
+        produto={selecionado}
         changePage={() => changePage()}
       />
     </>

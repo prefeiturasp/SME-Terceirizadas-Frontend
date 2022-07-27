@@ -2,6 +2,7 @@ import { TIPO_PERFIL } from "constants/shared";
 import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS as CARD_ID } from "configs/constants";
+import { usuarioEhTerceirizada } from "./utilities";
 const {
   CODAE_SUSPENDEU,
   CODAE_QUESTIONADO,
@@ -201,14 +202,13 @@ export const listarCardsPermitidos = () => {
 
 export const CADASTRO_GERAL = {
   titulo: "Cadastro Geral",
-  rota: "/gestao-produto/cadastro-geral"
+  rota: "cadastro-geral"
 };
 export const CADASTRO_PRODUTOS_PROVINIENTES_EDITAL = {
-  titulo: "Cadastro de Produtos Provenientes do Edital",
-  rota: "/gestao-produto/cadastro-produtos-provinientes-edital"
+  titulo: "Cadastro de Produtos                 Provenientes do Edital",
+  rota: "cadastro-produtos-provinientes-edital"
 };
 
-export const CADASTROS = [
-  CADASTRO_GERAL,
-  CADASTRO_PRODUTOS_PROVINIENTES_EDITAL
-];
+export const CADASTROS = !usuarioEhTerceirizada()
+  ? [CADASTRO_GERAL].concat(CADASTRO_PRODUTOS_PROVINIENTES_EDITAL)
+  : [CADASTRO_GERAL];

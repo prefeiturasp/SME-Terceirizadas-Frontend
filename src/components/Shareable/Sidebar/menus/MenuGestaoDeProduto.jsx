@@ -114,8 +114,8 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
         activeMenu={activeMenu}
       >
         {cadastroItems.map((item, index) => (
-          <LeafItem key={index} to={`${item.rota}`}>
-            {item.titulo}
+          <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
+            <div className="quebra-titulos">{item.titulo}</div>
           </LeafItem>
         ))}
       </SubMenu>
