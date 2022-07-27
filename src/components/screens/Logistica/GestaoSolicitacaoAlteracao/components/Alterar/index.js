@@ -32,7 +32,6 @@ export default ({ solicitacao, updatePage, acao }) => {
         style={BUTTON_STYLE.GREEN}
         onClick={handleShow}
         className="float-right ml-3"
-        disabled={solicitacao.status !== "Em análise"}
       />
 
       <Modal
