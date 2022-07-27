@@ -49,7 +49,7 @@ const ListagemSolicitacoes = ({
                 <div className={`${bordas}`}>{solicitacao.data_entrega}</div>
                 <div>
                   <Button
-                    className="acoes"
+                    className="acoes verde"
                     variant="link"
                     onClick={() => {
                       ativos && ativos.includes(solicitacao.uuid)
