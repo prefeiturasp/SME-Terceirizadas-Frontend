@@ -55,7 +55,7 @@ export default ({ closeModal, showModal, produto, changePage }) => {
       await cadastrarProdutoEdital(payload)
         .then(() => {
           toastSuccess(
-            "Cadastro de Produto Proveniente de Edital efetuado com sucesso."
+            "Cadastro de Produto Proveniente de Edital Efetuado com sucesso."
           );
         })
         .catch(error => {
