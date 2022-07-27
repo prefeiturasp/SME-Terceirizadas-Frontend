@@ -2,7 +2,7 @@ import { TIPO_PERFIL } from "constants/shared";
 import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS as CARD_ID } from "configs/constants";
-import { usuarioEhTerceirizada } from "./utilities";
+import { usuarioEhCODAEGestaoProduto } from "./utilities";
 const {
   CODAE_SUSPENDEU,
   CODAE_QUESTIONADO,
@@ -209,6 +209,6 @@ export const CADASTRO_PRODUTOS_PROVINIENTES_EDITAL = {
   rota: "cadastro-produtos-provinientes-edital"
 };
 
-export const CADASTROS = !usuarioEhTerceirizada()
+export const CADASTROS = usuarioEhCODAEGestaoProduto()
   ? [CADASTRO_GERAL].concat(CADASTRO_PRODUTOS_PROVINIENTES_EDITAL)
   : [CADASTRO_GERAL];
