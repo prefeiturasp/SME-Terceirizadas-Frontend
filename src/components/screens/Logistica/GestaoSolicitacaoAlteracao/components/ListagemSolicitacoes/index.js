@@ -23,7 +23,7 @@ const ListagemSolicitacoes = ({
           <div>Nome do Distribuidor</div>
           <div>Status</div>
           <div>Data de entrega</div>
-          <div />
+          <div>Solicitações</div>
         </div>
         {solicitacoes.map(solicitacao => {
           const bordas =
@@ -31,9 +31,7 @@ const ListagemSolicitacoes = ({
               ? "desativar-borda"
               : "";
           const toggleText =
-            ativos && ativos.includes(solicitacao.uuid)
-              ? "Ver menos"
-              : "Ver mais";
+            solicitacao.status === "Em análise" ? "Analisar" : "Visualizar";
           return (
             <>
               <div className="grid-table body-table">
@@ -110,20 +108,22 @@ const ListagemSolicitacoes = ({
                     <div>
                       <AlimentosConsolidado solicitacao={solicitacao} />
 
-                      <div className="d-flex justify-content-end">
-                        <Alterar
-                          acao={BOTAO_ACEITAR}
-                          className=""
-                          solicitacao={solicitacao}
-                          updatePage={updatePage}
-                        />
-                        <Alterar
-                          acao={BOTAO_NEGAR}
-                          className=""
-                          solicitacao={solicitacao}
-                          updatePage={updatePage}
-                        />
-                      </div>
+                      {solicitacao.status === "Em análise" && (
+                        <div className="d-flex justify-content-end">
+                          <Alterar
+                            acao={BOTAO_ACEITAR}
+                            className=""
+                            solicitacao={solicitacao}
+                            updatePage={updatePage}
+                          />
+                          <Alterar
+                            acao={BOTAO_NEGAR}
+                            className=""
+                            solicitacao={solicitacao}
+                            updatePage={updatePage}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </section>
