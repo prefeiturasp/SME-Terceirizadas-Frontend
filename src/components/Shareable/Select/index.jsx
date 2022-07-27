@@ -52,7 +52,7 @@ export const Select = props => {
         name={name}
         style={width && { width: width - 12 }}
       >
-        {options !== null &&
+        {options &&
           options.length > 0 &&
           options.map((e, key) => {
             return (
