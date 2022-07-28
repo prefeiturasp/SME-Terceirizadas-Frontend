@@ -4,6 +4,7 @@ import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHora
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
+import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
@@ -165,6 +166,7 @@ import EntregasDrePage from "pages/Logistica/EntregasDrePage";
 import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
+import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 
 const routesConfig = [
   {
@@ -1161,6 +1163,18 @@ const routesConfig = [
     component: CadastroGeralPage,
     exact: true,
     tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
+    component: VincularProdutosEditaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/cadastro-produtos-provinientes-edital`,
+    component: CadastroProdutosEdital,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${
