@@ -634,3 +634,15 @@ export const atualizarItem = async (payload, uuid) =>
 
 export const deletarItem = async uuid =>
   await axios.delete(`/itens-cadastros/${uuid}/`);
+
+export const getNomesProtudosEdital = async () =>
+  axios.get("/cadastro-produtos-edital/lista-nomes/");
+
+export const getCadastroProdutosEdital = async params =>
+  axios.get(`/cadastro-produtos-edital/`, { params });
+
+export const cadastrarProdutoEdital = async payload =>
+  await axios.post(`/cadastro-produtos-edital/`, payload);
+
+export const atualizarProdutoEdital = async (payload, uuid) =>
+  await axios.patch(`/cadastro-produtos-edital/${uuid}/`, payload);

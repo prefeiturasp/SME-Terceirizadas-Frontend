@@ -85,6 +85,9 @@ body {
             &:not(:last-child) {
               border-bottom: none !important;
             }
+            .quebra-titulos {
+              white-space: break-spaces;
+            }
           }
         }
         .collapse-item {
