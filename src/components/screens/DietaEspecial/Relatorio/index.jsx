@@ -243,7 +243,8 @@ const Relatorio = ({ visao }) => {
                 dietaEspecial.tipo_solicitacao !== "ALTERACAO_UE" &&
                 ![
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-                  TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+                  TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
+                  TIPO_PERFIL.MEDICAO
                 ].includes(tipoUsuario) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}

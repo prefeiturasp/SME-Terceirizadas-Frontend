@@ -379,20 +379,33 @@ export default () => {
 
         if (alimentoFaltante) values[`status_${index}`] = "Não Recebido";
 
-        if (values.data_entrega_real && !alimentoParcial && !alimentoFaltante) {
+        if (
+          values.data_entrega_real &&
+          !alimentoParcial &&
+          !alimentoFaltante &&
+          (!isNaN(recebidos_fechada) || !isNaN(recebidos_fracionada))
+        ) {
           values[`status_${index}`] = "Recebido";
           if (
             values[`ocorrencias_${index}`] &&
             values[`ocorrencias_${index}`].length
-          )
-            ocorrenciasApagadas = [
-              ...ocorrenciasApagadas,
+          ) {
+            let oldOcorrenciasApagadas = ocorrenciasApagadas[index]
+              ? ocorrenciasApagadas[index]
+              : [];
+            ocorrenciasApagadas[index] = [
+              ...oldOcorrenciasApagadas,
               ...values[`ocorrencias_${index}`]
             ];
+          }
+
           values[`ocorrencias_${index}`] = [];
-        } else if (ocorrenciasApagadas.length) {
-          values[`ocorrencias_${index}`] = ocorrenciasApagadas;
-          ocorrenciasApagadas = [];
+        } else if (
+          ocorrenciasApagadas[index] &&
+          ocorrenciasApagadas[index].length
+        ) {
+          values[`ocorrencias_${index}`] = ocorrenciasApagadas[index];
+          ocorrenciasApagadas[index] = [];
         }
 
         if (

@@ -680,3 +680,14 @@ export const deepEqual = (x, y) => {
         ok(x).every(key => deepEqual(x[key], y[key]))
     : x === y;
 };
+
+export const tipoStatus = () => {
+  return [
+    {
+      status: "Ativo"
+    },
+    {
+      status: "Inativo"
+    }
+  ];
+};

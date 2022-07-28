@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Spin } from "antd";
+import HTTP_STATUS from "http-status-codes";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
@@ -17,6 +18,7 @@ import {
   TIPO_PERFIL
 } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS } from "configs/constants";
+import { getHomologacoesDeProdutoPorStatusTitulo } from "services/produto.service";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -71,14 +73,74 @@ export class StatusSolicitacoes extends Component {
       ],
       originalCount: null
     };
+    this.typingTimeout = null;
 
     this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
   }
 
-  onPesquisarChanged(values) {
-    let solicitacoesFiltrados = this.state.solicitacoes;
-    let todasSolicitacoesCardAtual = this.state.todasSolicitacoesCardAtual;
-    let solicitacoesCardRespQuest = this.state.solicitacoesCardRespQuest;
+  async onPesquisarChanged(values) {
+    const { status, formatarDadosSolicitacao } = this.props;
+    const data = {};
+    let solicitacoes = [];
+    let solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
+
+    clearTimeout(this.typingTimeout);
+    this.typingTimeout = setTimeout(async () => {
+      if (values.titulo && values.titulo.length > 2) {
+        const listaStatus = Array.isArray(status) ? status : [status];
+        data["titulo_produto"] = values.titulo;
+        this.setState({
+          loading: true
+        });
+        const promises = listaStatus.map(status =>
+          getHomologacoesDeProdutoPorStatusTitulo(status, data)
+        );
+        const retornos = await Promise.all(promises);
+        if (retornos[0].status === HTTP_STATUS.OK) {
+          retornos.forEach(
+            retorno =>
+              (solicitacoes = solicitacoes.concat(
+                formatarDadosSolicitacao(
+                  retorno.data ? retorno.data.results : retorno.results,
+                  null,
+                  this.props.titulo
+                )
+              ))
+          );
+          if (
+            this.props.titulo ===
+            GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+          ) {
+            solicitacoesFiltrados = this.cardResponderQuestionamentosCodae(
+              solicitacoes
+            );
+          } else {
+            solicitacoesFiltrados = solicitacoes;
+          }
+          this.setState({
+            count: 1,
+            currentPage: 1,
+            loading: false,
+            solicitacoesFiltrados: solicitacoesFiltrados
+          });
+        } else {
+          this.setState({
+            loading: false,
+            erro: true
+          });
+        }
+      }
+      if (
+        values.titulo === undefined ||
+        (values.titulo && values.titulo.length < 3)
+      ) {
+        solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
+        this.setState({
+          count: this.state.originalCount,
+          currentPage: this.state.originalCurrentPage
+        });
+      }
+    }, 1000);
     if (values.lote && values.lote.length > 0) {
       solicitacoesFiltrados = this.filtrarLote(
         solicitacoesFiltrados,
@@ -90,46 +152,6 @@ export class StatusSolicitacoes extends Component {
         solicitacoesFiltrados,
         values.status
       );
-    }
-    if (
-      this.props.titulo !==
-      GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
-    ) {
-      if (values.titulo && values.titulo.length > 0) {
-        solicitacoesFiltrados = this.filtrarNome(
-          todasSolicitacoesCardAtual,
-          values.titulo
-        );
-        this.setState({
-          count: 1,
-          currentPage: 1
-        });
-      }
-      if (values.titulo === undefined) {
-        solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
-        this.setState({
-          count: this.state.originalCount,
-          currentPage: this.state.originalCurrentPage
-        });
-      }
-    } else {
-      if (values.titulo && values.titulo.length > 0) {
-        solicitacoesFiltrados = this.filtrarNome(
-          solicitacoesCardRespQuest,
-          values.titulo
-        );
-        this.setState({
-          count: 1,
-          currentPage: 1
-        });
-      }
-      if (values.titulo === undefined) {
-        solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
-        this.setState({
-          count: this.state.originalCount,
-          currentPage: this.state.originalCurrentPage
-        });
-      }
     }
     this.setState({ solicitacoesFiltrados });
   }
@@ -233,8 +255,6 @@ export class StatusSolicitacoes extends Component {
       status
     } = this.props;
     const { erro, loading, currentPage } = this.state;
-    const nomeUsuario = localStorage.getItem("nome");
-    const tipoPerfil = localStorage.getItem("tipo_perfil");
     const url = window.location.href;
     let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
     this.setState({ tipoSolicitacao });
@@ -261,7 +281,8 @@ export class StatusSolicitacoes extends Component {
         count: retornos[0].data.count,
         pageSize: retornos[0].data.page_size,
         nextPage: retornos[0].data.next,
-        originalCount: retornos[0].data.count
+        originalCount: retornos[0].data.count,
+        loading: false
       });
     } catch (e) {
       this.setState({
@@ -269,71 +290,14 @@ export class StatusSolicitacoes extends Component {
         erro: true
       });
     }
-    let todasSolicitacoesCardAtual = [];
-    try {
-      const promises = listaStatus.map(status =>
-        endpointGetSolicitacoes(status || terceirizadaUUID)
-      );
-      const retornos = await Promise.all(promises);
-
-      retornos.forEach(
-        retorno =>
-          (todasSolicitacoesCardAtual = todasSolicitacoesCardAtual.concat(
-            formatarDadosSolicitacao(
-              retorno.data ? retorno.data.results : retorno.results,
-              null,
-              this.props.titulo
-            )
-          ))
-      );
-    } catch {
-      this.setState({
-        erro: true
-      });
-    }
-    if (!erro && loading) {
+    if (solicitacoes.length > 0 && !erro && loading) {
       this.setState({ loading: false });
     }
     if (
       this.props.titulo ===
       GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ) {
-      let solicitacoesCardRespQuest = [];
-      if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
-        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
-          .filter(
-            solicitacao =>
-              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
-              solicitacao.status
-          )
-          .sort(ordenaPorDate);
-        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
-      } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
-        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
-          .filter(
-            solicitacao =>
-              nomeUsuario ===
-                `"${solicitacao.nome_usuario_log_de_reclamacao}"` &&
-              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
-                solicitacao.status
-          )
-          .sort(ordenaPorDate);
-        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
-      } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
-        solicitacoesCardRespQuest = todasSolicitacoesCardAtual
-          .filter(
-            solicitacao =>
-              ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
-              solicitacao.status
-          )
-          .sort(ordenaPorDate);
-        solicitacoes = solicitacoesCardRespQuest.slice(0, 10);
-      }
-      this.setState({
-        count: solicitacoesCardRespQuest.length,
-        originalCount: solicitacoesCardRespQuest.length,
-        solicitacoesCardRespQuest
-      });
+      solicitacoes = this.cardResponderQuestionamentosCodae(solicitacoes);
     } else {
       solicitacoes = solicitacoes.sort(ordenaPorDate);
     }
@@ -349,10 +313,40 @@ export class StatusSolicitacoes extends Component {
     this.setState({
       solicitacoes,
       solicitacoesFiltrados: solicitacoes,
-      solicitacoesPaginaAtual: solicitacoes,
-      todasSolicitacoesCardAtual
+      solicitacoesPaginaAtual: solicitacoes
     });
   }
+
+  cardResponderQuestionamentosCodae = solicitacoes => {
+    const nomeUsuario = localStorage.getItem("nome");
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+    if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
+      return solicitacoes
+        .filter(
+          solicitacao =>
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
+            solicitacao.status
+        )
+        .sort(ordenaPorDate);
+    } else if (tipoPerfil === TIPO_PERFIL.ESCOLA) {
+      return solicitacoes
+        .filter(
+          solicitacao =>
+            nomeUsuario === `"${solicitacao.nome_usuario_log_de_reclamacao}"` &&
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
+              solicitacao.status
+        )
+        .sort(ordenaPorDate);
+    } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
+      return solicitacoes
+        .filter(
+          solicitacao =>
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
+            solicitacao.status
+        )
+        .sort(ordenaPorDate);
+    }
+  };
 
   render() {
     const {
@@ -370,20 +364,15 @@ export class StatusSolicitacoes extends Component {
       <form onSubmit={this.props.handleSubmit}>
         <div className="card mt-3">
           <div className="card-body">
-            {loading && (
-              <div className="carregando-conteudo">
-                <Spin tip="Carregando..." />
-              </div>
-            )}
-            {!loading && erro && <div>Erro ao carregar as Solicitações</div>}
-            {!loading && !erro && (
-              <>
+            {!erro ? (
+              <Spin tip="Carregando..." spinning={loading}>
                 <div className="pr-3">
                   <InputSearchPendencias
                     voltarLink={`/`}
                     filterList={this.onPesquisarChanged}
                     tipoSolicitacao={tipoSolicitacao}
                     listaLotes={listaLotes}
+                    disabled={loading}
                   />
                 </div>
                 <div className="pb-3" />
@@ -399,10 +388,16 @@ export class StatusSolicitacoes extends Component {
                 <Paginacao
                   onChange={this.navegacaoPage}
                   total={count}
-                  pageSize={pageSize}
+                  pageSize={
+                    window.location.pathname.includes("gestao-produto")
+                      ? 10
+                      : pageSize
+                  }
                   current={currentPage}
                 />
-              </>
+              </Spin>
+            ) : (
+              <div>Erro ao carregar as Solicitações</div>
             )}
           </div>
         </div>

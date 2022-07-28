@@ -22,10 +22,18 @@ body {
     .sidebar-wrapper {
       &.div-submenu {
         overflow-x: auto;
-        max-height: 21rem;
         background: #13764e;
         border-radius: 10px;
         margin: 0 0.65rem 0 0.95rem;
+        max-height: 15rem;
+
+        @media screen and (min-height: 700px) {
+          max-height: 20rem;
+        }
+
+        @media screen and (min-height: 900px) {
+          max-height: 25rem;
+        }
       }
     }
   }
@@ -84,6 +92,9 @@ body {
             padding-left: 2rem;
             &:not(:last-child) {
               border-bottom: none !important;
+            }
+            .quebra-titulos {
+              white-space: break-spaces;
             }
           }
         }
