@@ -635,6 +635,15 @@ export const atualizarItem = async (payload, uuid) =>
 export const deletarItem = async uuid =>
   await axios.delete(`/itens-cadastros/${uuid}/`);
 
+export const filtrosVincularProdutoEdital = () =>
+  axios.get("/produtos-editais/filtros/");
+
+export const filtrarPorEditalNomeTipo = async params =>
+  await axios.get("/produtos-editais/filtrar/", { params });
+
+export const ativarInativarProduto = async uuid =>
+  await axios.patch(`/produtos-editais/${uuid}/ativar-inativar-produto/`);
+
 export const getNomesProtudosEdital = async () =>
   axios.get("/cadastro-produtos-edital/lista-nomes/");
 

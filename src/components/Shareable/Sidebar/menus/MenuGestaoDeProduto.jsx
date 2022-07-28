@@ -109,7 +109,6 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
-
       <SubMenu
         icon="fa-chevron-down"
         path="cadastros-gp"

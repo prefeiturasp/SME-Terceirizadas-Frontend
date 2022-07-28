@@ -208,7 +208,14 @@ export const CADASTRO_PRODUTOS_PROVINIENTES_EDITAL = {
   titulo: "Cadastro de Produtos                 Provenientes do Edital",
   rota: "cadastro-produtos-provinientes-edital"
 };
+export const VINCULAR_PRODUTOS_EDITAIS = {
+  titulo: "Vincular Produtos aos Editais",
+  rota: "vincular-produto-edital"
+};
 
 export const CADASTROS = usuarioEhCODAEGestaoProduto()
-  ? [CADASTRO_GERAL].concat(CADASTRO_PRODUTOS_PROVINIENTES_EDITAL)
+  ? [CADASTRO_GERAL].concat([
+      CADASTRO_PRODUTOS_PROVINIENTES_EDITAL,
+      VINCULAR_PRODUTOS_EDITAIS
+    ])
   : [CADASTRO_GERAL];
