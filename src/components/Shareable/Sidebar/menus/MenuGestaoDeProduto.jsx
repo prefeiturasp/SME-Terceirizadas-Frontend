@@ -17,12 +17,7 @@ import {
   usuarioEscolaEhGestaoMistaParceira
 } from "helpers/utilities";
 
-const MenuGestaoDeProduto = ({
-  activeMenu,
-  onSubmenuClick,
-  activeMenuCadastros,
-  onSubmenuCadastroClick
-}) => {
+const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const cadastroItems = CADASTROS;
   const exibirBusca = true;
