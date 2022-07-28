@@ -263,7 +263,11 @@ class Relatorio extends Component {
               this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
             }}
             uuid={inclusaoDeAlimentacao.uuid}
-            endpoint="grupos-inclusao-alimentacao-normal"
+            endpoint={
+              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+                ? "grupos-inclusao-alimentacao-normal"
+                : "inclusoes-alimentacao-continua"
+            }
           />
         )}
         {!inclusaoDeAlimentacao ? (

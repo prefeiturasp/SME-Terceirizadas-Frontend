@@ -284,7 +284,7 @@ export class StatusSolicitacoes extends Component {
         originalCount: retornos[0].data.count,
         loading: false
       });
-    } catch {
+    } catch (e) {
       this.setState({
         loading: false,
         erro: true
@@ -382,6 +382,9 @@ export class StatusSolicitacoes extends Component {
                   tipo={tipoCard}
                   icone={icone}
                 />
+                {!loading && solicitacoesFiltrados.length === 0 && (
+                  <div>Não há solicitações neste status</div>
+                )}
                 <Paginacao
                   onChange={this.navegacaoPage}
                   total={count}

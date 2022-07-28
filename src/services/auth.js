@@ -52,6 +52,16 @@ const login = async (email, password) => {
             "nome_instituicao",
             JSON.stringify(result.vinculo_atual.instituicao.nome)
           );
+          localStorage.setItem(
+            "dre_nome",
+            result.vinculo_atual.instituicao.diretoria_regional &&
+              result.vinculo_atual.instituicao.diretoria_regional.nome
+          );
+          localStorage.setItem(
+            "lotes",
+            result.vinculo_atual.instituicao.lotes &&
+              JSON.stringify(result.vinculo_atual.instituicao.lotes)
+          );
           window.location.href = "/";
         });
       });
@@ -66,6 +76,12 @@ const login = async (email, password) => {
 
 const logout = () => {
   localStorage.removeItem(TOKEN_ALIAS);
+  localStorage.removeItem("tipo_perfil");
+  localStorage.removeItem("perfil");
+  localStorage.removeItem("tipo_gestao");
+  localStorage.removeItem("nome_instituicao");
+  localStorage.removeItem("dre_nome");
+  localStorage.removeItem("lotes");
   window.location.href = "/login";
 };
 

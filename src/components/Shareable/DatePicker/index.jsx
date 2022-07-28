@@ -104,7 +104,8 @@ export class InputComData extends Component {
       textoLabel,
       popperPlacement,
       tooltipText,
-      visitedError
+      visitedError,
+      writable
     } = this.props;
     return (
       <div className="datepicker">
@@ -147,6 +148,7 @@ export class InputComData extends Component {
             showYearDropdown={showYearDropdown}
             dateFormat={dateFormatPicker}
             isClearable={true}
+            strictParsing={!writable}
             withPortal={fullScreen}
             inline={inline}
             minDate={minDate}
