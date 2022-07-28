@@ -798,10 +798,6 @@ export default () => {
                                   name={`status_${index}`}
                                   className="input-busca-produto"
                                   placeholder="---"
-                                  validate={composeValidators(
-                                    required,
-                                    maxLength(100)
-                                  )}
                                   disabled
                                 />
                               </div>

@@ -157,7 +157,7 @@ class DashboardTerceirizada extends Component {
 
       getSolicitacoesComQuestionamento(minhaTerceirizada).then(request => {
         let questionamentosListSolicitacao = ajustarFormatoLog(
-          request.results,
+          request.data.results,
           LOG_PARA.TERCEIRIZADA
         );
         this.setState({
@@ -168,7 +168,7 @@ class DashboardTerceirizada extends Component {
 
       getSolicitacoesCanceladasTerceirizada(minhaTerceirizada).then(request => {
         let canceladasListSolicitacao = ajustarFormatoLog(
-          request.results,
+          request.data.results,
           LOG_PARA.TERCEIRIZADA
         );
         this.setState({
@@ -179,7 +179,7 @@ class DashboardTerceirizada extends Component {
 
       getSolicitacoesNegadasTerceirizada(minhaTerceirizada).then(request => {
         let negadasListSolicitacao = ajustarFormatoLog(
-          request.results,
+          request.data.results,
           LOG_PARA.TERCEIRIZADA
         );
         this.setState({
@@ -191,7 +191,7 @@ class DashboardTerceirizada extends Component {
       getSolicitacoesAutorizadasTerceirizada(minhaTerceirizada).then(
         request => {
           let autorizadasListSolicitacao = ajustarFormatoLog(
-            request.results,
+            request.data.results,
             LOG_PARA.TERCEIRIZADA
           );
           this.setState({

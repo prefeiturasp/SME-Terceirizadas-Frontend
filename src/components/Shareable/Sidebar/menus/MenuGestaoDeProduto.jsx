@@ -8,7 +8,7 @@ import {
   AVALIAR_RECLAMACAO_PRODUTO,
   ATIVACAO_DE_PRODUTO
 } from "configs/constants";
-import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
+import { listarCardsPermitidos, CADASTROS } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
@@ -24,6 +24,7 @@ const MenuGestaoDeProduto = ({
   onSubmenuCadastroClick
 }) => {
   const menuItems = listarCardsPermitidos();
+  const cadastroItems = CADASTROS;
   const exibirBusca = true;
   const exibirCadastro = usuarioEhTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
@@ -35,11 +36,13 @@ const MenuGestaoDeProduto = ({
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
-  const exibirSubmenuCadastro =
-    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
-    <Menu id="GestaoProduto" icon="fa-atom" title={"Gestão de Produto"}>
+    <Menu
+      id="GestaoProduto"
+      icon="fa-shopping-basket"
+      title={"Gestão de Produto"}
+    >
       <LeafItem to={`/${PAINEL_GESTAO_PRODUTO}`}>
         Painel de Solicitações
       </LeafItem>
@@ -111,24 +114,19 @@ const MenuGestaoDeProduto = ({
           </LeafItem>
         ))}
       </SubMenu>
-      {exibirSubmenuCadastro && (
-        <SubMenu
-          icon="fa-chevron-down"
-          path="consulta-solicitacoes-gp"
-          onClick={onSubmenuCadastroClick}
-          title="Cadastros"
-          activeMenu={activeMenuCadastros}
-        >
-          <LeafItem to="/gestao-produto/cadastro-geral">
-            Cadastro Geral
+      <SubMenu
+        icon="fa-chevron-down"
+        path="cadastros-gp"
+        onClick={onSubmenuClick}
+        title="Cadastros"
+        activeMenu={activeMenu}
+      >
+        {cadastroItems.map((item, index) => (
+          <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
+            <div className="quebra-titulos">{item.titulo}</div>
           </LeafItem>
-          {usuarioEhCODAEGestaoProduto() && (
-            <LeafItem to="/gestao-produto/vincular-produto-edital">
-              Vincular Produtos aos Editais
-            </LeafItem>
-          )}
-        </SubMenu>
-      )}
+        ))}
+      </SubMenu>
     </Menu>
   );
 };

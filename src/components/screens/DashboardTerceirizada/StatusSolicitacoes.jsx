@@ -263,7 +263,7 @@ export class StatusSolicitacoes extends Component {
         nextPage: retornos[0].data.next,
         originalCount: retornos[0].data.count
       });
-    } catch {
+    } catch (e) {
       this.setState({
         loading: false,
         erro: true
@@ -275,6 +275,7 @@ export class StatusSolicitacoes extends Component {
         endpointGetSolicitacoes(status || terceirizadaUUID)
       );
       const retornos = await Promise.all(promises);
+
       retornos.forEach(
         retorno =>
           (todasSolicitacoesCardAtual = todasSolicitacoesCardAtual.concat(
@@ -290,7 +291,7 @@ export class StatusSolicitacoes extends Component {
         erro: true
       });
     }
-    if (solicitacoes.length > 0 && !erro && loading) {
+    if (!erro && loading) {
       this.setState({ loading: false });
     }
     if (
@@ -369,7 +370,13 @@ export class StatusSolicitacoes extends Component {
       <form onSubmit={this.props.handleSubmit}>
         <div className="card mt-3">
           <div className="card-body">
-            {!loading && !erro ? (
+            {loading && (
+              <div className="carregando-conteudo">
+                <Spin tip="Carregando..." />
+              </div>
+            )}
+            {!loading && erro && <div>Erro ao carregar as Solicitações</div>}
+            {!loading && !erro && (
               <>
                 <div className="pr-3">
                   <InputSearchPendencias
@@ -386,6 +393,9 @@ export class StatusSolicitacoes extends Component {
                   tipo={tipoCard}
                   icone={icone}
                 />
+                {!loading && solicitacoesFiltrados.length === 0 && (
+                  <div>Não há solicitações neste status</div>
+                )}
                 <Paginacao
                   onChange={this.navegacaoPage}
                   total={count}
@@ -393,12 +403,6 @@ export class StatusSolicitacoes extends Component {
                   current={currentPage}
                 />
               </>
-            ) : !erro ? (
-              <div className="carregando-conteudo">
-                <Spin tip="Carregando..." />
-              </div>
-            ) : (
-              <div>Erro ao carregar as Solicitações</div>
             )}
           </div>
         </div>

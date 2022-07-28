@@ -103,6 +103,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
+  usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
@@ -165,6 +166,7 @@ import EntregasDrePage from "pages/Logistica/EntregasDrePage";
 import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
+import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 
 const routesConfig = [
   {
@@ -191,7 +193,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhTerceirizada() ||
+      usuarioEhMedicao()
   },
   {
     path: "/login",
@@ -388,7 +391,7 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACOES_COM_QUESTIONAMENTO}`,
     component: StatusSolicitacoesComQuestionamentosCODAEPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.CODAE}/${constants.SOLICITACOES_NEGADAS}`,
@@ -466,13 +469,13 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesAutorizadasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.NUTRIMANIFESTACAO}/${
@@ -480,7 +483,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesCanceladasNutriManifestacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhCODAENutriManifestacao()
+    tipoUsuario: usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
@@ -731,7 +734,8 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhTerceirizada() ||
+      usuarioEhMedicao
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -1163,6 +1167,12 @@ const routesConfig = [
   {
     path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
     component: VincularProdutosEditaisPage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoProduto()
+  },
+  {
+    path: `/${constants.GESTAO_PRODUTO}/cadastro-produtos-provinientes-edital`,
+    component: CadastroProdutosEdital,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto()
   },

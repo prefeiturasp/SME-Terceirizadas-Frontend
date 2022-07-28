@@ -80,6 +80,11 @@
 }
 .link {
   color: #086397 !important;
+
+  &.editar-lotes {
+    cursor: pointer;
+    text-decoration: underline !important;
+  }
 }
 
 .link:hover {

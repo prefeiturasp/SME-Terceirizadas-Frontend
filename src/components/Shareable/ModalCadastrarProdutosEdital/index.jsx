@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
 import {
-  getTiposItems,
-  cadastrarItem,
-  atualizarItem
+  cadastrarProdutoEdital,
+  atualizarProdutoEdital
 } from "services/produto.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -21,24 +20,16 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { composeValidators, usuarioEhTerceirizada } from "helpers/utilities";
+import { composeValidators } from "helpers/utilities";
 import "./style.scss";
+import { tipoStatus } from "helpers/utilities";
 
-export default ({ closeModal, showModal, item, changePage }) => {
+export default ({ closeModal, showModal, produto, changePage }) => {
   const [carregando, setCarregando] = useState(true);
   const [tipos, setTipos] = useState(undefined);
 
   async function fetchData() {
-    const respTipos = await getTiposItems();
-    const permissao = usuarioEhTerceirizada();
-    if (permissao) {
-      const result = respTipos.data.filter(
-        data => data.tipo === "MARCA" || data.tipo === "FABRICANTE"
-      );
-      setTipos(result);
-    } else {
-      setTipos(respTipos.data);
-    }
+    setTipos(tipoStatus);
     setCarregando(false);
   }
 
@@ -50,20 +41,22 @@ export default ({ closeModal, showModal, item, changePage }) => {
     setCarregando(true);
     const payload = {
       nome: formValues.nome,
-      tipo: formValues.tipo
+      ativo: formValues.status
     };
-    if (item) {
-      await atualizarItem(payload, item.uuid)
+    if (produto) {
+      await atualizarProdutoEdital(payload, produto.uuid)
         .then(() => {
-          toastSuccess("Cadastro atualizado com sucesso");
+          toastSuccess("Alterações salvas com sucesso.");
         })
         .catch(error => {
           toastError(error.response.data[0]);
         });
     } else {
-      await cadastrarItem(payload)
+      await cadastrarProdutoEdital(payload)
         .then(() => {
-          toastSuccess("Cadastro realizado com sucesso");
+          toastSuccess(
+            "Cadastro de Produto Proveniente de Edital Efetuado com sucesso."
+          );
         })
         .catch(error => {
           toastError(error.response.data[0]);
@@ -78,7 +71,9 @@ export default ({ closeModal, showModal, item, changePage }) => {
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>{item ? "Editar Item" : "Cadastrar Item"}</Modal.Title>
+        <Modal.Title>
+          {produto ? "Editar Produto" : "Cadastrar Produto"}
+        </Modal.Title>
       </Modal.Header>
       <Spin tip="Carregando..." spinning={carregando}>
         <Form
@@ -93,20 +88,21 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       Status
                     </label>
                     <Field
-                      name="tipo"
+                      name="status"
                       component={Select}
-                      defaultValue={item ? item.tipo : undefined}
-                      disabled={item ? true : false}
+                      defaultValue={produto ? produto.status : undefined}
+                      //disabled={item ? true : false}
                       options={[
                         { uuid: "", nome: "Selecione uma opção" }
                       ].concat(
                         tipos &&
                           tipos.map(tipo => {
-                            return { uuid: tipo.tipo, nome: tipo.tipo_display };
+                            return { uuid: tipo.uuid, nome: tipo.status };
                           })
                       )}
                       required
                       validate={selectValidate}
+                      onChange
                     />
                   </div>
                   <div className="col-8">
@@ -116,7 +112,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
                     </label>
                     <Field
                       name="nome"
-                      defaultValue={item ? item.nome : undefined}
+                      defaultValue={produto ? produto.nome : undefined}
                       component={InputText}
                       required
                       validate={composeValidators(
