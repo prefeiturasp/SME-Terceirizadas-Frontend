@@ -47,7 +47,7 @@ export class StatusSolicitacoes extends Component {
       currentPage: 1,
       originalCurrentPage: 1,
       count: 0,
-      pageSize: 10,
+      pageSize: 0,
       nextPage: null,
       previousPage: null,
       solicitacoesPaginaAtual: [
@@ -388,7 +388,11 @@ export class StatusSolicitacoes extends Component {
                 <Paginacao
                   onChange={this.navegacaoPage}
                   total={count}
-                  pageSize={pageSize}
+                  pageSize={
+                    window.location.pathname.includes("gestao-produto")
+                      ? 10
+                      : pageSize
+                  }
                   current={currentPage}
                 />
               </Spin>
