@@ -193,6 +193,21 @@ export default () => {
                     />
                   </div>
                 </div>
+                {values.motivo === "OUTROS" && (
+                  <div className="row">
+                    <div className="col-12">
+                      <Field
+                        component={InputText}
+                        label="Descreva o título do motivo"
+                        name="outro_motivo"
+                        className="input-busca-produto"
+                        validate={composeValidators(required, maxLength(100))}
+                        required
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <div className="row">
                   <div className="col-12">
                     <Field
@@ -240,7 +255,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Hora da Entrega"
+                      label="Selecionar hora da entrega"
                       name="hora_tentativa"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
