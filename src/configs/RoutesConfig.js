@@ -4,7 +4,7 @@ import CadastroHorarioComboAlimentacaoPage from "../pages/Cadastros/CadastroHora
 import CadastroLotePage from "../pages/Cadastros/CadastroLotePage";
 import CadastrosPage from "../pages/Cadastros/CadastrosPage";
 import CadastroGeralPage from "../pages/Cadastros/CadastroGeralPage";
-import CadastroProdutosEditaisPage from "../pages/Cadastros/CadastroProdutosEditaisPage";
+import VincularProdutosEditaisPage from "../pages/Cadastros/VincularProdutosEditaisPage";
 import CadastroTipoAlimentacaoPage from "../pages/Cadastros/CadastroTipoAlimentacaoPage";
 import FaixasEtariasPage from "../pages/Cadastros/FaixasEtariasPage";
 import ConsultaKitLanchePage from "../pages/Cadastros/ConsultaKitLanchePage";
@@ -1162,7 +1162,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
-    component: CadastroProdutosEditaisPage,
+    component: VincularProdutosEditaisPage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoProduto()
   },

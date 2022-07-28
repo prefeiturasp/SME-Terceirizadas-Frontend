@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import CadastroProdutosEditais from "components/screens/Cadastros/CadastroProdutosEditais";
+import CadastroProdutosEditais from "components/screens/Cadastros/VincularProdutosEditais";
 import Page from "components/Shareable/Page/Page";
 
 const atual = {
