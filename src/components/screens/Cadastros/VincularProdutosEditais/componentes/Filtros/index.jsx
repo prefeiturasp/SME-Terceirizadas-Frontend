@@ -32,7 +32,9 @@ export default ({
   const filtrarPorNome = value => {
     if (value) {
       const reg = new RegExp(value, "iu");
-      return listaProdutos.filter(produto => reg.test(produto));
+      return listaProdutos
+        .map(produto => produto.produto__nome)
+        .filter(produto => reg.test(produto));
     }
     return [];
   };
@@ -40,7 +42,9 @@ export default ({
   const filtrarPorEdital = value => {
     if (value) {
       const reg = new RegExp(value, "iu");
-      return listaEditais.filter(edital => reg.test(edital));
+      return listaEditais
+        .map(edital => edital.edital__numero)
+        .filter(edital => reg.test(edital));
     }
     return [];
   };

@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
-import CadastroProdutosEditais from "components/screens/Cadastros/VincularProdutosEditais";
+import VincularProdutosEditais from "components/screens/Cadastros/VincularProdutosEditais";
 import Page from "components/Shareable/Page/Page";
 
 const atual = {
@@ -11,6 +11,6 @@ const atual = {
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={`/`}>
     <Breadcrumb home={"/"} atual={atual} />
-    <CadastroProdutosEditais />
+    <VincularProdutosEditais />
   </Page>
 );

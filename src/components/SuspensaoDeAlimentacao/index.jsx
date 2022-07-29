@@ -291,7 +291,10 @@ class FoodSuspensionEditor extends Component {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       const escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
-        this.retornaPeriodosComCombos(response.results, this.props.periodos);
+        this.retornaPeriodosComCombos(
+          response.data.results,
+          this.props.periodos
+        );
       });
       getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
         this.vinculaQuantidadeAlunosPorPeriodo(
