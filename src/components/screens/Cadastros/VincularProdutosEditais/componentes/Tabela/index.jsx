@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from "react";
-import { formatarEditais } from "./helpers";
 import { Icon } from "antd";
 import ModalAtivarInativar from "../ModalAtivarInativar";
 import "./style.scss";
@@ -44,14 +43,10 @@ export default ({ resultado, changePage }) => {
                   return (
                     <Fragment key={idx}>
                       <tr className="table-body-items">
-                        <td>{item.nome}</td>
-                        <td>{item.marca.nome}</td>
-                        <td>
-                          {item.eh_para_alunos_com_dieta
-                            ? "Dieta Especial"
-                            : "Comum"}
-                        </td>
-                        <td>{formatarEditais(item.editais)}</td>
+                        <td>{item.produto.nome}</td>
+                        <td>{item.marca}</td>
+                        <td>{item.tipo_produto}</td>
+                        <td>{item.edital.numero}</td>
                         <td>{item.ativo ? "Ativo" : "Inativo"}</td>
                         <td className="acoes">
                           <button
@@ -95,7 +90,7 @@ export default ({ resultado, changePage }) => {
                       </tr>
                       <tr className="table-body-items">
                         <td className="d-none p-3" id={item.uuid} colSpan="7">
-                          <b>Outras informações: </b>
+                          <b>Outras informações: {item.outras_informacoes}</b>
                         </td>
                       </tr>
                     </Fragment>

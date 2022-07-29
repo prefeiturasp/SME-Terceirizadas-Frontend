@@ -1,5 +1,7 @@
 import CONFIG from "../constants/config";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
+import axios from "./_base";
 
 const authHeader = {
   "Content-Type": "application/json",
@@ -56,18 +58,12 @@ export const updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values =
 };
 
 export const getVinculosTipoAlimentacaoPorEscola = async uuid => {
-  const OBJ_REQUEST = {
-    headers: authHeader,
-    method: "GET"
-  };
-
-  const url = `${
-    CONFIG.API_URL
-  }/vinculos-tipo-alimentacao-u-e-periodo-escolar/escola/${uuid}/`;
-  OBJ_REQUEST["method"] = "GET";
-  return await fetch(url, OBJ_REQUEST).then(response => {
-    return response.json();
-  });
+  const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/escola/${uuid}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const alteraVinculosTipoAlimentacao = async (uuid, values) => {

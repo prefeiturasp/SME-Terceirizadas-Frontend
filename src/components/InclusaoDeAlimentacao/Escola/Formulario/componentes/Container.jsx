@@ -1,14 +1,15 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getQuantidadeAlunosEscola } from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
-import { dataParaUTC, escolaEhCei } from "../../../../../helpers/utilities";
-import { getDiasUteis } from "../../../../../services/diasUteis.service";
+import { dataParaUTC, escolaEhCei } from "helpers/utilities";
+import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
   getMotivosInclusaoNormal
-} from "../../../../../services/inclusaoDeAlimentacao";
-import { getMeusDados } from "../../../../../services/perfil.service";
+} from "services/inclusaoDeAlimentacao";
+import { getMeusDados } from "services/perfil.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
   formatarPeriodos
@@ -23,6 +24,7 @@ export const Container = () => {
   const [periodos, setPeriodos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+
   const [erro, setErro] = useState(false);
 
   const getQuantidaDeAlunosPorPeriodoEEscolaAsync = async (
@@ -31,9 +33,21 @@ export const Container = () => {
   ) => {
     const response = await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
-      setPeriodos(
-        abstraiPeriodosComAlunosMatriculados(periodos, response.data.results)
+      const periodos_ = abstraiPeriodosComAlunosMatriculados(
+        periodos,
+        response.data.results
       );
+      const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+      if (vinculos.status === HTTP_STATUS.OK) {
+        periodos_.map(periodo => {
+          return (periodo.tipos_alimentacao = vinculos.data.results.find(
+            v => v.periodo_escolar.nome === periodo.nome
+          ).tipos_alimentacao);
+        });
+        setPeriodos(
+          abstraiPeriodosComAlunosMatriculados(periodos, response.data.results)
+        );
+      }
     }
   };
 
