@@ -110,9 +110,9 @@ export class Sidebar extends Component {
               />
               <div className="sidebar-wrapper">
                 <div className="text-center mx-auto justify-content-center p-2 conteudo-detalhes">
-                  <span className="text-white small">Licença AGPL V3</span>
-                  <br />
-                  <span className="text-white small">(API: {API_VERSION})</span>
+                  <span className="text-white small">
+                    Licença AGPL V3 (API: {API_VERSION})
+                  </span>
                 </div>
               </div>
             </div>
