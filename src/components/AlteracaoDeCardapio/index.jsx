@@ -120,7 +120,7 @@ class AlteracaoCardapio extends Component {
     ) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
-        periodos = construirPeriodosECombos(response.results);
+        periodos = construirPeriodosECombos(response.data.results);
         this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
         this.setState({ periodos, loading: false });
       });
