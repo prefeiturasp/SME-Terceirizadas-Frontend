@@ -87,7 +87,7 @@ class Container extends Component {
     let vinculosPeriodoEscolarUnidadeEscolar = this.state
       .vinculosPeriodoEscolarUnidadeEscolar;
     getVinculosTipoAlimentacaoPorEscola(uuidEscola).then(response => {
-      vinculosPeriodoEscolarUnidadeEscolar = response.results;
+      vinculosPeriodoEscolarUnidadeEscolar = response.data.results;
       this.setState({ vinculosPeriodoEscolarUnidadeEscolar });
     });
   };
