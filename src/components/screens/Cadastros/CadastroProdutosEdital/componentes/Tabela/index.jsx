@@ -29,7 +29,7 @@ export default ({ resultado, changePage }) => {
             <table className="table table-bordered table-produtos">
               <thead>
                 <tr className="table-head-produtos">
-                  <th className="nome">Nome</th>
+                  <th className="nome">Nome do Produto</th>
                   <th className="tipo">Status</th>
                   <th className="acoes">Ações</th>
                 </tr>
