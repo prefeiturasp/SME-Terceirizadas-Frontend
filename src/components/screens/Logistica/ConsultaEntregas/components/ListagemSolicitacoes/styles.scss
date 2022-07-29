@@ -58,6 +58,10 @@
         grid-column: span 2;
         text-align: center;
       }
+
+      .fas {
+        color: #696969;
+      }
     }
 
     .top-header {
@@ -190,6 +194,10 @@
 
     .red {
       color: #fc2122;
+    }
+
+    .gray {
+      color: $gray;
     }
   }
 }
