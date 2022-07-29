@@ -735,7 +735,7 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
-      usuarioEhMedicao
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
