@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import HTTP_STATUS from "http-status-codes";
 import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_QUESTIONADO,
@@ -15,7 +14,6 @@ import {
   getHomologacaoProduto,
   getNumeroProtocoloAnaliseSensorial,
   getNomesTerceirizadas,
-  CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
   CODAEPedeCorrecao
@@ -24,7 +22,6 @@ import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
-import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import ModalAtivacaoSuspensaoProduto from "../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
@@ -207,18 +204,6 @@ class HomologacaoProduto extends Component {
     this.forceUpdate();
   }
 
-  onSubmit = () => {
-    const { uuid } = this.state;
-    CODAEHomologaProduto(uuid).then(response => {
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de homologado enviada com sucesso");
-        this.loadHomologacao(uuid);
-      } else {
-        toastError(response.data.detail);
-      }
-    });
-  };
-
   renderFluxo = homologacao => {
     const { logs, status } = homologacao;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -296,12 +281,7 @@ class HomologacaoProduto extends Component {
       showModalVincularEditais,
       editaisOptions
     } = this.state;
-    const {
-      necessita_analise_sensorial,
-      handleSubmit,
-      justificativa,
-      editais
-    } = this.props;
+    const { necessita_analise_sensorial, justificativa, editais } = this.props;
     const { homologacao } = produto !== null && produto;
     const logAnaliseSensorial = homologacao && homologacao.ultimo_log;
 
@@ -323,10 +303,7 @@ class HomologacaoProduto extends Component {
           {!produto ? (
             <div>Carregando...</div>
           ) : (
-            <form
-              className="homologacao-produto"
-              onSubmit={handleSubmit(this.onSubmit)}
-            >
+            <form className="homologacao-produto">
               <ModalVincularEditais
                 showModal={showModalVincularEditais}
                 closeModal={() =>
@@ -335,6 +312,8 @@ class HomologacaoProduto extends Component {
                 editaisOptions={editaisOptions}
                 editais={editais}
                 onChangeEditais={this.onChangeEditais}
+                uuid={uuid}
+                loadSolicitacao={this.loadHomologacao}
               />
               <ModalPadrao
                 showModal={showModal}
