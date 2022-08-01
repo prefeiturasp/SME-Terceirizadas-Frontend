@@ -58,14 +58,14 @@ export const ModalVincularEditais = ({ ...props }) => {
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
       <Spin tip="Enviando..." spinning={loading}>
         <Modal.Header closeButton>
-          <Modal.Title>Homologação do produto</Modal.Title>
+          <Modal.Title>Homologação do Produto</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="row mb-3">
             <div className="col-4">
               <Field
                 name="nome"
-                label="Nome do produto"
+                label="Nome do Produto"
                 component={InputText}
                 disabled
               />
@@ -73,7 +73,7 @@ export const ModalVincularEditais = ({ ...props }) => {
             <div className="col-4">
               <Field
                 name="marca"
-                label="Marca do produto"
+                label="Marca do Produto"
                 component={InputText}
                 disabled
               />
@@ -81,7 +81,7 @@ export const ModalVincularEditais = ({ ...props }) => {
             <div className="col-4">
               <Field
                 name="fabricante"
-                label="Fabricante do produto"
+                label="Fabricante do Produto"
                 component={InputText}
                 disabled
               />
@@ -91,7 +91,7 @@ export const ModalVincularEditais = ({ ...props }) => {
             <div className="col-4">
               <Field
                 name="tipo"
-                label="Tipo de produto"
+                label="Tipo do Produto"
                 component={InputText}
                 disabled
               />
