@@ -272,12 +272,13 @@ export const getHomologacaoProduto = uuid => {
     });
 };
 
-export const CODAEHomologaProduto = uuid => {
+export const CODAEHomologaProduto = (uuid, editais) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-homologa/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ editais })
   })
     .then(res => {
       status = res.status;
