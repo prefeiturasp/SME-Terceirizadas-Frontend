@@ -16,7 +16,9 @@ export default ({ resultado, changePage }) => {
     <>
       {resultado.length === 0 ? (
         <div className="row">
-          <div className="col-12 text-center">Nenhum resultado encontrado</div>
+          <div className="col-12 text-center">
+            Não existem dados para filtragem informada.
+          </div>
         </div>
       ) : (
         <div className="row">
