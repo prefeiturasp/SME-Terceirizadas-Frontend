@@ -1,0 +1,33 @@
+.modal-produtos-editais {
+  max-width: 80% !important;
+}
+
+.editais-destino {
+  .multi-select {
+    margin-top: 2.5px;
+  }
+}
+
+.outras-informacoes {
+  .col-form-label {
+    padding-bottom: 1rem !important;
+  }
+}
+
+.sigpae-multi-selector-container {
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  height: 40px;
+  .sigpae-multi-selector-placeholder {
+    color: #42474a !important;
+    font-size: 14px !important;
+  }
+  .sigpae-arrow-down {
+    color: #42474a !important;
+    font-size: 14px !important;
+  }
+  .sigpae-arrow-up {
+    color: #42474a !important;
+    font-size: 14px !important;
+  }
+}
