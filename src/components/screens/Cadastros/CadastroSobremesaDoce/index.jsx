@@ -12,10 +12,16 @@ import {
 export const CadastroSobremesaDoce = () => {
   const [myEventsList] = useState([
     {
-      title: "on DST",
+      title: "EMEF",
       start: new Date(2022, 7, 3, 10, 0),
       end: new Date(2022, 7, 3, 11, 0),
-      allDay: false
+      allDay: true
+    },
+    {
+      title: "CEU GESTAO",
+      start: new Date(2022, 7, 3, 10, 0),
+      end: new Date(2022, 7, 3, 11, 0),
+      allDay: true
     }
   ]);
 
@@ -73,6 +79,11 @@ export const CadastroSobremesaDoce = () => {
     );
   };
 
+  const formats = {
+    weekdayFormat: (date, culture, localizer) =>
+      localizer.format(date, "dddd", culture)
+  };
+
   return (
     <div className="card calendario-sobremesa">
       <div className="card-body">
@@ -83,6 +94,7 @@ export const CadastroSobremesaDoce = () => {
         <div>
           <Calendar
             localizer={localizer}
+            formats={formats}
             events={myEventsList}
             startAccessor="start"
             endAccessor="end"
