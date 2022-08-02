@@ -47,7 +47,11 @@ export const validateSubmit = (values, meusDados) => {
 
   if (temPeriodosEscolares(values)) return "Obrigatório ao menos um período";
 
-  if (totalAlunos > meusDados.vinculo_atual.instituicao.quantidade_alunos) {
+  if (
+    meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
+      "CEU GESTAO" &&
+    totalAlunos > meusDados.vinculo_atual.instituicao.quantidade_alunos
+  ) {
     return "Número de alunos do pedido maior que a quantidade de alunos da escola";
   } else {
     delete values["substituicoes_MANHA"];
@@ -78,6 +82,23 @@ export const validateSubmit = (values, meusDados) => {
     (values["data_final"] && !values["data_inicial"])
   )
     return "Informe um período completo.";
+
+  if (
+    values.substituicoes.some(sub =>
+      ["", null].includes(sub.tipos_alimentacao_de)
+    )
+  )
+    return 'Preencher corretamente o campo "Alterar alimentação de"';
+
+  if (
+    values.substituicoes.some(sub =>
+      ["", null].includes(sub.tipo_alimentacao_para)
+    )
+  )
+    return 'Preencher corretamente o campo "Para alimentação"';
+
+  if (values.substituicoes.some(sub => [0, "", null].includes(sub.qtd_alunos)))
+    return 'Preencher corretamente o campo "Nº de Alunos"';
 
   return false;
 };

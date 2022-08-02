@@ -1,6 +1,7 @@
-@import "../../styles/variables.scss";
+@import "../../../../styles/variables.scss";
 
 .card.solicitation {
+  min-height: 60vh;
   .card-title {
     color: $blackInput;
   }

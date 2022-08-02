@@ -23,7 +23,6 @@ import { TIPOS_EMAIL_CADASTRO } from "../../Login/constans";
 import Select from "../../Shareable/Select";
 import { required } from "../../../helpers/fieldValidators";
 import authService from "../../../services/auth";
-import { formatarTipoPerfil } from "./helper";
 
 class Perfil extends Component {
   constructor(props) {
@@ -148,11 +147,7 @@ class Perfil extends Component {
                       <div className="data">
                         <div>RF: {meusDados.registro_funcional}</div>
                         <div>CPF: {formataCPF(meusDados.cpf)}</div>
-                        <div>
-                          {formatarTipoPerfil(
-                            meusDados.vinculo_atual.perfil.nome
-                          )}
-                        </div>
+                        <div>{meusDados.cargo}</div>
                       </div>
                     </div>
                   </div>

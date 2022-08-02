@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "../../components/InclusaoDeAlimentacao/Container";
+import Container from "../../components/InclusaoDeAlimentacao/Escola/Formulario/componentes/Container";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { ESCOLA, SUSPENSAO_ALIMENTACAO } from "../../configs/constants";

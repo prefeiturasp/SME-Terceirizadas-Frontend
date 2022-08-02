@@ -1,30 +1,13 @@
+import { Spin } from "antd";
+import CKEditorField from "components/Shareable/CKEditorField";
 import HTTP_STATUS from "http-status-codes";
+import { isEqual } from "lodash";
 import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import CKEditorField from "components/Shareable/CKEditorField";
-import { TIPO_SOLICITACAO } from "../../../constants/shared";
-import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
-import {
-  maxValue,
-  naoPodeSerZero,
-  required,
-  maxLength
-} from "../../../helpers/fieldValidators";
-import {
-  validateFormKitLanchePasseio,
-  validateFormKitLanchePasseioCei
-} from "./validators";
-import {
-  converterDDMMYYYYparaYYYYMMDD,
-  escolaEhCei
-} from "../../../helpers/utilities";
-import {
-  checaSeDataEstaEntre2e5DiasUteis,
-  getError
-} from "../../../helpers/utilities";
+import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 import {
   getSolicitacoesKitLanche,
   inicioPedido,
@@ -32,7 +15,20 @@ import {
   removeKitLanche,
   solicitarKitLanche
 } from "services/kitLanche";
-import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
+import { STATUS_DRE_A_VALIDAR } from "../../../configs/constants";
+import { TIPO_SOLICITACAO } from "../../../constants/shared";
+import {
+  maxLength,
+  maxValue,
+  naoPodeSerZero,
+  required
+} from "../../../helpers/fieldValidators";
+import {
+  checaSeDataEstaEntre2e5DiasUteis,
+  converterDDMMYYYYparaYYYYMMDD,
+  escolaEhCei,
+  getError
+} from "../../../helpers/utilities";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
 import { Botao } from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
@@ -44,11 +40,14 @@ import { PedidoKitLanche } from "../../Shareable/PedidoKitLanche";
 import TabelaQuantidadePorFaixaEtaria from "../../Shareable/TabelaQuantidadePorFaixaEtaria";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import { extrairKitsLanche } from "../../SolicitacaoUnificada/helper";
+import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
 import { Rascunhos } from "../Rascunhos";
 import { montaObjetoRequisicao } from "./helper";
 import "./style.scss";
-import { isEqual } from "lodash";
-import SeletorAlunosDietaEspecial from "../components/SeletorAlunosDietaEspecial";
+import {
+  validateFormKitLanchePasseio,
+  validateFormKitLanchePasseioCei
+} from "./validators";
 
 const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
 
@@ -73,7 +72,8 @@ export class SolicitacaoDeKitLanche extends Component {
       modalConfirmation: false,
       modalMessage: "",
       botaoConfirma: true,
-      alunosComDietaEspecial: []
+      alunosComDietaEspecial: [],
+      carregandoRascunhos: false
     };
     this.onSubmit = this.onSubmit.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -211,10 +211,11 @@ export class SolicitacaoDeKitLanche extends Component {
     }
   };
 
-  validaDiasUteis = event => {
+  validaDiasUteis = value => {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -319,9 +320,7 @@ export class SolicitacaoDeKitLanche extends Component {
         } else if (resp.data.tipo_error) {
           this.validaTipoMensagemError(resp.data);
         } else {
-          toastError(
-            `Erro ao salvar Solicitação de Kit Lanche Passeio ${resp.data}`
-          );
+          toastError(getError(resp.data));
         }
       });
     } else {
@@ -338,6 +337,7 @@ export class SolicitacaoDeKitLanche extends Component {
               toastSuccess(
                 "Solicitação de Kit Lanche Passeio atualizada com sucesso!"
               );
+              this.setState({ carregandoRascunhos: true });
               this.resetForm();
             }
           } else if (resp.data.tipo_error) {
@@ -414,11 +414,17 @@ export class SolicitacaoDeKitLanche extends Component {
     if (this.state.ehCei) {
       // FIXME: remove duplicated code
       getSolicitacoesKitLanche(SOLICITACAO_CEI).then(resp => {
-        this.setState({ rascunhosSolicitacoesKitLanche: resp.data.results });
+        this.setState({
+          rascunhosSolicitacoesKitLanche: resp.data.results,
+          carregandoRascunhos: false
+        });
       });
     } else {
       getSolicitacoesKitLanche(SOLICITACAO_NORMAL).then(resp => {
-        this.setState({ rascunhosSolicitacoesKitLanche: resp.results });
+        this.setState({
+          rascunhosSolicitacoesKitLanche: resp.results,
+          carregandoRascunhos: false
+        });
       });
     }
   }
@@ -473,7 +479,8 @@ export class SolicitacaoDeKitLanche extends Component {
       botaoConfirma,
       loading,
       kitsChecked,
-      alunosComDietaEspecial
+      alunosComDietaEspecial,
+      carregandoRascunhos
     } = this.state;
     return (
       <div>
@@ -485,15 +492,17 @@ export class SolicitacaoDeKitLanche extends Component {
             {!ehCei && (
               <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />
             )}
-            <Rascunhos
-              rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
-              OnDeleteButtonClicked={(id_externo, uuid) =>
-                this.OnDeleteButtonClicked(id_externo, uuid)
-              }
-              resetForm={event => this.resetForm(event)}
-              refreshComponent={this.refresh.bind(this)}
-              OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-            />
+            <Spin tip="Carregando Rascunhos..." spinning={carregandoRascunhos}>
+              <Rascunhos
+                rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
+                OnDeleteButtonClicked={(id_externo, uuid) =>
+                  this.OnDeleteButtonClicked(id_externo, uuid)
+                }
+                resetForm={event => this.resetForm(event)}
+                refreshComponent={this.refresh.bind(this)}
+                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
+              />
+            </Spin>
             <br />
             {!ehCei && <h3 className="page-title">{this.state.title}</h3>}
             <div className="card mt-3 p-4">
@@ -510,13 +519,14 @@ export class SolicitacaoDeKitLanche extends Component {
                     component={InputComData}
                     label="Data do passeio"
                     name="evento_data"
-                    onBlur={event => this.validaDiasUteis(event)}
+                    onBlur={event => this.validaDiasUteis(event.target.value)}
                     minDate={proximos_dois_dias_uteis}
                     maxDate={moment()
                       .endOf("year")
                       .toDate()}
                     required
                     validate={required}
+                    onChange={value => this.validaDiasUteis(value)}
                   />
                 </div>
                 <div className="col-9">
@@ -529,7 +539,7 @@ export class SolicitacaoDeKitLanche extends Component {
                   />
                 </div>
               </div>
-              {!ehCei && (
+              {!ehCei && meusDados && (
                 <div className="form-group row">
                   <div className="col-3">
                     <Field
@@ -538,11 +548,17 @@ export class SolicitacaoDeKitLanche extends Component {
                       type="number"
                       label="Número de alunos"
                       required
-                      validate={[
-                        required,
-                        maxValue(meusDados.quantidade_alunos),
-                        naoPodeSerZero
-                      ]}
+                      validate={
+                        meusDados.vinculo_atual &&
+                        meusDados.vinculo_atual.instituicao
+                          .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                          ? [
+                              required,
+                              maxValue(meusDados.quantidade_alunos),
+                              naoPodeSerZero
+                            ]
+                          : false
+                      }
                     />
                   </div>
                 </div>
@@ -569,16 +585,20 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              <Fragment>
-                <div className="form-group row sub-title">
-                  <p className="dre-name">
-                    Selecionar alunos com dieta especial
-                  </p>
-                </div>
-                <SeletorAlunosDietaEspecial
-                  alunosComDietaEspecial={alunosComDietaEspecial}
-                />
-              </Fragment>
+              {meusDados.instituicao &&
+                meusDados.vinculo_atual.instituicao
+                  .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
+                  <Fragment>
+                    <div className="form-group row sub-title">
+                      <p className="dre-name">
+                        Selecionar alunos com dieta especial
+                      </p>
+                    </div>
+                    <SeletorAlunosDietaEspecial
+                      alunosComDietaEspecial={alunosComDietaEspecial}
+                    />
+                  </Fragment>
+                )}
               <div className="form-group">
                 <Field
                   component={CKEditorField}

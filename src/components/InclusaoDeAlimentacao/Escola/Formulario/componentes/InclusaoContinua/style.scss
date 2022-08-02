@@ -1,0 +1,54 @@
+@import "../../../../../../styles//variables.scss";
+
+div.recorrencia-e-detalhes {
+  .wrapper-class {
+    height: 100px !important;
+  }
+  .DraftEditor-root {
+    overflow-y: hidden;
+  }
+
+  table {
+    font-size: 14px;
+    width: 100%;
+    border-radius: 4px;
+    thead {
+      background: $blackInput;
+      border: 1px solid #e9eaea;
+      color: #fff;
+      tr.row {
+        margin-left: 0;
+        margin-right: 0;
+        th {
+          padding: 10px;
+        }
+      }
+    }
+    tbody {
+      tr.row {
+        border: 1px solid #e9eaea;
+        &.active {
+          border-top: 1px solid #e9eaea !important;
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid #e9eaea !important;
+        }
+        margin-left: 0;
+        margin-right: 0;
+        td {
+          color: $gray;
+          padding: 10px;
+          &:not(:last-child) {
+            border-right: 1px solid #e9eaea;
+          }
+          i {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    div.produto-exibir {
+      padding-left: 1em;
+    }
+  }
+}

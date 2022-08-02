@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import "../Shareable/style.scss";
-import { comoTipo, ehInclusaoContinua } from "helpers/utilities";
+import React from "react";
+import { comoTipo } from "helpers/utilities";
+import "../../../../Shareable/style.scss";
 
-export class Rascunhos extends Component {
-  removerRascunho(id, uuid, tipoInclusao) {
-    this.props.removerRascunho(id, uuid, tipoInclusao);
-    this.props.resetForm();
-  }
-
-  render() {
-    const { rascunhosInclusaoDeAlimentacao, carregarRascunho } = this.props;
-    const cardsInclusoes = rascunhosInclusaoDeAlimentacao.map(
-      (inclusaoDeAlimentacao, key) => {
+export const Rascunhos = ({
+  rascunhosInclusaoDeAlimentacao,
+  removerRascunho,
+  form,
+  carregarRascunho,
+  values
+}) => {
+  return (
+    <div>
+      {rascunhosInclusaoDeAlimentacao.map((inclusaoDeAlimentacao, key) => {
         const { id_externo, uuid } = inclusaoDeAlimentacao;
         let backgroundColor = "#DADADA";
         return (
@@ -31,10 +31,11 @@ export class Rascunhos extends Component {
               Criado em: {inclusaoDeAlimentacao.criado_em}
               <span
                 onClick={() =>
-                  this.props.removerRascunho(
+                  removerRascunho(
                     id_externo,
                     uuid,
-                    comoTipo(inclusaoDeAlimentacao)
+                    comoTipo(inclusaoDeAlimentacao),
+                    form
                   )
                 }
               >
@@ -42,9 +43,7 @@ export class Rascunhos extends Component {
               </span>
               <span
                 onClick={() =>
-                  carregarRascunho({
-                    inclusaoDeAlimentacao
-                  })
+                  carregarRascunho(form, values, inclusaoDeAlimentacao)
                 }
               >
                 <i className="fas fa-edit" />
@@ -52,7 +51,7 @@ export class Rascunhos extends Component {
             </div>
             <div className="ml-3">
               <p>
-                {ehInclusaoContinua(inclusaoDeAlimentacao)
+                {inclusaoDeAlimentacao.data_inicial
                   ? `${inclusaoDeAlimentacao.motivo.nome} -
                     (${inclusaoDeAlimentacao.data_inicial} - ${
                       inclusaoDeAlimentacao.data_final
@@ -66,8 +65,7 @@ export class Rascunhos extends Component {
             </div>
           </div>
         );
-      }
-    );
-    return <div>{cardsInclusoes}</div>;
-  }
-}
+      })}
+    </div>
+  );
+};

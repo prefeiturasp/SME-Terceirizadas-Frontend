@@ -41,29 +41,6 @@ export class TextAreaWYSIWYG extends Component {
     this.changeValue(editorState);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { input } = nextProps;
-    if (input.value === "") {
-      const editorState = EditorState.createEmpty();
-      this.setState({ editorState });
-      return;
-    }
-    if (
-      input.value &&
-      input.value !== this.props.value &&
-      input.value.replace(/\s/g, "") !== "<p></p>"
-    ) {
-      const contentBlock = htmlToDraft(input.value);
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      );
-      const editorState = EditorState.moveFocusToEnd(
-        EditorState.createWithContent(contentState)
-      );
-      this.setState({ editorState });
-    }
-  }
-
   componentDidUpdate(prevProps) {
     if (this.props.valorInicial !== prevProps.valorInicial) {
       this.setState({

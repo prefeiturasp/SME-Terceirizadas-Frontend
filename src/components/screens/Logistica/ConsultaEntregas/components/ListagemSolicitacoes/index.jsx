@@ -1,59 +1,44 @@
-import React, { useState, useContext } from "react";
-import { Button } from "react-bootstrap";
+import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
-import FiltrosExcel from "../FiltrosExcel";
-import { imprimirGuiasDaSolicitacao } from "services/logistica.service.js";
-import { toastError } from "components/Shareable/Toast/dialogs";
-import { Spin } from "antd";
-import { CentralDeDownloadContext } from "context/CentralDeDownloads";
+import FiltrosExcel from "../FiltrosRelatorios";
+
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
-const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
-  const [carregando, setCarregando] = useState(false);
-  const [show, setShow] = useState(false);
-  const centralDownloadContext = useContext(CentralDeDownloadContext);
-
-  const baixarPDFGuiasRemessa = solicitacao => {
-    setCarregando(true);
-    let uuid = solicitacao.uuid;
-    imprimirGuiasDaSolicitacao(uuid)
-      .then(() => {
-        setCarregando(false);
-        setShow(true);
-        centralDownloadContext.getQtdeDownloadsNaoLidas();
-      })
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
-        setCarregando(false);
-      });
-  };
+const ListagemSolicitacoes = ({
+  solicitacoes,
+  ativos,
+  setAtivos,
+  dilog,
+  dre
+}) => {
+  const [showDownload, setShowDownload] = useState(false);
 
   return (
-    <Spin tip="Carregando..." spinning={carregando}>
-      <ModalSolicitacaoDownload show={show} setShow={setShow} />
+    <>
+      <ModalSolicitacaoDownload show={showDownload} setShow={setShowDownload} />
       <section
         className={`resultado-busca-entregas ${
-          dilog ? "dilog" : "distribuidor"
+          dilog || dre ? "dilog" : "distribuidor"
         }`}
       >
         <article>
           <div className={`grid-table header-table top-header`}>
-            <div className={dilog ? "colspan-4" : "colspan-3"} />
+            <div className={dilog || dre ? "colspan-4" : "colspan-3"} />
             <div className="colspan-4">Guias de Remessa</div>
             <div className="colspan-2">Exportar</div>
           </div>
           <div className="grid-table header-table">
             <div />
             <div>Requisição</div>
-            {dilog && <div>Distribuidor</div>}
+            {(dilog || dre) && <div>Distribuidor</div>}
             <div>Data de entrega</div>
             <div>Qtde.</div>
             <div>Conferidas</div>
             <div>Insucesso</div>
             <div>Pendentes</div>
             <div>Relatório</div>
-            <div>Guias de Remessa</div>
+            <div>Exportar Requisição</div>
           </div>
           {solicitacoes.map(solicitacao => {
             const bordas =
@@ -87,7 +72,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                   <div className={`${bordas}`}>
                     {solicitacao.numero_solicitacao}
                   </div>
-                  {dilog && (
+                  {(dilog || dre) && (
                     <div className={`${bordas}`}>
                       {solicitacao.distribuidor_nome}
                     </div>
@@ -109,17 +94,14 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
                   </div>
 
                   <div>
-                    <FiltrosExcel solicitacao={solicitacao} />
+                    <FiltrosExcel solicitacao={solicitacao} excel={true} />
                   </div>
                   <div>
-                    <Button
-                      className="acoes"
-                      variant="link"
-                      onClick={() => baixarPDFGuiasRemessa(solicitacao)}
-                    >
-                      <i className="fas fa-file-pdf red" />
-                      <span className="link-exportar">PDF</span>
-                    </Button>
+                    <FiltrosExcel
+                      solicitacao={solicitacao}
+                      pdf={true}
+                      showModal={setShowDownload}
+                    />
                   </div>
                 </div>
                 {ativos && ativos.includes(solicitacao.uuid) && (
@@ -174,7 +156,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos, dilog }) => {
           })}
         </article>
       </section>
-    </Spin>
+    </>
   );
 };
 

@@ -27,6 +27,7 @@ import "./styles.scss";
 const BuscaDietasForm = ({
   setCarregando,
   setDietasFiltradas,
+  setStatus,
   setStatusSelecionado,
   setFiltragemRealizada,
   lotesSelecionados,
@@ -43,6 +44,7 @@ const BuscaDietasForm = ({
   setDataFinal,
   setMostrarFiltrosAutorizadas,
   mostrarFiltrosAutorizadas,
+  dietasFiltradas,
   reset
 }) => {
   const [dietasEspeciais, setDietasEspeciais] = useState([]);
@@ -139,6 +141,7 @@ const BuscaDietasForm = ({
     setStatusSelecionado(true);
     setDietasFiltradas([]);
     setFiltragemRealizada(false);
+    setStatus(value.toUpperCase());
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
       const response = await getSolicitacoesRelatorioDietasEspeciais(data);
@@ -569,7 +572,13 @@ const BuscaDietasForm = ({
                 </div>
               </div>
 
-              <div className="mt-4 mb-4">
+              <div
+                className={
+                  dietasFiltradas && dietasFiltradas.length > 0
+                    ? "mt-4"
+                    : "botoes"
+                }
+              >
                 <Botao
                   texto="Filtrar"
                   style={BUTTON_STYLE.GREEN}

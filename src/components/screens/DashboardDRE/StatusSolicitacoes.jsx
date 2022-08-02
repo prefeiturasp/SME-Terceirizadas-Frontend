@@ -117,8 +117,12 @@ export class StatusSolicitacoes extends Component {
       default:
         break;
     }
-
-    solicitacoes = ajustarFormatoLog(solicitacoes.results, LOG_PARA.DRE);
+    solicitacoes = ajustarFormatoLog(
+      solicitacoes.results.filter(
+        solicitacao => solicitacao.prioridade !== "VENCIDO"
+      ),
+      LOG_PARA.DRE
+    );
     this.setState({
       solicitacoes,
       tipoCard,

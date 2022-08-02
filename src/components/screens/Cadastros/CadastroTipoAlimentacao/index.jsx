@@ -32,8 +32,11 @@ export default ({ tiposUnidadesEscolar }) => {
     : undefined;
 
   const [tiposDeAlimentacao, setTiposDeAlimentacao] = useState(undefined);
+  const [
+    alterandoTiposDeAlimentacao,
+    setAlterandoTiposDeAlimentacao
+  ] = useState(false);
   const [vinculos, setVinculos] = useState(undefined);
-  const [tipoUnidade, setTipoUnidade] = useState(undefined);
   const [carregando, setCarregando] = useState(undefined);
 
   async function fetchData() {
@@ -63,6 +66,7 @@ export default ({ tiposUnidadesEscolar }) => {
         }
       );
       setCarregando(false);
+      setAlterandoTiposDeAlimentacao(false);
     } else {
       toastError("Selecione um tipo de alimentação para atualizar");
     }
@@ -85,7 +89,6 @@ export default ({ tiposUnidadesEscolar }) => {
     await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(uuid).then(
       response => {
         if (response.results.length === 0) {
-          setTipoUnidade(undefined);
           toastError(
             "Nenhum período escolar está associado ao tipo de unidade escolar selecionado"
           );
@@ -133,13 +136,12 @@ export default ({ tiposUnidadesEscolar }) => {
                             .toLowerCase()
                             .includes(inputValue.toLowerCase())
                         }
-                        disabled={tipoUnidade ? true : false}
+                        disabled={alterandoTiposDeAlimentacao}
                       >
                         {opcoesTiposUnidades}
                       </Field>
                       <OnChange name="tipo_unidade_escolar">
                         {value => {
-                          setTipoUnidade(value);
                           getPeriodosEscolares(value);
                         }}
                       </OnChange>
@@ -195,24 +197,30 @@ export default ({ tiposUnidadesEscolar }) => {
                                         className="custom-control custom-checkbox col-4 mb-2"
                                         key={idx}
                                       >
-                                        <Field
-                                          name="tipos_alimentacao"
-                                          component="input"
-                                          type="checkbox"
-                                          value={tipoAlimentacao.uuid}
-                                          className="custom-control-input"
-                                          id={`${
-                                            vinculo.periodo_escolar.nome
-                                          }-${tipoAlimentacao.uuid}`}
-                                        />
-                                        <label
-                                          className="custom-control-label"
-                                          htmlFor={`${
-                                            vinculo.periodo_escolar.nome
-                                          }-${tipoAlimentacao.uuid}`}
+                                        <span
+                                          onClick={() =>
+                                            setAlterandoTiposDeAlimentacao(true)
+                                          }
                                         >
-                                          {tipoAlimentacao.nome}
-                                        </label>
+                                          <Field
+                                            name="tipos_alimentacao"
+                                            component="input"
+                                            type="checkbox"
+                                            value={tipoAlimentacao.uuid}
+                                            className="custom-control-input"
+                                            id={`${
+                                              vinculo.periodo_escolar.nome
+                                            }-${tipoAlimentacao.uuid}`}
+                                          />
+                                          <label
+                                            className="custom-control-label"
+                                            htmlFor={`${
+                                              vinculo.periodo_escolar.nome
+                                            }-${tipoAlimentacao.uuid}`}
+                                          >
+                                            {tipoAlimentacao.nome}
+                                          </label>
+                                        </span>
                                       </div>
                                     );
                                   }

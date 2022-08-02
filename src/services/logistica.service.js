@@ -55,8 +55,7 @@ export const gerarPDFDistribuidorSolicitacoes = async params => {
 
 export const gerarExcelSolicitacoes = async params => {
   const url = `/solicitacao-remessa/exporta-excel-visao-analitica/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "visao_analitica.xlsx");
+  return await axios.get(url, { params });
 };
 
 export const gerarPDFDistribuidorGuia = async uuid => {
@@ -105,6 +104,11 @@ export const getGuiaParaConferencia = async params => {
   return await axios.get(url, { params });
 };
 
+export const getGuiaDetalhe = async uuid => {
+  const url = `/guias-da-requisicao/${uuid}/detalhe-guia-de-remessa/`;
+  return await axios.get(url);
+};
+
 export const getConferenciaParaEdicao = async params => {
   const url = `/conferencia-da-guia-com-ocorrencia/get-ultima-conferencia/`;
   return await axios.get(url, { params });
@@ -147,10 +151,10 @@ export const getEntregasDilog = async params => {
   return await axios.get(url, { params });
 };
 
-export const gerarExcelEntregas = async params => {
+export const gerarExcelEntregas = async (params, requisicao) => {
   const url = `/solicitacao-remessa/exporta-excel-visao-entregas/`;
   const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_entregas.xlsx");
+  saveAs(data, "entregas_requisicao_" + requisicao + ".xlsx");
 };
 
 export const arquivaGuias = async payload => {
@@ -163,15 +167,15 @@ export const desarquivaGuias = async payload => {
   return await axios.post(url, payload);
 };
 
-export const imprimirGuiaRemessa = async uuid => {
+export const imprimirGuiaRemessa = async (uuid, numero) => {
   const url = `/guias-da-requisicao/${uuid}/relatorio-guia-remessa/`;
   const { data } = await axios.get(url, { responseType: "blob" });
-  saveAs(data, "guia_de_remessa.pdf");
+  saveAs(data, "guia_" + numero + ".pdf");
 };
 
-export const imprimirGuiasDaSolicitacao = async uuid => {
+export const imprimirGuiasDaSolicitacao = async (uuid, params) => {
   const url = `/solicitacao-remessa/${uuid}/relatorio-guias-da-requisicao/`;
-  return await axios.get(url);
+  return await axios.get(url, { params });
 };
 
 export const confirmaCancelamento = async payload => {

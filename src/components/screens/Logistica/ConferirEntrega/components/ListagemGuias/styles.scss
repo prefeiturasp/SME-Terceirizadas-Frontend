@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.4fr 1.2fr 0.6fr 0.8fr 1.6fr;
+      grid-template-columns: 0.4fr 1.2fr 0.6fr 0.8fr 1.1fr 0.4fr;
     }
 
     .header-table {
@@ -60,10 +60,13 @@
         cursor: pointer;
         text-decoration: underline;
         padding-right: 4px;
+        a {
+          color: #686868;
+        }
 
         .fas {
           text-decoration: none;
-          font-size: 12px;
+          font-size: 16px;
           padding-right: 4px;
           padding-left: 4px;
         }

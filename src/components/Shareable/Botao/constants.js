@@ -6,13 +6,16 @@ export const BUTTON_STYLE = {
   GREEN_OUTLINE_WHITE: "green-button-outline-white",
   RED: "red-button",
   RED_OUTLINE: "red-button-outline",
-  GRAY_OUTLINE: "red-button-outline",
+  GRAY_OUTLINE: "gray-button-outline",
+  GRAY: "gray-button",
   DARK_OUTLINE: "dark-button-outline"
 };
 
 export const BUTTON_ICON = {
   ARROW_LEFT: "fas fa-arrow-left",
   ARROW_RIGHT: "fas fa-arrow-right",
+  ANGLE_UP: "fa fa-angle-up",
+  ANGLE_DOWN: "fa fa-angle-down",
   ATTACH: "fas fa-file-upload",
   CHART_LINE: "fas fa-chart-line",
   CHECK_CIRCLE: "fas fa-check-circle",

@@ -5,13 +5,14 @@ import CardStatusDeSolicitacao from "components/Shareable/CardStatusDeSolicitaca
 import CardBody from "components/Shareable/CardBody";
 import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
-import { dataAtual } from "helpers/utilities";
+import { dataAtual, usuarioEhEscola } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
   getDashboardGestaoProdutos,
   getHomologacoesPorTituloMarca
 } from "services/produto.service";
 import { TIPO_PERFIL } from "constants/shared";
+import CardAtalho from "components/Shareable/CardAtalho";
 
 export default class DashboardGestaoProduto extends Component {
   constructor(props) {
@@ -152,7 +153,7 @@ export default class DashboardGestaoProduto extends Component {
     return (
       <div>
         {erro && <div>Erro ao carregar painel gerencial</div>}
-        {!erro && !cardsFiltered && <div>Carregando...</div>}
+        {!erro && !cardsFiltered && <div>Carregando dashboard...</div>}
         {!erro && cardsFiltered && (
           <CardBody
             titulo="Acompanhamento de produtos cadastrados"
@@ -209,12 +210,40 @@ export default class DashboardGestaoProduto extends Component {
               })
             ) : !erro ? (
               <div className="carregando-conteudo">
-                <Spin tip="Carregando..." />
+                <Spin tip="Carregando dashboard..." />
               </div>
             ) : (
               <div>Erro ao carregar as Solicitações</div>
             )}
           </CardBody>
+        )}
+        {usuarioEhEscola() && (
+          <div className="row row-shortcuts">
+            <div className="col-sm-3 col-12">
+              <CardAtalho
+                titulo={"Reclamação de Produtos"}
+                nome="card-inclusao"
+                texto={
+                  "Quando houver necessidade de registrar" +
+                  " Reclamação de Produtos para os produtos homologados"
+                }
+                textoLink={"Nova Reclamação"}
+                href={"/gestao-produto/nova-reclamacao-de-produto"}
+              />
+            </div>
+            <div className="col-sm-3 col-12">
+              <CardAtalho
+                titulo={"Responder Questionamentos de CODAE"}
+                nome="card-alteracao"
+                texto={
+                  "Quando houver necessidade de responder os questionamentos " +
+                  "da CODAE referente a uma reclamação de produto. "
+                }
+                textoLink={"Responder Questionamentos"}
+                href={"/gestao-produto/responder-questionamento-ue"}
+              />
+            </div>
+          </div>
         )}
       </div>
     );

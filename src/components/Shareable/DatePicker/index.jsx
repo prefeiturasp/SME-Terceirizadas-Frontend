@@ -56,11 +56,13 @@ export class InputComData extends Component {
 
   handleChange(date) {
     this.props.input.onChange(
-      this.props.writable
-        ? date
-        : moment(date).format(
-            this.props.dateFormat || this.defaultProps.dateFormat
-          )
+      date
+        ? this.props.writable
+          ? date
+          : moment(date).format(
+              this.props.dateFormat || this.defaultProps.dateFormat
+            )
+        : null
     );
   }
 
@@ -107,7 +109,11 @@ export class InputComData extends Component {
     return (
       <div className="datepicker">
         {label && [
-          required && <span className="required-asterisk float-left">*</span>,
+          required && (
+            <span className="required-asterisk float-left" key={0}>
+              *
+            </span>
+          ),
           <label
             key={1}
             htmlFor={name}

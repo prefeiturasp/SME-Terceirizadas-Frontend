@@ -20,6 +20,7 @@ import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistorico
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import { meusDados } from "services/perfil.service";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 
 class Relatorio extends Component {
@@ -30,6 +31,7 @@ class Relatorio extends Component {
       showNaoAprovaModal: false,
       showAutorizarModal: false,
       showModal: false,
+      meusDados: null,
       solicitacaoKitLanche: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
@@ -48,7 +50,14 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const tipoSolicitacao = urlParams.get("tipoSolicitacao");
-
+    meusDados().then(response => {
+      if (response) {
+        this.setState({ meusDados: response });
+      } else {
+        this.setState({ erro: true });
+        toastError("Erro ao carregar dados do usuário");
+      }
+    });
     if (uuid) {
       getDetalheKitLancheAvulsa(uuid, tipoSolicitacao).then(response => {
         this.setState({
@@ -137,6 +146,7 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
+      meusDados,
       showModalMarcarConferencia
     } = this.state;
     const {
@@ -285,6 +295,7 @@ class Relatorio extends Component {
                   solicitacaoKitLanche={solicitacaoKitLanche}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={this.state.tipoSolicitacao}
+                  meusDados={meusDados}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={solicitacaoKitLanche}

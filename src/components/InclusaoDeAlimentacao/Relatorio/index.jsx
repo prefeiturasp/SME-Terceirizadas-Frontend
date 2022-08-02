@@ -19,6 +19,7 @@ import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistorico
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import { meusDados } from "services/perfil.service";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
@@ -32,6 +33,7 @@ class Relatorio extends Component {
       tipoSolicitacao: null,
       showAutorizarModal: false,
       showModal: false,
+      meusDados: null,
       inclusaoDeAlimentacao: null,
       prazoDoPedidoMensagem: null,
       resposta_sim_nao: null,
@@ -53,6 +55,14 @@ class Relatorio extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     const tipoSolicitacao = urlParams.get("tipoSolicitacao");
+    meusDados().then(response => {
+      if (response) {
+        this.setState({ meusDados: response });
+      } else {
+        this.setState({ erro: true });
+        toastError("Erro ao carregar dados do usuário");
+      }
+    });
     if (uuid) {
       obterSolicitacaoDeInclusaoDeAlimentacao(uuid, tipoSolicitacao).then(
         response => {
@@ -142,6 +152,7 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
+      meusDados,
       showModalMarcarConferencia
     } = this.state;
     const {
@@ -289,6 +300,7 @@ class Relatorio extends Component {
                   inclusaoDeAlimentacao={inclusaoDeAlimentacao}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={tipoSolicitacao}
+                  meusDados={meusDados}
                 />
                 {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
                   inclusaoDeAlimentacao.inclusoes.find(

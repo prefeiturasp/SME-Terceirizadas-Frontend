@@ -102,7 +102,13 @@ class AlteracaoCardapio extends Component {
       const response = await getVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
         vinculo
       );
-      periodos = construirPeriodosECombos(response.results);
+      periodos = construirPeriodosECombos(
+        response.results.filter(combo =>
+          this.props.periodos.find(
+            periodo => periodo.uuid === combo.periodo_escolar.uuid
+          )
+        )
+      );
       periodos.forEach(periodo => this.montaObjetoDeSubstituicoesEdit(periodo));
       this.setState({ periodos, loading: false });
     }
@@ -345,10 +351,11 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModal: false });
   }
 
-  onAlterarDiaChanged(event) {
+  onAlterarDiaChanged(value) {
     if (
+      value &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -499,14 +506,21 @@ class AlteracaoCardapio extends Component {
                       component={Select}
                       name="motivo"
                       label="Motivo"
-                      options={motivos}
+                      options={motivos.filter(
+                        ({ nome }) =>
+                          nome.toUpperCase() !==
+                          "Lanche emergencial".toUpperCase()
+                      )}
                       validate={required}
                     />
                   </section>
                   <section className="col-12 col-sm-4">
                     <Field
                       component={InputComData}
-                      onBlur={event => this.onAlterarDiaChanged(event)}
+                      onBlur={event =>
+                        this.onAlterarDiaChanged(event.target.value)
+                      }
+                      onChange={value => this.onAlterarDiaChanged(value)}
                       name="data_alteracao"
                       minDate={proximos_dois_dias_uteis}
                       maxDate={moment()
@@ -575,7 +589,11 @@ class AlteracaoCardapio extends Component {
                           name="tipos_alimentacao_de"
                           multiple
                           options={formatarParaMultiselect(
-                            periodo.tipos_alimentacao
+                            periodo.tipos_alimentacao.filter(
+                              ({ nome }) =>
+                                nome.toUpperCase() !==
+                                "Lanche emergencial".toUpperCase()
+                            )
                           )}
                           nomeDoItemNoPlural="Alimentos"
                           onChange={value =>
@@ -590,7 +608,15 @@ class AlteracaoCardapio extends Component {
                         <Field
                           component={Select}
                           name="tipo_alimentacao_para"
-                          options={periodo.substituicoes}
+                          options={
+                            periodo.substituicoes
+                              ? periodo.substituicoes.filter(
+                                  ({ nome }) =>
+                                    nome.toUpperCase() !==
+                                    "Lanche emergencial".toUpperCase()
+                                )
+                              : agregarDefault([])
+                          }
                           validate={periodo.checked && required}
                           required={periodo.checked}
                         />

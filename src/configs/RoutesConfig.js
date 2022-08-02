@@ -89,7 +89,7 @@ import {
   relatoriosSolicitacaoKitLanche,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoCardapio
+  inclusaoAlimentacao
 } from "./helper";
 import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
@@ -153,6 +153,7 @@ import InsucessoEntregaPage from "pages/Logistica/InsucessoEntregaPage";
 import ConferenciaInconsistenciasPage from "pages/Logistica/ConferenciaInconsistenciasPage";
 import ConferirEntregaPage from "pages/Logistica/ConferirEntregaPage";
 import ConferenciaDeGuiaPage from "pages/Logistica/ConferenciaDeGuiaPage";
+import DetalhamentoGuiaPage from "pages/Logistica/DetalhamentoGuiaPage";
 import ReposicaoDeGuiaPage from "pages/Logistica/ReposicaoDeGuiaPage";
 import RegistrarInsucessoEntregaPage from "pages/Logistica/RegistrarInsucessoEntregaPage";
 import ConferenciaDeGuiaComOcorrenciaPage from "pages/Logistica/ConferenciaDeGuiaComOcorrenciaPage";
@@ -272,7 +273,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
-    component: inclusaoCardapio(),
+    component: inclusaoAlimentacao(),
     exact: false,
     tipoUsuario:
       usuarioEhEscola() &&
@@ -1339,6 +1340,12 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA_RESUMO_FINAL}`,
     component: ConferenciaDeGuiaResumoFinalPage,
+    exact: true,
+    tipoUsuario: usuarioEhEscolaAbastecimento()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.DETALHAMENTO_GUIA}`,
+    component: DetalhamentoGuiaPage,
     exact: true,
     tipoUsuario: usuarioEhEscolaAbastecimento()
   },

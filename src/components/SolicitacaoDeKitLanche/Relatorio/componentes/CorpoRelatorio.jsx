@@ -112,6 +112,7 @@ export const CorpoRelatorio = props => {
         <FluxoDeStatus
           listaDeStatus={solicitacaoKitLanche.logs}
           fluxo={fluxoPartindoEscola}
+          eh_gestao_alimentacao={true}
         />
       </div>
       <hr />

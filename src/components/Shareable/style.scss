@@ -48,6 +48,25 @@ textarea {
   i.fa-search {
     font-size: 20px;
   }
+
+  .carregando-filtro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 35%;
+    left: 7%;
+    transform: translate(0, -50%);
+    i {
+      padding-right: 0px;
+      &:nth-child(2) {
+        padding-left: 0px;
+      }
+    }
+    div {
+      margin-left: 10px;
+    }
+  }
 }
 
 .modal-content {
@@ -541,7 +560,9 @@ table.table-report {
   width: 100%;
   font-size: 14px;
   tr {
-    border-bottom: 1px solid $blackSubtle;
+    &:nth-of-type(odd) {
+      border-bottom: 1px solid $blackSubtle;
+    }
     &:first-child {
       color: white;
       background-color: $blackSubtle;

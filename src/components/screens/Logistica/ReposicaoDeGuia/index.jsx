@@ -93,17 +93,6 @@ export default () => {
   };
 
   const filtrarAlimentos = (conf_alimentos, guiaResponse, edicao) => {
-    conf_alimentos.forEach(conferencia => {
-      if (
-        conferencia.status_alimento === "Recebido" ||
-        conferencia.ocorrencia.includes("ATRASO_ENTREGA")
-      ) {
-        guiaResponse.alimentos = guiaResponse.alimentos.filter(
-          alimento => alimento.nome_alimento !== conferencia.nome_alimento
-        );
-      }
-    });
-
     if (edicao) {
       guiaResponse.alimentos.forEach(alimento => {
         alimento.embalagens.forEach(embalagem => {
@@ -117,6 +106,13 @@ export default () => {
         });
       });
     }
+
+    guiaResponse.alimentos = guiaResponse.alimentos.filter(alimento => {
+      alimento.embalagens = alimento.embalagens.filter(
+        embalagem => embalagem.qtd_a_receber !== 0
+      );
+      return alimento.embalagens.length !== 0;
+    });
   };
 
   const carregarReposicaoEdicao = async uuid => {
@@ -338,6 +334,7 @@ export default () => {
         let embalagensAlimento = guia.alimentos[index].embalagens;
         let fechada;
         let fracionada;
+        let alimentoFaltante;
         if (embalagensAlimento.length > 1) {
           fechada =
             embalagensAlimento[0].tipo_embalagem === "Fechada"
@@ -363,8 +360,16 @@ export default () => {
         let alimentoParcial =
           recebidos_fechada < fechada.qtd_a_receber ||
           recebidos_fracionada < fracionada.qtd_a_receber;
-        let alimentoFaltante =
-          recebidos_fechada === 0 || recebidos_fracionada === 0;
+        if (
+          fechada.tipo_embalagem === "Fechada" &&
+          fracionada.tipo_embalagem === "Fracionada"
+        ) {
+          alimentoFaltante =
+            recebidos_fechada === 0 && recebidos_fracionada === 0;
+        } else {
+          alimentoFaltante =
+            recebidos_fechada === 0 || recebidos_fracionada === 0;
+        }
 
         let newFlagAlimento = flagAlimento;
         newFlagAlimento[index] = alimentoFaltante || alimentoParcial;

@@ -158,6 +158,7 @@ export const CONFERENCIA_GUIA = "conferencia-guia";
 export const CONFERENCIA_GUIA_COM_OCORRENCIA =
   "conferencia-guia-com-ocorrencia";
 export const CONFERENCIA_GUIA_RESUMO_FINAL = "conferencia-guia-resumo-final";
+export const DETALHAMENTO_GUIA = "detalhamento-guia";
 export const REPOSICAO_GUIA = "reposicao-guia";
 export const REPOSICAO_RESUMO_FINAL = "reposicao-guia-resumo-final";
 export const ENTREGAS_DILOG = "entregas-dilog";
@@ -194,3 +195,34 @@ export const STATUS_RECLAMACAO = {
   CODAE_ACEITOU: "CODAE_ACEITOU",
   CODAE_RECUSOU: "CODAE_RECUSOU"
 };
+
+export const WEEK = [
+  {
+    label: "D",
+    value: "6"
+  },
+  {
+    label: "S",
+    value: "0"
+  },
+  {
+    label: "T",
+    value: "1"
+  },
+  {
+    label: "Q",
+    value: "2"
+  },
+  {
+    label: "Q",
+    value: "3"
+  },
+  {
+    label: "S",
+    value: "4"
+  },
+  {
+    label: "S",
+    value: "5"
+  }
+];

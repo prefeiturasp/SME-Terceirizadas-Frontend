@@ -17,6 +17,7 @@ import "./styles.scss";
 const RelatorioDietaEspecial = () => {
   const [carregando, setCarregando] = useState(false);
   const [dietasFiltradas, setDietasFiltradas] = useState([]);
+  const [status, setStatus] = useState("");
   const [statusSelecionado, setStatusSelecionado] = useState(false);
   const [mostrarFiltrosAutorizadas, setMostrarFiltrosAutorizadas] = useState(
     false
@@ -69,11 +70,13 @@ const RelatorioDietaEspecial = () => {
     <>
       <div className="sub-titulo">Filtrar dietas</div>
       <Spin tip="Carregando..." spinning={carregando}>
-        <div className="card mt-3">
+        <div className="card relatorio-dietas-especiais mt-3">
           <div className="card-body">
             <Filtros
               setCarregando={setCarregando}
               setDietasFiltradas={setDietasFiltradas}
+              dietasFiltradas={dietasFiltradas}
+              setStatus={setStatus}
               setStatusSelecionado={setStatusSelecionado}
               setFiltragemRealizada={setFiltragemRealizada}
               lotesSelecionados={lotesSelecionados}
@@ -99,7 +102,10 @@ const RelatorioDietaEspecial = () => {
                     {dietasFiltradas.length}
                   </div>
                 </div>
-                <ListagemDietas dietasFiltradas={dietasFiltradas} />
+                <ListagemDietas
+                  dietasFiltradas={dietasFiltradas}
+                  status={status}
+                />
               </>
             )}
             {dietasFiltradas.length > 0 && (

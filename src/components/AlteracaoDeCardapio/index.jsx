@@ -1,54 +1,56 @@
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { InputText } from "components/Shareable/Input/InputText";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
-import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
+import { getDiasUteis } from "services/diasUteis.service";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
-  peloMenosUmCaractere,
-  required,
-  textAreaRequired,
   maxValue,
   naoPodeSerZero,
-  numericInteger
+  peloMenosUmCaractere,
+  required,
+  textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
   agregarDefault,
-  formatarParaMultiselect,
   checaSeDataEstaEntre2e5DiasUteis,
+  formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
 import { loadAlteracaoCardapio } from "../../reducers/alteracaoCardapioReducer";
 import {
-  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
-  escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
   escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
-import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
-
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
+import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
+import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/helper";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import CardMatriculados from "../Shareable/CardMatriculados";
-import { Rascunhos } from "./Rascunhos";
-
 import { InputComData } from "../Shareable/DatePicker";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+import {
+  toastError,
+  toastSuccess,
+  toastWarn
+} from "../Shareable/Toast/dialogs";
 import { construirPeriodosECombos } from "./helper";
-import { abstraiPeriodosComAlunosMatriculados } from "../InclusaoDeAlimentacao/helper";
+import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
+import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { validateSubmit } from "./validacao";
-import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
-import { PERFIL, TIPO_SOLICITACAO } from "constants/shared";
-import { InputText } from "components/Shareable/Input/InputText";
 
 const ENTER = 13;
 
@@ -74,7 +76,17 @@ class AlteracaoCardapio extends Component {
       periodosQuePossuemLancheNaAlteracao: null,
       ehAlteracaoComLancheRepetida: false,
       verificado: false,
-      values: null
+      values: null,
+      uuidRascunhoEmEdicao: null,
+      optionsAlimentacaoDe: {
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      },
+      limiteDataFinal: moment()
+        .endOf("year")
+        .toDate()
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -157,7 +169,10 @@ class AlteracaoCardapio extends Component {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
-          if (substituicao.tipo_alimentacao_para.label.includes("lanche")) {
+          if (
+            substituicao.tipo_alimentacao_para &&
+            substituicao.tipo_alimentacao_para.nome.includes("lanche")
+          ) {
             periodosQuePossuemLancheNaAlteracao[
               `${substituicao.periodo_escolar.nome}`
             ].status = true;
@@ -192,30 +207,36 @@ class AlteracaoCardapio extends Component {
     nomePeriodo
   ) => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
-    substituicoes.forEach(substituicao => {
-      if (substituicao.uuid === uuidTPAlimentacao) {
-        if (substituicao.nome.includes("lanche")) {
-          periodosQuePossuemLancheNaAlteracao[
-            `${nomePeriodo}`
-          ].temNaSolicitacao = true;
-          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
-            periodosQuePossuemLancheNaAlteracao.temRestricao = true;
-          }
-        } else {
-          periodosQuePossuemLancheNaAlteracao[
-            `${nomePeriodo}`
-          ].temNaSolicitacao = false;
-          if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
-            periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+    substituicoes.length > 0 &&
+      substituicoes.forEach(substituicao => {
+        if (substituicao.uuid === uuidTPAlimentacao) {
+          if (substituicao.nome.includes("lanche")) {
+            periodosQuePossuemLancheNaAlteracao[
+              `${nomePeriodo}`
+            ].temNaSolicitacao = true;
+            if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+            }
+          } else {
+            periodosQuePossuemLancheNaAlteracao[
+              `${nomePeriodo}`
+            ].temNaSolicitacao = false;
+            if (periodosQuePossuemLancheNaAlteracao[`${nomePeriodo}`].status) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = false;
+            }
           }
         }
-      }
-    });
+      });
     this.setState({ periodosQuePossuemLancheNaAlteracao });
   };
 
   componentDidMount() {
     this.refresh();
+  }
+
+  componentWillUnmount() {
+    this.resetForm();
+    this.props.reset();
   }
 
   montaObjetoDeSubstituicoesEdit = periodo => {
@@ -261,37 +282,44 @@ class AlteracaoCardapio extends Component {
   atualizaEverificaSeEhAlteracaoRepetida = substituicoes => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
     substituicoes.forEach(substituicao => {
-      substituicao.tipos_alimentacao_de.substituicoes.forEach(
-        tipo_alimentacao_sub => {
-          if (
-            substituicao.tipo_alimentacao_para.uuid ===
-            tipo_alimentacao_sub.uuid
-          ) {
-            if (tipo_alimentacao_sub.label.includes("lanche")) {
+      substituicao.tipos_alimentacao_de.forEach(tipo_alimentacao_sub => {
+        if (
+          substituicao.tipo_alimentacao_para.uuid === tipo_alimentacao_sub.uuid
+        ) {
+          if (tipo_alimentacao_sub.label.includes("lanche")) {
+            periodosQuePossuemLancheNaAlteracao[
+              `${substituicao.periodo_escolar.nome}`
+            ].temNaSolicitacao = true;
+            if (
               periodosQuePossuemLancheNaAlteracao[
                 `${substituicao.periodo_escolar.nome}`
-              ].temNaSolicitacao = true;
-              if (
-                periodosQuePossuemLancheNaAlteracao[
-                  `${substituicao.periodo_escolar.nome}`
-                ].temNaSolicitacao &&
-                periodosQuePossuemLancheNaAlteracao[
-                  `${substituicao.periodo_escolar.nome}`
-                ].status
-              ) {
-                periodosQuePossuemLancheNaAlteracao.temRestricao = true;
-              } else {
-                periodosQuePossuemLancheNaAlteracao.temRestricao = false;
-              }
+              ].temNaSolicitacao &&
+              periodosQuePossuemLancheNaAlteracao[
+                `${substituicao.periodo_escolar.nome}`
+              ].status
+            ) {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = true;
+            } else {
+              periodosQuePossuemLancheNaAlteracao.temRestricao = false;
             }
           }
         }
-      );
+      });
     });
     this.setState({ periodosQuePossuemLancheNaAlteracao });
   };
 
   OnEditButtonClicked(param) {
+    if (
+      this.state.uuidRascunhoEmEdicao &&
+      this.state.uuidRascunhoEmEdicao === param.alteracaoDeCardapio.uuid
+    ) {
+      toastWarn(
+        `Rascunho # ${param.alteracaoDeCardapio.id_externo} já está em edição`
+      );
+      return;
+    }
+    this.props.reset("alteracaoCardapio");
     let dataInicial = this.state.dataInicial;
     let {
       substituicoesAlimentacao,
@@ -301,42 +329,59 @@ class AlteracaoCardapio extends Component {
     ehAlteracaoComLancheRepetida =
       param["alteracaoDeCardapio"].eh_alteracao_com_lanche_repetida;
     dataInicial = param["alteracaoDeCardapio"].data_inicial;
-    this.props.reset("alteracaoCardapio");
-    param.alteracaoDeCardapio.substituicoes.forEach(substituicao => {
-      substituicao.tipos_alimentacao_de["nome"] =
-        substituicao.tipos_alimentacao_de.label;
-      substituicao.tipo_alimentacao_para["nome"] =
-        substituicao.tipo_alimentacao_para.label;
-      substituicao.tipos_alimentacao_de.substituicoes.forEach(
-        substituicao_sub => {
-          substituicao_sub["nome"] = substituicao_sub.label;
-        }
-      );
-    });
     this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
     this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
     param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
       substituicoesAlimentacao[index].substituicoes =
-        substituicao.tipos_alimentacao_de.substituicoes;
+        substituicao.tipo_alimentacao_para;
     });
     this.atualizaEverificaSeEhAlteracaoRepetida(
       param.alteracaoDeCardapio.substituicoes
     );
-    periodos.forEach(periodo => {
+    periodos.forEach((periodo, indice) => {
       periodo.checked =
         param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
+      periodo.checked &&
+        periodo.checked.tipos_alimentacao_de.forEach(tipo => {
+          this.removerOpcoesSubstitutos(tipo, periodo, indice);
+        });
+      periodo.validador = periodo.checked
+        ? [naoPodeSerZero, maxValue(periodo.maximo_alunos), required]
+        : [];
     });
+    let optionsAlimentacaoDe = {
+      MANHA:
+        param.alteracaoDeCardapio.substituicoes_MANHA !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_MANHA.tipos_alimentacao_de
+          : [],
+      TARDE:
+        param.alteracaoDeCardapio.substituicoes_TARDE !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_TARDE.tipos_alimentacao_de
+          : [],
+      NOITE:
+        param.alteracaoDeCardapio.substituicoes_NOITE !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_NOITE.tipos_alimentacao_de
+          : [],
+      INTEGRAL:
+        param.alteracaoDeCardapio.substituicoes_INTEGRAL !== undefined
+          ? param.alteracaoDeCardapio.substituicoes_INTEGRAL
+              .tipos_alimentacao_de
+          : []
+    };
+
     this.setState({
       dataInicial,
       status: param.alteracaoDeCardapio.status,
       title: `Alteração do Tipo de Alimentação # ${
         param.alteracaoDeCardapio.id_externo
       }`,
+      uuidRascunhoEmEdicao: param.alteracaoDeCardapio.uuid,
       salvarAtualizarLbl: "Atualizar",
       id: param.alteracaoDeCardapio.id_externo,
       substituicoesAlimentacao,
       periodos,
-      ehAlteracaoComLancheRepetida
+      ehAlteracaoComLancheRepetida,
+      optionsAlimentacaoDe
     });
   }
 
@@ -376,7 +421,14 @@ class AlteracaoCardapio extends Component {
       dataInicial: null,
       periodos,
       motivo: {},
-      alimentacaoDe: {}
+      alimentacaoDe: {},
+      uuidRascunhoEmEdicao: null,
+      optionsAlimentacaoDe: {
+        MANHA: [],
+        TARDE: [],
+        NOITE: [],
+        INTEGRAL: []
+      }
     });
     this.buscaPeriodosParaVerificarSePossuiAlteracoesComLanche(periodos);
     const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
@@ -420,6 +472,7 @@ class AlteracaoCardapio extends Component {
       const erros = validateSubmit(values, this.props.meusDados);
       if (!erros) {
         this.resetaTodoPeriodoCheck();
+        this.resetForm("alteracaoCardapio");
         if (!values.uuid) {
           escolaCriarSolicitacaoDeAlteracaoCardapio(
             values,
@@ -499,10 +552,12 @@ class AlteracaoCardapio extends Component {
     this.setState({ ...this.state, showModalConfirm: false });
   }
 
-  onAlterarDiaChanged(event) {
+  onAlterarDiaChanged(value) {
     if (
+      value &&
+      this.state.motivo.nome !== "Lanche Emergencial" &&
       checaSeDataEstaEntre2e5DiasUteis(
-        event.target.value,
+        value,
         this.props.proximos_dois_dias_uteis,
         this.props.proximos_cinco_dias_uteis
       )
@@ -552,10 +607,20 @@ class AlteracaoCardapio extends Component {
     let dataInicial = this.state.dataInicial;
     dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
     this.setState({ dataInicial });
+    const dataDe = {
+      data: value
+    };
+    getDiasUteis(dataDe).then(response => {
+      const limiteDataFinal = moment(
+        response.data.data_apos_quatro_dias_uteis,
+        "YYYY-MM-DD"
+      )._d;
+      this.setState({ limiteDataFinal });
+    });
   };
 
   limpaCamposAlteracaoDoPeriodo(periodo, periodoNome) {
-    if (periodo.checked) {
+    if (!periodo.checked) {
       this.props.change(
         `substituicoes_${periodoNome}.tipos_alimentacao_de`,
         null
@@ -632,15 +697,11 @@ class AlteracaoCardapio extends Component {
         );
       }
     }
-
-    periodos[indice].validador = [
-      naoPodeSerZero,
-      numericInteger,
-      maxValue(periodos[indice].maximo_alunos)
-    ];
-    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
-
     periodos[indice].checked = !periodos[indice].checked;
+    periodos[indice].validador = periodos[indice].checked
+      ? [naoPodeSerZero, maxValue(periodos[indice].maximo_alunos), required]
+      : [];
+    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
     this.props.change(input, periodos[indice].checked);
     this.setState({ periodos });
   }
@@ -776,9 +837,23 @@ class AlteracaoCardapio extends Component {
       });
     }
     periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+
     this.setState({
+      ...this.state,
       periodos: periodos
     });
+    opcoesSubstitutos.length === 0 &&
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
+        null
+      );
+  }
+
+  DisabledDataInicial(motivo) {
+    return (
+      this.props.motivos.find(motivo_ => motivo_.uuid === motivo).nome !==
+      "Lanche Emergencial"
+    );
   }
 
   render() {
@@ -788,14 +863,17 @@ class AlteracaoCardapio extends Component {
       showModal,
       showModalConfirm,
       dataInicial,
+      limiteDataFinal,
       periodos,
       substituicoesAlimentacao,
-      values
+      values,
+      optionsAlimentacaoDe
     } = this.state;
     const {
       handleSubmit,
       meusDados,
       proximos_dois_dias_uteis,
+      motivo,
       motivos,
       pristine,
       submitting
@@ -854,10 +932,13 @@ class AlteracaoCardapio extends Component {
                 <section className="section-form-datas mt-4">
                   <Field
                     component={InputComData}
-                    onBlur={event => this.onAlterarDiaChanged(event)}
+                    onBlur={event =>
+                      this.onAlterarDiaChanged(event.target.value)
+                    }
+                    onChange={value => this.onAlterarDiaChanged(value)}
                     name="alterar_dia"
                     minDate={
-                      this.state.motivo.nome === "Merenda Seca"
+                      this.state.motivo.nome === "Lanche Emergencial"
                         ? moment().toDate()
                         : proximos_dois_dias_uteis
                     }
@@ -867,38 +948,38 @@ class AlteracaoCardapio extends Component {
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
                   />
-                  {localStorage.getItem("perfil") !== PERFIL.DIRETOR_CEI && (
-                    <>
-                      <div className="opcao-data">Ou</div>
-                      <Field
-                        component={InputComData}
-                        name="data_inicial"
-                        label="De"
-                        minDate={
-                          this.state.motivo.nome === "Merenda Seca"
-                            ? moment().toDate()
-                            : proximos_dois_dias_uteis
-                        }
-                        maxDate={moment()
-                          .endOf("year")
-                          .toDate()}
-                        disabled={this.props.alterar_dia}
-                        onChange={value => this.obtemDataInicial(value)}
-                      />
-                      <Field
-                        component={InputComData}
-                        name="data_final"
-                        label="Até"
-                        disabled={
-                          dataInicial === null || this.props.alterar_dia
-                        }
-                        minDate={dataInicial}
-                        maxDate={moment()
-                          .endOf("year")
-                          .toDate()}
-                      />
-                    </>
-                  )}
+                  <>
+                    <div className="opcao-data">Ou</div>
+                    <Field
+                      component={InputComData}
+                      name="data_inicial"
+                      label="De"
+                      minDate={
+                        this.state.motivo.nome === "Lanche Emergencial"
+                          ? moment().toDate()
+                          : proximos_dois_dias_uteis
+                      }
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
+                      disabled={
+                        this.props.alterar_dia ||
+                        (motivo && this.DisabledDataInicial(motivo))
+                      }
+                      onChange={value => {
+                        this.obtemDataInicial(value);
+                        this.onAlterarDiaChanged(value);
+                      }}
+                    />
+                    <Field
+                      component={InputComData}
+                      name="data_final"
+                      label="Até"
+                      disabled={dataInicial === null || this.props.alterar_dia}
+                      minDate={dataInicial}
+                      maxDate={limiteDataFinal}
+                    />
+                  </>
                 </section>
               </div>
               <div className="card-body">
@@ -955,6 +1036,7 @@ class AlteracaoCardapio extends Component {
                           indice
                         )}
                         multiple
+                        selected={optionsAlimentacaoDe[periodo.nome] || []}
                         options={formatarParaMultiselect(
                           periodo.tipos_alimentacao
                         )}
@@ -962,6 +1044,7 @@ class AlteracaoCardapio extends Component {
                         onChange={value =>
                           this.removerOpcoesSubstitutos(value, periodo, indice)
                         }
+                        validate={periodo.validador}
                       />
                       <Field
                         component={Select}
@@ -977,8 +1060,7 @@ class AlteracaoCardapio extends Component {
                             periodo.nome
                           );
                         }}
-                        validate={periodo.checked && required}
-                        required={periodo.checked}
+                        validate={periodo.validador}
                       />
                       <Field
                         component={InputText}
@@ -995,11 +1077,10 @@ class AlteracaoCardapio extends Component {
                         className="form-control quantidade-aluno"
                         required={periodo.checked}
                         validate={
-                          periodo.checked && [
-                            naoPodeSerZero,
-                            numericInteger,
-                            maxValue(periodos[indice].maximo_alunos)
-                          ]
+                          meusDados.vinculo_atual.instituicao
+                            .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                            ? periodo.validador
+                            : false
                         }
                       />
                     </FormSection>
@@ -1079,7 +1160,11 @@ const mapStateToProps = state => {
     data_final: selector(state, "data_final"),
     alterar_dia: selector(state, "alterar_dia"),
     motivo: selector(state, "motivo"),
-    observacao: selector(state, "observacao")
+    observacao: selector(state, "observacao"),
+    substituicoes_MANHA: selector(state, "substituicoes_MANHA"),
+    substituicoes_TARDE: selector(state, "substituicoes_TARDE"),
+    substituicoes_NOITE: selector(state, "substituicoes_NOITE"),
+    substituicoes_INTEGRAL: selector(state, "substituicoes_INTEGRAL")
   };
 };
 

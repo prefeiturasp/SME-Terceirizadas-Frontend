@@ -105,6 +105,7 @@ export const CorpoRelatorio = props => {
           <FluxoDeStatus
             listaDeStatus={inversaoDiaCardapio.logs}
             fluxo={fluxoPartindoEscola}
+            eh_gestao_alimentacao={true}
           />
         </div>
       )}
@@ -127,9 +128,15 @@ export const CorpoRelatorio = props => {
         </tr>
         <tr>
           <td className="text-right pr-5">
-            {inversaoDiaCardapio.cardapio_de.data}
+            {inversaoDiaCardapio.cardapio_de
+              ? inversaoDiaCardapio.cardapio_de.data
+              : inversaoDiaCardapio.data_de_inversao}
           </td>
-          <td>{inversaoDiaCardapio.cardapio_para.data}</td>
+          <td>
+            {inversaoDiaCardapio.cardapio_para
+              ? inversaoDiaCardapio.cardapio_para.data
+              : inversaoDiaCardapio.data_para_inversao}
+          </td>
         </tr>
       </table>
       <div className="row">

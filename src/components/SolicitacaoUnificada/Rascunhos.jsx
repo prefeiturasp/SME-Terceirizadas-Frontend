@@ -5,7 +5,8 @@ export class Rascunhos extends Component {
     const {
       unifiedSolicitationList,
       OnDeleteButtonClicked,
-      OnEditButtonClicked
+      OnEditButtonClicked,
+      form
     } = this.props;
     const allDaysInfo = unifiedSolicitationList.map(solicitacaoUnificada => {
       const { id_externo, uuid } = solicitacaoUnificada;
@@ -30,11 +31,7 @@ export class Rascunhos extends Component {
             </span>
             <span
               disabled={!this.props.schoolsLoaded}
-              onClick={() =>
-                OnEditButtonClicked({
-                  solicitacaoUnificada
-                })
-              }
+              onClick={() => OnEditButtonClicked(solicitacaoUnificada, form)}
             >
               <i className="fas fa-edit" />
             </span>

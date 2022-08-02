@@ -321,7 +321,7 @@ class cadastroProduto extends Component {
         response.status === HTTP_STATUS.CREATED ||
         response.status === HTTP_STATUS.OK
       ) {
-        toastSuccess("Produto cadastrado com sucesso.");
+        toastSuccess("Solicitação de homologação enviada com sucesso.");
         this.setState({
           payload: retornaPayloadDefault(),
           renderizaFormDietaEspecial: false,

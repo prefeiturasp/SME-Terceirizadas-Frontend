@@ -265,9 +265,8 @@ class HomologacaoProduto extends Component {
       handleSubmit,
       justificativa
     } = this.props;
-    const { ultima_homologacao } = produto !== null && produto;
-    const logAnaliseSensorial =
-      ultima_homologacao && ultima_homologacao.ultimo_log;
+    const { homologacao } = produto !== null && produto;
+    const logAnaliseSensorial = homologacao && homologacao.ultimo_log;
 
     const handleClickBotaoCancela = () => {
       this.showCancelarAnaliseSensorialModal();
@@ -335,7 +334,7 @@ class HomologacaoProduto extends Component {
                 terceirizada={terceirizada}
               />
               {!!status && status === STATUS_CODAE_AUTORIZOU_RECLAMACAO && (
-                <InformativoReclamacao homologacao={ultima_homologacao} />
+                <InformativoReclamacao homologacao={homologacao} />
               )}
 
               {!!logs.length &&
@@ -380,7 +379,7 @@ class HomologacaoProduto extends Component {
                         <span className="text-muted">
                           Protocolo Análise Sensorial:
                         </span>{" "}
-                        {produto.ultima_homologacao.protocolo_analise_sensorial}
+                        {produto.homologacao.protocolo_analise_sensorial}
                       </p>
                     </div>
 
@@ -454,7 +453,7 @@ class HomologacaoProduto extends Component {
                 idHomologacao={uuid}
                 atualizarDados={this.carregaHomologacao}
               />
-              {ultima_homologacao && this.renderFluxo(ultima_homologacao)}
+              {homologacao && this.renderFluxo(homologacao)}
               <ModalCancelarHomologacaoProduto
                 showModal={this.state.mostraModalCancelar}
                 closeModal={() =>

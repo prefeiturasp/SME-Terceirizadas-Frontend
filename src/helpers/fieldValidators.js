@@ -12,6 +12,14 @@ export const requiredOptionSearchSelect = escolas => value =>
     ? undefined
     : "Selecione uma opção válida";
 
+export const dataDuplicada = listaDatas => value => {
+  return value &&
+    listaDatas &&
+    listaDatas.filter(el => el && el.data === value).length > 1
+    ? "Já existe uma solicitação de inclusão de alimento para essa mesma data."
+    : undefined;
+};
+
 export const requiredMultiselect = array =>
   array !== [] ? undefined : "Campo obrigatório";
 
@@ -116,6 +124,18 @@ export const peloMenosUmNumeroEUmaLetra = value =>
 
 export const alphaNumeric = value =>
   value && /[^a-zA-Z0-9]/i.test(value) ? "Apenas letras e números" : undefined;
+
+export const noSpaceStartOrEnd = value =>
+  value && /^\s+|\s+$/.test(value)
+    ? "Remover espaço do início e/ou final"
+    : undefined;
+
+export const alphaNumericAndSingleSpaceBetweenCharacters = value =>
+  value && /[^a-zA-Z0-9\s]/.test(value)
+    ? "Apenas letras e números"
+    : /[^a-zA-Z0-9]+[\s{2,}]/.test(value)
+    ? "Remover excesso de espaços"
+    : undefined;
 
 export const apenasLetras = value =>
   value && /[^a-zA-Zà-úÀ-Ú ]/i.test(value)

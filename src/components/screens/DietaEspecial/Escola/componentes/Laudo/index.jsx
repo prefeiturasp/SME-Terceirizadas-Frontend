@@ -20,8 +20,7 @@ export default ({ pertence_a_escola }) => {
           <div className="card-warning mt-2">
             <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
             .pdf, .png, .jpg ou .jpeg, com até 10Mb. <br /> O Laudo deve ter
-            sido emitido há, no máximo, 12 meses. Após a data de aprovação no
-            sistema, o laudo terá validade de 12 meses
+            sido emitido há, no máximo, 12 meses.
           </div>
         </div>
         <div className="col-3 btn">

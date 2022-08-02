@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
@@ -9,6 +9,7 @@ import ListagemGuias from "../ListagemGuias";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { gerarExcelSolicitacoes } from "services/logistica.service";
+import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -16,9 +17,11 @@ const ListagemSolicitacoes = ({
   setAtivos,
   updatePage,
   confirmaCancelamentoGuias,
-  imprimirRequisicao
+  imprimirRequisicao,
+  setShowDownload
 }) => {
   const [carregando, setCarregando] = useState(false);
+  const centralDownloadContext = useContext(CentralDeDownloadContext);
 
   const baixarPDF = async solicitacao => {
     setCarregando(true);
@@ -34,6 +37,8 @@ const ListagemSolicitacoes = ({
     gerarExcelSolicitacoes(params)
       .then(() => {
         setCarregando(false);
+        setShowDownload(true);
+        centralDownloadContext.getQtdeDownloadsNaoLidas();
       })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
@@ -51,9 +56,10 @@ const ListagemSolicitacoes = ({
             <div>N° da Requisição de Entrega</div>
             <div>Qtde. de Guias Remessa</div>
             <div>Status</div>
-            <div>Data de entrega</div>
+            <div>Data de Entrega</div>
             <div>Ações</div>
-            <div>Exportar</div>
+            <div>Exportar Relatório</div>
+            <div>Exportar Requisição</div>
           </div>
           {solicitacoes.map(solicitacao => {
             const bordas =
@@ -119,7 +125,7 @@ const ListagemSolicitacoes = ({
                       onClick={() => baixarExcel(solicitacao)}
                     >
                       <i className="fas fa-file-excel green" />
-                      <span className="link-exportar">XLSX</span>
+                      <span className="link-exportar">Planilha</span>
                     </Button>
                   </div>
                   <div className={`${bordas}`}>

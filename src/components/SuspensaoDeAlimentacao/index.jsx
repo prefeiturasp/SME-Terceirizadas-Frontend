@@ -648,7 +648,12 @@ class FoodSuspensionEditor extends Component {
                             min="0"
                             className="form-control"
                             required
-                            validate={period.validador}
+                            validate={
+                              meusDados.vinculo_atual.instituicao
+                                .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
+                                ? period.validador
+                                : false
+                            }
                           />
                         </div>
                       </div>

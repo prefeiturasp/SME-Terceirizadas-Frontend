@@ -9,6 +9,7 @@ export default () => {
   const [meusDadosEscola, setMeusDadosEscola] = useState({});
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     meusDados().then(meusDados => {
       setQuantidadeAlunos(
         meusDados.vinculo_atual.instituicao.quantidade_alunos
