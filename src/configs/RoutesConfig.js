@@ -167,6 +167,7 @@ import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
+import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 
 const routesConfig = [
   {
@@ -560,6 +561,12 @@ const routesConfig = [
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
+    component: CadastroSobremesaDocePage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,

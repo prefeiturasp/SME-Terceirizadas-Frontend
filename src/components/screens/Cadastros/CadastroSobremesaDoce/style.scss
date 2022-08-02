@@ -1,0 +1,25 @@
+@import "styles/variables.scss";
+
+div.calendario-sobremesa {
+  div.toolbar-container {
+    div.mes-tab {
+      text-align: center;
+      padding: 0.5em;
+      background-color: $green;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      width: 3.5em;
+      cursor: pointer;
+    }
+
+    span.label-month {
+      color: $green;
+      font-weight: bold;
+      font-size: 18px;
+      margin-left: 1em;
+      margin-right: 1em;
+      width: 5em;
+    }
+  }
+}
