@@ -1,120 +1,100 @@
-import React, { useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
+import { CustomToolbar } from "./componentes/CustomToolbar";
+import { ModalCadastrarSobremesa } from "./componentes/ModalCadastrarSobremesa";
+import HTTP_STATUS from "http-status-codes";
 import "./style.scss";
-import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_ICON,
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "components/Shareable/Botao/constants";
+import { Spin } from "antd";
 
 export const CadastroSobremesaDoce = () => {
-  const [myEventsList] = useState([
-    {
-      title: "EMEF",
-      start: new Date(2022, 7, 3, 10, 0),
-      end: new Date(2022, 7, 3, 11, 0),
-      allDay: true
-    },
-    {
-      title: "CEU GESTAO",
-      start: new Date(2022, 7, 3, 10, 0),
-      end: new Date(2022, 7, 3, 11, 0),
-      allDay: true
-    }
-  ]);
+  const [currentEvent, setCurrentEvent] = useState(undefined);
+  const [myEventsList] = useState([]);
+  const [
+    showModalCadastrarSobremesa,
+    setShowModalCadastrarSobremesa
+  ] = useState(false);
+  const [tiposUnidades, setTiposUnidades] = useState(undefined);
+  const [erroAPI, setErroAPI] = useState(false);
 
   const localizer = momentLocalizer(moment);
-
-  const CustomToolbar = toolbar => {
-    const goToBack = () => {
-      toolbar.date.setMonth(toolbar.date.getMonth() - 1);
-      toolbar.onNavigate("prev");
-    };
-
-    const goToMonthView = () => {
-      toolbar.onView("month");
-    };
-
-    const goToNext = () => {
-      toolbar.date.setMonth(toolbar.date.getMonth() + 1);
-      toolbar.onNavigate("next");
-    };
-
-    const label = () => {
-      const date = moment(toolbar.date);
-      return (
-        <span>
-          {date.format("MMMM")} {date.format("YYYY")}
-        </span>
-      );
-    };
-
-    return (
-      <div className="row toolbar-container mb-3">
-        <div className="col-6">
-          <div onClick={goToMonthView} className="mes-tab">
-            Mês
-          </div>
-        </div>
-        <div className="col-6 text-right">
-          <div className={"back-next-buttons"}>
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              icon={BUTTON_ICON.ARROW_LEFT}
-              onClick={goToBack}
-            />
-            <span className="label-month">{label()}</span>
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              icon={BUTTON_ICON.ARROW_RIGHT}
-              onClick={goToNext}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   const formats = {
     weekdayFormat: (date, culture, localizer) =>
       localizer.format(date, "dddd", culture)
   };
 
+  useEffect(() => {
+    getTiposUnidadeEscolar().then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        setTiposUnidades(response.data.results);
+      } else {
+        setErroAPI(true);
+      }
+    });
+  }, []);
+
+  const handleSelectSlot = event => {
+    setCurrentEvent(event);
+    setShowModalCadastrarSobremesa(true);
+  };
+
+  /*const handleNewEvent = event => {
+    console.log(event);
+  };*/
+
   return (
     <div className="card calendario-sobremesa">
       <div className="card-body">
-        <p>
-          Para cadastrar sobremesas doces, clique sobre o dia desejado e insira
-          as informações de cadastro
-        </p>
-        <div>
-          <Calendar
-            localizer={localizer}
-            formats={formats}
-            events={myEventsList}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 1000 }}
-            //onSelectEvent={novoEvento}
-            selectable
-            resizable
-            messages={{
-              next: "Próximo",
-              previous: "Anterior",
-              today: "Hoje",
-              month: "Mês",
-              week: "Semana",
-              day: "Día"
-            }}
-            components={{
-              toolbar: CustomToolbar
-            }}
-          />
-        </div>
+        <Spin tip="Carregando..." spinning={!tiposUnidades && !erroAPI}>
+          {erroAPI && (
+            <div>
+              Erro ao carregar dados sobre tipos de unidades. Tente novamente
+              mais tarde.
+            </div>
+          )}
+          {tiposUnidades && (
+            <>
+              <p>
+                Para cadastrar sobremesas doces, clique sobre o dia desejado e
+                insira as informações de cadastro
+              </p>
+              <Calendar
+                localizer={localizer}
+                formats={formats}
+                events={myEventsList}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 1000 }}
+                //onSelectEvent={handleNewEvent}
+                onSelectSlot={handleSelectSlot}
+                selectable
+                resizable
+                messages={{
+                  next: "Próximo",
+                  previous: "Anterior",
+                  today: "Hoje",
+                  month: "Mês",
+                  week: "Semana",
+                  day: "Día"
+                }}
+                components={{
+                  toolbar: CustomToolbar
+                }}
+              />
+              {currentEvent && (
+                <ModalCadastrarSobremesa
+                  showModal={showModalCadastrarSobremesa}
+                  closeModal={() => setShowModalCadastrarSobremesa(false)}
+                  tiposUnidades={tiposUnidades}
+                  event={currentEvent}
+                />
+              )}
+            </>
+          )}
+        </Spin>
       </div>
     </div>
   );
