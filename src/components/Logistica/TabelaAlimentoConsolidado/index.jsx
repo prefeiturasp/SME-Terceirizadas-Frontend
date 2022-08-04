@@ -48,32 +48,14 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
             <tr key={index}>
               <td>{item.nome_alimento}</td>
               <td>{fechada ? fechada.qtd_volume : "--"}</td>
-              <td>
-                {fechada ? (
-                  <>
-                    {fechada.descricao_embalagem}.{" "}
-                    {fechada.capacidade_embalagem}
-                    {fechada.unidade_medida}
-                  </>
-                ) : (
-                  "--"
-                )}
-              </td>
+              <td>{fechada ? <>{fechada.capacidade_completa}</> : "--"}</td>
               <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
               <td>
-                {fracionada ? (
-                  <>
-                    {fracionada.descricao_embalagem}.{" "}
-                    {fracionada.capacidade_embalagem}
-                    {fracionada.unidade_medida}
-                  </>
-                ) : (
-                  "--"
-                )}
+                {fracionada ? <>{fracionada.capacidade_completa}</> : "--"}
               </td>
               {mostrarPesoTotal && (
                 <td>
-                  {item.peso_total}
+                  {String(item.peso_total).replace(".", ",")}{" "}
                   {item.total_embalagens[0].unidade_medida}
                 </td>
               )}

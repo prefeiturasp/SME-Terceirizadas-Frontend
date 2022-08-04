@@ -681,9 +681,7 @@ export default () => {
                                                   {fechada.descricao_embalagem}.
                                                 </td>
                                                 <td>
-                                                  {fechada.descricao_embalagem}.{" "}
-                                                  {fechada.capacidade_embalagem}
-                                                  {fechada.unidade_medida}
+                                                  {fechada.capacidade_completa}
                                                 </td>
                                                 <td>
                                                   <div className="form-tabela">
@@ -750,13 +748,8 @@ export default () => {
                                                 </td>
                                                 <td>
                                                   {
-                                                    fracionada.descricao_embalagem
+                                                    fracionada.capacidade_completa
                                                   }
-                                                  .{" "}
-                                                  {
-                                                    fracionada.capacidade_embalagem
-                                                  }
-                                                  {fracionada.unidade_medida}
                                                 </td>
                                                 <td>
                                                   <div className="form-tabela">
