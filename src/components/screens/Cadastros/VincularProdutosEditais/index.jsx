@@ -26,8 +26,8 @@ export default () => {
         setListaProdutos(responseFiltros.data.produtos);
         setListaEditais(responseFiltros.data.editais);
         setListaTipos([
-          { nome: "Comum", key: "COMUM" },
-          { nome: "Dieta Especial", key: "DIETA_ESPECIAL" }
+          { nome: "Comum", key: "Comum" },
+          { nome: "Dieta Especial", key: "Dieta especial" }
         ]);
       }
     } catch (e) {

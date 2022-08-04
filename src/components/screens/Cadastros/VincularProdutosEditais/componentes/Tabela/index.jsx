@@ -46,7 +46,7 @@ export default ({ resultado, changePage }) => {
                     <Fragment key={idx}>
                       <tr className="table-body-items">
                         <td>{item.produto.nome}</td>
-                        <td>{item.marca}</td>
+                        <td>{item.marca.nome}</td>
                         <td>{item.tipo_produto}</td>
                         <td>{item.edital.numero}</td>
                         <td>{item.ativo ? "Ativo" : "Inativo"}</td>
