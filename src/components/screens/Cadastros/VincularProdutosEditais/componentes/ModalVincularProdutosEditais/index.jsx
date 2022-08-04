@@ -78,7 +78,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
       }
     } else {
       if (extra.checked) {
-        resultado = resultado.push(extra.triggerValue);
+        resultado = resultado.concat([extra.triggerValue]);
       } else {
         resultado = resultado.filter(
           uuid => !extra.triggerValue.includes(uuid)
@@ -269,7 +269,11 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                     <Botao
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
-                      onClick={closeModal}
+                      onClick={() => {
+                        setProdutosEditaisSelecionados([]);
+                        setOpcoesProdutosEditais([]);
+                        closeModal();
+                      }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
                     />

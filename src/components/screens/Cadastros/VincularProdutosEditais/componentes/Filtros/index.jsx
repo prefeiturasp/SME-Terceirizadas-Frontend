@@ -125,7 +125,7 @@ export default ({
             <div className="row mb-3">
               <div className="col-8">
                 <Botao
-                  texto="Selecionar produtos"
+                  texto="Selecionar Produtos"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => setShowModal(true)}
