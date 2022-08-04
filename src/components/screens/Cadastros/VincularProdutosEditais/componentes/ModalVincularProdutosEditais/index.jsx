@@ -58,6 +58,8 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
       } catch (e) {
         toastError(`Houve um erro ao tentar vincular produtos: ${e}`);
       }
+      setProdutosEditaisSelecionados([]);
+      setOpcoesProdutosEditais([]);
       closeModal();
     } else {
       toastError("Verifique os campos obrigatórios");
@@ -101,7 +103,11 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     <Modal
       dialogClassName="modal-produtos-editais"
       show={showModal}
-      onHide={closeModal}
+      onHide={() => {
+        setProdutosEditaisSelecionados([]);
+        setOpcoesProdutosEditais([]);
+        closeModal();
+      }}
     >
       <Modal.Header closeButton>
         <Modal.Title>Selecionar produtos provenientes de editais</Modal.Title>
@@ -124,6 +130,9 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       selected={values.editais_origem_selecionados || []}
                       options={formatarParaMultiselect(opcoesEditaisOrigem)}
                       onSelectedChanged={async values_ => {
+                        setProdutosEditaisSelecionados([]);
+                        setOpcoesProdutosEditais([]);
+                        form.change(`produtos_editais`, []);
                         form.change(`editais_origem_selecionados`, values_);
                         let opcoesDestino = opcoesEditaisOrigem.filter(
                           opcao => !values_.includes(opcao.uuid)
@@ -133,8 +142,6 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                           ...erros,
                           editaisOrigem: values_.length === 0
                         });
-                        setProdutosEditaisSelecionados([]);
-                        setOpcoesProdutosEditais([]);
                         if (values_.length > 0) {
                           try {
                             const editaisString = formataEditais(values_);
@@ -142,7 +149,8 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                               editais: editaisString
                             });
                             if (response.status === HTTP_STATUS.OK) {
-                              setOpcoesProdutosEditais(response.data);
+                              let t = formatarOpcoes(response.data);
+                              setOpcoesProdutosEditais(t);
                             }
                           } catch (e) {
                             toastError(
@@ -166,10 +174,8 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                   <div className="col-8">
                     <span className="required-asterisk">*</span>
                     <label className="col-form-label pb-3">Produtos</label>
-                    <Field
-                      name="produtos_editais"
-                      component={TreeSelect}
-                      treeData={formatarOpcoes(opcoesProdutosEditais)}
+                    <TreeSelect
+                      treeData={opcoesProdutosEditais}
                       value={produtosEditaisSelecionados}
                       onChange={onChangeProdutosEditais}
                       treeCheckable={true}
