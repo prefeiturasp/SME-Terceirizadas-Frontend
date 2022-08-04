@@ -24,20 +24,28 @@ export const CadastroSobremesaDoce = () => {
   const [showModalConfirmarExclusao, setShowModalConfirmarExclusao] = useState(
     false
   );
+  const [loadingDiasCalendario, setLoadingDiasCalendario] = useState(false);
   const [tiposUnidades, setTiposUnidades] = useState(undefined);
   const [erroAPI, setErroAPI] = useState(false);
+  const [mes, setMes] = useState(moment().month() + 1);
+  const [ano, setAno] = useState(moment().year());
 
   const localizer = momentLocalizer(moment);
-
   const formats = {
     weekdayFormat: (date, culture, localizer) =>
       localizer.format(date, "dddd", culture)
   };
 
-  const getDiasSobremesaDoceAsync = async () => {
-    const response = await getDiasSobremesaDoce();
+  const getDiasSobremesaDoceAsync = async params => {
+    setLoadingDiasCalendario(true);
+    const response = await getDiasSobremesaDoce(
+      params ? { mes: params.mes, ano: params.ano } : { mes, ano }
+    );
     if (response.status === HTTP_STATUS.OK) {
       setDiasSobremesaDoce(formataComoEventos(response.data.results));
+    }
+    if (response) {
+      setLoadingDiasCalendario(false);
     }
   };
 
@@ -51,7 +59,10 @@ export const CadastroSobremesaDoce = () => {
       }
     };
 
-    getDiasSobremesaDoceAsync();
+    getDiasSobremesaDoceAsync({
+      mes,
+      ano
+    });
     getTiposUnidadeEscolarAsync();
   }, []);
 
@@ -84,34 +95,47 @@ export const CadastroSobremesaDoce = () => {
                 Para cadastrar sobremesas doces, clique sobre o dia desejado e
                 insira as informações de cadastro
               </p>
-              <Calendar
-                localizer={localizer}
-                formats={formats}
-                events={diasSobremesaDoce}
-                startAccessor="start"
-                endAccessor="end"
-                style={{ height: 1000 }}
-                onSelectEvent={handleEvent}
-                onSelectSlot={handleSelectSlot}
-                selectable
-                resizable
-                messages={{
-                  next: "Próximo",
-                  previous: "Anterior",
-                  today: "Hoje",
-                  month: "Mês",
-                  week: "Semana",
-                  day: "Día",
-                  showMore: target => (
-                    <span className="ml-2" role="presentation">
-                      ...{target} mais
-                    </span>
-                  )
-                }}
-                components={{
-                  toolbar: CustomToolbar
-                }}
-              />
+              <Spin
+                tip="Carregando dias de sobremesa..."
+                spinning={loadingDiasCalendario}
+              >
+                <Calendar
+                  localizer={localizer}
+                  formats={formats}
+                  events={diasSobremesaDoce}
+                  startAccessor="start"
+                  endAccessor="end"
+                  style={{ height: 1000 }}
+                  onSelectEvent={handleEvent}
+                  onSelectSlot={handleSelectSlot}
+                  selectable
+                  resizable
+                  messages={{
+                    next: "Próximo",
+                    previous: "Anterior",
+                    today: "Hoje",
+                    month: "Mês",
+                    week: "Semana",
+                    day: "Día",
+                    showMore: target => (
+                      <span className="ml-2" role="presentation">
+                        ...{target} mais
+                      </span>
+                    )
+                  }}
+                  components={{
+                    toolbar: CustomToolbar
+                  }}
+                  onNavigate={date => {
+                    setMes(date.getMonth() + 1);
+                    setAno(date.getFullYear());
+                    getDiasSobremesaDoceAsync({
+                      mes: date.getMonth() + 1,
+                      ano: date.getFullYear()
+                    });
+                  }}
+                />
+              </Spin>
               {currentEvent && (
                 <>
                   <ModalCadastrarSobremesa
@@ -120,7 +144,6 @@ export const CadastroSobremesaDoce = () => {
                     tiposUnidades={tiposUnidades}
                     event={currentEvent}
                     getDiasSobremesaDoceAsync={getDiasSobremesaDoceAsync}
-                    setDiasSobremesaDoce={setDiasSobremesaDoce}
                   />
                   {showModalEditar && (
                     <ModalEditar
@@ -138,7 +161,6 @@ export const CadastroSobremesaDoce = () => {
                       closeModal={() => setShowModalConfirmarExclusao(false)}
                       event={currentEvent}
                       getDiasSobremesaDoceAsync={getDiasSobremesaDoceAsync}
-                      setDiasSobremesaDoce={setDiasSobremesaDoce}
                     />
                   )}
                 </>

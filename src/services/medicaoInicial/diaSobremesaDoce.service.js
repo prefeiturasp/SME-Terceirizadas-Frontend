@@ -1,9 +1,9 @@
 import axios from "../_base";
 import { ErrorHandlerFunction } from "services/service-helpers";
 
-export const getDiasSobremesaDoce = async () => {
+export const getDiasSobremesaDoce = async (params = null) => {
   const url = `medicao-inicial/dias-sobremesa-doce/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

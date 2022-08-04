@@ -13,20 +13,13 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
 
 export const ModalConfirmarExclusao = ({ ...props }) => {
-  const {
-    event,
-    showModal,
-    closeModal,
-    getDiasSobremesaDoceAsync,
-    setDiasSobremesaDoce
-  } = props;
+  const { event, showModal, closeModal, getDiasSobremesaDoceAsync } = props;
 
   const onSubmit = async () => {
     const response = await deleteDiaSobremesaDoce(event.uuid);
     if (response.status === HTTP_STATUS.NO_CONTENT) {
       toastSuccess("Dia de sobremesa excluído com sucesso");
       closeModal();
-      setDiasSobremesaDoce(undefined);
       getDiasSobremesaDoceAsync();
     } else {
       toastError(getError(response.data));

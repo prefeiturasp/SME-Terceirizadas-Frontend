@@ -6,8 +6,16 @@ import {
 } from "components/Shareable/Botao/constants";
 import moment from "moment";
 import React from "react";
+import { useEffect } from "react";
 
 export const CustomToolbar = toolbar => {
+  useEffect(() => {
+    const now = new Date();
+    toolbar.date.setMonth(now.getMonth());
+    toolbar.date.setYear(now.getFullYear());
+    toolbar.onNavigate("current");
+  }, []);
+
   const goToBack = () => {
     toolbar.date.setMonth(toolbar.date.getMonth() - 1);
     toolbar.onNavigate("prev");
@@ -17,9 +25,9 @@ export const CustomToolbar = toolbar => {
     toolbar.onView("month");
   };
 
-  const goToNext = () => {
-    toolbar.date.setMonth(toolbar.date.getMonth() + 1);
-    toolbar.onNavigate("next");
+  const goToNext = async () => {
+    await toolbar.date.setMonth(toolbar.date.getMonth() + 1);
+    await toolbar.onNavigate("next");
   };
 
   const label = () => {
@@ -38,23 +46,25 @@ export const CustomToolbar = toolbar => {
           Mês
         </div>
       </div>
-      <div className="col-6 text-right">
-        <div className={"back-next-buttons"}>
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            icon={BUTTON_ICON.ARROW_LEFT}
-            onClick={goToBack}
-          />
-          <span className="label-month">{label()}</span>
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            icon={BUTTON_ICON.ARROW_RIGHT}
-            onClick={goToNext}
-          />
+      {toolbar.view === "month" && (
+        <div className="col-6 text-right">
+          <div className={"back-next-buttons"}>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              icon={BUTTON_ICON.ARROW_LEFT}
+              onClick={() => goToBack()}
+            />
+            <span className="label-month">{label()}</span>
+            <Botao
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              icon={BUTTON_ICON.ARROW_RIGHT}
+              onClick={() => goToNext()}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

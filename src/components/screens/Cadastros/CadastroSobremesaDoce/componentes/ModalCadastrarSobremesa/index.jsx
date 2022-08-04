@@ -20,8 +20,7 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     event,
     showModal,
     closeModal,
-    getDiasSobremesaDoceAsync,
-    setDiasSobremesaDoce
+    getDiasSobremesaDoceAsync
   } = props;
 
   const onSubmit = async values => {
@@ -34,7 +33,6 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     if (response.status === HTTP_STATUS.CREATED) {
       toastSuccess("Dia de sobremesa criado com sucesso");
       closeModal();
-      setDiasSobremesaDoce(undefined);
       getDiasSobremesaDoceAsync();
     } else {
       toastError(getError(response.data));
