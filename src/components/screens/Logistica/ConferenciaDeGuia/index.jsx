@@ -34,9 +34,6 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "conferenciaGuiaRemessa";
-const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente recebido pela Unidade Educacional.
-                      Se o alimento foi entregue em data posterior ao previsto na Guia de Remessa,
-                      será aberta ocorrência a ser detalhada pelo usuário.`;
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -255,7 +252,6 @@ export default () => {
                               required,
                               validaDataEntrega
                             )}
-                            tooltipText={TOOLTIP_DATA}
                             minDate={null}
                             maxDate={null}
                             required

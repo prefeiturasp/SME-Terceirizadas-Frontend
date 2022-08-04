@@ -127,8 +127,8 @@ const ListagemSolicitacoes = ({ guias }) => {
             <div>Número da Guia</div>
             <div>Nome do Distribuidor</div>
             <div>Data de entrega</div>
-            <div>Status da Entrega</div>
-            <div>Conferência de Entrega</div>
+            <div>Status de Entrega</div>
+            <div>Conferência de Entregas</div>
             <div>Opções</div>
           </div>
           {guias.map(guia => {
