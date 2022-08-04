@@ -4,16 +4,42 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { getDDMMYYYfromDate } from "configs/helper";
+import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
 import React from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import "./style.scss";
+import { setDiaSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import HTTP_STATUS from "http-status-codes";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { getError } from "helpers/utilities";
 
 export const ModalCadastrarSobremesa = ({ ...props }) => {
-  const { tiposUnidades, event, showModal, closeModal } = props;
+  const {
+    tiposUnidades,
+    event,
+    showModal,
+    closeModal,
+    getDiasSobremesaDoceAsync,
+    setDiasSobremesaDoce
+  } = props;
 
-  const onSubmit = async () => {};
+  const onSubmit = async values => {
+    const payload = {
+      criado_por: null,
+      tipo_unidades: values.tipo_unidades,
+      data: getYYYYMMDDfromDate(event.start)
+    };
+    const response = await setDiaSobremesaDoce(payload);
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Dia de sobremesa criado com sucesso");
+      closeModal();
+      setDiasSobremesaDoce(undefined);
+      getDiasSobremesaDoceAsync();
+    } else {
+      toastError(getError(response.data));
+    }
+  };
 
   return (
     <Modal
@@ -35,14 +61,14 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
               </p>
               <Field
                 component={StatefulMultiSelect}
-                name="tipos_unidade"
-                selected={values.tipos_unidade || []}
+                name="tipo_unidades"
+                selected={values.tipo_unidades || []}
                 options={tiposUnidades.map(tipoUnidade => ({
                   label: tipoUnidade.iniciais,
                   value: tipoUnidade.uuid
                 }))}
                 onSelectedChanged={values_ => {
-                  form.change("tipos_unidade", values_);
+                  form.change("tipo_unidades", values_);
                 }}
                 overrideStrings={{
                   selectSomeItems: "Selecione",
