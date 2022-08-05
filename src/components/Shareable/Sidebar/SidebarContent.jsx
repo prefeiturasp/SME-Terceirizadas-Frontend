@@ -94,8 +94,7 @@ export const SidebarContent = () => {
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhDRE() ||
-    usuarioEhTerceirizada() ||
-    !usuarioEhMedicao();
+    usuarioEhTerceirizada();
   const exibirLancamentoInicial =
     exibeMenuValidandoAmbiente &&
     ((usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
