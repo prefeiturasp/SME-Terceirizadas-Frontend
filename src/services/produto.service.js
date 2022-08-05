@@ -272,12 +272,13 @@ export const getHomologacaoProduto = uuid => {
     });
 };
 
-export const CODAEHomologaProduto = uuid => {
+export const CODAEHomologaProduto = (uuid, editais) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-homologa/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    headers: authToken
+    headers: authToken,
+    body: JSON.stringify({ editais })
   })
     .then(res => {
       status = res.status;
@@ -470,6 +471,14 @@ export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
   return await axios.get(url);
 };
 
+export const getHomologacoesDeProdutoPorStatusTitulo = async (
+  status,
+  titulo_produto
+) => {
+  const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
+  return await axios.post(url, titulo_produto);
+};
+
 export const getTodosOsProdutos = async () => {
   return await axios.get(`/produtos/todos-produtos/`);
 };
@@ -634,3 +643,32 @@ export const atualizarItem = async (payload, uuid) =>
 
 export const deletarItem = async uuid =>
   await axios.delete(`/itens-cadastros/${uuid}/`);
+
+export const filtrosVincularProdutoEdital = () =>
+  axios.get("/produtos-editais/filtros/");
+
+export const filtrarPorEditalNomeTipo = async params =>
+  await axios.get("/produtos-editais/filtrar/", { params });
+
+export const ativarInativarProduto = async uuid =>
+  await axios.patch(`/produtos-editais/${uuid}/ativar-inativar-produto/`);
+
+export const getListaProdutos = async params =>
+  await axios.get(`/produtos-editais/lista-produtos-opcoes/`, {
+    params: params
+  });
+
+export const criarVinculoProdutosEditais = async payload =>
+  await axios.post(`/produtos-editais/`, payload);
+
+export const getNomesProtudosEdital = async () =>
+  axios.get("/cadastro-produtos-edital/lista-nomes/");
+
+export const getCadastroProdutosEdital = async params =>
+  axios.get(`/cadastro-produtos-edital/`, { params });
+
+export const cadastrarProdutoEdital = async payload =>
+  await axios.post(`/cadastro-produtos-edital/`, payload);
+
+export const atualizarProdutoEdital = async (payload, uuid) =>
+  await axios.patch(`/cadastro-produtos-edital/${uuid}/`, payload);

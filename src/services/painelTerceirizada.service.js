@@ -1,10 +1,11 @@
 import { API_URL } from "../constants/config";
+import axios from "./_base";
 import {
   filtraNoLimite,
   filtraPrioritarios,
   filtraRegular
 } from "./../components/InversaoDeDiaDeCardapio/Terceirizada/PainelPedidos/helper";
-import { AUTH_TOKEN, SOLICITACOES } from "./constants";
+import { SOLICITACOES } from "./constants";
 import { getTerceirizadaPedidosDeAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { terceirizadaListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { getTerceirizadaPedidosDeInversoes } from "./inversaoDeDiaDeCardapio.service";
@@ -14,6 +15,7 @@ import { getTerceirizadasPedidosSolicitacoesUnificadas } from "./solicitacaoUnif
 import { getTerceirizadasSuspensoesDeAlimentacao } from "./suspensaoDeAlimentacao.service.js";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { safeConcatOn } from "helpers/utilities";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 export const getResumoPendenciasTerceirizadaAlteracoesDeCardapio = async (
   TerceirizadaUuid,
@@ -303,48 +305,48 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
-// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
-const retornoBase = async url => {
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getSolicitacoesPendentesTerceirizada = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.PENDENTES
   }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.CANCELADOS
   }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesAutorizadasTerceirizada = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.AUTORIZADOS
   }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesNegadasTerceirizada = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.NEGADOS
   }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesPendenteCienciaTerceirizada = async (
@@ -355,12 +357,20 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.PENDENTES_CIENCIA
   }/${TerceirizadaUuid}/${filtroAplicado}/${tipoVisao}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesComQuestionamento = async TerceirizadaUuid => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.QUESTIONAMENTOS
   }/${TerceirizadaUuid}/`;
-  return retornoBase(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

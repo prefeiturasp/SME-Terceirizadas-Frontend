@@ -72,7 +72,6 @@ class DashBoardDietaEspecial extends Component {
 
   async loadDietas() {
     let { instituicao } = this.state;
-
     await this.props
       .getDietaEspecialAutorizadas(instituicao.uuid, true)
       .then(response => {

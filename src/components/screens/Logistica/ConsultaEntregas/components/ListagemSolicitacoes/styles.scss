@@ -58,6 +58,10 @@
         grid-column: span 2;
         text-align: center;
       }
+
+      .fas {
+        color: #696969;
+      }
     }
 
     .top-header {
@@ -191,17 +195,21 @@
     .red {
       color: #fc2122;
     }
+
+    .gray {
+      color: $gray;
+    }
   }
 }
 
 .dilog {
   .grid-table {
-    grid-template-columns: 0.3fr 1.2fr 2.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.25fr 1.2fr 2.5fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr;
   }
 }
 
 .distribuidor {
   .grid-table {
-    grid-template-columns: 0.3fr 1.2fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.25fr 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr;
   }
 }

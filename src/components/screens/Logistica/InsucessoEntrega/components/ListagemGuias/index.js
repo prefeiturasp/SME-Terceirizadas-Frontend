@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import { REGISTRAR_INSUCESSO, LOGISTICA } from "configs/constants";
 import { NavLink } from "react-router-dom";
+import { Tooltip } from "antd";
 
 const ListagemGuias = ({ guias, ativos, setAtivos }) => {
   const isDisabled = guia => {
@@ -26,7 +27,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
           <div>Nome da U.E. </div>
           <div>Data de entrega</div>
           <div>Status</div>
-          <div>Ações</div>
+          <div>Registrar Insucesso de Entrega</div>
         </div>
         {guias.map(guia => {
           const bordas =
@@ -55,23 +56,34 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>{guia.data_entrega}</div>
                 <div className={`${bordas}`}>{guia.status}</div>
                 <div className={`${bordas}`}>
-                  <NavLink
-                    className="float-left"
-                    to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
-                      guia.uuid
-                    }`}
-                    disabled={isDisabled(guia)}
+                  <Tooltip
+                    title={
+                      isDisabled(guia)
+                        ? `Botão habilitado apenas para Guias de Remessa com status de "Pendente".`
+                        : ""
+                    }
                   >
-                    <span
-                      className={
-                        isDisabled(guia)
-                          ? "link-insucesso-desativado"
-                          : "link-insucesso"
-                      }
-                    >
-                      <i className="fas fa-thumbs-down" /> Insucesso de Entrega
+                    <span>
+                      <NavLink
+                        className="float-left"
+                        to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
+                          guia.uuid
+                        }`}
+                        disabled={isDisabled(guia)}
+                      >
+                        <span
+                          className={
+                            isDisabled(guia)
+                              ? "link-insucesso-desativado"
+                              : "link-insucesso"
+                          }
+                        >
+                          <i className="fas fa-thumbs-down" /> Insucesso de
+                          Entrega
+                        </span>
+                      </NavLink>
                     </span>
-                  </NavLink>
+                  </Tooltip>
                 </div>
               </div>
               {ativos && ativos.includes(guia.uuid) && (

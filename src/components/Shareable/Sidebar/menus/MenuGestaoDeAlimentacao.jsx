@@ -28,7 +28,8 @@ import {
   usuarioEhEscola,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
-  usuarioEhNutricionistaSupervisao
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhMedicao
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -44,7 +45,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
     ? DRE
     : usuarioEhCODAEGestaoAlimentacao()
     ? CODAE
-    : usuarioEhCODAENutriManifestacao()
+    : usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
     ? NUTRIMANIFESTACAO
     : usuarioEhNutricionistaSupervisao()
     ? NUTRISUPERVISAO
@@ -111,7 +112,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
             </LeafItem>
           ) : (
             !usuarioEhCODAENutriManifestacao() &&
-            !usuarioEscolaEhGestaoDireta() && (
+            !usuarioEscolaEhGestaoDireta() &&
+            !usuarioEhMedicao() && (
               <LeafItem to={`/${PERFIL}/${SOLICITACOES_PENDENTES}`}>
                 Aguardando autorização
               </LeafItem>

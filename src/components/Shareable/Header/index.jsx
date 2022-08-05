@@ -6,6 +6,7 @@ import { ENVIRONMENT } from "constants/config";
 import NotificacoesNavbar from "../NotificacoesNavbar";
 import DownloadsNavbar from "../DownloadsNavbar";
 import { CENTRAL_DOWNLOADS } from "configs/constants";
+import { usuarioEhEscolaAbastecimento } from "helpers/utilities";
 
 export class Header extends Component {
   render() {
@@ -72,15 +73,17 @@ export class Header extends Component {
                   </Link>
                   <p className="title">Ajuda</p>
                 </li>
-                <li className="nav-item">
-                  <Link
-                    to={{
-                      pathname: `/${CENTRAL_DOWNLOADS}`
-                    }}
-                  >
-                    <DownloadsNavbar />
-                  </Link>
-                </li>
+                {!usuarioEhEscolaAbastecimento() && (
+                  <li className="nav-item">
+                    <Link
+                      to={{
+                        pathname: `/${CENTRAL_DOWNLOADS}`
+                      }}
+                    >
+                      <DownloadsNavbar />
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item">
                   <NotificacoesNavbar />
                 </li>

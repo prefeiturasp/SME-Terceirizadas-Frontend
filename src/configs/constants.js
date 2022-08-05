@@ -27,6 +27,7 @@ export const ESCOLA = "escola";
 export const ALUNO = "aluno";
 export const NUTRISUPERVISAO = "nutrisupervisao";
 export const NUTRIMANIFESTACAO = "nutrimanifestacao";
+export const MEDICAO = "medicao";
 
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
@@ -226,3 +227,6 @@ export const WEEK = [
     value: "5"
   }
 ];
+
+export const USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM = "6769195";
+export const USUARIO_PODE_ATUALIZAR_FOTO_PROD = "sigpae.amcom";

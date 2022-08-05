@@ -26,6 +26,11 @@ export const InputSearchPendencias = props => {
     );
   };
 
+  const ehURLGestaoProduto = () => {
+    let path = window.location.pathname;
+    return path.includes("gestao-produto");
+  };
+
   const verificaStatusFiltros = () => {
     return [SOLICITACOES_AUTORIZADAS, SOLICITACOES_CANCELADAS].includes(
       props.tipoSolicitacao
@@ -58,12 +63,18 @@ export const InputSearchPendencias = props => {
                 component={InputText}
                 name="titulo"
                 placeholder="Pesquisar"
+                disabled={props.disabled}
               />
               <OnChange name="titulo">
                 {() => {
                   props.filterList(values);
                 }}
               </OnChange>
+              {ehURLGestaoProduto() && (
+                <div className="warning-num-charac">
+                  * mínimo de 3 caracteres
+                </div>
+              )}
             </div>
             {ehTerceirizada && (
               <>
