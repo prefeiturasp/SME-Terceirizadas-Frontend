@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Field } from "react-final-form";
+import ModalVincularProdutosEditais from "../ModalVincularProdutosEditais";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
 import { Icon, Select as SelectAntd } from "antd";
@@ -22,6 +23,7 @@ export default ({
   setPage,
   filtrarPorEditalNomeTipo
 }) => {
+  const [showModal, setShowModal] = useState(false);
   const { Option } = SelectAntd;
   const opcoesTipos = listaTipos
     ? listaTipos.map(tipo => {
@@ -121,7 +123,15 @@ export default ({
               </div>
             </div>
             <div className="row mb-3">
-              <div className="offset-8 col-4">
+              <div className="col-8">
+                <Botao
+                  texto="Selecionar Produtos"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN}
+                  onClick={() => setShowModal(true)}
+                />
+              </div>
+              <div className="col-4">
                 <Botao
                   texto="Filtrar"
                   type={BUTTON_TYPE.SUBMIT}
@@ -144,6 +154,12 @@ export default ({
             </div>
           </form>
         )}
+      />
+      <ModalVincularProdutosEditais
+        closeModal={() => setShowModal(false)}
+        showModal={showModal}
+        listaEditais={listaEditais}
+        opcoesTipos={opcoesTipos}
       />
     </>
   );
