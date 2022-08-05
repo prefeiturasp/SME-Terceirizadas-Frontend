@@ -294,11 +294,7 @@ export default ({ reposicao }) => {
                           </td>
                           <td className="embalagem">
                             {fechada ? (
-                              <>
-                                {fechada.descricao_embalagem}.{" "}
-                                {fechada.capacidade_embalagem}
-                                {fechada.unidade_medida}
-                              </>
+                              <>{fechada.capacidade_completa}</>
                             ) : (
                               "--"
                             )}
@@ -320,11 +316,7 @@ export default ({ reposicao }) => {
                           </td>
                           <td className="embalagem">
                             {fracionada ? (
-                              <>
-                                {fracionada.descricao_embalagem}.{" "}
-                                {fracionada.capacidade_embalagem}
-                                {fracionada.unidade_medida}
-                              </>
+                              <>{fracionada.capacidade_completa}</>
                             ) : (
                               "--"
                             )}
