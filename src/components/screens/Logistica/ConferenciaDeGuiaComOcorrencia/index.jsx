@@ -37,12 +37,6 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "conferenciaGuiaRemessaComOcorrencia";
-const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente recebido pela Unidade Educacional.
-                      Se o alimento foi entregue em data posterior ao previsto na Guia de Remessa,
-                      será aberta ocorrência a ser detalhada pelo usuário.`;
-const TOOLTIP_HORA = `Preencher com a hora em que o alimento foi entregue na Unidade Educacional.`;
-const TOOLTIP_PLACA = `Preencher com o registro da placa do veículo que transportou os alimentos à Unidade Educacional.`;
-const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimentos na Unidade Educacional.`;
 const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
                           Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
                           será aberta ocorrência a ser detalhada pelo usuário.`;
@@ -474,6 +468,10 @@ export default () => {
                   Conferência individual dos itens
                 </span>
                 <hr />
+                <div className="texto-intro">
+                  Preencher <strong>exatamente</strong> com os dados
+                  relacionados a <strong>Entrega na UE.</strong>
+                </div>
                 <div className="row mt-2">
                   <div className="col-4">
                     <Field
@@ -496,15 +494,14 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputComData}
-                      label="Data de recebimento da UE"
+                      label="Selecionar data de recebimento da UE"
                       name="data_entrega_real"
                       className="data-inicial"
-                      tooltipText={TOOLTIP_DATA}
                       validate={composeValidators(required, validaDataEntrega)}
                       minDate={null}
                       maxDate={null}
                       required
-                      writable
+                      writable={false}
                       onChange={validaStatus(values)}
                     />
                     {comparaDataEntrega(values.data_entrega_real) && (
@@ -519,15 +516,15 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Hora da Entrega"
+                      label="Selecionar hora da Entrega"
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
                       onChangeFunction={data => {
                         escolherHora(data);
                       }}
+                      writable={false}
                       className="input-busca-produto"
-                      tooltipText={TOOLTIP_HORA}
                       validate={validaHoraRecebimento}
                       required
                       functionComponent
@@ -540,7 +537,6 @@ export default () => {
                       name="nome_motorista"
                       className="input-busca-produto"
                       contador={100}
-                      tooltipText={TOOLTIP_NOME}
                       validate={composeValidators(
                         required,
                         maxLength(100),
@@ -556,7 +552,6 @@ export default () => {
                       name="placa_veiculo"
                       className="input-busca-produto"
                       contador={7}
-                      tooltipText={TOOLTIP_PLACA}
                       validate={composeValidators(
                         required,
                         maxLength(7),
@@ -681,9 +676,7 @@ export default () => {
                                                   {fechada.descricao_embalagem}.
                                                 </td>
                                                 <td>
-                                                  {fechada.descricao_embalagem}.{" "}
-                                                  {fechada.capacidade_embalagem}
-                                                  {fechada.unidade_medida}
+                                                  {fechada.capacidade_completa}
                                                 </td>
                                                 <td>
                                                   <div className="form-tabela">
@@ -750,13 +743,8 @@ export default () => {
                                                 </td>
                                                 <td>
                                                   {
-                                                    fracionada.descricao_embalagem
+                                                    fracionada.capacidade_completa
                                                   }
-                                                  .{" "}
-                                                  {
-                                                    fracionada.capacidade_embalagem
-                                                  }
-                                                  {fracionada.unidade_medida}
                                                 </td>
                                                 <td>
                                                   <div className="form-tabela">

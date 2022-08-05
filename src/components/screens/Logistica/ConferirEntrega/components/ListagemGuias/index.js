@@ -12,6 +12,7 @@ import { imprimirGuiaRemessa } from "services/logistica.service.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { Spin, Tooltip } from "antd";
 import ModalEdicao from "../ModalEdicao";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 
 const ListagemSolicitacoes = ({ guias }) => {
   const [carregando, setCarregando] = useState(false);
@@ -126,8 +127,8 @@ const ListagemSolicitacoes = ({ guias }) => {
             <div>Número da Guia</div>
             <div>Nome do Distribuidor</div>
             <div>Data de entrega</div>
-            <div>Status</div>
-            <div>Ações</div>
+            <div>Status de Entrega</div>
+            <div>Conferência de Entregas</div>
             <div>Opções</div>
           </div>
           {guias.map(guia => {
@@ -137,7 +138,12 @@ const ListagemSolicitacoes = ({ guias }) => {
                   <div>{guia.numero_guia}</div>
                   <div>{guia.nome_distribuidor}</div>
                   <div>{guia.data_entrega}</div>
-                  <div>{guia.status}</div>
+                  <div>
+                    {guia.status}
+                    {guia.status === "Insucesso de entrega" && (
+                      <TooltipIcone tooltipText="Não foi possível o distribuidor realizar a entrega, por motivo externo" />
+                    )}
+                  </div>
                   <div>
                     {retornaBotaoEdicao(guia, false)}
                     {retornaBotaoAcao(guia)}
