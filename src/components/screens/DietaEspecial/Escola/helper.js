@@ -1,4 +1,9 @@
-import { usuarioEhEscola } from "../../../../helpers/utilities";
+import {
+  USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM,
+  USUARIO_PODE_ATUALIZAR_FOTO_PROD
+} from "configs/constants";
+import { ENVIRONMENT } from "constants/config";
+import { usuarioEhEscola } from "helpers/utilities";
 
 export const formatarSolicitacoesVigentes = solicitacoes => {
   solicitacoes.forEach(solicitacao => {
@@ -15,5 +20,14 @@ export const exibirParteInativacao = (solicitacao, uuid) => {
     ["CODAE_AUTORIZADO", "TERCEIRIZADA_TOMOU_CIENCIA"].includes(
       solicitacao.status_solicitacao
     )
+  );
+};
+
+export const podeAtualizarFoto = criadoRF => {
+  return (
+    (ENVIRONMENT !== "production" &&
+      criadoRF === USUARIO_PODE_ATUALIZAR_FOTO_DEV_HOM) ||
+    (ENVIRONMENT === "production" &&
+      criadoRF === USUARIO_PODE_ATUALIZAR_FOTO_PROD)
   );
 };

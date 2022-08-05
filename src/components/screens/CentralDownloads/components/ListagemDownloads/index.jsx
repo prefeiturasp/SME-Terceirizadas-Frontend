@@ -6,13 +6,18 @@ import { STATUS_DOWNLOAD } from "constants/shared";
 import { baixarArquivoCentral } from "services/downloads.service";
 import moment from "moment";
 
-const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
+const ListagemDownloads = ({
+  downloads,
+  deletaDownload,
+  marcarVisto,
+  atualizar
+}) => {
   const retornaIconeStatus = status => {
     switch (status) {
       case STATUS_DOWNLOAD.CONCLUIDO:
         return "fas fa-check-circle verde";
       case STATUS_DOWNLOAD.EM_PROCESSAMENTO:
-        return "fas fa-sync laranja";
+        return "fas fa-spinner";
       case STATUS_DOWNLOAD.ERRO:
         return "fas fa-times-circle vermelho";
       default:
@@ -61,11 +66,18 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
             <>
               <div className="grid-table body-table">
                 <div>{download.identificador}</div>
-                <div className="flex-container">
-                  <Tooltip title={retornaTextoTooltipIcone(download)}>
+
+                <Tooltip title={retornaTextoTooltipIcone(download)}>
+                  <div className="flex-container center">
                     <i className={retornaIconeStatus(download.status)} />
-                  </Tooltip>
-                </div>
+                    <p className="font-weight-normal ml-2">
+                      {download.status === "Em processamento"
+                        ? "Aguarde, Processando..."
+                        : download.status}
+                    </p>
+                  </div>
+                </Tooltip>
+
                 <div>
                   {download.status === STATUS_DOWNLOAD.EM_PROCESSAMENTO
                     ? "----"
@@ -84,28 +96,34 @@ const ListagemDownloads = ({ downloads, deletaDownload, marcarVisto }) => {
                   )}
                 </div>
                 <div className="flex-container">
-                  <Tooltip title={retornaTextoTooltipDownload(download)}>
-                    <button
-                      disabled={
-                        download.status !== STATUS_DOWNLOAD.CONCLUIDO ||
-                        !verificaDataDownload(download)
-                      }
-                      onClick={() => baixarArquivo(download)}
-                      className="verde"
-                    >
-                      <i className="fas fa-download" />
-                    </button>
-                  </Tooltip>
+                  {download.status !== STATUS_DOWNLOAD.EM_PROCESSAMENTO && (
+                    <>
+                      <Tooltip title={retornaTextoTooltipDownload(download)}>
+                        <button
+                          disabled={
+                            download.status !== STATUS_DOWNLOAD.CONCLUIDO ||
+                            !verificaDataDownload(download)
+                          }
+                          onClick={() => baixarArquivo(download)}
+                          className="verde"
+                        >
+                          <i className="fas fa-download" />
+                        </button>
+                      </Tooltip>
 
-                  <button
-                    disabled={
-                      download.status === STATUS_DOWNLOAD.EM_PROCESSAMENTO
-                    }
-                    onClick={() => deletaDownload(download)}
-                    className="vermelho"
-                  >
-                    <i className="fas fa-trash-alt" />
-                  </button>
+                      <button
+                        onClick={() => deletaDownload(download)}
+                        className="vermelho"
+                      >
+                        <i className="fas fa-trash-alt" />
+                      </button>
+                    </>
+                  )}
+                  {download.status === STATUS_DOWNLOAD.EM_PROCESSAMENTO && (
+                    <button onClick={() => atualizar()}>
+                      <i className="fas fa-sync-alt" /> Atualizar
+                    </button>
+                  )}
                 </div>
               </div>
             </>

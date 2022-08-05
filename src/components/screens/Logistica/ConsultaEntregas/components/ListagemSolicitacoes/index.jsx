@@ -4,6 +4,7 @@ import "./styles.scss";
 import FiltrosExcel from "../FiltrosRelatorios";
 
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import TooltipIcone from "components/Shareable/TooltipIcone";
 
 const ListagemSolicitacoes = ({
   solicitacoes,
@@ -35,8 +36,26 @@ const ListagemSolicitacoes = ({
             <div>Data de entrega</div>
             <div>Qtde.</div>
             <div>Conferidas</div>
-            <div>Insucesso</div>
-            <div>Pendentes</div>
+            <div>
+              <span>
+                Insucessos de Entrega
+                <TooltipIcone
+                  tooltipText={
+                    "Não foi possível o distribuidor realizar a entrega, por motivo externo."
+                  }
+                />
+              </span>
+            </div>
+            <div>
+              <span>
+                Pendentes de Conferência
+                <TooltipIcone
+                  tooltipText={
+                    "Guias de remessa disponibilizadas, porém pendentes de conferência pela Unidade Educacional."
+                  }
+                />
+              </span>
+            </div>
             <div>Relatório</div>
             <div>Exportar Requisição</div>
           </div>

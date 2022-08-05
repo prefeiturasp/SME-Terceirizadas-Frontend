@@ -90,7 +90,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
                   <div className="col-4">
                     <label className="col-form-label mb-1">
                       <span className="asterisco">* </span>
-                      Tipo
+                      Status
                     </label>
                     <Field
                       name="tipo"

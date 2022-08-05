@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { version } from "../../../../package.json";
 import { Link } from "react-router-dom";
 import { SidebarContent } from "./SidebarContent";
 import { AvatarEscola } from "../Avatar/AvatarEscola";
@@ -8,14 +7,15 @@ import { AvatarCODAE } from "../Avatar/AvatarCODAE";
 import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
 import {
-  usuarioEhQualquerCODAE,
   usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhDRE,
-  usuarioEhNutricionistaSupervisao,
-  usuarioEhCoordenadorEscola
+  usuarioEhCoordenadorEscola,
+  usuarioEhDistribuidora,
+  usuarioEhEscolaAbastecimento
 } from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
+import { AvatarDistribuidor } from "../Avatar/AvatarDistribuidor";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -24,6 +24,24 @@ export class Sidebar extends Component {
       toggled: false,
       API_VERSION: ""
     };
+  }
+
+  retornaAvatar() {
+    if (usuarioEhDistribuidora()) {
+      return <AvatarDistribuidor />;
+    } else if (usuarioEhTerceirizada()) {
+      return <AvatarTerceirizada />;
+    } else if (usuarioEhDRE()) {
+      return <AvatarDRE />;
+    } else if (
+      usuarioEhEscola() ||
+      usuarioEhEscolaAbastecimento() ||
+      usuarioEhCoordenadorEscola()
+    ) {
+      return <AvatarEscola />;
+    } else {
+      return <AvatarCODAE />;
+    }
   }
 
   async componentDidMount() {
@@ -37,13 +55,7 @@ export class Sidebar extends Component {
 
   render() {
     const { API_VERSION } = this.state;
-    const {
-      nome,
-      toggle,
-      toggled,
-      registro_funcional,
-      nome_instituicao
-    } = this.props;
+    const { nome, toggle, toggled } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -68,24 +80,17 @@ export class Sidebar extends Component {
             to="/"
           >
             <div className="sidebar-brand-icon mb-3">
-              {(usuarioEhQualquerCODAE() ||
-                usuarioEhNutricionistaSupervisao()) && <AvatarCODAE />}
-              {usuarioEhDRE() && <AvatarDRE />}
-              {usuarioEhEscola() ||
-                (usuarioEhCoordenadorEscola() && <AvatarEscola />)}
-              {usuarioEhTerceirizada() && <AvatarTerceirizada />}
+              {this.retornaAvatar()}
             </div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
             <div className="nav-item">
               {!toggled && nome && nome !== "" && (
-                <div className="sidebar-brand-text text-center">
-                  <span className="d-none d-lg-inline text-bold text-white small border border-light rounded-pill p-1">
-                    {nome}
-                  </span>
+                <div className="sidebar-brand-text text-center text-bold text-white small border border-light rounded-pill p-1 mx-3">
+                  <span className="d-none d-lg-inline">{nome}</span>
                 </div>
               )}
-              <div className="profile">
+              <div className="profile mt-3">
                 <i className="fas fa-user-edit" />
                 <Link to="/perfil">
                   <span>Perfil</span>
@@ -93,16 +98,6 @@ export class Sidebar extends Component {
               </div>
             </div>
           </div>
-          {!toggled && (
-            <div className="sidebar-wrapper">
-              <div className="text-center mx-auto justify-content-center p-2">
-                <span className="text-bold text-white small">
-                  RF: {registro_funcional} <br />
-                  {nome_instituicao}
-                </span>
-              </div>
-            </div>
-          )}
           <div className="sidebar-wrapper div-submenu">
             <SidebarContent />
           </div>
@@ -110,20 +105,13 @@ export class Sidebar extends Component {
             <div className="text-center page-footer mx-auto justify-content-center mb-1 pb-2">
               <img
                 src="/assets/image/logo-sme-branco.svg"
-                className="rounded"
+                className="rounded logo-sme"
                 alt="SME Educação"
               />
               <div className="sidebar-wrapper">
                 <div className="text-center mx-auto justify-content-center p-2 conteudo-detalhes">
-                  <span className="text-bold text-white small detalhes-licenca">
-                    SME-SP-SGA - Distribuído sob a Licença AGPL V3
-                  </span>
-                </div>
-              </div>
-              <div className="sidebar-wrapper">
-                <div className="text-center mx-auto justify-content-center p-2">
-                  <span className="text-bold text-white small">
-                    {version} (API: {API_VERSION})
+                  <span className="text-white small">
+                    Licença AGPL V3 (API: {API_VERSION})
                   </span>
                 </div>
               </div>

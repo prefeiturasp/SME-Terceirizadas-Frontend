@@ -11,6 +11,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhEscola,
+  usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao
@@ -24,6 +25,7 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
     usuarioEhEscola() ||
+    usuarioEhMedicao() ||
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao();
   const exibeNovaSolicitacao = usuarioEhEscola();
@@ -33,13 +35,14 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscola() ||
+    usuarioEhMedicao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
 
   return (
-    <Menu id="DietaEspecial" icon="fa-utensils" title={"Dieta Especial"}>
+    <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
       {exibePainelInicial && (
         <LeafItem to="/painel-dieta-especial">Painel de Solicitações</LeafItem>
       )}

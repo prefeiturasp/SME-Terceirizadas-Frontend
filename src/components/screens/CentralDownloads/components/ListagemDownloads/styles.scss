@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 1fr 0.2fr 0.6fr 0.2fr 0.3fr;
+      grid-template-columns: 0.7fr 0.6fr 0.5fr 0.2fr 0.3fr;
     }
 
     .header-table {
@@ -56,14 +56,9 @@
         font-weight: 900;
         font-size: 16px;
         line-height: 18px;
-        display: flex;
         align-items: center;
         text-align: center;
         letter-spacing: 0.01em;
-      }
-
-      .laranja {
-        color: $orange;
       }
 
       .vermelho {
@@ -96,6 +91,10 @@
         display: flex;
         justify-content: space-evenly;
         padding-left: 0;
+      }
+
+      .center {
+        justify-content: center;
       }
 
       div {

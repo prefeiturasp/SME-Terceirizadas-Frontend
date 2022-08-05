@@ -32,15 +32,8 @@ export default class Page extends Component {
         );
       }
 
-      const nome_instituicao =
-        (meusDados.vinculo_atual &&
-          meusDados.vinculo_atual.instituicao &&
-          meusDados.vinculo_atual.instituicao.nome) ||
-        "Não vinculado à uma instituição";
       this.setState({
-        nome: meusDados.nome,
-        nome_instituicao,
-        registro_funcional: meusDados.registro_funcional || "N/A"
+        nome: meusDados.nome
       });
     } else {
       this.setState({ nome: localStorage.getItem("nome") });
@@ -48,18 +41,12 @@ export default class Page extends Component {
   }
 
   render() {
-    const { nome, nome_instituicao, registro_funcional, toggled } = this.state;
+    const { nome, toggled } = this.state;
     const { children, titulo, botaoVoltar, voltarPara } = this.props;
     return (
       <div id="wrapper">
         <Header toggled={toggled} />
-        <Sidebar
-          nome={nome}
-          toggle={this.toggle}
-          toggled={toggled}
-          registro_funcional={registro_funcional}
-          nome_instituicao={nome_instituicao}
-        />
+        <Sidebar nome={nome} toggle={this.toggle} toggled={toggled} />
         <div id="content-wrapper" className="pt-5">
           <div
             className={`content-wrapper-div ${toggled &&

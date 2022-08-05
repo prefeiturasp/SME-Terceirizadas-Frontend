@@ -83,6 +83,7 @@ export default () => {
                 downloads={downloads}
                 deletaDownload={deletaDownload}
                 marcarVisto={marcarVisto}
+                atualizar={() => buscarDownloads(page)}
               />
               <div className="row">
                 <div className="col">

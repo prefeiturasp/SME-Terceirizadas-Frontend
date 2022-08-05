@@ -36,14 +36,20 @@ import { loadEmpresa } from "../../../../reducers/empresa.reducer";
 import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
 import { getEnderecoPorCEP } from "../../../../services/cep.service";
+import ModalTransferirLote from "components/Shareable/ModalTransferirLote";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      terceirizada: undefined,
       lotes: "",
+      lotesRaw: null,
+      atualizarLotes: false,
       exibirModal: false,
+      exibirModalTransferenciaLote: false,
+      loteAdicionado: undefined,
       tituloModal: "Confirma cadastro de Empresa?",
       valoresForm: null,
       lotesSelecionados: [],
@@ -474,8 +480,10 @@ class CadastroEmpresa extends Component {
     const uuid = urlParams.get("uuid");
     if (uuid) this.setState({ carregando: true });
     getLotesSimples().then(response => {
-      let lotes = transformaObjetos(response);
-      this.setState({ lotes });
+      this.setState({
+        lotes: transformaObjetos(response),
+        lotesRaw: response.results
+      });
     });
   }
 
@@ -530,7 +538,7 @@ class CadastroEmpresa extends Component {
               lotesSelecionados
             });
           }
-          this.setState({ carregando: false });
+          this.setState({ terceirizada: response.data, carregando: false });
           this.setaValoresForm(response.data);
         });
       } else {
@@ -562,7 +570,30 @@ class CadastroEmpresa extends Component {
   }
 
   lidarComSelecionados(values) {
-    const lotes = this.state.lotes;
+    const { lotes, lotesRaw, terceirizada, lotesSelecionados } = this.state;
+    if (
+      terceirizada.lotes
+        .map(lote => lote.uuid)
+        .filter(lote => !values.includes(lote)).length > 0
+    ) {
+      toastError(
+        "Não é possível remover um lote, apenas transferí-lo para outra empresa."
+      );
+      return;
+    }
+    const loteSelecionado = values.find(
+      lote => !lotesSelecionados.includes(lote)
+    );
+    if (
+      loteSelecionado &&
+      lotesRaw.find(l => l.uuid === loteSelecionado).terceirizada
+    ) {
+      this.setState({
+        loteAdicionado: lotesRaw.find(l => l.uuid === loteSelecionado),
+        exibirModalTransferenciaLote: true
+      });
+    }
+
     let lotesNomesSelecionados = [];
     values.forEach(value => {
       const indice = lotes.findIndex(lote => lote.uuid === value);
@@ -574,6 +605,17 @@ class CadastroEmpresa extends Component {
       lotesSelecionados: values
     });
   }
+
+  naoAceitaTransferenciaLote = lote => {
+    const { lotesSelecionados, lotesNomesSelecionados } = this.state;
+    this.setState({
+      exibirModalTransferenciaLote: false,
+      lotesSelecionados: lotesSelecionados.filter(l => l !== lote.uuid),
+      lotesNomesSelecionados: lotesNomesSelecionados.filter(
+        l => l !== lote.nome
+      )
+    });
+  };
 
   resetForm() {
     this.props.reset();
@@ -706,12 +748,25 @@ class CadastroEmpresa extends Component {
       carregando,
       ehDistribuidor,
       dadosEndereco,
-      qtdField
+      qtdField,
+      atualizarLotes,
+      exibirModalTransferenciaLote,
+      loteAdicionado
     } = this.state;
     return (
       <Spin tip="Carregando..." spinning={carregando}>
         <div className="cadastro pt-3">
           {this.renderRedirect()}
+          {exibirModalTransferenciaLote && (
+            <ModalTransferirLote
+              lote={loteAdicionado}
+              closeModalNao={this.naoAceitaTransferenciaLote}
+              closeModalSim={() =>
+                this.setState({ exibirModalTransferenciaLote: false })
+              }
+              showModal={exibirModalTransferenciaLote}
+            />
+          )}
           <ModalCadastroEmpresa
             titulo={tituloModal}
             values={valoresForm}
@@ -1420,6 +1475,16 @@ class CadastroEmpresa extends Component {
                           <div className="col-12">
                             <label className="label font-weight-normal pb-3">
                               Lotes de atendimento
+                              <span
+                                onClick={() =>
+                                  this.setState({
+                                    atualizarLotes: !atualizarLotes
+                                  })
+                                }
+                                className="link editar-lotes ml-3"
+                              >
+                                editar lotes
+                              </span>
                             </label>
 
                             {this.state.lotes.length ? (
@@ -1432,6 +1497,7 @@ class CadastroEmpresa extends Component {
                                 onSelectedChanged={value => {
                                   this.lidarComSelecionados(value);
                                 }}
+                                disabled={!atualizarLotes}
                                 overrideStrings={{
                                   search: "Busca",
                                   selectSomeItems: "Selecione",

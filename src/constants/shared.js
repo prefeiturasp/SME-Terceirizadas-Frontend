@@ -61,7 +61,8 @@ export const TIPO_PERFIL = {
   GESTAO_PRODUTO: `"gestao_produto"`,
   TERCEIRIZADA: `"terceirizada"`,
   LOGISTICA: `"logistica_abastecimento"`,
-  NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`
+  NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`,
+  MEDICAO: `"medicao"`
 };
 
 export const TIPO_USUARIO = {

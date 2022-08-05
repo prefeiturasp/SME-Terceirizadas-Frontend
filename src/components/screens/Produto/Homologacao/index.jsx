@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import HTTP_STATUS from "http-status-codes";
 import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_QUESTIONADO,
@@ -15,7 +14,6 @@ import {
   getHomologacaoProduto,
   getNumeroProtocoloAnaliseSensorial,
   getNomesTerceirizadas,
-  CODAEHomologaProduto,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
   CODAEPedeCorrecao
@@ -24,7 +22,6 @@ import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "./helper";
-import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import ModalAtivacaoSuspensaoProduto from "../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
@@ -45,6 +42,8 @@ import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/he
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
 import TabelaEspecificacoesProduto from "components/Shareable/TabelaEspecificacoesProduto";
 import ModalCodaeCancelaAnaliseSensorial from "components/Shareable/ModalCodaeCancelaAnaliseSensorial";
+import { ModalVincularEditais } from "./components/ModelVincularEditais";
+import { getNumerosEditais } from "services/edital.service";
 
 const {
   CODAE_HOMOLOGADO,
@@ -70,7 +69,9 @@ class HomologacaoProduto extends Component {
       mostraModalCancelar: false,
       terceirizadas: null,
       showCancelarAnaliseSensorialModal: false,
-      disableBotaoCancelar: false
+      disableBotaoCancelar: false,
+      showModalVincularEditais: false,
+      editaisOptions: []
     };
     this.closeModal = this.closeModal.bind(this);
     this.closeCancelarAnaliseSensorialModal = this.closeCancelarAnaliseSensorialModal.bind(
@@ -112,6 +113,28 @@ class HomologacaoProduto extends Component {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     getHomologacaoProduto(uuid).then(response => {
+      this.props.change("nome", response.data.produto.nome);
+      this.props.change(
+        "marca",
+        response.data.produto.marca && response.data.produto.marca.nome
+      );
+      this.props.change(
+        "fabricante",
+        response.data.produto.fabricante &&
+          response.data.produto.fabricante.nome
+      );
+      this.props.change(
+        "tipo",
+        response.data.produto.eh_para_alunos_com_dieta
+          ? "DIETA ESPECIAL"
+          : "COMUM"
+      );
+      this.props.change(
+        "editais",
+        response.data.produto.eh_para_alunos_com_dieta
+          ? response.data.rastro_terceirizada.contratos.map(c => c.edital.uuid)
+          : []
+      );
       this.setState({
         produto: response.data.produto,
         informacoesNutricionais: formataInformacoesNutricionais(
@@ -127,6 +150,10 @@ class HomologacaoProduto extends Component {
 
     getNomesTerceirizadas().then(response => {
       this.setState({ terceirizadas: response.data.results });
+    });
+
+    getNumerosEditais().then(response => {
+      this.setState({ editaisOptions: response.data.results });
     });
   };
 
@@ -176,18 +203,6 @@ class HomologacaoProduto extends Component {
     informacoesNutricionais[key].active = !informacoesNutricionais[key].active;
     this.forceUpdate();
   }
-
-  onSubmit = () => {
-    const { uuid } = this.state;
-    CODAEHomologaProduto(uuid).then(response => {
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de homologado enviada com sucesso");
-        this.loadHomologacao(uuid);
-      } else {
-        toastError(response.data.detail);
-      }
-    });
-  };
 
   renderFluxo = homologacao => {
     const { logs, status } = homologacao;
@@ -242,6 +257,10 @@ class HomologacaoProduto extends Component {
     this.setState({ disableBotaoCancelar: true });
   }
 
+  onChangeEditais = values => {
+    this.props.change("editais", values);
+  };
+
   render() {
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const {
@@ -258,13 +277,11 @@ class HomologacaoProduto extends Component {
       acao,
       terceirizadas,
       showCancelarAnaliseSensorialModal,
-      disableBotaoCancelar
+      disableBotaoCancelar,
+      showModalVincularEditais,
+      editaisOptions
     } = this.state;
-    const {
-      necessita_analise_sensorial,
-      handleSubmit,
-      justificativa
-    } = this.props;
+    const { necessita_analise_sensorial, justificativa, editais } = this.props;
     const { homologacao } = produto !== null && produto;
     const logAnaliseSensorial = homologacao && homologacao.ultimo_log;
 
@@ -286,10 +303,18 @@ class HomologacaoProduto extends Component {
           {!produto ? (
             <div>Carregando...</div>
           ) : (
-            <form
-              className="homologacao-produto"
-              onSubmit={handleSubmit(this.onSubmit)}
-            >
+            <form className="homologacao-produto">
+              <ModalVincularEditais
+                showModal={showModalVincularEditais}
+                closeModal={() =>
+                  this.setState({ showModalVincularEditais: false })
+                }
+                editaisOptions={editaisOptions}
+                editais={editais}
+                onChangeEditais={this.onChangeEditais}
+                uuid={uuid}
+                loadSolicitacao={this.loadHomologacao}
+              />
               <ModalPadrao
                 showModal={showModal}
                 closeModal={this.closeModal}
@@ -810,7 +835,10 @@ class HomologacaoProduto extends Component {
                       />
                       <Botao
                         texto={"Homologar"}
-                        type={BUTTON_TYPE.SUBMIT}
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          this.setState({ showModalVincularEditais: true })
+                        }
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         disabled={
                           !necessita_analise_sensorial ||
@@ -869,7 +897,8 @@ const selector = formValueSelector("HomologacaoProduto");
 const mapStateToProps = state => {
   return {
     necessita_analise_sensorial: selector(state, "necessita_analise_sensorial"),
-    justificativa: selector(state, "justificativa")
+    justificativa: selector(state, "justificativa"),
+    editais: selector(state, "editais")
   };
 };
 
