@@ -31,6 +31,8 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
   const exibirResponderReclamacao = usuarioEhTerceirizada();
+  const usuarioEhTerceirizadaOuGP =
+    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
 
   return (
     <Menu
@@ -109,19 +111,21 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         ))}
       </SubMenu>
-      <SubMenu
-        icon="fa-chevron-down"
-        path="cadastros-gp"
-        onClick={onSubmenuClick}
-        title="Cadastros"
-        activeMenu={activeMenu}
-      >
-        {cadastroItems.map((item, index) => (
-          <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
-            <div className="quebra-titulos">{item.titulo}</div>
-          </LeafItem>
-        ))}
-      </SubMenu>
+      {usuarioEhTerceirizadaOuGP && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="cadastros-gp"
+          onClick={onSubmenuClick}
+          title="Cadastros"
+          activeMenu={activeMenu}
+        >
+          {cadastroItems.map((item, index) => (
+            <LeafItem key={index} to={`/${GESTAO_PRODUTO}/${item.rota}`}>
+              <div className="quebra-titulos">{item.titulo}</div>
+            </LeafItem>
+          ))}
+        </SubMenu>
+      )}
     </Menu>
   );
 };
