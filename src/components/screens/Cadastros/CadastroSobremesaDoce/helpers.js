@@ -3,6 +3,8 @@ export const formataComoEventos = diasSobremesaDoce => {
   diasSobremesaDoce.forEach(diaSobremesaDoce => {
     eventos.push({
       title: diaSobremesaDoce.tipo_unidade.iniciais,
+      tipo_unidade: diaSobremesaDoce.tipo_unidade,
+      data: diaSobremesaDoce.data,
       start: new Date(
         parseInt(diaSobremesaDoce.data.split("/")[2]),
         parseInt(diaSobremesaDoce.data.split("/")[1]) - 1,

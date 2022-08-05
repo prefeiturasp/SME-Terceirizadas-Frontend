@@ -14,6 +14,7 @@ export const CustomToolbar = toolbar => {
     toolbar.date.setMonth(now.getMonth());
     toolbar.date.setYear(now.getFullYear());
     toolbar.onNavigate("current");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const goToBack = () => {

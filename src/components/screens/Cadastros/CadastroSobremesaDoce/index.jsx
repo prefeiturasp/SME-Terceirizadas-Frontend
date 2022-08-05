@@ -64,6 +64,7 @@ export const CadastroSobremesaDoce = () => {
       ano
     });
     getTiposUnidadeEscolarAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelectSlot = event => {
@@ -80,7 +81,7 @@ export const CadastroSobremesaDoce = () => {
     <div className="card calendario-sobremesa">
       <div className="card-body">
         <Spin
-          tip="Carregando..."
+          tip="Carregando calendário..."
           spinning={(!tiposUnidades || !diasSobremesaDoce) && !erroAPI}
         >
           {erroAPI && (
@@ -141,6 +142,7 @@ export const CadastroSobremesaDoce = () => {
                   <ModalCadastrarSobremesa
                     showModal={showModalCadastrarSobremesa}
                     closeModal={() => setShowModalCadastrarSobremesa(false)}
+                    diasSobremesaDoce={diasSobremesaDoce}
                     tiposUnidades={tiposUnidades}
                     event={currentEvent}
                     getDiasSobremesaDoceAsync={getDiasSobremesaDoceAsync}

@@ -5,7 +5,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { getDDMMYYYfromDate, getYYYYMMDDfromDate } from "configs/helper";
-import React from "react";
+import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import "./style.scss";
@@ -13,6 +13,7 @@ import { setDiaSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.se
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getError } from "helpers/utilities";
+import { useEffect } from "react";
 
 export const ModalCadastrarSobremesa = ({ ...props }) => {
   const {
@@ -20,8 +21,22 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     event,
     showModal,
     closeModal,
-    getDiasSobremesaDoceAsync
+    getDiasSobremesaDoceAsync,
+    diasSobremesaDoce
   } = props;
+
+  const [tipoUnidadesSalvoNoDia, setTipoUnidadesSalvoNoDia] = useState([]);
+
+  useEffect(() => {
+    setTipoUnidadesSalvoNoDia(
+      diasSobremesaDoce
+        .filter(
+          diaSobremesa => diaSobremesa.data === getDDMMYYYfromDate(event.start)
+        )
+        .map(diaSobremesa => diaSobremesa.tipo_unidade.uuid)
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [event.start]);
 
   const onSubmit = async values => {
     const payload = {
@@ -31,7 +46,11 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
     };
     const response = await setDiaSobremesaDoce(payload);
     if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Dia de sobremesa criado com sucesso");
+      if (tipoUnidadesSalvoNoDia.length === 0) {
+        toastSuccess("Dia de sobremesa criado com sucesso");
+      } else {
+        toastSuccess("Dia de sobremesa atualizado com sucesso");
+      }
       closeModal();
       getDiasSobremesaDoceAsync();
     } else {
@@ -45,11 +64,18 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
       show={showModal}
       onHide={closeModal}
     >
-      <Form onSubmit={onSubmit}>
+      <Form
+        initialValues={{
+          tipo_unidades: tipoUnidadesSalvoNoDia
+        }}
+        onSubmit={onSubmit}
+      >
         {({ handleSubmit, form, submitting, values }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
-              <Modal.Title>Cadastrar Sobremesa Doce</Modal.Title>
+              <Modal.Title>{`${
+                tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
+              } Sobremesa Doce`}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>
@@ -85,7 +111,9 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
                 className="ml-3"
               />
               <Botao
-                texto="Cadastrar"
+                texto={
+                  tipoUnidadesSalvoNoDia.length ? "Atualizar" : "Cadastrar"
+                }
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
