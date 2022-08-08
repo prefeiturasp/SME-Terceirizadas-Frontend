@@ -14,7 +14,8 @@ import {
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhEscola,
-  usuarioEhLogistica
+  usuarioEhLogistica,
+  usuarioEhMedicao
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -56,6 +57,11 @@ const MenuCadastros = () => {
             Sobremesa Doce
           </LeafItem>
         </>
+      )}
+      {usuarioEhMedicao() && (
+        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${SOBREMESA_DOCE}`}>
+          Sobremesa Doce
+        </LeafItem>
       )}
     </Menu>
   );

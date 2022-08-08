@@ -12,6 +12,7 @@ import { getDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.s
 import { formataComoEventos } from "./helpers";
 import { ModalEditar } from "./componentes/ModalEditar";
 import { ModalConfirmarExclusao } from "./componentes/ModalConfirmarExclusao";
+import { usuarioEhCODAEGestaoAlimentacao } from "helpers/utilities";
 
 export const CadastroSobremesaDoce = () => {
   const [currentEvent, setCurrentEvent] = useState(undefined);
@@ -137,7 +138,7 @@ export const CadastroSobremesaDoce = () => {
                   }}
                 />
               </Spin>
-              {currentEvent && (
+              {currentEvent && usuarioEhCODAEGestaoAlimentacao() && (
                 <>
                   <ModalCadastrarSobremesa
                     showModal={showModalCadastrarSobremesa}

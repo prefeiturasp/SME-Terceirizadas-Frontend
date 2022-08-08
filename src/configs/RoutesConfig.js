@@ -566,7 +566,7 @@ const routesConfig = [
     path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
     component: CadastroSobremesaDocePage,
     exact: true,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,
