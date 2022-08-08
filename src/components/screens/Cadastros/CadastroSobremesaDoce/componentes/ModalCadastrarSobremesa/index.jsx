@@ -40,7 +40,6 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
 
   const onSubmit = async values => {
     const payload = {
-      criado_por: null,
       tipo_unidades: values.tipo_unidades,
       data: getYYYYMMDDfromDate(event.start)
     };
