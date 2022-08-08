@@ -29,8 +29,7 @@ export const ModalEditar = ({ ...props }) => {
         </p>
         <p>
           Para alterar o dia de oferta da sobremesa doce na unidade, você pode
-          apenas arrastar o item para a nova data desejada, ou excluir este
-          cadastro e criar um novo no dia desejado.
+          excluir este cadastro e criar um novo no dia desejado.
         </p>
       </Modal.Body>
       <div className="footer">
