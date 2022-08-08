@@ -29,7 +29,9 @@ export const ModalEditar = ({ ...props }) => {
         </p>
         <p>
           Para alterar o dia de oferta da sobremesa doce na unidade, você pode
-          excluir este cadastro e criar um novo no dia desejado.
+          apenas arrastar o item para a nova data desejada, ou excluir este
+          cadastro e criar um novo no dia desejado. excluir este cadastro e
+          criar um novo no dia desejado.
         </p>
       </Modal.Body>
       <div className="footer">
@@ -38,7 +40,7 @@ export const ModalEditar = ({ ...props }) => {
           type={BUTTON_TYPE.BUTTON}
           onClick={() => {
             closeModal();
-            setShowModalConfirmarExclusao(true);
+            setShowModalConfirmarExclusao();
           }}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           className="ml-3"
