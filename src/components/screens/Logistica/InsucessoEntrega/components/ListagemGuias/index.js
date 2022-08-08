@@ -158,11 +158,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                                   {alimento.embalagens[0].tipo_embalagem}
                                 </b>
                                 <br />
-                                {
-                                  alimento.embalagens[0].descricao_embalagem
-                                }{" "}
-                                {alimento.embalagens[0].capacidade_embalagem}{" "}
-                                {alimento.embalagens[0].unidade_medida}
+                                {alimento.embalagens[0].capacidade_completa}
                               </div>
 
                               {alimento.embalagens.length > 1 && (
@@ -178,14 +174,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                                       {alimento.embalagens[1].tipo_embalagem}
                                     </b>
                                     <br />
-                                    {
-                                      alimento.embalagens[1].descricao_embalagem
-                                    }{" "}
-                                    {
-                                      alimento.embalagens[1]
-                                        .capacidade_embalagem
-                                    }{" "}
-                                    {alimento.embalagens[1].unidade_medida}
+                                    {alimento.embalagens[1].capacidade_completa}
                                   </div>
                                 </>
                               )}

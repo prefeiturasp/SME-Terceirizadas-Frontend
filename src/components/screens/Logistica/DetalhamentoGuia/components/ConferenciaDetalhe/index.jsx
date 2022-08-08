@@ -109,15 +109,7 @@ export default ({ conferencia, reposicaoFlag }) => {
             const fechada = filtraEmbalagemPorTipo(item.embalagens, "FECHADA");
             let celEmbalagem = embalagem => (
               <td className="embalagem">
-                {embalagem ? (
-                  <>
-                    {embalagem.descricao_embalagem}.{" "}
-                    {embalagem.capacidade_embalagem}
-                    {embalagem.unidade_medida}
-                  </>
-                ) : (
-                  "--"
-                )}
+                {embalagem ? <>{embalagem.capacidade_completa}</> : "--"}
               </td>
             );
             return (
