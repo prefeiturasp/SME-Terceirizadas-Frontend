@@ -310,8 +310,7 @@ export default class TabelaProdutos extends Component {
                         [
                           CODAE_ACEITOU,
                           CODAE_RECUSOU,
-                          AGUARDANDO_ANALISE_SENSORIAL,
-                          "CODAE_QUESTIONOU_UE"
+                          AGUARDANDO_ANALISE_SENSORIAL
                         ].includes(reclamacao.status);
                       const desabilitarAnalise =
                         produtoTemReclacaoAceita ||
