@@ -25,7 +25,7 @@ class Container extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.tiposUnidadesEscolar === this.state.tiposUnidadesEscolar) {
       getTiposUnidadeEscolar().then(response => {
-        const tiposUnidadesEscolar = response.results;
+        const tiposUnidadesEscolar = response.data.results;
         this.setState({ tiposUnidadesEscolar });
       });
     }
