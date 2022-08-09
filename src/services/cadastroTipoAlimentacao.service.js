@@ -58,23 +58,11 @@ export const updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values =
 };
 
 export const updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values => {
-  try {
-    const response = await fetch(
-      `${
-        CONFIG.API_URL
-      }/vinculos-tipo-alimentacao-u-e-periodo-escolar/atualizar_lista_de_vinculos/`,
-      {
-        method: "PUT",
-        headers: authHeader,
-        body: JSON.stringify(values)
-      }
-    );
-    let json = await response.json();
-    const status = await response.status;
-    json.status = status;
-    return json;
-  } catch (err) {
-    return err;
+  const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/atualizar_lista_de_vinculos/`;
+  const response = await axios.put(url, values).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
