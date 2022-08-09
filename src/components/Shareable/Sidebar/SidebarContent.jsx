@@ -101,6 +101,7 @@ export const SidebarContent = () => {
       usuarioEhMedicao());
   const exibirCadastros =
     usuarioEhLogistica() ||
+    usuarioEhMedicao() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
