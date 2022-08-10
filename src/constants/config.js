@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 let API_URL = "API_URL_REPLACE_ME";
-let JWT_AUTH = "API_URL_REPLACE_ME/api-token-auth/";
+let JWT_AUTH = "API_URL_REPLACE_ME/login/";
 let USER_URL = "API_URL_REPLACE_ME/users/";
 let ENVIRONMENT = "NODE_ENV_REPLACE_ME";
 
@@ -15,14 +15,14 @@ if (process.env.NODE_ENV === "development") {
   // when build default env is production
   API_URL = process.env.REACT_APP_API_URL;
   ENVIRONMENT = process.env.NODE_ENV;
-  JWT_AUTH = `${API_URL}/api-token-auth/`;
+  JWT_AUTH = `${API_URL}/login/`;
   USER_URL = `${API_URL}/users/`;
 }
 
 if (process.env.NODE_ENV === "test") {
   API_URL = "http://localhost:8000";
   ENVIRONMENT = process.env.NODE_ENV;
-  JWT_AUTH = `${API_URL}/api-token-auth/`;
+  JWT_AUTH = `${API_URL}/login/`;
   USER_URL = `${API_URL}/users/`;
 }
 

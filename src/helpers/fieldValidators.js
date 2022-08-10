@@ -88,6 +88,13 @@ export const length = size => value =>
     ? `Deve ter exatamente ${size} caracteres`
     : undefined;
 
+export const rfOuCpf = value => {
+  if ((value && value.length === 7) || (value && value.length === 11)) {
+    return undefined;
+  }
+  return `Deve ter 7 ou 11 caracteres`;
+};
+
 export const semArroba = value =>
   value && value.includes("@") ? "Campo e-mail não deve conter @" : undefined;
 
