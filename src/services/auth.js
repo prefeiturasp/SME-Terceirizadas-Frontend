@@ -4,11 +4,11 @@ import { toastError } from "../components/Shareable/Toast/dialogs";
 
 export const TOKEN_ALIAS = "TOKEN";
 
-const login = async (email, password) => {
+const login = async (login, password) => {
   try {
     const response = await fetch(CONFIG.JWT_AUTH, {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ login, password }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -66,7 +66,7 @@ const login = async (email, password) => {
         });
       });
     } else {
-      toastError("Login e/ou senha inválidos");
+      toastError(`${json.detail}`);
     }
     return isValid;
   } catch (error) {

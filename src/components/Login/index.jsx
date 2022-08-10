@@ -5,6 +5,7 @@ import { Field, reduxForm } from "redux-form";
 import {
   length,
   required,
+  rfOuCpf,
   semCaracteresEspeciais
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
@@ -78,9 +79,9 @@ export class Login extends Component {
   }
 
   handleSubmit = values => {
-    const { email, password } = values;
-    if (email && password) {
-      authService.login(email, password);
+    const { login, password } = values;
+    if (login && password) {
+      authService.login(login, password);
     }
   };
 
@@ -149,12 +150,14 @@ export class Login extends Component {
           <Field
             component={InputText}
             esconderAsterisco
-            label="E-mail"
-            name="email"
-            placeholder={"nome@sme.prefeitura.sp.gov.br"}
+            label="Login"
+            name="login"
+            placeholder={"RF ou CPF"}
             required
-            type="email"
-            validate={[required]}
+            type="text"
+            maxlength="11"
+            apenasNumeros
+            validate={[required, rfOuCpf]}
           />
           <Field
             component={InputPassword}
