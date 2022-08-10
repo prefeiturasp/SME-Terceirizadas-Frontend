@@ -53,6 +53,15 @@ export const updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values =
   }
 };
 
+export const updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values => {
+  const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/atualizar_lista_de_vinculos/`;
+  const response = await axios.put(url, values).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getVinculosTipoAlimentacaoPorEscola = async uuid => {
   const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/escola/${uuid}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
