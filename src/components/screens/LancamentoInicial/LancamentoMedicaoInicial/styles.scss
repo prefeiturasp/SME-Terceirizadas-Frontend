@@ -1,0 +1,102 @@
+@import "styles/variables.scss";
+
+.periodo-info-ue,
+.info-med-inicial {
+  .periodo-lancamento,
+  .info-ue,
+  .panel-med-inicial {
+    div {
+      width: 100%;
+    }
+  }
+
+  .ant-select-selection__rendered,
+  .ant-select-selection-selected-value {
+    height: 38px !important;
+    line-height: 38px !important;
+  }
+
+  .info-ue {
+    margin-top: -9px;
+  }
+  .ant-skeleton-title {
+    margin-top: -4px !important;
+    height: 40px !important;
+  }
+}
+
+.collapse-adjustments {
+  .ant-collapse-header {
+    border-left: 6px solid $green;
+    border-radius: 2px 0 0 2px !important;
+  }
+
+  .ant-collapse-item {
+    svg {
+      transform: rotate(90deg);
+    }
+  }
+
+  .ant-collapse-item-active {
+    svg {
+      transform: rotate(-90deg) !important;
+    }
+  }
+}
+
+.label-adjustments {
+  .info-label {
+    font-size: 14px;
+    color: $gray;
+
+    .value-label {
+      font-weight: bold;
+      font-size: 15px;
+      color: $blackInput;
+    }
+  }
+
+  .select-medicao-inicial {
+    .ant-select {
+      svg {
+        transform: rotate(0deg) !important;
+      }
+    }
+    .ant-select-open {
+      svg {
+        transform: rotate(180deg) !important;
+      }
+    }
+  }
+}
+
+.section-title {
+  color: $green;
+}
+
+.radio-opt-positive {
+  border: 1px solid $green;
+  border-radius: 4px;
+  margin-left: 20px;
+  margin-right: 24px;
+  padding: 8px 58px 8px 12px;
+}
+
+.radio-opt-negative {
+  border: 1px solid $red;
+  border-radius: 4px;
+  padding: 8px 58px 8px 12px;
+}
+
+.anexo-planilha {
+  .file-div {
+    position: absolute;
+    right: 35px;
+    bottom: 35px;
+  }
+}
+
+.ant-skeleton-title {
+  margin-top: 24px !important;
+  height: 40px !important;
+}

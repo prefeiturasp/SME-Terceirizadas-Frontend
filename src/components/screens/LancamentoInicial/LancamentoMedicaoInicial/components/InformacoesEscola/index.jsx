@@ -1,69 +1,58 @@
 import React from "react";
+import { Collapse } from "antd";
 
-export default ({ meusDados, nomeTerceirizada }) => {
-  const escola = meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
+export default ({ escolaInstituicao, loteEscolaSimples }) => {
+  const { Panel } = Collapse;
+
+  const formataEnderencoCompleto = endereco => {
+    return `${endereco.logradouro}, ${endereco.numero} - ${
+      endereco.bairro
+    } - CEP: ${endereco.cep}`;
+  };
 
   return (
-    <div>
-      <div className="row">
-        <div className="col report-label-value">
-          <p className="value">Informações da escola</p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-2 report-label-value">
-          <p>Código EOL</p>
-          <p className="value-important">{escola && escola.codigo_eol}</p>
-        </div>
-        <div className="col-5 report-label-value">
-          <p>Nome</p>
-          <p className="value-important">{escola && escola.nome}</p>
-        </div>
-        <div className="col-5 report-label-value">
-          <p>DRE</p>
-          <p className="value-important">
-            {escola && escola.diretoria_regional.nome}
-          </p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-2 report-label-value">
-          <p>CEP</p>
-          <p className="value-important">{escola && escola.endereco.cep}</p>
-        </div>
-        <div className="col-5 report-label-value">
-          <p>Endereço</p>
-          <p className="value-important">
-            {escola && escola.endereco.logradouro}
-          </p>
-        </div>
-        <div className="col-2 report-label-value">
-          <p>Número</p>
-          <p className="value-important">{escola && escola.endereco.numero}</p>
-        </div>
-        <div className="col-3 report-label-value">
-          <p>Bairro</p>
-          <p className="value-important">{escola && escola.endereco.bairro}</p>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-2 report-label-value">
-          <p>Telefone{escola && escola.contato.telefone2 && "s"}</p>
-          <p className="value-important">{escola && escola.contato.telefone}</p>
-          {escola && escola.contato.telefone2 && (
-            <p className="value-important">
-              {escola && escola.contato.telefone2}
-            </p>
-          )}
-        </div>
-        <div className="col-5 report-label-value">
-          <p>E-mail</p>
-          <p className="value-important">{escola && escola.contato.email}</p>
-        </div>
-        <div className="col-5 report-label-value">
-          <p>Nome da empresa terceirizada</p>
-          <p className="value-important">{nomeTerceirizada}</p>
-        </div>
+    <div className="col-8 info-ue">
+      <div className="pl-0 label-adjustments">
+        <Collapse expandIconPosition="right">
+          <Panel header="Informações da Unidade Educacional">
+            <div className="row">
+              <div className="col-8 info-label">
+                <label>DRE</label>
+                <p className="value-label">
+                  {escolaInstituicao &&
+                    escolaInstituicao.diretoria_regional.nome}
+                </p>
+              </div>
+              <div className="col-4 info-label">
+                <label>Telefone</label>
+                <p className="value-label">
+                  {escolaInstituicao && escolaInstituicao.contato.telefone}
+                </p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-8 info-label">
+                <label>E-mail</label>
+                <p className="value-label">
+                  {escolaInstituicao && escolaInstituicao.contato.email}
+                </p>
+              </div>
+              <div className="col-4 info-label">
+                <label>Lote</label>
+                <p className="value-label">{loteEscolaSimples}</p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 info-label">
+                <label>Endereço</label>
+                <p className="value-label">
+                  {escolaInstituicao &&
+                    formataEnderencoCompleto(escolaInstituicao.endereco)}
+                </p>
+              </div>
+            </div>
+          </Panel>
+        </Collapse>
       </div>
     </div>
   );
