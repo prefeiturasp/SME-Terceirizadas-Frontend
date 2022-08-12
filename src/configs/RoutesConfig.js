@@ -111,7 +111,8 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
-  validaPerfilEscolaMistaParceira
+  validaPerfilEscolaMistaParceira,
+  exibirLancamentoMedicaoInicial
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1281,7 +1282,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()
+    tipoUsuario: exibirLancamentoMedicaoInicial()
   },
   {
     path: `/${constants.LOGISTICA}/${
