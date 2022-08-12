@@ -163,6 +163,8 @@ export const mensagemCancelamento = status => {
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
       return "Esta solicitação já foi autorizada pela CODAE. ";
+    case statusEnum.INFORMADO:
+      return "A solicitação da suspensão de alimentação está autorizada automaticamente. ";
     default:
       return "";
   }

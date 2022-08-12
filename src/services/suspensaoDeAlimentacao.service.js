@@ -1,6 +1,8 @@
 import { API_URL } from "../constants/config";
 import { PEDIDOS, FLUXO } from "./constants";
 import authService from "./auth";
+import axios from "./_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -90,6 +92,15 @@ export const enviarSuspensaoDeAlimentacao = uuid => {
     .catch(error => {
       return error.json();
     });
+};
+
+export const escolaCancelaSuspensao = async (uuid, values) => {
+  const url = `${URL_SUSPENSAO_ALIMENTACAO}/${uuid}/escola-cancela/`;
+  const response = await axios.patch(url, values).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const updateSuspensaoDeAlimentacao = (uuid, payload) => {
