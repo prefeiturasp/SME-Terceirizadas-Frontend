@@ -41,7 +41,7 @@ export default ({ insucesso }) => {
             <p className="dado-conferencia">{insucesso.justificativa}</p>
           </div>
           {insucesso.arquivo && (
-            <div className="col-12">
+            <div className="col-6">
               <p>Imagem:</p>
               <img
                 className="w-100"
