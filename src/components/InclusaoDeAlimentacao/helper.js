@@ -88,16 +88,19 @@ const retornaQuantidadeDeAlunosNoPeriodoEscolar = (
 
 export const abstraiPeriodosComAlunosMatriculados = (
   periodos,
-  periodosQuantidadeAlunos
+  periodosQuantidadeAlunos,
+  ehAlteracao
 ) => {
   periodos.forEach(periodo => {
     periodo["maximo_alunos"] = retornaQuantidadeDeAlunosNoPeriodoEscolar(
       periodo.uuid,
       periodosQuantidadeAlunos
     );
-    periodo["tipos_alimentacao"] = periodo.tipos_alimentacao.filter(
-      tipo_alimentacao => tipo_alimentacao.nome !== "Lanche Emergencial"
-    );
+    if (!ehAlteracao) {
+      periodo["tipos_alimentacao"] = periodo.tipos_alimentacao.filter(
+        tipo_alimentacao => tipo_alimentacao.nome !== "Lanche Emergencial"
+      );
+    }
   });
   return periodos;
 };
