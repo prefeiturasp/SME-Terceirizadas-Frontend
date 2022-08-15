@@ -55,16 +55,26 @@ export class InputFile extends Component {
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
     Array.from(event.target.files).forEach(file => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
-      if (
-        !["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(
-          extensao.toLowerCase()
-        )
-      ) {
-        toastError(`Extensão do arquivo não suportada: ${extensao}`);
-        valido = false;
-      } else if (file.size > DEZ_MB) {
-        toastError(`Tamanho máximo: 10MB`);
-        valido = false;
+      if (this.props.ehPlanilhaMedicaoInicial) {
+        if (!["xls", "xlsx"].includes(extensao.toLowerCase())) {
+          toastError(`Extensão do arquivo não suportada: ${extensao}`);
+          valido = false;
+        } else if (file.size > DEZ_MB) {
+          toastError(`Tamanho máximo: 10MB`);
+          valido = false;
+        }
+      } else {
+        if (
+          !["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(
+            extensao.toLowerCase()
+          )
+        ) {
+          toastError(`Extensão do arquivo não suportada: ${extensao}`);
+          valido = false;
+        } else if (file.size > DEZ_MB) {
+          toastError(`Tamanho máximo: 10MB`);
+          valido = false;
+        }
       }
     });
     if (valido) {
@@ -113,7 +123,8 @@ export class InputFile extends Component {
       name,
       required,
       title,
-      texto
+      texto,
+      ehPlanilhaMedicaoInicial
     } = this.props;
     return (
       <div
@@ -141,8 +152,16 @@ export class InputFile extends Component {
           onClick={() => this.inputRef.click()}
           htmlFor={name}
           texto={texto}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          icon={BUTTON_ICON.ATTACH}
+          style={
+            ehPlanilhaMedicaoInicial
+              ? BUTTON_STYLE.GREEN
+              : BUTTON_STYLE.GREEN_OUTLINE
+          }
+          icon={
+            ehPlanilhaMedicaoInicial
+              ? BUTTON_ICON.PAPER_CLIP
+              : BUTTON_ICON.ATTACH
+          }
           type={BUTTON_TYPE.BUTTON}
           disabled={disabled}
         />
@@ -156,7 +175,9 @@ export class InputFile extends Component {
                 </span>
                 <i
                   onClick={() => this.deleteFile(key)}
-                  className="fas fa-trash-alt exclude-icon"
+                  className={`fas ${
+                    ehPlanilhaMedicaoInicial ? "fa-times" : "fa-trash-alt"
+                  } exclude-icon`}
                 />
               </div>
             </div>
