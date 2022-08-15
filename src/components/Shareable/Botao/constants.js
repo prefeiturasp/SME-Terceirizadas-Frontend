@@ -31,7 +31,9 @@ export const BUTTON_ICON = {
   TIMES: "fas fa-times",
   TIMES_CIRCLE: "fas fa-times-circle",
   TRASH: "fas fa-trash-alt",
-  EYE: "fas fa-eye"
+  EYE: "fas fa-eye",
+  PEN: "fas fa-pen",
+  PAPER_CLIP: "fas fa-paperclip"
 };
 
 export const BUTTON_TYPE = {

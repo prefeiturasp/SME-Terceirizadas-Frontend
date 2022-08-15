@@ -78,6 +78,7 @@ class AlteracaoCardapio extends Component {
       verificado: false,
       values: null,
       uuidRascunhoEmEdicao: null,
+      ehEscolaEspecial: null,
       optionsAlimentacaoDe: {
         MANHA: [],
         TARDE: [],
@@ -98,6 +99,7 @@ class AlteracaoCardapio extends Component {
     this.resetForm = this.resetForm.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.removerOpcoesSubstitutos = this.removerOpcoesSubstitutos.bind(this);
+    this.formataOpcoesDe = this.formataOpcoesDe.bind(this);
   }
 
   componentDidUpdate() {
@@ -108,7 +110,8 @@ class AlteracaoCardapio extends Component {
       substituicoesAlimentacao,
       periodosQuePossuemLancheNaAlteracao,
       verificado,
-      loadQuantidadeAlunos
+      loadQuantidadeAlunos,
+      ehEscolaEspecial
     } = this.state;
     if (
       meusDados &&
@@ -116,8 +119,15 @@ class AlteracaoCardapio extends Component {
       loading &&
       !periodosQuePossuemLancheNaAlteracao &&
       periodos.length === 0 &&
-      !loadQuantidadeAlunos
+      !loadQuantidadeAlunos &&
+      ehEscolaEspecial === null
     ) {
+      let iniciais =
+        meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
+      ehEscolaEspecial = ["CEI", "CEMEI", "CEU CEI", "CCI"].includes(iniciais)
+        ? true
+        : false;
+      this.setState({ ehEscolaEspecial: ehEscolaEspecial });
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
         periodos = construirPeriodosECombos(response.data.results);
@@ -134,7 +144,8 @@ class AlteracaoCardapio extends Component {
         if (periodos !== []) {
           periodos = abstraiPeriodosComAlunosMatriculados(
             periodos,
-            response.results
+            response.results,
+            true
           );
         }
         this.setState({ periodos, loadQuantidadeAlunos: true });
@@ -780,34 +791,24 @@ class AlteracaoCardapio extends Component {
   onChangeMotivo = uuidMotivo => {
     // passar periodos
     const motivo = this.props.motivos.find(d => d.uuid === uuidMotivo);
+    let periodos = this.state.periodos;
     this.setState({ motivo });
 
-    this.state.periodos.forEach((periodo, indice) => {
-      const periodoChecado = this.props.formValues[
-        `substituicoes_${periodo.nome}`
-      ];
-
-      if (periodoChecado && periodoChecado.check) {
-        if (motivo.nome === "Medição Inicial - RPL - Refeição por lanche") {
-          this.mudaRefeicao(
-            periodo,
-            indice,
-            periodo.nome,
-            "refeição",
-            "lanche"
-          );
-        }
-        if (motivo.nome === "Medição Inicial - LPR - Lanche por refeição") {
-          this.mudaRefeicao(
-            periodo,
-            indice,
-            periodo.nome,
-            "lanche",
-            "refeição"
-          );
-        }
-      }
+    periodos.forEach(periodo => {
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipos_alimentacao_de`,
+        []
+      );
+      this.props.change(
+        `substituicoes_${periodo.nome}.tipos_alimentacao_para`,
+        ""
+      );
     });
+    periodos = periodos.map(periodo => {
+      periodo["substituicoes"] = agregarDefault([]);
+      return periodo;
+    });
+    this.setState({ periodos });
   };
 
   onNumeroAlunosChanged(event, periodo) {
@@ -824,11 +825,41 @@ class AlteracaoCardapio extends Component {
 
   removerOpcoesSubstitutos(value, periodo, indice) {
     let periodos = this.state.periodos;
+    let motivo = this.state.motivo;
+    let ehEscolaEspecial = this.state.ehEscolaEspecial;
     let opcoesSubstitutos = [];
     if (value && value.length) {
       opcoesSubstitutos = periodo.tipos_alimentacao.filter(
         substituto => !value.includes(substituto.uuid)
       );
+      if (motivo) {
+        switch (motivo.nome) {
+          case "RPL - Refeição por Lanche":
+            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+              ["Lanche"].includes(ta.nome)
+            );
+            break;
+          case "LPR - Lanche por Refeição":
+            if (ehEscolaEspecial) {
+              opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+                ["Refeição da tarde", "Almoço"].includes(ta.nome)
+              );
+            } else {
+              opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+                ["Refeição", "Sobremesa"].includes(ta.nome)
+              );
+            }
+            break;
+          case "Lanche Emergencial":
+            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+              ["Lanche Emergencial"].includes(ta.nome)
+            );
+            break;
+          default:
+            break;
+        }
+      }
+
       opcoesSubstitutos = opcoesSubstitutos.map(substituto => {
         return {
           nome: substituto.nome,
@@ -854,6 +885,40 @@ class AlteracaoCardapio extends Component {
       this.props.motivos.find(motivo_ => motivo_.uuid === motivo).nome !==
       "Lanche Emergencial"
     );
+  }
+
+  formataOpcoesDe(tipos_alimentacao) {
+    let { motivo, ehEscolaEspecial } = this.state;
+    let opcoesDe = tipos_alimentacao;
+    if (motivo) {
+      switch (motivo.nome) {
+        case "RPL - Refeição por Lanche":
+          if (ehEscolaEspecial) {
+            opcoesDe = tipos_alimentacao.filter(ta =>
+              ["Refeição da tarde", "Almoço"].includes(ta.nome)
+            );
+          } else {
+            opcoesDe = tipos_alimentacao.filter(ta =>
+              ["Refeição", "Sobremesa"].includes(ta.nome)
+            );
+          }
+          break;
+        case "LPR - Lanche por Refeição":
+          opcoesDe = tipos_alimentacao.filter(ta =>
+            ["Lanche"].includes(ta.nome)
+          );
+          break;
+        case "Lanche Emergencial":
+          opcoesDe = tipos_alimentacao.filter(
+            ta => !["Lanche Emergencial"].includes(ta.nome)
+          );
+          break;
+        default:
+          break;
+      }
+    }
+    opcoesDe = formatarParaMultiselect(opcoesDe);
+    return opcoesDe;
   }
 
   render() {
@@ -1037,7 +1102,7 @@ class AlteracaoCardapio extends Component {
                         )}
                         multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
-                        options={formatarParaMultiselect(
+                        options={this.formataOpcoesDe(
                           periodo.tipos_alimentacao
                         )}
                         nomeDoItemNoPlural="Alimentos"
