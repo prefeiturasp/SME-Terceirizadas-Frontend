@@ -64,6 +64,7 @@ class AlteracaoCardapio extends Component {
       periodos: [],
       loading: true,
       alteracaoCardapioList: [],
+      motivo: null,
       status: "SEM STATUS",
       title: "Nova Alteração do Tipo de Alimentação",
       id: null,
@@ -79,6 +80,8 @@ class AlteracaoCardapio extends Component {
     this.OnEditButtonClicked = this.OnEditButtonClicked.bind(this);
     this.OnDeleteButtonClicked = this.OnDeleteButtonClicked.bind(this);
     this.resetForm = this.resetForm.bind(this);
+    this.mudaMotivo = this.mudaMotivo.bind(this);
+    this.formataOpcoesDe = this.formataOpcoesDe.bind(this);
   }
 
   componentDidUpdate = async () => {
@@ -152,18 +155,35 @@ class AlteracaoCardapio extends Component {
 
   removerOpcoesSubstitutos(value, periodo, indice) {
     let periodos = this.state.periodos;
+    let motivo = this.state.motivo;
     let opcoesSubstitutos = [];
     if (value && value.length) {
       opcoesSubstitutos = periodo.tipos_alimentacao.filter(
         substituto => !value.includes(substituto.uuid)
       );
-      opcoesSubstitutos = opcoesSubstitutos.map(substituto => {
-        return {
-          nome: substituto.nome,
-          uuid: substituto.uuid
-        };
-      });
+      if (motivo) {
+        switch (motivo.nome) {
+          case "RPL - Refeição por Lanche":
+            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+              ["Lanche"].includes(ta.nome)
+            );
+            break;
+          case "LPR - Lanche por Refeição":
+            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+              ["Refeição da tarde", "Almoço"].includes(ta.nome)
+            );
+            break;
+          default:
+            break;
+        }
+      }
     }
+    opcoesSubstitutos = opcoesSubstitutos.map(substituto => {
+      return {
+        nome: substituto.nome,
+        uuid: substituto.uuid
+      };
+    });
     periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
     this.setState({
       periodos: periodos
@@ -450,6 +470,55 @@ class AlteracaoCardapio extends Component {
     }
   }
 
+  mudaMotivo = value => {
+    if (value) {
+      const { motivos } = this.props;
+      this.setState({ motivo: motivos.find(m => m.uuid === value) });
+      let periodos = this.state.periodos;
+      periodos.forEach(periodo => {
+        this.props.change(
+          `substituicoes_${periodo.nome}.tipos_alimentacao_de`,
+          []
+        );
+        this.props.change(
+          `substituicoes_${periodo.nome}.tipos_alimentacao_para`,
+          ""
+        );
+      });
+      periodos = periodos.map(periodo => {
+        periodo["substituicoes"] = agregarDefault([]);
+        return periodo;
+      });
+      this.setState({ periodos });
+    }
+  };
+
+  formataOpcoesDe = tipos_alimentacao => {
+    const { motivo } = this.state;
+    let opcoesDe = tipos_alimentacao.filter(
+      ta => ta.nome.toUpperCase() !== "Lanche emergencial".toUpperCase()
+    );
+    if (motivo) {
+      switch (motivo.nome) {
+        case "RPL - Refeição por Lanche":
+          opcoesDe = tipos_alimentacao.filter(ta =>
+            ["Refeição da tarde", "Almoço"].includes(ta.nome)
+          );
+          break;
+        case "LPR - Lanche por Refeição":
+          opcoesDe = tipos_alimentacao.filter(ta =>
+            ["Lanche"].includes(ta.nome)
+          );
+          break;
+        default:
+          break;
+      }
+    }
+
+    opcoesDe = formatarParaMultiselect(opcoesDe);
+    return opcoesDe;
+  };
+
   render() {
     const { loading, alteracaoCardapioList, showModal, periodos } = this.state;
     const {
@@ -511,6 +580,7 @@ class AlteracaoCardapio extends Component {
                           nome.toUpperCase() !==
                           "Lanche emergencial".toUpperCase()
                       )}
+                      onChange={event => this.mudaMotivo(event.target.value)}
                       validate={required}
                     />
                   </section>
@@ -588,12 +658,8 @@ class AlteracaoCardapio extends Component {
                           disableSearch
                           name="tipos_alimentacao_de"
                           multiple
-                          options={formatarParaMultiselect(
-                            periodo.tipos_alimentacao.filter(
-                              ({ nome }) =>
-                                nome.toUpperCase() !==
-                                "Lanche emergencial".toUpperCase()
-                            )
+                          options={this.formataOpcoesDe(
+                            periodo.tipos_alimentacao
                           )}
                           nomeDoItemNoPlural="Alimentos"
                           onChange={value =>

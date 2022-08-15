@@ -1,52 +1,127 @@
-import React from "react";
+import React, { useState } from "react";
+import Botao from "components/Shareable/Botao";
+import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 
 import CardLancamento from "./CardLancamento";
+import { CORES, mockPeriodos } from "./helpers";
 
-const CORES = [
-  "#198459",
-  "#D06D12",
-  "#9b51e0",
-  "#ffbb00",
-  "#00f7ff",
-  "#ff0095"
-];
-const COR_PROJETOS_PEDAGOGICOS = "#2F80ED";
+export default ({
+  escolaInstituicao,
+  solicitacaoMedicaoInicial,
+  onClickInfoBasicas
+}) => {
+  const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
+    false
+  );
+  const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
+    anexo: null,
+    status: null
+  });
 
-const NOMES_PERIODOS = {
-  MANHA: "matutino",
-  TARDE: "vespertino",
-  NOITE: "noturno",
-  INTEGRAL: "integral",
-  PARCIAL: "parcial"
-};
+  const getPathPlanilhaOcorr = () => {
+    if (objSolicitacaoMIFinalizada.anexo)
+      return objSolicitacaoMIFinalizada.anexo.arquivo;
+    if (!solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo)
+      return solicitacaoMedicaoInicial.anexo.arquivo;
+  };
 
-export default ({ panoramaGeral }) => {
+  const renderBotaoExportarPlanilha = () => {
+    if (objSolicitacaoMIFinalizada.anexo) return true;
+    if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const renderBotaoExportarPDF = () => {
+    if (solicitacaoMedicaoInicial) {
+      return true;
+    }
+    if (objSolicitacaoMIFinalizada.status) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  const renderBotaoFinalizar = () => {
+    if (!solicitacaoMedicaoInicial) {
+      return false;
+    }
+    if (solicitacaoMedicaoInicial) {
+      return ![
+        String(solicitacaoMedicaoInicial.status),
+        String(objSolicitacaoMIFinalizada.status)
+      ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
+    } else {
+      return (
+        String(objSolicitacaoMIFinalizada.status) !==
+        "MEDICAO_ENCERRADA_PELA_CODAE"
+      );
+    }
+  };
+
   return (
-    <div className="lancamento-por-periodo">
-      <div className="row">
-        <div className="col report-label-value">
-          <p className="value">Selecione período para lançamento da medição</p>
+    <div>
+      <div className="row pb-2">
+        <div className="col">
+          <b className="section-title">
+            Selecione período para lançamento da Medição
+          </b>
         </div>
       </div>
-      {panoramaGeral.map((panorama, index) => (
+      {mockPeriodos.map((periodo, index) => (
         <CardLancamento
           key={index}
-          textoCabecalho={`${index + 1}º Período: ${
-            NOMES_PERIODOS[panorama.periodo]
-          }`}
+          textoCabecalho={periodo.periodo}
           cor={CORES[index]}
-          totalAlimentacoes={1320}
-          alimentacoesConvencionais={460}
-          alimentacoesDietaA={12}
-          panorama={panorama}
+          totalAlimentacoes={periodo.alimentacoes.total}
+          alimentacoes={periodo.alimentacoes}
+          solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+          objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
         />
       ))}
-      <CardLancamento
-        textoCabecalho="Programas/projetos pedagógicos autorizados"
-        cor={COR_PROJETOS_PEDAGOGICOS}
-        totalAlimentacoes={15}
-        alimentacoesConvencionais={13}
-        alimentacoesDietaB={2}
+      <div className="row mt-4">
+        <div className="col">
+          {renderBotaoFinalizar() ? (
+            <Botao
+              texto="Finalizar"
+              style={BUTTON_STYLE.GREEN}
+              className="float-right"
+              onClick={() => setShowModalFinalizarMedicao(true)}
+            />
+          ) : (
+            <>
+              {renderBotaoExportarPlanilha() && (
+                <a href={getPathPlanilhaOcorr()}>
+                  <Botao
+                    texto="Exportar Planilha de Ocorrências"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-right ml-4"
+                  />
+                </a>
+              )}
+              {renderBotaoExportarPDF() && (
+                <Botao
+                  texto="Exportar PDF"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="float-right"
+                  onClick={() => {}}
+                />
+              )}
+            </>
+          )}
+        </div>
+      </div>
+      <ModalFinalizarMedicao
+        showModal={showModalFinalizarMedicao}
+        closeModal={() => setShowModalFinalizarMedicao(false)}
+        setObjSolicitacaoMIFinalizada={setObjSolicitacaoMIFinalizada}
+        escolaInstituicao={escolaInstituicao}
+        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+        onClickInfoBasicas={onClickInfoBasicas}
       />
     </div>
   );

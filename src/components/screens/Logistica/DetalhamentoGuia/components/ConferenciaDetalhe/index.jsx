@@ -217,11 +217,11 @@ export default ({ conferencia, reposicaoFlag }) => {
                   <p className="dado-conferencia">{conf.observacao}</p>
                 </div>
                 {conf.arquivo && (
-                  <div className="col-12">
+                  <div className="col-6">
                     <p>Imagem da ocorrência:</p>
                     <img
-                      alt="Imagem descritiva da Ocorrência"
                       className="w-100"
+                      alt="Imagem descritiva da Ocorrência"
                       src={conf.arquivo}
                     />
                   </div>
