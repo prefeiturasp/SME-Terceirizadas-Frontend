@@ -6,7 +6,7 @@ import {
   SUSPENSAO_ALIMENTACAO,
   TERCEIRIZADA
 } from "../../../configs/constants";
-import { getError } from "../../../helpers/utilities";
+import { getError, usuarioEhEscola } from "../../../helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -22,6 +22,7 @@ import {
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 
 import "./style.scss";
+import { ModalCancelaSuspensao } from "../components/ModalCancelaSuspensao";
 
 class RelatorioSuspensaoAlimentacao extends Component {
   constructor(props) {
@@ -31,7 +32,8 @@ class RelatorioSuspensaoAlimentacao extends Component {
       suspensaoAlimentacao: null,
       dadosEscola: null,
       redirect: false,
-      showModalMarcarConferencia: false
+      showModalMarcarConferencia: false,
+      showModalEscolaCancela: false
     };
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
@@ -140,7 +142,8 @@ class RelatorioSuspensaoAlimentacao extends Component {
       dadosEscola,
       erro,
       showModalMarcarConferencia,
-      uuid
+      uuid,
+      showModalEscolaCancela
     } = this.state;
 
     const visao = localStorage.getItem("tipo_perfil");
@@ -195,6 +198,33 @@ class RelatorioSuspensaoAlimentacao extends Component {
                   suspensaoAlimentacao={suspensaoAlimentacao}
                   dadosEscola={dadosEscola}
                 />
+                {usuarioEhEscola() &&
+                  suspensaoAlimentacao.status !== "ESCOLA_CANCELOU" && (
+                    <>
+                      {" "}
+                      <div className="row">
+                        <div className="col-12 text-right">
+                          <Botao
+                            texto="Cancelar"
+                            onClick={() =>
+                              this.setState({ showModalEscolaCancela: true })
+                            }
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                          />
+                        </div>
+                      </div>
+                      <ModalCancelaSuspensao
+                        showModal={showModalEscolaCancela}
+                        closeModal={() =>
+                          this.setState({ showModalEscolaCancela: false })
+                        }
+                        loadSolicitacao={() => this.loadSolicitacao(uuid)}
+                        solicitacao={suspensaoAlimentacao}
+                        uuid={suspensaoAlimentacao.uuid}
+                      />
+                    </>
+                  )}
                 {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                   <div className="form-group float-right mt-4">
                     {suspensaoAlimentacao.terceirizada_conferiu_gestao ? (
