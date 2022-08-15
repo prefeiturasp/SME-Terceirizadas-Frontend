@@ -832,7 +832,7 @@ class AlteracaoCardapio extends Component {
       opcoesSubstitutos = periodo.tipos_alimentacao.filter(
         substituto => !value.includes(substituto.uuid)
       );
-      if (motivo && !ehEscolaEspecial) {
+      if (motivo) {
         switch (motivo.nome) {
           case "RPL - Refeição por Lanche":
             opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
@@ -840,9 +840,15 @@ class AlteracaoCardapio extends Component {
             );
             break;
           case "LPR - Lanche por Refeição":
-            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
-              ["Refeição", "Sobremesa"].includes(ta.nome)
-            );
+            if (ehEscolaEspecial) {
+              opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+                ["Refeição da tarde", "Almoço"].includes(ta.nome)
+              );
+            } else {
+              opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
+                ["Refeição", "Sobremesa"].includes(ta.nome)
+              );
+            }
             break;
           case "Lanche Emergencial":
             opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
@@ -884,12 +890,18 @@ class AlteracaoCardapio extends Component {
   formataOpcoesDe(tipos_alimentacao) {
     let { motivo, ehEscolaEspecial } = this.state;
     let opcoesDe = tipos_alimentacao;
-    if (motivo && !ehEscolaEspecial) {
+    if (motivo) {
       switch (motivo.nome) {
         case "RPL - Refeição por Lanche":
-          opcoesDe = tipos_alimentacao.filter(ta =>
-            ["Refeição", "Sobremesa"].includes(ta.nome)
-          );
+          if (ehEscolaEspecial) {
+            opcoesDe = tipos_alimentacao.filter(ta =>
+              ["Refeição da tarde", "Almoço"].includes(ta.nome)
+            );
+          } else {
+            opcoesDe = tipos_alimentacao.filter(ta =>
+              ["Refeição", "Sobremesa"].includes(ta.nome)
+            );
+          }
           break;
         case "LPR - Lanche por Refeição":
           opcoesDe = tipos_alimentacao.filter(ta =>
