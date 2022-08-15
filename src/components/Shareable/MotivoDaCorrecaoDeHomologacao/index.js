@@ -7,7 +7,9 @@ export const getCorrecao = logs => {
     R.propEq("status_evento_explicacao", "Questionamento pela CODAE"),
     logs
   );
-  return arr[0];
+  const lastLogQuestionamento = arr.pop();
+
+  return lastLogQuestionamento;
 };
 
 export default ({ logs }) => {
