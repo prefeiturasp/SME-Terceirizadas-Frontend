@@ -112,6 +112,19 @@ class HomologacaoProduto extends Component {
   componentDidMount = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const checaEditais = response => {
+      let result = [];
+      if (response.data.produto.eh_para_alunos_com_dieta)
+        result = response.data.rastro_terceirizada.contratos.map(
+          c => c.edital.uuid
+        );
+      if (response.data.produto.vinculos_produto_edital.length)
+        result = response.data.produto.vinculos_produto_edital.map(
+          c => c.edital.uuid
+        );
+      return result;
+    };
+
     getHomologacaoProduto(uuid).then(response => {
       this.props.change("nome", response.data.produto.nome);
       this.props.change(
@@ -129,12 +142,7 @@ class HomologacaoProduto extends Component {
           ? "DIETA ESPECIAL"
           : "COMUM"
       );
-      this.props.change(
-        "editais",
-        response.data.produto.eh_para_alunos_com_dieta
-          ? response.data.rastro_terceirizada.contratos.map(c => c.edital.uuid)
-          : []
-      );
+      this.props.change("editais", checaEditais(response));
       this.setState({
         produto: response.data.produto,
         informacoesNutricionais: formataInformacoesNutricionais(
