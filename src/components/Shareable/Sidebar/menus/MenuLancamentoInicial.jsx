@@ -4,26 +4,20 @@ import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL
 } from "configs/constants";
-import {
-  usuarioEhEscola,
-  usuarioEscolaEhGestaoDireta
-} from "helpers/utilities";
+import { exibirLancamentoMedicaoInicial } from "helpers/utilities";
 
 export default () => {
-  const exibirLancamentoMedicaoInicial =
-    usuarioEhEscola() && !usuarioEscolaEhGestaoDireta();
-
   return (
-    <Menu
-      id="LancamentoInicial"
-      icon="fas fa-pencil-alt"
-      title={"Medição Inicial"}
-    >
-      {exibirLancamentoMedicaoInicial && (
+    exibirLancamentoMedicaoInicial() && (
+      <Menu
+        id="LancamentoInicial"
+        icon="fas fa-pencil-alt"
+        title={"Medição Inicial"}
+      >
         <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
           Lançamento Medição Inicial
         </LeafItem>
-      )}
-    </Menu>
+      </Menu>
+    )
   );
 };

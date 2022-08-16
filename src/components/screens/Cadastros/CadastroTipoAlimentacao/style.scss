@@ -42,6 +42,7 @@
 }
 
 .title-periodo {
+  text-align: center;
   font-family: "Roboto";
   font-style: normal;
   font-weight: 700;
@@ -61,4 +62,11 @@
   letter-spacing: 0.01em;
   color: #353535;
   margin-top: 10px;
+}
+
+.custom-card-header {
+  border-radius: calc(0.35rem - 1px) calc(0.35rem - 1px) 0 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid #e3e6f0;
+  background-color: #f8f5f5 !important;
 }

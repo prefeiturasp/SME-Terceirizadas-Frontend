@@ -6,6 +6,7 @@ import IconeGestaoDeAlimentacao from "../../Shareable/Icones/IconeGestaoDeAlimen
 import IconeGestaoDeProduto from "../../Shareable/Icones/IconeGestaoDeProduto";
 import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
+import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
 import {
   usuarioEhEscola,
   usuarioEhTerceirizada,
@@ -19,7 +20,8 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhEscolaAbastecimento,
-  exibirGA
+  exibirGA,
+  exibirLancamentoMedicaoInicial
 } from "helpers/utilities";
 
 const PainelInicial = ({ history }) => {
@@ -77,6 +79,18 @@ const PainelInicial = ({ history }) => {
             onClick={() => history.push("/painel-gestao-produto")}
           >
             <IconeGestaoDeProduto />
+          </CardLogo>
+        </Col>
+      )}
+      {exibirLancamentoMedicaoInicial() && (
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+          <CardLogo
+            titulo={"Medição Inicial"}
+            onClick={() =>
+              history.push("/lancamento-inicial/lancamento-medicao-inicial")
+            }
+          >
+            <IconeMedicaoInicial />
           </CardLogo>
         </Col>
       )}

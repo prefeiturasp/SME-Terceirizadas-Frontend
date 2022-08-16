@@ -32,35 +32,32 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
 
   const centralDownloadContext = useContext(CentralDeDownloadContext);
 
+  const thenDownload = () => {
+    showModal(true);
+    setLoading(false);
+    handleClose();
+    centralDownloadContext.getQtdeDownloadsNaoLidas();
+  };
+
+  const catchDownload = error => {
+    error.response.data.text().then(text => toastError(text));
+    setLoading(false);
+  };
+
   const handleDownload = () => {
     setLoading(true);
     let uuid = solicitacao.uuid;
-    let requisicao = solicitacao.numero_solicitacao;
     let payload = montaPayload(uuid);
     if (excel) {
       const params = gerarParametrosConsulta({ uuid, ...payload });
-      gerarExcelEntregas(params, requisicao)
-        .then(() => {
-          setLoading(false);
-          handleClose();
-        })
-        .catch(error => {
-          error.response.data.text().then(text => toastError(text));
-          setLoading(false);
-        });
+      gerarExcelEntregas(params)
+        .then(thenDownload)
+        .catch(catchDownload);
     } else if (pdf) {
       const params = gerarParametrosConsulta(payload);
       imprimirGuiasDaSolicitacao(uuid, params)
-        .then(() => {
-          showModal(true);
-          setLoading(false);
-          handleClose();
-          centralDownloadContext.getQtdeDownloadsNaoLidas();
-        })
-        .catch(error => {
-          error.response.data.text().then(text => toastError(text));
-          setLoading(false);
-        });
+        .then(thenDownload)
+        .catch(catchDownload);
     }
   };
 

@@ -113,7 +113,11 @@ const ListagemSolicitacoes = ({
                   </div>
 
                   <div>
-                    <FiltrosExcel solicitacao={solicitacao} excel={true} />
+                    <FiltrosExcel
+                      solicitacao={solicitacao}
+                      excel={true}
+                      showModal={setShowDownload}
+                    />
                   </div>
                   <div>
                     <FiltrosExcel

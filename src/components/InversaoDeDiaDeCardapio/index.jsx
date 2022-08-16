@@ -262,7 +262,8 @@ export class InversaoDeDiaDeCardapio extends Component {
                     />
                   </div>
                   <div className="col-md-12 col-lg-2 for-span">
-                    <span className="pr-3">para</span>
+                    <i className="fas fa-arrow-left" />
+                    <span className="pl-3 pr-3">para</span>
                     <i className="fas fa-arrow-right" />
                   </div>
                   <div className="inversao-datepicker col-md-12 col-lg-5">

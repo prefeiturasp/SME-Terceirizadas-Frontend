@@ -9,16 +9,12 @@ const authHeader = {
 };
 
 export const getTiposUnidadeEscolar = async () => {
-  const OBJ_REQUEST = {
-    headers: authHeader,
-    method: "GET"
-  };
-
   const url = CONFIG.API_URL + "/tipos-unidade-escolar/";
-  OBJ_REQUEST["method"] = "GET";
-  return await fetch(url, OBJ_REQUEST).then(response => {
-    return response.json();
-  });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async uuid => {
@@ -54,6 +50,15 @@ export const updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values =
     return json;
   } catch (err) {
     return err;
+  }
+};
+
+export const updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async values => {
+  const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/atualizar_lista_de_vinculos/`;
+  const response = await axios.put(url, values).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 

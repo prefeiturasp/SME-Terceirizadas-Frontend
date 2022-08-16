@@ -163,6 +163,8 @@ export const mensagemCancelamento = status => {
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
       return "Esta solicitação já foi autorizada pela CODAE. ";
+    case statusEnum.INFORMADO:
+      return "A solicitação da suspensão de alimentação está autorizada automaticamente. ";
     default:
       return "";
   }
@@ -656,6 +658,14 @@ export const exibirGA = () => {
   )
     return true;
   return false;
+};
+
+export const exibirLancamentoMedicaoInicial = () => {
+  return (
+    usuarioEhEscola() &&
+    !usuarioEscolaEhGestaoDireta() &&
+    !["treinamento", "production"].includes(ENVIRONMENT)
+  );
 };
 
 export const justificativaAoNegarSolicitacao = logs => {
