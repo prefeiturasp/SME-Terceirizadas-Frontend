@@ -204,9 +204,11 @@ export default ({
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
                   </label>
+                  <label className="asterisk-label">*</label>
                 </div>
                 <div className="col-4 pl-0">
                   <label>RF</label>
+                  <label className="asterisk-label">*</label>
                 </div>
                 {renderDadosResponsaveis()}
                 <div className="mt-3 pr-2">
