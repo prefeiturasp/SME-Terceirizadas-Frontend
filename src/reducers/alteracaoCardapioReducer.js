@@ -26,7 +26,9 @@ export default function reducer(state = {}, action) {
             tipos_alimentacao_de: extrairTiposALimentacao(
               substituicao.tipos_alimentacao_de
             ),
-            tipo_alimentacao_para: substituicao.tipo_alimentacao_para.uuid,
+            tipos_alimentacao_para: extrairTiposALimentacao(
+              substituicao.tipos_alimentacao_para
+            ),
             numero_de_alunos: substituicao.qtd_alunos
           };
         });
