@@ -22,7 +22,7 @@ export default ({
   const getPathPlanilhaOcorr = () => {
     if (objSolicitacaoMIFinalizada.anexo)
       return objSolicitacaoMIFinalizada.anexo.arquivo;
-    if (!solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo)
+    if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo)
       return solicitacaoMedicaoInicial.anexo.arquivo;
   };
 
