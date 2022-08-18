@@ -13,12 +13,13 @@
       }
     }
     .radio-entrega-sim {
-      padding: 5px;
+      text-align: center;
+      padding: 5px 25px;
       border: 1px solid green !important;
       border-radius: 4px;
     }
     .radio-entrega-nao {
-      padding: 5px;
+      padding: 5px 25px;
       border: 1px solid red !important;
       border-radius: 4px;
       margin-left: 10px;
@@ -57,7 +58,11 @@
     }
 
     .mb-custom {
-      margin-bottom: 5rem;
+      margin: 16px 0;
+    }
+
+    .black {
+      color: #686868;
     }
 
     .ant-radio-inner {

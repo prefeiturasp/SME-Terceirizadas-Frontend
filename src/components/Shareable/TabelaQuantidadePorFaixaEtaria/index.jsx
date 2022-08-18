@@ -1,3 +1,5 @@
+import { maxValue, naoPodeSerZero } from "helpers/fieldValidators";
+import { composeValidators } from "helpers/utilities";
 import React, { Component } from "react";
 
 import { Field } from "redux-form";
@@ -42,6 +44,10 @@ export default class TabelaQuantidadePorFaixaEtaria extends Component {
                     component={InputText}
                     name={`faixas_etarias.${faixa.faixa_etaria.uuid}`}
                     type="number"
+                    validate={composeValidators(
+                      naoPodeSerZero,
+                      maxValue(faixa.count)
+                    )}
                   />
                 </td>
               </tr>

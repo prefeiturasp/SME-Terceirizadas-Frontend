@@ -195,9 +195,7 @@ export default ({ solicitacao, situacao, arquivaDesarquivaGuias }) => {
                             <div>{alimento.embalagens[0].qtd_volume}</div>
                             <div>{alimento.embalagens[0].tipo_embalagem}</div>
                             <div>
-                              {alimento.embalagens[0].descricao_embalagem}{" "}
-                              {alimento.embalagens[0].capacidade_embalagem}{" "}
-                              {alimento.embalagens[0].unidade_medida}
+                              {alimento.embalagens[0].capacidade_completa}
                             </div>
                           </div>
                         </>

@@ -28,7 +28,8 @@ export const InputHorario = props => {
     name,
     onChangeFunction,
     functionComponent,
-    tooltipText
+    tooltipText,
+    writable
   } = props;
   return (
     <div className={`input-horario ${className}`}>
@@ -55,6 +56,7 @@ export const InputHorario = props => {
         onBlur={onBlur}
         disabled={disabled}
         format={format}
+        inputReadOnly={writable === undefined ? false : !writable}
         className={`${meta &&
           meta.touched &&
           (meta.error || meta.warning) &&

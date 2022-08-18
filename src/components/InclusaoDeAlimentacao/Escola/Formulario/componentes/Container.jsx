@@ -35,7 +35,8 @@ export const Container = () => {
     if (response.status === HTTP_STATUS.OK) {
       const periodos_ = abstraiPeriodosComAlunosMatriculados(
         periodos,
-        response.data.results
+        response.data.results,
+        false
       );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
@@ -45,7 +46,11 @@ export const Container = () => {
           ).tipos_alimentacao);
         });
         setPeriodos(
-          abstraiPeriodosComAlunosMatriculados(periodos, response.data.results)
+          abstraiPeriodosComAlunosMatriculados(
+            periodos,
+            response.data.results,
+            false
+          )
         );
       }
     }

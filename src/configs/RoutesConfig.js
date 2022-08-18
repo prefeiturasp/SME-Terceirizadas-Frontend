@@ -111,7 +111,8 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
-  validaPerfilEscolaMistaParceira
+  validaPerfilEscolaMistaParceira,
+  exibirLancamentoMedicaoInicial
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -167,6 +168,7 @@ import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
+import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 
 const routesConfig = [
   {
@@ -560,6 +562,12 @@ const routesConfig = [
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
+    component: CadastroSobremesaDocePage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,
@@ -1274,7 +1282,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()
+    tipoUsuario: exibirLancamentoMedicaoInicial()
   },
   {
     path: `/${constants.LOGISTICA}/${

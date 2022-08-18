@@ -1,12 +1,10 @@
-export const retornaTodosOsLogs = homologacoes => {
+export const retornaTodosOsLogs = homologacao => {
   let logs = [];
-  homologacoes.forEach(hom => {
-    const todosLogs = hom.logs.reverse();
-    todosLogs.forEach(log => {
-      log["ativo"] = false;
-      log["empresa"] = hom.rastro_terceirizada.nome_fantasia;
-      logs.push(log);
-    });
+  const todosLogs = homologacao.logs.reverse();
+  todosLogs.forEach(log => {
+    log["ativo"] = false;
+    log["empresa"] = homologacao.rastro_terceirizada.nome_fantasia;
+    logs.push(log);
   });
 
   return logs.reverse();

@@ -117,3 +117,106 @@ export const validateFormLancamento = (
 
   return erros;
 };
+
+export const mockLogs = [
+  {
+    criado_em: "13/07/2022 18:17:32",
+    descricao: "6105374: LAURA PORTO GONCALVES",
+    justificativa: "",
+    resposta_sim_nao: false,
+    status_evento_explicacao: "Em aberto para preenchimento pela UE",
+    usuario: {
+      cargo: "ANALISTA DE SAUDE NIVEL I",
+      cpf: null,
+      crn_numero: null,
+      date_joined: "10/07/2020 13:15:23",
+      email: "escolaemef@admin.com",
+      nome: "SUPER USUARIO ESCOLA EMEF",
+      registro_funcional: "8115257",
+      tipo_usuario: "escola",
+      uuid: "36750ded-5790-433e-b765-0507303828df"
+    }
+  }
+];
+
+export const CORES = [
+  "#198459",
+  "#D06D12",
+  "#2F80ED",
+  "#831d1c",
+  "#1F861F",
+  "#9b51e0",
+  "#B58B00",
+  "#00f7ff",
+  "#ff0095"
+];
+
+export const mockPeriodos = [
+  {
+    periodo: "Período Matutino",
+    alimentacoes: {
+      total: 200,
+      refeicoes: 100,
+      sobremesas: 60,
+      lanches: 40
+    }
+  },
+  {
+    periodo: "Período Vespertino",
+    alimentacoes: {
+      total: 102,
+      refeicoes: 50,
+      sobremesas: 30,
+      lanches_5h: 20
+    }
+  },
+  {
+    periodo: "Período Integral",
+    alimentacoes: {
+      total: 350,
+      refeicoes: 100,
+      sobremesas: 100,
+      lanches_4h: 70,
+      lanches_5h: 80
+    }
+  },
+  {
+    periodo: "Período Noturno - EJA",
+    alimentacoes: {
+      total: 280,
+      refeicoes: 80,
+      sobremesas: 80,
+      lanches: 100,
+      lanches_5h: 20
+    }
+  },
+  {
+    periodo: "Programas e Projetos",
+    alimentacoes: {
+      total: 120,
+      refeicoes: 20,
+      sobremesas: 20,
+      lanches_4h: 40,
+      lanches_5h: 40
+    }
+  },
+  {
+    periodo: "Solicitações de Alimentação",
+    alimentacoes: {
+      total: 80,
+      lanches_emergenciais: 30,
+      kit_lanches: 50
+    }
+  },
+  {
+    periodo: "ETEC",
+    alimentacoes: {
+      total: 0
+    }
+  }
+];
+
+export const OPCOES_AVALIACAO_A_CONTENTO = {
+  SIM_SEM_OCORRENCIAS: 1,
+  NAO_COM_OCORRENCIAS: 0
+};

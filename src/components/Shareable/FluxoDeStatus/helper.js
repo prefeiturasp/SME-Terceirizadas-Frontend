@@ -90,6 +90,23 @@ export const fluxoPartindoTerceirizada = [
   }
 ];
 
+export const fluxoMedicaoInicial = [
+  {
+    titulo: "Solicitação de Medição não Iniciada",
+    status: "",
+    criado_em: "",
+    usuario: null,
+    status_evento_explicacao: "Solicitação de Medição não Iniciada"
+  },
+  {
+    titulo: "Aguardando encerramento pela CODAE",
+    status: "",
+    criado_em: "",
+    usuario: null,
+    status_evento_explicacao: "Aguardando encerramento pela CODAE"
+  }
+];
+
 export const tipoDeStatus = status => {
   switch (status) {
     case "Solicitação Realizada":
@@ -128,6 +145,9 @@ export const tipoDeStatus = status => {
       return "questionado";
     case "CODAE pediu análise sensorial":
       return "questionado";
+    case "Em aberto para preenchimento pela UE":
+    case "Informação encerrada pela CODAE":
+      return "prosseguiu";
     default:
       return "";
   }

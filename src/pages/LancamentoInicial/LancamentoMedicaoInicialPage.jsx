@@ -13,7 +13,7 @@ import {
 
 const atual = {
   href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
-  titulo: "Lançamento de Medição Inicial"
+  titulo: "Lançamento Medição Inicial"
 };
 
 export default () => (
