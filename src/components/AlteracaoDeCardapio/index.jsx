@@ -1100,9 +1100,9 @@ class AlteracaoCardapio extends Component {
                         )}
                         multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
-                        options={this.formataOpcoesDe(
-                          periodo.tipos_alimentacao
-                        )}
+                        options={
+                          this.formataOpcoesDe(periodo.tipos_alimentacao) || []
+                        }
                         nomeDoItemNoPlural="Alimentos"
                         onChange={value =>
                           this.removerOpcoesSubstitutos(value, periodo, indice)
@@ -1119,7 +1119,7 @@ class AlteracaoCardapio extends Component {
                         )}
                         multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
-                        options={periodo.substituicoes}
+                        options={periodo.substituicoes || []}
                         nomeDoItemNoPlural="Substitutos"
                         onChange={values => {
                           this.verificaSeEhLancheNoTipoDeAlimentacao(
