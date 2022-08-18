@@ -653,39 +653,44 @@ class AlteracaoCardapio extends Component {
                           }}
                           nomePeriodo={periodo.nome}
                         />
-                        <Field
-                          component={MultiSelect}
-                          disableSearch
-                          name="tipos_alimentacao_de"
-                          multiple
-                          options={this.formataOpcoesDe(
-                            periodo.tipos_alimentacao
-                          )}
-                          nomeDoItemNoPlural="Alimentos"
-                          onChange={value =>
-                            this.removerOpcoesSubstitutos(
-                              value,
-                              periodo,
-                              indice
-                            )
-                          }
-                        />
-
-                        <Field
-                          component={Select}
-                          name="tipo_alimentacao_para"
-                          options={
-                            periodo.substituicoes
-                              ? periodo.substituicoes.filter(
-                                  ({ nome }) =>
-                                    nome.toUpperCase() !==
-                                    "Lanche emergencial".toUpperCase()
-                                )
-                              : agregarDefault([])
-                          }
-                          validate={periodo.checked && required}
-                          required={periodo.checked}
-                        />
+                        <div className="select-tipo-alimentacao-de">
+                          <Field
+                            component={MultiSelect}
+                            disableSearch
+                            name="tipos_alimentacao_de"
+                            multiple
+                            options={this.formataOpcoesDe(
+                              periodo.tipos_alimentacao
+                            )}
+                            nomeDoItemNoPlural="Alimentos"
+                            onChange={value =>
+                              this.removerOpcoesSubstitutos(
+                                value,
+                                periodo,
+                                indice
+                              )
+                            }
+                            disabled={!periodo.checked}
+                          />
+                        </div>
+                        <div className="select-tipo-alimentacao-de">
+                          <Field
+                            component={Select}
+                            name="tipo_alimentacao_para"
+                            options={
+                              periodo.substituicoes
+                                ? periodo.substituicoes.filter(
+                                    ({ nome }) =>
+                                      nome.toUpperCase() !==
+                                      "Lanche emergencial".toUpperCase()
+                                  )
+                                : agregarDefault([])
+                            }
+                            validate={periodo.checked && required}
+                            required={periodo.checked}
+                            disabled={!periodo.checked}
+                          />
+                        </div>
                       </div>
                       {periodo.checked && periodo.alunosPorFaixaEtaria && (
                         <TabelaQuantidadePorFaixaEtaria
