@@ -393,7 +393,7 @@ export const usuarioEhDistribuidora = () => {
 };
 
 export const escolaEhCei = () => {
-  return /^"?cei|\scei\s|\scei$/i.test(
+  return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
   );
 };
