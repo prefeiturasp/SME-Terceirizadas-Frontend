@@ -170,6 +170,7 @@ export const ENTREGAS_DRE = "entregas-dre";
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
+export const PERIODO_LANCAMENTO = "periodo-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

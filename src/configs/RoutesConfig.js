@@ -145,7 +145,8 @@ import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/Relatorio
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
-import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
+import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
+import PeriodoLancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
@@ -1281,6 +1282,14 @@ const routesConfig = [
       constants.LANCAMENTO_MEDICAO_INICIAL
     }`,
     component: LancamentoMedicaoInicialPage,
+    exact: true,
+    tipoUsuario: exibirLancamentoMedicaoInicial()
+  },
+  {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }/${constants.PERIODO_LANCAMENTO}`,
+    component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
     tipoUsuario: exibirLancamentoMedicaoInicial()
   },
