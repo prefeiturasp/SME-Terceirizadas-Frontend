@@ -76,9 +76,7 @@ const Relatorio = ({ visao }) => {
       codigo_eol
     );
     if (responseDietasVigentes.status === HTTP_STATUS.OK) {
-      setSolicitacaoVigenteAtiva(
-        responseDietasVigentes.data.results.slice(0, 1)
-      );
+      setSolicitacaoVigenteAtiva(responseDietasVigentes.data.results);
     } else {
       toastError("Houve um erro ao carregar Solicitação");
     }
