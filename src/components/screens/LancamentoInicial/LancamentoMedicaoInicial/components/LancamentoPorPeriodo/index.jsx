@@ -4,10 +4,11 @@ import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 
 import CardLancamento from "./CardLancamento";
-import { CORES, mockPeriodos } from "./helpers";
+import { CORES } from "./helpers";
 
 export default ({
   escolaInstituicao,
+  periodosEscolaSimples,
   solicitacaoMedicaoInicial,
   onClickInfoBasicas
 }) => {
@@ -72,13 +73,13 @@ export default ({
           </b>
         </div>
       </div>
-      {mockPeriodos.map((periodo, index) => (
+      {periodosEscolaSimples.map((periodo, index) => (
         <CardLancamento
           key={index}
-          textoCabecalho={periodo.periodo}
+          textoCabecalho={periodo.nome}
           cor={CORES[index]}
-          totalAlimentacoes={periodo.alimentacoes.total}
-          alimentacoes={periodo.alimentacoes}
+          totalAlimentacoes={"##"}
+          tipos_alimentacao={periodo.tipos_alimentacao}
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
           objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
         />
