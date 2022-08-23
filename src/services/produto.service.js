@@ -109,6 +109,10 @@ export const getNomesTerceirizadas = async () => {
   return await axios.get(`/terceirizadas/lista-nomes/`);
 };
 
+export const getNomesUnicosEditais = async () => {
+  return await axios.get(`/produtos-editais/lista-nomes-unicos/`);
+};
+
 export const getProdutosPorNome = async nomeProduto => {
   return await axios.get(`/produtos/filtro-por-nome/${nomeProduto}/`);
 };

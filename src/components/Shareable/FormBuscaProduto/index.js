@@ -3,6 +3,12 @@ import { Form, Field } from "react-final-form";
 import { Row, Col } from "antd";
 import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { ASelect } from "components/Shareable/MakeField";
+import { Icon, Select as SelectAntd } from "antd";
+import {
+  usuarioEhCODAEGestaoProduto,
+  usuarioEhEscola
+} from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
@@ -17,10 +23,20 @@ import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
+  getNomesUnicosEditais,
   getNomesTerceirizadas
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
+
+const tiposProdutos = [
+  { nome: "Comum", key: "Comum" },
+  { nome: "Dieta Especial", key: "Dieta especial" }
+];
+const { Option } = SelectAntd;
+const listaTipos = tiposProdutos.map(tipo => {
+  return <Option key={tipo.key}>{tipo.nome}</Option>;
+});
 
 const initialState = {
   dados: {},
@@ -28,6 +44,8 @@ const initialState = {
   produtos: [],
   marcas: [],
   fabricantes: [],
+  tipos: listaTipos,
+  editais: [],
   status: "",
   inicio: ""
 };
@@ -68,21 +86,24 @@ export const FormBuscaProduto = ({
     const endpoints = [
       getNomesUnicosProdutos(),
       getNomesUnicosMarcas(),
-      getNomesUnicosFabricantes()
+      getNomesUnicosFabricantes(),
+      getNomesUnicosEditais()
     ];
     if (!naoExibirRowTerceirizadas) endpoints.push(getNomesTerceirizadas());
     async function fetchData() {
       Promise.all(endpoints).then(
-        ([produtos, marcas, fabricantes, terceirizadas]) => {
+        ([produtos, marcas, fabricantes, editais, terceirizadas]) => {
+          const nomesTerceirizadas = terceirizadas
+            ? terceirizadas.data.results.map(el => el.nome_fantasia)
+            : [];
           dispatch({
             type: "popularDados",
             payload: {
               produtos: produtos.data.results,
               marcas: marcas.data.results,
               fabricantes: fabricantes.data.results,
-              terceirizadas:
-                terceirizadas &&
-                terceirizadas.data.results.map(el => el.nome_fantasia),
+              terceirizadas: nomesTerceirizadas,
+              editais: editais.data.results,
               status: STATUS_RECLAMACAO_PRODUTO
             }
           });
@@ -115,27 +136,15 @@ export const FormBuscaProduto = ({
             <Row gutter={[16, 16]}>
               <Col md={24} lg={12} xl={16}>
                 <Field
-                  component={"input"}
-                  type="checkbox"
-                  label="Nome da terceirizada"
-                  name="agrupado_por_nome_e_marca"
-                />
-                <span className="checkbox-custom" />
-                <label
-                  htmlFor="agrupado_por_nome_e_marca"
-                  className="checkbox-label"
-                >
-                  Visão agrupada por nome e marca
-                </label>
-              </Col>
-              <Col md={24} lg={12} xl={16}>
-                <Field
                   component={AutoCompleteField}
                   dataSource={state.terceirizadas}
                   label="Nome da terceirizada"
                   onSearch={v => onSearch("terceirizadas", v)}
                   name="nome_terceirizada"
-                  disabled={values.agrupado_por_nome_e_marca}
+                  disabled={
+                    values.agrupado_por_nome_e_marca ||
+                    !usuarioEhCODAEGestaoProduto()
+                  }
                 />
               </Col>
               <Col md={24} lg={6} xl={4}>
@@ -171,8 +180,39 @@ export const FormBuscaProduto = ({
               </Col>
             </Row>
           )}
-          <Row>
-            <Col>
+          <div className="row">
+            <div className="col-4">
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.editais}
+                label="Edital"
+                className="input-busca-produto"
+                onSearch={v => onSearch("editais", v)}
+                name="nome_edital"
+                disabled={values.agrupado_por_nome_e_marca || usuarioEhEscola()}
+              />
+            </div>
+            {state.tipos.length > 0 && (
+              <div className="col-4">
+                <label className="label-aselect">Tipo</label>
+                <Field
+                  component={ASelect}
+                  className="input-busca-tipo-item"
+                  placeholder="Selecione um tipo"
+                  suffixIcon={<Icon type="caret-down" />}
+                  name="tipo"
+                  filterOption={(inputValue, option) =>
+                    option.props.children
+                      .toString()
+                      .toLowerCase()
+                      .includes(inputValue.toLowerCase())
+                  }
+                >
+                  {state.tipos}
+                </Field>
+              </div>
+            )}
+            <div className="col-4">
               <Field
                 component={AutoCompleteField}
                 dataSource={state.produtos}
@@ -181,8 +221,8 @@ export const FormBuscaProduto = ({
                 onSearch={v => onSearch("produtos", v)}
                 name="nome_produto"
               />
-            </Col>
-          </Row>
+            </div>
+          </div>
           <Row gutter={[16, 16]}>
             <Col md={24} lg={statusSelect ? 8 : 12}>
               <Field
@@ -221,7 +261,22 @@ export const FormBuscaProduto = ({
             )}
           </Row>
           <div className="row">
-            <div className="col-12 text-right">
+            <div className="col-6">
+              <Field
+                component={"input"}
+                type="checkbox"
+                label="Nome da terceirizada"
+                name="agrupado_por_nome_e_marca"
+              />
+              <span className="checkbox-custom" />
+              <label
+                htmlFor="agrupado_por_nome_e_marca"
+                className="checkbox-label"
+              >
+                Visão agrupada por nome e marca
+              </label>
+            </div>
+            <div className="col-6 text-right">
               {!!exibirBotaoVoltar && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
