@@ -3,7 +3,7 @@ import { Pagination } from "antd";
 
 import "./style.scss";
 
-const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
+const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   const [page, setPage] = useState(1);
 
   const onChangePagination = page => {
@@ -16,14 +16,18 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
     dadosProdutos &&
     dadosProdutos.slice(pageSize * (page - 1), pageSize * page);
 
-  return (
+  return dadosProdutos ? (
     <div>
       <table className="table table-bordered table-items">
         <thead>
           <tr className="table-head-items">
+            <th>Terceirizada</th>
             <th>Produto</th>
-            <th>Marcas</th>
-            <th>Editais</th>
+            <th>Marca</th>
+            <th>Edital</th>
+            <th>Tipo</th>
+            <th>Cadastro</th>
+            <th>Homologação</th>
           </tr>
         </thead>
         <tbody>
@@ -31,9 +35,13 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
             dadosProdutosPaginado.map((produto, index) => {
               return (
                 <tr key={index} className="table-body-items">
+                  <td>{produto.terceirizada}</td>
                   <td>{produto.nome}</td>
-                  <td>{produto.marcas ? produto.marcas.join(", ") : ""}</td>
-                  <td>{produto.editais ? produto.editais.join(", ") : ""}</td>
+                  <td>{produto.marca}</td>
+                  <td>{produto.edital}</td>
+                  <td>{produto.tipo}</td>
+                  <td>{produto.cadastro}</td>
+                  <td>{produto.homologacao}</td>
                 </tr>
               );
             })}
@@ -46,7 +54,9 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
         pageSize={pageSize}
       />
     </div>
+  ) : (
+    <></>
   );
 };
 
-export default TabelaAgrupadaProdutosMarcas;
+export default TabelaAgrupadaProdutosTerceirizadas;
