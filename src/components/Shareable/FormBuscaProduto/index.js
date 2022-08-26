@@ -5,10 +5,7 @@ import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
 import { Icon, Select as SelectAntd } from "antd";
-import {
-  usuarioEhCODAEGestaoProduto,
-  usuarioEhEscola
-} from "helpers/utilities";
+import { usuarioEhTerceirizada, usuarioEhEscola } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,7 +15,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { useHistory } from "react-router-dom";
-
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
@@ -77,7 +73,8 @@ export const FormBuscaProduto = ({
   statusSelect,
   exibirBotaoVoltar,
   naoExibirLimparFiltros,
-  onLimparDados
+  onLimparDados,
+  valoresIniciais
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -126,6 +123,7 @@ export const FormBuscaProduto = ({
 
   return (
     <Form
+      initialValues={valoresIniciais}
       onSubmit={onSubmit}
       render={({ form, handleSubmit, submitting, values }) => (
         <form
@@ -142,8 +140,7 @@ export const FormBuscaProduto = ({
                   onSearch={v => onSearch("terceirizadas", v)}
                   name="nome_terceirizada"
                   disabled={
-                    values.agrupado_por_nome_e_marca ||
-                    !usuarioEhCODAEGestaoProduto()
+                    values.agrupado_por_nome_e_marca || usuarioEhTerceirizada()
                   }
                 />
               </Col>
