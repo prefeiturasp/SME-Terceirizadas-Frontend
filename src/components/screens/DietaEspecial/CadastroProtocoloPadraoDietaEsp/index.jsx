@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { useHistory, useLocation } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 import arrayMutators from "final-form-arrays";
@@ -26,6 +27,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import { getNumerosEditais } from "services/edital.service";
 
 const FORM_NAME = "cadastrarProtocoloPadrao";
 
@@ -40,10 +42,21 @@ export default ({ uuid }) => {
   const [valoresIniciais, setValoresIniciais] = useState({
     substituicoes: [{}]
   });
+  const [editais, setEditais] = useState(undefined);
+  const [erroAPI, setErroAPI] = useState(false);
 
   const history = useHistory();
   const location = useLocation();
   const ehCopia = location.pathname.includes("criar-copia");
+
+  const getEditaisAsync = async () => {
+    const response = await getNumerosEditais();
+    if (response.status === HTTP_STATUS.OK) {
+      setEditais(response.data.results);
+    } else {
+      setErroAPI(true);
+    }
+  };
 
   async function fetchData() {
     const respAlimentos = await getAlimentos({
@@ -64,6 +77,7 @@ export default ({ uuid }) => {
       setProcoloPadrao(respProtocolo.data);
       setValoresIniciais(getInitialValues(respProtocolo.data));
     }
+    getEditaisAsync();
     setCarregando(false);
   }
 
@@ -92,6 +106,7 @@ export default ({ uuid }) => {
         nome_protocolo: protocolo.nome_protocolo,
         orientacoes_gerais: protocolo.orientacoes_gerais,
         status: protocolo.status === "Liberado" ? "LIBERADO" : "NAO_LIBERADO",
+        editais: protocolo.editais.map(e => e.uuid),
         substituicoes: substituicoes
       };
     } else {
@@ -180,6 +195,9 @@ export default ({ uuid }) => {
   return (
     <div className="card mt-3 card-cadastro-protocolo-padrao">
       <div className="card-body">
+        {erroAPI && (
+          <div>Erro ao carregar dados. Tente novamente mais tarde.</div>
+        )}
         <Spin tip="Carregando..." spinning={carregando}>
           {protocoloPadrao && (
             <div className="row">
@@ -199,118 +217,142 @@ export default ({ uuid }) => {
               </div>
             </div>
           )}
-          <Form
-            onSubmit={onSubmit}
-            initialValues={valoresIniciais}
-            mutators={{ ...arrayMutators }}
-            render={({ form, handleSubmit, submitting, values }) => (
-              <form
-                onSubmit={event => {
-                  const promise = handleSubmit(event);
-                  promise &&
-                    promise.then(() => {
-                      // resetForm(form);
-                    });
-                  return promise;
-                }}
-              >
-                <FinalFormToRedux form={FORM_NAME} />
-                <div className="row">
-                  <div className="col-12">
-                    <div className="mb-2 input title">
-                      <span className="required-asterisk">*</span>
-                      <label>Nome do protocolo</label>
+          {editais && (
+            <Form
+              onSubmit={onSubmit}
+              initialValues={valoresIniciais}
+              mutators={{ ...arrayMutators }}
+              render={({ form, handleSubmit, submitting, values }) => (
+                <form
+                  onSubmit={event => {
+                    const promise = handleSubmit(event);
+                    promise &&
+                      promise.then(() => {
+                        // resetForm(form);
+                      });
+                    return promise;
+                  }}
+                >
+                  <FinalFormToRedux form={FORM_NAME} />
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="mb-2 input title">
+                        <span className="required-asterisk">*</span>
+                        <label>Nome do protocolo</label>
+                      </div>
+                      <Field
+                        component={InputText}
+                        name="nome_protocolo"
+                        validate={required}
+                      />
                     </div>
-                    <Field
-                      component={InputText}
-                      name="nome_protocolo"
-                      validate={required}
-                    />
                   </div>
-                </div>
-                <div className="row mt-2">
-                  <div className="col-12">
-                    <Field
-                      component={CKEditorField}
-                      label="Orientações Gerais"
-                      name="orientacoes_gerais"
-                      validate={required}
-                      required
-                    />
-                  </div>
-                </div>
-                {alimentos.length > 0 && produtos.length > 0 && (
-                  <>
-                    <div className="mt-2 mb-2 pt-2 input title titulo-substituicoes">
-                      <span className="required-asterisk">*</span>
-                      <label>Lista de Substituições</label>
+                  <div className="row mt-2">
+                    <div className="col-12">
+                      <Field
+                        component={CKEditorField}
+                        label="Orientações Gerais"
+                        name="orientacoes_gerais"
+                        validate={required}
+                        required
+                      />
                     </div>
-                    {!carregando && (
-                      <SubstituicoesField
-                        alimentos={alimentos}
-                        produtos={produtos}
-                        form={form}
+                  </div>
+                  {alimentos.length > 0 && produtos.length > 0 && (
+                    <>
+                      <div className="mt-2 mb-2 pt-2 input title titulo-substituicoes">
+                        <span className="required-asterisk">*</span>
+                        <label>Lista de Substituições</label>
+                      </div>
+                      {!carregando && (
+                        <SubstituicoesField
+                          alimentos={alimentos}
+                          produtos={produtos}
+                          form={form}
+                        />
+                      )}
+                    </>
+                  )}
+                  <hr />
+                  <div className="row mt-2">
+                    <div className="col-4">
+                      <div className="label mt-2 mb-1">Número do Edital</div>
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="editais"
+                        selected={values.editais || []}
+                        options={editais.map(edital => ({
+                          label: edital.numero,
+                          value: edital.uuid
+                        }))}
+                        onSelectedChanged={values_ => {
+                          form.change(`editais`, values_);
+                        }}
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    </div>
+                    <div className="col-3">
+                      <Field
+                        component={SelectSelecione}
+                        naoDesabilitarPrimeiraOpcao
+                        options={[
+                          {
+                            uuid: "LIBERADO",
+                            nome: "Liberado"
+                          },
+                          { uuid: "NAO_LIBERADO", nome: "Não liberado" }
+                        ]}
+                        label="Status"
+                        name="status"
+                        validate={required}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 mb-4">
+                    <Botao
+                      texto={ehCopia ? "Salvar cópia" : "Salvar"}
+                      type={BUTTON_TYPE.SUBMIT}
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-right ml-3"
+                      disabled={
+                        submitting || checaSeEditou(values, getInitialValues())
+                      }
+                    />
+                    {ehCopia ? (
+                      <Botao
+                        texto={"Cancelar cópia"}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-right ml-3"
+                        onClick={() => {
+                          setShowModalCancelaCopia(true);
+                        }}
+                      />
+                    ) : (
+                      <Botao
+                        texto={
+                          protocoloPadrao ? "Cancelar edição" : "Limpar campos"
+                        }
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-right ml-3"
+                        onClick={() => {
+                          resetForm(form);
+                        }}
                       />
                     )}
-                  </>
-                )}
-                <hr />
-                <div className="row mt-2">
-                  <div className="col-3">
-                    <Field
-                      component={SelectSelecione}
-                      naoDesabilitarPrimeiraOpcao
-                      options={[
-                        {
-                          uuid: "LIBERADO",
-                          nome: "Liberado"
-                        },
-                        { uuid: "NAO_LIBERADO", nome: "Não liberado" }
-                      ]}
-                      label="Status"
-                      name="status"
-                      validate={required}
-                      required
-                    />
                   </div>
-                </div>
-                <div className="mt-4 mb-4">
-                  <Botao
-                    texto={ehCopia ? "Salvar cópia" : "Salvar"}
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
-                    disabled={
-                      submitting || checaSeEditou(values, getInitialValues())
-                    }
-                  />
-                  {ehCopia ? (
-                    <Botao
-                      texto={"Cancelar cópia"}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
-                      onClick={() => {
-                        setShowModalCancelaCopia(true);
-                      }}
-                    />
-                  ) : (
-                    <Botao
-                      texto={
-                        protocoloPadrao ? "Cancelar edição" : "Limpar campos"
-                      }
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right ml-3"
-                      onClick={() => {
-                        resetForm(form);
-                      }}
-                    />
-                  )}
-                </div>
-              </form>
-            )}
-          />
+                </form>
+              )}
+            />
+          )}
         </Spin>
         {historico && (
           <ModalHistoricoProtocoloPadrao
