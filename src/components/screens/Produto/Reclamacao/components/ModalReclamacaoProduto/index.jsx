@@ -146,7 +146,6 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="RF/CRN/CRF"
                       name="reclamante_registro_funcional"
-                      disabled={true}
                       required
                       validate={required}
                     />
@@ -156,7 +155,6 @@ export default class ModalReclamacaoProduto extends Component {
                       component={InputText}
                       label="Cargo"
                       name="reclamante_cargo"
-                      disabled={true}
                       required
                       validate={required}
                     />
