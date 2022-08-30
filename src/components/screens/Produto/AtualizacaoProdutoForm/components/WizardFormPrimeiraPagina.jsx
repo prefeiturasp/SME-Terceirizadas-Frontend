@@ -17,6 +17,8 @@ import {
 import "./styles.scss";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
+import { TIPO_PERFIL } from "constants/shared";
+import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
 
 const maxLength5000 = maxLengthProduto(5000);
 const { Option } = Select;
@@ -37,12 +39,21 @@ class WizardFormPrimeiraPagina extends React.Component {
       listaFabricantes: [],
       loading: true,
       completo: false,
-      showModalCadastrarItem: false
+      showModalCadastrarItem: false,
+      desabilitarNomeDoProdutoField: true
     };
   }
 
   componentDidMount() {
     const { produto } = this.props;
+    const tipoPerfil = localStorage.getItem("tipo_perfil");
+
+    if (
+      tipoPerfil === TIPO_PERFIL.TERCEIRIZADA &&
+      produto.homologacao.status === STATUS_CODAE_QUESTIONADO
+    )
+      this.setState({ desabilitarNomeDoProdutoField: false });
+
     this.setState({ produtoForm: produto });
   }
 
@@ -276,7 +287,8 @@ class WizardFormPrimeiraPagina extends React.Component {
       produtoForm,
       nomeDeProdutosEditalArray,
       marcasArray,
-      fabricantesArray
+      fabricantesArray,
+      desabilitarNomeDoProdutoField
     } = this.state;
 
     return (
@@ -335,7 +347,7 @@ class WizardFormPrimeiraPagina extends React.Component {
               name="nome"
               onSelect={this.addNome}
               validate={required}
-              disabled={true}
+              disabled={desabilitarNomeDoProdutoField}
             >
               {nomeDeProdutosEditalArray}
             </Field>

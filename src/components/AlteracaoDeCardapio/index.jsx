@@ -17,7 +17,6 @@ import {
   textAreaRequired
 } from "../../helpers/fieldValidators";
 import {
-  agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect,
   getError
@@ -180,13 +179,15 @@ class AlteracaoCardapio extends Component {
       const alteracoes = response.results;
       alteracoes.forEach(alteracao => {
         alteracao.substituicoes.forEach(substituicao => {
-          if (
-            substituicao.tipo_alimentacao_para &&
-            substituicao.tipo_alimentacao_para.nome.includes("lanche")
-          ) {
-            periodosQuePossuemLancheNaAlteracao[
-              `${substituicao.periodo_escolar.nome}`
-            ].status = true;
+          if (substituicao.tipos_alimentacao_para) {
+            let temLanche = substituicao.tipos_alimentacao_para.find(
+              tap => tap.nome === "lanche"
+            );
+            if (temLanche !== undefined) {
+              periodosQuePossuemLancheNaAlteracao[
+                `${substituicao.periodo_escolar.nome}`
+              ].status = true;
+            }
           }
         });
       });
@@ -213,14 +214,14 @@ class AlteracaoCardapio extends Component {
   };
 
   verificaSeEhLancheNoTipoDeAlimentacao = (
-    uuidTPAlimentacao,
+    values,
     substituicoes,
     nomePeriodo
   ) => {
     let { periodosQuePossuemLancheNaAlteracao } = this.state;
     substituicoes.length > 0 &&
       substituicoes.forEach(substituicao => {
-        if (substituicao.uuid === uuidTPAlimentacao) {
+        if (values.includes(substituicao.uuid)) {
           if (substituicao.nome.includes("lanche")) {
             periodosQuePossuemLancheNaAlteracao[
               `${nomePeriodo}`
@@ -295,7 +296,9 @@ class AlteracaoCardapio extends Component {
     substituicoes.forEach(substituicao => {
       substituicao.tipos_alimentacao_de.forEach(tipo_alimentacao_sub => {
         if (
-          substituicao.tipo_alimentacao_para.uuid === tipo_alimentacao_sub.uuid
+          substituicao.tipos_alimentacao_para.includes(
+            tipo_alimentacao_sub.uuid
+          )
         ) {
           if (tipo_alimentacao_sub.label.includes("lanche")) {
             periodosQuePossuemLancheNaAlteracao[
@@ -344,7 +347,7 @@ class AlteracaoCardapio extends Component {
     this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
     param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
       substituicoesAlimentacao[index].substituicoes =
-        substituicao.tipo_alimentacao_para;
+        substituicao.tipos_alimentacao_para;
     });
     this.atualizaEverificaSeEhAlteracaoRepetida(
       param.alteracaoDeCardapio.substituicoes
@@ -637,7 +640,7 @@ class AlteracaoCardapio extends Component {
         null
       );
       this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        `substituicoes_${periodoNome}.tipos_alimentacao_para`,
         null
       );
       this.props.change(`substituicoes_${periodoNome}.numero_de_alunos`, null);
@@ -669,7 +672,7 @@ class AlteracaoCardapio extends Component {
       if (alimentacaoPara !== undefined) {
         // Define o valor no campo
         this.props.change(
-          `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+          `substituicoes_${periodoNome}.tipos_alimentacao_para`,
           alimentacaoPara.uuid
         );
       }
@@ -756,7 +759,7 @@ class AlteracaoCardapio extends Component {
     let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
     if (substituicoesAlimentacao[indice].uuidAlimentacao !== uuidInput) {
       this.props.change(
-        `substituicoes_${periodoNome}.tipo_alimentacao_para`,
+        `substituicoes_${periodoNome}.tipos_alimentacao_para`,
         null
       );
     }
@@ -805,7 +808,7 @@ class AlteracaoCardapio extends Component {
       );
     });
     periodos = periodos.map(periodo => {
-      periodo["substituicoes"] = agregarDefault([]);
+      periodo["substituicoes"] = [];
       return periodo;
     });
     this.setState({ periodos });
@@ -860,14 +863,9 @@ class AlteracaoCardapio extends Component {
         }
       }
 
-      opcoesSubstitutos = opcoesSubstitutos.map(substituto => {
-        return {
-          nome: substituto.nome,
-          uuid: substituto.uuid
-        };
-      });
+      opcoesSubstitutos = formatarParaMultiselect(opcoesSubstitutos);
     }
-    periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+    periodos[indice].substituicoes = opcoesSubstitutos;
 
     this.setState({
       ...this.state,
@@ -875,7 +873,7 @@ class AlteracaoCardapio extends Component {
     });
     opcoesSubstitutos.length === 0 &&
       this.props.change(
-        `substituicoes_${periodo.nome}.tipo_alimentacao_para`,
+        `substituicoes_${periodo.nome}.tipos_alimentacao_para`,
         null
       );
   }
@@ -1102,25 +1100,30 @@ class AlteracaoCardapio extends Component {
                         )}
                         multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
-                        options={this.formataOpcoesDe(
-                          periodo.tipos_alimentacao
-                        )}
+                        options={
+                          this.formataOpcoesDe(periodo.tipos_alimentacao) || []
+                        }
                         nomeDoItemNoPlural="Alimentos"
                         onChange={value =>
                           this.removerOpcoesSubstitutos(value, periodo, indice)
                         }
                         validate={periodo.validador}
                       />
+
                       <Field
-                        component={Select}
-                        name="tipo_alimentacao_para"
+                        component={MultiSelect}
+                        disableSearch
+                        name="tipos_alimentacao_para"
                         disabled={this.deveDesabilitarSeletorDeAlimentacao(
                           indice
                         )}
-                        options={periodo.substituicoes}
-                        onChange={event => {
+                        multiple
+                        selected={optionsAlimentacaoDe[periodo.nome] || []}
+                        options={periodo.substituicoes || []}
+                        nomeDoItemNoPlural="Substitutos"
+                        onChange={values => {
                           this.verificaSeEhLancheNoTipoDeAlimentacao(
-                            event.target.value,
+                            values,
                             substituicoesAlimentacao[indice].substituicoes,
                             periodo.nome
                           );
