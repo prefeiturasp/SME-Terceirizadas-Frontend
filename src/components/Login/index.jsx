@@ -1,12 +1,13 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Field, reduxForm } from "redux-form";
+import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   length,
   required,
   rfOuCpf,
-  semCaracteresEspeciais
+  semCaracteresEspeciais,
+  validaCPF
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import { recuperaSenha, setUsuario } from "../../services/perfil.service";
@@ -23,6 +24,8 @@ import {
   fieldCnpj,
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
+import { connect } from "react-redux";
+import { composeValidators } from "helpers/utilities";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -85,8 +88,8 @@ export class Login extends Component {
     }
   };
 
-  handleRecuperaSenha = registro_funcional => {
-    recuperaSenha(registro_funcional.email_ou_rf).then(resp => {
+  handleRecuperaSenha = values => {
+    recuperaSenha(values.recuperar_login).then(resp => {
       if (resp.status === HTTP_STATUS.OK) {
         this.setState({
           componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK,
@@ -453,10 +456,10 @@ export class Login extends Component {
           <div className="mt-3">
             <div className="alerta-vermelho mt-2">
               <i className="far fa-times-circle" />
-              <p>E-mail não encontrado</p>
+              <p>Usuário não encontrado</p>
             </div>
             <p className="mt-1">
-              Você não tem um e-mail cadastrado para recuperar sua senha.
+              Você não tem um usuário cadastrado para recuperar sua senha.
             </p>
             <p className="mt-2">
               Para restabelecer o seu acesso, procure o Diretor da sua unidade.
@@ -479,29 +482,60 @@ export class Login extends Component {
   }
 
   renderEsqueciSenha() {
-    const { handleSubmit } = this.props;
+    const { servidor, handleSubmit } = this.props;
     return (
       <div className="form">
         <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
         <p className="texto-simples mt-4">
-          Caso você tenha cadastrado um endereço de e-mail, informe seu usuário
-          ou RF e ao continuar você receberá um e-mail com as orientações para
-          redefinição da sua senha.
+          Caso você tenha cadastro, ao continuar você receberá um e-mail com as
+          orientações para redefinição da sua senha.
         </p>
         <p className="texto-simples">
           Se você não tem e-mail cadastrado ou não tem mais acesso ao endereço
           de e-mail cadastrado, procure o responsável pelo SIGPAE na sua
           unidade.
         </p>
-        <form className="login ml-4 mr-4">
-          <Field
-            component={InputText}
-            esconderAsterisco
-            label="E-mail ou RF"
-            name="email_ou_rf"
-            placeholder={"nome@sme.prefeitura.sp.gov.br ou RF"}
-            validate={[required]}
-          />
+        <p>É Servidor?</p>
+        <form className="login">
+          <div className="row ml-0">
+            <div className="col-3">
+              <label className="container-radio">
+                Sim
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="1"
+                  name="servidor"
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
+            <div className="col-3">
+              <label className="container-radio">
+                Não
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="0"
+                  name="servidor"
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
+          </div>
+          {servidor !== undefined && (
+            <Field
+              component={InputText}
+              type="number"
+              label={servidor === "1" ? "RF" : "CPF"}
+              name="recuperar_login"
+              placeholder={`Digite seu ${servidor === "1" ? "RF" : "CPF"}`}
+              validate={composeValidators(
+                required,
+                servidor === "1" ? length(7) : validaCPF
+              )}
+            />
+          )}
         </form>
 
         <div className="alinha-direita mt-3 ml-4 mr-4">
@@ -570,5 +604,11 @@ Login = reduxForm({
   destroyOnUnmount: false,
   initialValues: { tipo_email: 0 }
 })(Login);
+const selector = formValueSelector("login");
+const mapStateToProps = state => {
+  return {
+    servidor: selector(state, "servidor")
+  };
+};
 
-export default Login;
+export default connect(mapStateToProps)(Login);
