@@ -186,7 +186,7 @@ export const FormBuscaProduto = ({
                 className="input-busca-produto"
                 onSearch={v => onSearch("editais", v)}
                 name="nome_edital"
-                disabled={values.agrupado_por_nome_e_marca || usuarioEhEscola()}
+                disabled={usuarioEhEscola()}
               />
             </div>
             {state.tipos.length > 0 && (
