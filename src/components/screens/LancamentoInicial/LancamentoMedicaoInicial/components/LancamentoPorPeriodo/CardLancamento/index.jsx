@@ -17,6 +17,7 @@ export default ({
   cor,
   totalAlimentacoes,
   tipos_alimentacao,
+  periodoSelecionado,
   solicitacaoMedicaoInicial,
   objSolicitacaoMIFinalizada
 }) => {
@@ -39,13 +40,25 @@ export default ({
       ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
     }
     if (!solicitacaoMedicaoInicial) {
-      return false;
+      return true;
     } else {
       return (
         String(objSolicitacaoMIFinalizada.status) ===
         "MEDICAO_ENCERRADA_PELA_CODAE"
       );
     }
+  };
+
+  const handleClickEditar = () => {
+    history.push({
+      pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
+      search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
+      state: {
+        periodo: textoCabecalho,
+        mesAnoSelecionado: periodoSelecionado,
+        tipos_alimentacao: tipos_alimentacao
+      }
+    });
   };
 
   return (
@@ -87,11 +100,7 @@ export default ({
                 texto="Editar"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3 button-editar-card"
-                onClick={() =>
-                  history.push(
-                    `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`
-                  )
-                }
+                onClick={() => handleClickEditar()}
                 disabled={desabilitarBotaoEditar()}
               />
             </div>

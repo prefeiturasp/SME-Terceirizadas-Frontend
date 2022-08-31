@@ -71,7 +71,7 @@ export default () => {
       let mes = params.get("mes");
       let ano = params.get("ano");
       if (location.search) {
-        if (mes > format(new Date(), "MM") || mes <= 0) {
+        if (mes <= 0 || mes > 12) {
           mes = format(new Date(), "MM");
         }
         if (isNaN(ano)) {
@@ -79,6 +79,18 @@ export default () => {
         }
         if (ano > getYear(new Date()) || ano < getYear(new Date()) - 1) {
           ano = getYear(new Date());
+        }
+        if (
+          mes > format(new Date(), "MM") &&
+          Number(ano) === getYear(new Date())
+        ) {
+          mes = format(new Date(), "MM");
+        }
+        if (
+          mes < format(new Date(), "MM") &&
+          Number(ano) === getYear(new Date()) - 1
+        ) {
+          mes = format(new Date(), "MM");
         }
         const dataFromSearch = new Date(ano, mes - 1, 1);
         const mesStringFromSearch = format(dataFromSearch, "LLLL", {

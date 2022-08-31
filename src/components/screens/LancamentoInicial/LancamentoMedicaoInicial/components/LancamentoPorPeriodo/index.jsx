@@ -10,7 +10,8 @@ export default ({
   escolaInstituicao,
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
-  onClickInfoBasicas
+  onClickInfoBasicas,
+  periodoSelecionado
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
@@ -80,6 +81,7 @@ export default ({
           cor={CORES[index]}
           totalAlimentacoes={"##"}
           tipos_alimentacao={periodo.tipos_alimentacao}
+          periodoSelecionado={periodoSelecionado}
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
           objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
         />
