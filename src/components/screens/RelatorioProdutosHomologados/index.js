@@ -128,9 +128,13 @@ const RelatorioProdutosHomologados = () => {
                   style={BUTTON_STYLE.GREEN}
                   icon={BUTTON_ICON.PRINT}
                   className="float-right ml-3"
-                  onClick={() => {
+                  onClick={async () => {
                     const params = gerarParametrosConsulta(filtros);
-                    getRelatorioProdutosAgrupadosMarcasHomologados(params);
+                    setCarregando(true);
+                    await getRelatorioProdutosAgrupadosMarcasHomologados(
+                      params
+                    );
+                    setCarregando(false);
                   }}
                 />
               </div>
@@ -153,9 +157,11 @@ const RelatorioProdutosHomologados = () => {
                   style={BUTTON_STYLE.GREEN}
                   icon={BUTTON_ICON.PRINT}
                   className="float-right ml-3"
-                  onClick={() => {
+                  onClick={async () => {
                     const params = gerarParametrosConsulta(filtros);
-                    getRelatorioProdutosHomologados(params);
+                    setCarregando(true);
+                    await getRelatorioProdutosHomologados(params);
+                    setCarregando(false);
                   }}
                 />
               </div>
