@@ -20,6 +20,7 @@ export default ({ resultado }) => {
           <thead>
             <tr className="table-head-alimentacao">
               <th>Nome do Protocolo Padrão</th>
+              <th>Editais</th>
               <th>Status</th>
               <th />
             </tr>
@@ -30,6 +31,9 @@ export default ({ resultado }) => {
                 <Fragment key={idx}>
                   <tr className="table-body-alimentacao">
                     <td>{protocoloPadrao.nome_protocolo}</td>
+                    <td>
+                      {protocoloPadrao.editais.map(e => e.numero).join(", ")}
+                    </td>
                     <td>
                       <div className="row">
                         <div className="col-12">{protocoloPadrao.status}</div>

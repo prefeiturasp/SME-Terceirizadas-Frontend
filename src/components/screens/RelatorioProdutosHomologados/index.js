@@ -1,6 +1,10 @@
 import { Spin } from "antd";
-import React, { useEffect, useState, Fragment } from "react";
-import { Modal } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import {
+  getInitalState,
+  formataResultado
+} from "components/Shareable/FormBuscaProduto/helper";
+import { getNomesUnicosEditais } from "services/produto.service";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -9,132 +13,159 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
-import { getDataHomologacao } from "../helper";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
-import { gerarLabelPorFiltro } from "helpers/produto";
-
 import TabelaAgrupadaProdutosMarcas from "./TabelaAgrupadaProdutosMarcas";
-
+import TabelaAgrupadaProdutosTerceirizadas from "./TabelaAgrupadaProdutosTerceirizadas";
 import {
   getProdutosPorTerceirizada,
   getProdutosAgrupadosNomeMarcas,
   getRelatorioProdutosHomologados,
-  getRelatorioProdutosAgrupadosMarcasHomologados
+  getRelatorioProdutosAgrupadosMarcasHomologados,
+  getNomeProdutosHomologados
 } from "services/produto.service";
 
 import "./style.scss";
-
-const gerarLabelTotal = filtros => {
-  if (filtros.data_inicial || filtros.data_final) return " no período";
-  return "";
-};
-
-const TabelaProdutosHomologados = ({ dadosProdutos, filtros }) => {
-  if (!dadosProdutos) return false;
-  return (
-    <section className="tabela-produtos-homologados">
-      <div className="header-homologados">
-        <div>Terceirizada</div>
-        <div>Nome do Produto</div>
-        <div>Marca</div>
-        <div>Dieta Especial</div>
-        <div>Aditivos Alergênicos</div>
-        <div>Data de Cadastro</div>
-        <div>Data de Homologação</div>
-      </div>
-      {dadosProdutos.map((grupo, index) => {
-        return (
-          <Fragment key={index}>
-            {grupo.produtos.map((produto, index2) => {
-              return (
-                <div key={index2} className="body-homologados">
-                  <div>
-                    {
-                      produto.ultima_homologacao.rastro_terceirizada
-                        .nome_fantasia
-                    }
-                  </div>
-                  <div>{produto.nome}</div>
-                  <div>{produto.marca.nome}</div>
-                  <div>{produto.eh_para_alunos_com_dieta ? "Sim" : "Não"}</div>
-                  <div>{produto.tem_aditivos_alergenicos ? "Sim" : "Não"}</div>
-                  <div>{produto.criado_em}</div>
-                  <div>
-                    {getDataHomologacao(produto.ultima_homologacao.logs)}
-                  </div>
-                </div>
-              );
-            })}
-            <div className="linha-totalizacao" key={index}>
-              <span>
-                {`Total de itens por ${grupo.terceirizada.nome_fantasia}: `}
-                <span>{grupo.produtos.length.toString().padStart(2, "0")}</span>
-              </span>
-            </div>
-          </Fragment>
-        );
-      })}
-      <div className="linha-totalizacao linha-totalizacao-geral">
-        <span>
-          {`Total de produtos cadastrados ${gerarLabelTotal(filtros)}:`}
-          <span>
-            {dadosProdutos
-              .reduce((acc, v) => {
-                return acc + v.produtos.length;
-              }, 0)
-              .toString()
-              .padStart(2, "0")}
-          </span>
-        </span>
-      </div>
-    </section>
-  );
-};
+import { meusDados } from "services/perfil.service";
 
 const RelatorioProdutosHomologados = () => {
   const [dadosProdutos, setDadosProdutos] = useState(null);
+  const [quantidadeHomologados, setQuantidadeHomologados] = useState(null);
   const [filtros, setFiltros] = useState(null);
+  const [valoresIniciais, setValoresIniciais] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
   useEffect(() => {
+    setCarregando(true);
+    async function getTotalProdutos() {
+      let responseTotalProdutos = await getNomeProdutosHomologados();
+      setQuantidadeHomologados(responseTotalProdutos.data.results.length);
+    }
+    if (!quantidadeHomologados) {
+      getTotalProdutos();
+    }
+
+    async function defineFiltrosPadroes() {
+      let responseEditais = await getNomesUnicosEditais();
+      let responseMeusDados = await meusDados();
+      let instituicaoNome = responseMeusDados.vinculo_atual.instituicao.nome;
+      let valores = getInitalState(
+        responseEditais.data.results,
+        instituicaoNome
+      );
+      setValoresIniciais(valores);
+      setCarregando(false);
+    }
+    if (!valoresIniciais) {
+      defineFiltrosPadroes();
+    }
+
     if (!filtros) return;
     async function fetchData() {
       setCarregando(true);
+      setDadosProdutos(null);
       let response;
       if (filtros.agrupado_por_nome_e_marca) {
         response = await getProdutosAgrupadosNomeMarcas(filtros);
+        setDadosProdutos(formataResultado(response.data));
       } else {
         response = await getProdutosPorTerceirizada(filtros);
+        setDadosProdutos(response.data);
       }
       setCarregando(false);
-      setDadosProdutos(response.data);
     }
     fetchData();
-  }, [filtros, setDadosProdutos]);
+  }, [filtros, setDadosProdutos, valoresIniciais, quantidadeHomologados]);
 
   const onSubmitForm = formValues => {
     setFiltros(formValues);
   };
 
-  const handleClose = () => {
-    setDadosProdutos(null);
-    setFiltros(null);
-  };
-
-  const totalResultados = dadosProdutos && Object.keys(dadosProdutos).length;
+  const totalResultados = dadosProdutos && dadosProdutos.length;
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          <FormBuscaProduto
-            onSubmit={onSubmitForm}
-            onAtualizaProdutos={() => {}}
-            onLimparDados={() => {
-              setDadosProdutos(null);
-            }}
-          />
+          {valoresIniciais && (
+            <FormBuscaProduto
+              onSubmit={onSubmitForm}
+              onAtualizaProdutos={() => {}}
+              onLimparDados={() => {
+                setDadosProdutos(null);
+              }}
+              valoresIniciais={valoresIniciais}
+            />
+          )}
+
+          {quantidadeHomologados && !carregando && (
+            <div className="row">
+              <div className="col-12 mt-3 ">
+                <p className="quantitativo">
+                  QUANTITATIVO GERAL DE PRODUTOS HOMOLOGADOS
+                </p>
+              </div>
+              <div className="col-12 mt-1">
+                <p className="totalHomologadosValor">
+                  Total de itens homologados: <b>{quantidadeHomologados}</b>
+                </p>
+              </div>
+            </div>
+          )}
+
+          {filtros &&
+            filtros.agrupado_por_nome_e_marca &&
+            totalResultados > 0 &&
+            dadosProdutos && (
+              <div className="mt-3">
+                <p className="resultadoTitle">Resultado detalhado</p>
+                <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
+                <hr />
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  titulo="imprimir"
+                  texto="imprimir"
+                  style={BUTTON_STYLE.GREEN}
+                  icon={BUTTON_ICON.PRINT}
+                  className="float-right ml-3"
+                  onClick={async () => {
+                    const params = gerarParametrosConsulta(filtros);
+                    setCarregando(true);
+                    await getRelatorioProdutosAgrupadosMarcasHomologados(
+                      params
+                    );
+                    setCarregando(false);
+                  }}
+                />
+              </div>
+            )}
+
+          {filtros &&
+            !filtros.agrupado_por_nome_e_marca &&
+            totalResultados > 0 &&
+            dadosProdutos && (
+              <div className="mt-3">
+                <p className="resultadoTitle">Resultado detalhado</p>
+                <TabelaAgrupadaProdutosTerceirizadas
+                  dadosProdutos={dadosProdutos}
+                />
+                <hr />
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  titulo="imprimir"
+                  texto="imprimir"
+                  style={BUTTON_STYLE.GREEN}
+                  icon={BUTTON_ICON.PRINT}
+                  className="float-right ml-3"
+                  onClick={async () => {
+                    const params = gerarParametrosConsulta(filtros);
+                    setCarregando(true);
+                    await getRelatorioProdutosHomologados(params);
+                    setCarregando(false);
+                  }}
+                />
+              </div>
+            )}
 
           {totalResultados === 0 && (
             <div className="text-center mt-5">
@@ -143,76 +174,6 @@ const RelatorioProdutosHomologados = () => {
           )}
         </div>
       </div>
-
-      {filtros && filtros.agrupado_por_nome_e_marca && totalResultados > 0 && (
-        <div className="card mt-3">
-          <div className="card-body">
-            <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
-            <hr />
-            <Botao
-              type={BUTTON_TYPE.BUTTON}
-              titulo="imprimir"
-              texto="imprimir"
-              style={BUTTON_STYLE.GREEN}
-              icon={BUTTON_ICON.PRINT}
-              className="float-right ml-3"
-              onClick={() => {
-                const params = gerarParametrosConsulta(filtros);
-                getRelatorioProdutosAgrupadosMarcasHomologados(params);
-              }}
-            />
-          </div>
-        </div>
-      )}
-
-      {filtros && !filtros.agrupado_por_nome_e_marca && (
-        <Modal
-          dialogClassName="modal-90w"
-          show={Boolean(dadosProdutos && dadosProdutos.length)}
-          onHide={handleClose}
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Relatório de Produtos Homologados</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <section className="m-3">
-              <p className="text-black font-weight-bold mb-1">
-                {filtros && gerarLabelPorFiltro(filtros)}
-              </p>
-              <TabelaProdutosHomologados
-                dadosProdutos={dadosProdutos}
-                filtros={filtros}
-              />
-            </section>
-          </Modal.Body>
-          <Modal.Footer>
-            <section>
-              <Botao
-                type={BUTTON_TYPE.BUTTON}
-                titulo="imprimir"
-                texto="imprimir"
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.PRINT}
-                className="float-right ml-3"
-                onClick={() => {
-                  const params = gerarParametrosConsulta(filtros);
-                  getRelatorioProdutosHomologados(params);
-                }}
-              />
-
-              <Botao
-                texto="voltar"
-                titulo="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                onClick={handleClose}
-                className="float-right"
-              />
-            </section>
-          </Modal.Footer>
-        </Modal>
-      )}
     </Spin>
   );
 };

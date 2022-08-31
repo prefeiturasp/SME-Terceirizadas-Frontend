@@ -1,4 +1,5 @@
 import React from "react";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import Botao from "components/Shareable/Botao";
@@ -19,7 +20,8 @@ export default ({
   setCarregando,
   setTotal,
   setFiltros,
-  setPage
+  setPage,
+  editais
 }) => {
   const history = useHistory();
 
@@ -56,7 +58,8 @@ export default ({
       setCarregando(true);
       const payload = {
         nome_protocolo: formValues.nome_protocolo,
-        status: formatStatus(formValues.status)
+        status: formatStatus(formValues.status),
+        editais: formValues.editais
       };
       const response = await consultaProtocoloPadrao(payload);
       if (response.status === HTTP_STATUS.OK) {
@@ -77,7 +80,7 @@ export default ({
       render={({ submitting, form, handleSubmit, values }) => (
         <form onSubmit={handleSubmit}>
           <div className="row mt-3 mb-3">
-            <div className="col-6">
+            <div className="col-4">
               <Field
                 label="Nome do Protocolo Padrão"
                 component={AutoCompleteField}
@@ -87,7 +90,7 @@ export default ({
                 className="input-busca-nome-protocolo"
               />
             </div>
-            <div className="col-6">
+            <div className="col-4">
               <Field
                 label="Status do Protocolo Padrão"
                 component={AutoCompleteField}
@@ -95,6 +98,27 @@ export default ({
                 name="status"
                 placeholder="Insira o Status do Protocolo Padrão"
                 className="input-busca-status-protocolo"
+              />
+            </div>
+            <div className="col-4">
+              <div className="label mt-2 mb-1">Número do Edital</div>
+              <Field
+                component={StatefulMultiSelect}
+                name="editais"
+                selected={values.editais || []}
+                options={editais.map(edital => ({
+                  label: edital.numero,
+                  value: edital.uuid
+                }))}
+                onSelectedChanged={values_ => {
+                  form.change(`editais`, values_);
+                }}
+                overrideStrings={{
+                  search: "Busca",
+                  selectSomeItems: "Selecione",
+                  allItemsAreSelected: "Todos os itens estão selecionados",
+                  selectAll: "Todos"
+                }}
               />
             </div>
           </div>

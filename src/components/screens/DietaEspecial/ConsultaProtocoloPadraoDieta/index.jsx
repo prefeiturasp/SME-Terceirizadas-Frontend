@@ -7,6 +7,7 @@ import { consultaProtocoloPadrao } from "services/dietaEspecial.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import "./style.scss";
+import { getNumerosEditais } from "services/edital.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -15,7 +16,18 @@ export default () => {
   const [status, setStatus] = useState(undefined);
   const [total, setTotal] = useState(0);
   const [filtros, setFiltros] = useState({});
+  const [editais, setEditais] = useState(undefined);
+  const [erroAPI, setErroAPI] = useState(false);
   const [page, setPage] = useState(0);
+
+  const getEditaisAsync = async () => {
+    const response = await getNumerosEditais();
+    if (response.status === HTTP_STATUS.OK) {
+      setEditais(response.data.results);
+    } else {
+      setErroAPI(true);
+    }
+  };
 
   async function fetchData() {
     const respNomes = await getNomesProtocolos();
@@ -24,11 +36,13 @@ export default () => {
     setStatus(["Liberado", "Não liberado"]);
     setResultado(respProtocolo.data);
     setTotal(respProtocolo.data.count);
+    getEditaisAsync();
     setCarregando(false);
   }
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changePage = async page => {
@@ -49,16 +63,22 @@ export default () => {
 
   return (
     <div className="card mt-3 card-cadastro-protocolo-padrao pl-3 pr-3">
-      <Spin tip="Carregando..." spinning={carregando}>
-        <Filtros
-          setResultado={setResultado}
-          nomes={nomes}
-          status={status}
-          setCarregando={setCarregando}
-          setTotal={setTotal}
-          setFiltros={setFiltros}
-          setPage={setPage}
-        />
+      {erroAPI && (
+        <div>Erro ao carregar dados. Tente novamente mais tarde.</div>
+      )}
+      <Spin tip="Carregando..." spinning={(carregando || !editais) && !erroAPI}>
+        {editais && (
+          <Filtros
+            setResultado={setResultado}
+            nomes={nomes}
+            status={status}
+            setCarregando={setCarregando}
+            setTotal={setTotal}
+            setFiltros={setFiltros}
+            setPage={setPage}
+            editais={editais}
+          />
+        )}
         {resultado && (
           <>
             <Tabela resultado={resultado} />
