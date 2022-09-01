@@ -30,3 +30,14 @@ export const EscolaAtualizaSuspensao = async (uuid, payload) => {
     payload
   );
 };
+
+export const getSuspensaoAlimentacaoCEI = async uuid => {
+  return await axios.get(`/${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/`);
+};
+
+export const escolaCancelaSuspensaoCEI = async (uuid, payload) => {
+  return await axios.patch(
+    `/${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/cancela-suspensao-cei/`,
+    payload
+  );
+};
