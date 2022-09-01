@@ -7,7 +7,7 @@ export const formatarPayloadPeriodoLancamento = (
   const arrayCategoriesValues = valuesAsArray.filter(([key]) =>
     key.includes("categoria")
   );
-  const valoresMedicao = [];
+  let valoresMedicao = [];
 
   dadosIniciaisFiltered.forEach(([keyDado]) => {
     if (
@@ -35,6 +35,10 @@ export const formatarPayloadPeriodoLancamento = (
       categoria_medicao: idCategoria,
       tipo_alimentacao: uuidTipoAlimentacao || ""
     });
+  });
+
+  valoresMedicao = valoresMedicao.filter(valorMed => {
+    return !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0);
   });
 
   Object.entries(values).forEach(([key]) => {
