@@ -69,6 +69,7 @@ import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/Sta
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
@@ -555,6 +556,12 @@ const routesConfig = [
   {
     path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: PainelPedidosSuspensaoAlimentacaoRelatorio,
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SUSPENSAO_ALIMENTACAO_CEI}/${constants.RELATORIO}`,
+    component: PainelPedidosSuspensaoAlimentacaoCEIRelatorio,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
