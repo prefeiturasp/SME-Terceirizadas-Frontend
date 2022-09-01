@@ -127,7 +127,10 @@ export default ({
     closeModal();
   };
 
-  const onChangeTextAreaField = () => {
+  const onChangeTextAreaField = value => {
+    if (values[`${rowName}__dia_${dia}__categoria_${categoria}`] === value) {
+      return;
+    }
     setDesabilitarBotaoSalvar(
       ["<p></p>\n", null, ""].includes(
         values[`${rowName}__dia_${dia}__categoria_${categoria}`]
@@ -171,7 +174,7 @@ export default ({
               ehModal={true}
             />
             <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
-              {() => onChangeTextAreaField()}
+              {value => onChangeTextAreaField(value)}
             </OnChange>
           </div>
         </Modal.Body>

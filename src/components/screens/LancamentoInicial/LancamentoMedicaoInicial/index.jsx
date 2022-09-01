@@ -16,6 +16,7 @@ import { getEscolaSimples } from "services/escola.service";
 import { Icon, Select, Skeleton } from "antd";
 import "./styles.scss";
 import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export default () => {
   const [panoramaGeral, setPanoramaGeral] = useState();
@@ -49,10 +50,13 @@ export default () => {
       setNomeTerceirizada(
         respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
       );
+      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+        escola.uuid
+      );
       setPanoramaGeral(respostaPanorama.data);
       setEscolaInstituicao(escola);
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
-      setPeriodosEscolaSimples(respostaEscolaSimples.data.periodos_escolares);
+      setPeriodosEscolaSimples(response_vinculos.data.results);
 
       for (let mes = 0; mes <= proximosDozeMeses; mes++) {
         const dataBRT = addMonths(new Date(), -mes);
