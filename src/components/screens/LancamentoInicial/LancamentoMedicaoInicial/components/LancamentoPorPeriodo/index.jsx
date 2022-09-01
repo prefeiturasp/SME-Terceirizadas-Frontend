@@ -77,7 +77,7 @@ export default ({
       {periodosEscolaSimples.map((periodo, index) => (
         <CardLancamento
           key={index}
-          textoCabecalho={periodo.nome}
+          textoCabecalho={periodo.periodo_escolar.nome}
           cor={CORES[index]}
           totalAlimentacoes={0}
           tipos_alimentacao={periodo.tipos_alimentacao}
