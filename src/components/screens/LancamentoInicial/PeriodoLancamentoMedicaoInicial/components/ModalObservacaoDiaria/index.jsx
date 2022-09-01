@@ -40,16 +40,22 @@ export default ({
   };
 
   const onClickExcluir = async () => {
-    const uuidValor = valoresPeriodosLancamentos
+    const valorAtual = valoresPeriodosLancamentos
       .filter(valor => valor.nome_campo === rowName)
       .filter(valor => String(valor.dia) === String(dia))
-      .filter(valor => String(valor.categoria_medicao) === String(categoria))[0]
-      .uuid;
+      .filter(
+        valor => String(valor.categoria_medicao) === String(categoria)
+      )[0];
+    const uuidValor = valorAtual.uuid;
     const response = await deleteObservacaoValoresPeriodosLancamentos(
       uuidValor
     );
     if (response.status === HTTP_STATUS.NO_CONTENT) {
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+      valoresPeriodosLancamentos.splice(
+        valoresPeriodosLancamentos.findIndex(valor => valor.uuid === uuidValor),
+        1
+      );
       toastSuccess("Observação excluída com sucesso");
     } else {
       toastError("Ocorreu um erro ao deletar a observação!");
@@ -58,11 +64,37 @@ export default ({
   };
 
   const onClickVoltar = () => {
+    if (
+      !valoresPeriodosLancamentos
+        .filter(valor => valor.nome_campo === rowName)
+        .filter(valor => String(valor.dia) === String(dia))
+        .filter(
+          valor => String(valor.categoria_medicao) === String(categoria)
+        )[0]
+    ) {
+      form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+    } else {
+      form.change(
+        `${rowName}__dia_${dia}__categoria_${categoria}`,
+        valoresPeriodosLancamentos
+          .filter(valor => valor.nome_campo === rowName)
+          .filter(valor => String(valor.dia) === String(dia))
+          .filter(
+            valor => String(valor.categoria_medicao) === String(categoria)
+          )[0].valor
+      );
+    }
     closeModal();
   };
 
-  const onClickSalvar = () => {
-    onSubmit();
+  const onClickSalvar = async () => {
+    await onSubmit();
+    valoresPeriodosLancamentos
+      .filter(valor => valor.nome_campo === rowName)
+      .filter(valor => String(valor.dia) === String(dia))
+      .filter(
+        valor => String(valor.categoria_medicao) === String(categoria)
+      )[0] && setShowBotaoExcluir(true);
     closeModal();
   };
 
@@ -72,6 +104,26 @@ export default ({
     );
     validation &&
       form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+    if (
+      !valoresPeriodosLancamentos
+        .filter(valor => valor.nome_campo === rowName)
+        .filter(valor => String(valor.dia) === String(dia))
+        .filter(
+          valor => String(valor.categoria_medicao) === String(categoria)
+        )[0]
+    ) {
+      form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+    } else {
+      form.change(
+        `${rowName}__dia_${dia}__categoria_${categoria}`,
+        valoresPeriodosLancamentos
+          .filter(valor => valor.nome_campo === rowName)
+          .filter(valor => String(valor.dia) === String(dia))
+          .filter(
+            valor => String(valor.categoria_medicao) === String(categoria)
+          )[0].valor
+      );
+    }
     closeModal();
   };
 
