@@ -20,7 +20,15 @@ import "../style.scss";
 export class TextAreaWYSIWYG extends Component {
   constructor(props) {
     super(props);
-    const editorState = EditorState.createEmpty();
+    const editorState =
+      this.props.ehModal &&
+      !["<p></p>\n", null, ""].includes(this.props.input.value)
+        ? EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(this.props.input.value)
+            )
+          )
+        : EditorState.createEmpty();
     this.state = {
       editorState,
       talvezBordaVermelha: false
