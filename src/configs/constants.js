@@ -5,6 +5,7 @@ export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
   "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
+export const SUSPENSAO_ALIMENTACAO_CEI = "suspensao-de-alimentacao-cei";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
