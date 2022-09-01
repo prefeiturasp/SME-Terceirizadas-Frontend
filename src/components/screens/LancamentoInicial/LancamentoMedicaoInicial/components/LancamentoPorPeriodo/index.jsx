@@ -79,7 +79,7 @@ export default ({
           key={index}
           textoCabecalho={periodo.nome}
           cor={CORES[index]}
-          totalAlimentacoes={"##"}
+          totalAlimentacoes={0}
           tipos_alimentacao={periodo.tipos_alimentacao}
           periodoSelecionado={periodoSelecionado}
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}

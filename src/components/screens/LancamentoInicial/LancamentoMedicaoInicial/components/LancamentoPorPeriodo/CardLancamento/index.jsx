@@ -25,7 +25,7 @@ export default ({
   const alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
     <div key={key} className="mb-2">
       <span style={{ color: cor }}>
-        <b>##</b>
+        <b>0</b>
       </span>
       <span className="ml-1">- {alimentacao.nome}</span>
       <br />
