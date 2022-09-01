@@ -1,5 +1,6 @@
 import React from "react";
 import { fluxoInformativoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
+import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 
 export default ({ solicitacaoSuspensao }) => {
@@ -81,11 +82,22 @@ export default ({ solicitacaoSuspensao }) => {
       <table className="table-report mt-3">
         <tr>
           <th>Período</th>
+          <th>Tipos de Alimentação</th>
+          <th>N° de Alunos</th>
         </tr>
         {solicitacaoSuspensao.periodos_escolares.map((periodo, key) => {
+          let escola_periodo = solicitacaoSuspensao.escola.periodos_escolares.find(
+            pr => pr.nome === periodo.nome
+          );
+          let tipos_alimentacao = stringSeparadaPorVirgulas(
+            escola_periodo.tipos_alimentacao,
+            "nome"
+          );
           return (
             <tr key={key}>
               <td>{periodo.nome}</td>
+              <td>{tipos_alimentacao}</td>
+              <td>{solicitacaoSuspensao.escola.quantidade_alunos}</td>
             </tr>
           );
         })}
