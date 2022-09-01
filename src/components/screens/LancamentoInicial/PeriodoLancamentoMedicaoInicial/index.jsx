@@ -480,13 +480,15 @@ export default () => {
   let valuesInputArray = [];
 
   const onChangeInput = value => {
-    value.match(/\d+/g) !== null && valuesInputArray.push(value);
-    if (value === null) {
-      valuesInputArray.length = 0;
+    if (typeof value === "string") {
+      value.match(/\d+/g) !== null && valuesInputArray.push(value);
+      if (value === null) {
+        valuesInputArray.length = 0;
+      }
+      value.match(/\d+/g) !== null && valuesInputArray.length > 0
+        ? setDisableBotaoSalvarLancamentos(false)
+        : setDisableBotaoSalvarLancamentos(true);
     }
-    value.match(/\d+/g) !== null && valuesInputArray.length > 0
-      ? setDisableBotaoSalvarLancamentos(false)
-      : setDisableBotaoSalvarLancamentos(true);
   };
 
   return (
