@@ -25,7 +25,6 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { deepCopy } from "helpers/utilities";
-import { getEscolaSimples } from "services/escola.service";
 import {
   getCategoriasDeMedicao,
   getValoresPeriodosLancamentos,
@@ -42,6 +41,7 @@ import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
 import "./styles.scss";
 import { OnChange } from "react-final-form-listeners";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -110,12 +110,15 @@ export default () => {
       const meusDados = await perfilService.meusDados();
       const escola =
         meusDados.vinculo_atual && meusDados.vinculo_atual.instituicao;
-      const respostaEscolaSimples = await getEscolaSimples(escola.uuid);
-      const periodos_escolares = respostaEscolaSimples.data.periodos_escolares;
+      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+        escola.uuid
+      );
+      const periodos_escolares = response_vinculos.data.results;
       const periodo =
         periodos_escolares.find(
           periodo =>
-            periodo.nome === (location.state ? location.state.periodo : "MANHA")
+            periodo.periodo_escolar.nome ===
+            (location.state ? location.state.periodo : "MANHA")
         ) || periodos_escolares[0];
       const tipos_alimentacao = periodo.tipos_alimentacao;
       const cloneTiposAlimentacao = deepCopy(tipos_alimentacao);
@@ -467,10 +470,14 @@ export default () => {
   };
 
   const textoBotaoObservacao = value => {
-    return value &&
+    let text = "Adicionar";
+    if (
+      value &&
       !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)
-      ? "Visualizar"
-      : "Adicionar";
+    ) {
+      text = "Visualizar";
+    }
+    return text;
   };
 
   const onClickBotaoObservacao = (dia, categoria) => {
