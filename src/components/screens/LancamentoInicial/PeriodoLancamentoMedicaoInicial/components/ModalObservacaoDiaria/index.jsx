@@ -84,6 +84,8 @@ export default ({
           )[0].valor
       );
     }
+    setDesabilitarBotaoSalvar(true);
+    setShowBotaoExcluir(true);
     closeModal();
   };
 
@@ -124,29 +126,38 @@ export default ({
           )[0].valor
       );
     }
+    setDesabilitarBotaoSalvar(true);
+    setShowBotaoExcluir(true);
     closeModal();
   };
 
   const onChangeTextAreaField = value => {
-    if (values[`${rowName}__dia_${dia}__categoria_${categoria}`] === value) {
-      return;
-    }
-    setDesabilitarBotaoSalvar(
-      ["<p></p>\n", null, ""].includes(
-        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-      ) ||
-        !!peloMenosUmCaractere(
+    const valorFiltered = valoresPeriodosLancamentos
+      .filter(valor => valor.nome_campo === rowName)
+      .filter(valor => String(valor.dia) === String(dia))
+      .filter(
+        valor => String(valor.categoria_medicao) === String(categoria)
+      )[0];
+    if (value) {
+      setDesabilitarBotaoSalvar(
+        (!["<p></p>\n", null, ""].includes(
           values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-        )
-    );
+        ) ||
+          !!peloMenosUmCaractere(
+            values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+          )) &&
+          (valorFiltered && valorFiltered.valor === value)
+      );
 
-    setShowBotaoExcluir(
-      valoresPeriodosLancamentos
-        .filter(valor => valor.nome_campo === rowName)
-        .filter(valor => String(valor.dia) === String(dia))
-        .filter(valor => String(valor.categoria_medicao) === String(categoria))
-        .length > 0
-    );
+      setShowBotaoExcluir(
+        valoresPeriodosLancamentos
+          .filter(valor => valor.nome_campo === rowName)
+          .filter(valor => String(valor.dia) === String(dia))
+          .filter(
+            valor => String(valor.categoria_medicao) === String(categoria)
+          ).length > 0
+      );
+    }
   };
 
   return (
