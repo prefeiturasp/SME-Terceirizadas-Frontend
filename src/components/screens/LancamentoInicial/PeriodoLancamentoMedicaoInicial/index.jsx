@@ -41,6 +41,7 @@ import {
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
 import "./styles.scss";
+import { OnChange } from "react-final-form-listeners";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -69,11 +70,16 @@ export default () => {
   const [showModalSalvarLancamento, setShowModalSalvarLancamento] = useState(
     false
   );
+  const [
+    disableBotaoSalvarLancamentos,
+    setDisableBotaoSalvarLancamentos
+  ] = useState(true);
   const [showDiaObservacaoDiaria, setDiaObservacaoDiaria] = useState(null);
   const [
     showCategoriaObservacaoDiaria,
     setCategoriaObservacaoDiaria
   ] = useState(null);
+
   const location = useLocation();
   let mesAnoDefault = new Date();
 
@@ -329,6 +335,10 @@ export default () => {
     };
     semanaSelecionada && formatar();
 
+    valoresPeriodosLancamentos.findIndex(
+      valor => valor.nome_campo !== "observacoes"
+    ) !== -1 && setDisableBotaoSalvarLancamentos(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mesAnoConsiderado,
@@ -381,7 +391,11 @@ export default () => {
         payload
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Lançamentos editados com sucesso");
+        toastSuccess(
+          ehObservacao
+            ? "Observação salva com sucesso"
+            : "Lançamentos salvos com sucesso"
+        );
         valores_medicao_response = response.data.valores_medicao;
       } else {
         const errorMessage = Object.values(response.data).join("; ");
@@ -461,6 +475,18 @@ export default () => {
 
   const onClickBotaoObservacao = (dia, categoria) => {
     openModalObservacaoDiaria(dia, categoria);
+  };
+
+  let valuesInputArray = [];
+
+  const onChangeInput = value => {
+    value.match(/\d+/g) !== null && valuesInputArray.push(value);
+    if (value === null) {
+      valuesInputArray.length = 0;
+    }
+    value.match(/\d+/g) !== null && valuesInputArray.length > 0
+      ? setDisableBotaoSalvarLancamentos(false)
+      : setDisableBotaoSalvarLancamentos(true);
   };
 
   return (
@@ -595,24 +621,35 @@ export default () => {
                                           />
                                         )
                                       ) : (
-                                        <Field
-                                          className={"m-2"}
-                                          component={InputText}
-                                          apenasNumeros
-                                          name={`${row.name}__dia_${
-                                            column.dia
-                                          }__categoria_${categoria.id}`}
-                                          disabled={
-                                            validacaoSemana(
-                                              validacaoSemana,
-                                              column
-                                            ) || row.name === "matriculados"
-                                          }
-                                          defaultValue={defaultValue(
-                                            column,
-                                            row
-                                          )}
-                                        />
+                                        <>
+                                          <Field
+                                            className={"m-2"}
+                                            component={InputText}
+                                            apenasNumeros
+                                            name={`${row.name}__dia_${
+                                              column.dia
+                                            }__categoria_${categoria.id}`}
+                                            disabled={
+                                              validacaoSemana(
+                                                validacaoSemana,
+                                                column
+                                              ) || row.name === "matriculados"
+                                            }
+                                            defaultValue={defaultValue(
+                                              column,
+                                              row
+                                            )}
+                                          />
+                                          <OnChange
+                                            name={`${row.name}__dia_${
+                                              column.dia
+                                            }__categoria_${categoria.id}`}
+                                          >
+                                            {value => {
+                                              onChangeInput(value);
+                                            }}
+                                          </OnChange>
+                                        </>
                                       )}
                                     </div>
                                   ))}
@@ -644,6 +681,7 @@ export default () => {
                 type={BUTTON_TYPE.BUTTON}
                 style={`${BUTTON_STYLE.GREEN}`}
                 onClick={() => setShowModalSalvarLancamento(true)}
+                disabled={disableBotaoSalvarLancamentos}
               />
               <ModalSalvarLancamento
                 closeModal={() => setShowModalSalvarLancamento(false)}
