@@ -54,7 +54,6 @@ export default () => {
       const params = gerarParametrosConsulta({ uuid: uuid });
       response = await getGuiaParaConferencia(params);
       setGuia(response.data);
-      //setAlimentos(response.data.alimentos);
       setNomesAlimentos(
         response.data.alimentos.map(alimento => alimento.nome_alimento)
       );
@@ -78,7 +77,6 @@ export default () => {
       response = await getConferenciaParaEdicao(params);
       let conferencia = response.data.results;
       setGuia(conferencia.guia);
-      //setAlimentos(conferencia.guia.alimentos)
       setNomesAlimentos(
         conferencia.guia.alimentos.map(alimento => alimento.nome_alimento)
       );
