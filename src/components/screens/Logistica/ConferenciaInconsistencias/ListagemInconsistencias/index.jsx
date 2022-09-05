@@ -5,12 +5,12 @@ const ListagemInconsistencias = ({ guias }) => {
   return (
     <>
       <section className="guias-inconsistencias">
-        <header>Guias de Remessas com Inconsistências</header>
+        <header>Guias de Remessa com Inconsistência</header>
         <article>
           <div className="grid-table header-table">
             <div>Nº da Guia de Remessa</div>
             <div>Código CODAE</div>
-            <div>Nome da Unidade Educacional</div>
+            <div>Nome da UE</div>
           </div>
           {guias.map(guia => {
             const bordas = "desativar-borda";
