@@ -87,7 +87,7 @@ export default ({
             <div className="row">
               <div className="col-6">
                 <Field
-                  label="Status da Entrega"
+                  label="Status de Entrega"
                   component={MultiSelect}
                   disableSearch
                   name="status"

@@ -37,8 +37,8 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "conferenciaGuiaRemessaComOcorrencia";
-const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente recebeu.
-                          Se a quantidade de alimentos recebida for menor que o previsto na Guia de Remessa,
+const TOOLTIP_RECEBIDO = `Quantidade de embalagens que a UE efetivamente recebeu.
+                          Se a quantidade de recebida for menor que a prevista na Guia de Remessa,
                           será aberta ocorrência a ser detalhada pelo usuário.`;
 const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
 
@@ -652,15 +652,18 @@ export default () => {
                                           >
                                             <thead>
                                               <tr>
-                                                <th scope="col">
-                                                  Qtde Prevista
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
                                                 <th
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO
@@ -715,15 +718,18 @@ export default () => {
                                           >
                                             <thead>
                                               <tr>
-                                                <th scope="col">
-                                                  Qtde Prevista
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
                                                 <th
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO
