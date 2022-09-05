@@ -1,40 +1,36 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
 import "./styles.scss";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  PERIODO_LANCAMENTO
+} from "configs/constants";
 
 export default ({
   textoCabecalho,
   cor,
   totalAlimentacoes,
-  alimentacoes,
+  tipos_alimentacao,
+  periodoSelecionado,
   solicitacaoMedicaoInicial,
   objSolicitacaoMIFinalizada
 }) => {
-  const NOMES_ALIMENTACOES = {
-    refeicoes: "Refeições",
-    sobremesas: "Sobremesas",
-    lanches: "Lanches",
-    lanches_4h: "Lanches 4h",
-    lanches_5h: "Lanches 5h",
-    lanches_emergenciais: "Lanches Emergenciais",
-    kit_lanches: "Kits Lanches"
-  };
-
-  const alimentacoesFormatadas = Object.keys(alimentacoes)
-    .filter(alimentacao => alimentacao !== "total")
-    .map((alimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>{alimentacoes[alimentacao]}</b>
-        </span>
-        <span className="ml-1">- {NOMES_ALIMENTACOES[alimentacao]}</span>
-        <br />
-      </div>
-    ));
+  const history = useHistory();
+  const alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
+    <div key={key} className="mb-2">
+      <span style={{ color: cor }}>
+        <b>0</b>
+      </span>
+      <span className="ml-1">- {alimentacao.nome}</span>
+      <br />
+    </div>
+  ));
 
   const desabilitarBotaoEditar = () => {
     if (solicitacaoMedicaoInicial) {
@@ -44,13 +40,25 @@ export default ({
       ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
     }
     if (!solicitacaoMedicaoInicial) {
-      return false;
+      return true;
     } else {
       return (
         String(objSolicitacaoMIFinalizada.status) ===
         "MEDICAO_ENCERRADA_PELA_CODAE"
       );
     }
+  };
+
+  const handleClickEditar = () => {
+    history.push({
+      pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
+      search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
+      state: {
+        periodo: textoCabecalho,
+        mesAnoSelecionado: periodoSelecionado,
+        tipos_alimentacao: tipos_alimentacao
+      }
+    });
   };
 
   return (
@@ -74,22 +82,25 @@ export default ({
               <span>{totalAlimentacoes || "0"}</span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-8 alimentacoes-por-tipo">
+            <div className="col-9 alimentacoes-por-tipo">
               <div className="row">
-                <div className="col-5">
+                <div className="col-4">
                   {alimentacoesFormatadas.slice(0, 3)}
                 </div>
-                <div className="col-5">
+                <div className="col-4">
                   {alimentacoesFormatadas.slice(3, 6)}
+                </div>
+                <div className="col-4">
+                  {alimentacoesFormatadas.slice(6, 9)}
                 </div>
               </div>
             </div>
-            <div className="col-2 pr-0">
+            <div className="col-1 pr-0">
               <Botao
                 texto="Editar"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3 button-editar-card"
-                onClick={() => {}}
+                onClick={() => handleClickEditar()}
                 disabled={desabilitarBotaoEditar()}
               />
             </div>

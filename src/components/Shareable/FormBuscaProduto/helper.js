@@ -1,0 +1,45 @@
+import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
+
+export const getInitalState = (editais, nomeInstituicao) => {
+  if (usuarioEhEscola()) {
+    return {
+      agrupado_por_nome_e_marca: false,
+      nome_edital: editais[0]
+    };
+  } else if (usuarioEhTerceirizada()) {
+    return {
+      agrupado_por_nome_e_marca: false,
+      nome_terceirizada: nomeInstituicao
+    };
+  } else {
+    return { agrupado_por_nome_e_marca: false };
+  }
+};
+
+const onlyUnique = (value, index, self) => {
+  return self.indexOf(value) === index;
+};
+
+export const formataResultado = produtos => {
+  let resultado = [];
+  produtos.forEach(element => {
+    let jaFoiAgrupado = resultado.find(e => e.nome === element.nome);
+    if (jaFoiAgrupado === undefined) {
+      let produtosComMesmoNome = produtos.filter(
+        produto => produto.nome === element.nome
+      );
+      let marcas = produtosComMesmoNome
+        .map(produto => produto.marca)
+        .filter(onlyUnique);
+      let editais = produtosComMesmoNome
+        .map(produto => produto.edital)
+        .filter(onlyUnique);
+      resultado.push({
+        nome: element.nome,
+        marcas: marcas,
+        editais: editais
+      });
+    }
+  });
+  return resultado;
+};
