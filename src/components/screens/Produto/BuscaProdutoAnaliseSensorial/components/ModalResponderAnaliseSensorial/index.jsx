@@ -5,7 +5,7 @@ import { Field, formValueSelector, reduxForm } from "redux-form";
 import { Modal } from "react-bootstrap";
 import {
   required,
-  length,
+  minLength,
   numericInteger
 } from "../../../../../../helpers/fieldValidators";
 import InputText from "components/Shareable/Input/InputText";
@@ -27,7 +27,7 @@ import { getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
 import { ATimePicker } from "../../../../../Shareable/MakeField";
 
-const length7 = length(7);
+const minLength8 = minLength(8);
 
 class ModalResponderAnaliseSensorial extends Component {
   constructor(props) {
@@ -133,7 +133,7 @@ class ModalResponderAnaliseSensorial extends Component {
                 <Field
                   component={InputText}
                   name="registro_funcional"
-                  validate={[required, length7, numericInteger]}
+                  validate={[required, minLength8, numericInteger]}
                   maxlength="10"
                 />
               </article>
