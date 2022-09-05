@@ -33,7 +33,8 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="N° da Guia de Remessa"
                   name="numero_guia"
-                  placeholder="Digite o número da guia"
+                  inputType="number"
+                  placeholder="Digite o Nº da Guia"
                   className="input-busca-produto"
                 />
               </div>
@@ -42,16 +43,17 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="Código CODAE"
                   name="codigo_unidade"
-                  placeholder="Digite o código da unidade"
+                  inputType="number"
+                  placeholder="Digite o Código da UE"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nome da Unidade Educacional"
+                  label="Nome da UE"
                   name="nome_unidade"
-                  placeholder="Digite o nome da unidade"
+                  placeholder="Digite o Nome da UE"
                   className="input-busca-produto"
                 />
               </div>

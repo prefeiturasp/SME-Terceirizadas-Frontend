@@ -7,7 +7,7 @@ import ConferenciaInconsistencias from "components/screens/Logistica/Conferencia
 
 const atual = {
   href: `/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`,
-  titulo: "Conferência de Inconsistências"
+  titulo: "Conferência de Inconsistência"
 };
 
 const anteriores = [
