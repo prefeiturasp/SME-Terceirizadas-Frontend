@@ -21,7 +21,11 @@ import {
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
-import { formataInformacoesNutricionais } from "./helper";
+import {
+  formataInformacoesNutricionais,
+  deveExibirEditais,
+  formataEditais
+} from "./helper";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import ModalAtivacaoSuspensaoProduto from "../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
@@ -71,7 +75,8 @@ class HomologacaoProduto extends Component {
       showCancelarAnaliseSensorialModal: false,
       disableBotaoCancelar: false,
       showModalVincularEditais: false,
-      editaisOptions: []
+      editaisOptions: [],
+      exibirEditais: false
     };
     this.closeModal = this.closeModal.bind(this);
     this.closeCancelarAnaliseSensorialModal = this.closeCancelarAnaliseSensorialModal.bind(
@@ -152,7 +157,8 @@ class HomologacaoProduto extends Component {
         terceirizada: response.data.rastro_terceirizada,
         uuid,
         logs: response.data.logs,
-        ativo: this.checaStatus(response.data)
+        ativo: this.checaStatus(response.data),
+        exibirEditais: deveExibirEditais(response.data.logs)
       });
     });
 
@@ -287,8 +293,10 @@ class HomologacaoProduto extends Component {
       showCancelarAnaliseSensorialModal,
       disableBotaoCancelar,
       showModalVincularEditais,
-      editaisOptions
+      editaisOptions,
+      exibirEditais
     } = this.state;
+
     const { necessita_analise_sensorial, justificativa, editais } = this.props;
     const { homologacao } = produto !== null && produto;
     const logAnaliseSensorial = homologacao && homologacao.ultimo_log;
@@ -521,6 +529,23 @@ class HomologacaoProduto extends Component {
               </div>
 
               <hr />
+
+              {produto && exibirEditais && (
+                <Fragment>
+                  <div className="title">Editais Vinculados</div>
+                  <div className="row">
+                    <div className="col-12 report-label-value">
+                      <p>Editais Vinculados ao Produto</p>
+                      <p className="value">
+                        {formataEditais(produto.vinculos_produto_edital)}
+                      </p>
+                    </div>
+                  </div>
+                </Fragment>
+              )}
+
+              <hr />
+
               <div className="title">Identificação do Produto</div>
               <div className="row">
                 <div className="col-12 report-label-value">
