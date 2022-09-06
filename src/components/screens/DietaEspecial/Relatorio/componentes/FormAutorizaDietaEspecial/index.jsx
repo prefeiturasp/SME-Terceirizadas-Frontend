@@ -93,7 +93,8 @@ const FormAutorizaDietaEspecial = ({
       toastError("Houve um erro ao carregar Classificações da Dieta");
     }
 
-    const respNomesProtocolos = await getNomesProtocolosValidos();
+    const payload = { dieta_especial_uuid: dietaEspecial.uuid };
+    const respNomesProtocolos = await getNomesProtocolosValidos(payload);
     if (respNomesProtocolos.status === HTTP_STATUS.OK) {
       let optionsProtocolo = [
         {
