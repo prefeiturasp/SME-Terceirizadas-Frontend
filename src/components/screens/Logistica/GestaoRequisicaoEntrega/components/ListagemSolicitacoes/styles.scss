@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 2fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr 2fr 1fr 1fr 0.2fr;
     }
 
     .header-table {
@@ -38,9 +38,7 @@
         align-items: center;
         height: 100%;
         padding-left: 8px;
-        &:not(:first-child) {
-          border-right: 1px solid #e9eaea;
-        }
+        border-right: 1px solid #e9eaea;
 
         &:last-child {
           border-right: 0px solid #e9eaea;
@@ -65,17 +63,15 @@
         border-bottom: 1px solid #e9eaea;
         text-align: left;
         padding-left: 8px;
-        &:not(:first-child) {
-          border-right: 1px solid #e9eaea;
-        }
-      }
-
-      div:first-child {
-        border-right: 0px solid #e9eaea;
+        border-right: 1px solid #e9eaea;
       }
 
       div:last-child {
         border-right: 0px solid #e9eaea;
+      }
+
+      .fas {
+        font-size: 14px;
       }
     }
 

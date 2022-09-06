@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.6fr 0.6fr 0.6fr 0.8fr 0.7fr 0.5fr 0.5fr;
+      grid-template-columns: 0.6fr 0.6fr 0.6fr 0.8fr 0.7fr 0.5fr 0.1fr;
     }
 
     .header-table {
@@ -61,15 +61,12 @@
       .fas {
         cursor: pointer;
         font-weight: 900;
-        font-size: 16px;
+        font-size: 14px;
         line-height: 18px;
         display: flex;
         align-items: center;
         text-align: center;
         letter-spacing: 0.01em;
-        font-size: 12px !important;
-
-        /* $neutral/dark */
 
         color: #42474a;
       }
@@ -97,11 +94,6 @@
       color: #686868;
       font-style: normal;
       font-weight: normal;
-    }
-
-    .acoes {
-      font-size: 14px !important;
-      display: inline-block;
     }
   }
 }

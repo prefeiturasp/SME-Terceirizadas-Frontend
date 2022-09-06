@@ -105,33 +105,6 @@ export default ({
               </div>
               <div className="col-6">
                 <Field
-                  component={Select}
-                  label="Status"
-                  name="status"
-                  placeholder="Status"
-                  options={[
-                    { uuid: "", nome: "Selecione" },
-                    { uuid: undefined, nome: "Todos" },
-                    { uuid: "DILOG_ENVIA", nome: "Recebida" },
-                    {
-                      uuid: "AGUARDANDO_CANCELAMENTO",
-                      nome: "Aguardando cancelamento"
-                    },
-                    { uuid: "CANCELADA", nome: "Cancelada" },
-                    { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
-                    { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },
-                    {
-                      uuid: "DISTRIBUIDOR_SOLICITA_ALTERACAO",
-                      nome: "Em análise"
-                    }
-                  ]}
-                  className="input-busca-produto"
-                />
-              </div>
-            </div>
-            <div className="row mt-3">
-              <div className="col">
-                <Field
                   component={InputText}
                   label="Nome do produto"
                   name="nome_produto"
@@ -140,7 +113,8 @@ export default ({
                 />
               </div>
             </div>
-            <div className="row">
+
+            <div className="row mt-2">
               <div className="col-2">
                 <Field
                   component={InputComData}
@@ -189,7 +163,7 @@ export default ({
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nome da Unidade Educacional"
+                  label="Nome da UE"
                   name="nome_unidade"
                   placeholder="Digite o nome da Unidade Educacional"
                   className="input-busca-produto"
@@ -197,7 +171,33 @@ export default ({
                 />
               </div>
             </div>
-
+            <div className="row mt-2">
+              <div className="col-6">
+                <Field
+                  component={Select}
+                  label="Status"
+                  name="status"
+                  placeholder="Status"
+                  options={[
+                    { uuid: "", nome: "Selecione" },
+                    { uuid: undefined, nome: "Todos" },
+                    { uuid: "DILOG_ENVIA", nome: "Recebida" },
+                    {
+                      uuid: "AGUARDANDO_CANCELAMENTO",
+                      nome: "Aguardando cancelamento"
+                    },
+                    { uuid: "CANCELADA", nome: "Cancelada" },
+                    { uuid: "DISTRIBUIDOR_CONFIRMA", nome: "Confirmada" },
+                    { uuid: "DILOG_ACEITA_ALTERACAO", nome: "Alterada" },
+                    {
+                      uuid: "DISTRIBUIDOR_SOLICITA_ALTERACAO",
+                      nome: "Em análise"
+                    }
+                  ]}
+                  className="input-busca-produto"
+                />
+              </div>
+            </div>
             <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
                 texto="Consultar"

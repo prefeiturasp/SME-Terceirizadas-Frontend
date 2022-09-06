@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
@@ -23,10 +22,8 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
             ativos && ativos.includes(solicitacao.uuid)
               ? "desativar-borda"
               : "";
-          const toggleText =
-            ativos && ativos.includes(solicitacao.uuid)
-              ? "Ver menos"
-              : "Ver mais";
+          const icone =
+            ativos && ativos.includes(solicitacao.uuid) ? "minus" : "plus";
           return (
             <>
               <div className="grid-table body-table">
@@ -43,9 +40,8 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>{solicitacao.status}</div>
                 <div className={`${bordas}`}>{solicitacao.data_entrega}</div>
                 <div>
-                  <Button
-                    className="acoes"
-                    variant="link"
+                  <i
+                    className={`fas fa-${icone}`}
                     onClick={() => {
                       ativos && ativos.includes(solicitacao.uuid)
                         ? setAtivos(
@@ -57,9 +53,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                               : [solicitacao.uuid]
                           );
                     }}
-                  >
-                    {toggleText}
-                  </Button>
+                  />
                 </div>
               </div>
               {ativos && ativos.includes(solicitacao.uuid) && (
