@@ -37,11 +37,11 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "reposicaoGuiaRemessa";
-const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente
-                          recebeu como reposição aos alimentos faltantes. Se ainda restarem alimentos a receber, será
-                          aberta ocorrência a ser detalhada pelo usuário.`;
-const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimento faltantes (isto é, que o fornecedor deixou de entregar
-                          na Unidade Educacional) em relação à quantidade prevista na Guia de Remessa.`;
+const TOOLTIP_RECEBIDO = `Quantidade de embalagens do alimento que a UE efetivamente recebeu,
+                          na reposição dos alimentos. Se ainda restarem alimentos a receber,
+                          será aberta ocorrência a ser detalhada pelo usuário.`;
+const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimentos faltantes (que o fornecedor deixou de entregar na UE)
+                           em relação à quantidade prevista na Guia de Remessa.`;
 const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
 
 let ocorrenciasApagadas = [];
@@ -688,11 +688,14 @@ export default () => {
                                             <thead>
                                               <tr>
                                                 <th scope="col">
-                                                  Qtde Prevista
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
-                                                <th scope="col">
-                                                  A receber{" "}
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade a Receber{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_A_RECEBER
@@ -703,7 +706,7 @@ export default () => {
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO
@@ -760,11 +763,14 @@ export default () => {
                                             <thead>
                                               <tr>
                                                 <th scope="col">
-                                                  Qtde Prevista
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
-                                                <th scope="col">
-                                                  A receber{" "}
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade a Receber{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_A_RECEBER
@@ -775,7 +781,7 @@ export default () => {
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO

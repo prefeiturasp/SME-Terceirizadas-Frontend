@@ -40,7 +40,7 @@ const ListagemDownloads = ({
       download.status === STATUS_DOWNLOAD.CONCLUIDO
     )
       return "O prazo para download expirou. Solicite novamente.";
-    else return "";
+    else return "Download";
   };
 
   const retornaTextoTooltipIcone = download => {
@@ -59,7 +59,7 @@ const ListagemDownloads = ({
           <div>Status</div>
           <div>Data de Criação</div>
           <div>Visto</div>
-          <div>Ações</div>
+          <div>Opções</div>
         </div>
         {downloads.map((download, index) => {
           return (
@@ -110,13 +110,14 @@ const ListagemDownloads = ({
                           <i className="fas fa-download" />
                         </button>
                       </Tooltip>
-
-                      <button
-                        onClick={() => deletaDownload(download)}
-                        className="vermelho"
-                      >
-                        <i className="fas fa-trash-alt" />
-                      </button>
+                      <Tooltip title="Excluir">
+                        <button
+                          onClick={() => deletaDownload(download)}
+                          className="vermelho"
+                        >
+                          <i className="fas fa-trash-alt" />
+                        </button>
+                      </Tooltip>
                     </>
                   )}
                   {download.status === STATUS_DOWNLOAD.EM_PROCESSAMENTO && (
