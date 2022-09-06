@@ -5,7 +5,7 @@ export const getCategoriasDeMedicao = async () =>
   axios.get("medicao-inicial/categorias-medicao/");
 
 export const setPeriodoLancamento = async payload => {
-  const url = `medicao-inicial/medicao/`;
+  const url = "medicao-inicial/medicao/";
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -14,7 +14,7 @@ export const setPeriodoLancamento = async payload => {
 };
 
 export const getValoresPeriodosLancamentos = async params => {
-  const url = `medicao-inicial/valores-medicao/`;
+  const url = "medicao-inicial/valores-medicao/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data };
@@ -36,6 +36,15 @@ export const updateValoresPeriodosLancamentos = async (uuid, params) => {
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getMatriculadosPeriodo = async params => {
+  const url = "matriculados-no-mes/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data };
     return data;
   }
 };
