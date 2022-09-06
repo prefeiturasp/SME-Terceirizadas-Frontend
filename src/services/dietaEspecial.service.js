@@ -332,8 +332,10 @@ export const createSolicitacaoAlteracaoUE = async payload => {
 export const getNomesProtocolos = async () =>
   axios.get("/protocolo-padrao-dieta-especial/nomes/");
 
-export const getNomesProtocolosValidos = async () =>
-  axios.get("/protocolo-padrao-dieta-especial/lista-protocolos-liberados/");
+export const getNomesProtocolosValidos = async payload =>
+  axios.get(`/protocolo-padrao-dieta-especial/lista-protocolos-liberados/`, {
+    params: payload
+  });
 
 export const getStatusProtocolos = async () =>
   axios.get("/protocolo-padrao-dieta-especial/lista-status/");
