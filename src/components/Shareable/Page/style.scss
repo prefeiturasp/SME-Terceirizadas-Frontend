@@ -8,7 +8,12 @@
 }
 
 .page-title {
-  padding-top: 1.8rem;
+  margin-top: 1.8rem;
+
+  .texto-titulo {
+    vertical-align: -webkit-baseline-middle;
+    vertical-align: -moz-middle-with-baseline;
+  }
 }
 
 .page-no-sidebar-card {
