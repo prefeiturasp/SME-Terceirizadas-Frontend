@@ -27,6 +27,7 @@ import {
 import { deepCopy } from "helpers/utilities";
 import {
   getCategoriasDeMedicao,
+  getMatriculadosPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
   updateValoresPeriodosLancamentos
@@ -64,6 +65,7 @@ export default () => {
   const [valoresPeriodosLancamentos, setValoresPeriodosLancamentos] = useState(
     []
   );
+  const [valoresMatriculados, setValoresMatriculados] = useState([]);
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
@@ -191,18 +193,34 @@ export default () => {
       setCategoriasDeMedicao(response_categorias_medicao.data);
 
       const params = {
-        nome_periodo_escolar: periodo.nome,
+        nome_periodo_escolar: periodo.periodo_escolar.nome,
         uuid_solicitacao_medicao: uuid
       };
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
       );
       setValoresPeriodosLancamentos(response_valores_periodos.data);
+
+      const mes = format(mesAnoSelecionado, "MM");
+      const ano = getYear(mesAnoSelecionado);
+      const params_matriculados = {
+        escola_uuid: escola.uuid,
+        mes: mes,
+        ano: ano,
+        tipo_turma: "REGULAR",
+        periodo_escolar: periodo.periodo_escolar.uuid
+      };
+      const response_matriculados = await getMatriculadosPeriodo(
+        params_matriculados
+      );
+      setValoresMatriculados(response_matriculados.data);
+
       formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
         response_categorias_medicao.data,
-        tiposAlimentacaoFormatadas
+        tiposAlimentacaoFormatadas,
+        response_matriculados.data
       );
     };
     fetch();
@@ -214,7 +232,8 @@ export default () => {
     mesAnoFormatado,
     valoresMedicao,
     categoriasMedicao,
-    tiposAlimentacaoFormatadas
+    tiposAlimentacaoFormatadas,
+    matriculados
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculados = {};
@@ -226,12 +245,12 @@ export default () => {
 
     categoriasMedicao &&
       categoriasMedicao.forEach(categoria => {
-        for (let i = 1; i <= 31; i++) {
-          const dia = String(i).length === 1 ? "0" + String(i) : String(i);
-          dadosValoresMatriculados[
-            `matriculados__dia_${dia}__categoria_${categoria.id}`
-          ] = 100;
-        }
+        matriculados &&
+          matriculados.forEach(obj => {
+            dadosValoresMatriculados[
+              `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : 100;
+          });
 
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach(tipo => {
@@ -333,7 +352,8 @@ export default () => {
         mesAnoFormatadoState,
         valoresPeriodosLancamentos,
         categoriasDeMedicao,
-        tableAlimentacaoRows
+        tableAlimentacaoRows,
+        valoresMatriculados
       );
     };
     semanaSelecionada && formatar();
@@ -441,7 +461,7 @@ export default () => {
   const defaultValue = (column, row) => {
     let result = null;
     if (row.name === "matriculados") {
-      result = 100;
+      result = null;
     }
     if (Number(semanaSelecionada) === 1 && Number(column.dia) > 20) {
       result = "Mês anterior";
@@ -456,10 +476,25 @@ export default () => {
     return result;
   };
 
-  const validacaoSemana = (semana, coluna) => {
+  const validacaoSemana = coluna => {
     return (
       (Number(semanaSelecionada) === 1 && Number(coluna.dia) > 20) ||
       ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(coluna.dia) < 10)
+    );
+  };
+
+  const desabilitarField = (coluna, rowName) => {
+    const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
+      locale: ptBR
+    }).toString();
+    const mesAtual = format(mesAnoDefault, "LLLL", {
+      locale: ptBR
+    }).toString();
+    return (
+      validacaoSemana(coluna) ||
+      rowName === "matriculados" ||
+      (mesConsiderado === mesAtual &&
+        Number(coluna.dia) > format(mesAnoDefault, "dd"))
     );
   };
 
@@ -605,10 +640,7 @@ export default () => {
                                       }`}
                                     >
                                       {row.name === "observacoes" ? (
-                                        !validacaoSemana(
-                                          validacaoSemana,
-                                          column
-                                        ) && (
+                                        !validacaoSemana(column) && (
                                           <Botao
                                             texto={textoBotaoObservacao(
                                               values[
@@ -638,12 +670,10 @@ export default () => {
                                             name={`${row.name}__dia_${
                                               column.dia
                                             }__categoria_${categoria.id}`}
-                                            disabled={
-                                              validacaoSemana(
-                                                validacaoSemana,
-                                                column
-                                              ) || row.name === "matriculados"
-                                            }
+                                            disabled={desabilitarField(
+                                              column,
+                                              row.name
+                                            )}
                                             defaultValue={defaultValue(
                                               column,
                                               row
