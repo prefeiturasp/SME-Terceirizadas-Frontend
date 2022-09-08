@@ -27,6 +27,7 @@ import {
 import { deepCopy } from "helpers/utilities";
 import {
   getCategoriasDeMedicao,
+  getDiasCalendario,
   getMatriculadosPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
@@ -66,6 +67,9 @@ export default () => {
     []
   );
   const [valoresMatriculados, setValoresMatriculados] = useState([]);
+  const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
+    null
+  );
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
@@ -215,6 +219,16 @@ export default () => {
       );
       setValoresMatriculados(response_matriculados.data);
 
+      const params_dias_calendario = {
+        escola_uuid: escola.uuid,
+        mes: mes,
+        ano: ano
+      };
+      const response_dias_calendario = await getDiasCalendario(
+        params_dias_calendario
+      );
+      setCalendarioMesConsiderado(response_dias_calendario.data);
+
       formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
@@ -249,7 +263,7 @@ export default () => {
           matriculados.forEach(obj => {
             dadosValoresMatriculados[
               `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
-            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : 100;
+            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
           });
 
         tiposAlimentacaoFormatadas &&
@@ -490,11 +504,18 @@ export default () => {
     const mesAtual = format(mesAnoDefault, "LLLL", {
       locale: ptBR
     }).toString();
+
+    const objDia = calendarioMesConsiderado.find(
+      objDia => Number(objDia.dia) === Number(coluna.dia)
+    );
+    const ehDiaLetivo = objDia && objDia.dia_letivo;
+
     return (
       validacaoSemana(coluna) ||
       rowName === "matriculados" ||
       (mesConsiderado === mesAtual &&
-        Number(coluna.dia) > format(mesAnoDefault, "dd"))
+        Number(coluna.dia) > format(mesAnoDefault, "dd")) ||
+      !ehDiaLetivo
     );
   };
 
@@ -613,6 +634,7 @@ export default () => {
                           <div>Dom.</div>
                         </div>
                         {semanaSelecionada &&
+                          calendarioMesConsiderado &&
                           tableAlimentacaoRows &&
                           tableAlimentacaoRows.map((row, index) => {
                             return (
