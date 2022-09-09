@@ -514,7 +514,7 @@ export default () => {
       validacaoSemana(coluna) ||
       rowName === "matriculados" ||
       (mesConsiderado === mesAtual &&
-        Number(coluna.dia) > format(mesAnoDefault, "dd")) ||
+        Number(coluna.dia) >= format(mesAnoDefault, "dd")) ||
       !ehDiaLetivo
     );
   };
