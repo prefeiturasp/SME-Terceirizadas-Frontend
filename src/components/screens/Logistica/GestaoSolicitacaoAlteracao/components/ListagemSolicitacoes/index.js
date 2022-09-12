@@ -13,8 +13,8 @@ const ListagemSolicitacoes = ({
   updatePage
 }) => {
   return (
-    <section className="resultado-busca-solicitacao-alteracao">
-      <header>Veja solicitações disponibilizadas</header>
+    <section className="resultado-gestao-solicitacao-alteracao">
+      <header>Solicitações Disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
           <div>N° da Solicitação de Alteração</div>
@@ -23,7 +23,7 @@ const ListagemSolicitacoes = ({
           <div>Nome do Distribuidor</div>
           <div>Status</div>
           <div>Data de entrega</div>
-          <div>Solicitações</div>
+          <div>Ações</div>
         </div>
         {solicitacoes.map(solicitacao => {
           const bordas =
@@ -49,7 +49,11 @@ const ListagemSolicitacoes = ({
                 <div className={`${bordas}`}>{solicitacao.data_entrega}</div>
                 <div>
                   <Button
-                    className="acoes verde"
+                    className={`${
+                      solicitacao.status === "Em análise"
+                        ? "font-weight-bold"
+                        : ""
+                    } acoes verde`}
                     variant="link"
                     onClick={() => {
                       ativos && ativos.includes(solicitacao.uuid)
