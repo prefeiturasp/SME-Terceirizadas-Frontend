@@ -537,7 +537,9 @@ class HomologacaoProduto extends Component {
                     <div className="col-12 report-label-value">
                       <p>Editais Vinculados ao Produto</p>
                       <p className="value">
-                        {formataEditais(produto.vinculos_produto_edital)}
+                        {produto.vinculos_produto_edital.length > 0
+                          ? formataEditais(produto.vinculos_produto_edital)
+                          : "Ainda não existe nenhum edital vinculado ao produto"}
                       </p>
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, reduxForm } from "redux-form";
@@ -159,6 +160,15 @@ export class InversaoDeDiaDeCardapio extends Component {
   }
 
   onSubmit(values) {
+    if (values["alunos_da_cemei"]) {
+      if (values["alunos_da_cemei"].length === 2) {
+        values["alunos_da_cemei"] = "Todos";
+      } else if (values["alunos"].includes("CEI")) {
+        values["alunos_da_cemei"] = "CEI";
+      } else {
+        values["alunos_da_cemei"] = "EMEI";
+      }
+    }
     return new Promise(() => {
       values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
       if (!values.uuid) {
@@ -219,15 +229,16 @@ export class InversaoDeDiaDeCardapio extends Component {
     } = this.props;
     return (
       <div>
-        {loading ? (
+        {loading && !meusDados ? (
           <div>Carregando...</div>
         ) : (
-          <form>
+          <form className="mt-2">
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
               numeroAlunos={
                 meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
               }
+              meusDados={meusDados}
             />
             {rascunhosInversoes.length > 0 && (
               <div className="mt-3">
@@ -246,41 +257,102 @@ export class InversaoDeDiaDeCardapio extends Component {
                 <label className="card-title font-weight-bold">
                   Descrição da Inversão
                 </label>
-                <div className="row w-100 pt-3">
-                  <div className="inversao-datepicker col-md-12 col-lg-5">
-                    <Field
-                      component={InputComData}
-                      name="data_de"
-                      label="Referência"
-                      placeholder="Cardápio dia"
-                      required
-                      validate={[required, deveSerNoAnoCorrente]}
-                      onBlur={event => this.validaDiasUteis(event.target.value)}
-                      onChange={value => this.validaDiasUteis(value)}
-                      minDate={proximos_dois_dias_uteis}
-                      maxDate={dateDelta(60)}
-                    />
+                {meusDados.vinculo_atual.instituicao
+                  .tipo_unidade_escolar_iniciais !== "CEMEI" ? (
+                  <div className="row w-100 pt-3">
+                    <div className="inversao-datepicker col-md-12 col-lg-5">
+                      <Field
+                        component={InputComData}
+                        name="data_de"
+                        label="Referência"
+                        placeholder="Cardápio dia"
+                        required
+                        validate={[required, deveSerNoAnoCorrente]}
+                        onBlur={event =>
+                          this.validaDiasUteis(event.target.value)
+                        }
+                        onChange={value => this.validaDiasUteis(value)}
+                        minDate={proximos_dois_dias_uteis}
+                        maxDate={dateDelta(60)}
+                      />
+                    </div>
+                    <div className="col-md-12 col-lg-2 for-span">
+                      <i className="fas fa-arrow-left" />
+                      <span className="pl-3 pr-3">para</span>
+                      <i className="fas fa-arrow-right" />
+                    </div>
+                    <div className="inversao-datepicker col-md-12 col-lg-5">
+                      <Field
+                        component={InputComData}
+                        name="data_para"
+                        label="Aplicar em"
+                        placeholder="Cardápio dia"
+                        required
+                        validate={[required, deveSerNoAnoCorrente]}
+                        onBlur={event =>
+                          this.validaDiasUteis(event.target.value)
+                        }
+                        onChange={value => this.validaDiasUteis(value)}
+                        minDate={proximos_dois_dias_uteis}
+                        maxDate={dateDelta(60)}
+                      />
+                    </div>
                   </div>
-                  <div className="col-md-12 col-lg-2 for-span">
-                    <i className="fas fa-arrow-left" />
-                    <span className="pl-3 pr-3">para</span>
-                    <i className="fas fa-arrow-right" />
+                ) : (
+                  <div className="row w-100 pt-3">
+                    <div className="inversao-datepicker col-md-12 col-lg-3">
+                      <Field
+                        component={InputComData}
+                        name="data_de"
+                        label="Referência"
+                        placeholder="Cardápio dia"
+                        required
+                        validate={[required, deveSerNoAnoCorrente]}
+                        onBlur={event =>
+                          this.validaDiasUteis(event.target.value)
+                        }
+                        onChange={value => this.validaDiasUteis(value)}
+                        minDate={proximos_dois_dias_uteis}
+                        maxDate={dateDelta(60)}
+                      />
+                    </div>
+                    <div className="col-md-12 col-lg-1 for-span">
+                      <span className="pr-2">para</span>
+                      <i className="fas fa-arrow-right" />
+                    </div>
+                    <div className="inversao-datepicker col-md-12 col-lg-3">
+                      <Field
+                        component={InputComData}
+                        name="data_para"
+                        label="Aplicar em"
+                        placeholder="Cardápio dia"
+                        required
+                        validate={[required, deveSerNoAnoCorrente]}
+                        onBlur={event =>
+                          this.validaDiasUteis(event.target.value)
+                        }
+                        onChange={value => this.validaDiasUteis(value)}
+                        minDate={proximos_dois_dias_uteis}
+                        maxDate={dateDelta(60)}
+                      />
+                    </div>
+                    <div className="inversao-datepicker col-md-12 col-lg-4">
+                      <Field
+                        component={MultiSelect}
+                        disableSearch
+                        label="Alunos"
+                        name="alunos_da_cemei"
+                        multiple
+                        options={[
+                          { value: "CEI", label: "CEI" },
+                          { value: "EMEI", label: "EMEI" }
+                        ]}
+                        nomeDoItemNoPlural="Alunos"
+                        validate={required}
+                      />
+                    </div>
                   </div>
-                  <div className="inversao-datepicker col-md-12 col-lg-5">
-                    <Field
-                      component={InputComData}
-                      name="data_para"
-                      label="Aplicar em"
-                      placeholder="Cardápio dia"
-                      required
-                      validate={[required, deveSerNoAnoCorrente]}
-                      onBlur={event => this.validaDiasUteis(event.target.value)}
-                      onChange={value => this.validaDiasUteis(value)}
-                      minDate={proximos_dois_dias_uteis}
-                      maxDate={dateDelta(60)}
-                    />
-                  </div>
-                </div>
+                )}
                 <div className="row">
                   <div className="col-12">
                     <Field
