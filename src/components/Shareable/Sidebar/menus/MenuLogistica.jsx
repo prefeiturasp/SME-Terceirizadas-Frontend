@@ -48,13 +48,13 @@ const MenuLogistica = () => {
 
       {usuarioEhDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${CONSULTA_SOLICITACAO_ALTERACAO}`}>
-          Consulta de Solicitação de Alteração
+          Solicitação de Alteração
         </LeafItem>
       )}
 
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
-          Solicitação de Alteração
+          Alteração da Requisição
         </LeafItem>
       )}
 

@@ -6,7 +6,7 @@ import AlimentosConsolidado from "../AlimentosConsolidado";
 const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
   return (
     <section className="resultado-busca-solicitacao-alteracao">
-      <header>Veja solicitações disponibilizadas</header>
+      <header>Solicitações Disponibilizadas</header>
       <article>
         <div className="grid-table header-table">
           <div>N° da Solicitação de Alteração</div>
@@ -14,7 +14,7 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
           <div>Qtde. de Guias Remessa</div>
           <div>Nome do Distribuidor</div>
           <div>Status</div>
-          <div>Data de entrega</div>
+          <div>Data de Entrega</div>
           <div />
         </div>
         {solicitacoes.map(solicitacao => {
