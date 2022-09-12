@@ -10,6 +10,15 @@ export default function reducer(state = {}, action) {
         action.data.data_para = action.data.cardapio_para
           ? action.data.cardapio_para.data
           : action.data.data_para_inversao;
+        if (action.data.alunos_da_cemei === "Todos") {
+          action.data.alunos_da_cemei = ["CEI", "EMEI"];
+        }
+        if (action.data.alunos_da_cemei === "CEI") {
+          action.data.alunos_da_cemei = ["CEI"];
+        }
+        if (action.data.alunos_da_cemei === "EMEI") {
+          action.data.alunos_da_cemei = ["EMEI"];
+        }
       }
       return {
         data: {
