@@ -58,7 +58,7 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
       titulo: "Inversão de dia de Cardápio"
     };
     return (
-      <Page titulo={atual.titulo}>
+      <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
         <Breadcrumb home={HOME} atual={atual} />
         <Container />
       </Page>
