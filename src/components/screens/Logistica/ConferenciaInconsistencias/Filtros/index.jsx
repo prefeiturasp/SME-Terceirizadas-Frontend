@@ -33,7 +33,7 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="N° da Guia de Remessa"
                   name="numero_guia"
-                  inputType="number"
+                  apenasNumeros
                   placeholder="Digite o Nº da Guia"
                   className="input-busca-produto"
                 />
@@ -43,7 +43,7 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="Código CODAE"
                   name="codigo_unidade"
-                  inputType="number"
+                  apenasNumeros
                   placeholder="Digite o Código da UE"
                   className="input-busca-produto"
                 />
