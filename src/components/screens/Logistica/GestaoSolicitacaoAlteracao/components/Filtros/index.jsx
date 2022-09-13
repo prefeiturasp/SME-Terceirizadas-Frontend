@@ -46,7 +46,6 @@ export default ({
                   name="numero_solicitacao"
                   placeholder="Digite o Nº da Solicitação"
                   className="input-busca-produto"
-                  apenasNumeros
                 />
               </div>
               <div className="col-3">
