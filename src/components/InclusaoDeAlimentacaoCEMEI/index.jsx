@@ -220,6 +220,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     <div>
       <div className="mt-3">
         <CardMatriculados
+          meusDados={meusDados}
           numeroAlunos={
             meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
           }
