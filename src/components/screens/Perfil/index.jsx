@@ -147,7 +147,12 @@ class Perfil extends Component {
                       <div className="data">
                         <div>RF: {meusDados.registro_funcional}</div>
                         <div>{meusDados.vinculo_atual.instituicao.nome}</div>
-                        <div>CPF: {formataCPF(meusDados.cpf)}</div>
+                        <div>
+                          CPF:{" "}
+                          {meusDados.cpf
+                            ? formataCPF(meusDados.cpf)
+                            : "sem cpf"}
+                        </div>
                         <div>{meusDados.cargo}</div>
                       </div>
                     </div>

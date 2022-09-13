@@ -181,7 +181,7 @@ export default ({ setLoading, setFiltros }) => {
                 component={InputText}
                 name="codigo_eol_aluno"
                 placeholder="Insira o Código"
-                inputType="number"
+                type="number"
                 validate={length(7)}
                 disabled={carregandoAluno}
               />
