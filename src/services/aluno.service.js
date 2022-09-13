@@ -39,3 +39,14 @@ export const deleteFotoAluno = async codigo_eol_aluno => {
     return data;
   }
 };
+
+export const getQuantidadeAlunosCEMEIporCEIEMEI = async codigo_eol_escola => {
+  const url = `/alunos/quantidade-cemei-por-cei-emei/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
