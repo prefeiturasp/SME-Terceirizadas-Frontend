@@ -289,6 +289,7 @@ const SolicitacaoUnificada = ({
   return (
     <>
       <CardMatriculados
+        meusDados={dadosUsuario}
         numeroAlunos={
           dadosUsuario
             ? dadosUsuario.vinculo_atual.instituicao.quantidade_alunos

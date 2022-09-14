@@ -6,6 +6,7 @@ import { escolaEhCEMEI, pontuarValor } from "../../../helpers/utilities";
 export default class CardMatriculados extends Component {
   render() {
     const { collapsed, numeroAlunos, meusDados } = this.props;
+    console.log(meusDados);
 
     return escolaEhCEMEI() ? (
       <div className="card mt-1">
@@ -23,24 +24,27 @@ export default class CardMatriculados extends Component {
           </div>
           <div className="row">
             <div className="col-1 rectangle mr-2">
-              {pontuarValor(
-                meusDados.vinculo_atual.instituicao
-                  .quantidade_alunos_cei_da_cemei +
+              {meusDados &&
+                pontuarValor(
+                  meusDados.vinculo_atual.instituicao
+                    .quantidade_alunos_cei_da_cemei +
+                    meusDados.vinculo_atual.instituicao
+                      .quantidade_alunos_emei_da_cemei
+                )}
+            </div>
+            <div className="col-1 rectangle mr-2">
+              {meusDados &&
+                pontuarValor(
+                  meusDados.vinculo_atual.instituicao
+                    .quantidade_alunos_cei_da_cemei
+                )}
+            </div>
+            <div className="col-1 rectangle mr-2">
+              {meusDados &&
+                pontuarValor(
                   meusDados.vinculo_atual.instituicao
                     .quantidade_alunos_emei_da_cemei
-              )}
-            </div>
-            <div className="col-1 rectangle mr-2">
-              {pontuarValor(
-                meusDados.vinculo_atual.instituicao
-                  .quantidade_alunos_cei_da_cemei
-              )}
-            </div>
-            <div className="col-1 rectangle mr-2">
-              {pontuarValor(
-                meusDados.vinculo_atual.instituicao
-                  .quantidade_alunos_emei_da_cemei
-              )}
+                )}
             </div>
             <div className="col-5 beside-text mt-auto">
               Informação automática disponibilizada pelo Cadastro da Unidade
