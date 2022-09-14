@@ -47,3 +47,37 @@ export const formatarPayloadPeriodoLancamento = (
 
   return { ...values, valores_medicao: valoresMedicao };
 };
+
+export const deveExistirObservacao = (
+  categoria,
+  values,
+  calendarioMesConsiderado
+) => {
+  let diasNaoLetivos = [];
+  const objDiasNaoLetivos = calendarioMesConsiderado.filter(
+    obj => !obj.dia_letivo
+  );
+  objDiasNaoLetivos.map(obj => diasNaoLetivos.push(obj.dia));
+
+  const valuesAsArray = Object.entries(values);
+  const arrayCategoriesValuesDiasNaoletivos = valuesAsArray.filter(
+    ([key, value]) =>
+      key.includes("categoria") &&
+      !key.includes("matriculados") &&
+      !key.includes("frequencia") &&
+      !key.includes("observacoes") &&
+      !["Mês anterior", "Mês posterior", null].includes(value) &&
+      diasNaoLetivos.some(dia => key.includes(dia))
+  );
+  let dias = [];
+  arrayCategoriesValuesDiasNaoletivos.forEach(arr => {
+    const keySplitted = arr[0].split("__");
+    const dia = keySplitted[1].match(/\d/g).join("");
+    dias.push(dia);
+  });
+
+  return !dias.every(
+    dia =>
+      values[`observacoes__dia_${dia}__categoria_${categoria}`] !== undefined
+  );
+};

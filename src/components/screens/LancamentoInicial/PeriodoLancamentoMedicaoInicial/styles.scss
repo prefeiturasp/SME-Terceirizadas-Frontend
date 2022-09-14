@@ -56,28 +56,45 @@
       color: $blackSubtle;
 
       div {
-        // line-height: 48px;
         padding: 0 !important;
-        border: 0;
+        border: 0 !important;
+      }
+
+      .nome-linha {
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
       }
 
       .input-desabilitado {
         border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
         div.input input {
           font-size: 11px !important;
+          height: 35px;
         }
       }
 
       .input-habilitado {
         border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
         display: flex;
         justify-content: center;
+      }
+
+      .tooltip-input {
+        div.input input {
+          border-color: $red !important;
+        }
       }
 
       .input-habilitado-observacoes {
         display: flex;
         justify-content: center;
-        border-left: 1px solid #e9eaea;
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
 
         button {
           margin: 8px;
@@ -110,13 +127,33 @@
         border-right: 0px solid #e9eaea;
       }
 
-      // .data_lancamento_modal ::placeholder {
-      //   color: red;
-      // }
       .data_lancamento_modal {
         &::placeholder {
           color: red !important;
         }
+      }
+
+      .field-values-input {
+        position: relative;
+
+        .icone-info-error {
+          position: absolute;
+          background-color: $red;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+      }
+
+      .nao-eh-dia-letivo {
+        background-color: #dadada;
       }
     }
   }
