@@ -6,7 +6,6 @@ import { escolaEhCEMEI, pontuarValor } from "../../../helpers/utilities";
 export default class CardMatriculados extends Component {
   render() {
     const { collapsed, numeroAlunos, meusDados } = this.props;
-    console.log(meusDados);
 
     return escolaEhCEMEI() ? (
       <div className="card mt-1">
