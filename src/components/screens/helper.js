@@ -15,7 +15,7 @@ import { TIPO_SOLICITACAO } from "constants/shared";
 import { usuarioEhEscola } from "../../helpers/utilities";
 import { STATUS_ALIMENTO } from "./const";
 
-const ALT_CARDAPIO = "ALT_CARDAPIO";
+export const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
