@@ -126,6 +126,7 @@ class DashboardNutriManifestacao extends Component {
           <CardMatriculados
             collapsed={collapsed}
             alterarCollapse={this.alterarCollapse}
+            meusDados={meusDados}
             numeroAlunos={
               (meusDados &&
                 meusDados.vinculo_atual.instituicao.quantidade_alunos) ||

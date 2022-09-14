@@ -490,7 +490,10 @@ export class SolicitacaoDeKitLanche extends Component {
           <form onKeyPress={this.onKeyPress} className="solicitacao-kit-lanche">
             <Field component={"input"} type="hidden" name="uuid" />
             {!ehCei && (
-              <CardMatriculados numeroAlunos={meusDados.quantidade_alunos} />
+              <CardMatriculados
+                meusDados={meusDados}
+                numeroAlunos={meusDados.quantidade_alunos}
+              />
             )}
             <Spin tip="Carregando Rascunhos..." spinning={carregandoRascunhos}>
               <Rascunhos

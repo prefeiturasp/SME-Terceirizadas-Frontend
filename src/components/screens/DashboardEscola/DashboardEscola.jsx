@@ -106,10 +106,11 @@ export class DashboardEscola extends Component {
       negadasListFiltered,
       canceladasListFiltered
     } = this.state;
-    const { numeroAlunos } = this.props;
+    const { numeroAlunos, meusDados } = this.props;
     return (
       <div className="dashboard-school">
         <CardMatriculados
+          meusDados={meusDados}
           numeroAlunos={numeroAlunos}
           alterarCollapse={this.alterarCollapse}
         />
