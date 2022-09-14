@@ -1,28 +1,28 @@
 import React, { Component } from "react";
 import { ToggleExpandir } from "../../Shareable/ToggleExpandir";
 import "./style.scss";
-import { pontuarValor } from "../../../helpers/utilities";
+import { escolaEhCEMEI, pontuarValor } from "../../../helpers/utilities";
 
 export default class CardMatriculados extends Component {
   render() {
     const { collapsed, numeroAlunos, meusDados } = this.props;
-    const eh_cemei =
-      meusDados &&
-      meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais ===
-        "CEMEI";
 
-    return eh_cemei ? (
+    return escolaEhCEMEI() ? (
       <div className="card mt-1">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-12">
-              <span>Total de Matriculados</span>
-              <span className="cei">Matriculados CEI</span>
-              <span className="cemei">Matriculados EMEI</span>
+            <div className="col-1 p-0">
+              <span className="">Total de Matriculados</span>
+            </div>
+            <div className="col-1 p-0 ml-2">
+              <span>Matriculados CEI</span>
+            </div>
+            <div className="col-1 p-0 ml-2">
+              <span>Matriculados EMEI</span>
             </div>
           </div>
           <div className="row">
-            <div className="col-2 rectangle mr-2 ml-2">
+            <div className="col-1 rectangle mr-2">
               {pontuarValor(
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_cei_da_cemei +
@@ -30,13 +30,13 @@ export default class CardMatriculados extends Component {
                     .quantidade_alunos_emei_da_cemei
               )}
             </div>
-            <div className="col-2 rectangle mr-2 ml-2">
+            <div className="col-1 rectangle mr-2">
               {pontuarValor(
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_cei_da_cemei
               )}
             </div>
-            <div className="col-2 rectangle mr-2 ml-2">
+            <div className="col-1 rectangle mr-2">
               {pontuarValor(
                 meusDados.vinculo_atual.instituicao
                   .quantidade_alunos_emei_da_cemei

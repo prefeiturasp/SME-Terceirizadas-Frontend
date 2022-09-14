@@ -208,7 +208,7 @@ export default ({
                   name="codigo_eol_aluno"
                   placeholder="Insira o Código"
                   className="form-control"
-                  inputType="number"
+                  type="number"
                   required
                   disabled={carregandoAluno}
                   validate={composeValidators(required, length(7))}
@@ -328,7 +328,7 @@ export default ({
                   name="codigo_eol_escola"
                   placeholder="Insira o Código"
                   className="form-control"
-                  inputType="number"
+                  type="number"
                   required
                   disabled={carregandoEscola}
                   validate={composeValidators(required, length(6))}

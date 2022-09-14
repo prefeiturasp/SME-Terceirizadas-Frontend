@@ -198,7 +198,7 @@ const FormFiltros = ({
                 component={InputText}
                 name="codigo_eol"
                 placeholder="Insira o Código"
-                inputType="number"
+                type="number"
                 validate={length(7)}
                 disabled={carregandoAluno}
               />
