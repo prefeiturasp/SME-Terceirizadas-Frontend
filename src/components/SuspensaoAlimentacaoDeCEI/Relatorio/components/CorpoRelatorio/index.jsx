@@ -72,7 +72,7 @@ export default ({ solicitacaoSuspensao }) => {
         </tr>
         <tr className="row">
           <td className="col-8">
-            {solicitacaoSuspensao.motivo.nome === "Outro"
+            {solicitacaoSuspensao.motivo.nome.includes("Outro")
               ? solicitacaoSuspensao.outro_motivo
               : solicitacaoSuspensao.motivo.nome}
           </td>
