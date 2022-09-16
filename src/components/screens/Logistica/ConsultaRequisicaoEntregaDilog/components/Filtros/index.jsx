@@ -92,7 +92,7 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputText}
-                  label="Nº da guia de remessa"
+                  label="Nº da Guia de Remessa"
                   name="numero_guia"
                   placeholder="Digite o número da guia"
                   className="input-busca-produto"
@@ -157,7 +157,7 @@ export default ({
               <div className="col-2">
                 <Field
                   component={InputText}
-                  label="Cód. CODAE da U.E"
+                  label="Cód. CODAE da UE"
                   name="codigo_unidade"
                   placeholder="Digite o código"
                   className="input-busca-produto"
