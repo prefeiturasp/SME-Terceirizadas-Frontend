@@ -89,7 +89,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       });
     });
 
-    if (suspensao.motivo.nome === "Outro") {
+    if (suspensao.motivo.nome.includes("Outro")) {
       this.setState({
         ehOutroMotivo: true
       });
@@ -166,7 +166,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
     let { ehOutroMotivo } = this.state;
     const { motivos } = this.props;
     motivos.forEach(motivo => {
-      if (motivo.uuid === motivoUUID && motivo.nome === "Outro") {
+      if (motivo.uuid === motivoUUID && motivo.nome.includes("Outro")) {
         ehOutroMotivo = true;
       } else {
         ehOutroMotivo = false;
