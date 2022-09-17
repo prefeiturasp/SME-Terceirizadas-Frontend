@@ -688,7 +688,7 @@ class FoodSuspensionEditor extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() => this.onCheckInput(key)} //
+                                onClick={() => this.onCheckInput(key)}
                                 className="checkbox-custom"
                               />{" "}
                               {period.nome}
