@@ -1,6 +1,7 @@
 import axios from "../_base";
 import { FLUXO, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const solicitarKitLanche = async (values, tipoSolicitacao) => {
   const url = getPath(tipoSolicitacao);
@@ -68,5 +69,52 @@ export const cancelaKitLancheAvulsoEscola = async (
     return { ...data, status: status };
   } catch (error) {
     return error.json();
+  }
+};
+
+export const createSolicitacaoKitLancheCEMEI = async payload => {
+  const url = `solicitacao-kit-lanche-cemei/`;
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const updateSolicitacaoKitLancheCEMEI = async (uuid, payload) => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/`;
+  const response = await axios.put(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacaoKitLancheCEMEIRascunhos = async () => {
+  const url = `solicitacao-kit-lanche-cemei/`;
+  const response = await axios
+    .get(url, { params: { status: "RASCUNHO" } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteSolicitacaoKitLancheCEMEI = async uuid => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const iniciaFluxoSolicitacaoKitLancheCEMEI = async uuid => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };

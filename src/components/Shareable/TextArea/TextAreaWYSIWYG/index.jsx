@@ -54,7 +54,7 @@ export class TextAreaWYSIWYG extends Component {
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromBlockArray(
-            convertFromHTML(this.props.valorInicial)
+            htmlToDraft(this.props.valorInicial).contentBlocks
           )
         )
       });

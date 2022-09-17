@@ -1,12 +1,13 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Page from "../../components/Shareable/Page/Page";
-import Container from "../../components/SolicitacaoDeKitLanche/Container";
-import PainelPedidosKitLancheDRE from "../../components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
-import PainelPedidosKitLancheCODAE from "../../components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";
-import PainelPedidosKitLancheTerceirizada from "../../components/SolicitacaoDeKitLanche/Terceirizada/PainelPedidos/Container";
-import { meusDados } from "../../services/perfil.service";
-import { HOME } from "../../constants/config";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import Container from "components/SolicitacaoDeKitLanche/Container";
+import { Container as ContainerCEMEI } from "components/SolicitacaoKitLancheCEMEI/componentes/Container";
+import PainelPedidosKitLancheDRE from "components/SolicitacaoDeKitLanche/DRE/PainelPedidos/Container";
+import PainelPedidosKitLancheCODAE from "components/SolicitacaoDeKitLanche/CODAE/PainelPedidos/Container";
+import PainelPedidosKitLancheTerceirizada from "components/SolicitacaoDeKitLanche/Terceirizada/PainelPedidos/Container";
+import { meusDados } from "services/perfil.service";
+import { HOME } from "constants/config";
 import {
   SOLICITACAO_KIT_LANCHE,
   ESCOLA,
@@ -14,12 +15,13 @@ import {
   CODAE,
   TERCEIRIZADA
 } from "../../configs/constants";
+import { escolaEhCEMEI } from "helpers/utilities";
 
 export class PainelPedidosBase extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: {},
+      meusDados: null,
       quantidade_alunos: 0
     };
   }
@@ -47,6 +49,7 @@ export class PainelPedidosBase extends React.Component {
   }
 
   render() {
+    const { meusDados } = this.state;
     const atual = {
       href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE}`,
       titulo: "Kit Lanche Passeio"
@@ -54,8 +57,11 @@ export class PainelPedidosBase extends React.Component {
     return (
       <Page titulo={atual.titulo}>
         <Breadcrumb home={HOME} atual={atual} />
-        {this.props.VISAO === ESCOLA && (
-          <Container meusDados={this.state.meusDados} />
+        {this.props.VISAO === ESCOLA && !escolaEhCEMEI() && meusDados && (
+          <Container meusDados={meusDados} />
+        )}
+        {this.props.VISAO === ESCOLA && escolaEhCEMEI() && meusDados && (
+          <ContainerCEMEI meusDados={meusDados} />
         )}
         {this.props.VISAO === DRE && <PainelPedidosKitLancheDRE />}
         {this.props.VISAO === CODAE && <PainelPedidosKitLancheCODAE />}
