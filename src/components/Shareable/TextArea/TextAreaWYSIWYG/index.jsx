@@ -58,6 +58,23 @@ export class TextAreaWYSIWYG extends Component {
           )
         )
       });
+    } else if (
+      this.props.input.value !== prevProps.input.value &&
+      !["<p></p>\n", "<p></p>", null].includes(this.props.input.value)
+    ) {
+      let editor = EditorState.createEmpty();
+      if (this.props.input.value !== "") {
+        editor = EditorState.moveFocusToEnd(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(this.props.input.value)
+            )
+          )
+        );
+      }
+      this.setState({
+        editorState: editor
+      });
     }
   }
 

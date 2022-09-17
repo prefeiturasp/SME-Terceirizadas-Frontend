@@ -1,3 +1,4 @@
+import { escolaEhCEMEI } from "helpers/utilities";
 import { extrairTiposALimentacao } from "../components/InclusaoDeAlimentacao/helper";
 
 const LOAD_FOOD_SUSPENSION = "LOAD_FOOD_SUSPENSION";
@@ -30,6 +31,11 @@ export default function reducer(state = {}, action) {
           );
           quantidade_por_periodo_["numero_de_alunos"] =
             quantidade_por_periodo.numero_alunos;
+          escolaEhCEMEI() &&
+            (quantidade_por_periodo_["alunos_cei_ou_emei"] =
+              quantidade_por_periodo.alunos_cei_ou_emei === "Todos"
+                ? ["CEI", "EMEI"]
+                : [quantidade_por_periodo.alunos_cei_ou_emei]);
           action.data[
             `suspensoes_${quantidade_por_periodo.periodo_escolar.nome}`
           ] = quantidade_por_periodo_;
