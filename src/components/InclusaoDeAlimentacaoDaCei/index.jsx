@@ -101,7 +101,7 @@ class InclusaoDeAlimentacaoDaCei extends Component {
         }
       });
     });
-    if (inclusaoDeAlimentacao.motivo.nome === "Outro") {
+    if (inclusaoDeAlimentacao.motivo.nome.includes("Outro")) {
       ehOutroMotivo = true;
       this.props.change("outro_motivo", inclusaoDeAlimentacao.descricao);
     }

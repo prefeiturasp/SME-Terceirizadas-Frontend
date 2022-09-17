@@ -80,9 +80,9 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       motivosSimples.find(
         motivo => motivo.uuid === values.inclusoes[index].motivo
       ) &&
-      motivosSimples.find(
-        motivo => motivo.uuid === values.inclusoes[index].motivo
-      ).nome === "Outro"
+      motivosSimples
+        .find(motivo => motivo.uuid === values.inclusoes[index].motivo)
+        .nome.includes("Outro")
     );
   };
 

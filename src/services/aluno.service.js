@@ -50,3 +50,14 @@ export const getQuantidadeAlunosCEMEIporCEIEMEI = async codigo_eol_escola => {
     return data;
   }
 };
+
+export const getQuantidadeAlunosCEMEIporPeriodoCEIEMEI = async codigo_eol_escola => {
+  const url = `/alunos/quantidade-alunos-por-periodo-cei-emei/`;
+  const response = await axios
+    .get(url, { params: { codigo_eol_escola } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

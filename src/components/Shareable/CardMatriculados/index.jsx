@@ -11,41 +11,43 @@ export default class CardMatriculados extends Component {
       <div className="card mt-1">
         <div className="card-body card-enrolled">
           <div className="row title">
-            <div className="col-1 p-0">
-              <span className="">Total de Matriculados</span>
+            <div className="p-0">
+              <span>
+                Total de Matriculados
+                <div className="rectangle">
+                  {meusDados &&
+                    pontuarValor(
+                      meusDados.vinculo_atual.instituicao
+                        .quantidade_alunos_cei_da_cemei +
+                        meusDados.vinculo_atual.instituicao
+                          .quantidade_alunos_emei_da_cemei
+                    )}
+                </div>
+              </span>
             </div>
-            <div className="col-1 p-0 ml-2">
-              <span>Matriculados CEI</span>
+            <div className="p-0 ml-3">
+              <span>
+                Matriculados CEI
+                <div className="rectangle">
+                  {meusDados &&
+                    pontuarValor(
+                      meusDados.vinculo_atual.instituicao
+                        .quantidade_alunos_cei_da_cemei
+                    )}
+                </div>
+              </span>
             </div>
-            <div className="col-1 p-0 ml-2">
+            <div className="p-0 ml-3">
               <span>Matriculados EMEI</span>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-1 rectangle mr-2">
-              {meusDados &&
-                pontuarValor(
-                  meusDados.vinculo_atual.instituicao
-                    .quantidade_alunos_cei_da_cemei +
+              <div className="rectangle">
+                {meusDados &&
+                  pontuarValor(
                     meusDados.vinculo_atual.instituicao
                       .quantidade_alunos_emei_da_cemei
-                )}
+                  )}
+              </div>
             </div>
-            <div className="col-1 rectangle mr-2">
-              {meusDados &&
-                pontuarValor(
-                  meusDados.vinculo_atual.instituicao
-                    .quantidade_alunos_cei_da_cemei
-                )}
-            </div>
-            <div className="col-1 rectangle mr-2">
-              {meusDados &&
-                pontuarValor(
-                  meusDados.vinculo_atual.instituicao
-                    .quantidade_alunos_emei_da_cemei
-                )}
-            </div>
-            <div className="col-5 beside-text mt-auto">
+            <div className="col-6 beside-text mt-auto ml-2">
               Informação automática disponibilizada pelo Cadastro da Unidade
               Escolar <br />
             </div>
