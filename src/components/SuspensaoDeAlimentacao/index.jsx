@@ -16,7 +16,8 @@ import {
   geradorUUID,
   formatarParaMultiselect,
   getError,
-  deepCopy
+  deepCopy,
+  escolaEhCEMEI
 } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -37,6 +38,7 @@ import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
+import { getQuantidadeAlunosCEMEIporPeriodoCEIEMEI } from "services/aluno.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
 import { getQuantidaDeAlunosPorPeriodoEEscola } from "../../services/escola.service";
 import "./style.scss";
@@ -128,6 +130,21 @@ class FoodSuspensionEditor extends Component {
     );
   };
 
+  handleSelectedChangedAlunos = (selectedOptions, period) => {
+    let periodos = this.props.periodos;
+    let indice = periodos.findIndex(periodo => periodo.nome === period.nome);
+    let qnt_alunos = 0;
+    selectedOptions.forEach(opt => {
+      qnt_alunos += periodos[indice].alunos.filter(obj => obj.value === opt)[0]
+        .quantidade_alunos;
+    });
+    periodos[indice].validador = [
+      naoPodeSerZero,
+      maxValue(qnt_alunos),
+      required
+    ];
+  };
+
   OnDeleteButtonClicked(id_externo, uuid) {
     if (window.confirm("Deseja remover este rascunho?")) {
       deleteSuspensaoDeAlimentacao(uuid).then(
@@ -165,8 +182,10 @@ class FoodSuspensionEditor extends Component {
         TARDE: [],
         NOITE: [],
         INTEGRAL: []
-      }
+      },
+      observacao: null
     });
+    this.props.change("observacao", null);
   }
 
   diasRazoesFromSuspensoesAlimentacao(suspensoesAlimentacao) {
@@ -191,6 +210,8 @@ class FoodSuspensionEditor extends Component {
   }
 
   OnEditButtonClicked(param) {
+    let observacao = this.state.observacao;
+    observacao = param.suspensaoDeAlimentacao.observacao;
     this.props.reset("foodSuspension");
     this.props.loadFoodSuspension(param.suspensaoDeAlimentacao);
     this.setState({
@@ -219,7 +240,8 @@ class FoodSuspensionEditor extends Component {
           param.suspensaoDeAlimentacao.suspensoes_INTEGRAL !== undefined
             ? param.suspensaoDeAlimentacao.suspensoes_INTEGRAL.tipo_de_refeicao
             : []
-      }
+      },
+      observacao
     });
     window.scrollTo(0, this.titleRef.current.offsetTop - 90);
   }
@@ -260,6 +282,33 @@ class FoodSuspensionEditor extends Component {
     });
   };
 
+  vinculaQuantidadeAlunosPorPeriodoCeiEmei = (
+    periodosEQuantidadeAlunosCeiEmei,
+    periodoProps
+  ) => {
+    periodoProps.forEach(periodo => {
+      periodosEQuantidadeAlunosCeiEmei.forEach(quantidadeCeiEmei => {
+        if (periodo.nome === quantidadeCeiEmei.nome) {
+          periodo.alunos = [];
+          if (quantidadeCeiEmei.CEI > 0) {
+            periodo.alunos.push({
+              value: "CEI",
+              label: "CEI",
+              quantidade_alunos: quantidadeCeiEmei.CEI
+            });
+          }
+          if (quantidadeCeiEmei.EMEI > 0) {
+            periodo.alunos.push({
+              value: "EMEI",
+              label: "EMEI",
+              quantidade_alunos: quantidadeCeiEmei.EMEI
+            });
+          }
+        }
+      });
+    });
+  };
+
   componentDidUpdate(prevProps) {
     const fields = [
       "suspensoes_MANHA",
@@ -289,19 +338,28 @@ class FoodSuspensionEditor extends Component {
     );
     if (prevProps.periodos.length === 0 && this.props.periodos.length > 0) {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      const escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+      const escola = this.props.meusDados.vinculo_atual.instituicao;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
         this.retornaPeriodosComCombos(
           response.data.results,
           this.props.periodos
         );
       });
-      getQuantidaDeAlunosPorPeriodoEEscola(escola).then(response => {
+      getQuantidaDeAlunosPorPeriodoEEscola(escola.uuid).then(response => {
         this.vinculaQuantidadeAlunosPorPeriodo(
           response.results,
           this.props.periodos
         );
       });
+      escolaEhCEMEI() &&
+        getQuantidadeAlunosCEMEIporPeriodoCEIEMEI(escola.codigo_eol).then(
+          response => {
+            this.vinculaQuantidadeAlunosPorPeriodoCeiEmei(
+              response.data,
+              this.props.periodos
+            );
+          }
+        );
     }
     const { motivos, meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading, periodos } = this.state;
@@ -422,9 +480,19 @@ class FoodSuspensionEditor extends Component {
 
   onCheckInput = indice => {
     let periodos = this.props.periodos;
+    let maxValueToValidate = periodos[indice].quantidade_alunos;
     periodos[indice].checked = !periodos[indice].checked;
+
+    if (escolaEhCEMEI()) {
+      let qntAlunos = 0;
+      periodos[indice].alunos.forEach(obj => {
+        qntAlunos += obj.quantidade_alunos;
+      });
+      maxValueToValidate = qntAlunos;
+    }
+
     periodos[indice].validador = periodos[indice].checked
-      ? [naoPodeSerZero, maxValue(periodos[indice].quantidade_alunos), required]
+      ? [naoPodeSerZero, maxValue(maxValueToValidate), required]
       : [];
     this.props.change(
       `suspensoes_${periodos[indice].nome}.check`,
@@ -582,8 +650,23 @@ class FoodSuspensionEditor extends Component {
                 />
                 <div className="row table-titles">
                   <div className="col-3">Período</div>
-                  <div className="col-6 type-food">Tipo de Alimentação</div>
-                  <div className="col-3 n-students">Nº de Alunos</div>
+                  {escolaEhCEMEI() && (
+                    <div className="col-2 mr-5 type-food">Alunos</div>
+                  )}
+                  <div
+                    className={`${
+                      escolaEhCEMEI() ? "col-2 ml-5 mr-5" : "col-5 mr-4"
+                    } type-food`}
+                  >
+                    Tipo de Alimentação
+                  </div>
+                  <div
+                    className={`${
+                      escolaEhCEMEI() ? "col-2 pl-4 ml-5" : "col-3 pl-2"
+                    } n-students`}
+                  >
+                    Nº de Alunos
+                  </div>
                 </div>
                 {periodos.map((period, key) => {
                   this.props.change(
@@ -594,7 +677,7 @@ class FoodSuspensionEditor extends Component {
                     <FormSection key={key} name={`suspensoes_${period.nome}`}>
                       <div className="form-row">
                         <Field component={"input"} type="hidden" name="value" />
-                        <div className="form-check col-md-3 mr-4">
+                        <div className="form-check col-md-3 mr-3">
                           <div
                             className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
                           >
@@ -605,14 +688,56 @@ class FoodSuspensionEditor extends Component {
                                 name="check"
                               />
                               <span
-                                onClick={() => this.onCheckInput(key)}
+                                onClick={() => this.onCheckInput(key)} //
                                 className="checkbox-custom"
                               />{" "}
                               {period.nome}
                             </label>
                           </div>
                         </div>
-                        <div className="form-group col-md-5 mr-5">
+                        {escolaEhCEMEI() && (
+                          <div className="form-group col-md-3 mr-3">
+                            <div
+                              className={
+                                checkMap[period.nome]
+                                  ? "multiselect-wrapper-enabled"
+                                  : "multiselect-wrapper-disabled"
+                              }
+                            >
+                              <Field
+                                component={MultiSelect}
+                                name="alunos_cei_ou_emei"
+                                options={period.alunos || []}
+                                onChange={values =>
+                                  this.handleSelectedChangedAlunos(
+                                    values,
+                                    period
+                                  )
+                                }
+                                disableSearch={true}
+                                overrideStrings={{
+                                  selectSomeItems: "Selecione",
+                                  allItemsAreSelected:
+                                    period.alunos && period.alunos.length === 1
+                                      ? `${period.alunos[0].value}`
+                                      : "Todos os Alunos selecionados",
+                                  selectAll: "Todos"
+                                }}
+                                hasSelectAll={
+                                  period.alunos && period.alunos.length !== 1
+                                }
+                                nomeDoItemNoPlural="Alunos"
+                                required
+                                validate={period.validador}
+                              />
+                            </div>
+                          </div>
+                        )}
+                        <div
+                          className={`form-group ${
+                            escolaEhCEMEI() ? "col-md-3" : "col-md-5"
+                          } mr-3`}
+                        >
                           <div
                             className={
                               checkMap[period.nome]
@@ -637,7 +762,7 @@ class FoodSuspensionEditor extends Component {
                                   "Todos os itens estão selecionados",
                                 selectAll: "Todos"
                               }}
-                              nomeDoItemNoPlural="Tipos de alimentação"
+                              nomeDoItemNoPlural="Tipos"
                               required
                               validate={period.validador}
                             />
@@ -721,6 +846,7 @@ const selector = formValueSelector("foodSuspension");
 const mapStateToProps = state => {
   return {
     initialValues: state.suspensaoDeAlimentacao.data,
+    observacao: selector(state, "observacao"),
     suspensoes_MANHA: selector(state, "suspensoes_MANHA"),
     suspensoes_TARDE: selector(state, "suspensoes_TARDE"),
     suspensoes_NOITE: selector(state, "suspensoes_NOITE"),
