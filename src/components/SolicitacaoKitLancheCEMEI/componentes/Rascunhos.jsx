@@ -11,12 +11,7 @@ export class Rascunhos extends Component {
     } = this.props;
     const cardsRascunhos = rascunhosSolicitacoesKitLanche.map(
       solicitacaoKitLanche => {
-        const {
-          uuid,
-          id_externo,
-          local,
-          quantidade_alunos
-        } = solicitacaoKitLanche;
+        const { uuid, id_externo, local } = solicitacaoKitLanche;
         let backgroundColor = "#DADADA";
         return (
           <div className="draft card border rounded mt-3 p-3" key={id_externo}>
@@ -33,8 +28,8 @@ export class Rascunhos extends Component {
               <div className="ml-3">
                 <div>
                   <label>
-                    Data do evento: <b>{solicitacaoKitLanche.data}</b> Local do
-                    passeio: <b>{local}</b>
+                    Data do evento: <b>{solicitacaoKitLanche.data}</b>
+                    <br /> Local do passeio: <b>{local}</b>
                   </label>
                   <div className="icon-draft-card float-right">
                     Salvo em: {solicitacaoKitLanche.criado_em}
@@ -53,7 +48,7 @@ export class Rascunhos extends Component {
                   </div>
                 </div>
                 <label>
-                  Nº de Alunos participantes: <b>{quantidade_alunos}</b>
+                  <b>{solicitacaoKitLanche.alunos_cei_e_ou_emei}</b>
                 </label>
               </div>
             </div>

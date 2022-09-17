@@ -3,18 +3,11 @@ import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import Select from "components/Shareable/Select";
-import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
-import { Collapse } from "react-collapse";
-import {
-  maxLength,
-  maxValue,
-  naoPodeSerZero,
-  required,
-  textAreaRequired
-} from "helpers/fieldValidators";
+import { maxLength, required, textAreaRequired } from "helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
+  deepCopy,
   getError
 } from "helpers/utilities";
 import moment from "moment";
@@ -38,6 +31,14 @@ import {
 } from "services/kitLanche";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Rascunhos } from "./componentes/Rascunhos";
+import {
+  AlunosDietaEspecial,
+  Kits,
+  QuantidadeAlunosEMEI,
+  TabelaFaixasEtariasCEI,
+  TempoPasseio
+} from "./componentes";
+import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
 
 export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
   const {
@@ -51,20 +52,53 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
   const [erroRascunhos, setErroRascunhos] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [collapseAlunos, setCollapseAlunos] = useState(false);
+  const [faixasEtariasCEI, setFaixasEtariasCEI] = useState(null);
 
   useEffect(() => {
     getRascunhos();
   }, []);
 
   const formataSubmit = values => {
-    if (values.solicitacao_cei === null) {
+    if (values.alunos_cei_e_ou_emei === "EMEI") {
+      delete values.solicitacao_cei;
+    } else if (values.alunos_cei_e_ou_emei === "CEI") {
+      delete values.solicitacao_emei;
+    }
+
+    if (
+      values.solicitacao_cei === null ||
+      JSON.stringify(values.solicitacao_cei) === "{}" ||
+      JSON.stringify(values.solicitacao_cei) === '{"faixas_quantidades":{}}'
+    ) {
+      delete values.solicitacao_cei;
+    } else if (
+      values.solicitacao_cei &&
+      values.solicitacao_cei.faixas_quantidades &&
+      values.solicitacao_cei.faixas_quantidades.length === 0
+    ) {
       delete values.solicitacao_cei;
     } else if (values.solicitacao_cei) {
       delete values.solicitacao_cei.solicitacao_kit_lanche_cemei;
+      const faixasQuantidades = [];
+      Object.keys(values.solicitacao_cei.faixas_quantidades).forEach(
+        faixa_uuid => {
+          faixasQuantidades.push({
+            faixa_etaria: faixa_uuid,
+            quantidade_alunos:
+              values.solicitacao_cei.faixas_quantidades[faixa_uuid],
+            matriculados_quando_criado: faixasEtariasCEI.find(
+              faixa => faixa.faixa_etaria.uuid === faixa_uuid
+            ).count
+          });
+        }
+      );
+      values.solicitacao_cei.faixas_quantidades = faixasQuantidades;
     }
 
-    if (values.solicitacao_emei === null) {
+    if (
+      values.solicitacao_emei === null ||
+      JSON.stringify(values.solicitacao_emei) === "{}"
+    ) {
       delete values.solicitacao_emei;
     } else if (values.solicitacao_emei) {
       delete values.solicitacao_emei.solicitacao_kit_lanche_cemei;
@@ -72,9 +106,30 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     return values;
   };
 
+  const getAlunosPorFaixaEtariaNumaDataAsync = async data => {
+    const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
+      p => p.nome === "INTEGRAL"
+    );
+    const response = await getAlunosPorFaixaEtariaNumaData(
+      periodo.uuid,
+      data
+        .split("/")
+        .reverse()
+        .join("-")
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFaixasEtariasCEI(response.data.results);
+    } else {
+      toastError("Faixas etárias indisponíveis");
+    }
+  };
+
   const onSubmit = async (values, form) => {
-    if (!values.uuid) {
-      const response = await createSolicitacaoKitLancheCEMEI(values);
+    const values_ = deepCopy(values);
+    if (!values_.uuid) {
+      const response = await createSolicitacaoKitLancheCEMEI(
+        formataSubmit(values_)
+      );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
           iniciarPedido(response.data.uuid, form);
@@ -87,12 +142,12 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
       }
     } else {
       const response = await updateSolicitacaoKitLancheCEMEI(
-        values.uuid,
-        formataSubmit(values)
+        values_.uuid,
+        formataSubmit(values_)
       );
       if (response.status === HTTP_STATUS.OK) {
-        if (values.status === STATUS_DRE_A_VALIDAR) {
-          iniciarPedido(values.uuid, form);
+        if (values_.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(values_.uuid, form);
         } else {
           toastSuccess("Rascunho atualizado com sucesso");
         }
@@ -136,8 +191,30 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     }
   };
 
+  const buildFaixas = (form, solicitacao_kit_lanche) => {
+    if (solicitacao_kit_lanche.solicitacao_cei) {
+      const faixasQuantidades = {};
+      solicitacao_kit_lanche.solicitacao_cei.faixas_quantidades.forEach(
+        faixa_quantidade => {
+          faixasQuantidades[faixa_quantidade.faixa_etaria.uuid] =
+            faixa_quantidade.quantidade_alunos;
+        }
+      );
+      form.change(`solicitacao_cei.faixas_quantidades`, faixasQuantidades);
+    }
+  };
+
   const carregarRascunho = async (form, values, solicitacao) => {
-    form.initialize(solicitacao);
+    //form.initialize(solicitacao);
+    form.change("data", solicitacao.data);
+    form.change("local", solicitacao.local);
+    form.change("alunos_cei_e_ou_emei", solicitacao.alunos_cei_e_ou_emei);
+    form.change("escola", solicitacao.escola);
+    form.change("uuid", solicitacao.uuid);
+    form.change("solicitacao_cei", solicitacao.solicitacao_cei || {});
+    form.change("solicitacao_emei", solicitacao.solicitacao_emei || {});
+    form.change("id_externo", solicitacao.id_externo);
+    buildFaixas(form, solicitacao);
     form.change("observacao", solicitacao.observacao);
   };
 
@@ -152,6 +229,9 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     form.change("alunos_cei_e_ou_emei", undefined);
     form.change("solicitacao_emei", {});
     form.change("solicitacao_cei", {});
+    form.change("observacao", undefined);
+    form.change("id_externo", undefined);
+    form.change("uuid", undefined);
   };
 
   const validaDiasUteis = value => {
@@ -185,8 +265,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
       <Form
         keepDirtyOnReinitialize
         initialValues={{
-          escola: meusDados.vinculo_atual.instituicao.uuid,
-          solicitacao_emei: {}
+          escola: meusDados.vinculo_atual.instituicao.uuid
         }}
         onSubmit={onSubmit}
       >
@@ -227,7 +306,17 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     <OnChange name={`data`}>
                       {value => {
                         if (value) {
+                          if (!values.solicitacao_cei) {
+                            values.solicitacao_cei = {
+                              faixas_quantidades: {}
+                            };
+                          }
+                          if (!values.solicitacao_emei) {
+                            values.solicitacao_emei = {};
+                          }
+
                           validaDiasUteis(value);
+                          getAlunosPorFaixaEtariaNumaDataAsync(value);
                         }
                       }}
                     </OnChange>
@@ -246,6 +335,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   <div className="col-3">
                     <Field
                       component={Select}
+                      disabled={!values.data}
                       label="Alunos"
                       name="alunos_cei_e_ou_emei"
                       options={[
@@ -258,232 +348,57 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     />
                   </div>
                 </div>
+                {["TODOS", "CEI"].includes(values.alunos_cei_e_ou_emei) && (
+                  <>
+                    <div className="alunos-label mt-3">Alunos CEI</div>
+                    <TempoPasseio
+                      name="solicitacao_cei.tempo_passeio"
+                      nameKits="solicitacao_cei.kits"
+                      form={form}
+                    />
+                    <Kits
+                      name="solicitacao_cei.kits"
+                      nameTempoPasseio="solicitacao_cei.tempo_passeio"
+                      form={form}
+                      kits={kits}
+                      values={values}
+                    />
+                    {faixasEtariasCEI &&
+                      values.solicitacao_cei.faixas_quantidades && (
+                        <TabelaFaixasEtariasCEI
+                          faixasEtariasCEI={faixasEtariasCEI}
+                          values={values}
+                        />
+                      )}
+                    <AlunosDietaEspecial
+                      alunosComDietaEspecial={alunosComDietaEspecial.filter(
+                        aluno => ["1", "2", "3", "4"].includes(aluno.serie)
+                      )}
+                    />
+                  </>
+                )}
                 {["TODOS", "EMEI"].includes(values.alunos_cei_e_ou_emei) && (
                   <>
                     <div className="alunos-label mt-3">Alunos EMEI</div>
-                    <div className="tour-time">
-                      <div className="label mt-3 mb-3">
-                        Tempo previsto do passeio
-                      </div>
-                      <div className="d-inline-flex">
-                        <label className="container-radio">
-                          até 4 horas (1 Kit)
-                          <Field
-                            component="input"
-                            type="radio"
-                            value="0"
-                            data-cy="radio-4h"
-                            name="solicitacao_emei.tempo_passeio"
-                            validate={required}
-                          />
-                          <span className="checkmark" />
-                        </label>
-                        <label className="container-radio">
-                          de 5 a 7 horas (2 Kits)
-                          <Field
-                            component="input"
-                            type="radio"
-                            value="1"
-                            data-cy="radio-5-7h"
-                            name="solicitacao_emei.tempo_passeio"
-                            validate={required}
-                          />
-                          <span className="checkmark" />
-                        </label>
-                        <label className="container-radio">
-                          8 horas ou mais (3 Kits)
-                          <Field
-                            component={"input"}
-                            type="radio"
-                            value="2"
-                            data-cy="radio-8h"
-                            name="solicitacao_emei.tempo_passeio"
-                            validate={required}
-                          />
-                          <span className="checkmark" />
-                        </label>
-                      </div>
-                      <OnChange name="solicitacao_emei.tempo_passeio">
-                        {(value, previous) => {
-                          if (
-                            value &&
-                            previous &&
-                            parseInt(value) < parseInt(previous)
-                          ) {
-                            form.change("solicitacao_emei.kits", undefined);
-                          }
-                        }}
-                      </OnChange>
-                      <div className="row">
-                        <div className="col-12">
-                          <div className="explanation border rounded mt-3 p-3">
-                            <label>
-                              <b>Até 4 horas:</b> 1 Kit lanche/aluno: Escolher 1
-                              Kit entre os modelos estabelecidos
-                              contratualmente;
-                            </label>
-                            <br />
-                            <label>
-                              <b>De 5 a 7 horas:</b> 2 Kit lanche/aluno:
-                              Escolher 2 Kits distintos entre os modelos
-                              estabelecidos contratualmente;
-                            </label>
-                            <br />
-                            <label>
-                              <b>8 horas ou mais:</b> 3 Kit lanche/aluno:
-                              Escolher 3 Kits distintos entre os modelos
-                              estabelecidos contratualmente;
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="label mt-3">Selecione a opção desejada</div>
-                    <div className="row mt-3">
-                      {kits
-                        .filter(kit => kit.status === "Ativo")
-                        .map((kit, indice) => {
-                          return (
-                            <div
-                              className={`col-2 offset-${
-                                indice % 3 === 0 ? "1" : "2"
-                              } mt-3 d-flex`}
-                              key={indice}
-                            >
-                              <div className="card card-kits w-100">
-                                <div className="card-body p-2">
-                                  <div className="row">
-                                    <div className="col-6">
-                                      <span className="nome-kit">
-                                        {kit.nome}
-                                      </span>
-                                    </div>
-                                    <div className="col-6 form-check">
-                                      <Field
-                                        component={"input"}
-                                        type="checkbox"
-                                        required
-                                        validate={required}
-                                        value={kit.uuid}
-                                        className="float-right"
-                                        name="solicitacao_emei.kits"
-                                        disabled={
-                                          !values.solicitacao_emei
-                                            .tempo_passeio ||
-                                          (values.solicitacao_emei.kits &&
-                                            values.solicitacao_emei.kits
-                                              .length ===
-                                              parseInt(
-                                                values.solicitacao_emei
-                                                  .tempo_passeio
-                                              ) +
-                                                1 &&
-                                            !values.solicitacao_emei.kits.includes(
-                                              kit.uuid
-                                            ))
-                                        }
-                                      />
-                                      <span className="checkmark" />
-                                    </div>
-                                    <div className="col-12 kit-itens mt-3">
-                                      <div
-                                        dangerouslySetInnerHTML={{
-                                          __html: kit.descricao
-                                        }}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                    <table className="faixas-etarias-cei mt-3">
-                      <thead>
-                        <tr className="row">
-                          <th className="col-8 my-auto">
-                            <Field
-                              component="input"
-                              type="hidden"
-                              defaultValue={
-                                meusDados.vinculo_atual.instituicao
-                                  .quantidade_alunos_emei_da_cemei
-                              }
-                              name="solicitacao_emei.matriculados_quando_criado"
-                            />
-                            Alunos matriculados:{" "}
-                            <span className="font-weight-normal">
-                              {
-                                meusDados.vinculo_atual.instituicao
-                                  .quantidade_alunos_emei_da_cemei
-                              }
-                            </span>
-                          </th>
-                          <th className="col-4 d-flex justify-content-center">
-                            <span className="my-auto">Quantidade</span>
-                            <Field
-                              className="ml-3"
-                              component={InputText}
-                              type="number"
-                              name="solicitacao_emei.quantidade_alunos"
-                              validate={composeValidators(
-                                naoPodeSerZero,
-                                maxValue(
-                                  meusDados.vinculo_atual.instituicao
-                                    .quantidade_alunos_emei_da_cemei
-                                ),
-                                required
-                              )}
-                            />
-                          </th>
-                        </tr>
-                      </thead>
-                    </table>
-                    <div className="label mt-3">
-                      Selecionar alunos com dieta especial
-                    </div>
-                    <div className="card card-history mt-3 seletor-alunos-dieta-especial">
-                      <div className="card-header">
-                        <div className="row">
-                          <div className="col-2">{"Código EOL"}</div>
-                          <div className="col-8">{"Nome do Aluno"}</div>
-                          <div className="pl-5 col-1">
-                            <ToggleExpandir
-                              onClick={() => setCollapseAlunos(!collapseAlunos)}
-                              ativo={!collapseAlunos}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <Collapse isOpened={collapseAlunos}>
-                        <table className="table">
-                          <tbody>
-                            {alunosComDietaEspecial
-                              .filter(
-                                aluno =>
-                                  !["1", "2", "3", "4"].includes(aluno.serie)
-                              )
-                              .map((aluno, key) => {
-                                return (
-                                  <tr key={key}>
-                                    <td>
-                                      <Field
-                                        component="input"
-                                        type="checkbox"
-                                        value={aluno.uuid}
-                                        name="solicitacao_emei.alunos_com_dieta_especial_participantes"
-                                      />
-                                    </td>
-                                    <td>{aluno.codigo_eol}</td>
-                                    <td>{aluno.nome}</td>
-                                  </tr>
-                                );
-                              })}
-                          </tbody>
-                        </table>
-                      </Collapse>
-                    </div>
+                    <TempoPasseio
+                      name="solicitacao_emei.tempo_passeio"
+                      nameKits="solicitacao_emei.kits"
+                      form={form}
+                      ehEMEI
+                    />
+                    <Kits
+                      name="solicitacao_emei.kits"
+                      nameTempoPasseio="solicitacao_emei.tempo_passeio"
+                      form={form}
+                      kits={kits}
+                      values={values}
+                    />
+                    <QuantidadeAlunosEMEI meusDados={meusDados} />
+                    <AlunosDietaEspecial
+                      alunosComDietaEspecial={alunosComDietaEspecial.filter(
+                        aluno => !["1", "2", "3", "4"].includes(aluno.serie)
+                      )}
+                    />
                   </>
                 )}
                 <Field
@@ -492,7 +407,6 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   name="observacao"
                   required
                   validate={textAreaRequired}
-                  valorInicial={values.observacao || "<p></p>"}
                   className="form-control"
                 />
                 <hr />
