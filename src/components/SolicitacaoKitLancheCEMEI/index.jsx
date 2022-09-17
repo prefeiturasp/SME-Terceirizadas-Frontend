@@ -39,6 +39,7 @@ import {
   TempoPasseio
 } from "./componentes";
 import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
+import { formataSubmit, getNumeroTotalKits } from "./helpers";
 
 export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
   const {
@@ -57,54 +58,6 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
   useEffect(() => {
     getRascunhos();
   }, []);
-
-  const formataSubmit = values => {
-    if (values.alunos_cei_e_ou_emei === "EMEI") {
-      delete values.solicitacao_cei;
-    } else if (values.alunos_cei_e_ou_emei === "CEI") {
-      delete values.solicitacao_emei;
-    }
-
-    if (
-      values.solicitacao_cei === null ||
-      JSON.stringify(values.solicitacao_cei) === "{}" ||
-      JSON.stringify(values.solicitacao_cei) === '{"faixas_quantidades":{}}'
-    ) {
-      delete values.solicitacao_cei;
-    } else if (
-      values.solicitacao_cei &&
-      values.solicitacao_cei.faixas_quantidades &&
-      values.solicitacao_cei.faixas_quantidades.length === 0
-    ) {
-      delete values.solicitacao_cei;
-    } else if (values.solicitacao_cei) {
-      delete values.solicitacao_cei.solicitacao_kit_lanche_cemei;
-      const faixasQuantidades = [];
-      Object.keys(values.solicitacao_cei.faixas_quantidades).forEach(
-        faixa_uuid => {
-          faixasQuantidades.push({
-            faixa_etaria: faixa_uuid,
-            quantidade_alunos:
-              values.solicitacao_cei.faixas_quantidades[faixa_uuid],
-            matriculados_quando_criado: faixasEtariasCEI.find(
-              faixa => faixa.faixa_etaria.uuid === faixa_uuid
-            ).count
-          });
-        }
-      );
-      values.solicitacao_cei.faixas_quantidades = faixasQuantidades;
-    }
-
-    if (
-      values.solicitacao_emei === null ||
-      JSON.stringify(values.solicitacao_emei) === "{}"
-    ) {
-      delete values.solicitacao_emei;
-    } else if (values.solicitacao_emei) {
-      delete values.solicitacao_emei.solicitacao_kit_lanche_cemei;
-    }
-    return values;
-  };
 
   const getAlunosPorFaixaEtariaNumaDataAsync = async data => {
     const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
@@ -128,7 +81,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     const values_ = deepCopy(values);
     if (!values_.uuid) {
       const response = await createSolicitacaoKitLancheCEMEI(
-        formataSubmit(values_)
+        formataSubmit(values_, faixasEtariasCEI)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -143,7 +96,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     } else {
       const response = await updateSolicitacaoKitLancheCEMEI(
         values_.uuid,
-        formataSubmit(values_)
+        formataSubmit(values_, faixasEtariasCEI)
       );
       if (response.status === HTTP_STATUS.OK) {
         if (values_.status === STATUS_DRE_A_VALIDAR) {
@@ -401,6 +354,9 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     />
                   </>
                 )}
+                <div className="label mt-5 mb-5">
+                  Número total de kits: <b>{getNumeroTotalKits(values)}</b>
+                </div>
                 <Field
                   component={TextAreaWYSIWYG}
                   label="Observações"
