@@ -181,7 +181,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     form.change("local", undefined);
     form.change("alunos_cei_e_ou_emei", undefined);
     form.change("solicitacao_emei", {});
-    form.change("solicitacao_cei", {});
+    form.change("solicitacao_cei", { faixas_quantidades: {} });
     form.change("observacao", undefined);
     form.change("id_externo", undefined);
     form.change("uuid", undefined);
