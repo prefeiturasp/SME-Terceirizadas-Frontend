@@ -282,7 +282,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
-          iniciarPedido(
+          iniciarPedidoInclusaoContinua(
             response.data.uuid,
             TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
             form
@@ -413,7 +413,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     fields.map((name, index) => (
                       <div key={name}>
                         <div className="row">
-                          <div className="col-8">
+                          <div className="col-6">
                             <Field
                               component={Select}
                               name={`${name}.motivo`}

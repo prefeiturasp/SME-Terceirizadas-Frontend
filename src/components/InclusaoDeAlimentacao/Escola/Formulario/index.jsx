@@ -346,7 +346,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     fields.map((name, index) => (
                       <div key={name}>
                         <div className="row">
-                          <div className="col-8">
+                          <div className="col-6">
                             <Field
                               component={Select}
                               name={`${name}.motivo`}
