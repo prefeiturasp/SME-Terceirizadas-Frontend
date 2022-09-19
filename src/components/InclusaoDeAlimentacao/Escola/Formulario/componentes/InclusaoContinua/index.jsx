@@ -330,6 +330,8 @@ export const RecorrenciaTabela = ({ form, values, periodos, meusDados }) => {
                             <span
                               key={key}
                               className={
+                                values.quantidades_periodo[indice]
+                                  .dias_semana &&
                                 values.quantidades_periodo[
                                   indice
                                 ].dias_semana.includes(day.value)
