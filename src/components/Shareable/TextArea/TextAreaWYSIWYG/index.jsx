@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import strip_tags from "locutus/php/strings/strip_tags";
 import PropTypes from "prop-types";
 import {
   ContentState,
@@ -50,6 +51,7 @@ export class TextAreaWYSIWYG extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const inputSemTags = strip_tags(this.props.input.value);
     if (this.props.valorInicial !== prevProps.valorInicial) {
       this.setState({
         editorState: EditorState.createWithContent(
@@ -63,7 +65,7 @@ export class TextAreaWYSIWYG extends Component {
       !["<p></p>\n", "<p></p>", null].includes(this.props.input.value)
     ) {
       let editor = EditorState.createEmpty();
-      if (this.props.input.value !== "") {
+      if (this.props.input.value !== "" && inputSemTags !== "&nbsp;\n") {
         editor = EditorState.moveFocusToEnd(
           EditorState.createWithContent(
             ContentState.createFromBlockArray(

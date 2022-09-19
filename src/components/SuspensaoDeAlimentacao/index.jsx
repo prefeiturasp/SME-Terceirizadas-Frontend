@@ -425,6 +425,9 @@ class FoodSuspensionEditor extends Component {
     const error = validateSubmit(values, this.props.meusDados);
     values.quantidades_por_periodo = values.suspensoes;
     values.suspensoes_alimentacao = values.dias_razoes;
+    if (values.observacao === null) {
+      values.observacao = "<p></p>\n";
+    }
     const status = values.status;
     delete values.status;
     if (!error) {
