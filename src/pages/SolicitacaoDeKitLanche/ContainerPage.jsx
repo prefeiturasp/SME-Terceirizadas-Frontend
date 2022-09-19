@@ -55,7 +55,7 @@ export class PainelPedidosBase extends React.Component {
       titulo: "Kit Lanche Passeio"
     };
     return (
-      <Page titulo={atual.titulo}>
+      <Page titulo={atual.titulo} botaoVoltar>
         <Breadcrumb home={HOME} atual={atual} />
         {this.props.VISAO === ESCOLA && !escolaEhCEMEI() && meusDados && (
           <Container meusDados={meusDados} />
