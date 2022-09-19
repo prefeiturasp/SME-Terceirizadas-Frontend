@@ -7,7 +7,11 @@ import {
   getInclusaoCEMEIRascunhos,
   iniciaFluxoInclusaoAlimentacaoCEMEI,
   deleteInclusaoDeAlimentacaoCEMEI,
-  updateInclusaoAlimentacaoCEMEI
+  updateInclusaoAlimentacaoCEMEI,
+  createInclusaoAlimentacao,
+  updateInclusaoAlimentacao,
+  iniciaFluxoInclusaoAlimentacao,
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
@@ -36,6 +40,14 @@ import {
 } from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoNormal";
 import { PeriodosCEIeouEMEI } from "./componentes/InclusaoNormal";
 import { formataInclusaoCEMEI, validarSubmit } from "./helpers";
+import {
+  DatasInclusaoContinua,
+  Recorrencia,
+  RecorrenciaTabela
+} from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoContinua";
+import { TIPO_SOLICITACAO } from "constants/shared";
+import { validarSubmissaoContinua } from "components/InclusaoDeAlimentacao/validacao";
+import { formatarSubmissaoSolicitacaoContinua } from "components/InclusaoDeAlimentacao/helper";
 
 export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -45,9 +57,11 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const {
     meusDados,
     motivosSimples,
+    motivosContinuos,
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
+    periodosInclusaoContinua,
     vinculos
   } = props;
 
@@ -72,6 +86,16 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     );
   };
 
+  const motivoContinuoSelecionado = values => {
+    return (
+      values.inclusoes &&
+      values.inclusoes[0].motivo &&
+      motivosContinuos.find(
+        motivo => motivo.uuid === values.inclusoes[0].motivo
+      )
+    );
+  };
+
   const outroMotivoSelecionado = (values, index) => {
     return (
       values.inclusoes &&
@@ -87,9 +111,19 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   };
 
   const getRascunhos = async () => {
-    const response = await getInclusaoCEMEIRascunhos();
-    if (response.status === HTTP_STATUS.OK) {
-      setRascunhos(response.data.results);
+    const responseRascunhosNormais = await getInclusaoCEMEIRascunhos();
+    const responseRascunhosContinuas = await obterMinhasSolicitacoesDeInclusaoDeAlimentacao(
+      TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+    );
+    if (
+      responseRascunhosNormais.status === HTTP_STATUS.OK &&
+      responseRascunhosContinuas.status === HTTP_STATUS.OK
+    ) {
+      setRascunhos(
+        responseRascunhosNormais.data.results.concat(
+          responseRascunhosContinuas.data.results
+        )
+      );
     } else {
       setErroRascunhos(true);
     }
@@ -109,11 +143,35 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
+  const carregarRascunhoContinuo = async (form, values, inclusao_) => {
+    const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
+    quantidades_periodo_.forEach(qp => {
+      qp.dias_semana = qp.dias_semana.map(String);
+      qp.periodo_escolar = qp.periodo_escolar.uuid;
+      qp.tipos_alimentacao = qp.tipos_alimentacao.map(t => t.uuid);
+      delete qp.grupo_inclusao_normal;
+      delete qp.inclusao_alimentacao_continua;
+    });
+
+    await form.change("inclusoes", [
+      {
+        motivo: inclusao_.motivo.uuid,
+        data_inicial: inclusao_.data_inicial,
+        data_final: inclusao_.data_final
+      }
+    ]);
+    await form.change("quantidades_periodo", quantidades_periodo_);
+  };
+
   const carregarRascunho = async (form, values, inclusao) => {
     await form.change("uuid", inclusao.uuid);
     await form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
-    carregarRascunhoNormal(form, values, inclusao_);
+    if (inclusao_.dias_motivos_da_inclusao_cemei) {
+      carregarRascunhoNormal(form, inclusao_);
+    } else {
+      carregarRascunhoContinuo(form, values, inclusao_);
+    }
   };
 
   const buildFaixas = (values, inclusao) => {
@@ -138,7 +196,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     });
   };
 
-  const carregarRascunhoNormal = async (form, values, inclusao_) => {
+  const carregarRascunhoNormal = async (form, inclusao_) => {
     const periodos_ = deepCopy(periodos);
     inclusao_.dias_motivos_da_inclusao_cemei.forEach(i => {
       i.motivo = i.motivo.uuid;
@@ -164,16 +222,20 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
-  const onSubmit = async (values, form) => {
-    const values_ = deepCopy(values);
-    const erro = validarSubmit(values_);
-    if (erro) {
-      toastError(erro);
-      return;
+  const iniciarPedidoInclusaoContinua = async (uuid, tipoInclusao, form) => {
+    const response = await iniciaFluxoInclusaoAlimentacao(uuid, tipoInclusao);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Inclusão de Alimentação enviada com sucesso!");
+      refresh(form);
+    } else {
+      toastError(getError(response.data));
     }
-    if (!values_.uuid) {
+  };
+
+  const fluxoInclusaoNormal = async (values, form) => {
+    if (!values.uuid) {
       const response = await createInclusaoAlimentacaoCEMEI(
-        formataInclusaoCEMEI(values_, vinculos)
+        formataInclusaoCEMEI(values, vinculos)
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -188,7 +250,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     } else {
       const response = await updateInclusaoAlimentacaoCEMEI(
         values.uuid,
-        formataInclusaoCEMEI(values_, vinculos)
+        formataInclusaoCEMEI(values, vinculos)
       );
       if (response.status === HTTP_STATUS.OK) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
@@ -200,6 +262,69 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       } else {
         toastError(getError(response.data));
       }
+    }
+  };
+
+  const fluxoInclusaoContinua = async (values, form) => {
+    if (!values.uuid) {
+      const response = await createInclusaoAlimentacao(
+        formatarSubmissaoSolicitacaoContinua(values),
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      );
+      if (response.status === HTTP_STATUS.CREATED) {
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(
+            response.data.uuid,
+            TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
+            form
+          );
+        } else {
+          toastSuccess("Solicitação Rascunho criada com sucesso!");
+        }
+        refresh(form);
+      } else {
+        toastError(getError(response.data));
+      }
+    } else {
+      const response = await updateInclusaoAlimentacao(
+        values.uuid,
+        formatarSubmissaoSolicitacaoContinua(values),
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedidoInclusaoContinua(
+            values.uuid,
+            TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
+            form
+          );
+        } else {
+          toastSuccess("Rascunho atualizado com sucesso");
+        }
+        refresh(form);
+      } else {
+        toastError(getError(response.data));
+      }
+    }
+  };
+
+  const onSubmit = async (values, form) => {
+    const values_ = deepCopy(values);
+    const tipoSolicitacao = motivoSimplesSelecionado(values)
+      ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+      : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+    const erro =
+      tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        ? validarSubmit(values_)
+        : validarSubmissaoContinua(values, meusDados);
+    if (erro) {
+      toastError(erro);
+      return;
+    }
+    if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL) {
+      fluxoInclusaoNormal(values_, form);
+    } else {
+      fluxoInclusaoContinua(values_, form);
     }
   };
 
@@ -284,7 +409,13 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               component={Select}
                               name={`${name}.motivo`}
                               label="Motivo"
-                              options={agregarDefault(motivosSimples)}
+                              options={
+                                values.inclusoes.length > 1
+                                  ? agregarDefault(motivosSimples)
+                                  : agregarDefault(motivosSimples).concat(
+                                      motivosContinuos
+                                    )
+                              }
                               required
                               validate={required}
                               naoDesabilitarPrimeiraOpcao
@@ -301,6 +432,15 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                                   form.change("quantidades_periodo", periodos);
                                   form.change("reload", !values.reload);
                                 }
+                                if (
+                                  value &&
+                                  motivosContinuos.find(
+                                    motivo => motivo.uuid === value
+                                  )
+                                ) {
+                                  form.change("quantidades_periodo", undefined);
+                                  form.change("reload", !values.reload);
+                                }
                               }}
                             </OnChange>
                           </div>
@@ -312,6 +452,15 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               index={index}
                               proximosDoisDiasUteis={proximosDoisDiasUteis}
                               form={form}
+                            />
+                          )}
+                          {motivoContinuoSelecionado(values) && (
+                            <DatasInclusaoContinua
+                              onDataChanged={onDataChanged}
+                              index={index}
+                              name={name}
+                              proximosDoisDiasUteis={proximosDoisDiasUteis}
+                              values={values}
                             />
                           )}
                         </div>
@@ -341,6 +490,27 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     )}
                   </>
                 )}
+                {motivoContinuoSelecionado(values) && (
+                  <>
+                    <Recorrencia
+                      values={values}
+                      form={form}
+                      periodos={periodosInclusaoContinua}
+                      push={push}
+                      meusDados={meusDados}
+                    />
+                    {values.quantidades_periodo && (
+                      <div className="mt-5">
+                        <RecorrenciaTabela
+                          values={values}
+                          periodos={periodosInclusaoContinua}
+                          form={form}
+                          meusDados={meusDados}
+                        />
+                      </div>
+                    )}
+                  </>
+                )}
                 <div className="row float-right mt-4">
                   <div className="col-12">
                     <Botao
@@ -361,7 +531,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     />
                     <Botao
                       texto="Enviar inclusão"
-                      type={BUTTON_TYPE.SUBMIT}
+                      type={BUTTON_TYPE.BUTTON}
                       disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;

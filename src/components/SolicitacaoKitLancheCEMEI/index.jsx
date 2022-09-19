@@ -385,7 +385,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     />
                     <Botao
                       texto="Enviar"
-                      type={BUTTON_TYPE.SUBMIT}
+                      type={BUTTON_TYPE.BUTTON}
                       disabled={submitting}
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
