@@ -11,7 +11,8 @@ import {
   createInclusaoAlimentacao,
   updateInclusaoAlimentacao,
   iniciaFluxoInclusaoAlimentacao,
-  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao,
+  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
@@ -129,9 +130,17 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
-  const removerRascunho = async (id_externo, uuid, form) => {
+  const removerRascunho = async (id_externo, uuid, tipoSolicitacao, form) => {
     if (window.confirm("Deseja remover este rascunho?")) {
-      const response = await deleteInclusaoDeAlimentacaoCEMEI(uuid);
+      let response = "";
+      if (tipoSolicitacao) {
+        response = await escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+          uuid,
+          tipoSolicitacao
+        );
+      } else {
+        response = await deleteInclusaoDeAlimentacaoCEMEI(uuid);
+      }
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
         refresh(form);

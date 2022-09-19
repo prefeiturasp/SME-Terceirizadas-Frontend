@@ -1,5 +1,6 @@
 import React from "react";
 import "components/Shareable/style.scss";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export const Rascunhos = ({
   rascunhosInclusaoDeAlimentacao,
@@ -28,7 +29,18 @@ export const Rascunhos = ({
             </div>
             <div className="icon-draft-card float-right">
               Criado em: {inclusaoDeAlimentacao.criado_em}
-              <span onClick={() => removerRascunho(id_externo, uuid, form)}>
+              <span
+                onClick={() =>
+                  removerRascunho(
+                    id_externo,
+                    uuid,
+                    inclusaoDeAlimentacao.quantidades_periodo
+                      ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+                      : null,
+                    form
+                  )
+                }
+              >
                 <i className="fas fa-trash" />
               </span>
               <span
