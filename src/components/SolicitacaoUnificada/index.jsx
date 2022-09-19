@@ -902,7 +902,7 @@ const SolicitacaoUnificada = ({
                     </div>
                     <div className="col-2 mt-3">
                       <Botao
-                        type={BUTTON_TYPE.SUBMIT}
+                        type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN}
                         texto="Enviar"
                         onClick={() => {
