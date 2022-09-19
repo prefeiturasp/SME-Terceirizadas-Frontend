@@ -1,5 +1,7 @@
 import moment from "moment";
+import { format, getYear } from "date-fns";
 import strip_tags from "locutus/php/strings/strip_tags";
+import { ALT_CARDAPIO } from "components/screens/helper";
 
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
@@ -110,6 +112,87 @@ export const naoPodeSerZero = value =>
 
 export const maxValue = max => value =>
   value && value > max ? `Não pode ser maior que ${max}` : undefined;
+
+export const maxValueFrequencia = (max, inputName) => value => {
+  return value && value > max && inputName.includes("frequencia")
+    ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados"
+    : undefined;
+};
+
+export const maxValueLancheRefeicaoSobremesa1Oferta = (
+  max,
+  inputName,
+  solicitacoesAutorizadas,
+  mesAnoConsiderado,
+  dia
+) => value => {
+  const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(
+    mesAnoConsiderado
+  )}`;
+  const existeAlteracaoCardapioRPL =
+    solicitacoesAutorizadas.filter(
+      solicitacao =>
+        solicitacao.tipo_doc === ALT_CARDAPIO &&
+        solicitacao.data_evento === data &&
+        solicitacao.motivo === "RPL - Refeição por Lanche"
+    ).length > 0;
+  const existeAlteracaoCardapioLPR =
+    solicitacoesAutorizadas.filter(
+      solicitacao =>
+        solicitacao.tipo_doc === ALT_CARDAPIO &&
+        solicitacao.data_evento === data &&
+        solicitacao.motivo === "LPR - Lanche por Refeição"
+    ).length > 0;
+
+  if (
+    value &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    [NaN, 0].includes(max) &&
+    (inputName.includes("refeicao") ||
+      inputName.includes("sobremesa") ||
+      inputName.includes("lanche")) &&
+    !inputName.includes("repeticao") &&
+    !inputName.includes("emergencial")
+  ) {
+    return "Frequência acima inválida ou não preenchida";
+  }
+  if (
+    value &&
+    existeAlteracaoCardapioRPL &&
+    inputName.includes("lanche") &&
+    !inputName.includes("emergencial")
+  ) {
+    if (value > 2 * max) {
+      return "Lançamento maior que 2x a frequência de alunos no dia";
+    } else {
+      return undefined;
+    }
+  }
+  if (
+    value &&
+    existeAlteracaoCardapioLPR &&
+    inputName.includes("refeicao") &&
+    !inputName.includes("repeticao")
+  ) {
+    if (value > 2 * max) {
+      return "Lançamento maior que 2x a frequência de alunos no dia";
+    } else {
+      return undefined;
+    }
+  }
+  if (
+    value &&
+    value > max &&
+    (inputName.includes("refeicao") ||
+      inputName.includes("sobremesa") ||
+      inputName.includes("lanche")) &&
+    !inputName.includes("repeticao") &&
+    !inputName.includes("emergencial")
+  ) {
+    return "Lançamento maior que a frequência de alunos no dia";
+  }
+  return undefined;
+};
 
 export const email = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)

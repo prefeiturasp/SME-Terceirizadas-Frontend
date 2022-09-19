@@ -115,9 +115,7 @@ export default ({
                 ? "desativar-borda"
                 : "";
             const icone =
-              ativos && ativos.includes(solicitacao.uuid)
-                ? "angle-up"
-                : "angle-down";
+              ativos && ativos.includes(solicitacao.uuid) ? "minus" : "plus";
             return (
               <>
                 <div className="grid-table body-table">

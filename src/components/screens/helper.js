@@ -7,20 +7,22 @@ import {
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  SUSPENSAO_ALIMENTACAO
+  SUSPENSAO_ALIMENTACAO,
+  SUSPENSAO_ALIMENTACAO_CEI
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { usuarioEhEscola } from "../../helpers/utilities";
 import { STATUS_ALIMENTO } from "./const";
 
-const ALT_CARDAPIO = "ALT_CARDAPIO";
+export const ALT_CARDAPIO = "ALT_CARDAPIO";
 const DIETA_ESP = "DIETA_ESPECIAL";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
 const KIT_LANCHE_AVULSA = "KIT_LANCHE_AVULSA";
 const KIT_LANCHE_UNIFICADA = "KIT_LANCHE_UNIFICADA";
 const SUSP_ALIMENTACAO = "SUSP_ALIMENTACAO";
+const SUSP_ALIMENTACAO_CEI = "SUSP_ALIMENTACAO_CEI";
 const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
 const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
 const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
@@ -112,10 +114,17 @@ export const ajustarFormatoLog = (logs, card) => {
         solicitacao = SUSPENSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
+
+      case SUSP_ALIMENTACAO_CEI:
+        solicitacao = SUSPENSAO_ALIMENTACAO_CEI;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
+        break;
+
       case KIT_LANCHE_UNIFICADA:
         solicitacao = SOLICITACAO_KIT_LANCHE_UNIFICADA;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
+
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;

@@ -59,6 +59,11 @@
         text-align: center;
       }
 
+      .colspan-1 {
+        grid-column: span 1;
+        text-align: center;
+      }
+
       .fas {
         color: #696969;
       }
@@ -81,7 +86,7 @@
       }
 
       .fas {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .expand {
@@ -204,12 +209,12 @@
 
 .dilog {
   .grid-table {
-    grid-template-columns: 0.25fr 1.2fr 2.5fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr;
+    grid-template-columns: 1.2fr 2.5fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr 0.25fr;
   }
 }
 
 .distribuidor {
   .grid-table {
-    grid-template-columns: 0.25fr 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr;
+    grid-template-columns: 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr 1fr 0.25fr;
   }
 }

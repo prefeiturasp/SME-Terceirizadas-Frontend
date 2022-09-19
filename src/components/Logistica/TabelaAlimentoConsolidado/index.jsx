@@ -1,4 +1,5 @@
 import React from "react";
+import "./style.scss";
 
 export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
@@ -11,7 +12,7 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
 
   return (
     <table
-      className={`table table-bordered table-consolidado-alimentos mt-3 ${className}`}
+      className={`table table-bordered table-consolidado-alimentos mt-3 tabela-conferencia-guia ${className}`}
     >
       <thead>
         <tr>
@@ -31,10 +32,18 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
           )}
         </tr>
         <tr>
-          <th scope="col">Quantidade</th>
-          <th scope="col">Capacidade</th>
-          <th scope="col">Quantidade</th>
-          <th scope="col">Capacidade</th>
+          <th className="text-center" scope="col">
+            Quantidade Prevista
+          </th>
+          <th className="header-capacidade text-center" scope="col">
+            Capacidade
+          </th>
+          <th className="text-center" scope="col">
+            Quantidade Prevista
+          </th>
+          <th className="header-capacidade text-center" scope="col">
+            Capacidade
+          </th>
         </tr>
       </thead>
       <tbody>

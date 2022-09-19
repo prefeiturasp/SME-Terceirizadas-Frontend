@@ -92,12 +92,42 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputText}
-                  label="Nº da guia de remessa"
+                  label="Nº da Guia de Remessa"
                   name="numero_guia"
                   placeholder="Digite o número da guia"
                   className="input-busca-produto"
                 />
               </div>
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Nome do Alimento"
+                  name="nome_produto"
+                  placeholder="Digite o nome do alimento"
+                  className="input-busca-produto"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-6">
+                <MultiSelectDistribuidores
+                  className="input-busca-produto"
+                  name="distribuidor"
+                  label="Nome dos Distribuidores"
+                />
+              </div>
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Nome da UE"
+                  name="nome_unidade"
+                  placeholder="Digite o nome da Unidade Educacional"
+                  className="input-busca-produto"
+                  disabled={desabilitarAluno}
+                />
+              </div>
+            </div>
+            <div className="row">
               <div className="col-6">
                 <Field
                   component={Select}
@@ -124,26 +154,21 @@ export default ({
                   className="input-busca-produto"
                 />
               </div>
-            </div>
-            <div className="row">
-              <div className="col">
+              <div className="col-2">
                 <Field
                   component={InputText}
-                  label="Nome do Alimento"
-                  name="nome_produto"
-                  placeholder="Digite o nome do alimento"
+                  label="Cód. CODAE da UE"
+                  name="codigo_unidade"
+                  placeholder="Digite o código"
                   className="input-busca-produto"
                 />
+
+                <OnChange name="codigo_unidade">
+                  {value => {
+                    getNomeUnidadeEscolaDebounced(value, values);
+                  }}
+                </OnChange>
               </div>
-              <div className="col">
-                <MultiSelectDistribuidores
-                  className="input-busca-produto"
-                  name="distribuidor"
-                  label="Nome dos Distribuidores"
-                />
-              </div>
-            </div>
-            <div className="row">
               <div className="col-2">
                 <Field
                   component={InputComData}
@@ -174,31 +199,6 @@ export default ({
                   }
                   maxDate={null}
                   writable
-                />
-              </div>
-              <div className="col-2">
-                <Field
-                  component={InputText}
-                  label="Cód. CODAE da U.E"
-                  name="codigo_unidade"
-                  placeholder="Digite o código"
-                  className="input-busca-produto"
-                />
-
-                <OnChange name="codigo_unidade">
-                  {value => {
-                    getNomeUnidadeEscolaDebounced(value, values);
-                  }}
-                </OnChange>
-              </div>
-              <div className="col-6">
-                <Field
-                  component={InputText}
-                  label="Nome da Unidade Educacional"
-                  name="nome_unidade"
-                  placeholder="Digite o nome da Unidade Educacional"
-                  className="input-busca-produto"
-                  disabled={desabilitarAluno}
                 />
               </div>
             </div>

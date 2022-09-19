@@ -73,6 +73,7 @@ export default class DashboardEscolaContainer extends Component {
         getSolicitacoesCanceladasEscola(minhaEscolaUUID)
       ]);
       this.setState({
+        dadosMeus,
         autorizadas: ajustarFormatoLog(autorizadas.results),
         pendentes: ajustarFormatoLog(pendentes.results),
         negadas: ajustarFormatoLog(negadas.results),
@@ -90,12 +91,14 @@ export default class DashboardEscolaContainer extends Component {
       canceladas,
       theadList,
       trs,
+      dadosMeus,
       numeroAlunos
     } = this.state;
     return (
       <div>
         <DashboardEscola
           numeroAlunos={numeroAlunos}
+          meusDados={dadosMeus}
           autorizadas={autorizadas}
           pendentes={pendentes}
           negadas={negadas}

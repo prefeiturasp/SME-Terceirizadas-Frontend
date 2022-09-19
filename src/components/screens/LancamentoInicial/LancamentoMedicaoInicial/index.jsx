@@ -16,6 +16,7 @@ import { getEscolaSimples } from "services/escola.service";
 import { Icon, Select, Skeleton } from "antd";
 import "./styles.scss";
 import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export default () => {
   const [panoramaGeral, setPanoramaGeral] = useState();
@@ -24,9 +25,11 @@ export default () => {
   const [periodoSelecionado, setPeriodoSelecionado] = useState(null);
   const [escolaInstituicao, setEscolaInstituicao] = useState(null);
   const [loteEscolaSimples, setLoteEscolaSimples] = useState(null);
+  const [periodosEscolaSimples, setPeriodosEscolaSimples] = useState(null);
   const [solicitacaoMedicaoInicial, setSolicitacaoMedicaoInicial] = useState(
     null
   );
+  const [periodoFromSearchParam, setPeriodoFromSearchParam] = useState(null);
   const [
     loadingSolicitacaoMedInicial,
     setLoadingSolicitacaoMedicaoInicial
@@ -47,9 +50,13 @@ export default () => {
       setNomeTerceirizada(
         respostaEscolaSimples.data.lote.terceirizada.nome_fantasia
       );
+      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+        escola.uuid
+      );
       setPanoramaGeral(respostaPanorama.data);
       setEscolaInstituicao(escola);
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
+      setPeriodosEscolaSimples(response_vinculos.data.results);
 
       for (let mes = 0; mes <= proximosDozeMeses; mes++) {
         const dataBRT = addMonths(new Date(), -mes);
@@ -64,7 +71,46 @@ export default () => {
         });
       }
 
-      const periodoInicialSelecionado = periodos[0].dataBRT.toString();
+      const params = new URLSearchParams(location.search);
+      let mes = params.get("mes");
+      let ano = params.get("ano");
+      if (location.search) {
+        if (mes <= 0 || mes > 12) {
+          mes = format(new Date(), "MM");
+        }
+        if (isNaN(ano)) {
+          ano = getYear(new Date());
+        }
+        if (ano > getYear(new Date()) || ano < getYear(new Date()) - 1) {
+          ano = getYear(new Date());
+        }
+        if (
+          mes > format(new Date(), "MM") &&
+          Number(ano) === getYear(new Date())
+        ) {
+          mes = format(new Date(), "MM");
+        }
+        if (
+          mes < format(new Date(), "MM") &&
+          Number(ano) === getYear(new Date()) - 1
+        ) {
+          mes = format(new Date(), "MM");
+        }
+        const dataFromSearch = new Date(ano, mes - 1, 1);
+        const mesStringFromSearch = format(dataFromSearch, "LLLL", {
+          locale: ptBR
+        }).toString();
+        const periodoFromSearch =
+          mesStringFromSearch.charAt(0).toUpperCase() +
+          mesStringFromSearch.slice(1) +
+          " / " +
+          getYear(dataFromSearch).toString();
+        setPeriodoFromSearchParam(periodoFromSearch);
+      }
+
+      const periodoInicialSelecionado = !location.search
+        ? periodos[0].dataBRT.toString()
+        : new Date(ano, mes - 1, 1);
       setObjectoPeriodos(periodos);
       setPeriodoSelecionado(periodoInicialSelecionado);
       await getSolicitacaoMedInicial(periodoInicialSelecionado, escola.uuid);
@@ -72,12 +118,13 @@ export default () => {
     }
     fetch();
 
-    history.replace({
-      pathname: location.pathname,
-      search: `?mes=${format(new Date(), "MM").toString()}&ano=${getYear(
-        new Date()
-      ).toString()}`
-    });
+    !location.search &&
+      history.replace({
+        pathname: location.pathname,
+        search: `?mes=${format(new Date(), "MM").toString()}&ano=${getYear(
+          new Date()
+        ).toString()}`
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -144,7 +191,9 @@ export default () => {
                 <Select
                   suffixIcon={<Icon type="caret-down" />}
                   name="periodo_lancamento"
-                  defaultValue={objectoPeriodos[0].periodo}
+                  defaultValue={
+                    periodoFromSearchParam || objectoPeriodos[0].periodo
+                  }
                   onChange={value => handleChangeSelectPeriodo(value)}
                 >
                   {opcoesPeriodos}
@@ -175,11 +224,12 @@ export default () => {
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         />
         <hr className="linha-form mt-4 mb-4" />
-        {panoramaGeral && !loadingSolicitacaoMedInicial && (
+        {periodosEscolaSimples && !loadingSolicitacaoMedInicial && (
           <LancamentoPorPeriodo
             panoramaGeral={panoramaGeral}
             periodoSelecionado={periodoSelecionado}
             escolaInstituicao={escolaInstituicao}
+            periodosEscolaSimples={periodosEscolaSimples}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
           />

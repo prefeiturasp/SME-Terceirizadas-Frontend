@@ -398,6 +398,13 @@ export const escolaEhCei = () => {
   );
 };
 
+export const escolaEhCEMEI = () => {
+  return (
+    localStorage.getItem("nome_instituicao") &&
+    localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`)
+  );
+};
+
 export const nomeInstituicao = () => {
   return localStorage.getItem("nome_instituicao");
 };
