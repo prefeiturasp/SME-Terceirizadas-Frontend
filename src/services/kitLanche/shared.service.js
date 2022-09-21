@@ -8,6 +8,7 @@ import {
 } from "services/constants";
 import { getPath } from "./helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const atualizarKitLanche = async values => {
   const OBJ_REQUEST = {
@@ -106,7 +107,14 @@ export const getRefeicoes = async () => {
     });
 };
 
-export const getKitLanches = () => {
+export const getKitLanches = async (params = null) => {
+  const url = `/kit-lanches/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+
   const OBJ_REQUEST = {
     headers: AUTH_TOKEN,
     method: "GET"

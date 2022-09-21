@@ -35,8 +35,8 @@ export default () => {
       setProximosCincoDiasUteis(proximos_cinco_dias_uteis);
     });
 
-    getKitLanches().then(response => {
-      setKits(response.results);
+    getKitLanches({ status: "ATIVO" }).then(response => {
+      setKits(response.data.results);
     });
   }
 
