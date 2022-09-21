@@ -8,6 +8,7 @@ import {
 } from "../../../../../helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "../../../../../services/diretoriaRegional.service";
 import { TODOS } from "../../../../../constants/shared";
+import { getEscolasTrecTotal } from "services/escola.service";
 
 class BuscaPorPeriodo extends Component {
   constructor(props) {
@@ -46,9 +47,11 @@ class BuscaPorPeriodo extends Component {
             meusDados.vinculo_atual.instituicao.diretoria_regional
           ];
         } else if (usuarioEhDRE()) {
-          escolas = [{ nome: TODOS, uuid: TODOS }].concat(
-            meusDados.vinculo_atual.instituicao.escolas
-          );
+          const dre_uuid = meusDados.vinculo_atual.instituicao.uuid;
+          getEscolasTrecTotal(dre_uuid).then(response => {
+            escolas = [{ nome: TODOS, uuid: TODOS }].concat(response.data);
+          });
+
           diretoriasRegionais = [
             {
               nome: meusDados.vinculo_atual.instituicao.nome,
