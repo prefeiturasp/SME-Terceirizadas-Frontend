@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Pagination } from "antd";
 
 import "./style.scss";
+import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
 
 const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   const [page, setPage] = useState(1);
@@ -21,7 +22,9 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
       <table className="table table-bordered table-items">
         <thead>
           <tr className="table-head-items">
-            <th>Terceirizada</th>
+            {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
+              <th>Terceirizada</th>
+            )}
             <th>Produto</th>
             <th>Marca</th>
             <th>Edital</th>
@@ -35,7 +38,9 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
             dadosProdutosPaginado.map((produto, index) => {
               return (
                 <tr key={index} className="table-body-items">
-                  <td>{produto.terceirizada}</td>
+                  {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
+                    <td>{produto.terceirizada}</td>
+                  )}
                   <td>{produto.nome}</td>
                   <td>{produto.marca}</td>
                   <td>{produto.edital}</td>
