@@ -48,3 +48,18 @@ export const produtoEhReclamacao = produto => {
 export const retornaData = ({ criado_em }) => {
   return criado_em.split(" ")[0];
 };
+
+export const deveExibirEditais = logs => {
+  const resultado = logs.find(
+    log => log.status_evento_explicacao === "CODAE homologou"
+  );
+  if (resultado) {
+    return true;
+  }
+  return false;
+};
+
+export const formataEditais = vinculos => {
+  const editais = vinculos.map(vinculo => vinculo.edital.numero);
+  return editais.join(", ");
+};

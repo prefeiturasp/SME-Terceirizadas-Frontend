@@ -39,7 +39,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
   return (
     values.inclusoes &&
     index !== undefined && (
-      <div className="col-4">
+      <div className="col-6">
         <div className="row">
           <div className="col-6">
             <Field
@@ -82,6 +82,13 @@ export const DatasInclusaoContinua = ({ ...props }) => {
       </div>
     )
   );
+};
+
+const limpaRecorrencia = form => {
+  form.change("dias_semana", undefined);
+  form.change("tipos_alimentacao_selecionados", []);
+  form.change("periodo_escolar");
+  form.change("numero_alunos", undefined);
 };
 
 export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
@@ -150,6 +157,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
             observacao: deepCopy(values.observacao)
           }
         ]);
+        limpaRecorrencia(form);
       } else {
         form.change("quantidades_periodo", [
           {
@@ -159,6 +167,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
             observacao: deepCopy(values.observacao)
           }
         ]);
+        limpaRecorrencia(form);
       }
     } else {
       await push("quantidades_periodo");
@@ -180,6 +189,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
           }].tipos_alimentacao`,
           deepCopy(values.tipos_alimentacao_selecionados)
         );
+        limpaRecorrencia(form);
       } else {
         ["dias_semana", "periodo_escolar", "observacao"].forEach(async item => {
           await form.change(
@@ -194,6 +204,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
           deepCopy(values.tipos_alimentacao_selecionados)
         );
       }
+      limpaRecorrencia(form);
     }
   };
 
@@ -330,6 +341,8 @@ export const RecorrenciaTabela = ({ form, values, periodos, meusDados }) => {
                             <span
                               key={key}
                               className={
+                                values.quantidades_periodo[indice]
+                                  .dias_semana &&
                                 values.quantidades_periodo[
                                   indice
                                 ].dias_semana.includes(day.value)

@@ -36,9 +36,9 @@ export const DataInclusaoNormal = ({ ...props }) => {
 
   return (
     <>
-      <div className="col-4">
+      <div className="col-6">
         <div className="row">
-          <div className={`col-${index > 0 ? "8" : "12"}`}>
+          <div className={`col-${index > 0 ? "9" : "12"}`}>
             <Field
               component={InputComData}
               name={`${name}.data`}
@@ -62,7 +62,7 @@ export const DataInclusaoNormal = ({ ...props }) => {
             </OnChange>
           </div>
           {index > 0 && (
-            <div className="col-4 mt-auto mb-1">
+            <div className="col-3 mt-auto mb-1">
               <Botao
                 texto="Remover dia"
                 type={BUTTON_TYPE.BUTTON}

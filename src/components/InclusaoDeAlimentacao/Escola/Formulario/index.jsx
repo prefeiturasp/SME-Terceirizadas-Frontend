@@ -103,9 +103,9 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       motivosSimples.find(
         motivo => motivo.uuid === values.inclusoes[index].motivo
       ) &&
-      motivosSimples.find(
-        motivo => motivo.uuid === values.inclusoes[index].motivo
-      ).nome === "Outro"
+      motivosSimples
+        .find(motivo => motivo.uuid === values.inclusoes[index].motivo)
+        .nome.includes("Outro")
     );
   };
 
@@ -287,6 +287,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     <div>
       <div className="mt-3">
         <CardMatriculados
+          meusDados={meusDados}
           numeroAlunos={
             meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
           }
@@ -345,7 +346,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     fields.map((name, index) => (
                       <div key={name}>
                         <div className="row">
-                          <div className="col-8">
+                          <div className="col-6">
                             <Field
                               component={Select}
                               name={`${name}.motivo`}

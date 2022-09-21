@@ -287,6 +287,7 @@ class DashboardTerceirizada extends Component {
           <Field component={"input"} type="hidden" name="uuid" />
           <CardMatriculados
             collapsed={collapsed}
+            meusDados={meusDados}
             alterarCollapse={this.alterarCollapse}
             numeroAlunos={
               (meusDados &&

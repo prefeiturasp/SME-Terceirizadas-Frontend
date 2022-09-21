@@ -7,7 +7,7 @@ import ConsultaSolicitacaoAlteracao from "components/screens/Logistica/ConsultaS
 
 const atual = {
   href: `/${LOGISTICA}/${CONSULTA_SOLICITACAO_ALTERACAO}`,
-  titulo: "Consulta Solicitacão de Alteração"
+  titulo: "Solicitação de Alteração"
 };
 
 const anteriores = [

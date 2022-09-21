@@ -23,7 +23,8 @@ import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/Sta
 
 import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
-import { escolaEhCei } from "helpers/utilities";
+import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
+import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -198,6 +199,8 @@ export const painelInicial = () => {
 export const inclusaoAlimentacao = () => {
   return escolaEhCei()
     ? InclusaoDeAlimentacaoCEIPage
+    : escolaEhCEMEI()
+    ? InclusaoDeAlimentacaoCEMEIPage
     : InclusaoDeAlimentacaoPage;
 };
 

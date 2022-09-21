@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useLocation } from "react-router-dom";
 import { Field, Form } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import arrayMutators from "final-form-arrays";
 import {
   addDays,
   format,
@@ -16,32 +18,41 @@ import {
 import { ptBR } from "date-fns/locale";
 import { Tabs } from "antd";
 
-import arrayMutators from "final-form-arrays";
 import InputText from "components/Shareable/Input/InputText";
-import * as perfilService from "services/perfil.service";
+import InputValueMedicao from "components/Shareable/Input/InputValueMedicao";
 import Botao from "components/Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "components/Shareable/Botao/constants";
-import { deepCopy } from "helpers/utilities";
-import {
-  getCategoriasDeMedicao,
-  getValoresPeriodosLancamentos,
-  setPeriodoLancamento,
-  updateValoresPeriodosLancamentos
-} from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { formatarPayloadPeriodoLancamento } from "./helper";
 import {
   toastError,
   toastSuccess,
   toastWarn
 } from "components/Shareable/Toast/dialogs";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
-import "./styles.scss";
-import { OnChange } from "react-final-form-listeners";
+import { composeValidators, deepCopy } from "helpers/utilities";
+import {
+  deveExistirObservacao,
+  formatarPayloadPeriodoLancamento
+} from "./helper";
+import {
+  maxValueFrequencia,
+  maxValueLancheRefeicaoSobremesa1Oferta
+} from "helpers/fieldValidators";
+import {
+  getCategoriasDeMedicao,
+  getDiasCalendario,
+  getMatriculadosPeriodo,
+  getValoresPeriodosLancamentos,
+  setPeriodoLancamento,
+  updateValoresPeriodosLancamentos
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
+import "./styles.scss";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -61,8 +72,13 @@ export default () => {
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
   const [tableAlimentacaoRows, setTableAlimentacaoRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
+  const [solicitacoesAutorizadas, setSolicitacoesAutorizadas] = useState([]);
   const [valoresPeriodosLancamentos, setValoresPeriodosLancamentos] = useState(
     []
+  );
+  const [valoresMatriculados, setValoresMatriculados] = useState([]);
+  const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
+    null
   );
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
@@ -191,18 +207,49 @@ export default () => {
       setCategoriasDeMedicao(response_categorias_medicao.data);
 
       const params = {
-        nome_periodo_escolar: periodo.nome,
+        nome_periodo_escolar: periodo.periodo_escolar.nome,
         uuid_solicitacao_medicao: uuid
       };
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
       );
       setValoresPeriodosLancamentos(response_valores_periodos.data);
+
+      const mes = format(mesAnoSelecionado, "MM");
+      const ano = getYear(mesAnoSelecionado);
+      const params_matriculados = {
+        escola_uuid: escola.uuid,
+        mes: mes,
+        ano: ano,
+        tipo_turma: "REGULAR",
+        periodo_escolar: periodo.periodo_escolar.uuid
+      };
+      const response_matriculados = await getMatriculadosPeriodo(
+        params_matriculados
+      );
+      setValoresMatriculados(response_matriculados.data);
+
+      const params_dias_calendario = {
+        escola_uuid: escola.uuid,
+        mes: mes,
+        ano: ano
+      };
+      const response_dias_calendario = await getDiasCalendario(
+        params_dias_calendario
+      );
+      setCalendarioMesConsiderado(response_dias_calendario.data);
+
+      const solicitacoesAutorizadasEscola = await getSolicitacoesAutorizadasEscola(
+        escola.uuid
+      );
+      setSolicitacoesAutorizadas(solicitacoesAutorizadasEscola.results);
+
       formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
         response_categorias_medicao.data,
-        tiposAlimentacaoFormatadas
+        tiposAlimentacaoFormatadas,
+        response_matriculados.data
       );
     };
     fetch();
@@ -214,7 +261,8 @@ export default () => {
     mesAnoFormatado,
     valoresMedicao,
     categoriasMedicao,
-    tiposAlimentacaoFormatadas
+    tiposAlimentacaoFormatadas,
+    matriculados
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculados = {};
@@ -226,12 +274,12 @@ export default () => {
 
     categoriasMedicao &&
       categoriasMedicao.forEach(categoria => {
-        for (let i = 1; i <= 31; i++) {
-          const dia = String(i).length === 1 ? "0" + String(i) : String(i);
-          dadosValoresMatriculados[
-            `matriculados__dia_${dia}__categoria_${categoria.id}`
-          ] = 100;
-        }
+        matriculados &&
+          matriculados.forEach(obj => {
+            dadosValoresMatriculados[
+              `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
+            ] = obj.quantidade_alunos ? `${obj.quantidade_alunos}` : null;
+          });
 
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach(tipo => {
@@ -333,7 +381,8 @@ export default () => {
         mesAnoFormatadoState,
         valoresPeriodosLancamentos,
         categoriasDeMedicao,
-        tableAlimentacaoRows
+        tableAlimentacaoRows,
+        valoresMatriculados
       );
     };
     semanaSelecionada && formatar();
@@ -423,7 +472,8 @@ export default () => {
       mesAnoFormatadoState,
       valores_medicao_response,
       categoriasDeMedicao,
-      tableAlimentacaoRows
+      tableAlimentacaoRows,
+      valoresMatriculados
     );
   };
 
@@ -441,7 +491,7 @@ export default () => {
   const defaultValue = (column, row) => {
     let result = null;
     if (row.name === "matriculados") {
-      result = 100;
+      result = null;
     }
     if (Number(semanaSelecionada) === 1 && Number(column.dia) > 20) {
       result = "Mês anterior";
@@ -456,10 +506,36 @@ export default () => {
     return result;
   };
 
-  const validacaoSemana = (semana, coluna) => {
+  const validacaoSemana = dia => {
     return (
-      (Number(semanaSelecionada) === 1 && Number(coluna.dia) > 20) ||
-      ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(coluna.dia) < 10)
+      (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
+      ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(dia) < 10)
+    );
+  };
+
+  const validacaoDiaLetivo = dia => {
+    const objDia = calendarioMesConsiderado.find(
+      objDia => Number(objDia.dia) === Number(dia)
+    );
+    const ehDiaLetivo = objDia && objDia.dia_letivo;
+    return ehDiaLetivo;
+  };
+
+  const desabilitarField = (dia, rowName, categoria, values) => {
+    const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
+      locale: ptBR
+    }).toString();
+    const mesAtual = format(mesAnoDefault, "LLLL", {
+      locale: ptBR
+    }).toString();
+
+    return (
+      !validacaoDiaLetivo(dia) ||
+      validacaoSemana(dia) ||
+      rowName === "matriculados" ||
+      !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd"))
     );
   };
 
@@ -486,7 +562,7 @@ export default () => {
 
   let valuesInputArray = [];
 
-  const onChangeInput = value => {
+  const onChangeInput = (value, errors, values, dia, categoria) => {
     if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
       if (value === null) {
@@ -496,7 +572,39 @@ export default () => {
         ? setDisableBotaoSalvarLancamentos(false)
         : setDisableBotaoSalvarLancamentos(true);
     }
+
+    if (Object.keys(errors).length > 0) {
+      return setDisableBotaoSalvarLancamentos(true);
+    }
+    if (deveExistirObservacao(categoria, values, calendarioMesConsiderado)) {
+      return;
+    }
   };
+
+  const fieldValidations = (rowName, dia, categoria, values) => {
+    return composeValidators(
+      maxValueFrequencia(
+        Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]),
+        `${rowName}__dia_${dia}__categoria_${categoria}`
+      ),
+      maxValueLancheRefeicaoSobremesa1Oferta(
+        Number(values[`frequencia__dia_${dia}__categoria_${categoria}`]),
+        `${rowName}__dia_${dia}__categoria_${categoria}`,
+        solicitacoesAutorizadas,
+        mesAnoConsiderado,
+        dia
+      )
+    );
+  };
+
+  // const textoTooltipBotaoObservacao = (dia) => {
+  //   const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(mesAnoConsiderado)}`
+  //   const existeSolicGAAutorizada = solicitacoesAutorizadas.filter(
+  //     solicitacao => solicitacao.data_evento === data).length > 0
+  //   return existeSolicGAAutorizada ?
+  //     "Obrigatório confirmar a quantidade de lançamentos neste dia nas observação." :
+  //     "Obrigatório adicionar observação para lançamentos neste dia."
+  // }
 
   return (
     <Form
@@ -505,7 +613,7 @@ export default () => {
         ...arrayMutators
       }}
       initialValues={dadosIniciais}
-      render={({ handleSubmit, values, form }) => (
+      render={({ handleSubmit, values, form, errors }) => (
         <form onSubmit={handleSubmit}>
           <div className="card mt-3">
             <div className="card-body">
@@ -578,6 +686,7 @@ export default () => {
                           <div>Dom.</div>
                         </div>
                         {semanaSelecionada &&
+                          calendarioMesConsiderado &&
                           tableAlimentacaoRows &&
                           tableAlimentacaoRows.map((row, index) => {
                             return (
@@ -585,19 +694,14 @@ export default () => {
                                 <div
                                   className={`grid-table-tipos-alimentacao body-table-alimentacao`}
                                 >
-                                  <div>
+                                  <div className="nome-linha">
                                     <b className="pl-2">{row.nome}</b>
                                   </div>
                                   {weekColumns.map(column => (
                                     <div
                                       key={column.dia}
                                       className={`${
-                                        (Number(semanaSelecionada) === 1 &&
-                                          Number(column.dia) > 20) ||
-                                        ([4, 5, 6].includes(
-                                          Number(semanaSelecionada)
-                                        ) &&
-                                          Number(column.dia) < 10)
+                                        validacaoSemana(column.dia)
                                           ? "input-desabilitado"
                                           : row.name === "observacoes"
                                           ? "input-habilitado-observacoes"
@@ -605,10 +709,7 @@ export default () => {
                                       }`}
                                     >
                                       {row.name === "observacoes" ? (
-                                        !validacaoSemana(
-                                          validacaoSemana,
-                                          column
-                                        ) && (
+                                        !validacaoSemana(column.dia) && (
                                           <Botao
                                             texto={textoBotaoObservacao(
                                               values[
@@ -630,24 +731,38 @@ export default () => {
                                           />
                                         )
                                       ) : (
-                                        <>
+                                        <div className="field-values-input">
                                           <Field
-                                            className={"m-2"}
-                                            component={InputText}
+                                            className={`m-2 ${
+                                              !validacaoDiaLetivo(column.dia)
+                                                ? "nao-eh-dia-letivo"
+                                                : ""
+                                            }`}
+                                            component={InputValueMedicao}
                                             apenasNumeros
                                             name={`${row.name}__dia_${
                                               column.dia
                                             }__categoria_${categoria.id}`}
-                                            disabled={
-                                              validacaoSemana(
-                                                validacaoSemana,
-                                                column
-                                              ) || row.name === "matriculados"
-                                            }
+                                            disabled={desabilitarField(
+                                              column.dia,
+                                              row.name,
+                                              categoria.id,
+                                              values
+                                            )}
                                             defaultValue={defaultValue(
                                               column,
                                               row
                                             )}
+                                            validate={
+                                              solicitacoesAutorizadas &&
+                                              mesAnoConsiderado &&
+                                              fieldValidations(
+                                                row.name,
+                                                column.dia,
+                                                categoria.id,
+                                                values
+                                              )
+                                            }
                                           />
                                           <OnChange
                                             name={`${row.name}__dia_${
@@ -655,10 +770,16 @@ export default () => {
                                             }__categoria_${categoria.id}`}
                                           >
                                             {value => {
-                                              onChangeInput(value);
+                                              onChangeInput(
+                                                value,
+                                                errors,
+                                                values,
+                                                column.dia,
+                                                categoria.id
+                                              );
                                             }}
                                           </OnChange>
-                                        </>
+                                        </div>
                                       )}
                                     </div>
                                   ))}
@@ -677,6 +798,7 @@ export default () => {
                   showModal={showModalObservacaoDiaria}
                   dia={showDiaObservacaoDiaria}
                   mesAnoConsiderado={mesAnoConsiderado}
+                  calendarioMesConsiderado={calendarioMesConsiderado}
                   form={form}
                   values={values}
                   rowName={"observacoes"}

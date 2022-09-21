@@ -43,19 +43,10 @@ export default ({
                   label="N° da Requisição de Entrega"
                   name="numero_requisicao"
                   placeholder="Digite o número da requisição"
-                  className="input-busca-produto"
+                  className="input-consulta-entregas"
                 />
               </div>
 
-              {(dilog || dre) && (
-                <div className="col-6">
-                  <MultiSelectDistribuidores
-                    className="input-busca-produto"
-                    name="distribuidor"
-                    label="Nome dos Distribuidores"
-                  />
-                </div>
-              )}
               <div className="col-3">
                 <Field
                   component={InputComData}
@@ -76,6 +67,7 @@ export default ({
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
+                  className="data-final"
                   popperPlacement="bottom-end"
                   placeholder="Até"
                   minDate={
@@ -86,14 +78,25 @@ export default ({
                   maxDate={null}
                 />
               </div>
+
+              {(dilog || dre) && (
+                <div className="col-6 mt-1">
+                  <MultiSelectDistribuidores
+                    className="input-busca-distribuidores"
+                    name="distribuidor"
+                    label="Nome dos Distribuidores"
+                  />
+                </div>
+              )}
+
               {dre && (
-                <div className="col-6">
+                <div className="col-6 mt-1">
                   <Field
                     component={InputText}
                     label="Nome da Unidade Educacional"
                     name="nome_unidade"
                     placeholder="Digite o nome da Unidade Educacional"
-                    className="input-busca-produto"
+                    className="input-consulta-entregas"
                   />
                 </div>
               )}

@@ -48,7 +48,7 @@ export const Page = ({ ...props }) => {
         >
           {children.length ? children[0] : children}
           <h1 className="page-title">
-            {titulo}
+            <span className="texto-titulo">{titulo}</span>
             {botaoVoltar && <BotaoVoltar onClick={() => history.goBack()} />}
           </h1>
           {(usuarioEhDistribuidora() || usuarioEhLogistica()) &&
