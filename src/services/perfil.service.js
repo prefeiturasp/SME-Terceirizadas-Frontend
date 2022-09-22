@@ -207,3 +207,9 @@ export const dadosDoAluno = codigoEol => {
 
 export const getAlunosListagem = async params =>
   await axios.get(`/alunos/`, { params });
+
+export const getPerfilListagem = async params =>
+  await axios.get(`/perfis/`, { params });
+
+export const getVisoesListagem = async params =>
+  await axios.get(`/perfis/visoes/`, { params });

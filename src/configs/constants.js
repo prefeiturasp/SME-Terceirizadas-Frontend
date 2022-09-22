@@ -175,6 +175,8 @@ export const PERIODO_LANCAMENTO = "periodo-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
+
+export const GESTAO_ACESSO = "gestao-acesso";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
