@@ -33,12 +33,12 @@ const ListagemSolicitacoes = ({
           <div className="grid-table header-table">
             <div>Requisição</div>
             {(dilog || dre) && <div>Distribuidor</div>}
-            <div>Data de entrega</div>
-            <div>Qtde.</div>
+            <div>Data de Entrega</div>
+            <div>Quantidade</div>
             <div>Conferidas</div>
             <div>
               <span>
-                Insucessos de Entrega
+                Insucessos de <br/>Entrega
                 <TooltipIcone
                   tooltipText={
                     "Não foi possível o distribuidor realizar a entrega, por motivo externo."
@@ -48,7 +48,7 @@ const ListagemSolicitacoes = ({
             </div>
             <div>
               <span>
-                Pendentes de Conferência
+                Pendentes de <br/>Conferência
                 <TooltipIcone
                   tooltipText={
                     "Guias de remessa disponibilizadas, porém pendentes de conferência pela Unidade Educacional."
@@ -57,7 +57,7 @@ const ListagemSolicitacoes = ({
               </span>
             </div>
             <div>Relatório</div>
-            <div>Exportar Requisição</div>
+            <div>Requisição</div>
             <div />
           </div>
           {solicitacoes.map(solicitacao => {
