@@ -6,6 +6,7 @@ import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import Select from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
+import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
@@ -17,10 +18,15 @@ import {
   agregarDefault,
   deepCopy,
   getError,
-  getDataObj
+  getDataObj,
+  composeValidators
 } from "helpers/utilities";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
-import { required } from "helpers/fieldValidators";
+import {
+  required,
+  textAreaRequired,
+  peloMenosUmCaractere
+} from "helpers/fieldValidators";
 import "./style.scss";
 import { TabelaFaixasCEMEI } from "./componentes/TabelaFaixasCEMEI";
 import { Rascunhos } from "./componentes/Rascunhos";
@@ -332,6 +338,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     await form.change("alunos_cei_e_ou_emei", alteracao_.alunos_cei_e_ou_emei);
     let substituicoes = await buildSubstituicoes(periodos_, alteracao_);
     await form.change("substituicoes", substituicoes);
+    await form.change("observacao", alteracao_.observacao);
   };
 
   const carregarRascunho = async (form, alteracao) => {
@@ -352,6 +359,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     await form.change("data_inicial", undefined);
     await form.change("data_final", undefined);
     await form.change("substituicoes", []);
+    await form.change("observacao", undefined);
     setUuid(null);
   };
 
@@ -511,6 +519,20 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                     />
                   );
                 })}
+                <div className="row ">
+                  <div className="col-12">
+                    <Field
+                      component={TextAreaWYSIWYG}
+                      label="Motivo/Justificativa"
+                      name="observacao"
+                      required
+                      validate={composeValidators(
+                        textAreaRequired,
+                        peloMenosUmCaractere
+                      )}
+                    />
+                  </div>
+                </div>
                 <div className="row float-right mt-4">
                   <div className="col-12">
                     <Botao

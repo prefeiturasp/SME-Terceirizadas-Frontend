@@ -98,7 +98,8 @@ export const formatarPayload = (values, meusDados) => {
     data_inicial: values.data_inicial,
     data_final: values.data_final,
     substituicoes_cemei_cei_periodo_escolar: substituicoes_cemei_cei_periodo_escolar,
-    substituicoes_cemei_emei_periodo_escolar: substituicoes_cemei_emei_periodo_escolar
+    substituicoes_cemei_emei_periodo_escolar: substituicoes_cemei_emei_periodo_escolar,
+    observacao: values.observacao
   };
   return payload;
 };
