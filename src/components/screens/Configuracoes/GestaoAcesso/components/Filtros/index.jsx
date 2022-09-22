@@ -11,7 +11,7 @@ import "./styles.scss";
 import Select from "components/Shareable/Select";
 import { getPerfilListagem, getVisoesListagem } from "services/perfil.service";
 
-const FORM_NAME = "buscaDownloads";
+const FORM_NAME = "buscaGestaoAcesso";
 
 export default ({ setFiltros }) => {
   const initialValues = {};
