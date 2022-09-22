@@ -38,7 +38,8 @@ const ListagemSolicitacoes = ({
             <div>Conferidas</div>
             <div>
               <span>
-                Insucessos de <br/>Entrega
+                Insucessos de <br />
+                Entrega
                 <TooltipIcone
                   tooltipText={
                     "Não foi possível o distribuidor realizar a entrega, por motivo externo."
@@ -48,7 +49,8 @@ const ListagemSolicitacoes = ({
             </div>
             <div>
               <span>
-                Pendentes de <br/>Conferência
+                Pendentes de <br />
+                Conferência
                 <TooltipIcone
                   tooltipText={
                     "Guias de remessa disponibilizadas, porém pendentes de conferência pela Unidade Educacional."
