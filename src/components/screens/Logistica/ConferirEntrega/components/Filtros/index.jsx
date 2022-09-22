@@ -43,9 +43,10 @@ export default ({
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nº da guia de remessa"
+                  apenasNumeros
+                  label="Nº da Guia de Remessa"
                   name="numero_guia"
-                  placeholder="Digite o número da guia"
+                  placeholder="Digite o Nº da Guia"
                   className="input-numero-guia"
                 />
               </div>

@@ -52,7 +52,18 @@ export class InputFile extends Component {
 
   async onInputChange(event) {
     let valido = true;
+    let lista_extensoes = ["doc", "docx", "png", "pdf", "jpg", "jpeg"];
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
+    if (this.props.accept) {
+      let nova_lista_extensoes = [];
+      lista_extensoes.forEach(ext => {
+        if (this.props.accept.includes(ext.toUpperCase())) {
+          nova_lista_extensoes.push(ext);
+        }
+      });
+      lista_extensoes = nova_lista_extensoes;
+    }
+
     Array.from(event.target.files).forEach(file => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
       if (this.props.ehPlanilhaMedicaoInicial) {
@@ -64,15 +75,13 @@ export class InputFile extends Component {
           valido = false;
         }
       } else {
-        if (
-          !["doc", "docx", "png", "pdf", "jpg", "jpeg"].includes(
-            extensao.toLowerCase()
-          )
-        ) {
-          toastError(`Extensão do arquivo não suportada: ${extensao}`);
+        if (!lista_extensoes.includes(extensao.toLowerCase())) {
+          toastError(
+            `Extensão do arquivo não suportada: ${extensao.toUpperCase()}`
+          );
           valido = false;
         } else if (file.size > DEZ_MB) {
-          toastError(`Tamanho máximo: 10MB`);
+          toastError(`Arquivo superior a 10MB, não é possível fazer o upload`);
           valido = false;
         }
       }
