@@ -1,0 +1,64 @@
+@import "styles/variables.scss";
+
+.date-options {
+  margin-top: 4%;
+}
+.alunos-label {
+  margin-top: 31px;
+  height: 38px;
+  color: $blackInput;
+  size: 16px;
+  font-weight: 700;
+  border: 1px solid $greenLight;
+  border-radius: 6px;
+  background-color: $greenVeryLight;
+  padding-left: 1em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+
+.input-quantidades {
+  text-align: center;
+}
+
+table.faixas-etarias-cei-alteracao {
+  thead {
+    tr {
+      background-color: $grayBackground;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid $grayDisabled;
+      color: $blackInput;
+
+      th {
+        padding: 1em;
+        &:not(:first-child) {
+          border-left: 1px solid $grayDisabled;
+        }
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border: 1px solid $grayDisabled;
+      border-top: none;
+      color: $blackSubtle;
+
+      td {
+        padding: 0.5em;
+        &:not(:first-child) {
+          border-left: 1px solid $grayDisabled;
+        }
+      }
+    }
+
+    tr.total-faixas-cei {
+      background-color: $grayBackground;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid $grayDisabled;
+      color: $blackInput;
+    }
+  }
+}

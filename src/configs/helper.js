@@ -25,6 +25,7 @@ import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
 import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
 import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
+import AlteracaoDeCardapioCEMEIPage from "pages/Escola/AlteracaoDeCardapioCEMEIPage";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -205,7 +206,11 @@ export const inclusaoAlimentacao = () => {
 };
 
 export const alteracaoCardapio = () => {
-  return escolaEhCei() ? AlteracaoDeCardapioCEIPage : AlteracaoDeCardapioPage;
+  return escolaEhCei()
+    ? AlteracaoDeCardapioCEIPage
+    : escolaEhCEMEI()
+    ? AlteracaoDeCardapioCEMEIPage
+    : AlteracaoDeCardapioPage;
 };
 
 export const suspensaoAlimentacao = () => {

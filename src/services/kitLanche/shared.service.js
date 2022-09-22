@@ -1,5 +1,4 @@
 import axios from "services/_base";
-import { API_URL } from "constants/config";
 import {
   PEDIDOS,
   FLUXO,
@@ -8,6 +7,7 @@ import {
 } from "services/constants";
 import { getPath } from "./helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const atualizarKitLanche = async values => {
   const OBJ_REQUEST = {
@@ -106,19 +106,13 @@ export const getRefeicoes = async () => {
     });
 };
 
-export const getKitLanches = () => {
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-
-  return fetch(`${API_URL}/kit-lanches/`, OBJ_REQUEST)
-    .then(response => {
-      return response.json();
-    })
-    .catch(erro => {
-      return erro;
-    });
+export const getKitLanches = async (params = null) => {
+  const url = `/kit-lanches/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getDetalheKitLancheAvulsa = (uuid, tipoSolicitacao) => {
