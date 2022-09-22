@@ -880,7 +880,7 @@ export default () => {
                                     }
                                   />
                                   <label className="mb-3">
-                                    {"MPORTANTE: Envie um arquivo nos formatos: " +
+                                    {"IMPORTANTE: Envie um arquivo nos formatos: " +
                                       FORMATOS_IMAGEM +
                                       ", com até 10MB"}
                                   </label>
