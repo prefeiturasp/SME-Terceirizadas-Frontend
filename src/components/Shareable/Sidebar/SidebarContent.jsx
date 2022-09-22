@@ -20,7 +20,8 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhMedicao,
-  exibirGA
+  exibirGA,
+  usuarioEhOutrosDilog
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -120,8 +121,7 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
-    !usuarioEhLogistica() &&
+    !usuarioEhOutrosDilog() &&
     !usuarioEhDistribuidora();
 
   const exibirMenuLogistica =
@@ -152,6 +152,6 @@ export const SidebarContent = () => {
     exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} />
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />
   ];
 };

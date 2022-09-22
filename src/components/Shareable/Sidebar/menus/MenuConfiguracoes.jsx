@@ -1,6 +1,11 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
-import { CONFIGURACOES, PERMISSOES, MENSAGEM } from "configs/constants";
+import { Menu, LeafItem, SubMenu } from "./shared";
+import {
+  CONFIGURACOES,
+  PERMISSOES,
+  MENSAGEM,
+  GESTAO_ACESSO
+} from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
@@ -10,10 +15,11 @@ import {
   usuarioEhCoordenadorEscola,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
-  usuarioEhCoordenadorCODAE
+  usuarioEhCoordenadorCODAE,
+  usuarioEhLogistica
 } from "helpers/utilities";
 
-const MenuConfiguracoes = () => {
+const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
   const exibirPermissoes =
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhCoordenadorGpCODAE() ||
@@ -26,6 +32,9 @@ const MenuConfiguracoes = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhTerceirizada();
+
+  const exibirGestaoUsuario =
+    usuarioEhLogistica() || usuarioEhCoordenadorCODAE();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
@@ -40,6 +49,19 @@ const MenuConfiguracoes = () => {
             Configuração de Mensagem
           </LeafItem>
         </>
+      )}
+
+      {exibirGestaoUsuario && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
       )}
     </Menu>
   );

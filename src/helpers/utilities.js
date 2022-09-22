@@ -379,6 +379,14 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhOutrosDilog = () => {
+  return [
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
