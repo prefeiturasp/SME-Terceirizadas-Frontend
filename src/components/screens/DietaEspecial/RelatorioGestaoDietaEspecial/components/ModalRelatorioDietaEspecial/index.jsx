@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Modal, Spin, Pagination } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
@@ -12,10 +13,12 @@ import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.serv
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getCabecalhoPorFiltros } from "helpers/dietaEspecial";
 import { getStatusSolicitacaoFrontend } from "./helpers";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const ModalRelatorioDietaEspecial = ({
   showModal,
   closeModal,
+  setExibirModalCentralDownloads,
   dadosRelatorio,
   setDadosRelatorio,
   filtros,
@@ -37,6 +40,18 @@ const ModalRelatorioDietaEspecial = ({
       setDadosRelatorio(response.data.results);
       setCarregando(false);
     });
+  };
+
+  const imprimeRelatorioDietaEspecialAsync = async params => {
+    const response = await imprimeRelatorioDietaEspecial(filtros, params);
+    if (response.status === HTTP_STATUS.OK) {
+      closeModal();
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError(
+        "Erro ao solicitar o download do arquivo. Tente novamente mais tarde."
+      );
+    }
   };
 
   const getDataNegacao = (status_titulo, logs) => {
@@ -76,23 +91,23 @@ const ModalRelatorioDietaEspecial = ({
           key={0}
           texto="Voltar"
           type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.BLUE_OUTLINE}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
           onClick={closeModal}
         />,
         <Botao
           key={1}
           type={BUTTON_TYPE.BUTTON}
-          texto="Imprimir"
-          style={BUTTON_STYLE.BLUE}
-          icon={BUTTON_ICON.PRINT}
+          texto="Exportar"
+          style={BUTTON_STYLE.GREEN}
+          icon={BUTTON_ICON.FILE_PDF}
           onClick={() => {
             const params = gerarParametrosConsulta({
               ...filtros
             });
             params.delete("diagnostico");
             params.delete("escola");
-            imprimeRelatorioDietaEspecial(filtros, params);
+            imprimeRelatorioDietaEspecialAsync(params);
           }}
         />
       ]}
