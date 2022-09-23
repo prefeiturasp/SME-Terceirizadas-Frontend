@@ -513,7 +513,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Número da guia de remessa"
+                      label="Nº da Guia de Remessa"
                       name="numero_guia"
                       className="input-busca-produto"
                       disabled
@@ -531,7 +531,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputComData}
-                      label="Selecionar data de recebimento na UE"
+                      label="Selecionar Data de Recebimento na UE"
                       name="data_entrega_real"
                       className="data-inicial"
                       validate={composeValidators(required, validaDataEntrega)}
@@ -551,7 +551,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Selecionar hora da Entrega"
+                      label="Selecionar Hora da Entrega"
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
@@ -908,8 +908,10 @@ export default () => {
                               <div className="row">
                                 <article className="col-9 produto">
                                   <label className="mb-3">
-                                    Se possível, insira uma foto que demonstre a
-                                    ocorrência apontada.
+                                    <strong>
+                                      Insira uma foto que demonstre a ocorrência
+                                      apontada
+                                    </strong>
                                   </label>
                                   <InputFile
                                     ref={inputFile}
@@ -926,7 +928,9 @@ export default () => {
                                     disabled={arquivoAtual.length > 0}
                                   />
                                   <label className="mb-3">
-                                    {"Formatos aceitos: " + FORMATOS_IMAGEM}
+                                    {"IMPORTANTE: Envie um arquivo nos formatos: " +
+                                      FORMATOS_IMAGEM +
+                                      ", com até 10MB"}
                                   </label>
                                 </article>
                               </div>

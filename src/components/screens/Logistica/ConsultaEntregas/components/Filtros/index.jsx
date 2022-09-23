@@ -40,9 +40,10 @@ export default ({
               <div className="col-6">
                 <Field
                   component={InputText}
+                  apenasNumeros
                   label="N° da Requisição de Entrega"
                   name="numero_requisicao"
-                  placeholder="Digite o número da requisição"
+                  placeholder="Digite o Nº da Requisição"
                   className="input-consulta-entregas"
                 />
               </div>
@@ -84,7 +85,7 @@ export default ({
                   <MultiSelectDistribuidores
                     className="input-busca-distribuidores"
                     name="distribuidor"
-                    label="Nome dos Distribuidores"
+                    label="Nome do Distribuidor"
                   />
                 </div>
               )}
@@ -93,9 +94,9 @@ export default ({
                 <div className="col-6 mt-1">
                   <Field
                     component={InputText}
-                    label="Nome da Unidade Educacional"
+                    label="Nome da UE"
                     name="nome_unidade"
-                    placeholder="Digite o nome da Unidade Educacional"
+                    placeholder="Digite o Nome da UE"
                     className="input-consulta-entregas"
                   />
                 </div>
