@@ -303,12 +303,17 @@ export const imprimeRelatorioQuantitativoDiagDietaEsp = async payload => {
 };
 
 export const imprimeRelatorioDietaEspecial = async (filtros, params) => {
-  const { data } = await axios.post(
-    `${SOLICITACOES_DIETA_ESPECIAL}/imprime-relatorio-dieta-especial/`,
-    filtros,
-    { params: params, responseType: "blob" }
-  );
-  saveAs(data, "relatorio_dieta_especial.pdf");
+  const response = await axios
+    .post(
+      `${SOLICITACOES_DIETA_ESPECIAL}/imprime-relatorio-dieta-especial/`,
+      filtros,
+      { params: params }
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getMotivosDREnaoValida = async () => {

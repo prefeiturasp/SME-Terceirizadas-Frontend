@@ -6,12 +6,17 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.service";
 import FormFiltros from "./components/FormFiltros";
 import ModalRelatorioDietaEspecial from "./components/ModalRelatorioDietaEspecial";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 const RelatorioGestaoDietaEspecial = () => {
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
   const [totalResultados, setTotalResultados] = useState(0);
-  const [exibirModal, setExibirModal] = useState(null);
+  const [exibirModal, setExibirModal] = useState(false);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
   const [dadosRelatorio, setDadosRelatorio] = useState();
   const [filtros, setFiltros] = useState();
   const tipoUsuario = localStorage.getItem("tipo_perfil");
@@ -76,11 +81,18 @@ const RelatorioGestaoDietaEspecial = () => {
           {dadosRelatorio && (
             <ModalRelatorioDietaEspecial
               showModal={exibirModal}
-              closeModal={() => setExibirModal(null)}
+              closeModal={() => setExibirModal(false)}
+              setExibirModalCentralDownloads={setExibirModalCentralDownloads}
               dadosRelatorio={dadosRelatorio}
               setDadosRelatorio={setDadosRelatorio}
               filtros={filtros}
               totalResultados={totalResultados}
+            />
+          )}
+          {exibirModalCentralDownloads && (
+            <ModalSolicitacaoDownload
+              show={exibirModalCentralDownloads}
+              setShow={setExibirModalCentralDownloads}
             />
           )}
         </div>
