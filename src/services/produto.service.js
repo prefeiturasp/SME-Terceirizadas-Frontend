@@ -676,3 +676,11 @@ export const cadastrarProdutoEdital = async payload =>
 
 export const atualizarProdutoEdital = async (payload, uuid) =>
   await axios.patch(`/cadastro-produtos-edital/${uuid}/`, payload);
+
+export const imprimeFichaIdentificacaoProduto = async uuid => {
+  const url = `/homologacoes-produtos/${uuid}/gerar-pdf-ficha-identificacao-produto/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "ficha_identificacao_produto.pdf");
+};

@@ -9,14 +9,19 @@ import {
 import { Field, reduxForm, formValueSelector } from "redux-form";
 import Botao from "../../../Shareable/Botao";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE,
+  BUTTON_ICON
+} from "../../../Shareable/Botao/constants";
 import {
   getHomologacaoProduto,
   getNumeroProtocoloAnaliseSensorial,
   getNomesTerceirizadas,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
-  CODAEPedeCorrecao
+  CODAEPedeCorrecao,
+  imprimeFichaIdentificacaoProduto
 } from "../../../../services/produto.service";
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -405,6 +410,18 @@ class HomologacaoProduto extends Component {
                 status === STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO && (
                   <MotivoCacelamentoSolicitacao logs={logs} />
                 )}
+
+              {
+                <Botao
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN}
+                  icon={BUTTON_ICON.PRINT}
+                  className="print-button"
+                  onClick={() => {
+                    imprimeFichaIdentificacaoProduto(uuid);
+                  }}
+                />
+              }
 
               {logAnaliseSensorial.status_evento_explicacao ===
                 "CODAE pediu análise sensorial" && (
