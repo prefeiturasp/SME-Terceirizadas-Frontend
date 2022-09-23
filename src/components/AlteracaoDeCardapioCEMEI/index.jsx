@@ -45,7 +45,8 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     motivos,
     periodos,
     vinculos,
-    proximosDoisDiasUteis
+    proximosDoisDiasUteis,
+    proximosCincoDiasUteis
   } = props;
 
   useEffect(() => {
@@ -55,6 +56,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const [uuid, setUuid] = useState(null);
   const [rascunhos, setRascunhos] = useState(null);
   const [erroRascunhos, setErroRascunhos] = useState(false);
+  const [desabilitarAlterarDia, setDesabilitarAlterarDia] = useState(false);
+  const [desabilitarDeAte, setDesabilitarDeAte] = useState(false);
+  const [maximo5DiasUteis, setMaximo5DiasUteis] = useState(false);
   const [alimentosCEI, setAlimentosCEI] = useState(
     vinculos.filter(
       vinculo => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
@@ -363,6 +367,37 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     setUuid(null);
   };
 
+  const limparCampos = async (motivo, form) => {
+    await form.change("alterar_dia", undefined);
+    await form.change("data_inicial", undefined);
+    await form.change("data_final", undefined);
+    if (motivo) {
+      switch (motivo.nome) {
+        case "RPL - Refeição por Lanche":
+          setDesabilitarDeAte(true);
+          setDesabilitarAlterarDia(false);
+          break;
+
+        case "LPR - Lanche por Refeição":
+          setDesabilitarDeAte(true);
+          setDesabilitarAlterarDia(false);
+          break;
+
+        case "Lanche Emergencial":
+          setDesabilitarDeAte(false);
+          setDesabilitarAlterarDia(false);
+          setMaximo5DiasUteis(true);
+          break;
+
+        default:
+          setDesabilitarDeAte(false);
+          setDesabilitarAlterarDia(false);
+          break;
+      }
+    }
+    form.change("substituicoes", []);
+  };
+
   return (
     <div>
       <div className="mt-3">
@@ -441,7 +476,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       {async value => {
                         let motivo = motivos.find(m => m.uuid === value);
                         modificarOpcoesAlimentos(motivo);
-                        form.change("substituicoes", []);
+                        limparCampos(motivo, form);
                       }}
                     </OnChange>
                   </div>
@@ -461,7 +496,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                         .endOf("year")
                         .toDate()}
                       label="Alterar dia"
-                      disabled={values.data_inicial}
+                      disabled={values.data_inicial || desabilitarAlterarDia}
                     />
                   </div>
                   <div className="col-1 text-center date-options">
@@ -472,16 +507,19 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       component={InputComData}
                       name="data_inicial"
                       label="De"
-                      disabled={values.alterar_dia}
+                      disabled={values.alterar_dia || desabilitarDeAte}
                       minDate={
-                        values.motivo &&
-                        values.motivo.nome === "Lanche Emergencial"
+                        maximo5DiasUteis
                           ? moment().toDate()
                           : proximosDoisDiasUteis
                       }
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={
+                        maximo5DiasUteis
+                          ? proximosCincoDiasUteis
+                          : moment()
+                              .endOf("year")
+                              .toDate()
+                      }
                     />
                   </div>
                   <div className="col-3">
@@ -492,14 +530,19 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       disabled={
                         values.data_inicial === undefined ||
                         values.data_inicial === null ||
-                        values.alterar_dia
+                        values.alterar_dia ||
+                        desabilitarDeAte
                       }
                       minDate={
                         values.data_inicial && getDataObj(values.data_inicial)
                       }
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={
+                        maximo5DiasUteis
+                          ? proximosCincoDiasUteis
+                          : moment()
+                              .endOf("year")
+                              .toDate()
+                      }
                     />
                   </div>
                 </div>
