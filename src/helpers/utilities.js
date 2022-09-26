@@ -650,9 +650,9 @@ export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
-  if (!["treinamento", "production"].includes(ENVIRONMENT)) return true;
+  if (!["production"].includes(ENVIRONMENT)) return true;
   if (
-    (["treinamento", "production"].includes(ENVIRONMENT) &&
+    (["production"].includes(ENVIRONMENT) &&
       (localStorage.getItem("tipo_perfil") === `"diretoriaregional"` &&
         localStorage.getItem("nome_instituicao").includes("IPIRANGA"))) ||
     (localStorage.getItem("tipo_perfil") === `"escola"` &&
