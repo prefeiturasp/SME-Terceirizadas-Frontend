@@ -588,7 +588,7 @@ export class SolicitacaoDeKitLanche extends Component {
                   </span>
                 </div>
               </div>
-              {meusDados.instituicao &&
+              {meusDados.vinculo_atual.instituicao &&
                 meusDados.vinculo_atual.instituicao
                   .tipo_unidade_escolar_iniciais !== "CEU GESTAO" && (
                   <Fragment>
