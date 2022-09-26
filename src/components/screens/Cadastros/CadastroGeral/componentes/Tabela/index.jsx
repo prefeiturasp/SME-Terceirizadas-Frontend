@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
-import { Icon } from "antd";
 import "./style.scss";
+import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import ModalExcluirItem from "../ModalExcluirItem";
 import { usuarioEhTerceirizada } from "helpers/utilities";
@@ -63,7 +63,7 @@ export default ({ resultado, changePage }) => {
                                 : false
                             }
                           >
-                            <Icon className="mr-1" type="form" />
+                            <FormOutlined className="mr-1" />
                             Editar
                           </button>
                           |
@@ -78,7 +78,7 @@ export default ({ resultado, changePage }) => {
                                 : false
                             }
                           >
-                            <Icon className="mr-1" type="delete" />
+                            <DeleteOutlined className="mr-1" />
                             Excluir
                           </button>
                         </td>

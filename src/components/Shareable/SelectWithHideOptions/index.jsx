@@ -2,6 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import { Select } from "antd";
 import "./styles.css";
+const { Option } = Select;
 
 export class SelectWithHideOptions extends React.Component {
   state = {};
@@ -24,16 +25,18 @@ export class SelectWithHideOptions extends React.Component {
         placeholder={placeholder}
         value={selectedItems}
         onChange={handleChange}
-        style={{ width: "100%" }}
         onSelect={onSelect}
         onDeselect={onDeselect}
-        {...this.props}
+        style={{
+          width: "100%"
+        }}
+        optionLabelProp="label"
         {...input}
       >
         {filteredOptions.map(item => (
-          <Select.Option key={item} value={item}>
+          <Option key={item} label={item} value={item}>
             {item}
-          </Select.Option>
+          </Option>
         ))}
       </Select>
     );
