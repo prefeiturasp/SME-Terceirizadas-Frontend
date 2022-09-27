@@ -3,7 +3,8 @@ import { Form, Field } from "react-final-form";
 import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
+import { Select as SelectAntd } from "antd";
 import { usuarioEhTerceirizada, usuarioEhEscola } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -166,7 +167,7 @@ export const FormBuscaProduto = ({
                             component={ASelect}
                             className="input-busca-tipo-item"
                             placeholder="Selecione um tipo"
-                            suffixIcon={<Icon type="caret-down" />}
+                            suffixIcon={<CaretDownOutlined />}
                             name="tipo"
                             filterOption={(inputValue, option) =>
                               option.props.children
@@ -245,7 +246,7 @@ export const FormBuscaProduto = ({
                       component={ASelect}
                       className="input-busca-tipo-item"
                       placeholder="Selecione um tipo"
-                      suffixIcon={<Icon type="caret-down" />}
+                      suffixIcon={<CaretDownOutlined />}
                       name="tipo"
                       filterOption={(inputValue, option) =>
                         option.props.children
