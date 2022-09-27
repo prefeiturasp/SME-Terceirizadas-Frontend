@@ -94,14 +94,20 @@ export default ({
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <section className="resultado-busca-requisicao-entrega-dilog">
-        <header>Veja requisições disponibilizadas</header>
+        <header>Requisições Disponibilizadas</header>
         <article>
           <div className="grid-table header-table">
             <div>
               <Checkbox checked={allChecked} onChange={() => checkAll()} />
             </div>
-            <div>N° da Requisição de Entrega</div>
-            <div>Qtde. de Guias Remessa</div>
+            <div>
+              N° da Requisição <br />
+              de Entrega
+            </div>
+            <div>
+              Quantidade de <br />
+              Guias de Remessa
+            </div>
             <div>Distribuidor</div>
             <div>Status</div>
             <div>Data de Entrega</div>
