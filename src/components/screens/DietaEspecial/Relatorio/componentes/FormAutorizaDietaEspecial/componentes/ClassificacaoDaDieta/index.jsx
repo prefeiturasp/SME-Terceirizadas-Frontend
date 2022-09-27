@@ -1,7 +1,8 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 import { selectValidate } from "helpers/fieldValidators";
 
 const ClassificacaoDaDieta = ({ classificacoesDieta }) => {
@@ -21,7 +22,7 @@ const ClassificacaoDaDieta = ({ classificacoesDieta }) => {
         <Field
           component={ASelect}
           className={"select-form-produto"}
-          suffixIcon={<Icon type="caret-down" />}
+          suffixIcon={<CaretDownOutlined />}
           showSearch
           required
           validate={selectValidate}

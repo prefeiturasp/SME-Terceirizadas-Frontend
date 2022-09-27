@@ -88,69 +88,78 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputText}
+                  apenasNumeros
                   label="N° da Requisição de Entrega"
                   name="numero_requisicao"
-                  placeholder="Digite o número da requisição"
+                  placeholder="Digite o Nº da Requisição"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col-3">
                 <Field
                   component={InputText}
-                  label="Nº da Guia de Remessa"
+                  apenasNumeros
+                  label="N° da Guia de Remessa"
                   name="numero_guia"
-                  placeholder="Digite o número da guia"
+                  placeholder="Digite o Nº da Guia"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nome do produto"
+                  label="Nome do Produto"
                   name="nome_produto"
-                  placeholder="Digite o nome do produto"
+                  placeholder="Nome do Produto"
                   className="input-busca-produto"
                 />
               </div>
             </div>
 
             <div className="row mt-2">
-              <div className="col-2">
-                <Field
-                  component={InputComData}
-                  label="Período de Entrega"
-                  name="data_inicial"
-                  className="data-inicial"
-                  placeholder="De"
-                  minDate={null}
-                  maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
-                      : null
-                  }
-                />
+              <div className="col-4">
+                <span className="col-form-label">
+                  Selecionar Período de Entrega{" "}
+                </span>
+                <div className="row">
+                  <div className="col-6 mt-1">
+                    <Field
+                      component={InputComData}
+                      name="data_inicial"
+                      className="data-inicial"
+                      placeholder="De"
+                      minDate={null}
+                      maxDate={
+                        values.data_final
+                          ? moment(values.data_final, "DD/MM/YYYY")._d
+                          : null
+                      }
+                    />
+                  </div>
+                  <div className="col-6 mt-1">
+                    <Field
+                      component={InputComData}
+                      name="data_final"
+                      popperPlacement="bottom-end"
+                      placeholder="Até"
+                      minDate={
+                        values.data_inicial
+                          ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                          : null
+                      }
+                      maxDate={null}
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="col-2">
-                <Field
-                  component={InputComData}
-                  label="&nbsp;"
-                  name="data_final"
-                  popperPlacement="bottom-end"
-                  placeholder="Até"
-                  minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
-                  }
-                  maxDate={null}
-                />
-              </div>
+
               <div className="col-2">
                 <Field
                   component={InputText}
-                  label="Cód. CODAE da UE"
+                  apenasNumeros
+                  label="Código CODAE"
                   name="codigo_unidade"
-                  placeholder="Digite o código"
+                  placeholder="Digite o Código"
                   className="input-busca-produto"
                 />
 
@@ -165,7 +174,7 @@ export default ({
                   component={InputText}
                   label="Nome da UE"
                   name="nome_unidade"
-                  placeholder="Digite o nome da Unidade Educacional"
+                  placeholder="Digite o nome da UE"
                   className="input-busca-produto"
                   disabled={desabilitarAluno}
                 />

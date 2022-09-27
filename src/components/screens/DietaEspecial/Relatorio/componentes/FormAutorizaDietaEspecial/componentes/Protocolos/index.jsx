@@ -3,7 +3,8 @@ import HTTP_STATUS from "http-status-codes";
 import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 import { getProtocoloPadrao } from "services/dietaEspecial.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { selectValidate } from "helpers/fieldValidators";
@@ -57,7 +58,7 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
         <Field
           component={ASelect}
           className={"select-form-produto"}
-          suffixIcon={<Icon type="caret-down" />}
+          suffixIcon={<CaretDownOutlined />}
           showSearch
           required
           validate={selectValidate}

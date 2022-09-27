@@ -34,7 +34,7 @@ export default ({ updatePage, numEnviadas }) => {
   return (
     <>
       <Botao
-        texto="Confirmar todos"
+        texto="Confirmar Todos"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
         icon={BUTTON_ICON.CHECK_CIRCLE}
@@ -53,18 +53,18 @@ export default ({ updatePage, numEnviadas }) => {
           </Modal.Body>
           <Modal.Footer>
             <Botao
-              texto="Sim"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.BLUE}
-              className="ml-3"
-              onClick={handleSim}
-            />
-            <Botao
               texto="Não"
               type={BUTTON_TYPE.BUTTON}
               onClick={handleClose}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
               className="ml-3"
+            />
+            <Botao
+              texto="Sim"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN}
+              className="ml-3"
+              onClick={handleSim}
             />
           </Modal.Footer>
         </Spin>

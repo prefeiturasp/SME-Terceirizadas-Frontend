@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Icon, Input, Select } from "antd";
+import { Collapse, Input, Select } from "antd";
 import Botao from "components/Shareable/Botao";
+import { CaretDownOutlined } from "@ant-design/icons";
 import {
   BUTTON_ICON,
   BUTTON_STYLE
@@ -181,7 +182,7 @@ export default ({
                   </b>
                   {opcoesContagem.length > 0 && (
                     <Select
-                      suffixIcon={<Icon type="caret-down" />}
+                      suffixIcon={<CaretDownOutlined />}
                       name="contagem_refeicoes"
                       defaultValue={getDefaultValueSelectTipoContagem()}
                       onChange={value => handleChangeTipoContagem(value)}
