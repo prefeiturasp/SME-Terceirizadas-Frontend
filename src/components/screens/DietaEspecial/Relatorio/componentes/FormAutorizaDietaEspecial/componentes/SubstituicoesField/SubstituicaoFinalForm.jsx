@@ -4,7 +4,8 @@ import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
 import Select from "components/Shareable/Select";
-import { Icon, Select as SelectAntd } from "antd";
+import { Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import { ASelect } from "components/Shareable/MakeField";
 import {
@@ -56,7 +57,7 @@ export default class SubstituicoesField extends Component {
             <Field
               component={ASelect}
               className={"select-form-produto"}
-              suffixIcon={<Icon type="caret-down" />}
+              suffixIcon={<CaretDownOutlined />}
               showSearch
               validate={required}
               name={`${name}.alimento`}
