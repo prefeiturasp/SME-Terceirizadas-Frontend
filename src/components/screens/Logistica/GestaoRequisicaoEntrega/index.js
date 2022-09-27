@@ -184,7 +184,7 @@ export default () => {
                 <div className="d-flex align-items-end">
                   <Spin size="small" spinning={carregandoPDFConfirmados}>
                     <Botao
-                      texto="Exportar requisições confirmadas"
+                      texto="Exportar Requisições Confirmadas"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       icon={BUTTON_ICON.FILE_PDF}
