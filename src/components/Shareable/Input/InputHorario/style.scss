@@ -3,6 +3,11 @@
 .input-horario {
   height: 32px;
 
+  .ant-picker,
+  .ant-picker-focused {
+    width: 100%;
+  }
+
   span.required-asterisk {
     color: $red;
     padding-right: 5px;
