@@ -90,7 +90,7 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="Nome da UE"
                   name="nome_unidade"
-                  placeholder="Digite o nome da UE"
+                  placeholder="Digite o Nome da UE"
                   className="input-busca-produto"
                 />
               </div>
