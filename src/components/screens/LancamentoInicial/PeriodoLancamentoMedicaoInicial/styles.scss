@@ -150,6 +150,21 @@
           top: 4px;
           right: 4px;
         }
+
+        .icone-info-success {
+          position: absolute;
+          background-color: $green;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
       }
 
       .nao-eh-dia-letivo {

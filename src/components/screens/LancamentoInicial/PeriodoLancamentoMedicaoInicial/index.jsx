@@ -53,6 +53,7 @@ import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import "./styles.scss";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -80,6 +81,7 @@ export default () => {
   const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
     null
   );
+  const [diasSobremesaDoce, setDiasSobremesaDoce] = useState(null);
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
@@ -100,6 +102,20 @@ export default () => {
   let mesAnoDefault = new Date();
 
   const { TabPane } = Tabs;
+
+  const getListaDiasSobremesaDoceAsync = async escola_uuid => {
+    const params = {
+      mes: new Date(location.state.mesAnoSelecionado).getMonth() + 1,
+      ano: new Date(location.state.mesAnoSelecionado).getFullYear(),
+      escola_uuid
+    };
+    const response = await getListaDiasSobremesaDoce(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasSobremesaDoce(response.data);
+    } else {
+      toastError("Erro ao carregar dias de sobremesa doce");
+    }
+  };
 
   useEffect(() => {
     const mesAnoSelecionado = location.state
@@ -129,6 +145,7 @@ export default () => {
       const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
         escola.uuid
       );
+      getListaDiasSobremesaDoceAsync(escola.uuid);
       const periodos_escolares = response_vinculos.data.results;
       const periodo =
         periodos_escolares.find(
@@ -719,9 +736,28 @@ export default () => {
                                               ]
                                             )}
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${
-                                              BUTTON_STYLE.GREEN_OUTLINE_WHITE
-                                            }`}
+                                            style={
+                                              values[
+                                                `repeticao_refeicao__dia_${
+                                                  column.dia
+                                                }__categoria_${categoria.id}`
+                                              ] &&
+                                              diasSobremesaDoce.includes(
+                                                `${new Date(
+                                                  location.state.mesAnoSelecionado
+                                                ).getFullYear()}-${(
+                                                  new Date(
+                                                    location.state.mesAnoSelecionado
+                                                  ).getMonth() + 1
+                                                )
+                                                  .toString()
+                                                  .padStart(2, "0")}-${
+                                                  column.dia
+                                                }`
+                                              )
+                                                ? BUTTON_STYLE.RED_OUTLINE
+                                                : BUTTON_STYLE.GREEN_OUTLINE_WHITE
+                                            }
                                             onClick={() =>
                                               onClickBotaoObservacao(
                                                 column.dia,
@@ -749,6 +785,24 @@ export default () => {
                                               categoria.id,
                                               values
                                             )}
+                                            exibeTooltipDiaSobremesaDoce={
+                                              row.name ===
+                                                "repeticao_refeicao" &&
+                                              diasSobremesaDoce.includes(
+                                                `${new Date(
+                                                  location.state.mesAnoSelecionado
+                                                ).getFullYear()}-${(
+                                                  new Date(
+                                                    location.state.mesAnoSelecionado
+                                                  ).getMonth() + 1
+                                                )
+                                                  .toString()
+                                                  .padStart(2, "0")}-${
+                                                  column.dia
+                                                }`
+                                              )
+                                            }
+                                            dia={column.dia}
                                             defaultValue={defaultValue(
                                               column,
                                               row
