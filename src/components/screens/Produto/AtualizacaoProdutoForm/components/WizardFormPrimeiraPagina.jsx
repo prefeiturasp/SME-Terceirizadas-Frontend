@@ -342,6 +342,9 @@ class WizardFormPrimeiraPagina extends React.Component {
             </label>
             <Field
               component={ASelect}
+              onBlur={e => {
+                e.preventDefault();
+              }}
               className={"select-form-produto"}
               showSearch
               name="nome"
@@ -360,6 +363,9 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
+                onBlur={e => {
+                  e.preventDefault();
+                }}
                 className={"select-form-produto"}
                 showSearch
                 name="marca"
@@ -381,6 +387,9 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
+                onBlur={e => {
+                  e.preventDefault();
+                }}
                 className={"select-form-produto"}
                 showSearch
                 name="fabricante"

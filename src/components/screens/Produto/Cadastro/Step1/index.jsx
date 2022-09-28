@@ -54,6 +54,7 @@ class Step1 extends Component {
     };
     this.closeModalCadastrarItem = this.closeModalCadastrarItem.bind(this);
     this.getItensCadastrados = this.getItensCadastrados.bind(this);
+    this.setaNomeProduto = this.setaNomeProduto.bind(this);
     this.updateOpcoesItensCadastrados = this.updateOpcoesItensCadastrados.bind(
       this
     );
@@ -365,6 +366,9 @@ class Step1 extends Component {
               }}
               onSelect={this.setaNomeProduto}
               defaultValue={defaultNomeDeProdutosEditalStep1}
+              onBlur={e => {
+                e.preventDefault();
+              }}
               validate={required}
             >
               {nomeDeProdutosEditalArray}
@@ -378,6 +382,9 @@ class Step1 extends Component {
             </label>
             <Field
               component={ASelect}
+              onBlur={e => {
+                e.preventDefault();
+              }}
               className={"select-form-produto"}
               showSearch
               filterOption={(inputValue, option) => {
@@ -399,6 +406,9 @@ class Step1 extends Component {
             </label>
             <Field
               component={ASelect}
+              onBlur={e => {
+                e.preventDefault();
+              }}
               className={"select-form-produto"}
               filterOption={(inputValue, option) => {
                 return option.props.children
