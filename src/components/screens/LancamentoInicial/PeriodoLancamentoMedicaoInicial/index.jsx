@@ -54,6 +54,7 @@ import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimen
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import "./styles.scss";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import { botaoAdicionarObrigatorio, validarFormulario } from "./validacoes";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -418,6 +419,16 @@ export default () => {
   ]);
 
   const onSubmit = async (values, ehObservacao) => {
+    const erro = validarFormulario(
+      values,
+      diasSobremesaDoce,
+      location,
+      categoriasDeMedicao
+    );
+    if (erro) {
+      toastError(erro);
+      return;
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
@@ -737,24 +748,18 @@ export default () => {
                                             )}
                                             type={BUTTON_TYPE.BUTTON}
                                             style={
-                                              values[
-                                                `repeticao_refeicao__dia_${
+                                              botaoAdicionarObrigatorio(
+                                                values,
+                                                column.dia,
+                                                categoria,
+                                                diasSobremesaDoce,
+                                                location
+                                              ) &&
+                                              !values[
+                                                `observacoes__dia_${
                                                   column.dia
                                                 }__categoria_${categoria.id}`
-                                              ] &&
-                                              diasSobremesaDoce.includes(
-                                                `${new Date(
-                                                  location.state.mesAnoSelecionado
-                                                ).getFullYear()}-${(
-                                                  new Date(
-                                                    location.state.mesAnoSelecionado
-                                                  ).getMonth() + 1
-                                                )
-                                                  .toString()
-                                                  .padStart(2, "0")}-${
-                                                  column.dia
-                                                }`
-                                              )
+                                              ]
                                                 ? BUTTON_STYLE.RED_OUTLINE
                                                 : BUTTON_STYLE.GREEN_OUTLINE_WHITE
                                             }
