@@ -30,7 +30,8 @@ export const InputText = props => {
     icone,
     contador,
     toUppercaseActive,
-    apenasNumeros
+    apenasNumeros,
+    id
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -55,6 +56,7 @@ export const InputText = props => {
           meta.touched &&
           (meta.error || meta.warning) &&
           "invalid-field"}`}
+        id={id}
         disabled={disabled}
         min={min}
         max={max}

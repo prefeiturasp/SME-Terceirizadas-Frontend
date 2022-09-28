@@ -5,6 +5,7 @@ const SelectSelecione = props => {
   const {
     input: { onChange, value },
     options,
+    placeholder,
     ...rest
   } = props;
   return (
@@ -12,7 +13,7 @@ const SelectSelecione = props => {
       naoDesabilitarPrimeiraOpcao={value !== undefined}
       options={
         value === ""
-          ? [{ uuid: "0", nome: "Selecione..." }].concat(options)
+          ? [{ uuid: "0", nome: placeholder || "Selecione..." }].concat(options)
           : options
       }
       input={{ value: value || "0", onChange }}

@@ -2,7 +2,7 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 
-const ListagemVinculos = ({ vinculos }) => {
+const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
   return (
     <section className="tabela-gestao-acesso">
       <header>Usuários com Acesso Cadastrados</header>
@@ -22,12 +22,18 @@ const ListagemVinculos = ({ vinculos }) => {
               <div>{vinculo.visao_perfil}</div>
               <div>{vinculo.nome_perfil}</div>
               <div className="flex-container">
-                {vinculo.visao_perfil === "EMPRESA" ? (
-                  <button className="verde">
+                {vinculo.visao_perfil !== "EMPRESA" ? (
+                  <button
+                    className="verde"
+                    onClick={() => toggleExclusao(true, vinculo)}
+                  >
                     <i className="fas fa-trash" />
                   </button>
                 ) : (
-                  <button className="verde">
+                  <button
+                    className="verde"
+                    onClick={() => toggleEdicao(true, vinculo)}
+                  >
                     <i className="fas fa-edit" />
                   </button>
                 )}

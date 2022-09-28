@@ -67,6 +67,9 @@ const fetchPost = (url, body) => {
 export const getDadosUsuarioEOL = async registroFuncional =>
   axios.get(`/dados-usuario-eol/${registroFuncional}/`);
 
+export const getDadosUsuarioEOLCompleto = async registroFuncional =>
+  axios.get(`/dados-usuario-eol-completo/${registroFuncional}/`);
+
 export const criarEquipeAdministradoraEscola = (uuid, registro_funcional) =>
   fetchPost(
     `${API_URL}/vinculos-escolas/${uuid}/criar_equipe_administradora/`,
