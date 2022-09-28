@@ -83,18 +83,20 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputText}
+                  apenasNumeros
                   label="N° da Requisição de Entrega"
                   name="numero_requisicao"
-                  placeholder="Digite o número da requisição"
+                  placeholder="Digite o Nº da Requisição"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col-3">
                 <Field
                   component={InputText}
-                  label="Nº da Guia de Remessa"
+                  apenasNumeros
+                  label="N° da Guia de Remessa"
                   name="numero_guia"
-                  placeholder="Digite o número da guia"
+                  placeholder="Digite o Nº da Guia"
                   className="input-busca-produto"
                 />
               </div>
@@ -121,7 +123,7 @@ export default ({
                   component={InputText}
                   label="Nome da UE"
                   name="nome_unidade"
-                  placeholder="Digite o nome da Unidade Educacional"
+                  placeholder="Digite o nome da UE"
                   className="input-busca-produto"
                   disabled={desabilitarAluno}
                 />
@@ -157,9 +159,10 @@ export default ({
               <div className="col-2">
                 <Field
                   component={InputText}
-                  label="Cód. CODAE da UE"
+                  apenasNumeros
+                  label="Código CODAE"
                   name="codigo_unidade"
-                  placeholder="Digite o código"
+                  placeholder="Digite o Código"
                   className="input-busca-produto"
                 />
 
