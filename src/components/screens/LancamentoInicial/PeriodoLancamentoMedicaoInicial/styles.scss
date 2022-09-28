@@ -4,7 +4,16 @@
   .ant-tabs-tab-active {
     background: $green !important;
     font-weight: 700;
-    color: $white !important;
+
+    .ant-tabs-tab-btn {
+      color: $white !important;
+    }
+  }
+
+  .ant-tabs-tab {
+    .ant-tabs-tab-btn:hover {
+      color: $green !important;
+    }
   }
 }
 
