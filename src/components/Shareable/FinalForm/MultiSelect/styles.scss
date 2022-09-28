@@ -2,16 +2,28 @@
   input {
     height: 40px;
   }
+
   span {
     color: #42474a;
     font-size: 14px;
     font-weight: 900;
   }
+
   input::placeholder {
     color: #42474a;
     font-size: 14px;
   }
+
   label.select-item {
     white-space: nowrap;
+    padding: 0 1em !important;
+
+    span.item-renderer {
+      display: flex;
+
+      span {
+        padding: 10px 7px !important;
+      }
+    }
   }
 }
