@@ -1,3 +1,3 @@
-export const botaoAdicionarObrigatorio = values => {
+export const botaoAdicionarObrigatorio = () => {
   return;
 };
