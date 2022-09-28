@@ -1,4 +1,4 @@
-export const repeticaoSobremesaDoceComValor = (
+export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
   dia,
   categoria,
@@ -7,6 +7,7 @@ export const repeticaoSobremesaDoceComValor = (
 ) => {
   return (
     values[`repeticao_refeicao__dia_${dia}__categoria_${categoria.id}`] &&
+    !values[`observacoes__dia_${dia}__categoria_${categoria.id}`] &&
     diasSobremesaDoce.includes(
       `${new Date(location.state.mesAnoSelecionado).getFullYear()}-${(
         new Date(location.state.mesAnoSelecionado).getMonth() + 1
@@ -24,7 +25,7 @@ export const botaoAdicionarObrigatorio = (
   diasSobremesaDoce,
   location
 ) => {
-  return repeticaoSobremesaDoceComValor(
+  return repeticaoSobremesaDoceComValorESemObservacao(
     values,
     dia,
     categoria,
@@ -44,16 +45,13 @@ export const validarFormulario = (
   categoriasDeMedicao.forEach(categoria => {
     diasSobremesaDoce.forEach(dia => {
       if (
-        repeticaoSobremesaDoceComValor(
+        repeticaoSobremesaDoceComValorESemObservacao(
           values,
           dia.split("-")[2],
           categoria,
           diasSobremesaDoce,
           location
-        ) &&
-        !values[
-          `observacoes__dia_${dia.split("-")[2]}__categoria_${categoria.id}`
-        ]
+        )
       ) {
         erro = `Dia ${
           dia.split("-")[2]

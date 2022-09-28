@@ -754,12 +754,7 @@ export default () => {
                                                 categoria,
                                                 diasSobremesaDoce,
                                                 location
-                                              ) &&
-                                              !values[
-                                                `observacoes__dia_${
-                                                  column.dia
-                                                }__categoria_${categoria.id}`
-                                              ]
+                                              )
                                                 ? BUTTON_STYLE.RED_OUTLINE
                                                 : BUTTON_STYLE.GREEN_OUTLINE_WHITE
                                             }
