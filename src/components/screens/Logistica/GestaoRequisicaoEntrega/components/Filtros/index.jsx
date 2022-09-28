@@ -108,7 +108,7 @@ export default ({
                   component={InputText}
                   label="Nome do produto"
                   name="nome_produto"
-                  placeholder="Digite o nome do produto"
+                  placeholder="Digite o Nome do Produto"
                   className="input-busca-produto"
                 />
               </div>

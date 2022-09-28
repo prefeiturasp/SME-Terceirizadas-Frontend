@@ -36,7 +36,7 @@ const MenuLogistica = () => {
 
       {usuarioEhDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_REQUISICAO_ENTREGA}`}>
-          Requisições de Entrega
+          Requisição de Entrega
         </LeafItem>
       )}
 
