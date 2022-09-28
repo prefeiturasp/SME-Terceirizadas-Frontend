@@ -125,7 +125,7 @@ export default () => {
                   <div className="col-12">
                     <Field
                       component={InputText}
-                      label="Nome da Unidade Educacional"
+                      label="Nome da UE"
                       name="nome_unidade"
                       className="input-busca-produto"
                       disabled
@@ -255,7 +255,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Selecionar hora da entrega"
+                      label="Selecionar Hora da Entrega"
                       name="hora_tentativa"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
@@ -275,8 +275,10 @@ export default () => {
                   <div className="row pb-3">
                     <article className="col-9 produto">
                       <label className="mb-3">
-                        Se possível, insira uma foto que demonstre o motivo do
-                        insucesso de entrega.
+                        <b>
+                          Se possível, insira uma foto que demonstre o motivo do
+                          insucesso de entrega.
+                        </b>
                       </label>
                       <Field
                         component={InputFile}
@@ -291,7 +293,9 @@ export default () => {
                         disabled={arquivo.length > 0}
                       />
                       <label className="mb-3">
-                        {"Formatos aceitos: " + FORMATOS_IMAGEM}
+                        {"IMPORTANTE: Envie um arquivo nos formatos: " +
+                          FORMATOS_IMAGEM +
+                          ", com até 10MB"}
                       </label>
                     </article>
                   </div>
