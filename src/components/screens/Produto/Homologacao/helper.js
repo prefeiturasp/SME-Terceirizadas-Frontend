@@ -63,3 +63,11 @@ export const formataEditais = vinculos => {
   const editais = vinculos.map(vinculo => vinculo.edital.numero);
   return editais.join(", ");
 };
+
+export const formataValoresBooleanos = value => {
+  if (value) {
+    return "SIM";
+  } else {
+    return "NÃO";
+  }
+};

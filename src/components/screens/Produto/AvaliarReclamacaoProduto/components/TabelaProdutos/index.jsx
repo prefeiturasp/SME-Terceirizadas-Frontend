@@ -471,6 +471,7 @@ export default class TabelaProdutos extends Component {
           eAnalise={true}
           labelJustificativa="Informações Adicionais"
           helpText="Solicitamos que seja informado a quantidade e descrição para análise sensorial"
+          tipoModal="analise"
         />
       </section>
     );
