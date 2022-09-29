@@ -654,13 +654,17 @@ export const exibirGA = () => {
   if (
     (["production"].includes(ENVIRONMENT) &&
       (localStorage.getItem("tipo_perfil") === `"diretoriaregional"` &&
-        localStorage.getItem("nome_instituicao").includes("IPIRANGA"))) ||
-    (localStorage.getItem("tipo_perfil") === `"escola"` &&
+        (localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
+          localStorage.getItem("nome_instituicao").includes("PIRITUBA")))) ||
+    ((localStorage.getItem("tipo_perfil") === `"escola"` &&
       localStorage.getItem("dre_nome").includes("IPIRANGA")) ||
+      localStorage.getItem("dre_nome").includes("PIRITUBA")) ||
     (localStorage.getItem("tipo_perfil") === `"terceirizada"` &&
       localStorage.getItem("lotes") &&
-      JSON.parse(localStorage.getItem("lotes")).find(lote =>
-        lote.diretoria_regional.nome.includes("IPIRANGA")
+      JSON.parse(localStorage.getItem("lotes")).find(
+        lote =>
+          lote.diretoria_regional.nome.includes("IPIRANGA") ||
+          lote.diretoria_regional.nome.includes("PIRITUBA")
       ))
   )
     return true;
