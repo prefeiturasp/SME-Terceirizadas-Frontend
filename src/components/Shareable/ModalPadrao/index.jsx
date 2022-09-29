@@ -74,6 +74,7 @@ export class ModalPadrao extends Component {
       protocoloAnalise,
       status,
       terceirizada,
+      tipoModal,
       ...textAreaProps
     } = this.props;
     return (
@@ -90,7 +91,7 @@ export class ModalPadrao extends Component {
                 <Modal.Title>{modalTitle}</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                {protocoloAnalise !== null && (
+                {protocoloAnalise !== null && tipoModal === "analise" && (
                   <div className="numero-protocolo">
                     <div>Número Protocolo: {protocoloAnalise}</div>
                   </div>
