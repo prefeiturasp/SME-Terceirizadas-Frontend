@@ -75,6 +75,7 @@ const ModalCadastroVinculo = ({
     values.nome_servidor = usuarioEOL.nome;
     values.cargo_servidor = usuarioEOL.cargo;
     values.email_servidor = usuarioEOL.email;
+    values.cpf = usuarioEOL.cpf;
     values.cpf_servidor = formataCPFCensurado(usuarioEOL.cpf);
     values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
     values.cargo_servidor = usuarioEOL.cargo;
