@@ -27,3 +27,12 @@ export const deleteDiaSobremesaDoce = async uuid => {
     return data;
   }
 };
+
+export const getListaDiasSobremesaDoce = async (params = null) => {
+  const url = `medicao-inicial/dias-sobremesa-doce/lista-dias/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
