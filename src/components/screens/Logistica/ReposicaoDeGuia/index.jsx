@@ -908,10 +908,10 @@ export default () => {
                               <div className="row">
                                 <article className="col-9 produto">
                                   <label className="mb-3">
-                                    <strong>
-                                      Insira uma foto que demonstre a ocorrência
-                                      apontada
-                                    </strong>
+                                    <span>
+                                      Insira uma <strong> foto </strong>que
+                                      demonstre a ocorrência apontada
+                                    </span>
                                   </label>
                                   <InputFile
                                     ref={inputFile}

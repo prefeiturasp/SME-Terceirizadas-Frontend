@@ -275,10 +275,10 @@ export default () => {
                   <div className="row pb-3">
                     <article className="col-9 produto">
                       <label className="mb-3">
-                        <b>
-                          Se possível, insira uma foto que demonstre o motivo do
-                          insucesso de entrega.
-                        </b>
+                        <span>
+                          Se possível, insira uma <strong>foto</strong> que
+                          demonstre o motivo do insucesso de entrega.
+                        </span>
                       </label>
                       <Field
                         component={InputFile}

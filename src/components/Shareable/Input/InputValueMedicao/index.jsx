@@ -25,7 +25,8 @@ export const InputText = props => {
     pattern,
     icone,
     toUppercaseActive,
-    apenasNumeros
+    apenasNumeros,
+    exibeTooltipDiaSobremesaDoce
   } = props;
 
   let msgTooltip = "";
@@ -72,11 +73,21 @@ export const InputText = props => {
           {label}
         </label>
       ]}
+      {exibeTooltipDiaSobremesaDoce && (
+        <Tooltip
+          title={
+            "Dia de sobremesa doce. Justifique o lançamento de repetição nas observações."
+          }
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
       {(validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()) && (
         <Tooltip title={msgTooltip}>
           <i className="fas fa-info icone-info-error" />
         </Tooltip>
       )}
+
       <input
         {...input}
         className={`form-control ${className} ${(validacaoFrequencia() ||
