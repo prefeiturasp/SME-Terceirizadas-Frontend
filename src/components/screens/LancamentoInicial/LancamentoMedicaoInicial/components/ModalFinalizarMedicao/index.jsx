@@ -190,6 +190,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
                   helpText={
                     "É obrigatório anexar o relatório de ocorrências no formato Excel e também no formato PDF"
                   }
+                  customHelpTextClassName="custom-style-help-text"
                 />
               )}
             />

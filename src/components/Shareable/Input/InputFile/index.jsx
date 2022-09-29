@@ -123,6 +123,7 @@ export class InputFile extends Component {
       accept,
       alignLeft,
       className,
+      customHelpTextClassName,
       disabled,
       helpText,
       icone,
@@ -139,8 +140,9 @@ export class InputFile extends Component {
     return (
       <>
         <div
-          className={`col-4 input input-file ${alignLeft &&
-            "align-left"} ${icone && "icon"}`}
+          className={`${
+            ehPlanilhaMedicaoInicial ? "col-4" : "col-12"
+          } input input-file ${alignLeft && "align-left"} ${icone && "icon"}`}
         >
           <Botao
             className="upload-button"
@@ -181,10 +183,14 @@ export class InputFile extends Component {
             )}
         </div>
         <div
-          className={`col-8 input input-file ${alignLeft &&
-            "align-left"} ${icone && "icon"}`}
+          className={`${
+            ehPlanilhaMedicaoInicial ? "col-8" : "col-12"
+          } input input-file ${alignLeft && "align-left"} ${icone && "icon"}`}
         >
-          <HelpText helpText={helpText} />
+          <HelpText
+            helpText={helpText}
+            customHelpTextClassName={customHelpTextClassName}
+          />
         </div>
         <div
           className={`col-12 input input-file ${alignLeft &&
@@ -242,6 +248,7 @@ export class InputFile extends Component {
 InputFile.propTypes = {
   alignLeft: PropTypes.bool,
   className: PropTypes.string,
+  customHelpTextClassName: PropTypes.string,
   concatenarNovosArquivos: PropTypes.bool,
   disabled: PropTypes.bool,
   esconderAsterisco: PropTypes.bool,
@@ -260,6 +267,7 @@ InputFile.propTypes = {
 
 InputFile.defaultProps = {
   className: "",
+  customHelpTextClassName: "",
   concatenarNovosArquivos: false,
   disabled: false,
   esconderAsterisco: false,
