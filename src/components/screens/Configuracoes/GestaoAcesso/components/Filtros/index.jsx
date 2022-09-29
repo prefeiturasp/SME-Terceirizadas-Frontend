@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef } from "react";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -8,48 +8,13 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./styles.scss";
-import Select from "components/Shareable/Select";
-import { getPerfilListagem, getVisoesListagem } from "services/perfil.service";
+import SelectSelecione from "components/Shareable/SelectSelecione";
 
 const FORM_NAME = "buscaGestaoAcesso";
 
-export default ({ setFiltros }) => {
+export default ({ setFiltros, setShowCadastro, visoes, perfis }) => {
   const initialValues = {};
   const inicioResultado = useRef();
-  const [perfis, setPerfis] = useState([]);
-  const [visoes, setVisoes] = useState([]);
-
-  const buscaFiltros = async () => {
-    const perfis = await getPerfilListagem();
-    const visoes = await getVisoesListagem();
-
-    const placeholderPerfil = {
-      uuid: undefined,
-      nome: "Selecione o perfil do Usuário"
-    };
-
-    const placeholderVisao = {
-      uuid: undefined,
-      nome: "Selecione a Visão"
-    };
-
-    let options_perfis = perfis.data.results.map(perfil => ({
-      uuid: perfil.nome,
-      nome: perfil.nome
-    }));
-
-    let options_visoes = visoes.data.map(visao => ({
-      uuid: visao.id,
-      nome: visao.nome
-    }));
-
-    setPerfis([placeholderPerfil, ...options_perfis]);
-    setVisoes([placeholderVisao, ...options_visoes]);
-  };
-
-  useEffect(() => {
-    buscaFiltros();
-  }, []);
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -89,26 +54,32 @@ export default ({ setFiltros }) => {
               <div className="col-6">
                 <Field
                   label="Visão"
-                  component={Select}
-                  placeholder="Selecione"
+                  component={SelectSelecione}
+                  placeholder="Selecione a Visão"
                   name="visao"
                   options={visoes}
-                  naoDesabilitarPrimeiraOpcao
                 />
               </div>
               <div className="col-6">
                 <Field
                   label="Perfil de Acesso"
-                  component={Select}
-                  placeholder="Selecione"
+                  component={SelectSelecione}
+                  placeholder="Selecione o perfil do Usuário"
                   name="perfil"
                   options={perfis}
-                  naoDesabilitarPrimeiraOpcao
                 />
               </div>
             </div>
 
             <div className="mt-4 mb-4" ref={inicioResultado}>
+              <Botao
+                texto="Adicionar Acesso"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN}
+                className="float-left"
+                onClick={() => setShowCadastro(true)}
+              />
+
               <Botao
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
