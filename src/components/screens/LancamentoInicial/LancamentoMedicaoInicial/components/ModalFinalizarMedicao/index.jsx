@@ -112,7 +112,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
       arquivo.forEach(element => {
         payloadAnexos.push({
           nome: String(element.nome),
-          base64: String(element.arquivo)
+          base64: String(element.base64)
         });
       });
       data.append("anexos", JSON.stringify(payloadAnexos));
