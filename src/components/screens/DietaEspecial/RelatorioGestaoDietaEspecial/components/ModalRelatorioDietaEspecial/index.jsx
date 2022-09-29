@@ -26,6 +26,7 @@ const ModalRelatorioDietaEspecial = ({
 }) => {
   const [carregando, setCarregando] = useState(false);
   const [page, setPage] = useState(1);
+  const [exportandoRelatorio, setExportandoRelatorio] = useState(false);
 
   const nextPage = page => {
     setCarregando(true);
@@ -47,10 +48,12 @@ const ModalRelatorioDietaEspecial = ({
     if (response.status === HTTP_STATUS.OK) {
       closeModal();
       setExibirModalCentralDownloads(true);
+      setExportandoRelatorio(false);
     } else {
       toastError(
         "Erro ao solicitar o download do arquivo. Tente novamente mais tarde."
       );
+      setExportandoRelatorio(false);
     }
   };
 
@@ -93,15 +96,18 @@ const ModalRelatorioDietaEspecial = ({
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN_OUTLINE}
           icon={BUTTON_ICON.ARROW_LEFT}
+          className="mr-2"
           onClick={closeModal}
         />,
         <Botao
           key={1}
           type={BUTTON_TYPE.BUTTON}
+          disabled={exportandoRelatorio}
           texto="Exportar"
           style={BUTTON_STYLE.GREEN}
           icon={BUTTON_ICON.FILE_PDF}
           onClick={() => {
+            setExportandoRelatorio(true);
             const params = gerarParametrosConsulta({
               ...filtros
             });
