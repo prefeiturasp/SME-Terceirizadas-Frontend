@@ -13,7 +13,7 @@ export default ({ escolaInstituicao, loteEscolaSimples }) => {
   return (
     <div className="col-8 info-ue">
       <div className="pl-0 label-adjustments">
-        <Collapse expandIconPosition="right">
+        <Collapse expandIconPosition="end">
           <Panel header="Informações da Unidade Educacional">
             <div className="row">
               <div className="col-8 info-label">
