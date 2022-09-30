@@ -116,38 +116,37 @@ export const tipoDeStatus = status => {
     case "Homologado":
     case "CODAE autorizou":
     case "Terceirizada respondeu a análise":
-      return "prosseguiu";
-    case "CODAE homologou":
-      return "prosseguiu";
-    case "CODAE não homologou":
-    case "CODAE cancelou análise sensorial":
-      return "cancelado";
-    case "CODAE pediu correção":
-    case "Terceirizada respondeu questionamento":
-      return "questionado";
     case "Terceirizada tomou ciência":
     case "Escola solicitou cancelamento":
     case "CODAE autorizou cancelamento":
     case "Terceirizada tomou ciência do cancelamento":
+    case "CODAE suspendeu o produto":
+    case "Em aberto para preenchimento pela UE":
+    case "Informação encerrada pela CODAE":
+    case "CODAE homologou":
       return "prosseguiu";
+
+    case "CODAE pediu correção":
+    case "Questionamento pela CODAE":
+    case "Terceirizada respondeu questionamento":
+    case "CODAE pediu análise sensorial":
+      return "questionado";
+
     case "Escola cancelou":
     case "DRE cancelou":
     case "Cancelada por atingir data de término":
     case "Cancelamento por alteração de unidade educacional":
     case "Cancelamento para aluno não matriculado na rede municipal":
+    case "CODAE cancelou análise sensorial":
       return "cancelado";
+
     case "DRE não validou":
     case "CODAE negou":
     case "CODAE negou cancelamento":
     case "Terceirizada recusou":
+    case "CODAE não homologou":
       return "reprovado";
-    case "Questionamento pela CODAE":
-      return "questionado";
-    case "CODAE pediu análise sensorial":
-      return "questionado";
-    case "Em aberto para preenchimento pela UE":
-    case "Informação encerrada pela CODAE":
-      return "prosseguiu";
+
     default:
       return "";
   }
