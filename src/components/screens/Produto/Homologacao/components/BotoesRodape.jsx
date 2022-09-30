@@ -26,6 +26,7 @@ export const BotoesRodape = ({ homologacao }) => {
           type={BUTTON_TYPE.BUTTON}
           texto="Voltar"
           style={BUTTON_STYLE.GREEN_OUTLINE}
+          icon={BUTTON_ICON.ARROW_LEFT}
           onClick={() => history.goBack()}
           className="mr-2 float-right"
         />
