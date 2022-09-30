@@ -787,7 +787,7 @@ export default () => {
                                             )}
                                             exibeTooltipDiaSobremesaDoce={
                                               row.name ===
-                                                "repeticao_refeicao" &&
+                                                "repeticao_sobremesa" &&
                                               diasSobremesaDoce.includes(
                                                 `${new Date(
                                                   location.state.mesAnoSelecionado

@@ -6,7 +6,7 @@ export const repeticaoSobremesaDoceComValorESemObservacao = (
   location
 ) => {
   return (
-    values[`repeticao_refeicao__dia_${dia}__categoria_${categoria.id}`] &&
+    values[`repeticao_sobremesa__dia_${dia}__categoria_${categoria.id}`] &&
     !values[`observacoes__dia_${dia}__categoria_${categoria.id}`] &&
     diasSobremesaDoce.includes(
       `${new Date(location.state.mesAnoSelecionado).getFullYear()}-${(
