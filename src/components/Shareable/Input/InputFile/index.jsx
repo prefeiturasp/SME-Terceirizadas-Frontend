@@ -53,11 +53,12 @@ export class InputFile extends Component {
   async onInputChange(event) {
     let valido = true;
     let lista_extensoes = ["doc", "docx", "png", "pdf", "jpg", "jpeg"];
+    let { accept } = this.props;
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
-    if (this.props.accept) {
+    if (accept) {
       let nova_lista_extensoes = [];
       lista_extensoes.forEach(ext => {
-        if (this.props.accept.includes(ext.toUpperCase())) {
+        if (accept.includes(ext)) {
           nova_lista_extensoes.push(ext);
         }
       });
@@ -246,6 +247,7 @@ export class InputFile extends Component {
 }
 
 InputFile.propTypes = {
+  accept: PropTypes.string,
   alignLeft: PropTypes.bool,
   className: PropTypes.string,
   customHelpTextClassName: PropTypes.string,
@@ -266,6 +268,7 @@ InputFile.propTypes = {
 };
 
 InputFile.defaultProps = {
+  accept: "",
   className: "",
   customHelpTextClassName: "",
   concatenarNovosArquivos: false,
