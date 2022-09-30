@@ -78,7 +78,9 @@ export const Homologacao = ({
           {({ handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <DadosDaEmpresa />
-              <EditaisVinculados />
+              {homologacao.logs.filter(
+                log => log.status_evento_explicacao === "CODAE homologou"
+              ).length > 0 && <EditaisVinculados />}
               <IdentificacaoProduto />
               <InformacoesNutricionais homologacao={homologacao} />
               <InformacoesProduto homologacao={homologacao} />

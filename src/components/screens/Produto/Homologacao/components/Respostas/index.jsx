@@ -18,9 +18,9 @@ export const Respostas = ({ homologacao, logAnaliseSensorial }) => {
       {homologacao.status === "CODAE_QUESTIONADO" && (
         <MotivoCorrecaoHomologacao logs={homologacao.logs} />
       )}
-      {["CODAE_SUSPENDEU", "CODAE_AUTORIZOU_RECLAMACAO"].includes(
-        homologacao.status
-      ) && <MotivoHomologacaoRecusada logs={homologacao.logs} />}
+      {homologacao.status === "CODAE_NAO_HOMOLOGADO" && (
+        <MotivoHomologacaoRecusada logs={homologacao.logs} />
+      )}
       {homologacao.status ===
         "TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO" && (
         <MotivoCancelamento logs={homologacao.logs} />
