@@ -31,6 +31,9 @@ export const BotoesTerceirizada = ({
           style={BUTTON_STYLE.GREEN}
         />
       </div>
+      <div className="col-12">
+        <hr />
+      </div>
     </div>
   );
 };
