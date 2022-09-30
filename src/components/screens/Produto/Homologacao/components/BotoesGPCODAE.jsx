@@ -144,6 +144,9 @@ export const BotoesGPCODAE = ({
           disabled={values.necessita_analise_sensorial === "0"}
         />
       </div>
+      <div className="col-12">
+        <hr />
+      </div>
     </div>
   );
 };

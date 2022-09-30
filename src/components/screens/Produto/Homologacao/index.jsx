@@ -12,6 +12,7 @@ import DocumentosProduto from "./components/DocumentosProduto";
 import BotoesCabecalho from "./components/BotoesCabecalho";
 import BotoesGPCODAE from "./components/BotoesGPCODAE";
 import BotoesTerceirizada from "./components/BotoesTerceirizada";
+import BotoesRodape from "./components/BotoesRodape";
 import Respostas from "./components/Respostas/index";
 import { AnaliseSensorial } from "./components/AnaliseSensorial";
 import {
@@ -118,6 +119,7 @@ export const Homologacao = ({
             </form>
           )}
         </Form>
+        <BotoesRodape homologacao={homologacao} />
       </div>
     </div>
   );
