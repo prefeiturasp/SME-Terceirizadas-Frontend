@@ -32,7 +32,7 @@ const ModalExclusaoVinculo = ({
       </Modal.Body>
       <Modal.Footer>
         <Botao
-          texto="Cancelar"
+          texto="Não"
           type={BUTTON_TYPE.BUTTON}
           onClick={handleClose}
           style={BUTTON_STYLE.GREEN_OUTLINE}
