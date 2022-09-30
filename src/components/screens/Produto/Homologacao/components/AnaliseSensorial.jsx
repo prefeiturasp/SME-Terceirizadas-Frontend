@@ -13,7 +13,7 @@ export const AnaliseSensorial = () => {
         <div className="col-4">
           <span className="required-asterisk">*</span>
           <label className="col-form-label ">
-            * Precisa solicitar análise sensorial?
+            Precisa solicitar análise sensorial?
           </label>
         </div>
         <div className="col-2 radio-wrapper">
