@@ -74,7 +74,7 @@ export class ModalAlterarSenha extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-4">
+            <div className="col-4 custom-margin">
               <div className="password-requirements">
                 <div className="title">Requisitos de segurança da senha:</div>
                 <div className="requirements">

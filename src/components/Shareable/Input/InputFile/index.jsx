@@ -67,7 +67,7 @@ export class InputFile extends Component {
     Array.from(event.target.files).forEach(file => {
       const extensao = file.name.split(".")[file.name.split(".").length - 1];
       if (this.props.ehPlanilhaMedicaoInicial) {
-        if (!["xls", "xlsx"].includes(extensao.toLowerCase())) {
+        if (!["xls", "xlsx", "pdf"].includes(extensao.toLowerCase())) {
           toastError(`Extensão do arquivo não suportada: ${extensao}`);
           valido = false;
         } else if (file.size > DEZ_MB) {
@@ -123,6 +123,7 @@ export class InputFile extends Component {
       accept,
       alignLeft,
       className,
+      customHelpTextClassName,
       disabled,
       helpText,
       icone,
@@ -133,68 +134,113 @@ export class InputFile extends Component {
       required,
       title,
       texto,
-      ehPlanilhaMedicaoInicial
+      ehPlanilhaMedicaoInicial,
+      validationFile
     } = this.props;
     return (
-      <div
-        className={`input input-file ${alignLeft && "align-left"} ${icone &&
-          "icon"}`}
-      >
-        <input
-          {...input}
-          accept={accept}
-          ref={i => (this.inputRef = i)}
-          className={`form-control ${className} ${meta &&
-            meta.touched &&
-            (meta.error || meta.warning) &&
-            "invalid-field"}`}
-          disabled={disabled}
-          name={name}
-          onChange={event => this.onInputChange(event)}
-          data-cy={input.name}
-          required={required}
-          type="file"
-          multiple={multiple}
-          title={title}
-        />
-        <Botao
-          onClick={() => this.inputRef.click()}
-          htmlFor={name}
-          texto={texto}
-          style={
-            ehPlanilhaMedicaoInicial
-              ? BUTTON_STYLE.GREEN
-              : BUTTON_STYLE.GREEN_OUTLINE
-          }
-          icon={
-            ehPlanilhaMedicaoInicial
-              ? BUTTON_ICON.PAPER_CLIP
-              : BUTTON_ICON.ATTACH
-          }
-          type={BUTTON_TYPE.BUTTON}
-          disabled={disabled}
-        />
-        {files.map((file, key) => {
-          return (
-            <div className="file-div" key={key}>
-              <div className="file-name-container">
-                <i className="fas fa-paperclip" />
-                <span onClick={() => this.openFile(file)} className="file-name">
-                  {truncarString(file.nome, 40)}
-                </span>
-                <i
-                  onClick={() => this.deleteFile(key)}
-                  className={`fas ${
-                    ehPlanilhaMedicaoInicial ? "fa-times" : "fa-trash-alt"
-                  } exclude-icon`}
-                />
+      <>
+        <div
+          className={`${
+            ehPlanilhaMedicaoInicial ? "col-4" : "col-12"
+          } input input-file ${alignLeft && "align-left"} ${icone && "icon"}`}
+        >
+          <Botao
+            className="upload-button"
+            onClick={() => this.inputRef.click()}
+            htmlFor={name}
+            texto={texto}
+            style={
+              ehPlanilhaMedicaoInicial
+                ? BUTTON_STYLE.GREEN
+                : BUTTON_STYLE.GREEN_OUTLINE
+            }
+            icon={
+              ehPlanilhaMedicaoInicial
+                ? BUTTON_ICON.PAPER_CLIP
+                : BUTTON_ICON.ATTACH
+            }
+            type={BUTTON_TYPE.BUTTON}
+            disabled={disabled}
+          />
+          <InputErroMensagem meta={meta} />
+          {ehPlanilhaMedicaoInicial &&
+            validationFile.touched &&
+            !validationFile.xls && (
+              <div className="error-or-warning-message">
+                <div className="error-message">
+                  Falta anexar o arquivo em Excel
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <HelpText helpText={helpText} />
-        <InputErroMensagem meta={meta} />
-      </div>
+            )}
+          {ehPlanilhaMedicaoInicial &&
+            validationFile.touched &&
+            !validationFile.pdf && (
+              <div className="error-or-warning-message">
+                <div className="error-message">
+                  Falta anexar o arquivo em PDF
+                </div>
+              </div>
+            )}
+        </div>
+        <div
+          className={`${
+            ehPlanilhaMedicaoInicial ? "col-8" : "col-12"
+          } input input-file ${alignLeft && "align-left"} ${icone && "icon"}`}
+        >
+          <HelpText
+            helpText={helpText}
+            customHelpTextClassName={customHelpTextClassName}
+          />
+        </div>
+        <div
+          className={`col-12 input input-file ${alignLeft &&
+            "align-left"} ${icone && "icon"}`}
+        >
+          {files.map((file, key) => {
+            return (
+              <div className="file-div" key={key}>
+                <div className="file-name-container">
+                  <i className="fas fa-paperclip" />
+                  <span
+                    onClick={() => this.openFile(file)}
+                    className="file-name"
+                  >
+                    {truncarString(file.nome, 40)}
+                  </span>
+                  <i
+                    onClick={() => this.deleteFile(key)}
+                    className={`fas ${
+                      ehPlanilhaMedicaoInicial ? "fa-times" : "fa-trash-alt"
+                    } exclude-icon`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div
+          className={`col-12 input input-file ${alignLeft &&
+            "align-left"} ${icone && "icon"}`}
+        >
+          <input
+            {...input}
+            accept={accept}
+            ref={i => (this.inputRef = i)}
+            className={`form-control ${className} ${meta &&
+              meta.touched &&
+              (meta.error || meta.warning) &&
+              "invalid-field"}`}
+            disabled={disabled}
+            name={name}
+            onChange={event => this.onInputChange(event)}
+            data-cy={input.name}
+            required={required}
+            type="file"
+            multiple={ehPlanilhaMedicaoInicial ? true : multiple}
+            title={title}
+          />
+        </div>
+      </>
     );
   }
 }
@@ -202,6 +248,7 @@ export class InputFile extends Component {
 InputFile.propTypes = {
   alignLeft: PropTypes.bool,
   className: PropTypes.string,
+  customHelpTextClassName: PropTypes.string,
   concatenarNovosArquivos: PropTypes.bool,
   disabled: PropTypes.bool,
   esconderAsterisco: PropTypes.bool,
@@ -214,11 +261,13 @@ InputFile.propTypes = {
   nomeNovoArquivo: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  type: PropTypes.string
+  type: PropTypes.string,
+  validationFile: PropTypes.object
 };
 
 InputFile.defaultProps = {
   className: "",
+  customHelpTextClassName: "",
   concatenarNovosArquivos: false,
   disabled: false,
   esconderAsterisco: false,
@@ -230,7 +279,8 @@ InputFile.defaultProps = {
   name: "",
   placeholder: "",
   required: false,
-  type: "text"
+  type: "text",
+  validationFile: { touched: false }
 };
 
 export default InputFile;
