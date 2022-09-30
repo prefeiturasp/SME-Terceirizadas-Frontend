@@ -173,7 +173,7 @@ export default ({
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
-          <Collapse expandIconPosition="right">
+          <Collapse expandIconPosition="end">
             <Panel header="Informações Básicas da Medição Inicial">
               <div className="row">
                 <div className="col-5 info-label select-medicao-inicial">

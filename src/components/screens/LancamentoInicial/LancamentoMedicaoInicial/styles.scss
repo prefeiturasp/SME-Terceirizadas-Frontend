@@ -93,15 +93,14 @@
   padding: 8px 58px 8px 12px;
 }
 
-.anexo-planilha {
-  .file-div {
-    position: absolute;
-    right: 35px;
-    bottom: 35px;
-  }
-}
-
 .ant-skeleton-title {
   margin-top: 24px !important;
   height: 40px !important;
+}
+
+.custom-style-help-text {
+  margin-top: 2%;
+  padding: 1%;
+  border-radius: 5px;
+  border: solid 1px #a4a4a4;
 }
