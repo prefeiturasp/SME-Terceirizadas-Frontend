@@ -677,6 +677,14 @@ export const exibirGA = () => {
   }
 };
 
+export const exibirLancamentoMedicaoInicial = () => {
+  return (
+    usuarioEhEscola() &&
+    !usuarioEscolaEhGestaoDireta() &&
+    !["treinamento", "production"].includes(ENVIRONMENT)
+  );
+};
+
 export const justificativaAoNegarSolicitacao = logs => {
   let justificativa = null;
   if (logs.length) {
