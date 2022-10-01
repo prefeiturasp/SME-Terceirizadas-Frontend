@@ -650,25 +650,39 @@ export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
-  if (!["treinamento", "production"].includes(ENVIRONMENT)) return true;
-  if (
-    (["treinamento", "production"].includes(ENVIRONMENT) &&
-      (localStorage.getItem("tipo_perfil") === `"diretoriaregional"` &&
-        (localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA")))) ||
-    ((localStorage.getItem("tipo_perfil") === `"escola"` &&
-      localStorage.getItem("dre_nome").includes("IPIRANGA")) ||
-      localStorage.getItem("dre_nome").includes("PIRITUBA")) ||
-    (localStorage.getItem("tipo_perfil") === `"terceirizada"` &&
-      localStorage.getItem("lotes") &&
-      JSON.parse(localStorage.getItem("lotes")).find(
-        lote =>
-          lote.diretoria_regional.nome.includes("IPIRANGA") ||
-          lote.diretoria_regional.nome.includes("PIRITUBA")
-      ))
-  )
-    return true;
-  return false;
+  if (!["production"].includes(ENVIRONMENT)) return true;
+  if (["production"].includes(ENVIRONMENT)) {
+    switch (localStorage.getItem("tipo_perfil")) {
+      case `"gestao_alimentacao_terceirizada"`:
+        return true;
+      case `"diretoriaregional"`:
+        return (
+          localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
+          localStorage.getItem("nome_instituicao").includes("PIRITUBA")
+        );
+      case `"escola"`:
+        return (
+          localStorage.getItem("dre_nome").includes("IPIRANGA") ||
+          localStorage.getItem("dre_nome").includes("PIRITUBA")
+        );
+      case `"terceirizada"`:
+        return JSON.parse(localStorage.getItem("lotes")).find(
+          lote =>
+            lote.diretoria_regional.nome.includes("IPIRANGA") ||
+            lote.diretoria_regional.nome.includes("PIRITUBA")
+        );
+      default:
+        return false;
+    }
+  }
+};
+
+export const exibirLancamentoMedicaoInicial = () => {
+  return (
+    usuarioEhEscola() &&
+    !usuarioEscolaEhGestaoDireta() &&
+    !["treinamento", "production"].includes(ENVIRONMENT)
+  );
 };
 
 export const exibirLancamentoMedicaoInicial = () => {
