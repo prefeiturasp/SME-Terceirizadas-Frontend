@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import strip_tags from "locutus/php/strings/strip_tags";
 import PropTypes from "prop-types";
 import {
   ContentState,
@@ -20,7 +21,15 @@ import "../style.scss";
 export class TextAreaWYSIWYG extends Component {
   constructor(props) {
     super(props);
-    const editorState = EditorState.createEmpty();
+    const editorState =
+      this.props.ehModal &&
+      !["<p></p>\n", null, ""].includes(this.props.input.value)
+        ? EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(this.props.input.value)
+            )
+          )
+        : EditorState.createEmpty();
     this.state = {
       editorState,
       talvezBordaVermelha: false
@@ -42,13 +51,31 @@ export class TextAreaWYSIWYG extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const inputSemTags = strip_tags(this.props.input.value);
     if (this.props.valorInicial !== prevProps.valorInicial) {
       this.setState({
         editorState: EditorState.createWithContent(
           ContentState.createFromBlockArray(
-            convertFromHTML(this.props.valorInicial)
+            htmlToDraft(this.props.valorInicial).contentBlocks
           )
         )
+      });
+    } else if (
+      this.props.input.value !== prevProps.input.value &&
+      !["<p></p>\n", "<p></p>", null].includes(this.props.input.value)
+    ) {
+      let editor = EditorState.createEmpty();
+      if (this.props.input.value !== "" && inputSemTags !== "&nbsp;\n") {
+        editor = EditorState.moveFocusToEnd(
+          EditorState.createWithContent(
+            ContentState.createFromBlockArray(
+              convertFromHTML(this.props.input.value)
+            )
+          )
+        );
+      }
+      this.setState({
+        editorState: editor
       });
     }
   }

@@ -69,6 +69,7 @@ import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/Sta
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
+import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
 import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
@@ -111,7 +112,8 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
-  validaPerfilEscolaMistaParceira
+  validaPerfilEscolaMistaParceira,
+  exibirLancamentoMedicaoInicial
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -144,7 +146,8 @@ import RelatorioQuantitativoDiagDietaEspPage from "pages/DietaEspecial/Relatorio
 import RelatorioDietaEspecial from "pages/DietaEspecial/RelatorioDietaEspecial";
 import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDietaEspecial";
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
-import LancamentoMedicaoInicialPage from "pages/LancamentoInicial/LancamentoMedicaoInicialPage";
+import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
+import PeriodoLancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
@@ -167,6 +170,7 @@ import ReposicaoResumoFinalPage from "pages/Logistica/ReposicaoResumoFinalPage";
 import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
+import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 
 const routesConfig = [
   {
@@ -556,10 +560,22 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.SUSPENSAO_ALIMENTACAO_CEI}/${constants.RELATORIO}`,
+    component: PainelPedidosSuspensaoAlimentacaoCEIRelatorio,
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
+  },
+  {
+    path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
+    component: CadastroSobremesaDocePage,
+    exact: true,
+    tipoUsuario: usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/configuracoes/cadastros/lotes-cadastrados`,
@@ -1274,7 +1290,15 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()
+    tipoUsuario: exibirLancamentoMedicaoInicial()
+  },
+  {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }/${constants.PERIODO_LANCAMENTO}`,
+    component: PeriodoLancamentoMedicaoInicialPage,
+    exact: true,
+    tipoUsuario: exibirLancamentoMedicaoInicial()
   },
   {
     path: `/${constants.LOGISTICA}/${

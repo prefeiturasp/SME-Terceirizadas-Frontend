@@ -34,12 +34,6 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "conferenciaGuiaRemessa";
-const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente recebido pela Unidade Educacional.
-                      Se o alimento foi entregue em data posterior ao previsto na Guia de Remessa,
-                      será aberta ocorrência a ser detalhada pelo usuário.`;
-const TOOLTIP_HORA = `Preencher com a hora em que o alimento foi entregue na Unidade Educacional.`;
-const TOOLTIP_PLACA = `Preencher com o registro da placa do veículo que transportou os alimentos à Unidade Educacional.`;
-const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimentos na Unidade Educacional.`;
 
 export default () => {
   const [guia, setGuia] = useState({});
@@ -60,7 +54,6 @@ export default () => {
       const params = gerarParametrosConsulta({ uuid: uuid });
       response = await getGuiaParaConferencia(params);
       setGuia(response.data);
-      //setAlimentos(response.data.alimentos);
       setNomesAlimentos(
         response.data.alimentos.map(alimento => alimento.nome_alimento)
       );
@@ -84,7 +77,6 @@ export default () => {
       response = await getConferenciaParaEdicao(params);
       let conferencia = response.data.results;
       setGuia(conferencia.guia);
-      //setAlimentos(conferencia.guia.alimentos)
       setNomesAlimentos(
         conferencia.guia.alimentos.map(alimento => alimento.nome_alimento)
       );
@@ -232,20 +224,28 @@ export default () => {
                       Sim, alimentos recebidos corretamente
                     </Radio>
                     <Radio className="radio-entrega-nao" value={true}>
-                      Não, há um ou mais alimentos com problemas
+                      Não. Há alimentos com problemas
                     </Radio>
                   </Radio.Group>
 
                   {existeOcorrencia === false && (
                     <>
+                      <div className="row mb-custom">
+                        <span className="black">
+                          Preencher <strong>exatamente</strong> com os dados
+                          relacionados a <strong>Entrega na UE. </strong>
+                          Se o alimento foi entregue em data e hora posterior ao
+                          previsto na Guia de Remessa, serão abertas ocorrências
+                          a serem detalhadas pelo usuário.
+                        </span>
+                      </div>
                       <div className="row mt-3 mb-3">
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputComData}
-                            label="Data de recebimento da UE"
+                            label="Selecionar data de recebimento da UE"
                             name="data_entrega_real"
                             className="data-inicial"
-                            tooltipText={TOOLTIP_DATA}
                             validate={composeValidators(
                               required,
                               validaDataEntrega
@@ -253,19 +253,15 @@ export default () => {
                             minDate={null}
                             maxDate={null}
                             required
-                            writable
+                            writable={false}
                           />
                         </div>
-                      </div>
-
-                      <div className="row mb-custom">
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputText}
                             label="Nome do Motorista"
                             name="nome_motorista"
                             className="input-busca-produto"
-                            tooltipText={TOOLTIP_NOME}
                             validate={composeValidators(
                               required,
                               maxLength(100),
@@ -274,13 +270,13 @@ export default () => {
                             required
                           />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputText}
                             label="Placa do Veículo"
                             name="placa_veiculo"
                             className="input-busca-produto"
-                            tooltipText={TOOLTIP_PLACA}
+                            contador={7}
                             validate={composeValidators(
                               required,
                               maxLength(7),
@@ -290,10 +286,10 @@ export default () => {
                             required
                           />
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
                           <Field
                             component={InputHorario}
-                            label="Hora da Entrega"
+                            label="Selecionar hora da Entrega"
                             name="hora_recebimento"
                             placeholder="Selecione a Hora"
                             horaAtual={HoraRecebimento}
@@ -301,10 +297,10 @@ export default () => {
                               escolherHora(data);
                             }}
                             className="input-busca-produto"
-                            tooltipText={TOOLTIP_HORA}
                             validate={validaHoraRecebimento}
                             required
                             functionComponent
+                            writable={false}
                           />
                         </div>
                       </div>

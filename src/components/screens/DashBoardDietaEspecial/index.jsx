@@ -349,6 +349,7 @@ class DashBoardDietaEspecial extends Component {
     return (
       <div>
         <CardMatriculados
+          meusDados={meusDados}
           numeroAlunos={instituicao && instituicao.quantidade_alunos}
           alterarCollapse={this.alterarCollapse}
         />

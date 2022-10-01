@@ -1,0 +1,61 @@
+@import "styles/variables.scss";
+
+.periodos_cei_emei {
+  div.alunos-label {
+    color: $blackInput;
+    size: 16px;
+    font-weight: 700;
+    border: 1px solid $greenLight;
+    border-radius: 6px;
+    background-color: $greenVeryLight;
+    padding-left: 2em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  div.tipos-alimentacao {
+    font-weight: 500;
+
+    span {
+      color: $green;
+      font-weight: 700;
+    }
+  }
+
+  table.faixas-etarias-cei {
+    width: 98%;
+    margin-left: 1em;
+
+    thead {
+      tr {
+        background-color: $grayBackground;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid $grayDisabled;
+        color: $blackInput;
+
+        th {
+          padding: 1em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border: 1px solid $grayDisabled;
+        border-top: none;
+        color: $blackSubtle;
+
+        td {
+          padding: 0.5em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+  }
+}

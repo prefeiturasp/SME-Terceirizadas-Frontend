@@ -23,7 +23,8 @@ import * as StatusSolicitacoesDietaEspecialPage from "../pages/DietaEspecial/Sta
 
 import { TIPO_PERFIL } from "../constants/shared";
 import PainelInicialPage from "../pages/PainelInicial/PainelInicialPage";
-import { escolaEhCei } from "helpers/utilities";
+import { escolaEhCei, escolaEhCEMEI } from "helpers/utilities";
+import InclusaoDeAlimentacaoCEMEIPage from "pages/Escola/InclusaoDeAlimentacaoCEMEIPage";
 
 export const painelGestaoAlimentacao = () => {
   switch (localStorage.getItem("tipo_perfil")) {
@@ -198,6 +199,8 @@ export const painelInicial = () => {
 export const inclusaoAlimentacao = () => {
   return escolaEhCei()
     ? InclusaoDeAlimentacaoCEIPage
+    : escolaEhCEMEI()
+    ? InclusaoDeAlimentacaoCEMEIPage
     : InclusaoDeAlimentacaoPage;
 };
 
@@ -209,4 +212,22 @@ export const suspensaoAlimentacao = () => {
   return escolaEhCei()
     ? SuspensaoDeAlimentacaoDeCEI
     : SuspensaoDeAlimentacaoPage;
+};
+
+export const getDDMMYYYfromDate = date => {
+  return `${date
+    .getDate()
+    .toString()
+    .padStart(2, "0")}/${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}/${date.getFullYear()}`;
+};
+
+export const getYYYYMMDDfromDate = date => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${date
+    .getDate()
+    .toString()
+    .padStart(2, "0")}`;
 };

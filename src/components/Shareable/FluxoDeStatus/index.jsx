@@ -12,7 +12,8 @@ export const FluxoDeStatus = props => {
     listaDeStatus,
     fluxo,
     eh_importado = false,
-    eh_gestao_alimentacao = false
+    eh_gestao_alimentacao = false,
+    eh_medicao_inicial = false
   } = props;
   let cloneListaDeStatus = deepCopy(listaDeStatus);
   cloneListaDeStatus = formatarLogs(cloneListaDeStatus);
@@ -22,6 +23,10 @@ export const FluxoDeStatus = props => {
     fluxo.length > cloneListaDeStatus.length ? fluxo : cloneListaDeStatus;
   let ultimoStatus = cloneListaDeStatus.slice(-1)[0];
   let temStatusDeAnaliseSensorialCancelada = false;
+
+  if (eh_medicao_inicial && !listaDeStatus.length) {
+    fluxoUtilizado = fluxo;
+  }
 
   if (
     cloneListaDeStatus.length > fluxo.length &&

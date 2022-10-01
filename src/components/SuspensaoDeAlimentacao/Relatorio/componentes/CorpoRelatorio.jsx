@@ -84,6 +84,7 @@ export const CorpoRelatorio = props => {
           <FluxoDeStatus
             listaDeStatus={suspensaoAlimentacao.logs}
             fluxo={fluxoInformativoPartindoEscola}
+            eh_gestao_alimentacao={true}
           />
         </div>
       )}
@@ -96,7 +97,7 @@ export const CorpoRelatorio = props => {
         {suspensaoAlimentacao.suspensoes_alimentacao.map((suspensao, index) => (
           <tr className="row" key={index}>
             <td className="col-8">
-              {suspensao.motivo.nome === "Outro"
+              {suspensao.motivo.nome.includes("Outro")
                 ? `${suspensao.motivo.nome} - ${suspensao.outro_motivo}`
                 : suspensao.motivo.nome}
             </td>

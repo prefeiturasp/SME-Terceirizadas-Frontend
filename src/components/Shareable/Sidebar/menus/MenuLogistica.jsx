@@ -48,19 +48,19 @@ const MenuLogistica = () => {
 
       {usuarioEhDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${CONSULTA_SOLICITACAO_ALTERACAO}`}>
-          Consulta de Solicitação de Alteração
-        </LeafItem>
-      )}
-
-      {usuarioEhLogistica() && (
-        <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
           Solicitação de Alteração
         </LeafItem>
       )}
 
       {usuarioEhLogistica() && (
+        <LeafItem to={`/${LOGISTICA}/${GESTAO_SOLICITACAO_ALTERACAO}`}>
+          Alteração da Requisição
+        </LeafItem>
+      )}
+
+      {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`}>
-          Conferência de Inconsistências
+          Conferência de Inconsistência
         </LeafItem>
       )}
 

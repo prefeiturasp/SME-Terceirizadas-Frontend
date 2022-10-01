@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 
 import {
   getVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
-  updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
+  updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar,
   getTiposDeAlimentacao
 } from "services/cadastroTipoAlimentacao.service";
 
@@ -52,36 +52,34 @@ export default ({ tiposUnidadesEscolar }) => {
   }, []);
 
   const onSubmit = async formValues => {
-    if (formValues.tipos_alimentacao.length) {
-      setCarregando(true);
-      showHideBody(formValues.periodo_escolar);
-      await updateVinculosTipoAlimentacaoPorTipoUnidadeEscolar(formValues).then(
-        async response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Tipos de alimentação atualizados com sucesso");
-            await getPeriodosEscolares(response.tipo_unidade_escolar);
-          } else {
-            toastError("Erro ao atualizar tipos de alimentação");
-          }
-        }
-      );
-      setCarregando(false);
-      setAlterandoTiposDeAlimentacao(false);
-    } else {
-      toastError("Selecione um tipo de alimentação para atualizar");
-    }
+    setCarregando(true);
+    await updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar(
+      formValues
+    ).then(async response => {
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Tipo de Alimentação salvo com sucesso");
+        setVinculos(response.results);
+      } else {
+        toastError("Erro ao atualizar tipos de alimentação");
+      }
+    });
+    setCarregando(false);
+    setAlterandoTiposDeAlimentacao(false);
   };
 
-  const setInitialValues = vinculo => {
-    let tipos_alimentacao = vinculo.tipos_alimentacao.map(
-      tipo_alimentacao => tipo_alimentacao.uuid
-    );
-    return {
-      tipos_alimentacao: tipos_alimentacao,
-      uuid: vinculo.uuid,
-      periodo_escolar: vinculo.periodo_escolar.uuid,
-      tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid
-    };
+  const setInitialValues = vinculos => {
+    let vinculosFormatados = vinculos.map(vinculo => {
+      let tipos_alimentacao = vinculo.tipos_alimentacao.map(
+        tipo_alimentacao => tipo_alimentacao.uuid
+      );
+      return {
+        tipos_alimentacao: tipos_alimentacao,
+        uuid: vinculo.uuid,
+        periodo_escolar: vinculo.periodo_escolar.uuid,
+        tipo_unidade_escolar: vinculo.tipo_unidade_escolar.uuid
+      };
+    });
+    return { vinculos: vinculosFormatados };
   };
 
   const getPeriodosEscolares = async uuid => {
@@ -98,18 +96,6 @@ export default ({ tiposUnidadesEscolar }) => {
       }
     );
     setCarregando(false);
-  };
-
-  const showHideBody = periodo => {
-    let element = document.getElementsByClassName(periodo)[0];
-    let card = document.getElementsByClassName(`card-${periodo}`)[0];
-    if (element.classList.contains("d-none")) {
-      element.classList.remove("d-none");
-      card.style.backgroundColor = "#F2FBFE";
-    } else {
-      element.classList.add("d-none");
-      card.style.backgroundColor = "#FFFFFF";
-    }
   };
 
   return (
@@ -151,99 +137,94 @@ export default ({ tiposUnidadesEscolar }) => {
               )}
             />
           )}
-          {vinculos &&
-            vinculos.map((vinculo, indice) => {
-              return (
-                <section key={indice}>
-                  <div
-                    className={`card mb-1 card-${vinculo.periodo_escolar.uuid}`}
-                  >
-                    <div
-                      onClick={() => showHideBody(vinculo.periodo_escolar.uuid)}
-                      className="card-header"
-                    >
-                      <div className="row">
-                        <div className="col-11">
-                          <p className="title-periodo">
-                            {vinculo.periodo_escolar.nome}
-                          </p>
-                        </div>
-                        <div className="col-1 icon-arrow">
-                          <i className="fas fa-chevron-down" />
-                        </div>
+          {vinculos && (
+            <section>
+              <Form
+                onSubmit={onSubmit}
+                initialValues={setInitialValues(vinculos)}
+                render={({ submitting, handleSubmit, pristine }) => (
+                  <form onSubmit={handleSubmit}>
+                    <div className="row mb-3">
+                      <div className="col-10 mb-3">
+                        <p className="title-tipos-alimentacao">
+                          Períodos e Tipos de Refeição
+                        </p>
                       </div>
-                    </div>
-                    <div
-                      className={`card-body ${
-                        vinculo.periodo_escolar.uuid
-                      } d-none`}
-                    >
-                      <Form
-                        onSubmit={onSubmit}
-                        initialValues={setInitialValues(vinculo)}
-                        render={({ submitting, handleSubmit, pristine }) => (
-                          <form onSubmit={handleSubmit}>
-                            <div className="row mb-3">
-                              <div className="p-0 col-12 mb-3">
-                                <p className="title-tipos-alimentacao">
-                                  Tipos de alimentação
+                      <div className="col-2 mb-3">
+                        <Botao
+                          texto="Salvar"
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          disabled={pristine || submitting}
+                        />
+                      </div>
+                      {vinculos.map((vinculo, indice) => {
+                        return (
+                          <div className="col-4 w-100" key={indice}>
+                            <div className="card mb-1">
+                              <div className="custom-card-header">
+                                <p className="title-periodo">
+                                  {vinculo.periodo_escolar.nome}
                                 </p>
                               </div>
-                              {tiposDeAlimentacao &&
-                                tiposDeAlimentacao.map(
-                                  (tipoAlimentacao, idx) => {
-                                    return (
-                                      <div
-                                        className="custom-control custom-checkbox col-4 mb-2"
-                                        key={idx}
-                                      >
-                                        <span
-                                          onClick={() =>
-                                            setAlterandoTiposDeAlimentacao(true)
-                                          }
+                              <div className="card-body">
+                                {tiposDeAlimentacao &&
+                                  tiposDeAlimentacao.map(
+                                    (tipoAlimentacao, idx) => {
+                                      return (
+                                        <div
+                                          className="custom-control custom-checkbox col-12 mb-2"
+                                          key={idx}
                                         >
-                                          <Field
-                                            name="tipos_alimentacao"
-                                            component="input"
-                                            type="checkbox"
-                                            value={tipoAlimentacao.uuid}
-                                            className="custom-control-input"
-                                            id={`${
-                                              vinculo.periodo_escolar.nome
-                                            }-${tipoAlimentacao.uuid}`}
-                                          />
-                                          <label
-                                            className="custom-control-label"
-                                            htmlFor={`${
-                                              vinculo.periodo_escolar.nome
-                                            }-${tipoAlimentacao.uuid}`}
+                                          <span
+                                            onClick={() =>
+                                              setAlterandoTiposDeAlimentacao(
+                                                false
+                                              )
+                                            }
                                           >
-                                            {tipoAlimentacao.nome}
-                                          </label>
-                                        </span>
-                                      </div>
-                                    );
-                                  }
-                                )}
-                            </div>
-                            <div className="row mb-3">
-                              <div className="offset-10 col-2">
-                                <Botao
-                                  texto="Salvar"
-                                  type={BUTTON_TYPE.SUBMIT}
-                                  style={`${BUTTON_STYLE.GREEN} w-100`}
-                                  disabled={pristine || submitting}
-                                />
+                                            <Field
+                                              name={`vinculos[${indice}].tipos_alimentacao`}
+                                              component="input"
+                                              type="checkbox"
+                                              value={tipoAlimentacao.uuid}
+                                              className="custom-control-input"
+                                              id={`${
+                                                vinculo.periodo_escolar.nome
+                                              }-${tipoAlimentacao.uuid}`}
+                                            />
+                                            <label
+                                              className="custom-control-label"
+                                              htmlFor={`${
+                                                vinculo.periodo_escolar.nome
+                                              }-${tipoAlimentacao.uuid}`}
+                                            >
+                                              {tipoAlimentacao.nome}
+                                            </label>
+                                          </span>
+                                        </div>
+                                      );
+                                    }
+                                  )}
                               </div>
                             </div>
-                          </form>
-                        )}
-                      />
+                          </div>
+                        );
+                      })}
+                      <div className="offset-10 col-2 mt-3 mb-3">
+                        <Botao
+                          texto="Salvar"
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={`${BUTTON_STYLE.GREEN} w-100`}
+                          disabled={pristine || submitting}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </section>
-              );
-            })}
+                  </form>
+                )}
+              />
+            </section>
+          )}
         </div>
       </div>
     </Spin>

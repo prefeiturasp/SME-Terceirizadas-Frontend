@@ -1,4 +1,5 @@
 import React from "react";
+import "./style.scss";
 
 export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
@@ -11,7 +12,7 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
 
   return (
     <table
-      className={`table table-bordered table-consolidado-alimentos mt-3 ${className}`}
+      className={`table table-bordered table-consolidado-alimentos mt-3 tabela-conferencia-guia ${className}`}
     >
       <thead>
         <tr>
@@ -31,10 +32,18 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
           )}
         </tr>
         <tr>
-          <th scope="col">Quantidade</th>
-          <th scope="col">Capacidade</th>
-          <th scope="col">Quantidade</th>
-          <th scope="col">Capacidade</th>
+          <th className="text-center" scope="col">
+            Quantidade Prevista
+          </th>
+          <th className="header-capacidade text-center" scope="col">
+            Capacidade
+          </th>
+          <th className="text-center" scope="col">
+            Quantidade Prevista
+          </th>
+          <th className="header-capacidade text-center" scope="col">
+            Capacidade
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -48,32 +57,14 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
             <tr key={index}>
               <td>{item.nome_alimento}</td>
               <td>{fechada ? fechada.qtd_volume : "--"}</td>
-              <td>
-                {fechada ? (
-                  <>
-                    {fechada.descricao_embalagem}.{" "}
-                    {fechada.capacidade_embalagem}
-                    {fechada.unidade_medida}
-                  </>
-                ) : (
-                  "--"
-                )}
-              </td>
+              <td>{fechada ? <>{fechada.capacidade_completa}</> : "--"}</td>
               <td>{fracionada ? fracionada.qtd_volume : "--"}</td>
               <td>
-                {fracionada ? (
-                  <>
-                    {fracionada.descricao_embalagem}.{" "}
-                    {fracionada.capacidade_embalagem}
-                    {fracionada.unidade_medida}
-                  </>
-                ) : (
-                  "--"
-                )}
+                {fracionada ? <>{fracionada.capacidade_completa}</> : "--"}
               </td>
               {mostrarPesoTotal && (
                 <td>
-                  {item.peso_total}
+                  {String(item.peso_total).replace(".", ",")}{" "}
                   {item.total_embalagens[0].unidade_medida}
                 </td>
               )}

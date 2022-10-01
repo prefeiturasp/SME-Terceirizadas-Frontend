@@ -1,0 +1,160 @@
+@import "styles/variables.scss";
+
+.weeks-tabs {
+  .ant-tabs-tab-active {
+    background: $green !important;
+    font-weight: 700;
+    color: $white !important;
+  }
+}
+
+.tabela-tipos-alimentacao {
+  margin-top: 10px;
+
+  header {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 16px;
+    color: #42474a;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-table-tipos-alimentacao {
+      min-height: 24px;
+      font-size: 16px;
+      display: flex;
+      line-height: 24px;
+      align-items: center;
+      text-align: center;
+      display: grid;
+      grid-template-columns: 15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15% 12.15%;
+    }
+
+    .header-table {
+      background-color: $green !important;
+      color: #ffffff !important;
+      font-weight: bold;
+      div {
+        border: 0.05px solid $white;
+        border-top: 0;
+        text-align: center;
+        display: grid;
+        align-items: center;
+        height: 100%;
+        border-right: none !important;
+      }
+    }
+
+    .body-table-alimentacao {
+      font-weight: 500;
+      color: $blackSubtle;
+
+      div {
+        padding: 0 !important;
+        border: 0 !important;
+      }
+
+      .nome-linha {
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+      }
+
+      .input-desabilitado {
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+        div.input input {
+          font-size: 11px !important;
+          height: 35px;
+        }
+      }
+
+      .input-habilitado {
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+        display: flex;
+        justify-content: center;
+      }
+
+      .tooltip-input {
+        div.input input {
+          border-color: $red !important;
+        }
+      }
+
+      .input-habilitado-observacoes {
+        display: flex;
+        justify-content: center;
+        border: 0 !important;
+        border-right: 1px solid #e9eaea !important;
+        border-bottom: 1px solid #e9eaea !important;
+
+        button {
+          margin: 8px;
+          display: flex;
+          align-items: center;
+          align-self: center;
+          height: 28px;
+        }
+      }
+
+      .flex-container {
+        display: flex;
+        justify-content: space-evenly;
+        padding-left: 0;
+      }
+
+      div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e9eaea;
+        text-align: left;
+        padding-left: 8px;
+        &:not(:last-child) {
+          border-right: 1px solid #e9eaea;
+        }
+      }
+
+      div:last-child {
+        border-right: 0px solid #e9eaea;
+      }
+
+      .data_lancamento_modal {
+        &::placeholder {
+          color: red !important;
+        }
+      }
+
+      .field-values-input {
+        position: relative;
+
+        .icone-info-error {
+          position: absolute;
+          background-color: $red;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+      }
+
+      .nao-eh-dia-letivo {
+        background-color: #dadada;
+      }
+    }
+  }
+}

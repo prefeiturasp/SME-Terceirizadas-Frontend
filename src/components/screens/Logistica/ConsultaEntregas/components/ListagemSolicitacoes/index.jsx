@@ -25,12 +25,12 @@ const ListagemSolicitacoes = ({
       >
         <article>
           <div className={`grid-table header-table top-header`}>
-            <div className={dilog || dre ? "colspan-4" : "colspan-3"} />
+            <div className={dilog || dre ? "colspan-3" : "colspan-2"} />
             <div className="colspan-4">Guias de Remessa</div>
             <div className="colspan-2">Exportar</div>
+            <div className="colspan-1" />
           </div>
           <div className="grid-table header-table">
-            <div />
             <div>Requisição</div>
             {(dilog || dre) && <div>Distribuidor</div>}
             <div>Data de entrega</div>
@@ -58,6 +58,7 @@ const ListagemSolicitacoes = ({
             </div>
             <div>Relatório</div>
             <div>Exportar Requisição</div>
+            <div />
           </div>
           {solicitacoes.map(solicitacao => {
             const bordas =
@@ -65,29 +66,10 @@ const ListagemSolicitacoes = ({
                 ? "desativar-borda"
                 : "";
             const icone =
-              ativos && ativos.includes(solicitacao.uuid)
-                ? "angle-up"
-                : "angle-down";
+              ativos && ativos.includes(solicitacao.uuid) ? "minus" : "plus";
             return (
               <>
                 <div className="grid-table body-table">
-                  <div>
-                    <i
-                      className={`fas fa-${icone} expand`}
-                      onClick={() => {
-                        ativos && ativos.includes(solicitacao.uuid)
-                          ? setAtivos(
-                              ativos.filter(el => el !== solicitacao.uuid)
-                            )
-                          : setAtivos(
-                              ativos
-                                ? [...ativos, solicitacao.uuid]
-                                : [solicitacao.uuid]
-                            );
-                      }}
-                    />
-                  </div>
-
                   <div className={`${bordas}`}>
                     {solicitacao.numero_solicitacao}
                   </div>
@@ -113,13 +95,33 @@ const ListagemSolicitacoes = ({
                   </div>
 
                   <div>
-                    <FiltrosExcel solicitacao={solicitacao} excel={true} />
+                    <FiltrosExcel
+                      solicitacao={solicitacao}
+                      excel={true}
+                      showModal={setShowDownload}
+                    />
                   </div>
                   <div>
                     <FiltrosExcel
                       solicitacao={solicitacao}
                       pdf={true}
                       showModal={setShowDownload}
+                    />
+                  </div>
+                  <div>
+                    <i
+                      className={`fas fa-${icone} expand`}
+                      onClick={() => {
+                        ativos && ativos.includes(solicitacao.uuid)
+                          ? setAtivos(
+                              ativos.filter(el => el !== solicitacao.uuid)
+                            )
+                          : setAtivos(
+                              ativos
+                                ? [...ativos, solicitacao.uuid]
+                                : [solicitacao.uuid]
+                            );
+                      }}
                     />
                   </div>
                 </div>

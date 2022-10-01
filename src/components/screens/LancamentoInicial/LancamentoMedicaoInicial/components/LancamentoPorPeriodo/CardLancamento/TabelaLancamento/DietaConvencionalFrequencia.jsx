@@ -11,7 +11,7 @@ import BorderlessInput from "../../../BorderlessInput";
 import "./styles.scss";
 import BorderlessTextarea from "../../../BorderlessTextarea";
 
-import { tamanhoMaximoObsDiarias } from "../helpers";
+import { tamanhoMaximoObsDiarias } from "../../helpers";
 
 export default ({
   panorama,

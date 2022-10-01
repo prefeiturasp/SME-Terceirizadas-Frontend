@@ -10,28 +10,30 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
     setPage(page);
   };
 
-  const totalResultados = dadosProdutos && Object.keys(dadosProdutos).length;
+  const totalResultados = dadosProdutos && dadosProdutos.length;
   const pageSize = 10;
   const dadosProdutosPaginado =
     dadosProdutos &&
-    Object.entries(dadosProdutos).slice(pageSize * (page - 1), pageSize * page);
+    dadosProdutos.slice(pageSize * (page - 1), pageSize * page);
 
   return (
     <div>
-      <table className="table">
+      <table className="table table-bordered table-items">
         <thead>
-          <tr>
-            <th className="nome-produto">Nome do Produto</th>
-            <th>Marca</th>
+          <tr className="table-head-items">
+            <th>Produto</th>
+            <th>Marcas</th>
+            <th>Editais</th>
           </tr>
         </thead>
         <tbody>
           {dadosProdutos &&
-            dadosProdutosPaginado.map(([nome, marcas], index) => {
+            dadosProdutosPaginado.map((produto, index) => {
               return (
-                <tr key={index}>
-                  <td>{nome}</td>
-                  <td>{marcas.join(", ")}</td>
+                <tr key={index} className="table-body-items">
+                  <td>{produto.nome}</td>
+                  <td>{produto.marcas ? produto.marcas.join(", ") : ""}</td>
+                  <td>{produto.editais ? produto.editais.join(", ") : ""}</td>
                 </tr>
               );
             })}

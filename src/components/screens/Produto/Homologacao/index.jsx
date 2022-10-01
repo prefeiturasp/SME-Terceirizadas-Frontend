@@ -21,7 +21,11 @@ import {
 import "./style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { Collapse } from "react-collapse";
-import { formataInformacoesNutricionais } from "./helper";
+import {
+  formataInformacoesNutricionais,
+  deveExibirEditais,
+  formataEditais
+} from "./helper";
 import { ModalPadrao } from "../../../Shareable/ModalPadrao";
 import ModalAtivacaoSuspensaoProduto from "../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 import MotivoDaRecusaDeHomologacao from "components/Shareable/MotivoDaRecusaDeHomologacao";
@@ -71,7 +75,8 @@ class HomologacaoProduto extends Component {
       showCancelarAnaliseSensorialModal: false,
       disableBotaoCancelar: false,
       showModalVincularEditais: false,
-      editaisOptions: []
+      editaisOptions: [],
+      exibirEditais: false
     };
     this.closeModal = this.closeModal.bind(this);
     this.closeCancelarAnaliseSensorialModal = this.closeCancelarAnaliseSensorialModal.bind(
@@ -112,6 +117,19 @@ class HomologacaoProduto extends Component {
   componentDidMount = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const checaEditais = response => {
+      let result = [];
+      if (response.data.produto.eh_para_alunos_com_dieta)
+        result = response.data.rastro_terceirizada.contratos.map(
+          c => c.edital.uuid
+        );
+      if (response.data.produto.vinculos_produto_edital.length)
+        result = response.data.produto.vinculos_produto_edital.map(
+          c => c.edital.uuid
+        );
+      return result;
+    };
+
     getHomologacaoProduto(uuid).then(response => {
       this.props.change("nome", response.data.produto.nome);
       this.props.change(
@@ -129,12 +147,7 @@ class HomologacaoProduto extends Component {
           ? "DIETA ESPECIAL"
           : "COMUM"
       );
-      this.props.change(
-        "editais",
-        response.data.produto.eh_para_alunos_com_dieta
-          ? response.data.rastro_terceirizada.contratos.map(c => c.edital.uuid)
-          : []
-      );
+      this.props.change("editais", checaEditais(response));
       this.setState({
         produto: response.data.produto,
         informacoesNutricionais: formataInformacoesNutricionais(
@@ -144,7 +157,8 @@ class HomologacaoProduto extends Component {
         terceirizada: response.data.rastro_terceirizada,
         uuid,
         logs: response.data.logs,
-        ativo: this.checaStatus(response.data)
+        ativo: this.checaStatus(response.data),
+        exibirEditais: deveExibirEditais(response.data.logs)
       });
     });
 
@@ -279,8 +293,10 @@ class HomologacaoProduto extends Component {
       showCancelarAnaliseSensorialModal,
       disableBotaoCancelar,
       showModalVincularEditais,
-      editaisOptions
+      editaisOptions,
+      exibirEditais
     } = this.state;
+
     const { necessita_analise_sensorial, justificativa, editais } = this.props;
     const { homologacao } = produto !== null && produto;
     const logAnaliseSensorial = homologacao && homologacao.ultimo_log;
@@ -513,6 +529,25 @@ class HomologacaoProduto extends Component {
               </div>
 
               <hr />
+
+              {produto && exibirEditais && (
+                <Fragment>
+                  <div className="title">Editais Vinculados</div>
+                  <div className="row">
+                    <div className="col-12 report-label-value">
+                      <p>Editais Vinculados ao Produto</p>
+                      <p className="value">
+                        {produto.vinculos_produto_edital.length > 0
+                          ? formataEditais(produto.vinculos_produto_edital)
+                          : "Ainda não existe nenhum edital vinculado ao produto"}
+                      </p>
+                    </div>
+                  </div>
+                </Fragment>
+              )}
+
+              <hr />
+
               <div className="title">Identificação do Produto</div>
               <div className="row">
                 <div className="col-12 report-label-value">

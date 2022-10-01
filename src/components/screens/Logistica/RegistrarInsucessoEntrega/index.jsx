@@ -112,8 +112,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-conferencia-guia">
-        <div className="card-body conferencia-guia">
+      <div className="card mt-3 card-insucesso-entrega">
+        <div className="card-body insucesso-entrega">
           <Form
             onSubmit={onSubmit}
             initialValues={initialValues}

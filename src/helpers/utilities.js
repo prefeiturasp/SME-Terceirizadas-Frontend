@@ -163,6 +163,8 @@ export const mensagemCancelamento = status => {
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
       return "Esta solicitação já foi autorizada pela CODAE. ";
+    case statusEnum.INFORMADO:
+      return "A solicitação da suspensão de alimentação está autorizada automaticamente. ";
     default:
       return "";
   }
@@ -391,8 +393,15 @@ export const usuarioEhDistribuidora = () => {
 };
 
 export const escolaEhCei = () => {
-  return /^"?cei|\scei\s|\scei$/i.test(
+  return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
+  );
+};
+
+export const escolaEhCEMEI = () => {
+  return (
+    localStorage.getItem("nome_instituicao") &&
+    localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`)
   );
 };
 

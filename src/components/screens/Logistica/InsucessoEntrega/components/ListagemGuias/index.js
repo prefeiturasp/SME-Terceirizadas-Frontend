@@ -21,35 +21,21 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
     <section className="resultado-insucesso-entrega">
       <article>
         <div className="grid-table header-table">
-          <div />
           <div>N° da Guia</div>
           <div>N° da Requisição</div>
           <div>Nome da U.E. </div>
           <div>Data de entrega</div>
           <div>Status</div>
           <div>Registrar Insucesso de Entrega</div>
+          <div />
         </div>
         {guias.map(guia => {
           const bordas =
             ativos && ativos.includes(guia.uuid) ? "desativar-borda" : "";
-          const icone =
-            ativos && ativos.includes(guia.uuid) ? "angle-up" : "angle-down";
+          const icone = ativos && ativos.includes(guia.uuid) ? "minus" : "plus";
           return (
             <>
               <div key={guia.uuid} className="grid-table body-table">
-                <div className={`${bordas}`}>
-                  <i
-                    className={`fas fa-${icone}`}
-                    onClick={() => {
-                      ativos && ativos.includes(guia.uuid)
-                        ? setAtivos(ativos.filter(el => el !== guia.uuid))
-                        : setAtivos(
-                            ativos ? [...ativos, guia.uuid] : [guia.uuid]
-                          );
-                    }}
-                  />
-                </div>
-
                 <div className={`${bordas}`}>{guia.numero_guia}</div>
                 <div className={`${bordas}`}>{guia.numero_requisicao}</div>
                 <div className={`${bordas}`}>{guia.nome_unidade}</div>
@@ -84,6 +70,18 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                       </NavLink>
                     </span>
                   </Tooltip>
+                </div>
+                <div className={`${bordas}`}>
+                  <i
+                    className={`fas fa-${icone}`}
+                    onClick={() => {
+                      ativos && ativos.includes(guia.uuid)
+                        ? setAtivos(ativos.filter(el => el !== guia.uuid))
+                        : setAtivos(
+                            ativos ? [...ativos, guia.uuid] : [guia.uuid]
+                          );
+                    }}
+                  />
                 </div>
               </div>
               {ativos && ativos.includes(guia.uuid) && (
@@ -158,11 +156,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                                   {alimento.embalagens[0].tipo_embalagem}
                                 </b>
                                 <br />
-                                {
-                                  alimento.embalagens[0].descricao_embalagem
-                                }{" "}
-                                {alimento.embalagens[0].capacidade_embalagem}{" "}
-                                {alimento.embalagens[0].unidade_medida}
+                                {alimento.embalagens[0].capacidade_completa}
                               </div>
 
                               {alimento.embalagens.length > 1 && (
@@ -178,14 +172,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                                       {alimento.embalagens[1].tipo_embalagem}
                                     </b>
                                     <br />
-                                    {
-                                      alimento.embalagens[1].descricao_embalagem
-                                    }{" "}
-                                    {
-                                      alimento.embalagens[1]
-                                        .capacidade_embalagem
-                                    }{" "}
-                                    {alimento.embalagens[1].unidade_medida}
+                                    {alimento.embalagens[1].capacidade_completa}
                                   </div>
                                 </>
                               )}

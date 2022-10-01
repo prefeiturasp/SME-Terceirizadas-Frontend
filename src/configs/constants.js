@@ -5,6 +5,7 @@ export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
   "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
 export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
+export const SUSPENSAO_ALIMENTACAO_CEI = "suspensao-de-alimentacao-cei";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
@@ -135,6 +136,7 @@ export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
+export const SOBREMESA_DOCE = "sobremesa-doce";
 export const CONSULTA_KITS = "consulta-kits";
 export const KITS = "kits";
 export const LOTE = "lote";
@@ -169,6 +171,7 @@ export const ENTREGAS_DRE = "entregas-dre";
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
+export const PERIODO_LANCAMENTO = "periodo-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

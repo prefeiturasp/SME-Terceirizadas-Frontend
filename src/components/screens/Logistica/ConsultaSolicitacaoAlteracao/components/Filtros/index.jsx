@@ -42,7 +42,7 @@ export default ({
                   component={InputText}
                   label="Nº da Solicitação de Alteração"
                   name="numero_solicitacao"
-                  placeholder="Digite o número da solicitação"
+                  placeholder="Digite o Nº da Solicitação"
                   className="input-busca-produto"
                 />
               </div>
@@ -51,14 +51,15 @@ export default ({
                   component={InputText}
                   label="Nº da Requisição de Entrega"
                   name="numero_requisicao"
-                  placeholder="Digite o número da requisição"
+                  placeholder="Digite o Nº da Requisição"
                   className="input-busca-produto"
+                  apenasNumeros
                 />
               </div>
               <div className="col-3">
                 <Field
                   component={InputComData}
-                  label="Período de Entrega"
+                  label="Selecionar Período de Entrega"
                   name="data_inicial"
                   className="data-inicial"
                   placeholder="De"
@@ -90,15 +91,15 @@ export default ({
               <div className="col">
                 <Field
                   component={InputText}
-                  label="Nome do distribuidor"
+                  label="Nome do Distribuidor"
                   name="nome_distribuidor"
-                  placeholder="Digite o nome do distribuidor"
+                  placeholder="Digite o Nome do Distribuidor"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col">
                 <Field
-                  label="Motivo de alteração"
+                  label="Motivo de Alteração"
                   component={MultiSelect}
                   disableSearch
                   name="motivos"

@@ -37,16 +37,11 @@ import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
 const FORM_NAME = "reposicaoGuiaRemessa";
-const TOOLTIP_DATA = `Preencher com a data em que o alimento foi efetivamente recebido pela Unidade Educacional.
-                      Tratando-se de uma reposição de alimentos faltantes, será aberta ocorrência a ser detalhada pelo usuário.`;
-const TOOLTIP_HORA = `Preencher com a hora em que o alimento foi entregue na Unidade Educacional.`;
-const TOOLTIP_PLACA = `Preencher com o registro da placa do veículo que transportou os alimentos à Unidade Educacional.`;
-const TOOLTIP_NOME = `Preencher com o nome do motorista que entregou os alimentos na Unidade Educacional.`;
-const TOOLTIP_RECEBIDO = `Preencher com a quantidade de embalagens do alimento que a Unidade Educacional efetivamente
-                          recebeu como reposição aos alimentos faltantes. Se ainda restarem alimentos a receber, será
-                          aberta ocorrência a ser detalhada pelo usuário.`;
-const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimento faltantes (isto é, que o fornecedor deixou de entregar
-                          na Unidade Educacional) em relação à quantidade prevista na Guia de Remessa.`;
+const TOOLTIP_RECEBIDO = `Quantidade de embalagens do alimento que a UE efetivamente recebeu,
+                          na reposição dos alimentos. Se ainda restarem alimentos a receber,
+                          será aberta ocorrência a ser detalhada pelo usuário.`;
+const TOOLTIP_A_RECEBER = `Quantidade de embalagens de alimentos faltantes (que o fornecedor deixou de entregar na UE)
+                           em relação à quantidade prevista na Guia de Remessa.`;
 const FORMATOS_IMAGEM = "PNG, JPG ou JPEG";
 
 let ocorrenciasApagadas = [];
@@ -510,7 +505,10 @@ export default () => {
                   Conferência individual dos itens da guia
                 </span>
                 <hr />
-
+                <div className="texto-intro">
+                  Preencher <strong>exatamente</strong> com os dados
+                  relacionados a <strong>Entrega da Reposição na UE.</strong>
+                </div>
                 <div className="row mt-2">
                   <div className="col-4">
                     <Field
@@ -533,10 +531,9 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputComData}
-                      label="Data de recebimento na Unidade Educacional"
+                      label="Selecionar data de recebimento na UE"
                       name="data_entrega_real"
                       className="data-inicial"
-                      tooltipText={TOOLTIP_DATA}
                       validate={composeValidators(required, validaDataEntrega)}
                       minDate={
                         moment(values.data_entrega, "DD/MM/YYYY").add(1, "days")
@@ -544,7 +541,7 @@ export default () => {
                       }
                       maxDate={null}
                       required
-                      writable
+                      writable={false}
                       onChange={validaStatus(values)}
                     />
                   </div>
@@ -554,15 +551,15 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Hora da Entrega"
+                      label="Selecionar hora da Entrega"
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
                       onChangeFunction={data => {
                         escolherHora(data);
                       }}
+                      writable={false}
                       className="input-busca-produto"
-                      tooltipText={TOOLTIP_HORA}
                       validate={validaHoraRecebimento}
                       required
                       functionComponent
@@ -575,7 +572,6 @@ export default () => {
                       name="nome_motorista"
                       className="input-busca-produto"
                       contador={100}
-                      tooltipText={TOOLTIP_NOME}
                       validate={composeValidators(
                         required,
                         maxLength(100),
@@ -591,7 +587,6 @@ export default () => {
                       name="placa_veiculo"
                       className="input-busca-produto"
                       contador={7}
-                      tooltipText={TOOLTIP_PLACA}
                       validate={composeValidators(
                         required,
                         maxLength(7),
@@ -693,11 +688,14 @@ export default () => {
                                             <thead>
                                               <tr>
                                                 <th scope="col">
-                                                  Qtde Prevista
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
-                                                <th scope="col">
-                                                  A receber{" "}
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade a Receber{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_A_RECEBER
@@ -708,7 +706,7 @@ export default () => {
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO
@@ -724,9 +722,7 @@ export default () => {
                                                   {fechada.descricao_embalagem}.
                                                 </td>
                                                 <td>
-                                                  {fechada.descricao_embalagem}.{" "}
-                                                  {fechada.capacidade_embalagem}
-                                                  {fechada.unidade_medida}
+                                                  {fechada.capacidade_completa}
                                                 </td>
                                                 <td>{fechada.qtd_a_receber}</td>
                                                 <td>
@@ -767,11 +763,14 @@ export default () => {
                                             <thead>
                                               <tr>
                                                 <th scope="col">
-                                                  Qtde Prevista
+                                                  Quantidade Prevista
                                                 </th>
                                                 <th scope="col">Capacidade</th>
-                                                <th scope="col">
-                                                  A receber{" "}
+                                                <th
+                                                  scope="col"
+                                                  className="th-recebido"
+                                                >
+                                                  Quantidade a Receber{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_A_RECEBER
@@ -782,7 +781,7 @@ export default () => {
                                                   scope="col"
                                                   className="th-recebido"
                                                 >
-                                                  Recebido{" "}
+                                                  Quantidade Recebida{" "}
                                                   <TooltipIcone
                                                     tooltipText={
                                                       TOOLTIP_RECEBIDO
@@ -802,13 +801,8 @@ export default () => {
                                                 </td>
                                                 <td>
                                                   {
-                                                    fracionada.descricao_embalagem
+                                                    fracionada.capacidade_completa
                                                   }
-                                                  .{" "}
-                                                  {
-                                                    fracionada.capacidade_embalagem
-                                                  }
-                                                  {fracionada.unidade_medida}
                                                 </td>
                                                 <td>
                                                   {fracionada.qtd_a_receber}

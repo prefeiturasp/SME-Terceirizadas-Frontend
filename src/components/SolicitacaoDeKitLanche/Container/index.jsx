@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { getDiasUteis } from "../../../services/diasUteis.service";
 import { dataParaUTC } from "../../../helpers/utilities";
 import SolicitacaoDeKitLanche from "./base";
+import { meusDados } from "services/perfil.service";
 
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: {},
+      meusDados: null,
       proximos_dois_dias_uteis: null,
       proximos_cinco_dias_uteis: null,
       enumKits: null
@@ -15,6 +16,12 @@ class Container extends Component {
   }
 
   componentDidMount() {
+    meusDados().then(response => {
+      this.setState({
+        meusDados: response
+      });
+    });
+
     getDiasUteis().then(response => {
       const proximos_cinco_dias_uteis = dataParaUTC(
         new Date(response.data.proximos_cinco_dias_uteis)
@@ -30,7 +37,12 @@ class Container extends Component {
   }
 
   render() {
-    return <SolicitacaoDeKitLanche {...this.state} {...this.props} />;
+    const { meusDados } = this.state;
+    return meusDados ? (
+      <SolicitacaoDeKitLanche {...this.state} {...this.props} />
+    ) : (
+      <div>Carregando...</div>
+    );
   }
 }
 

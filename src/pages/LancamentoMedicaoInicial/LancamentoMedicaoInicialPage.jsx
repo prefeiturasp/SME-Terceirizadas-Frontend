@@ -13,11 +13,11 @@ import {
 
 const atual = {
   href: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
-  titulo: "Lançamento de Medição Inicial"
+  titulo: "Medição Inicial"
 };
 
 export default () => (
-  <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
+  <Page botaoVoltar voltarPara="/" titulo={"Lançamento Medição Inicial"}>
     <Breadcrumb home={HOME} atual={atual} />
     <LancamentoMedicaoInicial />
   </Page>
