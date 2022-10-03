@@ -272,14 +272,14 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
               meusDados.vinculo_atual.instituicao
                 .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
                 ? values.numero_alunos &&
+                  values.periodo_escolar &&
                   composeValidators(
                     naoPodeSerZero,
                     numericInteger,
-                    values.periodo_escolar &&
-                      maxValue(
-                        periodos.find(p => p.uuid === values.periodo_escolar)
-                          .maximo_alunos
-                      )
+                    maxValue(
+                      periodos.find(p => p.uuid === values.periodo_escolar)
+                        .maximo_alunos
+                    )
                   )
                 : false
             }
