@@ -25,7 +25,7 @@ export const BotoesTerceirizada = ({
       <div className="col-12">
         <Botao
           texto="Cancelar Solicitação"
-          className="mr-3"
+          className="float-right"
           type={BUTTON_TYPE.BUTTON}
           onClick={() => setShowModal(true)}
           style={BUTTON_STYLE.GREEN}
