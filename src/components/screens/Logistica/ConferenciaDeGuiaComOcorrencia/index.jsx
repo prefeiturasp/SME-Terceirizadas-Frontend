@@ -476,7 +476,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Número da guia de remessa"
+                      label="Nº da Guia de Remessa"
                       name="numero_guia"
                       className="input-busca-produto"
                       disabled
@@ -494,7 +494,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputComData}
-                      label="Selecionar data de recebimento da UE"
+                      label="Selecionar Data de Recebimento da UE"
                       name="data_entrega_real"
                       className="data-inicial"
                       validate={composeValidators(required, validaDataEntrega)}
@@ -516,7 +516,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputHorario}
-                      label="Selecionar hora da Entrega"
+                      label="Selecionar Hora da Entrega"
                       name="hora_recebimento"
                       placeholder="Selecione a Hora"
                       horaAtual={HoraRecebimento}
@@ -788,7 +788,7 @@ export default () => {
                               <div className="col-6">
                                 <Field
                                   component={InputText}
-                                  label="Status de recebimento de alimento"
+                                  label="Status de Recebimento de Alimento"
                                   name={`status_${index}`}
                                   className="input-busca-produto"
                                   placeholder="---"
@@ -853,8 +853,10 @@ export default () => {
                               <div className="row">
                                 <article className="col-9 produto">
                                   <label className="mb-3">
-                                    Se possível, insira uma foto que demonstre a
-                                    ocorrência apontada.
+                                    <span>
+                                      Insira uma <strong> foto </strong>que
+                                      demonstre a ocorrência apontada
+                                    </span>
                                   </label>
                                   <InputFile
                                     ref={ref =>
@@ -878,7 +880,9 @@ export default () => {
                                     }
                                   />
                                   <label className="mb-3">
-                                    {"Formatos aceitos: " + FORMATOS_IMAGEM}
+                                    {"IMPORTANTE: Envie um arquivo nos formatos: " +
+                                      FORMATOS_IMAGEM +
+                                      ", com até 10MB"}
                                   </label>
                                 </article>
                               </div>

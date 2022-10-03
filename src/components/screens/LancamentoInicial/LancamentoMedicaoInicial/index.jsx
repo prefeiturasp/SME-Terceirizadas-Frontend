@@ -7,13 +7,14 @@ import { useHistory, useLocation } from "react-router";
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
 import FluxoDeStatusMedicaoInicial from "./components/FluxoDeStatusMedicaoInicial";
+import { CaretDownOutlined } from "@ant-design/icons";
 
 import * as perfilService from "services/perfil.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
 import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 import { getEscolaSimples } from "services/escola.service";
 
-import { Icon, Select, Skeleton } from "antd";
+import { Select, Skeleton } from "antd";
 import "./styles.scss";
 import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -189,7 +190,7 @@ export default () => {
             <div className="pl-0">
               {objectoPeriodos.length > 0 ? (
                 <Select
-                  suffixIcon={<Icon type="caret-down" />}
+                  suffixIcon={<CaretDownOutlined />}
                   name="periodo_lancamento"
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo

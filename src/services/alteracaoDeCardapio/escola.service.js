@@ -3,6 +3,7 @@ import axios from "../_base";
 import { FLUXO, AUTH_TOKEN, TIPO_SOLICITACAO } from "services/constants";
 import { ENDPOINT } from "constants/shared";
 import { getPath } from "./helper";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (
   uuid,
@@ -177,4 +178,51 @@ export const getAlunosPorFaixaEtariaNumaData = async (
 export const getEscolaPeriodoEscolares = async () => {
   const url = `/${ENDPOINT.QUANTIDADE_ALUNOS_POR_PERIODO}/`;
   return axios.get(url);
+};
+
+export const createAlteracaoCardapioCEMEI = async payload => {
+  const url = `alteracoes-cardapio-cemei/`;
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getAlteracaoCEMEIRascunhos = async () => {
+  const url = `alteracoes-cardapio-cemei/`;
+  const response = await axios
+    .get(url, { params: { status: "RASCUNHO" } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteAlteracaoAlimentacaoCEMEI = async uuid => {
+  const url = `alteracoes-cardapio-cemei/${uuid}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const iniciaFluxoAlteracaoAlimentacaoCEMEI = async uuid => {
+  const url = `alteracoes-cardapio-cemei/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const updateAlteracaoCardapioCEMEI = async (uuid, payload) => {
+  const url = `alteracoes-cardapio-cemei/${uuid}/`;
+  const response = await axios.put(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

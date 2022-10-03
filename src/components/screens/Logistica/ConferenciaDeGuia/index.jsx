@@ -180,7 +180,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Número da guia de remessa"
+                      label="Nº da Guia de Remessa"
                       name="numero_guia"
                       className="input-busca-produto"
                       disabled
@@ -189,7 +189,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={InputText}
-                      label="Data de entrega prevista"
+                      label="Data de Entrega Prevista"
                       name="data_entrega"
                       className="input-busca-produto"
                       disabled
@@ -243,7 +243,7 @@ export default () => {
                         <div className="col-3">
                           <Field
                             component={InputComData}
-                            label="Selecionar data de recebimento da UE"
+                            label="Selecionar Data de Recebimento da UE"
                             name="data_entrega_real"
                             className="data-inicial"
                             validate={composeValidators(
@@ -289,7 +289,7 @@ export default () => {
                         <div className="col-3">
                           <Field
                             component={InputHorario}
-                            label="Selecionar hora da Entrega"
+                            label="Selecionar Hora da Entrega"
                             name="hora_recebimento"
                             placeholder="Selecione a Hora"
                             horaAtual={HoraRecebimento}

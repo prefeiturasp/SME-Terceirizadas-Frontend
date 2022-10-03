@@ -11,7 +11,8 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
+import { Select as SelectAntd } from "antd";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -113,7 +114,7 @@ export default ({ tiposUnidadesEscolar }) => {
                     <article>
                       <Field
                         component={ASelect}
-                        suffixIcon={<Icon type="caret-down" />}
+                        suffixIcon={<CaretDownOutlined />}
                         showSearch
                         name="tipo_unidade_escolar"
                         filterOption={(inputValue, option) =>

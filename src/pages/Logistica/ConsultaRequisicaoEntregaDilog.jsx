@@ -10,7 +10,7 @@ import ConsultaRequisicaoEntregaDilog from "components/screens/Logistica/Consult
 
 const atual = {
   href: `/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`,
-  titulo: "Requisições de Entrega"
+  titulo: "Requisição de Entrega"
 };
 
 const anteriores = [

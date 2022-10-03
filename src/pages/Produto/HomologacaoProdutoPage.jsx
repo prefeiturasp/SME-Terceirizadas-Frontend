@@ -1,6 +1,6 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import HomologacaoProduto from "../../components/screens/Produto/Homologacao";
+import HomologacaoProduto from "../../components/screens/Produto/Homologacao/components/Container";
 import Page from "../../components/Shareable/Page/Page";
 import {
   PESQUISA_DESENVOLVIMENTO,

@@ -18,7 +18,7 @@ export class OpcoesKits extends Component {
     if (!this.props.kitsLanche) {
       getKitLanches().then(response => {
         this.setState({
-          kitsLanche: response.results
+          kitsLanche: response.data.results
         });
       });
     } else {

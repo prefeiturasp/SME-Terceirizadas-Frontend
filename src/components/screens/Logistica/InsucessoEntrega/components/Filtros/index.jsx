@@ -36,18 +36,20 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
               <div className="col-6">
                 <Field
                   component={InputText}
+                  apenasNumeros
                   label="N° da Requisição de Entrega"
                   name="numero_requisicao"
-                  placeholder="Digite o número da requisição"
+                  placeholder="Digite o Nº da Requisição"
                   className="input-busca-produto"
                 />
               </div>
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nº da guia de remessa"
+                  apenasNumeros
+                  label="N° da Guia de Remessa"
                   name="numero_guia"
-                  placeholder="Digite o número da guia"
+                  placeholder="Digite o Nº da Guia"
                   className="input-busca-produto"
                 />
               </div>
@@ -56,7 +58,7 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
               <div className="col-3">
                 <Field
                   component={InputComData}
-                  label="Período de Entrega"
+                  label="Selecionar Período de Entrega"
                   name="data_inicial"
                   className="data-inicial"
                   placeholder="De"
@@ -86,9 +88,9 @@ export default ({ setFiltros, setGuias, setTotal, inicioResultado }) => {
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nome da Unidade Educacional"
+                  label="Nome da UE"
                   name="nome_unidade"
-                  placeholder="Digite o nome da Unidade Educacional"
+                  placeholder="Digite o Nome da UE"
                   className="input-busca-produto"
                 />
               </div>

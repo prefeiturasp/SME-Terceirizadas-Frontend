@@ -176,7 +176,7 @@ class ModalResponderAnaliseSensorial extends Component {
             </section>
 
             <div className="row pt-3 pb-3">
-              <article className="col-9 produto">
+              <article className="col-6 produto">
                 <label>
                   <span className="obrigatorio">* </span>Anexar
                 </label>
@@ -184,7 +184,7 @@ class ModalResponderAnaliseSensorial extends Component {
                   Anexar documento de entrega ou laudo relacionado ao produto
                 </label>
               </article>
-              <div className="col-3 btn">
+              <div className="col-6 btn">
                 <Field
                   component={InputFile}
                   className="inputfile"

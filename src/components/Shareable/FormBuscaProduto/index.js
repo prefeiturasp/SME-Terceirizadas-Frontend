@@ -1,10 +1,10 @@
 import React, { useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
-import { Row, Col } from "antd";
 import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
+import { Select as SelectAntd } from "antd";
 import { usuarioEhTerceirizada, usuarioEhEscola } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -131,82 +131,171 @@ export const FormBuscaProduto = ({
           className="busca-produtos-formulario-shared"
         >
           {!naoExibirRowTerceirizadas && (
-            <Row gutter={[16, 16]}>
-              <Col md={24} lg={12} xl={16}>
-                <Field
-                  component={AutoCompleteField}
-                  dataSource={state.terceirizadas}
-                  label="Nome da terceirizada"
-                  onSearch={v => onSearch("terceirizadas", v)}
-                  name="nome_terceirizada"
-                  disabled={
-                    values.agrupado_por_nome_e_marca || usuarioEhTerceirizada()
-                  }
-                />
-              </Col>
-              <Col md={24} lg={6} xl={4}>
-                <Field
-                  component={InputComData}
-                  label="Início do Período"
-                  name="data_inicial"
-                  labelClassName="datepicker-fixed-padding"
-                  minDate={null}
-                  maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
-                      : moment()._d
-                  }
-                  disabled={values.agrupado_por_nome_e_marca}
-                />
-              </Col>
-              <Col md={24} lg={6} xl={4}>
-                <Field
-                  component={InputComData}
-                  label={"Até"}
-                  name="data_final"
-                  labelClassName="datepicker-fixed-padding"
-                  popperPlacement="bottom-end"
-                  minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                      : null
-                  }
-                  maxDate={moment()._d}
-                  disabled={values.agrupado_por_nome_e_marca}
-                />
-              </Col>
-            </Row>
+            <>
+              <div className="row">
+                <div className="col-8">
+                  {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
+                    <Field
+                      component={AutoCompleteField}
+                      dataSource={state.terceirizadas}
+                      label="Nome da terceirizada"
+                      onSearch={v => onSearch("terceirizadas", v)}
+                      name="nome_terceirizada"
+                      disabled={
+                        values.agrupado_por_nome_e_marca ||
+                        usuarioEhTerceirizada()
+                      }
+                    />
+                  )}
+                  {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                    <div className="row">
+                      <div className="col-6">
+                        <Field
+                          component={AutoCompleteField}
+                          dataSource={state.editais}
+                          label="Edital"
+                          className="input-busca-produto"
+                          onSearch={v => onSearch("editais", v)}
+                          name="nome_edital"
+                          disabled={usuarioEhEscola()}
+                        />
+                      </div>
+                      {state.tipos.length > 0 && (
+                        <div className="col-6">
+                          <label className="label-aselect">Tipo</label>
+                          <Field
+                            component={ASelect}
+                            className="input-busca-tipo-item"
+                            placeholder="Selecione um tipo"
+                            suffixIcon={<CaretDownOutlined />}
+                            name="tipo"
+                            filterOption={(inputValue, option) =>
+                              option.props.children
+                                .toString()
+                                .toLowerCase()
+                                .includes(inputValue.toLowerCase())
+                            }
+                          >
+                            {state.tipos}
+                          </Field>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="col-2">
+                  <Field
+                    component={InputComData}
+                    label="Início do Período"
+                    name="data_inicial"
+                    labelClassName="datepicker-fixed-padding"
+                    minDate={null}
+                    maxDate={
+                      values.data_final
+                        ? moment(values.data_final, "DD/MM/YYYY")._d
+                        : moment()._d
+                    }
+                    disabled={values.agrupado_por_nome_e_marca}
+                  />
+                </div>
+                <div className="col-2">
+                  <Field
+                    component={InputComData}
+                    label={"Até"}
+                    name="data_final"
+                    labelClassName="datepicker-fixed-padding"
+                    popperPlacement="bottom-end"
+                    minDate={
+                      values.data_inicial
+                        ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                        : null
+                    }
+                    maxDate={moment()._d}
+                    disabled={values.agrupado_por_nome_e_marca}
+                  />
+                </div>
+              </div>
+            </>
           )}
           <div className="row">
-            <div className="col-4">
+            {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
+              <>
+                <div
+                  className={`col-${
+                    !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
+                  }`}
+                >
+                  <Field
+                    component={AutoCompleteField}
+                    dataSource={state.editais}
+                    label="Edital"
+                    className="input-busca-produto"
+                    onSearch={v => onSearch("editais", v)}
+                    name="nome_edital"
+                    disabled={usuarioEhEscola()}
+                  />
+                </div>
+                {state.tipos.length > 0 && (
+                  <div
+                    className={`col-${
+                      !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
+                    }`}
+                  >
+                    <label className="label-aselect">Tipo</label>
+                    <Field
+                      component={ASelect}
+                      className="input-busca-tipo-item"
+                      placeholder="Selecione um tipo"
+                      suffixIcon={<CaretDownOutlined />}
+                      name="tipo"
+                      filterOption={(inputValue, option) =>
+                        option.props.children
+                          .toString()
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      }
+                    >
+                      {state.tipos}
+                    </Field>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+          <div className="row">
+            <div className={`col-4`}>
               <Field
                 component={AutoCompleteField}
-                dataSource={state.editais}
-                label="Edital"
+                dataSource={state.marcas}
                 className="input-busca-produto"
-                onSearch={v => onSearch("editais", v)}
-                name="nome_edital"
-                disabled={usuarioEhEscola()}
+                label="Marca do Produto"
+                onSearch={v => onSearch("marcas", v)}
+                name="nome_marca"
               />
             </div>
-            {state.tipos.length > 0 && (
-              <div className="col-4">
-                <label className="label-aselect">Tipo</label>
+            <div className={`col-4`}>
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.fabricantes}
+                label="Fabricante do Produto"
+                onSearch={v => onSearch("fabricantes", v)}
+                name="nome_fabricante"
+                disabled={values.agrupado_por_nome_e_marca}
+              />
+            </div>
+            {statusSelect && (
+              <div className={`col-4`}>
+                <div className="pb-1">
+                  <label>Status</label>
+                </div>
                 <Field
-                  component={ASelect}
-                  className="input-busca-tipo-item"
-                  placeholder="Selecione um tipo"
-                  suffixIcon={<Icon type="caret-down" />}
-                  name="tipo"
-                  filterOption={(inputValue, option) =>
-                    option.props.children
-                      .toString()
-                      .toLowerCase()
-                      .includes(inputValue.toLowerCase())
-                  }
-                >
-                  {state.tipos}
-                </Field>
+                  component={SelectWithHideOptions}
+                  mode="default"
+                  options={STATUS_RECLAMACAO_PRODUTO}
+                  name="status"
+                  handleChange={v => onSearch("status", v)}
+                  selectedItems={state.status}
+                />
               </div>
             )}
             <div className="col-4">
@@ -220,43 +309,6 @@ export const FormBuscaProduto = ({
               />
             </div>
           </div>
-          <Row gutter={[16, 16]}>
-            <Col md={24} lg={statusSelect ? 8 : 12}>
-              <Field
-                component={AutoCompleteField}
-                dataSource={state.marcas}
-                className="input-busca-produto"
-                label="Marca do Produto"
-                onSearch={v => onSearch("marcas", v)}
-                name="nome_marca"
-              />
-            </Col>
-            <Col md={24} lg={statusSelect ? 8 : 12}>
-              <Field
-                component={AutoCompleteField}
-                dataSource={state.fabricantes}
-                label="Fabricante do Produto"
-                onSearch={v => onSearch("fabricantes", v)}
-                name="nome_fabricante"
-                disabled={values.agrupado_por_nome_e_marca}
-              />
-            </Col>
-            {statusSelect && (
-              <Col md={24} lg={8}>
-                <div className="pb-1">
-                  <label>Status</label>
-                </div>
-                <Field
-                  component={SelectWithHideOptions}
-                  mode="default"
-                  options={STATUS_RECLAMACAO_PRODUTO}
-                  name="status"
-                  handleChange={v => onSearch("status", v)}
-                  selectedItems={state.status}
-                />
-              </Col>
-            )}
-          </Row>
           <div className="row">
             <div className="col-6">
               <Field

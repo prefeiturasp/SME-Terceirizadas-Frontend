@@ -53,6 +53,8 @@ import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import "./styles.scss";
+import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import { botaoAdicionarObrigatorio, validarFormulario } from "./validacoes";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -80,6 +82,7 @@ export default () => {
   const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
     null
   );
+  const [diasSobremesaDoce, setDiasSobremesaDoce] = useState(null);
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
@@ -100,6 +103,20 @@ export default () => {
   let mesAnoDefault = new Date();
 
   const { TabPane } = Tabs;
+
+  const getListaDiasSobremesaDoceAsync = async escola_uuid => {
+    const params = {
+      mes: new Date(location.state.mesAnoSelecionado).getMonth() + 1,
+      ano: new Date(location.state.mesAnoSelecionado).getFullYear(),
+      escola_uuid
+    };
+    const response = await getListaDiasSobremesaDoce(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDiasSobremesaDoce(response.data);
+    } else {
+      toastError("Erro ao carregar dias de sobremesa doce");
+    }
+  };
 
   useEffect(() => {
     const mesAnoSelecionado = location.state
@@ -129,6 +146,7 @@ export default () => {
       const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
         escola.uuid
       );
+      getListaDiasSobremesaDoceAsync(escola.uuid);
       const periodos_escolares = response_vinculos.data.results;
       const periodo =
         periodos_escolares.find(
@@ -401,6 +419,16 @@ export default () => {
   ]);
 
   const onSubmit = async (values, ehObservacao) => {
+    const erro = validarFormulario(
+      values,
+      diasSobremesaDoce,
+      location,
+      categoriasDeMedicao
+    );
+    if (erro) {
+      toastError(erro);
+      return;
+    }
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
@@ -719,9 +747,17 @@ export default () => {
                                               ]
                                             )}
                                             type={BUTTON_TYPE.BUTTON}
-                                            style={`${
-                                              BUTTON_STYLE.GREEN_OUTLINE_WHITE
-                                            }`}
+                                            style={
+                                              botaoAdicionarObrigatorio(
+                                                values,
+                                                column.dia,
+                                                categoria,
+                                                diasSobremesaDoce,
+                                                location
+                                              )
+                                                ? BUTTON_STYLE.RED_OUTLINE
+                                                : BUTTON_STYLE.GREEN_OUTLINE_WHITE
+                                            }
                                             onClick={() =>
                                               onClickBotaoObservacao(
                                                 column.dia,
@@ -749,6 +785,24 @@ export default () => {
                                               categoria.id,
                                               values
                                             )}
+                                            exibeTooltipDiaSobremesaDoce={
+                                              row.name ===
+                                                "repeticao_sobremesa" &&
+                                              diasSobremesaDoce.includes(
+                                                `${new Date(
+                                                  location.state.mesAnoSelecionado
+                                                ).getFullYear()}-${(
+                                                  new Date(
+                                                    location.state.mesAnoSelecionado
+                                                  ).getMonth() + 1
+                                                )
+                                                  .toString()
+                                                  .padStart(2, "0")}-${
+                                                  column.dia
+                                                }`
+                                              )
+                                            }
+                                            dia={column.dia}
                                             defaultValue={defaultValue(
                                               column,
                                               row

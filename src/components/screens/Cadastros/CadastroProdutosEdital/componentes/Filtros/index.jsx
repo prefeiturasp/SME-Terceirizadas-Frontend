@@ -3,7 +3,8 @@ import ModalCadastrarProdutosEdital from "components/Shareable/ModalCadastrarPro
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, Select as SelectAntd } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
+import { Select as SelectAntd } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -81,7 +82,7 @@ export default ({
                 <Field
                   component={ASelect}
                   className="input-busca-tipo-item"
-                  suffixIcon={<Icon type="caret-down" />}
+                  suffixIcon={<CaretDownOutlined />}
                   showSearch
                   name="status"
                   filterOption={(inputValue, option) =>

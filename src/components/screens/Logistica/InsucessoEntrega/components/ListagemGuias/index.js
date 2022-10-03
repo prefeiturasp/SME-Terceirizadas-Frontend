@@ -19,6 +19,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
   };
   return (
     <section className="resultado-insucesso-entrega">
+      <header>Registros de Insucesso</header>
       <article>
         <div className="grid-table header-table">
           <div>N° da Guia</div>

@@ -29,6 +29,7 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     false
   );
   const [arquivo, setArquivo] = useState([]);
+  const [validationFile, setValidationFile] = useState({ touched: false });
 
   const handleOnChange = event => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
@@ -55,16 +56,42 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     closeModal();
   };
 
+  const isValidFiles = files => {
+    let validation = { touched: true };
+    files.forEach(element => {
+      const base64Ext = element.base64.split(";")[0];
+      if (base64Ext.includes("pdf")) {
+        validation = {
+          ...validation,
+          pdf: true
+        };
+      }
+      if (base64Ext.includes("spreadsheetml")) {
+        validation = {
+          ...validation,
+          xls: true
+        };
+      }
+    });
+    if (validation.xls && validation.pdf) {
+      setDisableFinalizarMedicao(false);
+    } else {
+      setDisableFinalizarMedicao(true);
+    }
+    setValidationFile(validation);
+  };
+
   const removeFile = () => {
-    setArquivo([]);
-    setDisableFinalizarMedicao(true);
+    let arquivos = arquivo;
+    isValidFiles(arquivos);
+    setArquivo(arquivos);
   };
 
   const setFiles = files => {
     let arquivos = arquivo;
     arquivos = files;
+    isValidFiles(arquivos);
     setArquivo(arquivos);
-    setDisableFinalizarMedicao(false);
   };
 
   const handleFinalizarMedicao = async () => {
@@ -81,13 +108,14 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
     data.append("com_ocorrencias", String(!opcaoSelecionada));
 
     if (!opcaoSelecionada) {
-      data.append(
-        "anexo",
-        JSON.stringify({
-          nome: String(arquivo[0].nome),
-          base64: String(arquivo[0].arquivo)
-        })
-      );
+      let payloadAnexos = [];
+      arquivo.forEach(element => {
+        payloadAnexos.push({
+          nome: String(element.nome),
+          base64: String(element.base64)
+        });
+      });
+      data.append("anexos", JSON.stringify(payloadAnexos));
     }
 
     const response = await updateSolicitacaoMedicaoInicial(
@@ -141,27 +169,33 @@ export const ModalFinalizarMedicao = ({ ...props }) => {
             </Radio>
           </Radio.Group>
         </div>
-        {showButtonAnexarPlanilha && (
-          <div className="row ml-2 mt-4 mb-2 anexo-planilha">
+        <div className="row pl-2">
+          {showButtonAnexarPlanilha && (
             <Form
               onSubmit={() => {}}
               render={() => (
                 <Field
                   component={InputFile}
                   className="inputfile"
-                  texto="Anexar planilha de ocorrências"
-                  name="file"
-                  accept=".xls, .xlsx"
+                  alignLeft={true}
+                  texto="Anexar arquivos"
+                  name="files"
+                  accept=".xls, .xlsx, .pdf"
                   setFiles={setFiles}
                   removeFile={removeFile}
-                  toastSuccess={"Planilha de ocorrências anexada com sucesso!"}
+                  toastSuccess={"Arquivos anexados com sucesso!"}
                   ehPlanilhaMedicaoInicial={true}
-                  disabled={arquivo.length > 0}
+                  validationFile={validationFile}
+                  concatenarNovosArquivos={true}
+                  helpText={
+                    "É obrigatório anexar o relatório de ocorrências no formato Excel e também no formato PDF"
+                  }
+                  customHelpTextClassName="custom-style-help-text"
                 />
               )}
             />
-          </div>
-        )}
+          )}
+        </div>
       </Modal.Body>
       <Modal.Footer>
         <div className="row">

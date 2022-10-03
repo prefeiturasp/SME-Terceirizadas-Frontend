@@ -5,7 +5,8 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { formatarParaMultiselect } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
-import { Icon, TreeSelect, Spin } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
+import { TreeSelect, Spin } from "antd";
 import "antd/dist/antd.css";
 import Botao from "components/Shareable/Botao";
 import {
@@ -70,7 +71,14 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     setErros({ ...erros, produtos: _value.length === 0 });
     let resultado = produtosEditaisSelecionados;
     if (extra.triggerNode && extra.triggerNode.props.todos) {
-      let uuids = extra.triggerNode.props.children.map(pe => pe.key);
+      let uuids;
+      if (extra.triggerNode.props.children.length) {
+        uuids = extra.triggerNode.props.children.map(pe => pe.key);
+      } else {
+        uuids = opcoesProdutosEditais
+          .find(op => op.title === extra.triggerValue)
+          .children.map(child => child.value);
+      }
       if (extra.checked) {
         resultado = resultado.concat(uuids);
       } else {
@@ -101,6 +109,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
 
   return (
     <Modal
+      backdrop={"static"}
       dialogClassName="modal-produtos-editais"
       show={showModal}
       onHide={() => {
@@ -181,6 +190,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       treeCheckable={true}
                       showCheckedStrategy={SHOW_PARENT}
                       searchPlaceholder="Selecione os produtos"
+                      treeNodeFilterProp="title"
                       style={{ width: "100%" }}
                     />
                     {erros.produtos && (
@@ -197,7 +207,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                     <Field
                       component={ASelect}
                       className="input-busca-tipo-item"
-                      suffixIcon={<Icon type="caret-down" />}
+                      suffixIcon={<CaretDownOutlined />}
                       name="tipo_produto"
                       onChange={value => {
                         form.change("tipo_produto", value);

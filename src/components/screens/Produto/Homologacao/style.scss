@@ -1,94 +1,146 @@
 @import "../../../../styles/variables.scss";
 
-form.homologacao-produto {
-  font-size: 14px;
-  div.title {
-    color: $blackInput;
-    font-weight: bold;
+.card {
+  .card-body {
+    .titulo-section {
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 16px;
+      color: #198459;
+    }
+
+    .float-right {
+      float: right;
+    }
+
+    .importante-section {
+      margin-top: 10px !important;
+      margin-bottom: 0px !important;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 11px;
+      line-height: 13px;
+      color: #a50e05;
+    }
+
+    .importante-infobox {
+      border: 1px solid #a50e05;
+      border-radius: 4px;
+      margin-top: 7px !important;
+      padding: 9.5px !important;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 14px;
+      color: #a50e05;
+    }
+
+    .info-calorias {
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 13px;
+      color: #42474a;
+    }
   }
-  .texto-wysiwyg {
-    border: 1px #dddddd solid !important;
-    padding: 0.5rem;
-    font-size: 12px;
-    border-radius: 2px;
-  }
-  table.table-informacoes-nutricionais {
-    width: 100%;
-    thead {
-      font-weight: bold;
+}
+
+table.table-ficha-identificacao-produto {
+  thead {
+    tr {
+      background-color: $grayBackground;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid $grayDisabled;
+      color: $blackInput;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 14px;
+      letter-spacing: 0.25px;
+
       th {
-        padding-top: 1em;
-        padding-bottom: 1em;
-        border-top: 1px solid #e9eaea;
-        border-bottom: 1px solid #a7a7a7;
-        background-color: #f5f6f8;
-      }
-    }
-    tbody {
-      tr {
-        padding-top: 0.3em;
-        padding-bottom: 0.3em;
-        border-bottom: 1px solid #a7a7a7;
-        color: $blackInput;
-      }
-    }
-  }
-  .link-with-student {
-    .container-radio {
-      input {
-        &:checked ~ .checkmark {
-          background-color: $green;
+        padding: 1em;
+        &:not(:first-child) {
+          border-left: 1px solid $grayDisabled;
         }
       }
     }
-    div.label {
-      span.required-asterisk {
-        color: $red;
-        padding-right: 5px;
+  }
+
+  tbody {
+    tr {
+      border: 1px solid $grayDisabled;
+      border-top: none;
+      color: $blackSubtle;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      align-items: center;
+
+      td {
+        padding: 0.5em;
+        &:not(:first-child) {
+          border-left: 1px solid $grayDisabled;
+        }
       }
-      color: $gray;
-      padding-top: 0.5em;
-      padding-bottom: 1em;
     }
-    label.container-radio {
+
+    tr.total-faixas-cei {
+      background-color: $grayBackground;
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      border: 1px solid $grayDisabled;
       color: $blackInput;
     }
   }
-  .card-warning {
-    border-radius: 4px;
-    &.gray {
-      border-color: $grayPlaceholder;
-      color: $grayPlaceholder;
-    }
+}
+
+.arquivo-produto-ficha {
+  width: 150px;
+  height: 150px;
+}
+
+.justificativa-ficha-produto {
+  background-color: #dadada;
+  opacity: 1;
+  font-size: 14px;
+  font-weight: bold !important;
+  font-family: Roboto !important;
+  color: #42474a;
+  padding: 0.375rem 0.75rem;
+  border-radius: 5px;
+  border: solid 1px #dadada;
+}
+
+.no-margin {
+  p {
+    font-size: 14px;
+    font-weight: bold !important;
+    font-family: Roboto !important;
+    color: #42474a;
+    margin-bottom: 0px !important;
   }
 
-  .descricao-reclamação {
-    margin-bottom: 1em;
-
-    .motivo-data-reclamacao {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 1em;
-
-      div {
-        color: $blackInput;
-        font-weight: bold;
-      }
-    }
-
-    .box-detalhe-reclamacao {
-      border: 1px solid $blackInput;
-      border-radius: 4px;
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      padding: 0 1em;
-
-      p {
-        margin: 0;
-        padding: 0;
-        color: $gray;
-      }
-    }
+  .print-button {
+    position: absolute;
+    right: 15px;
+    top: 15px;
   }
+}
+
+.radio-wrapper {
+  padding-top: 5px;
+}
+
+.container-radio input:checked ~ .checkmark {
+  background-color: #198459 !important;
 }
