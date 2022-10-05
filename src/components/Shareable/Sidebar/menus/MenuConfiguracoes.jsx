@@ -4,7 +4,8 @@ import {
   CONFIGURACOES,
   PERMISSOES,
   MENSAGEM,
-  GESTAO_ACESSO
+  GESTAO_ACESSO,
+  CARGAS_USUARIOS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -60,6 +61,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO}/`}>
             Gestão de Acesso
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
+            Cargas de Usuários
           </LeafItem>
         </SubMenu>
       )}

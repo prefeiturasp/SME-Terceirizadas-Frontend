@@ -173,6 +173,7 @@ import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 import GestaoAcessoPage from "pages/Configuracoes/GestaoAcessoPage";
+import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
 
 const routesConfig = [
   {
@@ -676,6 +677,12 @@ const routesConfig = [
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO}`,
     component: GestaoAcessoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
+    component: CargasUsuariosPage,
     exact: true,
     tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhLogistica()
   },
