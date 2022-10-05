@@ -19,17 +19,22 @@ export default () => {
   }, []);
 
   return (
-    <>
-      <CardMatriculados numeroAlunos={quantidadeAlunos} />
-      <div className="card card-dieta-alteracao-ue mt-3">
-        <div className="card-body ">
-          <FormCadastro
-            solicitacoesVigentes={solicitacoesVigentes}
-            setSolicitacoesVigentes={setSolicitacoesVigentes}
-            meusDadosEscola={meusDadosEscola}
-          />
+    meusDadosEscola && (
+      <>
+        <CardMatriculados
+          meusDados={meusDadosEscola}
+          numeroAlunos={quantidadeAlunos}
+        />
+        <div className="card card-dieta-alteracao-ue mt-3">
+          <div className="card-body ">
+            <FormCadastro
+              solicitacoesVigentes={solicitacoesVigentes}
+              setSolicitacoesVigentes={setSolicitacoesVigentes}
+              meusDadosEscola={meusDadosEscola}
+            />
+          </div>
         </div>
-      </div>
-    </>
+      </>
+    )
   );
 };
