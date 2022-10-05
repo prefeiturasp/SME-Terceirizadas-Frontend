@@ -42,6 +42,7 @@ class DashBoardDietaEspecial extends Component {
       inativasListFiltered: null,
       instituicao: null,
       listaLotes: null,
+      dadosMeus: null,
       listaStatus: [
         { nome: "Conferência Status", uuid: "" },
         { nome: "Conferida", uuid: "1" },
@@ -55,7 +56,8 @@ class DashBoardDietaEspecial extends Component {
   async componentDidMount() {
     await meusDados().then(response => {
       this.setState({
-        instituicao: response.vinculo_atual.instituicao
+        instituicao: response.vinculo_atual.instituicao,
+        dadosMeus: response
       });
     });
     this.loadDietas();
@@ -342,14 +344,15 @@ class DashBoardDietaEspecial extends Component {
       instituicao,
       listaLotes,
       listaStatus,
-      loadingDietas
+      loadingDietas,
+      dadosMeus
     } = this.state;
 
     const podeIncluirDietaEspecial = usuarioEhEscola();
     return (
       <div>
         <CardMatriculados
-          meusDados={meusDados}
+          meusDados={dadosMeus}
           numeroAlunos={instituicao && instituicao.quantidade_alunos}
           alterarCollapse={this.alterarCollapse}
         />
