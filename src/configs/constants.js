@@ -177,6 +177,7 @@ export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
 
 export const GESTAO_ACESSO = "gestao-acesso";
+export const CARGAS_USUARIOS = "cargas-usuarios";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
