@@ -12,7 +12,7 @@ import {
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
-import { required } from "helpers/fieldValidators";
+import { maxLength, required } from "helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -49,6 +49,7 @@ import {
   Recorrencia,
   RecorrenciaTabela
 } from "./componentes/InclusaoContinua";
+import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -92,6 +93,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       motivosContinuos.find(
         motivo => motivo.uuid === values.inclusoes[0].motivo
       )
+    );
+  };
+
+  const motivoETECSelecionado = values => {
+    return (
+      values.inclusoes &&
+      values.inclusoes[0].motivo &&
+      motivosContinuos.find(
+        motivo => motivo.uuid === values.inclusoes[0].motivo
+      ).nome === "ETEC"
     );
   };
 
@@ -430,26 +441,35 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     )}
                   </>
                 )}
-                {motivoContinuoSelecionado(values) && (
-                  <>
-                    <Recorrencia
-                      values={values}
-                      form={form}
-                      periodos={periodos}
-                      push={push}
-                      meusDados={meusDados}
-                    />
-                    {values.quantidades_periodo && (
-                      <div className="mt-5">
-                        <RecorrenciaTabela
-                          values={values}
-                          periodos={periodos}
-                          form={form}
-                          meusDados={meusDados}
-                        />
-                      </div>
-                    )}
-                  </>
+                {motivoContinuoSelecionado(values) &&
+                  !motivoETECSelecionado(values) && (
+                    <>
+                      <Recorrencia
+                        values={values}
+                        form={form}
+                        periodos={periodos}
+                        push={push}
+                        meusDados={meusDados}
+                      />
+                      {values.quantidades_periodo && (
+                        <div className="mt-5">
+                          <RecorrenciaTabela
+                            values={values}
+                            periodos={periodos}
+                            form={form}
+                            meusDados={meusDados}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
+                {motivoETECSelecionado(values) && (
+                  <Field
+                    component={TextAreaWYSIWYG}
+                    label="Observações"
+                    validate={maxLength(1000)}
+                    name={`observacao`}
+                  />
                 )}
                 <div className="row float-right mt-4">
                   <div className="col-12">

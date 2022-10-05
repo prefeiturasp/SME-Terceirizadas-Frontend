@@ -1,7 +1,10 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { getQuantidadeAlunosEscola } from "services/escola.service";
+import {
+  buscaPeriodosEscolares,
+  getQuantidadeAlunosEscola
+} from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
 import { dataParaUTC, escolaEhCei } from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
@@ -12,6 +15,7 @@ import {
 import { getMeusDados } from "services/perfil.service";
 import {
   abstraiPeriodosComAlunosMatriculados,
+  exibeMotivoETEC,
   formatarPeriodos
 } from "../../../helper";
 
@@ -24,6 +28,7 @@ export const Container = () => {
   const [periodos, setPeriodos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [periodoNoite, setPeriodoNoite] = useState(exibeMotivoETEC() || null);
 
   const [erro, setErro] = useState(false);
 
@@ -73,6 +78,11 @@ export const Container = () => {
   const getMotivosInclusaoContinuaAsync = async () => {
     const response = await getMotivosInclusaoContinua();
     if (response.status === HTTP_STATUS.OK) {
+      if (!exibeMotivoETEC()) {
+        response.data.results = response.data.results.filter(
+          motivo => motivo.nome !== "ETEC"
+        );
+      }
       setMotivosContinuos(response.data.results);
     } else {
       setErro(true);
@@ -102,11 +112,24 @@ export const Container = () => {
     }
   };
 
+  const getBuscaPeriodosEscolaresAsync = async () => {
+    const response = await buscaPeriodosEscolares({ nome: "NOITE" });
+    if (
+      response.status === HTTP_STATUS.OK &&
+      response.data.results.length > 0
+    ) {
+      setPeriodoNoite(response.data.results[0]);
+    } else {
+      setErro(true);
+    }
+  };
+
   useEffect(() => {
     getMeusDadosAsync();
     !escolaEhCei() && getMotivosInclusaoContinuaAsync();
     getMotivosInclusaoNormalAsync();
     getDiasUteisAsync();
+    exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -116,7 +139,8 @@ export const Container = () => {
     motivosSimples &&
     periodos &&
     proximosDoisDiasUteis &&
-    proximosCincoDiasUteis;
+    proximosCincoDiasUteis &&
+    periodoNoite;
 
   return (
     <div>
@@ -132,6 +156,7 @@ export const Container = () => {
           periodos={periodos}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
+          periodoNoite={periodoNoite}
         />
       )}
     </div>

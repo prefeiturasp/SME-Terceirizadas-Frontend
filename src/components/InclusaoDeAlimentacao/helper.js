@@ -104,3 +104,12 @@ export const abstraiPeriodosComAlunosMatriculados = (
   });
   return periodos;
 };
+
+export const exibeMotivoETEC = () => {
+  return (
+    localStorage.getItem("nome_instituicao") &&
+    (localStorage.getItem("nome_instituicao").startsWith(`"EMEF `) ||
+      localStorage.getItem("nome_instituicao").startsWith(`"CEU EMEF `) ||
+      localStorage.getItem("nome_instituicao").startsWith(`"CEU GESTÃO `))
+  );
+};
