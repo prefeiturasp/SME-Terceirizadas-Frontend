@@ -6,7 +6,7 @@ import { existeLogDeQuestionamentoDaCODAE } from "./helper";
 export const RelatorioHistoricoQuestionamento = props => {
   const { solicitacao } = props;
   const EXIBIR_HISTORICO =
-    solicitacao.foi_solicitado_fora_do_prazo &&
+    solicitacao.prioridade !== "REGULAR" &&
     existeLogDeQuestionamentoDaCODAE(solicitacao.logs);
   return (
     <div>
