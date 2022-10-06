@@ -186,7 +186,7 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
       (alteracaoDeCardapio &&
-        alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+        alteracaoDeCardapio.prioridade !== "REGULAR" &&
         alteracaoDeCardapio.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
@@ -196,7 +196,7 @@ class Relatorio extends Component {
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (alteracaoDeCardapio &&
-        (!alteracaoDeCardapio.foi_solicitado_fora_do_prazo ||
+        (!alteracaoDeCardapio.prioridade !== "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
@@ -208,7 +208,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       alteracaoDeCardapio &&
-      (alteracaoDeCardapio.foi_solicitado_fora_do_prazo ||
+      (alteracaoDeCardapio.prioridade !== "REGULAR" ||
         (visao === CODAE && alteracaoDeCardapio.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         alteracaoDeCardapio.status
@@ -216,7 +216,7 @@ class Relatorio extends Component {
     const EXIBIR_MODAL_AUTORIZACAO =
       visao === CODAE &&
       alteracaoDeCardapio &&
-      alteracaoDeCardapio.foi_solicitado_fora_do_prazo &&
+      alteracaoDeCardapio.prioridade !== "REGULAR" &&
       !alteracaoDeCardapio.logs[alteracaoDeCardapio.logs.length - 1]
         .resposta_sim_nao;
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
