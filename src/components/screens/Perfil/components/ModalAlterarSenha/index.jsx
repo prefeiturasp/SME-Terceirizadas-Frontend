@@ -44,7 +44,7 @@ export class ModalAlterarSenha extends Component {
                 <div className="form-group col-12">
                   <Field
                     component={InputText}
-                    label="Senha atual"
+                    label="Senha Atual"
                     name="senha_atual"
                     type="password"
                     required
