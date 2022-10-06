@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
 import CorpoRelatorio from "./components/CorpoRelatorio";
@@ -9,12 +10,20 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
+import { statusEnum } from "constants/shared";
 import "./style.scss";
+import { TERCEIRIZADA } from "configs/constants";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
-export default () => {
+export default ({ ...props }) => {
   const [carregando, setCarregando] = useState(true);
   const [solicitacaoSuspensao, setSolicitacaoSuspensao] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
+
+  const { visao } = props;
 
   async function fetchData() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -30,6 +39,20 @@ export default () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const loadSolicitacao = async uuid => {
+    const response = await getSuspensaoAlimentacaoCEI(uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setSolicitacaoSuspensao(response.data);
+    }
+  };
+
+  const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+    visao === TERCEIRIZADA &&
+    solicitacaoSuspensao &&
+    [statusEnum.INFORMADO, statusEnum.ESCOLA_CANCELOU].includes(
+      solicitacaoSuspensao.status
+    );
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -64,6 +87,35 @@ export default () => {
                 />
               </>
             )}
+          {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+            <div className="form-group float-right mt-4">
+              {solicitacaoSuspensao.terceirizada_conferiu_gestao ? (
+                <label className="ml-3 conferido">
+                  <i className="fas fa-check mr-2" />
+                  Solicitação Conferida
+                </label>
+              ) : (
+                <Botao
+                  texto="Marcar Conferência"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN}
+                  className="ml-3"
+                  onClick={() => {
+                    setShowModalMarcarConferencia(true);
+                  }}
+                />
+              )}
+              <ModalMarcarConferencia
+                showModal={showModalMarcarConferencia}
+                closeModal={() => setShowModalMarcarConferencia(false)}
+                onMarcarConferencia={() => {
+                  loadSolicitacao(solicitacaoSuspensao.uuid);
+                }}
+                uuid={solicitacaoSuspensao.uuid}
+                endpoint={"suspensao-alimentacao-de-cei"}
+              />
+            </div>
+          )}
         </div>
       </div>
     </Spin>

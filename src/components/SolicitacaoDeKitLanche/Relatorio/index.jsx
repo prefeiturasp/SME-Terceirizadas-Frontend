@@ -14,7 +14,7 @@ import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants/shared";
+import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
@@ -147,7 +147,8 @@ class Relatorio extends Component {
       uuid,
       showAutorizarModal,
       meusDados,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
+      tipoSolicitacao
     } = this.state;
     const {
       visao,
@@ -235,7 +236,7 @@ class Relatorio extends Component {
             motivosDREnaoValida={motivosDREnaoValida}
             motivoCancelamento={motivo_cancelamento}
             uuid={uuid}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -247,7 +248,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
           />
         )}
         {solicitacaoKitLanche && (
@@ -255,10 +256,14 @@ class Relatorio extends Component {
             showModal={showModalMarcarConferencia}
             closeModal={() => this.closeModalMarcarConferencia()}
             onMarcarConferencia={() => {
-              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+              this.loadSolicitacao(uuid, tipoSolicitacao);
             }}
             uuid={solicitacaoKitLanche.uuid}
-            endpoint="solicitacoes-kit-lanche-avulsa"
+            endpoint={
+              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI
+                ? "solicitacoes-kit-lanche-cei-avulsa"
+                : "solicitacoes-kit-lanche-avulsa"
+            }
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -273,7 +278,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                tipoSolicitacao={this.state.tipoSolicitacao}
+                tipoSolicitacao={tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
