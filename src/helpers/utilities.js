@@ -541,7 +541,11 @@ export const ehInclusaoCei = tipoSolicitacao => {
 
 export const ehEscolaTipoCEI = escola => {
   const nome = (escola && escola.nome) || "";
-  return nome.startsWith("CEI") || nome.startsWith("CCI");
+  return (
+    nome.startsWith("CEU CEI") ||
+    nome.startsWith("CEI") ||
+    nome.startsWith("CCI")
+  );
 };
 
 export const tipoSolicitacaoComoQuery = obj => {
