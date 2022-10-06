@@ -1,21 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { SidebarContent } from "./SidebarContent";
-import { AvatarEscola } from "../Avatar/AvatarEscola";
-import { AvatarDRE } from "../Avatar/AvatarDRE";
-import { AvatarCODAE } from "../Avatar/AvatarCODAE";
-import { AvatarTerceirizada } from "../Avatar/AvatarTerceirizada";
 import "./style.scss";
-import {
-  usuarioEhEscola,
-  usuarioEhTerceirizada,
-  usuarioEhDRE,
-  usuarioEhCoordenadorEscola,
-  usuarioEhDistribuidora,
-  usuarioEhEscolaAbastecimento
-} from "../../../helpers/utilities";
 import { getAPIVersion } from "../../../services/api.service";
-import { AvatarDistribuidor } from "../Avatar/AvatarDistribuidor";
+import retornaAvatar from "helpers/retornaAvatar";
 
 export class Sidebar extends Component {
   constructor(props) {
@@ -24,24 +12,6 @@ export class Sidebar extends Component {
       toggled: false,
       API_VERSION: ""
     };
-  }
-
-  retornaAvatar() {
-    if (usuarioEhDistribuidora()) {
-      return <AvatarDistribuidor />;
-    } else if (usuarioEhTerceirizada()) {
-      return <AvatarTerceirizada />;
-    } else if (usuarioEhDRE()) {
-      return <AvatarDRE />;
-    } else if (
-      usuarioEhEscola() ||
-      usuarioEhEscolaAbastecimento() ||
-      usuarioEhCoordenadorEscola()
-    ) {
-      return <AvatarEscola />;
-    } else {
-      return <AvatarCODAE />;
-    }
   }
 
   async componentDidMount() {
@@ -79,9 +49,7 @@ export class Sidebar extends Component {
             className="sidebar-brand d-flex align-items-center justify-content-center"
             to="/"
           >
-            <div className="sidebar-brand-icon mb-3">
-              {this.retornaAvatar()}
-            </div>
+            <div className="sidebar-brand-icon mb-3">{retornaAvatar()}</div>
           </Link>
           <div className="justify-content-center mx-auto align-items-center sidebar-brand-text mx-3 pt-2">
             <div className="nav-item">
