@@ -196,7 +196,7 @@ class Relatorio extends Component {
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (alteracaoDeCardapio &&
-        (!alteracaoDeCardapio.prioridade !== "REGULAR" ||
+        (alteracaoDeCardapio.prioridade === "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
