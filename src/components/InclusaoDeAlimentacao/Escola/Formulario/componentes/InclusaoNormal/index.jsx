@@ -209,7 +209,10 @@ export const PeriodosInclusaoNormal = ({
                             maxValue(
                               periodos.find(
                                 p => p.uuid === getPeriodo(indice).uuid
-                              ).maximo_alunos
+                              ) &&
+                                periodos.find(
+                                  p => p.uuid === getPeriodo(indice).uuid
+                                ).maximo_alunos
                             )
                           )
                         : false

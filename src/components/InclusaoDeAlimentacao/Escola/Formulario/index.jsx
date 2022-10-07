@@ -62,7 +62,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     motivosContinuos,
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
-    periodos
+    periodos,
+    periodoNoite
   } = props;
 
   useEffect(() => {
@@ -100,6 +101,9 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     return (
       values.inclusoes &&
       values.inclusoes[0].motivo &&
+      motivosContinuos.find(
+        motivo => motivo.uuid === values.inclusoes[0].motivo
+      ) &&
       motivosContinuos.find(
         motivo => motivo.uuid === values.inclusoes[0].motivo
       ).nome === "ETEC"
@@ -197,13 +201,24 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
 
   const carregarRascunhoContinuo = async (form, values, inclusao_) => {
     const quantidades_periodo_ = deepCopy(inclusao_.quantidades_periodo);
-    quantidades_periodo_.forEach(qp => {
-      qp.dias_semana = qp.dias_semana.map(String);
-      qp.periodo_escolar = qp.periodo_escolar.uuid;
-      qp.tipos_alimentacao = qp.tipos_alimentacao.map(t => t.uuid);
-      delete qp.grupo_inclusao_normal;
-      delete qp.inclusao_alimentacao_continua;
-    });
+    if (inclusao_.motivo.nome === "ETEC") {
+      quantidades_periodo_.forEach(qp => {
+        qp.checked = true;
+        qp.nome = qp.periodo_escolar.nome;
+        qp.tipos_alimentacao_selecionados = qp.tipos_alimentacao.map(
+          t => t.uuid
+        );
+        qp.tipos_alimentacao = qp.periodo_escolar.tipos_alimentacao;
+      });
+    } else {
+      quantidades_periodo_.forEach(qp => {
+        qp.dias_semana = qp.dias_semana.map(String);
+        qp.periodo_escolar = qp.periodo_escolar.uuid;
+        qp.tipos_alimentacao = qp.tipos_alimentacao.map(t => t.uuid);
+        delete qp.grupo_inclusao_normal;
+        delete qp.inclusao_alimentacao_continua;
+      });
+    }
 
     await form.change("inclusoes", [
       {
@@ -247,6 +262,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       const response = await createInclusaoAlimentacao(
         tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
           ? formatarSubmissaoSolicitacaoNormal(values_)
+          : motivoETECSelecionado(values)
+          ? formatarSubmissaoSolicitacaoNormal(
+              formatarSubmissaoSolicitacaoContinua(values_)
+            )
           : formatarSubmissaoSolicitacaoContinua(values_),
         tipoSolicitacao
       );
@@ -265,6 +284,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         values.uuid,
         tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
           ? formatarSubmissaoSolicitacaoNormal(values_)
+          : motivoETECSelecionado(values)
+          ? formatarSubmissaoSolicitacaoNormal(
+              formatarSubmissaoSolicitacaoContinua(values_)
+            )
           : formatarSubmissaoSolicitacaoContinua(values_),
         tipoSolicitacao
       );
@@ -375,23 +398,41 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                             />
                             <OnChange name={`${name}.motivo`}>
                               {async value => {
-                                if (
-                                  value &&
-                                  motivosSimples.find(
-                                    motivo => motivo.uuid === value
-                                  )
-                                ) {
-                                  form.change("quantidades_periodo", undefined);
-                                  form.change("quantidades_periodo", periodos);
-                                  form.change("reload", !values.reload);
-                                }
-                                if (
-                                  value &&
-                                  motivosContinuos.find(
-                                    motivo => motivo.uuid === value
-                                  )
-                                ) {
-                                  form.change("quantidades_periodo", undefined);
+                                if (value) {
+                                  if (
+                                    motivosSimples.find(
+                                      motivo => motivo.uuid === value
+                                    )
+                                  ) {
+                                    form.change(
+                                      "quantidades_periodo",
+                                      undefined
+                                    );
+                                    form.change(
+                                      "quantidades_periodo",
+                                      periodos
+                                    );
+                                    form.change("reload", !values.reload);
+                                  } else if (
+                                    motivosContinuos.find(
+                                      motivo => motivo.uuid === value
+                                    ).nome === "ETEC"
+                                  ) {
+                                    form.change(
+                                      "quantidades_periodo",
+                                      undefined
+                                    );
+                                    form.change(
+                                      "quantidades_periodo",
+                                      periodoNoite
+                                    );
+                                    form.change("reload", !values.reload);
+                                  } else {
+                                    form.change(
+                                      "quantidades_periodo",
+                                      undefined
+                                    );
+                                  }
                                 }
                               }}
                             </OnChange>
@@ -431,16 +472,27 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     <div className="mt-3">
                       <AdicionarDia push={push} />
                     </div>
-                    {values.quantidades_periodo && (
-                      <PeriodosInclusaoNormal
-                        form={form}
-                        values={values}
-                        periodos={periodos}
-                        meusDados={meusDados}
-                      />
-                    )}
+                    {values.quantidades_periodo &&
+                      values.quantidades_periodo.length === periodos.length && (
+                        <PeriodosInclusaoNormal
+                          form={form}
+                          values={values}
+                          periodos={periodos}
+                          meusDados={meusDados}
+                        />
+                      )}
                   </>
                 )}
+                {motivoETECSelecionado(values) &&
+                  values.quantidades_periodo &&
+                  values.quantidades_periodo.length === periodoNoite.length && (
+                    <PeriodosInclusaoNormal
+                      form={form}
+                      values={values}
+                      periodos={periodoNoite}
+                      meusDados={meusDados}
+                    />
+                  )}
                 {motivoContinuoSelecionado(values) &&
                   !motivoETECSelecionado(values) && (
                     <>

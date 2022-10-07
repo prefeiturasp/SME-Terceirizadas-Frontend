@@ -38,18 +38,8 @@ export const Container = () => {
   ) => {
     const response = await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
-      const periodos_ = abstraiPeriodosComAlunosMatriculados(
-        periodos,
-        response.data.results,
-        false
-      );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
-        periodos_.map(periodo => {
-          return (periodo.tipos_alimentacao = vinculos.data.results.find(
-            v => v.periodo_escolar.nome === periodo.nome
-          ).tipos_alimentacao);
-        });
         setPeriodos(
           abstraiPeriodosComAlunosMatriculados(
             periodos,
@@ -65,6 +55,7 @@ export const Container = () => {
     const response = await getMeusDados();
     if (response.status === HTTP_STATUS.OK) {
       setDados(response.data);
+
       const periodos = formatarPeriodos(
         response.data.vinculo_atual.instituicao.periodos_escolares
       );
@@ -118,7 +109,7 @@ export const Container = () => {
       response.status === HTTP_STATUS.OK &&
       response.data.results.length > 0
     ) {
-      setPeriodoNoite(response.data.results[0]);
+      setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
       setErro(true);
     }
