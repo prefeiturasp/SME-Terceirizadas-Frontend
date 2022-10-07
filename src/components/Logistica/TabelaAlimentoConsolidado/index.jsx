@@ -16,7 +16,7 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
     >
       <thead>
         <tr>
-          <th scope="col" rowSpan="2" className="align-middle">
+          <th scope="col" rowSpan="2" className="align-middle text-center">
             Nome do Alimento
           </th>
           <th scope="col" colSpan="2" className="text-center">
@@ -26,8 +26,8 @@ export default ({ alimentosConsolidado, className, mostrarPesoTotal }) => {
             Embalagem Fracionada
           </th>
           {mostrarPesoTotal && (
-            <th scope="col" rowSpan="2" className="align-middle">
-              Peso total
+            <th scope="col" rowSpan="2" className="align-middle text-center">
+              Peso Total
             </th>
           )}
         </tr>
