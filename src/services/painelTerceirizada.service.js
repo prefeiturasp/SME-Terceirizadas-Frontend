@@ -327,11 +327,14 @@ export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
   }
 };
 
-export const getSolicitacoesAutorizadasTerceirizada = async TerceirizadaUuid => {
+export const getSolicitacoesAutorizadasTerceirizada = async (
+  TerceirizadaUuid,
+  params
+) => {
   const url = `${SOLICITACOES_TERCEIRIZADA}/${
     SOLICITACOES.AUTORIZADOS
   }/${TerceirizadaUuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

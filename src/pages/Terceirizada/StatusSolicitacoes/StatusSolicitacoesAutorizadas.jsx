@@ -1,7 +1,7 @@
 import React from "react";
-import StatusSolicitacoes from "../../../components/screens/DashboardTerceirizada/StatusSolicitacoes";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
+import StatusSolicitacoes from "components/screens/DashboardTerceirizada/StatusSolicitacoes";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
 import {
   SOLICITACOES_AUTORIZADAS,
   TERCEIRIZADA
