@@ -24,6 +24,7 @@ export class StatusSolicitacoes extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      dadosMeus: null,
       solicitacoes: [
         {
           text: "...",
@@ -185,7 +186,7 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
-    const { solicitacoesCardRespQuest, pageSize } = this.state;
+    const { solicitacoesCardRespQuest, pageSize, dadosMeus } = this.state;
 
     this.setState({
       originalCurrentPage: paginaAtual
@@ -216,7 +217,17 @@ export class StatusSolicitacoes extends Component {
         loading: true
       });
       const promises = listaStatus.map(status =>
-        endpointGetSolicitacoes(status, paginaAtual)
+        endpointGetSolicitacoes(
+          status || dadosMeus.vinculo_atual.instituicao.uuid,
+          [
+            "Autorizadas",
+            "Negadas",
+            "Canceladas",
+            "Questionamentos da CODAE"
+          ].includes(this.props.titulo)
+            ? { limit: 100, offset: (paginaAtual - 1) * 100 }
+            : paginaAtual
+        )
       );
       const retornos = await Promise.all(promises);
       retornos.forEach(
@@ -260,6 +271,7 @@ export class StatusSolicitacoes extends Component {
     this.setState({ tipoSolicitacao });
     const listaStatus = Array.isArray(status) ? status : [status];
     const dadosMeus = await meusDados();
+    this.setState({ dadosMeus });
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
     let solicitacoes = [];
     try {
