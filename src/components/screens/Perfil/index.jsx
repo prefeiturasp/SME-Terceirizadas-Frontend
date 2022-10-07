@@ -4,37 +4,25 @@ import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import {
   meusDados,
-  atualizarEmail,
   atualizarSenhaLogado
 } from "../../../services/perfil.service";
-import { AvatarCODAE } from "../../Shareable/Avatar/AvatarCODAE";
-import { AvatarDRE } from "../../Shareable/Avatar/AvatarDRE";
-import { AvatarEscola } from "../../Shareable/Avatar/AvatarEscola";
-import { AvatarTerceirizada } from "../../Shareable/Avatar/AvatarTerceirizada";
 import { TIPO_PERFIL, ENTER } from "../../../constants/shared";
-import { formataCPF } from "../../../helpers/utilities";
+import { formataCPFCensurado } from "../../../helpers/utilities";
 import InputText from "../../Shareable/Input/InputText";
 import "./style.scss";
-import Botao from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import ModalAlterarSenha from "./components/ModalAlterarSenha";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPOS_EMAIL_CADASTRO } from "../../Login/constans";
-import Select from "../../Shareable/Select";
-import { required } from "../../../helpers/fieldValidators";
-import authService from "../../../services/auth";
+import retornaAvatar from "helpers/retornaAvatar";
 
 class Perfil extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      buttonLabel: "Editar",
       meusDados: null,
       showModal: false
     };
     this.abrirModal = this.abrirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
-    this.onEditEmailClicked = this.onEditEmailClicked.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
@@ -78,29 +66,6 @@ class Perfil extends Component {
     }
   }
 
-  onEditEmailClicked() {
-    const { buttonLabel } = this.state;
-    if (buttonLabel === "Editar") {
-      this.setState({
-        buttonLabel: "Salvar"
-      });
-    } else {
-      atualizarEmail({
-        email: this.props.email,
-        tipo_email: this.props.tipo_email
-      }).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("E-mail atualizado com sucesso! Você será deslogado...");
-          setTimeout(() => {
-            authService.logout();
-          }, 3000);
-        } else {
-          toastError("Erro ao atualizar e-mail");
-        }
-      });
-    }
-  }
-
   onKeyPress(event) {
     if (event.which === ENTER) {
       event.preventDefault();
@@ -109,7 +74,7 @@ class Perfil extends Component {
 
   render() {
     const tipo_perfil = localStorage.getItem("tipo_perfil");
-    const { buttonLabel, meusDados, showModal } = this.state;
+    const { meusDados, showModal } = this.state;
     const { handleSubmit, senha } = this.props;
     return (
       <div className="profile">
@@ -119,22 +84,10 @@ class Perfil extends Component {
           <div className="card">
             <div className="card-body">
               <div className="row">
-                <div className="col-4 information text-center">
+                <div className="col-5 information text-center">
                   <div className="row">
                     <div className="col-12">
-                      <div className="avatar">
-                        {[
-                          TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
-                          TIPO_PERFIL.DIETA_ESPECIAL
-                        ].includes(tipo_perfil) && <AvatarCODAE />}
-                        {tipo_perfil === TIPO_PERFIL.DIRETORIA_REGIONAL && (
-                          <AvatarDRE />
-                        )}
-                        {tipo_perfil === TIPO_PERFIL.ESCOLA && <AvatarEscola />}
-                        {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
-                          <AvatarTerceirizada />
-                        )}
-                      </div>
+                      <div className="avatar">{retornaAvatar()}</div>
                     </div>
                   </div>
                   <div className="row">
@@ -147,18 +100,20 @@ class Perfil extends Component {
                       <div className="data">
                         <div>RF: {meusDados.registro_funcional}</div>
                         <div>{meusDados.vinculo_atual.instituicao.nome}</div>
-                        <div>
-                          CPF:{" "}
-                          {meusDados.cpf
-                            ? formataCPF(meusDados.cpf)
-                            : "sem cpf"}
-                        </div>
+                        {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA && (
+                          <div>
+                            CPF:{" "}
+                            {meusDados.cpf
+                              ? formataCPFCensurado(meusDados.cpf)
+                              : "Sem CPF"}
+                          </div>
+                        )}
                         <div>{meusDados.cargo}</div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="col-8">
+                <div className="col-7">
                   <div className="form">
                     <form
                       onSubmit={handleSubmit(this.onSubmit)}
@@ -166,48 +121,13 @@ class Perfil extends Component {
                     >
                       <div className="row">
                         <div className="col-11">
-                          {tipo_perfil === TIPO_PERFIL.TERCEIRIZADA ? (
-                            <Field
-                              component={InputText}
-                              esconderAsterisco
-                              label="E-mail"
-                              name="email"
-                              disabled={buttonLabel === "Editar"}
-                              type="email"
-                            />
-                          ) : (
-                            <div className="input-group email-sme">
-                              <div ref={this.emailInput} className="col-6">
-                                <Field
-                                  component={InputText}
-                                  esconderAsterisco
-                                  placeholder={"seu.nome"}
-                                  label="E-mail"
-                                  name="email"
-                                  disabled={buttonLabel === "Editar"}
-                                  type="text"
-                                />
-                              </div>
-                              <div className="input-group-append col-6">
-                                <Field
-                                  component={Select}
-                                  name="tipo_email"
-                                  options={TIPOS_EMAIL_CADASTRO}
-                                  required
-                                  validate={required}
-                                  naoDesabilitarPrimeiraOpcao
-                                  disabled={buttonLabel === "Editar"}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                        <div className="col-1 button">
-                          <Botao
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            texto={buttonLabel}
-                            onClick={this.onEditEmailClicked}
-                            type={BUTTON_TYPE.BUTTON}
+                          <Field
+                            component={InputText}
+                            esconderAsterisco
+                            label="E-mail"
+                            name="email"
+                            disabled={true}
+                            type="email"
                           />
                         </div>
                       </div>

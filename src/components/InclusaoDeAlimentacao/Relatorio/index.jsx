@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import { Link } from "react-router-dom";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
-} from "../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
@@ -172,7 +167,7 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
       (inclusaoDeAlimentacao &&
-        inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
+        inclusaoDeAlimentacao.prioridade !== "REGULAR" &&
         inclusaoDeAlimentacao.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     const EXIBIR_BOTAO_APROVAR =
@@ -182,7 +177,7 @@ class Relatorio extends Component {
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (inclusaoDeAlimentacao &&
-        (!inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo ||
+        (!inclusaoDeAlimentacao.prioridade !== "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
@@ -194,7 +189,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       inclusaoDeAlimentacao &&
-      (inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo ||
+      (inclusaoDeAlimentacao.prioridade !== "REGULAR" ||
         (visao === CODAE && inclusaoDeAlimentacao.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         inclusaoDeAlimentacao.status
@@ -202,7 +197,7 @@ class Relatorio extends Component {
     const EXIBIR_MODAL_AUTORIZACAO =
       visao === CODAE &&
       inclusaoDeAlimentacao &&
-      inclusaoDeAlimentacao.foi_solicitado_fora_do_prazo &&
+      inclusaoDeAlimentacao.prioridade !== "REGULAR" &&
       !inclusaoDeAlimentacao.logs[inclusaoDeAlimentacao.logs.length - 1]
         .resposta_sim_nao;
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
@@ -264,7 +259,9 @@ class Relatorio extends Component {
             }}
             uuid={inclusaoDeAlimentacao.uuid}
             endpoint={
-              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI
+                ? "inclusoes-alimentacao-da-cei"
+                : tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
                 ? "grupos-inclusao-alimentacao-normal"
                 : "inclusoes-alimentacao-continua"
             }
@@ -288,16 +285,6 @@ class Relatorio extends Component {
             <span className="page-title">{`Inclusão de Alimentação - Solicitação # ${
               inclusaoDeAlimentacao.id_externo
             }`}</span>
-            <Link to={`/`}>
-              <Botao
-                texto="voltar"
-                titulo="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio

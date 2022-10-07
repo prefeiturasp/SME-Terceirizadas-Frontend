@@ -18,7 +18,12 @@ import "./styles.scss";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import { TIPO_PERFIL } from "constants/shared";
-import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
+import {
+  STATUS_CODAE_QUESTIONADO,
+  STATUS_CODAE_HOMOLOGADO,
+  STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+  STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO
+} from "configs/constants";
 
 const maxLength5000 = maxLengthProduto(5000);
 const { Option } = Select;
@@ -40,7 +45,8 @@ class WizardFormPrimeiraPagina extends React.Component {
       loading: true,
       completo: false,
       showModalCadastrarItem: false,
-      desabilitarNomeDoProdutoField: true
+      desabilitarNomeDoProdutoField: true,
+      desabilitarEhParaAlunosComDietaField: true
     };
   }
 
@@ -48,11 +54,25 @@ class WizardFormPrimeiraPagina extends React.Component {
     const { produto } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
 
-    if (
-      tipoPerfil === TIPO_PERFIL.TERCEIRIZADA &&
-      produto.homologacao.status === STATUS_CODAE_QUESTIONADO
-    )
-      this.setState({ desabilitarNomeDoProdutoField: false });
+    if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
+      if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
+        this.setState({
+          desabilitarNomeDoProdutoField: false
+        });
+      }
+      if (
+        [
+          STATUS_CODAE_QUESTIONADO,
+          STATUS_CODAE_HOMOLOGADO,
+          STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
+          STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO
+        ].includes(produto.homologacao.status)
+      ) {
+        this.setState({
+          desabilitarEhParaAlunosComDietaField: false
+        });
+      }
+    }
 
     this.setState({ produtoForm: produto });
   }
@@ -288,7 +308,8 @@ class WizardFormPrimeiraPagina extends React.Component {
       nomeDeProdutosEditalArray,
       marcasArray,
       fabricantesArray,
-      desabilitarNomeDoProdutoField
+      desabilitarNomeDoProdutoField,
+      desabilitarEhParaAlunosComDietaField
     } = this.state;
 
     return (
@@ -313,7 +334,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     onClick={() => {
                       this.dietaEspecialCheck("1");
                     }}
-                    disabled={true}
+                    disabled={desabilitarEhParaAlunosComDietaField}
                     required
                   />
                   <span className="checkmark" />
@@ -328,7 +349,7 @@ class WizardFormPrimeiraPagina extends React.Component {
                     onClick={() => {
                       this.dietaEspecialCheck("0");
                     }}
-                    disabled={true}
+                    disabled={desabilitarEhParaAlunosComDietaField}
                   />
                   <span className="checkmark" />
                 </label>
@@ -342,6 +363,9 @@ class WizardFormPrimeiraPagina extends React.Component {
             </label>
             <Field
               component={ASelect}
+              onBlur={e => {
+                e.preventDefault();
+              }}
               className={"select-form-produto"}
               showSearch
               name="nome"
@@ -360,6 +384,9 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
+                onBlur={e => {
+                  e.preventDefault();
+                }}
                 className={"select-form-produto"}
                 showSearch
                 name="marca"
@@ -381,6 +408,9 @@ class WizardFormPrimeiraPagina extends React.Component {
               </label>
               <Field
                 component={ASelect}
+                onBlur={e => {
+                  e.preventDefault();
+                }}
                 className={"select-form-produto"}
                 showSearch
                 name="fabricante"

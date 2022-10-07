@@ -18,7 +18,7 @@ import {
 
 import { cancelaHomologacao } from "services/produto.service";
 
-import "./style.scss";
+import "../style.scss";
 
 const maxLength500 = maxLengthProduto(500);
 

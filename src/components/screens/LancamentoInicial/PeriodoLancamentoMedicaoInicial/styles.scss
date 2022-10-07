@@ -4,7 +4,16 @@
   .ant-tabs-tab-active {
     background: $green !important;
     font-weight: 700;
-    color: $white !important;
+
+    .ant-tabs-tab-btn {
+      color: $white !important;
+    }
+  }
+
+  .ant-tabs-tab {
+    .ant-tabs-tab-btn:hover {
+      color: $green !important;
+    }
   }
 }
 
@@ -139,6 +148,21 @@
         .icone-info-error {
           position: absolute;
           background-color: $red;
+          height: 16px;
+          width: 16px;
+          line-height: 16px;
+          border-radius: 50%;
+          font-size: 9px;
+          color: #fff;
+          text-align: center;
+          vertical-align: middle;
+          top: 4px;
+          right: 4px;
+        }
+
+        .icone-info-success {
+          position: absolute;
+          background-color: $green;
           height: 16px;
           width: 16px;
           line-height: 16px;

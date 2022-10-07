@@ -12,12 +12,14 @@
         padding-right: 8px;
       }
     }
+
     .radio-entrega-sim {
       text-align: center;
       padding: 5px 25px;
       border: 1px solid green !important;
       border-radius: 4px;
     }
+
     .radio-entrega-nao {
       padding: 5px 25px;
       border: 1px solid red !important;
@@ -73,10 +75,10 @@
     }
 
     .ant-radio-inner::after {
-      width: 6px;
-      height: 6px;
-      top: 5px;
-      left: 5px;
+      width: 20px;
+      height: 20px;
+      top: 6px;
+      left: 6px;
     }
 
     .ant-radio-wrapper {
@@ -124,7 +126,7 @@
       }
 
       .ant-checkbox-group-item {
-        display: block;
+        display: flex;
         width: 21%;
       }
       label {

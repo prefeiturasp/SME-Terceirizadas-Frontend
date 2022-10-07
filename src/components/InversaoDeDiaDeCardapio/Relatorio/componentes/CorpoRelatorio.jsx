@@ -151,7 +151,7 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       {inversaoDiaCardapio.logs &&
-        !inversaoDiaCardapio.foi_solicitado_fora_do_prazo &&
+        !inversaoDiaCardapio.prioridade !== "REGULAR" &&
         inversaoDiaCardapio.status === statusEnum.CODAE_AUTORIZADO && (
           <div className="row">
             <div className="col-12 report-label-value">

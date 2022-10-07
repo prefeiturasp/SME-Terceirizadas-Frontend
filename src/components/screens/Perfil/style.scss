@@ -29,12 +29,6 @@
       .form {
         margin-top: 2em;
         margin-left: 1em;
-        div.input-group.email-sme select {
-          width: 15em;
-        }
-        .button {
-          padding-top: 35px;
-        }
         .password {
           cursor: pointer;
           padding-top: 2em;
@@ -51,12 +45,13 @@
 }
 
 .modal-50w {
-  .col-4 {
+  .custom-margin {
     margin-top: 8em;
     .password-requirements {
       margin-top: auto;
-      font-size: 10px;
+      font-size: 12px;
       .title {
+        font-size: 13px;
         color: $grayPlaceholder;
         font-weight: bold;
       }

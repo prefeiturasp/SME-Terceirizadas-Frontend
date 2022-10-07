@@ -181,10 +181,11 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
     form.change("local", undefined);
     form.change("alunos_cei_e_ou_emei", undefined);
     form.change("solicitacao_emei", {});
-    form.change("solicitacao_cei", {});
+    form.change("solicitacao_cei", { faixas_quantidades: {} });
     form.change("observacao", undefined);
     form.change("id_externo", undefined);
     form.change("uuid", undefined);
+    form.change("status", undefined);
   };
 
   const validaDiasUteis = value => {
@@ -325,7 +326,11 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       )}
                     <AlunosDietaEspecial
                       alunosComDietaEspecial={alunosComDietaEspecial.filter(
-                        aluno => ["1", "2", "3", "4"].includes(aluno.serie)
+                        aluno =>
+                          aluno.serie.includes("1") ||
+                          aluno.serie.includes("2") ||
+                          aluno.serie.includes("3") ||
+                          aluno.serie.includes("4")
                       )}
                     />
                   </>
@@ -349,7 +354,13 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                     <QuantidadeAlunosEMEI meusDados={meusDados} />
                     <AlunosDietaEspecial
                       alunosComDietaEspecial={alunosComDietaEspecial.filter(
-                        aluno => !["1", "2", "3", "4"].includes(aluno.serie)
+                        aluno =>
+                          !(
+                            aluno.serie.includes("1") ||
+                            aluno.serie.includes("2") ||
+                            aluno.serie.includes("3") ||
+                            aluno.serie.includes("4")
+                          )
                       )}
                     />
                   </>

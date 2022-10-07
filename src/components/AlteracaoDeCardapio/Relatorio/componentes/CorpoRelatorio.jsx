@@ -143,7 +143,7 @@ export const CorpoRelatorio = props => {
           <th>Período</th>
           <th>Alteração alimentação de:</th>
           <th>Alteração alimentação para:</th>
-          <th>Número de alunos</th>
+          {!ehInclusaoCei(tipoSolicitacao) && <th>Número de alunos</th>}
         </tr>
         {alteracaoDeCardapio.substituicoes.map(
           (
@@ -151,6 +151,7 @@ export const CorpoRelatorio = props => {
               periodo_escolar,
               tipos_alimentacao_de,
               tipos_alimentacao_para,
+              tipo_alimentacao_para,
               qtd_alunos,
               faixas_etarias
             },
@@ -165,24 +166,30 @@ export const CorpoRelatorio = props => {
                 tipos_alimentos_formatados = tipos_alimentos_formatados + ", ";
               }
             }
-
-            let substitutos = tipos_alimentacao_para.map(
-              substituto => substituto.nome
-            );
             let substitutos_formatados = "";
-            for (let i = 0; i < substitutos.length; i++) {
-              substitutos_formatados = substitutos_formatados + substitutos[i];
-              if (i + 1 !== substitutos.length) {
-                substitutos_formatados = substitutos_formatados + ", ";
+            if (ehInclusaoCei(tipoSolicitacao)) {
+              substitutos_formatados = tipo_alimentacao_para.nome;
+            } else {
+              let substitutos = tipos_alimentacao_para.map(
+                substituto => substituto.nome
+              );
+
+              for (let i = 0; i < substitutos.length; i++) {
+                substitutos_formatados =
+                  substitutos_formatados + substitutos[i];
+                if (i + 1 !== substitutos.length) {
+                  substitutos_formatados = substitutos_formatados + ", ";
+                }
               }
             }
+
             return (
               <Fragment key={key}>
                 <tr>
                   <td>{periodo_escolar && periodo_escolar.nome}</td>
                   <td>{tipos_alimentos_formatados}</td>
                   <td>{substitutos_formatados}</td>
-                  <td>{qtd_alunos}</td>
+                  {!ehInclusaoCei(tipoSolicitacao) && <td>{qtd_alunos}</td>}
                 </tr>
                 {ehInclusaoCei(tipoSolicitacao) && (
                   <tr>

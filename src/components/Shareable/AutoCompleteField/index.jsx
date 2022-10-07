@@ -2,6 +2,7 @@ import { Input, AutoComplete } from "antd";
 import React, { Component } from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
 import { HelpText } from "components/Shareable/HelpText";
+import "./style.scss";
 
 export default class AutoCompleteField extends Component {
   render() {
@@ -28,7 +29,12 @@ export default class AutoCompleteField extends Component {
             {label}
           </label>
         ]}
-        <AutoComplete {...props} {...input} onSearch={onSearch}>
+        <AutoComplete
+          className="autocomplete"
+          {...props}
+          {...input}
+          onSearch={onSearch}
+        >
           <Input.Search
             {...input}
             className={`${className} ${meta &&

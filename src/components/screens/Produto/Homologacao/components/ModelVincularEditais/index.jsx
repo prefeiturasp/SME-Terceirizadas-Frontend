@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field } from "redux-form";
+import { Field } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import InputText from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
@@ -64,7 +64,7 @@ export const ModalVincularEditais = ({ ...props }) => {
           <div className="row mb-3">
             <div className="col-4">
               <Field
-                name="nome"
+                name="produto.nome"
                 label="Nome do Produto"
                 component={InputText}
                 disabled
@@ -72,7 +72,7 @@ export const ModalVincularEditais = ({ ...props }) => {
             </div>
             <div className="col-4">
               <Field
-                name="marca"
+                name="produto.marca.nome"
                 label="Marca do Produto"
                 component={InputText}
                 disabled
@@ -80,7 +80,7 @@ export const ModalVincularEditais = ({ ...props }) => {
             </div>
             <div className="col-4">
               <Field
-                name="fabricante"
+                name="produto.fabricante.nome"
                 label="Fabricante do Produto"
                 component={InputText}
                 disabled
@@ -90,7 +90,7 @@ export const ModalVincularEditais = ({ ...props }) => {
           <div className="row mb-3">
             <div className="col-4">
               <Field
-                name="tipo"
+                name="produto.tipo"
                 label="Tipo do Produto"
                 component={InputText}
                 disabled

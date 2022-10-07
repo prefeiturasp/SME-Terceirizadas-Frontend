@@ -14,7 +14,7 @@ import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants/shared";
+import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
@@ -147,7 +147,8 @@ class Relatorio extends Component {
       uuid,
       showAutorizarModal,
       meusDados,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
+      tipoSolicitacao
     } = this.state;
     const {
       visao,
@@ -166,7 +167,7 @@ class Relatorio extends Component {
     const EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
       (solicitacaoKitLanche &&
-        solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
+        solicitacaoKitLanche.prioridade !== "REGULAR" &&
         solicitacaoKitLanche.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
     // TODO:  Rever se essa lógica ainda está sendo usada
@@ -177,7 +178,7 @@ class Relatorio extends Component {
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (solicitacaoKitLanche &&
-        (!solicitacaoKitLanche.foi_solicitado_fora_do_prazo ||
+        (!solicitacaoKitLanche.prioridade !== "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
@@ -189,7 +190,7 @@ class Relatorio extends Component {
         TIPO_PERFIL.TERCEIRIZADA
       ].includes(tipoPerfil) &&
       solicitacaoKitLanche &&
-      (solicitacaoKitLanche.foi_solicitado_fora_do_prazo ||
+      (solicitacaoKitLanche.prioridade !== "REGULAR" ||
         (visao === CODAE && solicitacaoKitLanche.prioridade !== "REGULAR")) &&
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         solicitacaoKitLanche.status
@@ -197,7 +198,7 @@ class Relatorio extends Component {
     const EXIBIR_MODAL_AUTORIZACAO =
       visao === CODAE &&
       solicitacaoKitLanche &&
-      solicitacaoKitLanche.foi_solicitado_fora_do_prazo &&
+      solicitacaoKitLanche.prioridade !== "REGULAR" &&
       !solicitacaoKitLanche.logs[solicitacaoKitLanche.logs.length - 1]
         .resposta_sim_nao;
     const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
@@ -235,7 +236,7 @@ class Relatorio extends Component {
             motivosDREnaoValida={motivosDREnaoValida}
             motivoCancelamento={motivo_cancelamento}
             uuid={uuid}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
           />
         )}
         {ModalQuestionamento && (
@@ -247,7 +248,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
           />
         )}
         {solicitacaoKitLanche && (
@@ -255,10 +256,14 @@ class Relatorio extends Component {
             showModal={showModalMarcarConferencia}
             closeModal={() => this.closeModalMarcarConferencia()}
             onMarcarConferencia={() => {
-              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+              this.loadSolicitacao(uuid, tipoSolicitacao);
             }}
             uuid={solicitacaoKitLanche.uuid}
-            endpoint="solicitacoes-kit-lanche-avulsa"
+            endpoint={
+              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI
+                ? "solicitacoes-kit-lanche-cei-avulsa"
+                : "solicitacoes-kit-lanche-avulsa"
+            }
           />
         )}
         {!solicitacaoKitLanche ? (
@@ -273,7 +278,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                tipoSolicitacao={this.state.tipoSolicitacao}
+                tipoSolicitacao={tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${

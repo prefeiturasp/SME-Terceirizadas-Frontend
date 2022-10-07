@@ -164,7 +164,7 @@ class WizardFormTerceiraPagina extends Component {
       if (response.status === HTTP_STATUS.OK) {
         if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
           toastSuccess("Correção efetuada com sucesso.");
-        else toastSuccess("Homologação atualizada com sucesso.");
+        else toastSuccess("Nova homologação solicitada.");
         this.props.history.push("/painel-gestao-produto");
         resolve();
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {

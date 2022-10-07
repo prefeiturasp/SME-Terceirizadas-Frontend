@@ -49,11 +49,17 @@ const ListagemSolicitacoes = ({
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <section className="resultado-busca-requisicao-entrega">
-        <header>Veja requisições disponibilizadas</header>
+        <header>Requisições Disponibilizadas</header>
         <article>
           <div className="grid-table header-table">
-            <div>N° da Requisição de Entrega</div>
-            <div>Qtde. de Guias Remessa</div>
+            <div>
+              N° da Requisição <br />
+              de Entrega
+            </div>
+            <div>
+              Quantidade de <br />
+              Guias de Remessa
+            </div>
             <div>Status</div>
             <div>Data de Entrega</div>
             <div>Ações</div>

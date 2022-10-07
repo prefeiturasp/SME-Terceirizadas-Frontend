@@ -11,7 +11,8 @@ import {
   createInclusaoAlimentacao,
   updateInclusaoAlimentacao,
   iniciaFluxoInclusaoAlimentacao,
-  obterMinhasSolicitacoesDeInclusaoDeAlimentacao
+  obterMinhasSolicitacoesDeInclusaoDeAlimentacao,
+  escolaExcluirSolicitacaoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
@@ -129,9 +130,17 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     }
   };
 
-  const removerRascunho = async (id_externo, uuid, form) => {
+  const removerRascunho = async (id_externo, uuid, tipoSolicitacao, form) => {
     if (window.confirm("Deseja remover este rascunho?")) {
-      const response = await deleteInclusaoDeAlimentacaoCEMEI(uuid);
+      let response = "";
+      if (tipoSolicitacao) {
+        response = await escolaExcluirSolicitacaoDeInclusaoDeAlimentacao(
+          uuid,
+          tipoSolicitacao
+        );
+      } else {
+        response = await deleteInclusaoDeAlimentacaoCEMEI(uuid);
+      }
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
         refresh(form);
@@ -273,7 +282,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
       );
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
-          iniciarPedido(
+          iniciarPedidoInclusaoContinua(
             response.data.uuid,
             TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
             form
@@ -404,7 +413,7 @@ export const InclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                     fields.map((name, index) => (
                       <div key={name}>
                         <div className="row">
-                          <div className="col-8">
+                          <div className="col-6">
                             <Field
                               component={Select}
                               name={`${name}.motivo`}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { getKitLanches } from "../../services/kitLanche";
-import { getEscolasTrecTotal } from "../../services/escola.service";
-import { dataParaUTC } from "../../helpers/utilities";
+import { meusDados } from "services/perfil.service";
+import { getDiasUteis } from "services/diasUteis.service";
+import { getKitLanches } from "services/kitLanche";
+import { getEscolasTrecTotal } from "services/escola.service";
+import { dataParaUTC } from "helpers/utilities";
 import SolicitacaoUnificada from ".";
 
 export default () => {
@@ -18,10 +18,10 @@ export default () => {
     meusDados().then(response => {
       setDadosUsuario(response);
       setLotes(response.vinculo_atual.instituicao.lotes);
-    });
-
-    getEscolasTrecTotal().then(response => {
-      setEscolas(response.data);
+      const dre_uuid = response.vinculo_atual.instituicao.uuid;
+      getEscolasTrecTotal(dre_uuid).then(response => {
+        setEscolas(response.data);
+      });
     });
 
     getDiasUteis().then(response => {
@@ -35,8 +35,8 @@ export default () => {
       setProximosCincoDiasUteis(proximos_cinco_dias_uteis);
     });
 
-    getKitLanches().then(response => {
-      setKits(response.results);
+    getKitLanches({ status: "ATIVO" }).then(response => {
+      setKits(response.data.results);
     });
   }
 

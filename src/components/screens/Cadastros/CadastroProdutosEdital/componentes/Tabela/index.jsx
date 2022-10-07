@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
-import { Icon } from "antd";
 import "./style.scss";
+import { FormOutlined } from "@ant-design/icons";
 import ModalCadastrarProdutosEdital from "components/Shareable/ModalCadastrarProdutosEdital";
 
 export default ({ resultado, changePage }) => {
@@ -46,7 +46,7 @@ export default ({ resultado, changePage }) => {
                             className="botaoEditar mr-2"
                             onClick={() => openModal(produto)}
                           >
-                            <Icon className="mr-1" type="form" />
+                            <FormOutlined className="mr-1" />
                             Editar
                           </button>
                         </td>

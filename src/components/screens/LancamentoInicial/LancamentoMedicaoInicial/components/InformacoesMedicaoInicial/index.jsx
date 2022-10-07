@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Icon, Input, Select } from "antd";
+import { Collapse, Input, Select } from "antd";
 import Botao from "components/Shareable/Botao";
+import { CaretDownOutlined } from "@ant-design/icons";
 import {
   BUTTON_ICON,
   BUTTON_STYLE
@@ -172,7 +173,7 @@ export default ({
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
-          <Collapse expandIconPosition="right">
+          <Collapse expandIconPosition="end">
             <Panel header="Informações Básicas da Medição Inicial">
               <div className="row">
                 <div className="col-5 info-label select-medicao-inicial">
@@ -181,7 +182,7 @@ export default ({
                   </b>
                   {opcoesContagem.length > 0 && (
                     <Select
-                      suffixIcon={<Icon type="caret-down" />}
+                      suffixIcon={<CaretDownOutlined />}
                       name="contagem_refeicoes"
                       defaultValue={getDefaultValueSelectTipoContagem()}
                       onChange={value => handleChangeTipoContagem(value)}
