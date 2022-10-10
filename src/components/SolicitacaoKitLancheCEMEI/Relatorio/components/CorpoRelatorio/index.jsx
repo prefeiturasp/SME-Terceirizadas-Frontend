@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Collapse } from "react-collapse";
-import { corDaMensagem } from "helpers/utilities";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao
+} from "helpers/utilities";
 import {
   totalAlunosCEI,
   tempoPasseio,
@@ -23,6 +26,7 @@ import "../../style.scss";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { statusEnum } from "constants/shared";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -36,6 +40,10 @@ export const CorpoRelatorio = ({ ...props }) => {
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    solicitacaoKitLancheCEMEI.logs
+  );
 
   return (
     <>
@@ -369,7 +377,23 @@ export const CorpoRelatorio = ({ ...props }) => {
           />
         </div>
       </div>
+      {justificativaNegacao && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Justificativa da negação</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
       <RelatorioHistoricoJustificativaEscola
+        solicitacao={solicitacaoKitLancheCEMEI}
+      />
+      <RelatorioHistoricoQuestionamento
         solicitacao={solicitacaoKitLancheCEMEI}
       />
       {solicitacaoKitLancheCEMEI.status !== statusEnum.ESCOLA_CANCELOU && (
