@@ -73,14 +73,14 @@ const ListagemSolicitacoes = ({ solicitacoes, ativos, setAtivos }) => {
                     </div>
                     <div className="row mt-2">
                       <div className="col">
-                        <b>Justificativa da solicitação</b> <br />
+                        <b>Justificativa da Solicitação</b> <br />
                         {solicitacao.justificativa}
                       </div>
                     </div>
                     {solicitacao.justificativa_aceite && (
                       <div className="row mt-2">
                         <div className="col">
-                          <b>Justificativa de aceite</b> <br />
+                          <b>Justificativa de Aceite</b> <br />
                           {solicitacao.justificativa_aceite}
                         </div>
                       </div>
