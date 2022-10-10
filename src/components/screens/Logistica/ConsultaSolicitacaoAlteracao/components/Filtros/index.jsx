@@ -61,7 +61,7 @@ export default ({
                   component={InputComData}
                   label="Selecionar Período de Entrega"
                   name="data_inicial"
-                  className="data-inicial"
+                  className="input-data"
                   placeholder="De"
                   minDate={null}
                   maxDate={
@@ -76,6 +76,7 @@ export default ({
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
+                  className="input-data"
                   popperPlacement="bottom-end"
                   placeholder="Até"
                   minDate={
