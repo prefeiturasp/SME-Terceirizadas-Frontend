@@ -1,16 +1,35 @@
 .seletor-alunos-dieta-especial {
   .card-header {
+    height: auto;
     color: #353535;
     .col-2 {
       margin-left: 33px;
     }
   }
+
   tr {
     td:nth-child(1) {
       width: 20px;
     }
     td:nth-child(2) {
       width: 16.4%;
+    }
+  }
+
+  table {
+    margin-bottom: 0;
+  }
+
+  .toggle-right {
+    span {
+      float: right;
+    }
+  }
+
+  .row-alunos {
+    td:nth-child(1) {
+      padding-left: 24px;
+      width: 1.8% !important;
     }
   }
 }

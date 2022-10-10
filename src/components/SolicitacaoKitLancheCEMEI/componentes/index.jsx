@@ -191,7 +191,10 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
   );
 };
 
-export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
+export const AlunosDietaEspecial = ({
+  alunosComDietaEspecial,
+  solicitacao
+}) => {
   const [collapseAlunos, setCollapseAlunos] = useState(false);
 
   return (
@@ -202,10 +205,10 @@ export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1">
+            <div className="pl-5 col-1 toggle-right">
               <ToggleExpandir
                 onClick={() => setCollapseAlunos(!collapseAlunos)}
-                ativo={!collapseAlunos}
+                ativo={collapseAlunos}
               />
             </div>
           </div>
@@ -221,7 +224,7 @@ export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
                         component="input"
                         type="checkbox"
                         value={aluno.uuid}
-                        name="solicitacao_emei.alunos_com_dieta_especial_participantes"
+                        name={`${solicitacao}.alunos_com_dieta_especial_participantes`}
                       />
                     </td>
                     <td>{aluno.codigo_eol}</td>
