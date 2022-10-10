@@ -28,7 +28,9 @@ export const Container = () => {
   const [periodos, setPeriodos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [periodoNoite, setPeriodoNoite] = useState(exibeMotivoETEC() || null);
+  const [periodoNoite, setPeriodoNoite] = useState(
+    exibeMotivoETEC() ? null : []
+  );
 
   const [erro, setErro] = useState(false);
 
