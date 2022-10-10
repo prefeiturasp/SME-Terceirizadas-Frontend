@@ -89,6 +89,7 @@ import {
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
   inclusaoAlimentacao
@@ -718,6 +719,12 @@ const routesConfig = [
       constants.RELATORIO
     }`,
     component: relatoriosSolicitacaoUnificada(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLancheCEMEI(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
