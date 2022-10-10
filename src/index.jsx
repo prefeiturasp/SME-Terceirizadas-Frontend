@@ -20,6 +20,7 @@ import "./styles/sb-admin-2.css";
 import "./styles/_overrides.scss";
 import * as Sentry from "@sentry/browser";
 import { CentralDeDownloadContextProvider } from "./context/CentralDeDownloads";
+import { SolicitacaoAlimentacaoContextProvider } from "context/SolicitacaoAlimentacao";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -69,11 +70,13 @@ const store = applyMiddleware(thunk, multi, promise)(createStore)(
 // store é o carinha que recebe todos os estados
 ReactDOM.render(
   <CentralDeDownloadContextProvider>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
+    <SolicitacaoAlimentacaoContextProvider>
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
+    </SolicitacaoAlimentacaoContextProvider>
   </CentralDeDownloadContextProvider>,
   document.getElementById("root")
 );

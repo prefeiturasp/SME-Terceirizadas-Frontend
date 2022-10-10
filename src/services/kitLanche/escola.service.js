@@ -118,3 +118,21 @@ export const iniciaFluxoSolicitacaoKitLancheCEMEI = async uuid => {
     return data;
   }
 };
+
+export const getSolicitacaoKitLancheCEMEI = async uuid => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const cancelaFluxoSolicitacaoKitLancheCEMEI = async (uuid, payload) => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
