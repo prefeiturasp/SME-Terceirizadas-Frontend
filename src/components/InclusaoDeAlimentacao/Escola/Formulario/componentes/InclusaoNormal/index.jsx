@@ -23,6 +23,7 @@ import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { OnChange } from "react-final-form-listeners";
 import "../../style.scss";
+import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 
 export const DataInclusaoNormal = ({ ...props }) => {
   const {
@@ -114,7 +115,8 @@ export const PeriodosInclusaoNormal = ({
   form,
   values,
   periodos,
-  meusDados
+  meusDados,
+  ehETEC
 }) => {
   const getPeriodo = indice => {
     return values.quantidades_periodo[indice];
@@ -220,6 +222,14 @@ export const PeriodosInclusaoNormal = ({
                   />
                 </div>
               </div>
+              {ehETEC && (
+                <Field
+                  component={TextAreaWYSIWYG}
+                  label="Observações"
+                  validate={maxLength(1000)}
+                  name={`${name}.observacao`}
+                />
+              )}
             </div>
           ))
         }

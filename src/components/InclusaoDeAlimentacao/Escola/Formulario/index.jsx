@@ -12,7 +12,7 @@ import {
 } from "services/inclusaoDeAlimentacao";
 import { Rascunhos } from "./componentes/Rascunhos";
 import Select from "components/Shareable/Select";
-import { maxLength, required } from "helpers/fieldValidators";
+import { required } from "helpers/fieldValidators";
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
@@ -49,7 +49,6 @@ import {
   Recorrencia,
   RecorrenciaTabela
 } from "./componentes/InclusaoContinua";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 
 export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
@@ -208,7 +207,13 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
         qp.tipos_alimentacao_selecionados = qp.tipos_alimentacao.map(
           t => t.uuid
         );
-        qp.tipos_alimentacao = qp.periodo_escolar.tipos_alimentacao;
+        qp.tipos_alimentacao = qp.periodo_escolar.tipos_alimentacao.filter(
+          tipo_alimentacao =>
+            ["Lanche 4h", "Refeição", "Sobremesa"].includes(
+              tipo_alimentacao.nome
+            )
+        );
+        qp.periodo_escolar = qp.periodo_escolar.uuid;
       });
     } else {
       quantidades_periodo_.forEach(qp => {
@@ -491,6 +496,7 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       values={values}
                       periodos={periodoNoite}
                       meusDados={meusDados}
+                      ehETEC
                     />
                   )}
                 {motivoContinuoSelecionado(values) &&
@@ -515,14 +521,6 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       )}
                     </>
                   )}
-                {motivoETECSelecionado(values) && (
-                  <Field
-                    component={TextAreaWYSIWYG}
-                    label="Observações"
-                    validate={maxLength(1000)}
-                    name={`observacao`}
-                  />
-                )}
                 <div className="row float-right mt-4">
                   <div className="col-12">
                     <Botao

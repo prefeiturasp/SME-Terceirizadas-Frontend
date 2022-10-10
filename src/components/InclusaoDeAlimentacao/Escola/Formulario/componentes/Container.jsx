@@ -109,6 +109,10 @@ export const Container = () => {
       response.status === HTTP_STATUS.OK &&
       response.data.results.length > 0
     ) {
+      response.data.results[0].tipos_alimentacao = response.data.results[0].tipos_alimentacao.filter(
+        tipo_alimentacao =>
+          ["Lanche 4h", "Refeição", "Sobremesa"].includes(tipo_alimentacao.nome)
+      );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
       setErro(true);

@@ -63,9 +63,16 @@ export const formatarSubmissaoSolicitacaoNormal = values => {
   values.quantidades_periodo
     .filter(qp => qp.checked)
     .forEach(quantidade_periodo => {
-      quantidade_periodo["periodo_escolar"] = quantidade_periodo.uuid;
+      if (
+        quantidade_periodo.nome !== "NOITE" ||
+        !quantidade_periodo["periodo_escolar"]
+      ) {
+        quantidade_periodo["periodo_escolar"] = quantidade_periodo.uuid;
+      }
       quantidade_periodo["tipos_alimentacao"] =
         quantidade_periodo.tipos_alimentacao_selecionados;
+      delete quantidade_periodo.grupo_inclusao_normal;
+      delete quantidade_periodo.inclusao_alimentacao_continua;
     });
   values.quantidades_periodo = values.quantidades_periodo.filter(
     qp => qp.checked
