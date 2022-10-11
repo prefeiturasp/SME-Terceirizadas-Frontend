@@ -31,7 +31,7 @@ const OPTIONS_MODELO = [
   }
 ];
 
-export default ({ setFiltros, setShowCadastro, setPlanilhas }) => {
+export default ({ setFiltros, setPlanilhas, setShowCadastro }) => {
   const initialValues = {};
   const inicioResultado = useRef();
 
@@ -151,10 +151,11 @@ export default ({ setFiltros, setShowCadastro, setPlanilhas }) => {
 
             <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
-                texto="Adicionar Acesso"
+                texto="Inserir Carga de Usuários"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 className="float-left"
+                icon="fas fa-upload"
                 onClick={() => setShowCadastro(true)}
               />
 

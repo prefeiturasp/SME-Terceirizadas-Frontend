@@ -5,10 +5,18 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemPlanilhas from "./components/ListagemPlanilhas";
 import Filtros from "./components/Filtros";
 import {
+  createExcelCoreSSOExterno,
+  createExcelCoreSSOServidor,
+  executarCargaPlanilhaExterno,
+  executarCargaPlanilhaServidor,
   getPlanilhasNaoServidor,
-  getPlanilhasServidor
+  getPlanilhasServidor,
+  removerPlanilhaExterno,
+  removerPlanilhaServidor
 } from "services/cargaUsuario.service";
-import { OPTIONS_STATUS } from "./constants";
+import ModalCadastroPlanilha from "./components/ModalCadastroPlanilha";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalRemocaoPlanilha from "./components/ModalRemocaoPlanilha";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -16,9 +24,13 @@ export default () => {
   const [filtros, setFiltros] = useState();
   const [totalPlanilhas, setTotalPlanilhas] = useState(0);
   const [page, setPage] = useState(1);
+  const [showCadastro, setShowCadastro] = useState(false);
+  const [showRemocao, setShowRemocao] = useState(false);
+  const [tipoPlanilha, setTipoPlanilha] = useState();
 
-  const buscarVinculos = async page => {
+  const buscarPlanilhas = async page => {
     setCarregando(true);
+    setTipoPlanilha(filtros.modelo);
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data;
     if (filtros.modelo === "SERVIDOR") {
@@ -33,13 +45,79 @@ export default () => {
   };
 
   const nextPage = page => {
-    buscarVinculos(page);
+    buscarPlanilhas(page);
     setPage(page);
+  };
+
+  const createPlanilha = async (tipoPlanilha, arquivo) => {
+    setCarregando(true);
+    let res = await fetch(arquivo[0].arquivo);
+    let blob = await res.blob();
+    let file = new File([blob], arquivo[0].nome, {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    });
+    let payload = {
+      conteudo: file
+    };
+    let response;
+    if (tipoPlanilha === "NAO_SERVIDOR") {
+      response = await createExcelCoreSSOExterno(payload);
+    } else if (tipoPlanilha === "SERVIDOR") {
+      response = await createExcelCoreSSOServidor(payload);
+    }
+    if (response.status === 201) {
+      toastSuccess("Planilha inserida com sucesso!");
+      setShowCadastro(false);
+      setFiltros({ modelo: tipoPlanilha });
+      setCarregando(false);
+    } else {
+      toastError("Erro ao adicionar acesso!");
+      setCarregando(false);
+    }
+  };
+
+  const removePlanilha = async () => {
+    setCarregando(true);
+    let response;
+    if (tipoPlanilha === "SERVIDOR") {
+      response = await removerPlanilhaServidor(showRemocao);
+    } else if (tipoPlanilha === "NAO_SERVIDOR") {
+      response = await removerPlanilhaExterno(showRemocao);
+    }
+
+    if (response.status === 200) {
+      toastSuccess("Arquivo removido com sucesso!");
+      setShowRemocao(false);
+      buscarPlanilhas(page);
+      setCarregando(false);
+    } else {
+      toastError("Erro ao remover arquivo!");
+      setCarregando(false);
+    }
+  };
+
+  const executarCarga = async uuid => {
+    setCarregando(true);
+    let response;
+    if (tipoPlanilha === "SERVIDOR") {
+      response = await executarCargaPlanilhaServidor(uuid);
+    } else if (tipoPlanilha === "NAO_SERVIDOR") {
+      response = await executarCargaPlanilhaExterno(uuid);
+    }
+
+    if (response.status === 200) {
+      setShowRemocao(false);
+      buscarPlanilhas(page);
+      setCarregando(false);
+    } else {
+      toastError("Erro ao remover arquivo!");
+      setCarregando(false);
+    }
   };
 
   useEffect(() => {
     if (filtros) {
-      buscarVinculos(1);
+      buscarPlanilhas(1);
       setPage(1);
     }
 
@@ -49,16 +127,35 @@ export default () => {
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cargas-usuarios">
+        <ModalCadastroPlanilha
+          show={showCadastro}
+          setShow={setShowCadastro}
+          onSubmit={(tipoPlanilha, arquivo) => {
+            createPlanilha(tipoPlanilha, arquivo);
+          }}
+        />
+        <ModalRemocaoPlanilha
+          show={showRemocao}
+          setShow={setShowRemocao}
+          removerPlanilha={removePlanilha}
+        />
         <div className="card-body cargas-usuarios">
           <Filtros
             setFiltros={setFiltros}
             setPlanilhas={setPlanilhas}
-            optionsStatus={OPTIONS_STATUS}
+            setShowCadastro={setShowCadastro}
           />
           {planilhas && planilhas.length > 0 && (
             <>
               <hr className="mt-4" />
-              <ListagemPlanilhas planilhas={planilhas} filtros={filtros} />
+              <ListagemPlanilhas
+                planilhas={planilhas}
+                filtros={filtros}
+                buscarPlanilhas={buscarPlanilhas}
+                page={page}
+                setShowRemocao={setShowRemocao}
+                executarCarga={executarCarga}
+              />
               <div className="row">
                 <div className="col">
                   <Pagination
