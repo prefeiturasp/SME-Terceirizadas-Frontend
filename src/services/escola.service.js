@@ -8,20 +8,13 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const buscaPeriodosEscolares = () => {
-  // TODO: pegar periodos escolares da escola ex: escolas/periodos
+export const buscaPeriodosEscolares = async params => {
   const url = `${API_URL}/periodos-escolares/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getEscolas = () => {
