@@ -52,13 +52,23 @@ export class InputFile extends Component {
 
   async onInputChange(event) {
     let valido = true;
-    let lista_extensoes = ["doc", "docx", "png", "pdf", "jpg", "jpeg"];
+    let lista_extensoes = [
+      "doc",
+      "docx",
+      "png",
+      "pdf",
+      "jpg",
+      "jpeg",
+      "xlsx",
+      "xls"
+    ];
     let { accept } = this.props;
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
     if (accept) {
       let nova_lista_extensoes = [];
+      let accept_array = accept.split(",").map(ext => ext.trim().toLowerCase());
       lista_extensoes.forEach(ext => {
-        if (accept.includes(ext)) {
+        if (accept_array.includes(ext)) {
           nova_lista_extensoes.push(ext);
         }
       });

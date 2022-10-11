@@ -1,5 +1,6 @@
 import axios from "./_base";
 import { saveAs } from "file-saver";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const baixarExcelModeloServidor = async () => {
   const url = `/planilha-coresso-servidor/download-planilha-servidor/`;
@@ -18,3 +19,39 @@ export const getPlanilhasServidor = async params =>
 
 export const getPlanilhasNaoServidor = async params =>
   (await axios.get("/planilha-coresso-externo/", { params })).data;
+
+export const createExcelCoreSSOExterno = async params => {
+  const url = `/planilha-coresso-externo/`;
+  const headers = { "content-type": "multipart/form-data" };
+  const formData = new FormData();
+  formData.append("conteudo", params.conteudo);
+  return await axios
+    .post(url, formData, {
+      headers: headers
+    })
+    .catch(ErrorHandlerFunction);
+};
+
+export const createExcelCoreSSOServidor = async params => {
+  const url = `/planilha-coresso-servidor/`;
+  const headers = { "content-type": "multipart/form-data" };
+  const formData = new FormData();
+  formData.append("conteudo", params.conteudo);
+  return await axios
+    .post(url, formData, {
+      headers: headers
+    })
+    .catch(ErrorHandlerFunction);
+};
+
+export const removerPlanilhaServidor = async uuid =>
+  await axios.patch(`/planilha-coresso-servidor/${uuid}/remover/`);
+
+export const removerPlanilhaExterno = async uuid =>
+  await axios.patch(`/planilha-coresso-externo/${uuid}/remover/`);
+
+export const executarCargaPlanilhaServidor = async uuid =>
+  await axios.post(`/planilha-coresso-servidor/${uuid}/processar-importacao/`);
+
+export const executarCargaPlanilhaExterno = async uuid =>
+  await axios.post(`/planilha-coresso-externo/${uuid}/processar-importacao/`);
