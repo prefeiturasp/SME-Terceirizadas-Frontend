@@ -117,6 +117,6 @@ export const exibeMotivoETEC = () => {
     localStorage.getItem("nome_instituicao") &&
     (localStorage.getItem("nome_instituicao").startsWith(`"EMEF `) ||
       localStorage.getItem("nome_instituicao").startsWith(`"CEU EMEF `) ||
-      localStorage.getItem("nome_instituicao").startsWith(`"CEU GESTÃO `))
+      localStorage.getItem("nome_instituicao").startsWith(`"CEU GESTAO `))
   );
 };
