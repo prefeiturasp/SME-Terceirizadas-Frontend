@@ -213,7 +213,8 @@ export class CorpoRelatorio extends Component {
         <table className="table-report mt-3">
           <tbody>
             <tr>
-              {ehInclusaoContinua(tipoSolicitacao) && <th>Repetir</th>}
+              {ehInclusaoContinua(tipoSolicitacao) &&
+                motivo.nome !== "ETEC" && <th>Repetir</th>}
               <th>Período</th>
               <th>Tipos de Alimentação</th>
               <th>Nº de Alunos</th>
@@ -222,28 +223,29 @@ export class CorpoRelatorio extends Component {
               quantidades_periodo.map((quantidade_por_periodo, key) => {
                 return [
                   <tr key={key}>
-                    {ehInclusaoContinua(tipoSolicitacao) && (
-                      <td className="weekly">
-                        {WEEK.map((day, key) => {
-                          return (
-                            <span
-                              key={key}
-                              className={
-                                quantidade_por_periodo.dias_semana
-                                  .map(String)
-                                  .includes(day.value)
-                                  ? "week-circle-clicked green"
-                                  : "week-circle"
-                              }
-                              data-cy={`dia-${key}`}
-                              value={day.value}
-                            >
-                              {day.label}
-                            </span>
-                          );
-                        })}
-                      </td>
-                    )}
+                    {ehInclusaoContinua(tipoSolicitacao) &&
+                      motivo.nome !== "ETEC" && (
+                        <td className="weekly">
+                          {WEEK.map((day, key) => {
+                            return (
+                              <span
+                                key={key}
+                                className={
+                                  quantidade_por_periodo.dias_semana
+                                    .map(String)
+                                    .includes(day.value)
+                                    ? "week-circle-clicked green"
+                                    : "week-circle"
+                                }
+                                data-cy={`dia-${key}`}
+                                value={day.value}
+                              >
+                                {day.label}
+                              </span>
+                            );
+                          })}
+                        </td>
+                      )}
                     <td>
                       {quantidade_por_periodo.periodo_escolar &&
                         quantidade_por_periodo.periodo_escolar.nome}
