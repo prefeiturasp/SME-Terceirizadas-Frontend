@@ -41,10 +41,7 @@ export const validarSubmissaoContinua = (values, meusDados) => {
     totalAlunos += parseInt(quantidade_periodo.numero_alunos);
   });
 
-  if (
-    meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
-    "CEU GESTAO"
-  ) {
+  if (!values.quantidades_periodo.find(qp => qp.nome === "NOITE")) {
     if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
       return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
   }
