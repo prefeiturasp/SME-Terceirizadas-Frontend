@@ -40,8 +40,18 @@ export const Container = () => {
   ) => {
     const response = await getQuantidadeAlunosEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
+      const periodos_ = abstraiPeriodosComAlunosMatriculados(
+        periodos,
+        response.data.results,
+        false
+      );
       const vinculos = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
       if (vinculos.status === HTTP_STATUS.OK) {
+        periodos_.map(periodo => {
+          return (periodo.tipos_alimentacao = vinculos.data.results.find(
+            v => v.periodo_escolar.nome === periodo.nome
+          ).tipos_alimentacao);
+        });
         setPeriodos(
           abstraiPeriodosComAlunosMatriculados(
             periodos,
