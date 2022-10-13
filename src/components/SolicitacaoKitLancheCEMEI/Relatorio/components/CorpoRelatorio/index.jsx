@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Collapse } from "react-collapse";
+import HTTP_STATUS from "http-status-codes";
 import {
   corDaMensagem,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  visualizaBotoesDoFluxo
 } from "helpers/utilities";
 import {
   totalAlunosCEI,
@@ -22,28 +24,66 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import "../../style.scss";
-import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
-import { statusEnum } from "constants/shared";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { statusEnum, TIPO_PERFIL } from "constants/shared";
+import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
+import "../../style.scss";
+import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 
 export const CorpoRelatorio = ({ ...props }) => {
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
   const {
     solicitacaoKitLancheCEMEI,
     kits,
     alunosComDietaEspecial,
     ModalNaoAprova,
-    endpointNaoAprovaSolicitacao
+    textoBotaoNaoAprova,
+    textoBotaoAprova,
+    motivosDREnaoValida,
+    endpointNaoAprovaSolicitacao,
+    endpointAprovaSolicitacao,
+    toastAprovaMensagem,
+    toastAprovaMensagemErro
   } = props;
 
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
 
+  const solicitacaoAlimentacaoContext = useContext(
+    SolicitacaoAlimentacaoContext
+  );
+
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLancheCEMEI.logs
   );
+
+  const EXIBIR_BOTAO_APROVAR =
+    ![
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.TERCEIRIZADA
+    ].includes(tipoPerfil) && textoBotaoAprova;
+
+  const onClickBotaoAprovar = async () => {
+    const resp = await endpointAprovaSolicitacao(
+      solicitacaoKitLancheCEMEI.uuid
+    );
+    if (resp.status === HTTP_STATUS.OK) {
+      toastSuccess(toastAprovaMensagem);
+      const response = await getSolicitacaoKitLancheCEMEI(
+        solicitacaoKitLancheCEMEI.uuid
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
+          response.data
+        );
+      }
+    } else {
+      toastError(toastAprovaMensagemErro);
+    }
+  };
 
   return (
     <>
@@ -396,19 +436,32 @@ export const CorpoRelatorio = ({ ...props }) => {
       <RelatorioHistoricoQuestionamento
         solicitacao={solicitacaoKitLancheCEMEI}
       />
-      {solicitacaoKitLancheCEMEI.status !== statusEnum.ESCOLA_CANCELOU && (
-        <Botao
-          texto={props.textoBotaoNaoAprova}
-          className="float-right"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          onClick={() => setShowNaoAprovaModal(true)}
-        />
+      {visualizaBotoesDoFluxo(solicitacaoKitLancheCEMEI) && (
+        <div className="row float-right">
+          {solicitacaoKitLancheCEMEI.status !== statusEnum.ESCOLA_CANCELOU && (
+            <Botao
+              texto={textoBotaoNaoAprova}
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => setShowNaoAprovaModal(true)}
+            />
+          )}
+          {EXIBIR_BOTAO_APROVAR && (
+            <Botao
+              texto={textoBotaoAprova}
+              type={BUTTON_TYPE.SUBMIT}
+              onClick={() => onClickBotaoAprovar()}
+              style={BUTTON_STYLE.GREEN}
+              className="ml-3"
+            />
+          )}
+        </div>
       )}
       {ModalNaoAprova && (
         <ModalNaoAprova
           showModal={showNaoAprovaModal}
           closeModal={() => setShowNaoAprovaModal(false)}
+          motivosDREnaoValida={motivosDREnaoValida}
           endpoint={endpointNaoAprovaSolicitacao}
           solicitacao={solicitacaoKitLancheCEMEI}
           loadSolicitacao={getSolicitacaoKitLancheCEMEI}
