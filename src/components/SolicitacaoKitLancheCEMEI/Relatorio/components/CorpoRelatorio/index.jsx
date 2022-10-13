@@ -2,16 +2,14 @@ import React, { useState } from "react";
 import { Collapse } from "react-collapse";
 import {
   corDaMensagem,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  visualizaBotoesDoFluxo
 } from "helpers/utilities";
 import {
   totalAlunosCEI,
   tempoPasseio,
-  kitsSelecionados,
   checaPrazo,
-  filtraAlunosCEIcomDietaEspecial,
-  getNumeroTotalKits,
-  filtraAlunosEMEIcomDietaEspecial
+  getNumeroTotalKits
 } from "components/SolicitacaoKitLancheCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
@@ -25,21 +23,81 @@ import {
 import "../../style.scss";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
-import { statusEnum } from "constants/shared";
+import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
     solicitacaoKitLancheCEMEI,
-    kits,
-    alunosComDietaEspecial,
     ModalNaoAprova,
-    endpointNaoAprovaSolicitacao
+    endpointNaoAprovaSolicitacao,
+    visao,
+    textoBotaoNaoAprova,
+    textoBotaoAprova,
+    fetchData,
+    ModalQuestionamento,
+    endpointQuestionamento
   } = props;
 
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
+  const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
+  const [respostaSimNao, setRespostaSimNao] = useState(null);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
+  const tipoSolicitacao = urlParams.get("tipoSolicitacao");
+
+  const EXIBIR_BOTAO_NAO_APROVAR =
+    visao !== TERCEIRIZADA ||
+    (solicitacaoKitLancheCEMEI &&
+      solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" &&
+      solicitacaoKitLancheCEMEI.status === statusEnum.CODAE_QUESTIONADO &&
+      textoBotaoNaoAprova);
+  const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+    visao === TERCEIRIZADA &&
+    solicitacaoKitLancheCEMEI &&
+    [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+      solicitacaoKitLancheCEMEI.status
+    );
+  const EXIBIR_BOTAO_APROVAR =
+    (![
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.TERCEIRIZADA
+    ].includes(tipoPerfil) &&
+      textoBotaoAprova) ||
+    (solicitacaoKitLancheCEMEI &&
+      (solicitacaoKitLancheCEMEI.prioridade === "REGULAR" ||
+        [
+          statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
+          statusEnum.CODAE_AUTORIZADO
+        ].includes(solicitacaoKitLancheCEMEI.status)) &&
+      textoBotaoAprova);
+  const EXIBIR_MODAL_AUTORIZACAO =
+    visao === CODAE &&
+    solicitacaoKitLancheCEMEI &&
+    solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" &&
+    !solicitacaoKitLancheCEMEI.logs[solicitacaoKitLancheCEMEI.logs.length - 1]
+      .resposta_sim_nao;
+  const EXIBIR_BOTAO_QUESTIONAMENTO =
+    [
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.TERCEIRIZADA
+    ].includes(tipoPerfil) &&
+    solicitacaoKitLancheCEMEI &&
+    (solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" ||
+      (visao === CODAE &&
+        solicitacaoKitLancheCEMEI.prioridade !== "REGULAR")) &&
+    [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+      solicitacaoKitLancheCEMEI.status
+    );
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLancheCEMEI.logs
@@ -141,9 +199,7 @@ export const CorpoRelatorio = ({ ...props }) => {
           <p className="value-important">{solicitacaoKitLancheCEMEI.local}</p>
         </div>
       </div>
-      {["TODOS", "CEI"].includes(
-        solicitacaoKitLancheCEMEI.alunos_cei_e_ou_emei
-      ) && (
+      {solicitacaoKitLancheCEMEI.solicitacao_cei && (
         <>
           <div className="alunos-label mt-3">Alunos CEI</div>
           <div className="row">
@@ -172,9 +228,8 @@ export const CorpoRelatorio = ({ ...props }) => {
               <p>
                 Opção desejada:{" "}
                 <b className="green ml-1">
-                  {kitsSelecionados(
-                    solicitacaoKitLancheCEMEI.solicitacao_cei,
-                    kits
+                  {solicitacaoKitLancheCEMEI.solicitacao_cei.kits.map(
+                    k => k.nome
                   )}
                 </b>
               </p>
@@ -214,10 +269,8 @@ export const CorpoRelatorio = ({ ...props }) => {
           </section>
         </>
       )}
-      {filtraAlunosCEIcomDietaEspecial(
-        solicitacaoKitLancheCEMEI,
-        alunosComDietaEspecial
-      ).length > 0 && (
+      {solicitacaoKitLancheCEMEI.solicitacao_cei
+        .alunos_com_dieta_especial_participantes.length > 0 && (
         <>
           <div className="row">
             <div className="col">
@@ -242,26 +295,23 @@ export const CorpoRelatorio = ({ ...props }) => {
             <Collapse isOpened={collapseAlunosCEI}>
               <table className="table">
                 <tbody>
-                  {filtraAlunosCEIcomDietaEspecial(
-                    solicitacaoKitLancheCEMEI,
-                    alunosComDietaEspecial
-                  ).map((aluno, key) => {
-                    return (
-                      <tr className="row-alunos" key={key}>
-                        <td>{aluno.codigo_eol}</td>
-                        <td>{aluno.nome}</td>
-                      </tr>
-                    );
-                  })}
+                  {solicitacaoKitLancheCEMEI.solicitacao_cei.alunos_com_dieta_especial_participantes.map(
+                    (aluno, key) => {
+                      return (
+                        <tr className="row-alunos" key={key}>
+                          <td>{aluno.codigo_eol}</td>
+                          <td>{aluno.nome}</td>
+                        </tr>
+                      );
+                    }
+                  )}
                 </tbody>
               </table>
             </Collapse>
           </div>
         </>
       )}
-      {["TODOS", "EMEI"].includes(
-        solicitacaoKitLancheCEMEI.alunos_cei_e_ou_emei
-      ) && (
+      {solicitacaoKitLancheCEMEI.solicitacao_emei && (
         <>
           <div className="alunos-label mt-6">Alunos EMEI</div>
           <div className="row">
@@ -287,9 +337,8 @@ export const CorpoRelatorio = ({ ...props }) => {
               <p>
                 Opção desejada:{" "}
                 <b className="green ml-1">
-                  {kitsSelecionados(
-                    solicitacaoKitLancheCEMEI.solicitacao_emei,
-                    kits
+                  {solicitacaoKitLancheCEMEI.solicitacao_emei.kits.map(
+                    k => k.nome
                   )}
                 </b>
               </p>
@@ -312,51 +361,49 @@ export const CorpoRelatorio = ({ ...props }) => {
           </section>
         </>
       )}
-      {filtraAlunosEMEIcomDietaEspecial(
-        solicitacaoKitLancheCEMEI,
-        alunosComDietaEspecial
-      ).length > 0 && (
-        <>
-          <div className="row">
-            <div className="col">
-              <p className="mb-0">
-                <b>Aluno(s) com dieta especial</b>
-              </p>
-            </div>
-          </div>
-          <div className="card card-history mt-3 seletor-alunos-dieta-especial">
-            <div className="card-header">
-              <div className="row">
-                <div className="col-2 ml-0">Código EOL</div>
-                <div className="col-8">Nome do Aluno</div>
-                <div className="col-2 ml-0 toggle-right">
-                  <ToggleExpandir
-                    onClick={() => setCollapseAlunosEMEI(!collapseAlunosEMEI)}
-                    ativo={collapseAlunosEMEI}
-                  />
-                </div>
+      {solicitacaoKitLancheCEMEI.solicitacao_emei &&
+        solicitacaoKitLancheCEMEI.solicitacao_emei
+          .alunos_com_dieta_especial_participantes.length > 0 && (
+          <>
+            <div className="row">
+              <div className="col">
+                <p className="mb-0">
+                  <b>Aluno(s) com dieta especial</b>
+                </p>
               </div>
             </div>
-            <Collapse isOpened={collapseAlunosEMEI}>
-              <table className="table">
-                <tbody>
-                  {filtraAlunosEMEIcomDietaEspecial(
-                    solicitacaoKitLancheCEMEI,
-                    alunosComDietaEspecial
-                  ).map((aluno, key) => {
-                    return (
-                      <tr className="row-alunos" key={key}>
-                        <td>{aluno.codigo_eol}</td>
-                        <td>{aluno.nome}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </Collapse>
-          </div>
-        </>
-      )}
+            <div className="card card-history mt-3 seletor-alunos-dieta-especial">
+              <div className="card-header">
+                <div className="row">
+                  <div className="col-2 ml-0">Código EOL</div>
+                  <div className="col-8">Nome do Aluno</div>
+                  <div className="col-2 ml-0 toggle-right">
+                    <ToggleExpandir
+                      onClick={() => setCollapseAlunosEMEI(!collapseAlunosEMEI)}
+                      ativo={collapseAlunosEMEI}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Collapse isOpened={collapseAlunosEMEI}>
+                <table className="table">
+                  <tbody>
+                    {solicitacaoKitLancheCEMEI.solicitacao_emei.alunos_com_dieta_especial_participantes.map(
+                      (aluno, key) => {
+                        return (
+                          <tr className="row-alunos" key={key}>
+                            <td>{aluno.codigo_eol}</td>
+                            <td>{aluno.nome}</td>
+                          </tr>
+                        );
+                      }
+                    )}
+                  </tbody>
+                </table>
+              </Collapse>
+            </div>
+          </>
+        )}
       <div className="row">
         <div className="col">
           <p className="total-kits">
@@ -396,23 +443,112 @@ export const CorpoRelatorio = ({ ...props }) => {
       <RelatorioHistoricoQuestionamento
         solicitacao={solicitacaoKitLancheCEMEI}
       />
-      {solicitacaoKitLancheCEMEI.status !== statusEnum.ESCOLA_CANCELOU && (
-        <Botao
-          texto={props.textoBotaoNaoAprova}
-          className="float-right"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          onClick={() => setShowNaoAprovaModal(true)}
-        />
-      )}
-      {ModalNaoAprova && (
-        <ModalNaoAprova
-          showModal={showNaoAprovaModal}
-          closeModal={() => setShowNaoAprovaModal(false)}
-          endpoint={endpointNaoAprovaSolicitacao}
-          solicitacao={solicitacaoKitLancheCEMEI}
-          loadSolicitacao={getSolicitacaoKitLancheCEMEI}
-        />
+      {visualizaBotoesDoFluxo(solicitacaoKitLancheCEMEI) && (
+        <>
+          <div className="form-group row float-right mt-4">
+            {EXIBIR_BOTAO_NAO_APROVAR && (
+              <Botao
+                texto={textoBotaoNaoAprova}
+                className="float-right"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={() => setShowNaoAprovaModal(true)}
+              />
+            )}
+            {ModalNaoAprova && (
+              <ModalNaoAprova
+                showModal={showNaoAprovaModal}
+                closeModal={() => setShowNaoAprovaModal(false)}
+                endpoint={endpointNaoAprovaSolicitacao}
+                solicitacao={solicitacaoKitLancheCEMEI}
+                loadSolicitacao={getSolicitacaoKitLancheCEMEI}
+              />
+            )}
+            {EXIBIR_BOTAO_APROVAR &&
+              (textoBotaoAprova !== "Ciente" &&
+                (visao === CODAE &&
+                solicitacaoKitLancheCEMEI.logs.filter(
+                  log =>
+                    log.status_evento_explicacao ===
+                      "Terceirizada respondeu questionamento" &&
+                    !log.resposta_sim_nao
+                ).length > 0 ? null : (
+                  <Botao
+                    texto={textoBotaoAprova}
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={() =>
+                      EXIBIR_MODAL_AUTORIZACAO
+                        ? this.showAutorizarModal()
+                        : this.handleSubmit()
+                    }
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
+                  />
+                )))}
+            {EXIBIR_BOTAO_QUESTIONAMENTO && (
+              <Botao
+                texto={
+                  tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                    ? "Questionar"
+                    : "Sim"
+                }
+                type={BUTTON_TYPE.SUBMIT}
+                onClick={() => {
+                  setRespostaSimNao("Sim");
+                  setShowQuestionamentoModal(true);
+                }}
+                style={BUTTON_STYLE.GREEN}
+                className="ml-3"
+              />
+            )}
+            {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+              <div className="form-group float-right mt-4">
+                {solicitacaoKitLancheCEMEI.terceirizada_conferiu_gestao ? (
+                  <label className="ml-3 conferido">
+                    <i className="fas fa-check mr-2" />
+                    Solicitação Conferida
+                  </label>
+                ) : (
+                  <Botao
+                    texto="Marcar Conferência"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
+                    onClick={() => {
+                      setShowModalMarcarConferencia(true);
+                    }}
+                  />
+                )}
+              </div>
+            )}
+            <ModalMarcarConferencia
+              showModal={showModalMarcarConferencia}
+              closeModal={() => setShowModalMarcarConferencia(false)}
+              onMarcarConferencia={() => {
+                fetchData();
+              }}
+              uuid={solicitacaoKitLancheCEMEI.uuid}
+              endpoint={
+                tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI
+                  ? "solicitacoes-kit-lanche-cei-avulsa"
+                  : tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+                  ? "solicitacao-kit-lanche-cemei"
+                  : "solicitacoes-kit-lanche-avulsa"
+              }
+            />
+            {ModalQuestionamento && (
+              <ModalTercRespondeQuestFinalForm
+                closeModal={this.closeQuestionamentoModal}
+                showModal={showQuestionamentoModal}
+                uuid={solicitacaoKitLancheCEMEI.uuid}
+                loadSolicitacao={fetchData}
+                resposta_sim_nao={respostaSimNao}
+                endpoint={endpointQuestionamento}
+                tipoSolicitacao={tipoSolicitacao}
+              />
+            )}
+          </div>
+        </>
       )}
     </>
   );

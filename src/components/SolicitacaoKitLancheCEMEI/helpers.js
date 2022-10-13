@@ -106,14 +106,6 @@ export const tempoPasseio = solicitacao => {
   return tempo[Number(solicitacao.tempo_passeio)];
 };
 
-export const kitsSelecionados = (solicitacao, kits) => {
-  let nomeKits = [];
-  solicitacao.kits.forEach(kitUUID =>
-    nomeKits.push(kits.find(kit => kit.uuid === kitUUID).nome)
-  );
-  return nomeKits.join(", ");
-};
-
 export const checaPrazo = prioridade => {
   let texto = "Solicitação perto do prazo de vencimento";
   if (prioridade === "REGULAR") {
