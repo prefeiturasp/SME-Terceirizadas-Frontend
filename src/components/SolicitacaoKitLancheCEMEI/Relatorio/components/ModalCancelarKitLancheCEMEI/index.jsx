@@ -3,7 +3,7 @@ import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
-import { mensagemCancelamento } from "helpers/utilities";
+import { getError, mensagemCancelamento } from "helpers/utilities";
 import { textAreaRequired } from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
@@ -14,7 +14,7 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 
-export const ModalKitLanche = ({ ...props }) => {
+export const ModalCancelarKitLancheCEMEI = ({ ...props }) => {
   const {
     showModal,
     closeModal,
@@ -35,7 +35,7 @@ export const ModalKitLanche = ({ ...props }) => {
       toastSuccess("Solicitação cancelada com sucesso!");
       if (loadSolicitacao) {
         const response = await loadSolicitacao(solicitacao.uuid);
-        if (resp.status === HTTP_STATUS.OK) {
+        if (response.status === HTTP_STATUS.OK) {
           solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
             response.data
           );
@@ -43,7 +43,9 @@ export const ModalKitLanche = ({ ...props }) => {
       }
     } else {
       closeModal();
-      toastError("Erro ao cancelar solicitação!");
+      toastError(
+        `Houve um erro ao cancelar solicitação: ${getError(resp.data)}`
+      );
     }
   };
 
