@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Collapse } from "react-collapse";
+import HTTP_STATUS from "http-status-codes";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
@@ -20,14 +21,16 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import "../../style.scss";
-import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
+import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
+import "../../style.scss";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -37,6 +40,10 @@ export const CorpoRelatorio = ({ ...props }) => {
     visao,
     textoBotaoNaoAprova,
     textoBotaoAprova,
+    motivosDREnaoValida,
+    endpointAprovaSolicitacao,
+    toastAprovaMensagem,
+    toastAprovaMensagemErro,
     fetchData,
     ModalQuestionamento,
     endpointQuestionamento
@@ -80,12 +87,6 @@ export const CorpoRelatorio = ({ ...props }) => {
           statusEnum.CODAE_AUTORIZADO
         ].includes(solicitacaoKitLancheCEMEI.status)) &&
       textoBotaoAprova);
-  const EXIBIR_MODAL_AUTORIZACAO =
-    visao === CODAE &&
-    solicitacaoKitLancheCEMEI &&
-    solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" &&
-    !solicitacaoKitLancheCEMEI.logs[solicitacaoKitLancheCEMEI.logs.length - 1]
-      .resposta_sim_nao;
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
@@ -99,9 +100,32 @@ export const CorpoRelatorio = ({ ...props }) => {
       solicitacaoKitLancheCEMEI.status
     );
 
+  const solicitacaoAlimentacaoContext = useContext(
+    SolicitacaoAlimentacaoContext
+  );
+
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLancheCEMEI.logs
   );
+
+  const onClickBotaoAprovar = async () => {
+    const resp = await endpointAprovaSolicitacao(
+      solicitacaoKitLancheCEMEI.uuid
+    );
+    if (resp.status === HTTP_STATUS.OK) {
+      toastSuccess(toastAprovaMensagem);
+      const response = await getSolicitacaoKitLancheCEMEI(
+        solicitacaoKitLancheCEMEI.uuid
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
+          response.data
+        );
+      }
+    } else {
+      toastError(toastAprovaMensagemErro);
+    }
+  };
 
   return (
     <>
@@ -269,48 +293,49 @@ export const CorpoRelatorio = ({ ...props }) => {
           </section>
         </>
       )}
-      {solicitacaoKitLancheCEMEI.solicitacao_cei
-        .alunos_com_dieta_especial_participantes.length > 0 && (
-        <>
-          <div className="row">
-            <div className="col">
-              <p className="mb-0">
-                <b>Aluno(s) com dieta especial</b>
-              </p>
-            </div>
-          </div>
-          <div className="card card-history mt-3 seletor-alunos-dieta-especial">
-            <div className="card-header">
-              <div className="row">
-                <div className="col-2 ml-0">Código EOL</div>
-                <div className="col-8">Nome do Aluno</div>
-                <div className="col-2 ml-0 toggle-right">
-                  <ToggleExpandir
-                    onClick={() => setCollapseAlunosCEI(!collapseAlunosCEI)}
-                    ativo={collapseAlunosCEI}
-                  />
-                </div>
+      {solicitacaoKitLancheCEMEI.solicitacao_cei &&
+        solicitacaoKitLancheCEMEI.solicitacao_cei
+          .alunos_com_dieta_especial_participantes.length > 0 && (
+          <>
+            <div className="row">
+              <div className="col">
+                <p className="mb-0">
+                  <b>Aluno(s) com dieta especial</b>
+                </p>
               </div>
             </div>
-            <Collapse isOpened={collapseAlunosCEI}>
-              <table className="table">
-                <tbody>
-                  {solicitacaoKitLancheCEMEI.solicitacao_cei.alunos_com_dieta_especial_participantes.map(
-                    (aluno, key) => {
-                      return (
-                        <tr className="row-alunos" key={key}>
-                          <td>{aluno.codigo_eol}</td>
-                          <td>{aluno.nome}</td>
-                        </tr>
-                      );
-                    }
-                  )}
-                </tbody>
-              </table>
-            </Collapse>
-          </div>
-        </>
-      )}
+            <div className="card card-history mt-3 seletor-alunos-dieta-especial">
+              <div className="card-header">
+                <div className="row">
+                  <div className="col-2 ml-0">Código EOL</div>
+                  <div className="col-8">Nome do Aluno</div>
+                  <div className="col-2 ml-0 toggle-right">
+                    <ToggleExpandir
+                      onClick={() => setCollapseAlunosCEI(!collapseAlunosCEI)}
+                      ativo={collapseAlunosCEI}
+                    />
+                  </div>
+                </div>
+              </div>
+              <Collapse isOpened={collapseAlunosCEI}>
+                <table className="table">
+                  <tbody>
+                    {solicitacaoKitLancheCEMEI.solicitacao_cei.alunos_com_dieta_especial_participantes.map(
+                      (aluno, key) => {
+                        return (
+                          <tr className="row-alunos" key={key}>
+                            <td>{aluno.codigo_eol}</td>
+                            <td>{aluno.nome}</td>
+                          </tr>
+                        );
+                      }
+                    )}
+                  </tbody>
+                </table>
+              </Collapse>
+            </div>
+          </>
+        )}
       {solicitacaoKitLancheCEMEI.solicitacao_emei && (
         <>
           <div className="alunos-label mt-6">Alunos EMEI</div>
@@ -459,6 +484,7 @@ export const CorpoRelatorio = ({ ...props }) => {
               <ModalNaoAprova
                 showModal={showNaoAprovaModal}
                 closeModal={() => setShowNaoAprovaModal(false)}
+                motivosDREnaoValida={motivosDREnaoValida}
                 endpoint={endpointNaoAprovaSolicitacao}
                 solicitacao={solicitacaoKitLancheCEMEI}
                 loadSolicitacao={getSolicitacaoKitLancheCEMEI}
@@ -476,11 +502,7 @@ export const CorpoRelatorio = ({ ...props }) => {
                   <Botao
                     texto={textoBotaoAprova}
                     type={BUTTON_TYPE.SUBMIT}
-                    onClick={() =>
-                      EXIBIR_MODAL_AUTORIZACAO
-                        ? this.showAutorizarModal()
-                        : this.handleSubmit()
-                    }
+                    onClick={() => onClickBotaoAprovar()}
                     style={BUTTON_STYLE.GREEN}
                     className="ml-3"
                   />
@@ -538,7 +560,7 @@ export const CorpoRelatorio = ({ ...props }) => {
             />
             {ModalQuestionamento && (
               <ModalTercRespondeQuestFinalForm
-                closeModal={this.closeQuestionamentoModal}
+                closeModal={() => setShowQuestionamentoModal(false)}
                 showModal={showQuestionamentoModal}
                 uuid={solicitacaoKitLancheCEMEI.uuid}
                 loadSolicitacao={fetchData}
