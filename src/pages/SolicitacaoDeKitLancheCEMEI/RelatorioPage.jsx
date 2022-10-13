@@ -17,9 +17,20 @@ export const RelatorioBase = ({ ...props }) => {
     titulo: "Relatório"
   };
 
+  const anteriores = [
+    {
+      href: `/painel-gestao-alimentacao`,
+      titulo: "Gestão de Alimentação"
+    },
+    {
+      href: `/painel-gestao-alimentacao`,
+      titulo: "Painel de Solicitações"
+    }
+  ];
+
   return (
     <Page>
-      <Breadcrumb home="/" atual={atual} />
+      <Breadcrumb home="/" anteriores={anteriores} atual={atual} />
       <Relatorio {...props} />
     </Page>
   );

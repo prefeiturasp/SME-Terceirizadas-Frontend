@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Collapse } from "react-collapse";
-import { corDaMensagem, visualizaBotoesDoFluxo } from "helpers/utilities";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao,
+  visualizaBotoesDoFluxo
+} from "helpers/utilities";
 import {
   totalAlunosCEI,
   tempoPasseio,
@@ -22,6 +26,7 @@ import RelatorioHistoricoJustificativaEscola from "components/Shareable/Relatori
 import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -92,6 +97,10 @@ export const CorpoRelatorio = ({ ...props }) => {
     [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
       solicitacaoKitLancheCEMEI.status
     );
+
+  const justificativaNegacao = justificativaAoNegarSolicitacao(
+    solicitacaoKitLancheCEMEI.logs
+  );
 
   return (
     <>
@@ -414,7 +423,23 @@ export const CorpoRelatorio = ({ ...props }) => {
           />
         </div>
       </div>
+      {justificativaNegacao && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Justificativa da negação</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
       <RelatorioHistoricoJustificativaEscola
+        solicitacao={solicitacaoKitLancheCEMEI}
+      />
+      <RelatorioHistoricoQuestionamento
         solicitacao={solicitacaoKitLancheCEMEI}
       />
       {visualizaBotoesDoFluxo(solicitacaoKitLancheCEMEI) && (
