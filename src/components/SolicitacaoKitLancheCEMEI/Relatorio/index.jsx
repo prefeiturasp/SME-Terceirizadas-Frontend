@@ -9,20 +9,14 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { getDietasAtivasInativasPorAluno } from "services/dietaEspecial.service";
-import {
-  getKitsLanche,
-  getSolicitacaoKitLancheCEMEI
-} from "services/kitLanche";
+import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import "./style.scss";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 
 export const Relatorio = ({ ...props }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
-  const [kits, setKits] = useState(null);
   const [erro, setErro] = useState(false);
-  const [alunosComDietaEspecial, setAlunosComDietaEspecial] = useState(null);
 
   const solicitacaoAlimentacaoContext = useContext(
     SolicitacaoAlimentacaoContext
@@ -44,34 +38,14 @@ export const Relatorio = ({ ...props }) => {
     setCarregando(false);
   };
 
-  const getKitsAsync = async () => {
-    const response = await getKitsLanche();
-    if (response.status === HTTP_STATUS.OK) {
-      setKits(response.data.results);
-    } else {
-      setErro(true);
-    }
-  };
-
-  const getDietasAtivasInativasPorAlunoAsync = async () => {
-    const response = await getDietasAtivasInativasPorAluno();
-    if (response.status === HTTP_STATUS.OK) {
-      setAlunosComDietaEspecial(response.data.solicitacoes);
-    } else {
-      setErro(true);
-    }
-  };
-
   useEffect(() => {
     fetchData();
-    getKitsAsync();
-    getDietasAtivasInativasPorAlunoAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const solicitacao = solicitacaoAlimentacaoContext.solicitacaoAlimentacao;
 
-  const REQUISICOES_CONCLUIDAS = solicitacao && kits && alunosComDietaEspecial;
+  const REQUISICOES_CONCLUIDAS = solicitacao;
 
   return erro ? (
     <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
@@ -92,7 +66,7 @@ export const Relatorio = ({ ...props }) => {
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 icon={BUTTON_ICON.ARROW_LEFT}
                 onClick={() => history.push("/painel-gestao-alimentacao")}
-                className="mr-2 float-right"
+                className="float-right"
               />
             </div>
           </div>
@@ -101,8 +75,7 @@ export const Relatorio = ({ ...props }) => {
               {solicitacao && (
                 <CorpoRelatorio
                   solicitacaoKitLancheCEMEI={solicitacao}
-                  kits={kits}
-                  alunosComDietaEspecial={alunosComDietaEspecial}
+                  fetchData={fetchData}
                   {...props}
                 />
               )}

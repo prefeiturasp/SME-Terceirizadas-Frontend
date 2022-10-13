@@ -1,12 +1,35 @@
-import React from "react";
-import { ESCOLA } from "configs/constants";
-import { cancelaFluxoSolicitacaoKitLancheCEMEI } from "services/kitLanche";
+import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
+import { DRE, ESCOLA, TERCEIRIZADA } from "configs/constants";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { Relatorio } from "components/SolicitacaoKitLancheCEMEI/Relatorio";
-import { ModalKitLanche } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalKitLancheCEMEI";
+import { ModalTerceirizadaRespondeQuestionamento } from "components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+import { ModalCancelarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCancelarKitLancheCEMEI";
+import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
+import {
+  cancelaFluxoSolicitacaoKitLancheCEMEI,
+  DRENaoValidaKitLancheCEMEI,
+  DREValidaKitLancheCEMEI,
+  terceirizadaRespondeQuestionamentoKitLanche,
+  terceirizadaTomaCienciaKitLanche
+} from "services/kitLanche";
+import { getMotivosDREnaoValida } from "services/relatorios";
 
 export const RelatorioBase = ({ ...props }) => {
+  const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
+
+  useEffect(() => {
+    const getMotivosDREnaoValidaData = async () => {
+      const response = await getMotivosDREnaoValida();
+      if (response.status === HTTP_STATUS.OK) {
+        setMotivosDREnaoValida(response.data.results);
+      }
+    };
+
+    getMotivosDREnaoValidaData();
+  }, []);
+
   const atual = {
     href: "#",
     titulo: "Relatório"
@@ -26,18 +49,47 @@ export const RelatorioBase = ({ ...props }) => {
   return (
     <Page>
       <Breadcrumb home="/" anteriores={anteriores} atual={atual} />
-      <Relatorio {...props} />
+      <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
   );
 };
 
-// Escola
 export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
-    ModalNaoAprova={ModalKitLanche}
+    ModalNaoAprova={ModalCancelarKitLancheCEMEI}
     toastNaoAprovaMensagem={"Kit Lanche Passeio cancelado com sucesso!"}
     endpointNaoAprovaSolicitacao={cancelaFluxoSolicitacaoKitLancheCEMEI}
     textoBotaoNaoAprova="Cancelar"
+  />
+);
+
+export const RelatorioDRE = () => (
+  <RelatorioBase
+    visao={DRE}
+    ModalNaoAprova={ModalNaoValidarKitLancheCEMEI}
+    toastAprovaMensagem={"Kit Lanche Passeio validado com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao validar o Kit Lanche Passeio"}
+    endpointNaoAprovaSolicitacao={DRENaoValidaKitLancheCEMEI}
+    endpointAprovaSolicitacao={DREValidaKitLancheCEMEI}
+    textoBotaoNaoAprova="Não Validar"
+    textoBotaoAprova="Validar"
+  />
+);
+
+export const RelatorioTerceirizada = () => (
+  <RelatorioBase
+    visao={TERCEIRIZADA}
+    ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
+    ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
+    toastAprovaMensagem={"Ciência de Kit Lanche Passeio enviado com sucesso!"}
+    toastAprovaMensagemErro={
+      "Houve um erro ao tomar ciência do Kit Lanche Passeio"
+    }
+    endpointAprovaSolicitacao={terceirizadaTomaCienciaKitLanche}
+    endpointNaoAprovaSolicitacao={terceirizadaRespondeQuestionamentoKitLanche}
+    endpointQuestionamento={terceirizadaRespondeQuestionamentoKitLanche}
+    textoBotaoNaoAprova="Não"
+    textoBotaoAprova="Ciente"
   />
 );

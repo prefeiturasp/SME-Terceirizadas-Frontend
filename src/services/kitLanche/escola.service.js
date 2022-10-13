@@ -136,3 +136,21 @@ export const cancelaFluxoSolicitacaoKitLancheCEMEI = async (uuid, payload) => {
     return data;
   }
 };
+
+export const DRENaoValidaKitLancheCEMEI = async (uuid, payload) => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const DREValidaKitLancheCEMEI = async uuid => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.DRE_VALIDA}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
