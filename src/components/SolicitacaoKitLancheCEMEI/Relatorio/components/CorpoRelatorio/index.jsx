@@ -27,6 +27,7 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -36,7 +37,9 @@ export const CorpoRelatorio = ({ ...props }) => {
     visao,
     textoBotaoNaoAprova,
     textoBotaoAprova,
-    fetchData
+    fetchData,
+    ModalQuestionamento,
+    endpointQuestionamento
   } = props;
 
   const [collapseAlunosCEI, setCollapseAlunosCEI] = useState(false);
@@ -45,10 +48,8 @@ export const CorpoRelatorio = ({ ...props }) => {
   const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
     false
   );
-  const [/*showQuestionamentoModal, */ setShowQuestionamentoModal] = useState(
-    false
-  );
-  const [/*respostaSimNao, */ setRespostaSimNao] = useState(null);
+  const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
+  const [respostaSimNao, setRespostaSimNao] = useState(null);
 
   const urlParams = new URLSearchParams(window.location.search);
   const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -535,6 +536,17 @@ export const CorpoRelatorio = ({ ...props }) => {
                   : "solicitacoes-kit-lanche-avulsa"
               }
             />
+            {ModalQuestionamento && (
+              <ModalTercRespondeQuestFinalForm
+                closeModal={this.closeQuestionamentoModal}
+                showModal={showQuestionamentoModal}
+                uuid={solicitacaoKitLancheCEMEI.uuid}
+                loadSolicitacao={fetchData}
+                resposta_sim_nao={respostaSimNao}
+                endpoint={endpointQuestionamento}
+                tipoSolicitacao={tipoSolicitacao}
+              />
+            )}
           </div>
         </>
       )}
