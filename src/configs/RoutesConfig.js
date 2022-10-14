@@ -1167,7 +1167,8 @@ const routesConfig = [
         !usuarioEscolaEhGestaoMistaParceira() &&
         !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhDRE()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
