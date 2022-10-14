@@ -39,7 +39,7 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit }) => {
       dialogClassName="modal-cadastro-vinculo"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Adicionar Acesso</Modal.Title>
+        <Modal.Title>Inserir Carga de Usuários</Modal.Title>
       </Modal.Header>
       <Form
         onSubmit={onSubmit}
@@ -64,27 +64,29 @@ const ModalCadastroVinculo = ({ show, setShow, onSubmit }) => {
                   </Radio.Group>
                 </div>
 
-                <div className="row pb-3">
-                  <article className="col-9 produto">
-                    <Field
-                      component={InputFile}
-                      className="inputfile"
-                      texto="Inserir Imagem"
-                      name="files"
-                      accept={FORMATOS_IMAGEM}
-                      setFiles={setFiles}
-                      removeFile={removeFile}
-                      toastSuccess={"Imagem incluída com sucesso!"}
-                      alignLeft
-                      disabled={arquivo.length > 0}
-                    />
-                    <label className="mb-3">
-                      {"IMPORTANTE: Envie um arquivo nos formatos: " +
-                        FORMATOS_IMAGEM +
-                        ", com até 10MB"}
-                    </label>
-                  </article>
-                </div>
+                {tipoPlanilha && (
+                  <div className="row pb-3">
+                    <article className="col-9 produto">
+                      <Field
+                        component={InputFile}
+                        className="inputfile"
+                        texto="Anexar Planilha"
+                        name="files"
+                        accept={FORMATOS_IMAGEM}
+                        setFiles={setFiles}
+                        removeFile={removeFile}
+                        toastSuccess={"Planilha incluída com sucesso!"}
+                        alignLeft
+                        disabled={arquivo.length > 0}
+                      />
+                      <label className="mb-3">
+                        {"IMPORTANTE: Envie um arquivo nos formatos: " +
+                          FORMATOS_IMAGEM +
+                          ", com até 10MB"}
+                      </label>
+                    </article>
+                  </div>
+                )}
               </form>
             </Modal.Body>
             <Modal.Footer>
