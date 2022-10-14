@@ -130,6 +130,10 @@ export const ajustarFormatoLog = (logs, card) => {
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+        descricao =
+          usuarioEhEscola() && log.motivo === "ETEC"
+            ? descricao.replace("Contínua", "- ETEC")
+            : descricao;
         break;
 
       case INC_ALIMENTA_CEI:
