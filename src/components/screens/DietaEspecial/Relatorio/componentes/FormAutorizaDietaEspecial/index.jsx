@@ -349,6 +349,7 @@ const FormAutorizaDietaEspecial = ({
                         alimentos={alimentos}
                         produtos={produtos}
                         form={form}
+                        values={values}
                       />
                     </div>
                   </>
