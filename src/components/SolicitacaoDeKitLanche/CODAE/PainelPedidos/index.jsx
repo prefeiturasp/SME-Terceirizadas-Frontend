@@ -35,9 +35,15 @@ class PainelPedidos extends Component {
 
     Promise.all([
       getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
-    ]).then(([response, responseCei]) => {
-      const results = safeConcatOn("results", response, responseCei);
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEMEI)
+    ]).then(([response, responseCei, responseCEMEI]) => {
+      const results = safeConcatOn(
+        "results",
+        response,
+        responseCei,
+        responseCEMEI
+      );
       pedidosPrioritarios = filtraPrioritarios(results);
       pedidosNoPrazoLimite = filtraNoLimite(results);
       pedidosNoPrazoRegular = filtraRegular(results);

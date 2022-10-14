@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { DRE, ESCOLA, TERCEIRIZADA } from "configs/constants";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "configs/constants";
 import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { Relatorio } from "components/SolicitacaoKitLancheCEMEI/Relatorio";
-import { ModalTerceirizadaRespondeQuestionamento } from "components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+// import { ModalTerceirizadaRespondeQuestionamento } from "components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCancelarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCancelarKitLancheCEMEI";
 import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
 import {
   cancelaFluxoSolicitacaoKitLancheCEMEI,
+  CODAEAutorizaKitLancheCEMEI,
+  CODAENegaKitLancheCEMEI,
+  CODAEquestionaKitLancheCEMEI,
   DRENaoValidaKitLancheCEMEI,
   DREValidaKitLancheCEMEI,
   terceirizadaRespondeQuestionamentoKitLanche,
   terceirizadaTomaCienciaKitLanche
 } from "services/kitLanche";
 import { getMotivosDREnaoValida } from "services/relatorios";
+import { ModalNegarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNegarKitLancheCEMEI";
+import { ModalCODAEQuestionaKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCODAEQuestionaKitLancheCEMEI";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -77,11 +83,26 @@ export const RelatorioDRE = () => (
   />
 );
 
+export const RelatorioCODAE = () => (
+  <RelatorioBase
+    visao={CODAE}
+    ModalNaoAprova={ModalNegarKitLancheCEMEI}
+    ModalQuestionamento={ModalCODAEQuestionaKitLancheCEMEI}
+    toastAprovaMensagem={"Kit Lanche Passeio autorizado com sucesso!"}
+    toastAprovaMensagemErro={"Houve um erro ao autorizar o Kit Lanche Passeio"}
+    endpointNaoAprovaSolicitacao={CODAENegaKitLancheCEMEI}
+    endpointAprovaSolicitacao={CODAEAutorizaKitLancheCEMEI}
+    endpointQuestionamento={CODAEquestionaKitLancheCEMEI}
+    textoBotaoNaoAprova="Negar"
+    textoBotaoAprova="Autorizar"
+  />
+);
+
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     visao={TERCEIRIZADA}
-    ModalNaoAprova={ModalTerceirizadaRespondeQuestionamento}
-    ModalQuestionamento={ModalTerceirizadaRespondeQuestionamento}
+    ModalNaoAprova={ModalTercRespondeQuestFinalForm}
+    ModalQuestionamento={ModalTercRespondeQuestFinalForm}
     toastAprovaMensagem={"Ciência de Kit Lanche Passeio enviado com sucesso!"}
     toastAprovaMensagemErro={
       "Houve um erro ao tomar ciência do Kit Lanche Passeio"

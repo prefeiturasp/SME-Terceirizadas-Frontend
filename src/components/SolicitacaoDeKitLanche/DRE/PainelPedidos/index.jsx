@@ -37,12 +37,12 @@ class PainelPedidos extends Component {
       getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
       getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
       getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEMEI)
-    ]).then(([response, responseCei, responseEMEI]) => {
+    ]).then(([response, responseCei, responseCEMEI]) => {
       const results = safeConcatOn(
         "results",
         response,
         responseCei,
-        responseEMEI
+        responseCEMEI
       );
       pedidosPrioritarios = filtraPrioritarios(results);
       pedidosNoPrazoLimite = filtraNoLimite(results);

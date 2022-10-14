@@ -70,7 +70,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
               texto="Cancelar"
               type={BUTTON_TYPE.BUTTON}
               onClick={closeModal}
-              style={BUTTON_STYLE.BLUE_OUTLINE}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
               className="ml-3"
             />
             <Botao
@@ -79,7 +79,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
               onClick={() => {
                 enviarQuestionamento(uuid);
               }}
-              style={BUTTON_STYLE.BLUE}
+              style={BUTTON_STYLE.GREEN}
               className="ml-3"
             />
           </div>

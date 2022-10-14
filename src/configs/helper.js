@@ -151,6 +151,8 @@ export const relatoriosSolicitacaoKitLancheCEMEI = () => {
   switch (localStorage.getItem("tipo_perfil")) {
     case TIPO_PERFIL.DIRETORIA_REGIONAL:
       return RelatorioSolicitacaoKitLancheCEMEI.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatorioSolicitacaoKitLancheCEMEI.RelatorioCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return RelatorioSolicitacaoKitLancheCEMEI.RelatorioTerceirizada;
     default:

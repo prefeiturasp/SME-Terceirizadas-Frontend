@@ -12,16 +12,16 @@ export const ModalTercRespondeQuestFinalForm = ({ ...props }) => {
   const {
     showModal,
     closeModal,
-    uuid,
     resposta_sim_nao,
     endpoint,
     tipoSolicitacao,
-    loadSolicitacao
+    loadSolicitacao,
+    solicitacao
   } = props;
 
   const onSubmit = async values => {
     const response = await endpoint(
-      uuid,
+      solicitacao.uuid,
       {
         resposta_sim_nao: resposta_sim_nao === "Sim",
         justificativa: values.justificativa
@@ -74,14 +74,14 @@ export const ModalTercRespondeQuestFinalForm = ({ ...props }) => {
                     texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={closeModal}
-                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="ml-3"
                   />
                   <Botao
                     texto="Enviar"
                     type={BUTTON_TYPE.SUBMIT}
                     disabled={values.justificativa === undefined || submitting}
-                    style={BUTTON_STYLE.BLUE}
+                    style={BUTTON_STYLE.GREEN}
                     className="ml-3"
                   />
                 </div>
