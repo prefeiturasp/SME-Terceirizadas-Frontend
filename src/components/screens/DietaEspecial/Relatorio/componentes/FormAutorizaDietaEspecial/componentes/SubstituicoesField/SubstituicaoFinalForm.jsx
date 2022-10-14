@@ -122,6 +122,7 @@ export default class SubstituicoesField extends Component {
                 allItemsAreSelected: "Todos os itens estão selecionados",
                 selectAll: "Todos"
               }}
+              validate={required}
             />
           </div>
           {deveHabilitarApagar && chave > 0 && (
