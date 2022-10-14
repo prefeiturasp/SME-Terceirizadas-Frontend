@@ -1,3 +1,15 @@
+@import "../../../../styles/variables.scss";
+
+.red {
+  color: $red;
+}
+.yellow {
+  color: $yellow;
+}
+.green {
+  color: $green;
+}
+
 .table-report-dieta-especial {
   border-radius: 4px;
   border: 1px solid #e9eaea;
