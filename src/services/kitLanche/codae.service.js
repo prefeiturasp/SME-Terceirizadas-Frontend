@@ -1,5 +1,7 @@
+import axios from "../_base";
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import { getPath } from "./helper";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const CODAEquestionaKitLancheAvulso = async (
   uuid,
@@ -101,4 +103,31 @@ export const getCodaePedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
     .catch(error => {
       console.log(error);
     });
+};
+
+export const CODAENegaKitLancheCEMEI = async (uuid, payload) => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.CODAE_NEGA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const CODAEAutorizaKitLancheCEMEI = async uuid => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const CODAEquestionaKitLancheCEMEI = async (uuid, payload) => {
+  const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

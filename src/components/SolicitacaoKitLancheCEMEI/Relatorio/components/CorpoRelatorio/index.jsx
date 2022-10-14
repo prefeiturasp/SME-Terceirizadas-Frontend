@@ -26,7 +26,6 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
-import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
@@ -125,6 +124,12 @@ export const CorpoRelatorio = ({ ...props }) => {
     } else {
       toastError(toastAprovaMensagemErro);
     }
+  };
+
+  const kitsSelecionados = kits => {
+    let nomeKits = [];
+    kits.forEach(kit => nomeKits.push(kit.nome));
+    return nomeKits.join(", ");
   };
 
   return (
@@ -252,8 +257,8 @@ export const CorpoRelatorio = ({ ...props }) => {
               <p>
                 Opção desejada:{" "}
                 <b className="green ml-1">
-                  {solicitacaoKitLancheCEMEI.solicitacao_cei.kits.map(
-                    k => k.nome
+                  {kitsSelecionados(
+                    solicitacaoKitLancheCEMEI.solicitacao_cei.kits
                   )}
                 </b>
               </p>
@@ -362,8 +367,8 @@ export const CorpoRelatorio = ({ ...props }) => {
               <p>
                 Opção desejada:{" "}
                 <b className="green ml-1">
-                  {solicitacaoKitLancheCEMEI.solicitacao_emei.kits.map(
-                    k => k.nome
+                  {kitsSelecionados(
+                    solicitacaoKitLancheCEMEI.solicitacao_emei.kits
                   )}
                 </b>
               </p>
@@ -477,7 +482,10 @@ export const CorpoRelatorio = ({ ...props }) => {
                 className="float-right"
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => setShowNaoAprovaModal(true)}
+                onClick={() => {
+                  setRespostaSimNao("Não");
+                  setShowNaoAprovaModal(true);
+                }}
               />
             )}
             {ModalNaoAprova && (
@@ -487,7 +495,13 @@ export const CorpoRelatorio = ({ ...props }) => {
                 motivosDREnaoValida={motivosDREnaoValida}
                 endpoint={endpointNaoAprovaSolicitacao}
                 solicitacao={solicitacaoKitLancheCEMEI}
-                loadSolicitacao={getSolicitacaoKitLancheCEMEI}
+                resposta_sim_nao={respostaSimNao}
+                loadSolicitacao={
+                  visao === TERCEIRIZADA
+                    ? fetchData
+                    : getSolicitacaoKitLancheCEMEI
+                }
+                tipoSolicitacao={tipoSolicitacao}
               />
             )}
             {EXIBIR_BOTAO_APROVAR &&
@@ -559,14 +573,14 @@ export const CorpoRelatorio = ({ ...props }) => {
               }
             />
             {ModalQuestionamento && (
-              <ModalTercRespondeQuestFinalForm
+              <ModalQuestionamento
                 closeModal={() => setShowQuestionamentoModal(false)}
                 showModal={showQuestionamentoModal}
-                uuid={solicitacaoKitLancheCEMEI.uuid}
                 loadSolicitacao={fetchData}
                 resposta_sim_nao={respostaSimNao}
                 endpoint={endpointQuestionamento}
                 tipoSolicitacao={tipoSolicitacao}
+                solicitacao={solicitacaoKitLancheCEMEI}
               />
             )}
           </div>
