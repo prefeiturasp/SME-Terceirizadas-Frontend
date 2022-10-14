@@ -11,7 +11,7 @@ import { required } from "helpers/fieldValidators";
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, produtos, form } = this.props;
+    const { alimentos, produtos, form, values } = this.props;
     return (
       <div className="substituicoes-field">
         <div className="row">
@@ -26,6 +26,9 @@ export default class SubstituicoesField extends Component {
                 component={Substituicao}
                 name={name}
                 key={index}
+                index={index}
+                values={values}
+                form={form}
                 chave={index}
                 alimentos={alimentos}
                 produtos={produtos}
