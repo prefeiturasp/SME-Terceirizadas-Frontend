@@ -96,7 +96,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={{}}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, errors, values }) => (
+            render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-5">
