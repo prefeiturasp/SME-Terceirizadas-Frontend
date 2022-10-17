@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer } from "react";
-import moment from "moment";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { dateDelta } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -11,7 +11,8 @@ import {
   getNomesProdutos,
   getNomesMarcas,
   getNomesFabricantes,
-  getNomesTerceirizadas
+  getNomesTerceirizadas,
+  getNomesUnicosEditais
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import "./style.scss";
@@ -22,8 +23,8 @@ const initialState = {
   produtos: [],
   marcas: [],
   fabricantes: [],
-  dataMinima: null,
-  dataMaxima: null
+  tipos: ["Comum", "Dieta especial"],
+  editais: []
 };
 
 function reducer(state, { type: actionType, payload }) {
@@ -47,7 +48,7 @@ function reducer(state, { type: actionType, payload }) {
   }
 }
 
-const FormBuscaProduto = ({ onSubmit }) => {
+const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
@@ -56,8 +57,9 @@ const FormBuscaProduto = ({ onSubmit }) => {
         getNomesProdutos(),
         getNomesMarcas(),
         getNomesFabricantes(),
-        getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) => {
+        getNomesTerceirizadas(),
+        getNomesUnicosEditais()
+      ]).then(([produtos, marcas, fabricantes, terceirizadas, editais]) => {
         dispatch({
           type: "popularDados",
           payload: {
@@ -66,7 +68,9 @@ const FormBuscaProduto = ({ onSubmit }) => {
             fabricantes: fabricantes.data.results.map(el => el.nome),
             terceirizadas: terceirizadas.data.results.map(
               el => el.nome_fantasia
-            )
+            ),
+            tipos: ["Comum", "Dieta especial"],
+            editais: editais.data.results
           }
         });
       });
@@ -87,9 +91,22 @@ const FormBuscaProduto = ({ onSubmit }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, submitting, values }) => (
+      initialValues={initialStateForm}
+      render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
           <div className="form-row">
+            <div className="col-md-6 col-xl-6">
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.editais}
+                label="Edital"
+                placeholder="Digite edital"
+                className="input-busca-produto"
+                onSearch={v => onSearch("editais", v)}
+                name="nome_edital"
+                disabled={bloquearEdital}
+              />
+            </div>
             <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
@@ -101,6 +118,8 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_produto"
               />
             </div>
+          </div>
+          <div className="form-row">
             <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
@@ -112,8 +131,6 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_marca"
               />
             </div>
-          </div>
-          <div className="form-row">
             <div className="col-md-6 col-xl-6">
               <Field
                 component={AutoCompleteField}
@@ -124,43 +141,28 @@ const FormBuscaProduto = ({ onSubmit }) => {
                 name="nome_fabricante"
               />
             </div>
-
+          </div>
+          <div className="form-row">
+            <div className="col-md-6 col-xl-6">
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.tipos}
+                label="Tipo"
+                placeholder="Selecione um tipo"
+                className="input-busca-produto"
+                onSearch={v => onSearch("tipos", v)}
+                name="tipo"
+              />
+            </div>
             <div className="col-12 col-md-6 col-xl-6">
-              <div className="row">
-                <label className="ml-3">Data de Suspensão</label>
-              </div>
-              <div className="row">
-                <div className="col mt-1">
-                  <Field
-                    component={InputComData}
-                    name="data_suspensao_inicial"
-                    className="data-inicial"
-                    labelClassName="datepicker-fixed-padding"
-                    placeholder="De"
-                    minDate={null}
-                    maxDate={
-                      values.data_suspensao_final
-                        ? moment(values.data_suspensao_final, "DD/MM/YYYY")._d
-                        : moment()._d
-                    }
-                  />
-                </div>
-                <div className="col mt-1">
-                  <Field
-                    component={InputComData}
-                    name="data_suspensao_final"
-                    labelClassName="datepicker-fixed-padding"
-                    popperPlacement="bottom-end"
-                    placeholder="Até"
-                    minDate={
-                      values.data_suspensao_inicial
-                        ? moment(values.data_suspensao_inicial, "DD/MM/YYYY")._d
-                        : null
-                    }
-                    maxDate={moment()._d}
-                  />
-                </div>
-              </div>
+              <Field
+                component={InputComData}
+                name="data_suspensao_final"
+                label="Suspensos até"
+                minDate={false}
+                maxDate={dateDelta(0)}
+                popperPlacement="bottom-end"
+              />
             </div>
           </div>
           <div className="mt-4 mb-4">

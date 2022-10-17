@@ -1,28 +1,63 @@
 import "antd/dist/antd.css";
+import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
+import { getNomesUnicosEditais } from "services/produto.service";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
 import FormBuscaProduto from "./components/FormBuscaProduto";
-import ModalRelatorioProdutoSuspenso from "./components/ModalRelatorioProdutoSuspenso";
+import ContadorResultado from "./components/ContadorResultado";
+import TabelaResultado from "./components/TabelaResultado";
 import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_AUTORIZOU_RECLAMACAO
 } from "configs/constants";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import "./styles.scss";
+import { getMeusDados } from "services/perfil.service";
 
 const BuscaProdutoSuspensos = () => {
   const [produtos, setProdutos] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [filtros, setFiltros] = useState(null);
-  const [exibirModal, setExibirModal] = useState(null);
   const [produtosCount, setProdutosCount] = useState(0);
+  const [totalSuspensos, setTotalSuspensos] = useState(0);
   const [page, setPage] = useState(1);
+  const [meusDados, setMeusDados] = useState(undefined);
+  const [bloquearEdital, setBloquearEdital] = useState(false);
+  const [initialStateForm, setInitialStateForm] = useState({});
   const PAGE_SIZE = 10;
 
   useEffect(() => {
-    if (!filtros) return;
+    async function getDadosUsuario() {
+      setCarregando(true);
+      const response = await getMeusDados();
+      if (response.status === HTTP_STATUS.OK) {
+        let params = {};
+        if (response.data.tipo_usuario === "escola") {
+          let responseEditais = await getNomesUnicosEditais();
+          params = { nome_edital: responseEditais.data.results[0] };
+          setInitialStateForm(params);
+          setBloquearEdital(true);
+        } else {
+          params = {};
+          setInitialStateForm(params);
+          setBloquearEdital(false);
+        }
+        setMeusDados(response.data);
+        const paramsConsultaTotal = gerarParametrosConsulta({
+          status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO],
+          page: page,
+          page_size: PAGE_SIZE
+        });
+        const responseTotalSuspensos = await getProdutosRelatorioSuspenso(
+          paramsConsultaTotal
+        );
+        setTotalSuspensos(responseTotalSuspensos.data.count);
+      }
+      setCarregando(false);
+    }
+
     async function fetchData() {
       setCarregando(true);
       setProdutos(null);
@@ -33,13 +68,14 @@ const BuscaProdutoSuspensos = () => {
       });
       const response = await getProdutosRelatorioSuspenso(params);
       setProdutos(response.data.results);
-      if (response.data.results.length > 0) setExibirModal(true);
       setProdutosCount(response.data.count);
       setCarregando(false);
     }
-    fetchData();
+
+    if (!meusDados) getDadosUsuario();
+    if (filtros) fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filtros]);
+  }, [filtros, meusDados]);
 
   const onSubmitForm = formValues => {
     setPage(1);
@@ -53,24 +89,36 @@ const BuscaProdutoSuspensos = () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 margem-da-pagina">
         <div className="card-body ">
-          <FormBuscaProduto onSubmit={onSubmitForm} />
+          <FormBuscaProduto
+            onSubmit={onSubmitForm}
+            bloquearEdital={bloquearEdital}
+            initialStateForm={initialStateForm}
+          />
         </div>
         {produtos && !produtos.length && (
           <div className="text-center mt-5">
             Não existem dados para filtragem informada
           </div>
         )}
-        <ModalRelatorioProdutoSuspenso
-          showModal={exibirModal}
-          closeModal={() => setExibirModal(null)}
-          produtos={produtos}
-          setProdutos={setProdutos}
-          filtros={filtros}
-          produtosCount={produtosCount}
-          pageSize={PAGE_SIZE}
-          setPage={setPage}
-          page={page}
-        />
+        {produtos && produtos.length && (
+          <>
+            <ContadorResultado
+              filtros={filtros}
+              produtosCount={produtosCount}
+              totalSuspensos={totalSuspensos}
+            />
+            <TabelaResultado
+              filtros={filtros}
+              produtosCount={produtosCount}
+              produtos={produtos}
+              pageSize={PAGE_SIZE}
+              setProdutos={setProdutos}
+              setPage={setPage}
+              page={page}
+              bloquearEdital={bloquearEdital}
+            />
+          </>
+        )}
       </div>
     </Spin>
   );
