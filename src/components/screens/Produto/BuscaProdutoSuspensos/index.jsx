@@ -12,7 +12,6 @@ import {
   STATUS_CODAE_SUSPENDEU,
   STATUS_CODAE_AUTORIZOU_RECLAMACAO
 } from "configs/constants";
-import { gerarParametrosConsulta } from "helpers/utilities";
 import "./styles.scss";
 import { getMeusDados } from "services/perfil.service";
 
@@ -45,11 +44,11 @@ const BuscaProdutoSuspensos = () => {
           setBloquearEdital(false);
         }
         setMeusDados(response.data);
-        const paramsConsultaTotal = gerarParametrosConsulta({
+        const paramsConsultaTotal = {
           status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO],
           page: page,
           page_size: PAGE_SIZE
-        });
+        };
         const responseTotalSuspensos = await getProdutosRelatorioSuspenso(
           paramsConsultaTotal
         );
@@ -61,11 +60,11 @@ const BuscaProdutoSuspensos = () => {
     async function fetchData() {
       setCarregando(true);
       setProdutos(null);
-      const params = gerarParametrosConsulta({
+      const params = {
         ...filtros,
         page: page,
         page_size: PAGE_SIZE
-      });
+      };
       const response = await getProdutosRelatorioSuspenso(params);
       setProdutos(response.data.results);
       setProdutosCount(response.data.count);

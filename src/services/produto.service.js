@@ -164,7 +164,7 @@ export const getProdutosRelatorioAnaliseSensorial = async params => {
 };
 
 export const getProdutosRelatorioSuspenso = async params => {
-  return await axios.get(`/produtos/filtro-relatorio-produto-suspenso/`, {
+  return await axios.post(`/produtos/filtro-relatorio-produto-suspenso/`, {
     params
   });
 };
