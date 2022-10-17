@@ -96,11 +96,11 @@ const BuscaProdutoSuspensos = () => {
           />
         </div>
         {produtos && !produtos.length && (
-          <div className="text-center mt-5">
+          <div className="text-center mt-5 mb-5">
             Não existem dados para filtragem informada
           </div>
         )}
-        {produtos && produtos.length && (
+        {produtos && produtos.length !== 0 && (
           <>
             <ContadorResultado
               filtros={filtros}
