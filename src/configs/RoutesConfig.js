@@ -172,6 +172,8 @@ import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
+import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 
 const routesConfig = [
   {
@@ -1442,6 +1444,18 @@ const routesConfig = [
     component: CentralDownloadsPage,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
+    component: CronogramaEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
+    component: CadastroCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhLogistica()
   }
 ];
 

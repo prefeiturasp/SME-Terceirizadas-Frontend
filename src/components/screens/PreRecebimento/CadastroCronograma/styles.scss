@@ -1,0 +1,38 @@
+.card-cadastro-cronograma {
+  .cadastro-cronograma {
+    .botao-pesquisar {
+      height: 37px;
+      margin-top: 30px;
+    }
+
+    #accordionCronograma > .card {
+      border-radius: 5px;
+    }
+
+    #accordionCronograma > .card > .card-header {
+      border-radius: 5px;
+      margin-bottom: 0;
+      background-color: #fff;
+    }
+
+    #accordionCronograma .card-header,
+    #accordionCronograma .card-body {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .card-header {
+      height: 50px;
+
+      .card-header-content {
+        height: 100%;
+        align-content: center;
+        justify-content: space-between;
+        color: #42474a;
+
+        .nome-alimento {
+          margin: auto 0;
+        }
+      }
+    }
+  }
+}
