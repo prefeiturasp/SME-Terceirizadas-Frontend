@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
-import { corrigeLinkAnexo, gerarParametrosConsulta } from "helpers/utilities";
+import { corrigeLinkAnexo } from "helpers/utilities";
 import { Spin, Pagination } from "antd";
 import { API_URL } from "constants/config";
 
@@ -20,11 +20,11 @@ const TabelaResultado = ({
   const nextPage = page => {
     setCarregando(true);
     setPage(page);
-    const params = gerarParametrosConsulta({
+    const params = {
       ...filtros,
       page: page,
       page_size: pageSize
-    });
+    };
     getProdutosRelatorioSuspenso(params).then(response => {
       setProdutos(response.data.results);
       setCarregando(false);
