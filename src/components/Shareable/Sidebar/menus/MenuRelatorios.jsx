@@ -44,6 +44,7 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
+    usuarioEhDRE() ||
     (usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()) ||

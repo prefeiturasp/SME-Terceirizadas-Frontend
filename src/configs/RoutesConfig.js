@@ -1133,6 +1133,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
       (usuarioEhEscola() &&
