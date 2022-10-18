@@ -62,7 +62,7 @@ class DashboardNutriManifestacao extends Component {
 
   async componentDidMount() {
     getSolicitacoesCanceladasNutrimanifestacao().then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response);
+      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
@@ -70,7 +70,7 @@ class DashboardNutriManifestacao extends Component {
     });
 
     getSolicitacoesNegadasNutrimanifestacao().then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response);
+      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
@@ -78,7 +78,7 @@ class DashboardNutriManifestacao extends Component {
     });
 
     getSolicitacoesAutorizadasNutrimanifestacao().then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response);
+      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao

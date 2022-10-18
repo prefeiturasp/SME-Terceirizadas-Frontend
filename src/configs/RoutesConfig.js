@@ -93,7 +93,6 @@ import {
   StatusSolicitacoesDietaEspecial,
   inclusaoAlimentacao
 } from "./helper";
-import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
   usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
@@ -317,12 +316,6 @@ const routesConfig = [
       usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.DRE}/${constants.SOLICITACOES}`,
-    component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
-    exact: false,
-    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
