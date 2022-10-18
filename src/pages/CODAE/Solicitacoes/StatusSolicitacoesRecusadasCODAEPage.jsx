@@ -22,7 +22,7 @@ export default () => (
     <SolicitacoesPorStatusGenerico
       tipoCard={CARD_TYPE_ENUM.NEGADO}
       icone={ICON_CARD_TYPE_ENUM.NEGADO}
-      titulo={"Pendentes"}
+      titulo={"Negadas"}
       getSolicitacoes={getSolicitacoesNegadasCodae}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
