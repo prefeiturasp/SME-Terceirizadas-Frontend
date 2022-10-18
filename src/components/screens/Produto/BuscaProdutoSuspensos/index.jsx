@@ -3,6 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import { getNomesUnicosEditais } from "services/produto.service";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
 import FormBuscaProduto from "./components/FormBuscaProduto";
@@ -44,11 +45,11 @@ const BuscaProdutoSuspensos = () => {
           setBloquearEdital(false);
         }
         setMeusDados(response.data);
-        const paramsConsultaTotal = {
+        const paramsConsultaTotal = gerarParametrosConsulta({
           status: [STATUS_CODAE_SUSPENDEU, STATUS_CODAE_AUTORIZOU_RECLAMACAO],
           page: page,
           page_size: PAGE_SIZE
-        };
+        });
         const responseTotalSuspensos = await getProdutosRelatorioSuspenso(
           paramsConsultaTotal
         );
@@ -60,11 +61,11 @@ const BuscaProdutoSuspensos = () => {
     async function fetchData() {
       setCarregando(true);
       setProdutos(null);
-      const params = {
+      const params = gerarParametrosConsulta({
         ...filtros,
         page: page,
         page_size: PAGE_SIZE
-      };
+      });
       const response = await getProdutosRelatorioSuspenso(params);
       setProdutos(response.data.results);
       setProdutosCount(response.data.count);
