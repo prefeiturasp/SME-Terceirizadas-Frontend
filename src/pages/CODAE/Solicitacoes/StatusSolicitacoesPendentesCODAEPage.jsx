@@ -1,10 +1,15 @@
 import React from "react";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import StatusSolicitacoes from "../../../components/screens/DashboardCODAE/StatusSolicitacoes";
-import Page from "../../../components/Shareable/Page/Page";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { CODAE, SOLICITACOES_PENDENTES } from "../../../configs/constants";
-import { STATUS } from "../../../components/screens/const";
+import { CODAE, SOLICITACOES_PENDENTES } from "configs/constants";
+import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import {
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
+} from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { getSolicitacoesPendentesAutorizacaoCodaeSemFiltro } from "services/painelCODAE.service";
+import CardLegendas from "components/Shareable/CardLegendas";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_PENDENTES}`,
@@ -14,6 +19,14 @@ const atual = {
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
-    <StatusSolicitacoes tipoStatus={STATUS.PENDENTES} />
+    <SolicitacoesPorStatusGenerico
+      tipoCard={CARD_TYPE_ENUM.PENDENTE}
+      icone={ICON_CARD_TYPE_ENUM.PENDENTE}
+      titulo={"Pendentes"}
+      getSolicitacoes={getSolicitacoesPendentesAutorizacaoCodaeSemFiltro}
+      Legendas={CardLegendas}
+      tipoPaginacao="OFFSET"
+      limit="10"
+    />
   </Page>
 );
