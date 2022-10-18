@@ -1,10 +1,15 @@
 import React from "react";
-import StatusSolicitacoes from "../../../components/screens/DashboardEscola/StatusSolicitacoes";
-import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "../../../configs/constants";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
+import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "configs/constants";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { STATUS } from "../../../components/screens/const";
+import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import {
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
+} from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import CardLegendas from "components/Shareable/CardLegendas";
+import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`,
@@ -14,6 +19,14 @@ const atual = {
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
     <Breadcrumb home={HOME} atual={atual} />
-    <StatusSolicitacoes tipoStatus={STATUS.AUTORIZADAS} />
+    <SolicitacoesPorStatusGenerico
+      tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
+      icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+      titulo={"Autorizadas"}
+      getSolicitacoes={getSolicitacoesAutorizadasEscola}
+      Legendas={CardLegendas}
+      tipoPaginacao="OFFSET"
+      limit="10"
+    />
   </Page>
 );

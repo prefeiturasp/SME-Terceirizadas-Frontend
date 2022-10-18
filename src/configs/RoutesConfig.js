@@ -53,7 +53,6 @@ import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolic
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
-import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -273,12 +272,6 @@ const routesConfig = [
       usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.ESCOLA}/status-solicitacoes`,
-    component: StatusSolicitacoesPage,
-    exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
