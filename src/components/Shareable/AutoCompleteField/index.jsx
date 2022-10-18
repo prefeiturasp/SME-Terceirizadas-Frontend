@@ -45,7 +45,6 @@ export default class AutoCompleteField extends Component {
                 "invalid-field"}`}
               name={name}
               size="large"
-              onSearch={onSearch}
             />
           ) : (
             <Input.Search

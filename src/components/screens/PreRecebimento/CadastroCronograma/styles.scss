@@ -34,5 +34,27 @@
         }
       }
     }
+
+    .subtitulo {
+      color: #0c6b45;
+      font-size: 18px;
+      margin: 16px 0px;
+    }
+
+    .ant-select-selector {
+      margin: 0 !important;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
   }
 }

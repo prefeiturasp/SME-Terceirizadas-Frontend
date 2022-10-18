@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin } from "antd";
+import { Spin, TreeSelect } from "antd";
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
@@ -14,6 +14,8 @@ import {
 } from "services/safi.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import SelectSelecione from "components/Shareable/SelectSelecione";
+import createDecorator from "final-form-calculate";
+import { InputComData } from "components/Shareable/DatePicker";
 
 export default () => {
   const [carregando] = useState(false);
@@ -21,6 +23,7 @@ export default () => {
   const [contratosOptions, setContratosOptions] = useState([]);
   const [collapse, setCollapse] = useState([]);
   const [produtosOptions, setProdutosOptions] = useState([]);
+  const [empenhoOptions, setEmpenhoOptions] = useState([]);
 
   const onSubmit = () => {};
 
@@ -54,6 +57,20 @@ export default () => {
         );
       }
 
+      if (contrato.dotacoes) {
+        let treeData = contrato.dotacoes.map(dotacao => ({
+          title: dotacao.numero_dotacao,
+          value: dotacao.uuid,
+          selectable: false,
+          children: dotacao.empenhos.map(empenho => ({
+            title: empenho.numero,
+            value: empenho.uuid
+          }))
+        }));
+
+        setEmpenhoOptions(treeData);
+      }
+
       document.getElementById("autocomplete-contrato").focus();
       document.getElementById("autocomplete-contrato").blur();
     }
@@ -66,6 +83,18 @@ export default () => {
       values.unidade_medida = produto.unidade_medida;
     }
   };
+
+  const onChangeEmpenho = prop => {
+    console.log(prop);
+  };
+
+  const calculator = createDecorator({
+    field: "produto",
+    updates: {
+      dummy: (minimumValue, allValues) =>
+        selecionaProduto(minimumValue, allValues)
+    }
+  });
 
   const toggleCollapse = index => {
     setCollapse({
@@ -95,6 +124,7 @@ export default () => {
           <Form
             onSubmit={onSubmit}
             initialValues={{}}
+            decorators={[calculator]}
             validate={() => {}}
             render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
@@ -104,7 +134,7 @@ export default () => {
                       component={AutoCompleteField}
                       id="autocomplete-contrato"
                       options={getContratosFiltrado(values.termo_contrato)}
-                      label="Nº da Guia de Remessa"
+                      label="Pesquisar Contrato"
                       name="termo_contrato"
                       className="input-busca-produto"
                       required
@@ -182,24 +212,23 @@ export default () => {
                     >
                       <div className="card-body">
                         <div className="row">
-                          <div className="col-5">
+                          <div className="col-6">
                             <Field
                               component={SelectSelecione}
                               naoDesabilitarPrimeiraOpcao
                               options={produtosOptions}
-                              label="Status"
-                              name="status"
+                              label="Produto"
+                              name="produto"
+                              placeholder={"Selecione um Produto"}
                               required
-                              validate={evt => selecionaProduto(evt, values)}
                             />
                           </div>
-                          <div className="col-4">
+                          <div className="col-3">
                             <Field
                               component={InputText}
                               label="Quantidade Total Programada"
                               name="quantidade_total"
                               className="input-busca-produto"
-                              value={"123"}
                               disabled={false}
                             />
                           </div>
@@ -209,8 +238,106 @@ export default () => {
                               label="Unidade de Medida"
                               name="unidade_medida"
                               className="input-busca-produto"
-                              placeholder="asd"
                               disabled={true}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-6">
+                            <Field
+                              component={SelectSelecione}
+                              naoDesabilitarPrimeiraOpcao
+                              options={produtosOptions} // MUDAR
+                              label="Armazém"
+                              name="armazem"
+                              required
+                              placeholder={"Selecione o Armazém"}
+                            />
+                          </div>
+                          <div className="col-3">
+                            <Field
+                              component={SelectSelecione}
+                              naoDesabilitarPrimeiraOpcao
+                              options={produtosOptions} // MUDAR
+                              label="Tipo de Embalagem"
+                              name="armazem"
+                              required
+                              placeholder={"Selecione a Embalagem"}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="subtitulo">Cronograma das Entregas</div>
+                        <hr className="linha-verde" />
+
+                        <div className="row">
+                          <div className="col-4">
+                            <span className="required-asterisk">*</span>
+                            <label className="col-form-label">Produtos</label>
+                            <TreeSelect
+                              treeData={empenhoOptions}
+                              value={values.empenho}
+                              onChange={onChangeEmpenho}
+                              placeholder="Selecione o Empenho"
+                              treeNodeFilterProp="title"
+                              style={{ width: "100%" }}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={AutoCompleteField}
+                              options={getContratosFiltrado(
+                                values.termo_contrato
+                              )}
+                              label="Etapa"
+                              name="etapa"
+                              className="input-busca-produto"
+                              placeholder="Selecione a Etapa"
+                              required
+                              esconderIcone
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={SelectSelecione}
+                              naoDesabilitarPrimeiraOpcao
+                              options={produtosOptions} // MUDAR
+                              label="Parte"
+                              name="parte"
+                              placeholder={"Selecione a Parte"}
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-4">
+                            <Field
+                              component={InputComData}
+                              label="Data Programada"
+                              name="data_programada"
+                              placeholder="Selecionar a Data"
+                              required
+                              writable={false}
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Quantidade"
+                              name="quantidade"
+                              placeholder="Digite a Quantidade"
+                              required
+                              type="number"
+                              pattern="[0-9]*"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <Field
+                              component={InputText}
+                              label="Total de Embalagens"
+                              name="total_embalagens"
+                              placeholder="Digite a Quantidade"
+                              required
+                              apenasNumeros
                             />
                           </div>
                         </div>
