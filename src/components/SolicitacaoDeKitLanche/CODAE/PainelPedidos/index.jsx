@@ -9,7 +9,8 @@ import {
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { getCodaePedidosDeKitLanche } from "services/kitLanche";
@@ -44,9 +45,15 @@ class PainelPedidos extends Component {
         responseCei,
         responseCEMEI
       );
-      pedidosPrioritarios = filtraPrioritarios(results);
-      pedidosNoPrazoLimite = filtraNoLimite(results);
-      pedidosNoPrazoRegular = filtraRegular(results);
+      pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(results)
+      );
+      pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(results)
+      );
+      pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
