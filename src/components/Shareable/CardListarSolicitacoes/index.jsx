@@ -41,7 +41,10 @@ export class CardListarSolicitacoes extends Component {
                             "INC_ALIMENTA_CONTINUA"}`
                         }
                       >
-                        <p className={`data ml-4 ${conferida}`}>{value.text}</p>
+                        <p className={`data ml-4 ${conferida}`}>
+                          {value.text ||
+                            `${value.descricao} / ${value.escola_nome}`}
+                        </p>
                       </NavLink>
                     </div>
                     <span className={`date-time col-3 text-right ${conferida}`}>
