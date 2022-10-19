@@ -13,7 +13,8 @@ import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "./../../../../helpers/painelPedidos";
 
 class PainelPedidos extends Component {
@@ -44,9 +45,15 @@ class PainelPedidos extends Component {
         responseCei,
         responseCEMEI
       );
-      pedidosPrioritarios = filtraPrioritarios(results);
-      pedidosNoPrazoLimite = filtraNoLimite(results);
-      pedidosNoPrazoRegular = filtraRegular(results);
+      pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(results)
+      );
+      pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(results)
+      );
+      pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,
