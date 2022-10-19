@@ -53,7 +53,6 @@ import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolic
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
-import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -94,7 +93,6 @@ import {
   StatusSolicitacoesDietaEspecial,
   inclusaoAlimentacao
 } from "./helper";
-import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
   usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
@@ -275,12 +273,6 @@ const routesConfig = [
       !usuarioEscolaEhGestaoDireta()
   },
   {
-    path: `/${constants.ESCOLA}/status-solicitacoes`,
-    component: StatusSolicitacoesPage,
-    exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoAlimentacao(),
     exact: false,
@@ -324,12 +316,6 @@ const routesConfig = [
       usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.DRE}/${constants.SOLICITACOES}`,
-    component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
-    exact: false,
-    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,

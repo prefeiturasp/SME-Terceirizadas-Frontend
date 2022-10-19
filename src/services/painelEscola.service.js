@@ -1,44 +1,42 @@
 import { API_URL } from "../constants/config";
-import { AUTH_TOKEN, SOLICITACOES } from "./constants";
+import { SOLICITACOES } from "./constants";
+import { ErrorHandlerFunction } from "./service-helpers";
+import axios from "./_base";
 
 const SOLICITACOES_ESCOLA = `${API_URL}/escola-solicitacoes`;
 
-// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
-const retornoBase = async url => {
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
+export const getSolicitacoesPendentesEscola = async params => {
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.PENDENTES}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
-export const getSolicitacoesPendentesEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.PENDENTES}/${escolaUuid}/`;
-  return retornoBase(url);
+export const getSolicitacoesAutorizadasEscola = async params => {
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.AUTORIZADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesAutorizadasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${
-    SOLICITACOES.AUTORIZADOS
-  }/${escolaUuid}/`;
-  return retornoBase(url);
+export const getSolicitacoesNegadasEscola = async params => {
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.NEGADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesNegadasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.NEGADOS}/${escolaUuid}/`;
-  return retornoBase(url);
-};
-
-export const getSolicitacoesCanceladasEscola = async escolaUuid => {
-  const url = `${SOLICITACOES_ESCOLA}/${
-    SOLICITACOES.CANCELADOS
-  }/${escolaUuid}/`;
-  return retornoBase(url);
+export const getSolicitacoesCanceladasEscola = async params => {
+  const url = `${SOLICITACOES_ESCOLA}/${SOLICITACOES.CANCELADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

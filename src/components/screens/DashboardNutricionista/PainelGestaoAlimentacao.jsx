@@ -129,7 +129,7 @@ class PainelGestaoAlimentacao extends Component {
     );
 
     getSolicitacoesCanceladasNutrisupervisao().then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response);
+      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
@@ -137,7 +137,7 @@ class PainelGestaoAlimentacao extends Component {
     });
 
     getSolicitacoesNegadasNutrisupervisao().then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response);
+      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
@@ -145,7 +145,7 @@ class PainelGestaoAlimentacao extends Component {
     });
 
     getSolicitacoesAutorizadasNutrisupervisao().then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response);
+      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         autorizadasListSolicitacao: autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao
@@ -153,7 +153,9 @@ class PainelGestaoAlimentacao extends Component {
     });
 
     getSolicitacoesComQuestionamentoNutrisupervisao().then(response => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(response);
+      let questionamentosListSolicitacao = ajustarFormatoLog(
+        response.data.results
+      );
       this.setState({
         questionamentosListSolicitacao: questionamentosListSolicitacao,
         questionamentosListFiltered: questionamentosListSolicitacao
