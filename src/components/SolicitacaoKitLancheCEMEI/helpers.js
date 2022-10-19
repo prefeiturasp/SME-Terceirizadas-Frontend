@@ -46,13 +46,23 @@ export const formataSubmit = (values, faixasEtariasCEI) => {
   return values;
 };
 
-export const getNumeroTotalKits = values => {
+export const getNumeroTotalKits = (values, ehRelatorio = false) => {
   let totalCEI = 0;
   let totalEMEI = 0;
   if (values.solicitacao_cei && values.solicitacao_cei.faixas_quantidades) {
-    Object.values(values.solicitacao_cei.faixas_quantidades).forEach(valor => {
-      totalCEI += parseInt(valor);
-    });
+    if (ehRelatorio) {
+      Object.values(values.solicitacao_cei.faixas_quantidades).forEach(
+        faixa => {
+          totalCEI += parseInt(faixa.quantidade_alunos);
+        }
+      );
+    } else {
+      Object.values(values.solicitacao_cei.faixas_quantidades).forEach(
+        valor => {
+          totalCEI += parseInt(valor);
+        }
+      );
+    }
     if (values.solicitacao_cei.kits && values.solicitacao_cei.kits.length > 0) {
       totalCEI *= values.solicitacao_cei.kits.length;
     }
@@ -67,4 +77,71 @@ export const getNumeroTotalKits = values => {
     }
   }
   return totalCEI + totalEMEI;
+};
+
+export const totalAlunosCEI = solicitacao => {
+  let totalQuantidadeAlunos = 0;
+  let totalMatriculados = 0;
+  if (
+    solicitacao.solicitacao_cei &&
+    solicitacao.solicitacao_cei.faixas_quantidades
+  ) {
+    solicitacao.solicitacao_cei.faixas_quantidades.forEach(valor => {
+      totalQuantidadeAlunos += parseInt(valor.quantidade_alunos);
+      totalMatriculados += parseInt(valor.matriculados_quando_criado);
+    });
+  }
+  return {
+    totalQuantidadeAlunos: totalQuantidadeAlunos,
+    totalMatriculados: totalMatriculados
+  };
+};
+
+export const tempoPasseio = solicitacao => {
+  const tempo = {
+    0: "até 4 horas (1 Kit)",
+    1: "de 5 a 7 horas (2 Kits)",
+    2: "8 horas ou mais (3 Kits)"
+  };
+  return tempo[Number(solicitacao.tempo_passeio)];
+};
+
+export const checaPrazo = prioridade => {
+  let texto = "Solicitação perto do prazo de vencimento";
+  if (prioridade === "REGULAR") {
+    texto = "Solicitação no prazo regular";
+  } else if (prioridade === "LIMITE") {
+    texto = "Solicitação no prazo limite";
+  }
+  return texto;
+};
+
+export const filtraAlunosCEIcomDietaEspecial = (
+  solicitacaoKitLancheCEMEI,
+  alunosComDietaEspecial
+) => {
+  let alunosCEIfiltrados = [];
+  if (solicitacaoKitLancheCEMEI.solicitacao_cei) {
+    alunosCEIfiltrados = alunosComDietaEspecial.filter(aluno =>
+      solicitacaoKitLancheCEMEI.solicitacao_cei.alunos_com_dieta_especial_participantes.includes(
+        aluno.uuid
+      )
+    );
+  }
+  return alunosCEIfiltrados;
+};
+
+export const filtraAlunosEMEIcomDietaEspecial = (
+  solicitacaoKitLancheCEMEI,
+  alunosComDietaEspecial
+) => {
+  let alunosEMEIfiltrados = [];
+  if (solicitacaoKitLancheCEMEI.solicitacao_emei) {
+    alunosEMEIfiltrados = alunosComDietaEspecial.filter(aluno =>
+      solicitacaoKitLancheCEMEI.solicitacao_emei.alunos_com_dieta_especial_participantes.includes(
+        aluno.uuid
+      )
+    );
+  }
+  return alunosEMEIfiltrados;
 };

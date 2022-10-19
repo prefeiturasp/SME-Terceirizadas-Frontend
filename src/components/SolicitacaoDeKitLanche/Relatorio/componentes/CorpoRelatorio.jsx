@@ -30,15 +30,11 @@ export const CorpoRelatorio = props => {
   return (
     <div>
       <div className="row">
-        <p
-          className={`col-12 title-message ${corDaMensagem(
-            prazoDoPedidoMensagem
-          )}`}
-        >
-          {prazoDoPedidoMensagem}
+        <p className={`col-12 ${corDaMensagem(prazoDoPedidoMensagem)}`}>
+          <b>{prazoDoPedidoMensagem}</b>
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {

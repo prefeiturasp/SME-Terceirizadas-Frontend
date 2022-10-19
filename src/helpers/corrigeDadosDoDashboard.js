@@ -22,6 +22,13 @@ export default results => {
         results["Kit Lanche Passeio de CEI"]
       );
     }
+    if (results["Kit Lanche Passeio de CEMEI"]) {
+      results["Kit Lanche Passeio"] = sumObjectsByKey(
+        results["Kit Lanche Passeio"],
+        results["Kit Lanche Passeio de CEI"],
+        results["Kit Lanche Passeio de CEMEI"]
+      );
+    }
     if (results["Alteração de Cardápio de CEI"]) {
       results["Alteração do tipo de Alimentação"] = sumObjectsByKey(
         results["Alteração do tipo de Alimentação"],

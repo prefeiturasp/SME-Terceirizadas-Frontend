@@ -9,6 +9,7 @@ export const SUSPENSAO_ALIMENTACAO_CEI = "suspensao-de-alimentacao-cei";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
+export const SOLICITACAO_KIT_LANCHE_CEMEI = "solicitacao-de-kit-lanche-cemei";
 
 export const PAINEL_GESTAO_PRODUTO = "painel-gestao-produto";
 
@@ -186,6 +187,12 @@ export const STATUS_CODAE_QUESTIONADO = "CODAE_QUESTIONADO";
 export const STATUS_CODAE_AUTORIZOU_RECLAMACAO = "CODAE_AUTORIZOU_RECLAMACAO";
 export const STATUS_TERCEIRIZADA_CANCELOU_SOLICITACAO =
   "TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO";
+
+export const STATUS_CODAE_HOMOLOGADO = "CODAE_HOMOLOGADO";
+export const STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU =
+  "ESCOLA_OU_NUTRICIONISTA_RECLAMOU";
+export const STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO =
+  "TERCEIRIZADA_RESPONDEU_RECLAMACAO";
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";

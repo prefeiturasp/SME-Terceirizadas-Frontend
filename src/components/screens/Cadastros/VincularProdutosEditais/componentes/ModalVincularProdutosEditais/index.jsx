@@ -100,7 +100,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     setCarregando(true);
     if (listaEditais) {
       let opcoes = listaEditais.map(edital => {
-        return { nome: edital.edital__numero, uuid: edital.edital__uuid };
+        return { nome: edital.numero, uuid: edital.uuid };
       });
       setOpcoesEditaisOrigem(opcoes);
       setCarregando(false);

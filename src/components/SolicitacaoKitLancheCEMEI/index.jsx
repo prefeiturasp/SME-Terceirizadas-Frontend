@@ -332,6 +332,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                           aluno.serie.includes("3") ||
                           aluno.serie.includes("4")
                       )}
+                      solicitacao="solicitacao_cei"
                     />
                   </>
                 )}
@@ -362,6 +363,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                             aluno.serie.includes("4")
                           )
                       )}
+                      solicitacao="solicitacao_emei"
                     />
                   </>
                 )}

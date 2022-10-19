@@ -1,11 +1,18 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { Form, Field } from "react-final-form";
 import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { ASelect } from "components/Shareable/MakeField";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
-import { usuarioEhTerceirizada, usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhTerceirizada,
+  usuarioEhEscola,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhDRE
+} from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
@@ -20,7 +27,8 @@ import {
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
   getNomesUnicosEditais,
-  getNomesTerceirizadas
+  getNomesTerceirizadas,
+  getEditaisDre
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
@@ -45,6 +53,13 @@ const initialState = {
   status: "",
   inicio: ""
 };
+
+const exibirFiltroNomeTerceirizada =
+  !usuarioEhEscola() &&
+  !usuarioEhTerceirizada() &&
+  !usuarioEhCODAEGestaoAlimentacao() &&
+  !usuarioEhNutricionistaSupervisao() &&
+  !usuarioEhCODAENutriManifestacao();
 
 function reducer(state, { type: actionType, payload }) {
   switch (actionType) {
@@ -78,8 +93,21 @@ export const FormBuscaProduto = ({
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [editaisDRE, setEditaisDRE] = useState([]);
 
   useEffect(() => {
+    (async () => {
+      try {
+        const listaEditaisDRE = await getEditaisDre();
+        let listaRsultados = listaEditaisDRE.data.results;
+        let listaFormatada = listaRsultados.map(element => {
+          return { value: element.numero, label: element.numero };
+        });
+        setEditaisDRE(listaFormatada);
+      } catch (erro) {
+        throw erro;
+      }
+    })();
     const endpoints = [
       getNomesUnicosProdutos(),
       getNomesUnicosMarcas(),
@@ -134,7 +162,7 @@ export const FormBuscaProduto = ({
             <>
               <div className="row">
                 <div className="col-8">
-                  {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
+                  {exibirFiltroNomeTerceirizada && (
                     <Field
                       component={AutoCompleteField}
                       dataSource={state.terceirizadas}
@@ -183,11 +211,11 @@ export const FormBuscaProduto = ({
                     </div>
                   )}
                 </div>
-                <div className="col-2">
+                <div className="col-4">
                   <Field
                     component={InputComData}
-                    label="Início do Período"
-                    name="data_inicial"
+                    label="Homologados até:"
+                    name="data_homologacao"
                     labelClassName="datepicker-fixed-padding"
                     minDate={null}
                     maxDate={
@@ -195,22 +223,6 @@ export const FormBuscaProduto = ({
                         ? moment(values.data_final, "DD/MM/YYYY")._d
                         : moment()._d
                     }
-                    disabled={values.agrupado_por_nome_e_marca}
-                  />
-                </div>
-                <div className="col-2">
-                  <Field
-                    component={InputComData}
-                    label={"Até"}
-                    name="data_final"
-                    labelClassName="datepicker-fixed-padding"
-                    popperPlacement="bottom-end"
-                    minDate={
-                      values.data_inicial
-                        ? moment(values.data_inicial, "DD/MM/YYYY")._d
-                        : null
-                    }
-                    maxDate={moment()._d}
                     disabled={values.agrupado_por_nome_e_marca}
                   />
                 </div>
@@ -225,23 +237,44 @@ export const FormBuscaProduto = ({
                     !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
                   }`}
                 >
-                  <Field
-                    component={AutoCompleteField}
-                    dataSource={state.editais}
-                    label="Edital"
-                    className="input-busca-produto"
-                    onSearch={v => onSearch("editais", v)}
-                    name="nome_edital"
-                    disabled={usuarioEhEscola()}
-                  />
+                  {usuarioEhDRE() ? (
+                    <>
+                      <label className="mb-1 mt-2">Edital</label>
+                      <Field
+                        component={ASelect}
+                        className="input-busca-tipo-item"
+                        name="nome_edital"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                        options={editaisDRE}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <label className="mb-1 mt-2">Edital</label>
+                      <Field
+                        component={AutoCompleteField}
+                        dataSource={state.editais}
+                        className="input-busca-produto mt-1"
+                        onSearch={v => onSearch("editais", v)}
+                        name="nome_edital"
+                        disabled={usuarioEhEscola()}
+                      />
+                    </>
+                  )}
                 </div>
+
                 {state.tipos.length > 0 && (
                   <div
                     className={`col-${
                       !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
                     }`}
                   >
-                    <label className="label-aselect">Tipo</label>
+                    <label className="label-aselect mt-2">Tipo</label>
                     <Field
                       component={ASelect}
                       className="input-busca-tipo-item"

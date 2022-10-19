@@ -16,6 +16,7 @@ import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/Rel
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
+import * as RelatorioSolicitacaoKitLancheCEMEI from "../pages/SolicitacaoDeKitLancheCEMEI/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
 import * as RelatoriosDietaEspecial from "../pages/DietaEspecial/RelatorioPage";
 import * as DashBoardDietaEspecial from "../pages/DietaEspecial/DashboardDietaEspecialPage";
@@ -143,6 +144,19 @@ export const relatoriosSolicitacaoKitLanche = () => {
       return RelatoriosSolicitacaoKitLanche.RelatorioTerceirizada;
     default:
       return RelatoriosSolicitacaoKitLanche.RelatorioEscola;
+  }
+};
+
+export const relatoriosSolicitacaoKitLancheCEMEI = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatorioSolicitacaoKitLancheCEMEI.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatorioSolicitacaoKitLancheCEMEI.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatorioSolicitacaoKitLancheCEMEI.RelatorioTerceirizada;
+    default:
+      return RelatorioSolicitacaoKitLancheCEMEI.RelatorioEscola;
   }
 };
 

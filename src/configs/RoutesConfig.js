@@ -89,6 +89,7 @@ import {
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
   inclusaoAlimentacao
@@ -722,6 +723,12 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLancheCEMEI(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosCODAE,
     exact: true,
@@ -1126,6 +1133,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
       (usuarioEhEscola() &&
@@ -1160,7 +1168,8 @@ const routesConfig = [
         !usuarioEscolaEhGestaoMistaParceira() &&
         !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhDRE()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,

@@ -4,12 +4,20 @@ import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import {
   talvezPluralizar,
-  ehEscolaTipoCEI
+  ehEscolaTipoCEI,
+  ehEscolaTipoCEMEI
 } from "../../../../helpers/utilities";
-import { SOLICITACAO_KIT_LANCHE } from "../../../../configs/constants";
+import {
+  SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_CEMEI
+} from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { TIPO_SOLICITACAO } from "constants/shared";
-const { SOLICITACAO_CEI, SOLICITACAO_NORMAL } = TIPO_SOLICITACAO;
+const {
+  SOLICITACAO_CEI,
+  SOLICITACAO_NORMAL,
+  SOLICITACAO_CEMEI
+} = TIPO_SOLICITACAO;
 
 export class CardPendenteAcao extends Component {
   constructor(props) {
@@ -111,11 +119,16 @@ export class CardPendenteAcao extends Component {
                   pedidosFiltrados.map((pedido, key) => {
                     const tipoSolicitacao = ehEscolaTipoCEI(pedido.escola)
                       ? SOLICITACAO_CEI
+                      : ehEscolaTipoCEMEI(pedido.escola)
+                      ? SOLICITACAO_CEMEI
                       : SOLICITACAO_NORMAL;
+                    const solicitacaoUrl = ehEscolaTipoCEMEI(pedido.escola)
+                      ? SOLICITACAO_KIT_LANCHE_CEMEI
+                      : SOLICITACAO_KIT_LANCHE;
                     return (
                       <Link
                         key={key}
-                        to={`/${SOLICITACAO_KIT_LANCHE}/relatorio?uuid=${
+                        to={`/${solicitacaoUrl}/relatorio?uuid=${
                           pedido.uuid
                         }&tipoSolicitacao=${tipoSolicitacao}`}
                       >
@@ -123,7 +136,11 @@ export class CardPendenteAcao extends Component {
                           <td>{pedido.id_externo}</td>
                           <td>{pedido.escola.codigo_eol}</td>
                           <td>{pedido.escola.nome}</td>
-                          <td>{pedido.solicitacao_kit_lanche.data}</td>
+                          <td>
+                            {pedido.solicitacao_kit_lanche
+                              ? pedido.solicitacao_kit_lanche.data
+                              : pedido.data}
+                          </td>
                         </tr>
                       </Link>
                     );

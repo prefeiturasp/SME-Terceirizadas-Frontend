@@ -112,8 +112,22 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                   })}
                 </>
               )}
+              {solicitacao.motivo.nome === "ETEC" && (
+                <>
+                  <p>
+                    Selecione a(s) data(s) para solicitar o cancelamento:
+                    <span className="ml-2">
+                      {solicitacao.data_inicial} até {solicitacao.data_final}
+                    </span>
+                  </p>
+                  <p>
+                    Motivo: <strong>{solicitacao.motivo.nome}</strong>
+                  </p>
+                </>
+              )}
               <div className="row pl-3 pr-3">
-                <label>* Justificativa</label>
+                <span className="required-asterisk">*</span>
+                <label>Justificativa</label>
                 <Field
                   className="col-12 pb-5"
                   component="textarea"
@@ -128,13 +142,13 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
                 className="ml-3"
               />
