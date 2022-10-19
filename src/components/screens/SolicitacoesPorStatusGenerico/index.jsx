@@ -46,12 +46,17 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
 
   const onSubmit = async () => {};
 
-  const onPageChanged = async page => {
+  const onPageChanged = async (page, values) => {
     const params = TIPO_PAGINACAO
       ? { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE }
       : { page };
-    getSolicitacoesAsync(params);
-    setCurrentPage(page);
+    if (values.titulo && values.titulo.length > 2) {
+      params["busca"] = values.titulo;
+    }
+    setTimeout(async () => {
+      await getSolicitacoesAsync(params);
+      setCurrentPage(page);
+    }, 500);
   };
 
   useEffect(() => {
@@ -67,7 +72,7 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
           <Spin tip="Carregando..." spinning={loading}>
             {solicitacoes && (
               <Form onSubmit={onSubmit}>
-                {({ handleSubmit }) => (
+                {({ handleSubmit, values }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
                       <div className="col-12 float-right">
@@ -104,7 +109,7 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
                       icone={icone}
                     />
                     <Paginacao
-                      onChange={onPageChanged}
+                      onChange={page => onPageChanged(page, values)}
                       total={count}
                       pageSize={PAGE_SIZE}
                       current={currentPage}
