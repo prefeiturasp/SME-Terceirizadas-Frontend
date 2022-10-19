@@ -14,7 +14,6 @@ import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
-import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
@@ -718,12 +717,6 @@ const routesConfig = [
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosCODAE,
     exact: true,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
-  },
-  {
-    path: `/${constants.CODAE}/${constants.DETALHE_DASHBOARD_DRE}`,
-    component: DashboardCODAEDetailDRE,
-    exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Collapse } from "react-collapse";
 import { Field, reduxForm } from "redux-form";
 import {
   SOLICITACOES_AUTORIZADAS,
@@ -17,7 +16,6 @@ import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
 import { ajustarFormatoLog, slugify } from "../helper";
 import { FILTRO } from "../const";
 import "./style.scss";
@@ -198,7 +196,7 @@ class PainelGestaoAlimentacao extends Component {
   }
 
   render() {
-    const { handleSubmit, meusDados, lotesRaw } = this.props;
+    const { handleSubmit, meusDados } = this.props;
     const {
       collapsed,
       questionamentosListFiltered,
@@ -221,13 +219,7 @@ class PainelGestaoAlimentacao extends Component {
                 meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
               0
             }
-          >
-            {meusDados && (
-              <Collapse isOpened={!collapsed}>
-                <TabelaHistoricoLotesDREs lotes={lotesRaw} />
-              </Collapse>
-            )}
-          </CardMatriculados>
+          />
           <CardBody
             titulo={"Acompanhamento solicitações"}
             dataAtual={dataAtual()}
