@@ -10,6 +10,7 @@ import {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesCanceladasDRE } from "services/painelDRE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${DRE}/${SOLICITACOES_CANCELADAS}`,
@@ -26,7 +27,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesCanceladasDRE}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );

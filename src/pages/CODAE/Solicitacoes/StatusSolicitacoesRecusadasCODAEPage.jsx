@@ -10,6 +10,7 @@ import {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesNegadasCodae } from "services/painelCODAE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_NEGADAS}`,
@@ -26,7 +27,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesNegadasCodae}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );

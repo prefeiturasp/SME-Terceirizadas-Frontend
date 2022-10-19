@@ -10,6 +10,7 @@ import {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { getSolicitacoesCanceladasEscola } from "services/painelEscola.service";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${ESCOLA}/${SOLICITACOES_PENDENTES}`,
@@ -26,7 +27,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesCanceladasEscola}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );

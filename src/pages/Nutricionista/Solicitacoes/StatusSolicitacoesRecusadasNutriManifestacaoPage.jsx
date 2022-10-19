@@ -10,6 +10,7 @@ import {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesNegadasNutrimanifestacao } from "services/painelNutricionista.service";
 import CardLegendas from "components/Shareable/CardLegendas";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`,
@@ -26,7 +27,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesNegadasNutrimanifestacao}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );

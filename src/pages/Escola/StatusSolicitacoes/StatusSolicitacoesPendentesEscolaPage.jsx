@@ -4,6 +4,7 @@ import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 import React from "react";
 import { getSolicitacoesPendentesEscola } from "services/painelEscola.service";
 import Breadcrumb from "../../../components/Shareable/Breadcrumb";
@@ -26,7 +27,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesPendentesEscola}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );

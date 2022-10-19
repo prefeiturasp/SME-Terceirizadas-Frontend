@@ -13,6 +13,7 @@ import {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesComQuestionamentoCodae } from "services/painelCODAE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
+import { PAGINACAO_DEFAULT } from "constants/shared";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_COM_QUESTIONAMENTO}`,
@@ -29,7 +30,7 @@ export default () => (
       getSolicitacoes={getSolicitacoesComQuestionamentoCodae}
       Legendas={CardLegendas}
       tipoPaginacao="OFFSET"
-      limit="10"
+      limit={PAGINACAO_DEFAULT}
     />
   </Page>
 );
