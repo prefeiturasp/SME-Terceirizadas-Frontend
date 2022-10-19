@@ -9,7 +9,10 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_COM_QUESTIONAMENTO
 } from "../../../configs/constants";
-import { FILTRO_VISAO, PAGINACAO_DEFAULT } from "../../../constants/shared";
+import {
+  FILTRO_VISAO,
+  PAGINACAO_DASHBOARD_DEFAULT
+} from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -33,7 +36,7 @@ import {
 import { toastError } from "../../Shareable/Toast/dialogs";
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
 
-const PARAMS = { limit: PAGINACAO_DEFAULT, offset: 0 };
+const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 class DashboardCODAE extends Component {
   constructor(props) {
     super(props);
@@ -170,12 +173,16 @@ class DashboardCODAE extends Component {
 
   onPesquisaChanged(values) {
     if (values.titulo && values.titulo.length > 2) {
-      this.getSolicitacoesAsync({
-        busca: values.titulo,
-        ...PARAMS
-      });
+      setTimeout(async () => {
+        this.getSolicitacoesAsync({
+          busca: values.titulo,
+          ...PARAMS
+        });
+      }, 500);
     } else {
-      this.getSolicitacoesAsync(PARAMS);
+      setTimeout(async () => {
+        this.getSolicitacoesAsync(PARAMS);
+      }, 500);
     }
   }
 
