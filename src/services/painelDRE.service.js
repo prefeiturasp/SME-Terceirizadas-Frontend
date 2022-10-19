@@ -13,6 +13,8 @@ import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnifi
 import { getSuspensoesDeAlimentacaoInformadas } from "services/suspensaoDeAlimentacao.service.js";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { safeConcatOn } from "helpers/utilities";
+import axios from "./_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const SOLICITACOES_DRE = `${API_URL}/diretoria-regional-solicitacoes`;
 
@@ -290,22 +292,38 @@ export const getSolicitacoesPendentesValidacaoDRE = async (
   return retornoBase(url);
 };
 
-export const getSolicitacoesPendentesDRE = async () => {
+export const getSolicitacoesPendentesDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.PENDENTES}/`;
-  return retornoBase(url);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesAutorizadasDRE = async () => {
+export const getSolicitacoesAutorizadasDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AUTORIZADOS}/`;
-  return retornoBase(url);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesCanceladasDRE = async () => {
+export const getSolicitacoesCanceladasDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
-  return retornoBase(url);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesNegadasDRE = async () => {
+export const getSolicitacoesNegadasDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.NEGADOS}/`;
-  return retornoBase(url);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
