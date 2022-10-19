@@ -71,7 +71,7 @@ export const DashboardEscola = () => {
   };
 
   useEffect(() => {
-    getSolicitacoesAsync();
+    getSolicitacoesAsync(PARAMS);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
