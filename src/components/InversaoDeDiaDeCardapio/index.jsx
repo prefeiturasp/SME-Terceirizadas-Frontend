@@ -163,7 +163,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     if (values["alunos_da_cemei"]) {
       if (values["alunos_da_cemei"].length === 2) {
         values["alunos_da_cemei"] = "Todos";
-      } else if (values["alunos"].includes("CEI")) {
+      } else if (values["alunos_da_cemei"].includes("CEI")) {
         values["alunos_da_cemei"] = "CEI";
       } else {
         values["alunos_da_cemei"] = "EMEI";
@@ -181,15 +181,11 @@ export class InversaoDeDiaDeCardapio extends Component {
               this.resetForm();
             }
           } else {
-            let keys = Object.keys(response.data);
-            keys.forEach(function() {
-              toastError(
-                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
-                  response.data
-                )}`
-              );
-            });
-            this.resetForm();
+            toastError(
+              `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+                response.data
+              )}`
+            );
           }
         });
       } else {
@@ -212,7 +208,6 @@ export class InversaoDeDiaDeCardapio extends Component {
                 )}`
               );
             });
-            this.resetForm();
           }
         });
       }
