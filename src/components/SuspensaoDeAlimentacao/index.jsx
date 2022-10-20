@@ -14,7 +14,6 @@ import {
 } from "../../services/suspensaoDeAlimentacao.service";
 import {
   geradorUUID,
-  formatarParaMultiselect,
   getError,
   deepCopy,
   escolaEhCEMEI
@@ -50,9 +49,11 @@ class FoodSuspensionEditor extends Component {
     this.state = {
       loading: true,
       suspensoesDeAlimentacaoList: [],
+      alunosCEIouEMEI: undefined,
       status: "SEM STATUS",
       title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
+      vinculos: undefined,
       dias_razoes: [
         {
           id: geradorUUID(),
@@ -131,6 +132,7 @@ class FoodSuspensionEditor extends Component {
   };
 
   handleSelectedChangedAlunos = (selectedOptions, period) => {
+    this.setState({ alunosCEIouEMEI: selectedOptions });
     let periodos = this.props.periodos;
     let indice = periodos.findIndex(periodo => periodo.nome === period.nome);
     let qnt_alunos = 0;
@@ -309,6 +311,32 @@ class FoodSuspensionEditor extends Component {
     });
   };
 
+  periodosOptions(period) {
+    const { alunosCEIouEMEI, vinculos } = this.state;
+    let periodos = vinculos
+      ? vinculos.find(v => v.periodo_escolar.nome === period.nome)
+          .tipos_alimentacao
+      : [];
+    if (escolaEhCEMEI()) {
+      periodos = period.tipos_alimentacao;
+    }
+    if (alunosCEIouEMEI && alunosCEIouEMEI.length !== 2) {
+      if (alunosCEIouEMEI.includes("CEI")) {
+        periodos = vinculos.find(v =>
+          v.tipo_unidade_escolar.iniciais.includes("CEI")
+        ).tipos_alimentacao;
+      } else if (alunosCEIouEMEI.includes("EMEI")) {
+        periodos = vinculos.find(v =>
+          v.tipo_unidade_escolar.iniciais.includes("EMEI")
+        ).tipos_alimentacao;
+      }
+    }
+    return periodos.map(p => ({
+      label: p.nome,
+      value: p.uuid
+    }));
+  }
+
   componentDidUpdate(prevProps) {
     const fields = [
       "suspensoes_MANHA",
@@ -340,6 +368,7 @@ class FoodSuspensionEditor extends Component {
       const vinculo = this.props.meusDados.vinculo_atual.instituicao.uuid;
       const escola = this.props.meusDados.vinculo_atual.instituicao;
       getVinculosTipoAlimentacaoPorEscola(vinculo).then(response => {
+        this.setState({ vinculos: response.data.results });
         this.retornaPeriodosComCombos(
           response.data.results,
           this.props.periodos
@@ -526,7 +555,8 @@ class FoodSuspensionEditor extends Component {
       title,
       options,
       suspensoesDeAlimentacaoList,
-      dias_razoes
+      dias_razoes,
+      alunosCEIouEMEI
     } = this.state;
     let checkMap = {
       MANHA: suspensoes_MANHA && suspensoes_MANHA.check,
@@ -752,9 +782,7 @@ class FoodSuspensionEditor extends Component {
                               component={MultiSelect}
                               name="tipo_de_refeicao"
                               selected={options[period.nome] || []}
-                              options={formatarParaMultiselect(
-                                period.tipos_alimentacao
-                              )}
+                              options={this.periodosOptions(period)}
                               onSelectedChanged={values =>
                                 this.handleSelectedChanged(values, period)
                               }
@@ -768,6 +796,10 @@ class FoodSuspensionEditor extends Component {
                               nomeDoItemNoPlural="Tipos"
                               required
                               validate={period.validador}
+                              disabled={
+                                escolaEhCEMEI() &&
+                                (!alunosCEIouEMEI || !alunosCEIouEMEI.length)
+                              }
                             />
                           </div>
                         </div>
