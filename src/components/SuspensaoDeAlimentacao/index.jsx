@@ -49,7 +49,7 @@ class FoodSuspensionEditor extends Component {
     this.state = {
       loading: true,
       suspensoesDeAlimentacaoList: [],
-      alunosCEIouEMEI: undefined,
+      alunosCEIouEMEI: [],
       status: "SEM STATUS",
       title: "Nova Solicitação",
       salvarAtualizarLbl: "Salvar Rascunho",
@@ -132,7 +132,9 @@ class FoodSuspensionEditor extends Component {
   };
 
   handleSelectedChangedAlunos = (selectedOptions, period) => {
-    this.setState({ alunosCEIouEMEI: selectedOptions });
+    const { alunosCEIouEMEI } = this.state;
+    alunosCEIouEMEI[period.nome] = selectedOptions;
+    this.setState({ alunosCEIouEMEI });
     let periodos = this.props.periodos;
     let indice = periodos.findIndex(periodo => periodo.nome === period.nome);
     let qnt_alunos = 0;
@@ -320,12 +322,19 @@ class FoodSuspensionEditor extends Component {
     if (escolaEhCEMEI()) {
       periodos = period.tipos_alimentacao;
     }
-    if (alunosCEIouEMEI && alunosCEIouEMEI.length !== 2) {
-      if (alunosCEIouEMEI.includes("CEI")) {
+    if (alunosCEIouEMEI[period.nome]) {
+      if (alunosCEIouEMEI[period.nome].length === 2) {
+        periodos = vinculos
+          .find(v => v.tipo_unidade_escolar.iniciais.includes("CEI"))
+          .tipos_alimentacao.concat(
+            vinculos.find(v => v.tipo_unidade_escolar.iniciais.includes("EMEI"))
+              .tipos_alimentacao
+          );
+      } else if (alunosCEIouEMEI[period.nome].includes("CEI")) {
         periodos = vinculos.find(v =>
           v.tipo_unidade_escolar.iniciais.includes("CEI")
         ).tipos_alimentacao;
-      } else if (alunosCEIouEMEI.includes("EMEI")) {
+      } else if (alunosCEIouEMEI[period.nome].includes("EMEI")) {
         periodos = vinculos.find(v =>
           v.tipo_unidade_escolar.iniciais.includes("EMEI")
         ).tipos_alimentacao;
@@ -797,8 +806,7 @@ class FoodSuspensionEditor extends Component {
                               required
                               validate={period.validador}
                               disabled={
-                                escolaEhCEMEI() &&
-                                (!alunosCEIouEMEI || !alunosCEIouEMEI.length)
+                                escolaEhCEMEI() && !alunosCEIouEMEI[period.nome]
                               }
                             />
                           </div>
