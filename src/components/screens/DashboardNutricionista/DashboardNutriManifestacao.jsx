@@ -1,182 +1,136 @@
-import React, { Component } from "react";
-import { Field, reduxForm } from "redux-form";
+import MeusDadosContext from "context/MeusDadosContext";
+import React, { useContext, useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import {
+  NUTRIMANIFESTACAO,
   SOLICITACOES_AUTORIZADAS,
-  SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
-  NUTRIMANIFESTACAO
-} from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/shared";
-import { dataAtual } from "../../../helpers/utilities";
-import CardBody from "../../Shareable/CardBody";
-import CardMatriculados from "../../Shareable/CardMatriculados";
+  SOLICITACOES_NEGADAS
+} from "configs/constants";
+import { dataAtual } from "helpers/utilities";
+import CardBody from "components/Shareable/CardBody";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 import CardStatusDeSolicitacao, {
-  ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { ajustarFormatoLog, slugify } from "../helper";
+  CARD_TYPE_ENUM,
+  ICON_CARD_TYPE_ENUM
+} from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "./style.scss";
 import {
+  getSolicitacoesAutorizadasNutrimanifestacao,
   getSolicitacoesCanceladasNutrimanifestacao,
-  getSolicitacoesNegadasNutrimanifestacao,
-  getSolicitacoesAutorizadasNutrimanifestacao
-} from "../../../services/painelNutricionista.service";
+  getSolicitacoesNegadasNutrimanifestacao
+} from "services/painelNutricionista.service";
+import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
+import { Spin } from "antd";
+import { ajustarFormatoLog } from "../helper";
 
-class DashboardNutriManifestacao extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: this.props.cards,
-      canceladasListFiltered: [],
-      negadasListFiltered: [],
-      autorizadasListFiltered: [],
+export const DashboardNutrimanifestacao = () => {
+  const [canceladas, setCanceladas] = useState(null);
+  const [negadas, setNegadas] = useState(null);
+  const [autorizadas, setAutorizadas] = useState(null);
+  const [erro, setErro] = useState("");
 
-      lotes: [],
-      resumo: [],
+  const { meusDados } = useContext(MeusDadosContext);
 
-      collapsed: true,
-      canceladasListSolicitacao: [],
-      negadasListSolicitacao: [],
-      autorizadasListSolicitacao: [],
-      loadingPainelSolicitacoes: true,
+  const LOADING = !canceladas || !negadas || !autorizadas;
+  const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
-      visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO
-    };
-    this.alterarCollapse = this.alterarCollapse.bind(this);
-    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
-  }
-
-  alterarCollapse() {
-    this.setState({ collapsed: !this.state.collapsed });
-  }
-
-  filtrarNome(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(value.toLowerCase());
-      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
-    });
-    return listaFiltro;
-  }
-
-  async componentDidMount() {
-    getSolicitacoesCanceladasNutrimanifestacao().then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        canceladasListSolicitacao,
-        canceladasListFiltered: canceladasListSolicitacao
-      });
-    });
-
-    getSolicitacoesNegadasNutrimanifestacao().then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        negadasListSolicitacao,
-        negadasListFiltered: negadasListSolicitacao
-      });
-    });
-
-    getSolicitacoesAutorizadasNutrimanifestacao().then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        autorizadasListSolicitacao,
-        autorizadasListFiltered: autorizadasListSolicitacao
-      });
-    });
-  }
-
-  onPesquisaChanged(values) {
-    if (values.titulo === undefined) values.titulo = "";
-    const {
-      canceladasListSolicitacao,
-      autorizadasListSolicitacao,
-      negadasListSolicitacao
-    } = this.state;
-
-    this.setState({
-      autorizadasListFiltered: this.filtrarNome(
-        autorizadasListSolicitacao,
-        values.titulo
-      ),
-      negadasListFiltered: this.filtrarNome(
-        negadasListSolicitacao,
-        values.titulo
-      ),
-      canceladasListFiltered: this.filtrarNome(
-        canceladasListSolicitacao,
-        values.titulo
-      )
-    });
-  }
-
-  render() {
-    const { handleSubmit, meusDados } = this.props;
-    const {
-      collapsed,
-      canceladasListFiltered,
-      negadasListFiltered,
-      autorizadasListFiltered
-    } = this.state;
-
-    return (
-      <div>
-        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
-          <Field component={"input"} type="hidden" name="uuid" />
-          <CardMatriculados
-            collapsed={collapsed}
-            alterarCollapse={this.alterarCollapse}
-            meusDados={meusDados}
-            numeroAlunos={
-              (meusDados &&
-                meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
-              0
-            }
-          />
-          <CardBody
-            titulo={"Acompanhamento solicitações"}
-            dataAtual={dataAtual()}
-            onChange={this.onPesquisaChanged}
-          >
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Autorizadas"}
-                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                  solicitations={autorizadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                  href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_AUTORIZADAS}`}
-                />
-              </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Negadas"}
-                  cardType={CARD_TYPE_ENUM.NEGADO}
-                  solicitations={negadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                  href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Canceladas"}
-                  cardType={CARD_TYPE_ENUM.CANCELADO}
-                  solicitations={canceladasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                  href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`}
-                />
-              </div>
-            </div>
-          </CardBody>
-        </form>
-      </div>
+  const getSolicitacoesAsync = async (params = null) => {
+    const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setCanceladas(ajustarFormatoLog(response.data.results));
+    } else {
+      setErro("Erro ao carregar solicitações canceladas");
+    }
+    const responseNegadas = await getSolicitacoesNegadasNutrimanifestacao(
+      params
     );
-  }
-}
+    if (responseNegadas.status === HTTP_STATUS.OK) {
+      setNegadas(ajustarFormatoLog(responseNegadas.data.results));
+    } else {
+      setErro("Erro ao carregar solicitações negadas");
+    }
 
-const DashboardNutriManifestacaoForm = reduxForm({
-  form: "DashboardNutriManifestacao",
-  enableReinitialize: true
-})(DashboardNutriManifestacao);
+    const responseAutorizadas = await getSolicitacoesAutorizadasNutrimanifestacao(
+      params
+    );
+    if (responseAutorizadas.status === HTTP_STATUS.OK) {
+      setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
+    } else {
+      setErro("Erro ao carregar solicitações autorizadas");
+    }
+  };
 
-export default DashboardNutriManifestacaoForm;
+  useEffect(() => {
+    getSolicitacoesAsync(PARAMS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onPesquisaChanged = values => {
+    if (values.titulo && values.titulo.length > 2) {
+      getSolicitacoesAsync({
+        busca: values.titulo,
+        ...PARAMS
+      });
+    } else {
+      getSolicitacoesAsync(PARAMS);
+    }
+  };
+
+  return (
+    <div>
+      {erro && <div>{erro}</div>}
+      {!erro && (
+        <Spin tip="Carregando..." spinning={LOADING}>
+          {meusDados && (
+            <CardMatriculados
+              meusDados={meusDados}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos
+              }
+            />
+          )}
+          {!LOADING && (
+            <CardBody
+              titulo={"Acompanhamento solicitações"}
+              dataAtual={dataAtual()}
+              onChange={onPesquisaChanged}
+            >
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={autorizadas}
+                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_AUTORIZADAS}`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={negadas}
+                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={canceladas}
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`}
+                  />
+                </div>
+              </div>
+            </CardBody>
+          )}
+        </Spin>
+      )}
+    </div>
+  );
+};
