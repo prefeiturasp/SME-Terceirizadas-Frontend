@@ -24,38 +24,7 @@ export default class DashboardEscolaContainer extends Component {
         "Escola",
         "Quantidade de Alimentações solicitadas"
       ],
-      trs: [
-        {
-          _id: 12083,
-          escola: "EMEF CACILDA BECKER",
-          quantidade: 1705
-        },
-        {
-          _id: 12084,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12085,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12086,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12087,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        },
-        {
-          _id: 12088,
-          escola: "EMEF AMORIM LIMA, DES.",
-          quantidade: 150
-        }
-      ]
+      trs: []
     };
   }
 
@@ -63,24 +32,21 @@ export default class DashboardEscolaContainer extends Component {
     const dadosMeus = await meusDados();
     const vinculoAtual = dadosMeus.vinculo_atual;
     if (!vinculoAtual) return;
-    const minhaEscolaUUID = vinculoAtual.instituicao.uuid;
     const numeroAlunos = vinculoAtual.instituicao.quantidade_alunos;
-    if (minhaEscolaUUID) {
-      const [pendentes, autorizadas, negadas, canceladas] = await Promise.all([
-        getSolicitacoesPendentesEscola(minhaEscolaUUID),
-        getSolicitacoesAutorizadasEscola(minhaEscolaUUID),
-        getSolicitacoesNegadasEscola(minhaEscolaUUID),
-        getSolicitacoesCanceladasEscola(minhaEscolaUUID)
-      ]);
-      this.setState({
-        dadosMeus,
-        autorizadas: ajustarFormatoLog(autorizadas.results),
-        pendentes: ajustarFormatoLog(pendentes.results),
-        negadas: ajustarFormatoLog(negadas.results),
-        canceladas: ajustarFormatoLog(canceladas.results),
-        numeroAlunos
-      });
-    }
+    const [pendentes, autorizadas, negadas, canceladas] = await Promise.all([
+      getSolicitacoesPendentesEscola(),
+      getSolicitacoesAutorizadasEscola(),
+      getSolicitacoesNegadasEscola(),
+      getSolicitacoesCanceladasEscola()
+    ]);
+    this.setState({
+      dadosMeus,
+      autorizadas: ajustarFormatoLog(autorizadas.data.results),
+      pendentes: ajustarFormatoLog(pendentes.data.results),
+      negadas: ajustarFormatoLog(negadas.data.results),
+      canceladas: ajustarFormatoLog(canceladas.data.results),
+      numeroAlunos
+    });
   }
 
   render() {

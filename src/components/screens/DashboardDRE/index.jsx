@@ -111,7 +111,9 @@ class DashboardDRE extends Component {
     this.carregaResumoPendencias();
 
     getSolicitacoesPendentesDRE().then(request => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(request.results);
+      let questionamentosListSolicitacao = ajustarFormatoLog(
+        request.data.results
+      );
       this.setState({
         questionamentosListSolicitacao,
         questionamentosListFiltered: questionamentosListSolicitacao
@@ -119,7 +121,7 @@ class DashboardDRE extends Component {
     });
 
     getSolicitacoesCanceladasDRE().then(request => {
-      let canceladasListSolicitacao = ajustarFormatoLog(request.results);
+      let canceladasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
@@ -127,7 +129,7 @@ class DashboardDRE extends Component {
     });
 
     getSolicitacoesNegadasDRE().then(request => {
-      let negadasListSolicitacao = ajustarFormatoLog(request.results);
+      let negadasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
@@ -135,7 +137,7 @@ class DashboardDRE extends Component {
     });
 
     getSolicitacoesAutorizadasDRE().then(request => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(request.results);
+      let autorizadasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         autorizadasListSolicitacao: autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao

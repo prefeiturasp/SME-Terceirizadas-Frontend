@@ -57,6 +57,10 @@
   border: 1px solid #929394 !important;
   background-color: #f4f4f4 !important;
 
+  &.card-disabled {
+    opacity: 0.5;
+  }
+
   .nome-kit {
     font-weight: 900;
   }

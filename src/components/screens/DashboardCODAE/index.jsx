@@ -130,7 +130,7 @@ class DashboardCODAE extends Component {
     });
 
     getSolicitacoesCanceladasCodae().then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response);
+      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
@@ -138,7 +138,7 @@ class DashboardCODAE extends Component {
     });
 
     getSolicitacoesNegadasCodae().then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response);
+      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
@@ -146,7 +146,7 @@ class DashboardCODAE extends Component {
     });
 
     getSolicitacoesAutorizadasCodae().then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response);
+      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         autorizadasListSolicitacao: autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao
@@ -154,7 +154,9 @@ class DashboardCODAE extends Component {
     });
 
     getSolicitacoesComQuestionamentoCodae().then(response => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(response);
+      let questionamentosListSolicitacao = ajustarFormatoLog(
+        response.data.results
+      );
       this.setState({
         questionamentosListSolicitacao: questionamentosListSolicitacao,
         questionamentosListFiltered: questionamentosListSolicitacao

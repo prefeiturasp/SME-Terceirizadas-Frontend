@@ -402,3 +402,5 @@ export const OPTIONS_STATUS_DIETA = [
     nome: STATUS_DIETAS.CANCELADAS
   }
 ];
+
+export const PAGINACAO_DEFAULT = 10;

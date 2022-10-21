@@ -688,6 +688,10 @@ export const exibirGA = () => {
             lote.diretoria_regional.nome.includes("IPIRANGA") ||
             lote.diretoria_regional.nome.includes("PIRITUBA")
         );
+      case `"nutricao_manifestacao"`:
+        return true;
+      case `"supervisao_nutricao"`:
+        return true;
       default:
         return false;
     }
