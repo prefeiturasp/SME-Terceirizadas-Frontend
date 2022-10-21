@@ -112,19 +112,21 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                   })}
                 </>
               )}
-              {solicitacao.motivo.nome === "ETEC" && (
-                <>
-                  <p>
-                    Selecione a(s) data(s) para solicitar o cancelamento:
-                    <span className="ml-2">
-                      {solicitacao.data_inicial} até {solicitacao.data_final}
-                    </span>
-                  </p>
-                  <p>
-                    Motivo: <strong>{solicitacao.motivo.nome}</strong>
-                  </p>
-                </>
-              )}
+              {solicitacao.inclusoes &&
+                solicitacao.inclusoes[0].motivo.nome === "ETEC" && (
+                  <>
+                    <p>
+                      Selecione a(s) data(s) para solicitar o cancelamento:
+                      <span className="ml-2">
+                        {solicitacao.data_inicial} até {solicitacao.data_final}
+                      </span>
+                    </p>
+                    <p>
+                      Motivo:{" "}
+                      <strong>{solicitacao.inclusoes[0].motivo.nome}</strong>
+                    </p>
+                  </>
+                )}
               <div className="row pl-3 pr-3">
                 <span className="required-asterisk">*</span>
                 <label>Justificativa</label>
