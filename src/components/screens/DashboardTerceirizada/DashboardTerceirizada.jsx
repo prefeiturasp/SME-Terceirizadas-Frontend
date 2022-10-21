@@ -134,6 +134,8 @@ class DashboardTerceirizada extends Component {
     const params = PARAMS;
     if (values.titulo && values.titulo.length > 2) {
       params["busca"] = values.titulo;
+    } else {
+      delete params["busca"];
     }
     params["status"] = values.status;
     params["lote"] = values.lote;

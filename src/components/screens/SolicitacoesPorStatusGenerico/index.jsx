@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { getError } from "helpers/utilities";
+import { agregarDefault, getError } from "helpers/utilities";
 import { Spin } from "antd";
 import CardListarSolicitacoes from "components/Shareable/CardListarSolicitacoes";
 import { ajustarFormatoLog } from "../helper";
@@ -8,6 +8,7 @@ import { Paginacao } from "components/Shareable/Paginacao";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
+import Select from "components/Shareable/Select";
 
 export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
   const {
@@ -17,7 +18,9 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
     getSolicitacoes,
     Legendas,
     tipoPaginacao,
-    limit
+    limit,
+    lotes,
+    listaStatus
   } = props;
 
   const [solicitacoes, setSolicitacoes] = useState(null);
@@ -75,12 +78,19 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
                 {({ handleSubmit, values }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
-                      <div className="col-12 float-right">
+                      <div
+                        className={`${
+                          lotes && listaStatus
+                            ? "offset-3"
+                            : lotes || listaStatus
+                            ? "offset-6"
+                            : "offset-9"
+                        } col-3`}
+                      >
                         <Field
                           component={InputText}
                           name="titulo"
                           placeholder="Pesquisar"
-                          className="offset-9 col-3"
                           disabled={props.disabled}
                         />
                         <div className="warning-num-charac">
@@ -88,19 +98,66 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
                         </div>
                         <OnChange name="titulo">
                           {value => {
-                            if (value && value.length > 2) {
-                              getSolicitacoesAsync({
-                                busca: value,
-                                ...PARAMS
-                              });
-                              setCurrentPage(1);
-                            } else {
-                              getSolicitacoesAsync(PARAMS);
-                              setCurrentPage(1);
-                            }
+                            getSolicitacoesAsync({
+                              busca: value && value.length > 2 ? value : null,
+                              status: values.status,
+                              lote: values.lote,
+                              ...PARAMS
+                            });
+                            setCurrentPage(1);
                           }}
                         </OnChange>
                       </div>
+                      {listaStatus && (
+                        <div className="col-3">
+                          <Field
+                            component={Select}
+                            options={listaStatus}
+                            name="status"
+                            placeholder="Conferência Status"
+                            naoDesabilitarPrimeiraOpcao
+                          />
+                          <OnChange name="status">
+                            {value => {
+                              getSolicitacoesAsync({
+                                status: value,
+                                lote: values.lote,
+                                busca:
+                                  values.titulo && values.titulo.length > 2
+                                    ? values.titulo
+                                    : null,
+                                ...PARAMS
+                              });
+                              setCurrentPage(1);
+                            }}
+                          </OnChange>
+                        </div>
+                      )}
+                      {lotes && (
+                        <div className="col-3">
+                          <Field
+                            component={Select}
+                            options={agregarDefault(lotes)}
+                            name="lote"
+                            placeholder="Selecione um Lote"
+                            naoDesabilitarPrimeiraOpcao
+                          />
+                          <OnChange name="lote">
+                            {value => {
+                              getSolicitacoesAsync({
+                                lote: value,
+                                status: values.status,
+                                busca:
+                                  values.titulo && values.titulo.length > 2
+                                    ? values.titulo
+                                    : null,
+                                ...PARAMS
+                              });
+                              setCurrentPage(1);
+                            }}
+                          </OnChange>
+                        </div>
+                      )}
                     </div>
                     <CardListarSolicitacoes
                       titulo={titulo}
