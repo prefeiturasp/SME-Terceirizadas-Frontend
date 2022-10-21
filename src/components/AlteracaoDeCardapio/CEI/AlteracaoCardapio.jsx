@@ -355,6 +355,11 @@ class AlteracaoCardapio extends Component {
         }
       } else if (response.status === statusOk) {
         toastSuccess("Rascunho salvo com sucesso");
+        this.resetForm("alteracaoCardapio");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        response.data.data.forEach(erro => {
+          toastError(erro);
+        });
         this.refresh();
         this.resetForm("alteracaoCardapio");
       } else {
