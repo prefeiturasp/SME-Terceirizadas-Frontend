@@ -14,7 +14,7 @@ import {
 import { InputText } from "../Shareable/Input/InputText";
 import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { Form, Field } from "react-final-form";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Botao } from "components/Shareable/Botao";
 import {
@@ -874,7 +874,7 @@ const SolicitacaoUnificada = ({
                   <div className="row">
                     <div className="col-12">
                       <Field
-                        component={TextAreaWYSIWYG}
+                        component={CKEditorField}
                         label="Observações"
                         name="descricao"
                       />

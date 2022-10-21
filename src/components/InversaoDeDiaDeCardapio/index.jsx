@@ -30,7 +30,7 @@ import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { InputComData } from "../Shareable/DatePicker";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 
@@ -351,7 +351,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 <div className="row">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Motivo"
                       name="motivo"
                       required
@@ -362,7 +362,7 @@ export class InversaoDeDiaDeCardapio extends Component {
                 <div className="row mt-5">
                   <div className="col-12 mt-2 pb-5">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Observação"
                       name="observacao"
                     />

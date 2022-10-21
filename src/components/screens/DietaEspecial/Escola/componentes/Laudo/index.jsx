@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "redux-form";
 import ManagedInputFileField from "../../../../../Shareable/Input/InputFile/ManagedField";
-import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { required } from "helpers/fieldValidators";
 
 export default ({ pertence_a_escola }) => {
@@ -40,7 +40,7 @@ export default ({ pertence_a_escola }) => {
       <section className="row mt-5 mb-5">
         <div className="col-12">
           <Field
-            component={TextAreaWYSIWYG}
+            component={CKEditorField}
             label="Observações"
             name="observacoes"
             className="form-control"
