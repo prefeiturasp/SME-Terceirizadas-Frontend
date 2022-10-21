@@ -36,7 +36,7 @@ import { InputComData } from "../Shareable/DatePicker";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { getQuantidadeAlunosCEMEIporPeriodoCEIEMEI } from "services/aluno.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -795,7 +795,7 @@ class FoodSuspensionEditor extends Component {
                 <hr className="w-100" />
                 <div className="form-group pb-5">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     label="Observações"
                     name="observacao"
                   />

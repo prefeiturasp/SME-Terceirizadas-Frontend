@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { InputText } from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -100,7 +100,7 @@ export default class ModalResponderReclamacao extends Component {
                 <div className="form-row row-textarea">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Resposta"
                       name="justificativa"
                       required

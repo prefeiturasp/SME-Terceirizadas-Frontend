@@ -12,7 +12,7 @@ import {
   maxLengthProduto,
   textAreaRequiredAndAtLeastOneCharacter
 } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
+import CKEditorField from "../CKEditorField";
 import { toastError, toastSuccess, toastWarn } from "../Toast/dialogs";
 import { MENSAGEM_VAZIA } from "../TextArea/constants";
 import { composeValidators } from "helpers/utilities";
@@ -112,7 +112,7 @@ class ModalCodaeCancelaAnaliseSensorial extends Component {
                   <div className="form-row">
                     <div className="form-group col-12">
                       <Field
-                        component={TextAreaWYSIWYG}
+                        component={CKEditorField}
                         label="Justificativa"
                         name="justificativa_autorizacao"
                         required
