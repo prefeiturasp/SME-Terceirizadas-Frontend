@@ -295,7 +295,10 @@ class solicitacaoDietaEspecial extends Component {
         arquivo: anexo.base64
       };
     });
-    if (payload_.aluno_nao_matriculado_data.data_nascimento.includes("T")) {
+    if (
+      payload_.aluno_nao_matriculado_data &&
+      payload_.aluno_nao_matriculado_data.data_nascimento.includes("T")
+    ) {
       payload_.aluno_nao_matriculado_data.data_nascimento = payload_.aluno_nao_matriculado_data.data_nascimento.split(
         "T"
       )[0];
