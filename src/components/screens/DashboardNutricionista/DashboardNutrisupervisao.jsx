@@ -2,10 +2,12 @@ import MeusDadosContext from "context/MeusDadosContext";
 import React, { useContext, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
-  NUTRIMANIFESTACAO,
+  NUTRISUPERVISAO,
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS,
-  SOLICITACOES_NEGADAS
+  SOLICITACOES_COM_QUESTIONAMENTO,
+  SOLICITACOES_NEGADAS,
+  SOLICITACOES_PENDENTES
 } from "configs/constants";
 import { dataAtual } from "helpers/utilities";
 import CardBody from "components/Shareable/CardBody";
@@ -16,48 +18,80 @@ import CardStatusDeSolicitacao, {
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import "./style.scss";
 import {
-  getSolicitacoesAutorizadasNutrimanifestacao,
-  getSolicitacoesCanceladasNutrimanifestacao,
-  getSolicitacoesNegadasNutrimanifestacao
+  getSolicitacoesAutorizadasNutrisupervisao,
+  getSolicitacoesCanceladasNutrisupervisao,
+  getSolicitacoesComQuestionamentoNutrisupervisao,
+  getSolicitacoesNegadasNutrisupervisao,
+  getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro
 } from "services/painelNutricionista.service";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
 
-export const DashboardNutrimanifestacao = () => {
+export const DashboardNutrisupervisao = () => {
   const [canceladas, setCanceladas] = useState(null);
   const [negadas, setNegadas] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
+  const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);
+  const [aguardandoRespostaEmpresa, setAguardandoRespostaEmpresa] = useState(
+    null
+  );
   const [erro, setErro] = useState("");
 
   const { meusDados } = useContext(MeusDadosContext);
 
-  const LOADING = !canceladas || !negadas || !autorizadas;
+  const LOADING =
+    !canceladas ||
+    !negadas ||
+    !autorizadas ||
+    !aguardandoAutorizacao ||
+    !aguardandoRespostaEmpresa;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
   const getSolicitacoesAsync = async (params = null) => {
-    const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
+    const response = await getSolicitacoesCanceladasNutrisupervisao(params);
     if (response.status === HTTP_STATUS.OK) {
       setCanceladas(ajustarFormatoLog(response.data.results));
     } else {
       setErro("Erro ao carregar solicitações canceladas");
     }
-    const responseNegadas = await getSolicitacoesNegadasNutrimanifestacao(
-      params
-    );
+
+    const responseNegadas = await getSolicitacoesNegadasNutrisupervisao(params);
     if (responseNegadas.status === HTTP_STATUS.OK) {
       setNegadas(ajustarFormatoLog(responseNegadas.data.results));
     } else {
       setErro("Erro ao carregar solicitações negadas");
     }
 
-    const responseAutorizadas = await getSolicitacoesAutorizadasNutrimanifestacao(
+    const responseAutorizadas = await getSolicitacoesAutorizadasNutrisupervisao(
       params
     );
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
     } else {
       setErro("Erro ao carregar solicitações autorizadas");
+    }
+
+    const responseAguardandoAutorizacao = await getSolicitacoesPendentesAutorizacaoNutrisupervisaoSemFiltro(
+      params
+    );
+    if (responseAguardandoAutorizacao.status === HTTP_STATUS.OK) {
+      setAguardandoAutorizacao(
+        ajustarFormatoLog(responseAguardandoAutorizacao.data.results)
+      );
+    } else {
+      setErro("Erro ao carregar solicitações aguardando autorização");
+    }
+
+    const responseAguardandoRespostaEmpresa = await getSolicitacoesComQuestionamentoNutrisupervisao(
+      params
+    );
+    if (responseAguardandoRespostaEmpresa.status === HTTP_STATUS.OK) {
+      setAguardandoRespostaEmpresa(
+        ajustarFormatoLog(responseAguardandoRespostaEmpresa.data.results)
+      );
+    } else {
+      setErro("Erro ao carregar solicitações aguardando resposta da empresa");
     }
   };
 
@@ -99,11 +133,31 @@ export const DashboardNutrimanifestacao = () => {
               <div className="row pb-3">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Autorização"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={aguardandoAutorizacao}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_PENDENTES}`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Resposta da Empresa"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={aguardandoRespostaEmpresa}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
+                  />
+                </div>
+              </div>
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
                     cardTitle={"Autorizadas"}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={autorizadas}
                     icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_AUTORIZADAS}`}
+                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_AUTORIZADAS}`}
                   />
                 </div>
                 <div className="col-6">
@@ -112,7 +166,7 @@ export const DashboardNutrimanifestacao = () => {
                     cardType={CARD_TYPE_ENUM.NEGADO}
                     solicitations={negadas}
                     icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`}
+                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_NEGADAS}`}
                   />
                 </div>
               </div>
@@ -123,7 +177,7 @@ export const DashboardNutrimanifestacao = () => {
                     cardType={CARD_TYPE_ENUM.CANCELADO}
                     solicitations={canceladas}
                     icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`}
+                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_CANCELADAS}`}
                   />
                 </div>
               </div>
