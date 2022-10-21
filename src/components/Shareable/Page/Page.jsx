@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import BotaoVoltar from "./BotaoVoltar";
@@ -7,6 +7,7 @@ import "./style.scss";
 import { usuarioEhLogistica, usuarioEhDistribuidora } from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
+import MeusDadosContext from "context/MeusDadosContext";
 
 export const Page = ({ ...props }) => {
   const history = useHistory();
@@ -16,9 +17,12 @@ export const Page = ({ ...props }) => {
   const [nome, setNome] = useState(null);
   const [toggled, setToggled] = useState(false);
 
+  const { setMeusDados } = useContext(MeusDadosContext);
+
   useEffect(() => {
     if (!localStorage.getItem("meusDados")) {
       getMeusDados().then(meusDados => {
+        setMeusDados(meusDados);
         localStorage.setItem("nome", JSON.stringify(meusDados.nome));
         if (meusDados.tipo_usuario === "dieta_especial") {
           localStorage.setItem(
@@ -31,6 +35,7 @@ export const Page = ({ ...props }) => {
     } else {
       this.setState({ nome: localStorage.getItem("nome") });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
