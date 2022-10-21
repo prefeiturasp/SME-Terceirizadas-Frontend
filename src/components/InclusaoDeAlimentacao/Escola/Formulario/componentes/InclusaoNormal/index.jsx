@@ -8,6 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
+import CKEditorField from "components/Shareable/CKEditorField";
 import {
   dataDuplicada,
   maxLength,
@@ -23,7 +24,6 @@ import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
 import { OnChange } from "react-final-form-listeners";
 import "../../style.scss";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 
 export const DataInclusaoNormal = ({ ...props }) => {
   const {
@@ -251,7 +251,7 @@ export const PeriodosInclusaoNormal = ({
               </div>
               {ehETEC && (
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Observações"
                   validate={maxLength(1000)}
                   name={`${name}.observacao`}

@@ -4,7 +4,7 @@ import * as R from "ramda";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
 import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -15,8 +15,8 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import { ativarProduto, suspenderProduto } from "services/produto.service";
-import "./style.scss";
 import { meusDados } from "services/perfil.service";
+import "./style.scss";
 
 const capitalizar = R.replace(/^./, R.toUpper);
 
@@ -117,7 +117,7 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
                 <div className="form-row row-ativacao mt-3">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Justificativa"
                       name="justificativa"
                       required

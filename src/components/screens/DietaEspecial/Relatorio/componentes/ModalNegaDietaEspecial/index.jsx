@@ -2,7 +2,7 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import {
   toastError,
   toastSuccess
@@ -80,7 +80,7 @@ export default class ModalNegarSolicitacao extends Component {
                 <div className="form-row mb-3">
                   <div className="form-group col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Justificativa"
                       name={this.props.fieldJustificativa}
                       className="form-control"

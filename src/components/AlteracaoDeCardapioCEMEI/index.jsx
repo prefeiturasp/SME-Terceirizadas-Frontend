@@ -6,7 +6,7 @@ import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import Select from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
@@ -565,7 +565,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                 <div className="row ">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Motivo/Justificativa"
                       name="observacao"
                       required

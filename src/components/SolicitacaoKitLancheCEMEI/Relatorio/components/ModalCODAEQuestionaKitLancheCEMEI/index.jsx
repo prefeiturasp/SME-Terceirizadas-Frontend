@@ -9,7 +9,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 
 export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
   const {
@@ -56,7 +56,7 @@ export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
               <div className="form-row">
                 <div className="form-group col-12">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     label="Observação"
                     name="justificativa"
                     placeholder="Alguma observação para a Terceirizada?"
