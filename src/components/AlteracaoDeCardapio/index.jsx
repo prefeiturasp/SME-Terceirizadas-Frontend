@@ -505,6 +505,11 @@ class AlteracaoCardapio extends Component {
                 }
                 this.resetForm();
               }
+              if (response.status === HTTP_STATUS.BAD_REQUEST) {
+                response.data.non_field_errors.forEach(erro => {
+                  toastError(erro);
+                });
+              }
             })
             .catch(error => {
               toastError(getError(error.data));

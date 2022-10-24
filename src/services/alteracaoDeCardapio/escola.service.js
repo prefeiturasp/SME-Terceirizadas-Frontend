@@ -34,10 +34,6 @@ export const escolaCriarSolicitacaoDeAlteracaoCardapio = (
 ) => {
   const url = `${getPath(tipoSolicitacao)}/`;
 
-  if (tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI) {
-    return axios.post(`${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/`, payload);
-  }
-
   let status = 0;
   return fetch(url, {
     method: "POST",
