@@ -24,6 +24,9 @@ export default () => {
   const [collapse, setCollapse] = useState([]);
   const [produtosOptions, setProdutosOptions] = useState([]);
   const [empenhoOptions, setEmpenhoOptions] = useState([]);
+  const [empenhos, setEmpenhos] = useState([{}]);
+  const [etapas, setEtapas] = useState([{}]);
+  const [recebimentos, setRecebimentos] = useState([{}]);
 
   const onSubmit = () => {};
 
@@ -84,8 +87,30 @@ export default () => {
     }
   };
 
-  const onChangeEmpenho = prop => {
-    console.log(prop);
+  const onChangeEmpenho = (empenho, index) => {
+    let empenhosNovo = empenhos;
+    empenhosNovo[index] = empenho;
+    setEmpenhos(empenhosNovo);
+  };
+
+  const adicionaEtapa = () => {
+    setEtapas([...etapas, {}]);
+  };
+
+  const deletaEtapa = index => {
+    let etapasNovo = [...etapas];
+    etapasNovo.splice(index, 1);
+    setEtapas(etapasNovo);
+  };
+
+  const adicionaRecebimento = () => {
+    setRecebimentos([...recebimentos, {}]);
+  };
+
+  const deletaRecebimento = index => {
+    let recebimentosNovo = [...recebimentos];
+    recebimentosNovo.splice(index, 1);
+    setRecebimentos(recebimentosNovo);
   };
 
   const calculator = createDecorator({
@@ -270,76 +295,112 @@ export default () => {
                         <div className="subtitulo">Cronograma das Entregas</div>
                         <hr className="linha-verde" />
 
-                        <div className="row">
-                          <div className="col-4">
-                            <span className="required-asterisk">*</span>
-                            <label className="col-form-label">Produtos</label>
-                            <TreeSelect
-                              treeData={empenhoOptions}
-                              value={values.empenho}
-                              onChange={onChangeEmpenho}
-                              placeholder="Selecione o Empenho"
-                              treeNodeFilterProp="title"
-                              style={{ width: "100%" }}
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              component={AutoCompleteField}
-                              options={getContratosFiltrado(
-                                values.termo_contrato
-                              )}
-                              label="Etapa"
-                              name="etapa"
-                              className="input-busca-produto"
-                              placeholder="Selecione a Etapa"
-                              required
-                              esconderIcone
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              component={SelectSelecione}
-                              naoDesabilitarPrimeiraOpcao
-                              options={produtosOptions} // MUDAR
-                              label="Parte"
-                              name="parte"
-                              placeholder={"Selecione a Parte"}
-                            />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-4">
-                            <Field
-                              component={InputComData}
-                              label="Data Programada"
-                              name="data_programada"
-                              placeholder="Selecionar a Data"
-                              required
-                              writable={false}
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              component={InputText}
-                              label="Quantidade"
-                              name="quantidade"
-                              placeholder="Digite a Quantidade"
-                              required
-                              type="number"
-                              pattern="[0-9]*"
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              component={InputText}
-                              label="Total de Embalagens"
-                              name="total_embalagens"
-                              placeholder="Digite a Quantidade"
-                              required
-                              apenasNumeros
-                            />
-                          </div>
+                        {etapas.map((etapa, index) => (
+                          <>
+                            {index !== 0 && (
+                              <>
+                                <hr />
+                                <div className="row">
+                                  <div className="w-100">
+                                    <Botao
+                                      texto=""
+                                      type={BUTTON_TYPE.BUTTON}
+                                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                                      icon="fas fa-trash"
+                                      className="float-right ml-3"
+                                      onClick={() => deletaEtapa(index)}
+                                      disabled={submitting}
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            <div className="row">
+                              <div className="col-4">
+                                <span className="required-asterisk">*</span>
+                                <label className="col-form-label">
+                                  Produtos
+                                </label>
+                                <TreeSelect
+                                  treeData={empenhoOptions}
+                                  value={values.empenho}
+                                  onChange={e => onChangeEmpenho(e, index)}
+                                  placeholder="Selecione o Empenho"
+                                  treeNodeFilterProp="title"
+                                  style={{ width: "100%" }}
+                                />
+                              </div>
+                              <div className="col-4">
+                                <Field
+                                  component={AutoCompleteField}
+                                  options={getContratosFiltrado(
+                                    values.termo_contrato
+                                  )}
+                                  label="Etapa"
+                                  name={`etapa_${index}`}
+                                  className="input-busca-produto"
+                                  placeholder="Selecione a Etapa"
+                                  required
+                                  esconderIcone
+                                />
+                              </div>
+                              <div className="col-4">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={produtosOptions} // MUDAR
+                                  label="Parte"
+                                  name={`parte_${index}`}
+                                  placeholder={"Selecione a Parte"}
+                                />
+                              </div>
+                            </div>
+                            <div className="row">
+                              <div className="col-4">
+                                <Field
+                                  component={InputComData}
+                                  label="Data Programada"
+                                  name={`data_programada_${index}`}
+                                  placeholder="Selecionar a Data"
+                                  required
+                                  writable={false}
+                                />
+                              </div>
+                              <div className="col-4">
+                                <Field
+                                  component={InputText}
+                                  label="Quantidade"
+                                  name={`quantidade_${index}`}
+                                  placeholder="Digite a Quantidade"
+                                  required
+                                  type="number"
+                                  pattern="[0-9]*"
+                                />
+                              </div>
+                              <div className="col-4">
+                                <Field
+                                  component={InputText}
+                                  label="Total de Embalagens"
+                                  name={`total_embalagens_${index}`}
+                                  placeholder="Digite a Quantidade"
+                                  required
+                                  apenasNumeros
+                                />
+                              </div>
+                            </div>
+                          </>
+                        ))}
+
+                        <div className="text-center mb-2 mt-2">
+                          <Botao
+                            texto="+ Adicionar Etapa"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            className=""
+                            onClick={() => adicionaEtapa()}
+                            disabled={submitting}
+                          />
                         </div>
                       </div>
                     </div>
@@ -380,7 +441,64 @@ export default () => {
                       aria-labelledby="headingOne"
                       data-parent="#accordionCronograma"
                     >
-                      222222222222222222
+                      <div className="card-body">
+                        {recebimentos.map((recebimento, index) => (
+                          <>
+                            {index !== 0 && (
+                              <>
+                                <hr />
+                                <div className="row">
+                                  <div className="w-100">
+                                    <Botao
+                                      texto=""
+                                      type={BUTTON_TYPE.BUTTON}
+                                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                                      icon="fas fa-trash"
+                                      className="float-right ml-3"
+                                      onClick={() => deletaRecebimento(index)}
+                                      disabled={submitting}
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+
+                            <div className="row">
+                              <div className="col-4">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={produtosOptions} // MUDAR
+                                  label="Data Programada"
+                                  name={`data_recebimento_${index}`}
+                                  placeholder={"Selecione a Data"}
+                                />
+                              </div>
+                              <div className="col-4">
+                                <Field
+                                  component={SelectSelecione}
+                                  naoDesabilitarPrimeiraOpcao
+                                  options={produtosOptions} // MUDAR
+                                  label="Tipo de Carga"
+                                  name={`tipo_recebimento_${index}`}
+                                  placeholder={"Selecione a Carga"}
+                                />
+                              </div>
+                            </div>
+                          </>
+                        ))}
+
+                        <div className="text-center mb-2 mt-2">
+                          <Botao
+                            texto="+ Adicionar Recebimento"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            className=""
+                            onClick={() => adicionaRecebimento()}
+                            disabled={submitting}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
