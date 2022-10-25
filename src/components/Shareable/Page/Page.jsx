@@ -11,7 +11,7 @@ import { useEffect } from "react";
 export const Page = ({ ...props }) => {
   const history = useHistory();
 
-  const { children, titulo, botaoVoltar } = props;
+  const { children, titulo, botaoVoltar, voltarPara } = props;
 
   const [nome, setNome] = useState(null);
   const [toggled, setToggled] = useState(false);
@@ -49,7 +49,13 @@ export const Page = ({ ...props }) => {
           {children.length ? children[0] : children}
           <h1 className="page-title">
             <span className="texto-titulo">{titulo}</span>
-            {botaoVoltar && <BotaoVoltar onClick={() => history.goBack()} />}
+            {botaoVoltar && (
+              <BotaoVoltar
+                onClick={() => {
+                  voltarPara ? history.push(voltarPara) : history.goBack();
+                }}
+              />
+            )}
           </h1>
           {(usuarioEhDistribuidora() || usuarioEhLogistica()) &&
             window.location.pathname === "/" && (

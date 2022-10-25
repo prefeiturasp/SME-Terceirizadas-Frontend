@@ -33,6 +33,7 @@ import StatusSolicitacoesRecusadasNutriManifestacaoPage from "../pages/Nutricion
 import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import GerenciamentoEmailsPage from "../pages/Configuracoes/GerenciamentoEmailsPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
@@ -659,6 +660,12 @@ const routesConfig = [
     component: CadastrosPage,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/configuracoes/gerenciamento-emails`,
+    component: GerenciamentoEmailsPage,
+    exact: false,
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/mensagem`,
