@@ -36,6 +36,10 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     produtosEditaisSelecionados,
     setProdutosEditaisSelecionados
   ] = useState([]);
+  const [
+    qtdProdutosGetListaProdutos,
+    setQtdProdutosGetListaProdutos
+  ] = useState(0);
   const [erros, setErros] = useState({
     editalOrigem: false,
     editaisDestino: false,
@@ -49,7 +53,10 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
   const onSubmit = async formValues => {
     let payload = formValues;
     if (produtosEditaisSelecionados.length !== 0) {
-      payload["produtos_editais"] = produtosEditaisSelecionados;
+      const produtos_editais = produtosEditaisSelecionados.filter(
+        prod => prod !== "todos"
+      );
+      payload["produtos_editais"] = produtos_editais;
     }
     let resultadoValidacao = await validatePayload(payload);
     setErros(resultadoValidacao);
@@ -75,6 +82,19 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
 
   const onChangeProdutosEditais = (_value, _label, extra) => {
     setErros({ ...erros, produtos: _value.length === 0 });
+    if (extra.triggerValue === "todos") {
+      let checked = [];
+      if (produtosEditaisSelecionados.length > 0) {
+        setProdutosEditaisSelecionados([]);
+      } else {
+        opcoesProdutosEditais
+          .filter(op => op.key !== "todos")
+          .map(op => op.children.map(ch => checked.push(ch.key)));
+        checked.push("todos");
+        setProdutosEditaisSelecionados(checked);
+      }
+      return;
+    }
     let resultado = produtosEditaisSelecionados;
     if (extra.triggerNode && extra.triggerNode.props.todos) {
       let uuids;
@@ -98,6 +118,13 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
           uuid => !extra.triggerValue.includes(uuid)
         );
       }
+    }
+    if (extra.preValue.find(v => v.value === "todos")) {
+      resultado = resultado.filter(prod => prod !== "todos");
+    }
+    resultado = [...new Set(resultado)];
+    if (qtdProdutosGetListaProdutos === resultado.length) {
+      resultado.push("todos");
     }
     setProdutosEditaisSelecionados(resultado);
   };
@@ -156,10 +183,28 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
             changes.values["tipo_produto_edital_origem"]
         });
         if (response.status === HTTP_STATUS.OK) {
-          let t = formatarOpcoes(response.data);
+          let t = [];
+          if (response.data.length > 0) {
+            t.push({
+              title: (
+                <span
+                  style={{
+                    display: "inline-block",
+                    cursor: "pointer"
+                  }}
+                >
+                  Todos
+                </span>
+              ),
+              value: "todos",
+              key: "todos"
+            });
+          }
+          t.push(...formatarOpcoes(response.data));
           setOpcoesProdutosEditais(t);
           setLoadingProdutos(false);
           setCarregando(false);
+          setQtdProdutosGetListaProdutos(response.data.length);
         }
       } catch (e) {
         toastError("Houve um erro ao carregar opções dos produtos");
