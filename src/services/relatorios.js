@@ -326,3 +326,11 @@ export const getMotivosDREnaoValida = async () => {
     return data;
   }
 };
+
+export const getRelatorioKitLancheCEMEI = async uuid => {
+  const url = `/solicitacao-kit-lanche-cemei/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_kit_lanche_cemei.pdf");
+};
