@@ -13,7 +13,8 @@ import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "./../../../../helpers/painelPedidos";
 
 class PainelPedidos extends Component {
@@ -35,12 +36,24 @@ class PainelPedidos extends Component {
 
     Promise.all([
       getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
-    ]).then(([response, responseCei]) => {
-      const results = safeConcatOn("results", response, responseCei);
-      pedidosPrioritarios = filtraPrioritarios(results);
-      pedidosNoPrazoLimite = filtraNoLimite(results);
-      pedidosNoPrazoRegular = filtraRegular(results);
+      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
+      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEMEI)
+    ]).then(([response, responseCei, responseCEMEI]) => {
+      const results = safeConcatOn(
+        "results",
+        response,
+        responseCei,
+        responseCEMEI
+      );
+      pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(results)
+      );
+      pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(results)
+      );
+      pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

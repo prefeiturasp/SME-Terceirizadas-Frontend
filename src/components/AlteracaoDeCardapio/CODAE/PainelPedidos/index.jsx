@@ -5,7 +5,8 @@ import { FiltroEnum, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { codaeListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
@@ -30,9 +31,15 @@ class PainelPedidos extends Component {
       codaeListarSolicitacoesDeAlteracaoDeCardapio(filtro, SOLICITACAO_CEI)
     ]).then(([response, ceiResponse]) => {
       const results = safeConcatOn("results", response, ceiResponse);
-      let pedidosPrioritarios = filtraPrioritarios(results);
-      let pedidosNoPrazoLimite = filtraNoLimite(results);
-      let pedidosNoPrazoRegular = filtraRegular(results);
+      let pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(results)
+      );
+      let pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(results)
+      );
+      let pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(results)
+      );
       this.setState({
         loading: false,
         pedidosPrioritarios,

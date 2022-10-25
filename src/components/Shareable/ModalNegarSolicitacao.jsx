@@ -3,11 +3,11 @@ import React, { Component } from "react";
 import { Modal } from "react-bootstrap";
 import { Field } from "redux-form";
 import { peloMenosUmCaractere, required } from "../../helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "./TextArea/TextAreaWYSIWYG";
 import { toastError, toastSuccess, toastWarn } from "./Toast/dialogs";
 import Botao from "./Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "./Botao/constants";
 import { MENSAGEM_VAZIA } from "./TextArea/constants";
+import CKEditorField from "./CKEditorField";
 
 export class ModalNegarSolicitacao extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ export class ModalNegarSolicitacao extends Component {
           <div className="form-row mb-3">
             <div className="form-group col-12">
               <Field
-                component={TextAreaWYSIWYG}
+                component={CKEditorField}
                 label="Justificativa"
                 name="justificativa"
                 required
@@ -73,7 +73,7 @@ export class ModalNegarSolicitacao extends Component {
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
               <Botao
@@ -82,7 +82,7 @@ export class ModalNegarSolicitacao extends Component {
                 onClick={() => {
                   this.negarSolicitacaoEscolaOuDre(uuid);
                 }}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 className="ml-3"
               />
             </div>

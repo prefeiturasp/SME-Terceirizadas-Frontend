@@ -182,7 +182,8 @@ export const escolaPodeCancelar = status => {
 export const TIPO_SOLICITACAO = {
   SOLICITACAO_NORMAL: "solicitacao-normal",
   SOLICITACAO_CONTINUA: "solicitacao-continua",
-  SOLICITACAO_CEI: "solicitacao-cei"
+  SOLICITACAO_CEI: "solicitacao-cei",
+  SOLICITACAO_CEMEI: "solicitacao-cemei"
 };
 
 export const TIPOS_SOLICITACAO_LABEL = {
@@ -401,3 +402,6 @@ export const OPTIONS_STATUS_DIETA = [
     nome: STATUS_DIETAS.CANCELADAS
   }
 ];
+
+export const PAGINACAO_DEFAULT = 10;
+export const PAGINACAO_DASHBOARD_DEFAULT = 6;

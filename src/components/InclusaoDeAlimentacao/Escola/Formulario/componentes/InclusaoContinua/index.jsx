@@ -5,10 +5,10 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import Weekly from "components/Shareable/Weekly/Weekly";
 import { WEEK } from "configs/constants";
@@ -291,7 +291,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
         </div>
       </div>
       <Field
-        component={TextAreaWYSIWYG}
+        component={CKEditorField}
         label="Observações"
         validate={maxLength(1000)}
         name={`observacao`}

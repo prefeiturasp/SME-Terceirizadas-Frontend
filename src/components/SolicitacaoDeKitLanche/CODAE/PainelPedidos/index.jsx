@@ -9,7 +9,8 @@ import {
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { getCodaePedidosDeKitLanche } from "services/kitLanche";
@@ -35,12 +36,24 @@ class PainelPedidos extends Component {
 
     Promise.all([
       getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI)
-    ]).then(([response, responseCei]) => {
-      const results = safeConcatOn("results", response, responseCei);
-      pedidosPrioritarios = filtraPrioritarios(results);
-      pedidosNoPrazoLimite = filtraNoLimite(results);
-      pedidosNoPrazoRegular = filtraRegular(results);
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
+      getCodaePedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEMEI)
+    ]).then(([response, responseCei, responseCEMEI]) => {
+      const results = safeConcatOn(
+        "results",
+        response,
+        responseCei,
+        responseCEMEI
+      );
+      pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(results)
+      );
+      pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(results)
+      );
+      pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

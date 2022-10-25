@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import SSelect from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -353,7 +353,7 @@ export default ({
             <div className="row pb-3 mb-3">
               <div className="col-12">
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Observações"
                   name="observacoes_alteracao"
                   className="form-control"

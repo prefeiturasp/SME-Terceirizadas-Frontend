@@ -14,7 +14,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "components/Shareable/Botao";
 import HTTP_STATUS from "http-status-codes";
 import {
@@ -332,6 +332,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                           aluno.serie.includes("3") ||
                           aluno.serie.includes("4")
                       )}
+                      solicitacao="solicitacao_cei"
                     />
                   </>
                 )}
@@ -362,6 +363,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                             aluno.serie.includes("4")
                           )
                       )}
+                      solicitacao="solicitacao_emei"
                     />
                   </>
                 )}
@@ -369,7 +371,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   Número total de kits: <b>{getNumeroTotalKits(values)}</b>
                 </div>
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Observações"
                   name="observacao"
                   required

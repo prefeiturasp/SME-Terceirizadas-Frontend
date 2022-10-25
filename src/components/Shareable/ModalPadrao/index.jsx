@@ -7,10 +7,10 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
-import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
+import CKEditorField from "../CKEditorField";
 import { toastError, toastSuccess } from "../Toast/dialogs";
-import "./style.scss";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
+import "./style.scss";
 
 export class ModalPadrao extends Component {
   propTypes = {
@@ -126,7 +126,7 @@ export class ModalPadrao extends Component {
                 <div className="row">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label={labelJustificativa}
                       placeholder={textAreaPlaceholder}
                       name="justificativa"
@@ -144,13 +144,13 @@ export class ModalPadrao extends Component {
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
                     />
                     <Botao
                       texto="Enviar"
                       type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.BLUE}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
                   </div>

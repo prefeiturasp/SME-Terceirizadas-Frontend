@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import MultiSelect from "./MultiSelect";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
@@ -47,6 +47,9 @@ export default class SubstituicoesField extends Component {
       produtos,
       removeOption,
       input: { name },
+      form,
+      values,
+      index,
       deveHabilitarApagar
     } = this.props;
 
@@ -94,24 +97,31 @@ export default class SubstituicoesField extends Component {
           </div>
           <div className="col-4">
             <Field
-              component={MultiSelect}
-              type="select-multi"
+              component={StatefulMultiSelect}
               name={`${name}.substitutos`}
-              alimentoSelecionado={this.state.valorSelecionado}
-              options={produtos
-                .filter(p => {
-                  if (this.state.valorSelecionado === undefined) {
-                    return true;
-                  }
-                  const alimento = this.state.valorSelecionado;
-                  return p.nome.split(" (")[0] !== alimento.nome;
-                })
-                .map(a => {
-                  return {
-                    value: a.uuid,
-                    label: a.nome
-                  };
-                })}
+              selected={
+                (values.substituicoes &&
+                  values.substituicoes[index].substitutos) ||
+                []
+              }
+              options={produtos.map(produto => ({
+                value: produto.uuid,
+                label: produto.nome
+              }))}
+              onSelectedChanged={values_ =>
+                form.change(
+                  `substituicoes[
+                ${index}].substitutos`,
+                  values_
+                )
+              }
+              disableSearch={false}
+              hasSelectAll={false}
+              overrideStrings={{
+                selectSomeItems: "Selecione",
+                allItemsAreSelected: "Todos os itens estão selecionados",
+                selectAll: "Todos"
+              }}
               validate={required}
             />
           </div>

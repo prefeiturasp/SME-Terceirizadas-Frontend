@@ -7,7 +7,7 @@ import {
   required,
   maxLengthProduto
 } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
@@ -107,7 +107,7 @@ export default class ModalCancelarHomologacaoProduto extends Component {
                 <div className="form-row row-cancelar">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Justificativa"
                       name="justificativa"
                       required

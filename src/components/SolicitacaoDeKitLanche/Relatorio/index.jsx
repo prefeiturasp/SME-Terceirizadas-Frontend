@@ -178,7 +178,7 @@ class Relatorio extends Component {
       ].includes(tipoPerfil) &&
         textoBotaoAprova) ||
       (solicitacaoKitLanche &&
-        (!solicitacaoKitLanche.prioridade !== "REGULAR" ||
+        (solicitacaoKitLanche.prioridade === "REGULAR" ||
           [
             statusEnum.TERCEIRIZADA_RESPONDEU_QUESTIONAMENTO,
             statusEnum.CODAE_AUTORIZADO
@@ -286,10 +286,10 @@ class Relatorio extends Component {
             }`}</span>
             <Link to={`/`}>
               <Botao
-                texto="voltar"
-                titulo="voltar"
+                texto="Voltar"
+                titulo="Voltar"
                 type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 icon={BUTTON_ICON.ARROW_LEFT}
                 className="float-right"
               />

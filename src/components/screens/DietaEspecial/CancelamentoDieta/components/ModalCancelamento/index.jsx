@@ -9,8 +9,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import "./styles.scss";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { escolaInativaDietaEspecial } from "services/dietaEspecial.service";
@@ -20,6 +19,7 @@ import {
   textAreaRequired
 } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
+import "./styles.scss";
 
 export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
   const onSubmit = values => {
@@ -87,7 +87,7 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
               <section className="row mt-5">
                 <div className="col-12">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     label="Justificativa"
                     name="justificativa"
                     className="form-control mb-3"

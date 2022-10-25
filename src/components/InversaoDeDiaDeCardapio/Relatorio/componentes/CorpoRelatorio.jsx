@@ -37,7 +37,7 @@ export const CorpoRelatorio = props => {
           <Botao
             type={BUTTON_TYPE.BUTTON}
             titulo="imprimir"
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}

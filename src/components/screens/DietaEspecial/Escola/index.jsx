@@ -21,6 +21,7 @@ import {
 import {
   cpfMask,
   dateDelta,
+  deepCopy,
   gerarParametrosConsulta,
   getError
 } from "../../../../helpers/utilities";
@@ -287,14 +288,23 @@ class solicitacaoDietaEspecial extends Component {
   };
 
   onSubmit(payload) {
-    payload.anexos = payload.anexos.map(anexo => {
+    const payload_ = deepCopy(payload);
+    payload_.anexos = payload_.anexos.map(anexo => {
       return {
         nome: anexo.nome,
         arquivo: anexo.base64
       };
     });
+    if (
+      payload_.aluno_nao_matriculado_data &&
+      payload_.aluno_nao_matriculado_data.data_nascimento.includes("T")
+    ) {
+      payload_.aluno_nao_matriculado_data.data_nascimento = payload_.aluno_nao_matriculado_data.data_nascimento.split(
+        "T"
+      )[0];
+    }
     return new Promise(async (resolve, reject) => {
-      const response = await criaDietaEspecial(payload);
+      const response = await criaDietaEspecial(payload_);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Solicitação realizada com sucesso.");
         this.setState({
@@ -454,6 +464,7 @@ class solicitacaoDietaEspecial extends Component {
                           showYearDropdown
                           disabled
                           tabindex="-1"
+                          required
                           validate={required}
                         />
                       </div>

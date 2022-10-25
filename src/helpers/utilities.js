@@ -561,6 +561,11 @@ export const ehEscolaTipoCEI = escola => {
   );
 };
 
+export const ehEscolaTipoCEMEI = escola => {
+  const nome = (escola && escola.nome) || "";
+  return nome.startsWith("CEMEI");
+};
+
 export const tipoSolicitacaoComoQuery = obj => {
   return `tipoSolicitacao=${comoTipo(obj)}`;
 };
@@ -585,7 +590,7 @@ export const gerarLinkRelatorio = (path, solicitacao) => {
   }&${tipoSolicitacaoComoQuery(solicitacao)}`;
 };
 
-export const safeConcatOn = (propName, a, b, c) => {
+export const safeConcatOn = (propName, a, b, c, d) => {
   if (!a || !a[propName] || !Array.isArray(a[propName])) {
     // eslint-disable-next-line no-console
     console.error("Invalid array concatenation on value: ", a);
@@ -599,7 +604,10 @@ export const safeConcatOn = (propName, a, b, c) => {
   if (!c || !c[propName] || !Array.isArray(c[propName])) {
     return a[propName].concat(b[propName]);
   }
-  return a[propName].concat(b[propName], c[propName]);
+  if (!d || !d[propName] || !Array.isArray(d[propName])) {
+    return a[propName].concat(b[propName], c[propName]);
+  }
+  return a[propName].concat(b[propName], c[propName], d[propName]);
 };
 
 export const comparaObjetosMoment = (a, b) => {
@@ -688,6 +696,10 @@ export const exibirGA = () => {
             lote.diretoria_regional.nome.includes("IPIRANGA") ||
             lote.diretoria_regional.nome.includes("PIRITUBA")
         );
+      case `"nutricao_manifestacao"`:
+        return true;
+      case `"supervisao_nutricao"`:
+        return true;
       default:
         return false;
     }

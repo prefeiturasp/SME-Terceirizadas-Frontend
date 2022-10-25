@@ -1,0 +1,98 @@
+@import "../../../styles/variables.scss";
+
+.red {
+  color: $red;
+}
+.yellow {
+  color: $yellow;
+}
+.green {
+  color: $green;
+}
+
+.tabela-matriculados {
+  margin: 0 0 24px 0;
+
+  article {
+    border-radius: 6px;
+    border: 1px solid $grayDisabled;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    min-height: 48px;
+    height: auto;
+    background-color: $grayInputBackground;
+    font-weight: bold;
+    line-height: 16px;
+    color: $blackInput;
+
+    div {
+      font-style: normal;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 16px;
+    }
+
+    .alunos-matriculados {
+      border-right: 0.5px solid $grayDisabled;
+    }
+
+    .quantidade {
+      display: flex;
+      border-left: 0.5px solid $grayDisabled;
+    }
+  }
+}
+
+.tabela-faixa-etaria-cei {
+  article {
+    border-bottom: 1px solid $grayDisabled;
+    border-right: 1px solid $grayDisabled;
+    border-left: 1px solid $grayDisabled;
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+    min-height: 48px;
+    height: auto;
+    line-height: 16px;
+    color: $blackInput;
+
+    div {
+      font-style: normal;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 16px;
+    }
+
+    .faixa-etaria {
+      border-right: 0.5px solid $grayDisabled;
+    }
+
+    .quantidade {
+      display: flex;
+      border-left: 0.5px solid $grayDisabled;
+    }
+  }
+
+  article:first-child {
+    border-radius: 6px 6px 0 0;
+    border-top: 1px solid $grayDisabled;
+    background-color: $grayInputBackground;
+    font-weight: bold;
+  }
+
+  article:last-child {
+    border-radius: 0 0 6px 6px;
+    background-color: $grayInputBackground;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+}
+
+.total-kits {
+  margin: 24px 0 24px 0;
+  font-size: 16px;
+  font-weight: 700;
+}

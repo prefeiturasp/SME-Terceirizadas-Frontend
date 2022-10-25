@@ -14,7 +14,6 @@ import EditaisContratosPage from "../pages/Cadastros/EditaisContratosPage";
 import EmpresasCadastradas from "../pages/Cadastros/EmpresasCadastradasPage";
 import LotesCadastradosPage from "../pages/Cadastros/LotesCadastradosPage";
 import PainelPedidosAlteracaoDeCardapioCODAEPage from "../pages/CODAE/AlteracaoDeCardapio/PainelPedidosPage";
-import DashboardCODAEDetailDRE from "../pages/CODAE/DashboardCODAEDetailDRE";
 import PainelPedidosInclusaoDeAlimentacaoCODAEPage from "../pages/CODAE/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioCODAEPage from "../pages/CODAE/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaCODAEPage from "../pages/CODAE/SolicitacaoUnificada/PainelPedidosPage";
@@ -53,7 +52,6 @@ import StatusSolicitacoesAutorizadasEscolaPage from "../pages/Escola/StatusSolic
 import StatusSolicitacoesCanceladasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesCanceladasEscolaPage";
 import StatusSolicitacoesPendentesEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesPendentesEscolaPage";
 import StatusSolicitacoesRecusadasEscolaPage from "../pages/Escola/StatusSolicitacoes/StatusSolicitacoesRecusadasEscolaPage";
-import StatusSolicitacoesPage from "../pages/Escola/StatusSolicitacoesPage";
 
 import * as RelatorioPageInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import PerfilPage from "../pages/Perfil/PerfilPage";
@@ -62,10 +60,10 @@ import PainelPedidosAlteracaoDeCardapioTerceirizadaPage from "../pages/Terceiriz
 import PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage from "../pages/Terceirizada/InclusaoDeAlimentacao/PainelPedidosPage";
 import PainelPedidosInversaoDiaCardapioTerceirizadaPage from "../pages/Terceirizada/InversaoDiaCardapio/PainelPedidosPage";
 import PainelPedidosSolicitacaoUnificadaTerceirizadaPage from "../pages/Terceirizada/SolicitacaoUnificada/PainelPedidosPage";
-import StatusSolicitacoesAutorizadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
-import StatusQuestionamentosCodaePage from "../pages/Terceirizada/StatusSolicitacoes/StatusQuestionamentosCodae";
-import StatusSolicitacoesCanceladasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
-import StatusSolicitacoesNegadasTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
+import { StatusSolicitacoesAutorizadasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesAutorizadas";
+import { StatusQuestionamentosCodae } from "../pages/Terceirizada/StatusSolicitacoes/StatusQuestionamentosCodae";
+import { StatusSolicitacoesCanceladasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesCanceladasTerceirizada";
+import { StatusSolicitacoesNegadasTerceirizadaPage } from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesNegadasTerceirizada";
 import StatusSolicitacoesPendentesTerceirizadaPage from "../pages/Terceirizada/StatusSolicitacoes/StatusSolicitacoesPendentes";
 import PainelPedidosSuspensaoAlimentacao from "../pages/Terceirizada/SuspensaoAlimentacao/PainelPedidosPage";
 import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/SuspensaoAlimentacao/RelatorioPage";
@@ -89,11 +87,11 @@ import {
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
   relatoriosSolicitacaoKitLanche,
+  relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
   inclusaoAlimentacao
 } from "./helper";
-import * as statusSolicitacoesPaginas from "./imports/StatusSolicitacoesPaginas";
 import {
   usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
@@ -277,12 +275,6 @@ const routesConfig = [
       !usuarioEscolaEhGestaoDireta()
   },
   {
-    path: `/${constants.ESCOLA}/status-solicitacoes`,
-    component: StatusSolicitacoesPage,
-    exact: false,
-    tipoUsuario: usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira()
-  },
-  {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoAlimentacao(),
     exact: false,
@@ -326,12 +318,6 @@ const routesConfig = [
       usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.DRE}/${constants.SOLICITACOES}`,
-    component: statusSolicitacoesPaginas.SolicitacoesTotalDRE,
-    exact: false,
-    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -508,7 +494,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${
       constants.SOLICITACOES_COM_QUESTIONAMENTO
     }`,
-    component: StatusQuestionamentosCodaePage,
+    component: StatusQuestionamentosCodae,
     exact: false,
     tipoUsuario: usuarioEhTerceirizada()
   },
@@ -737,15 +723,15 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.SOLICITACAO_KIT_LANCHE_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosSolicitacaoKitLancheCEMEI(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.CODAE}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosCODAE,
     exact: true,
-    tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
-  },
-  {
-    path: `/${constants.CODAE}/${constants.DETALHE_DASHBOARD_DRE}`,
-    component: DashboardCODAEDetailDRE,
-    exact: false,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
@@ -1141,6 +1127,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
+      usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhTerceirizada() ||
       (usuarioEhEscola() &&
@@ -1175,7 +1162,8 @@ const routesConfig = [
         !usuarioEscolaEhGestaoMistaParceira() &&
         !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhDRE()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,

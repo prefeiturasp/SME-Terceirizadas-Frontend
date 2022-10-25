@@ -95,6 +95,11 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
         {kits
           .filter(kit => kit.status === "Ativo")
           .map((kit, indice) => {
+            const CARD_DISABLED =
+              !valuesTempoPasseio ||
+              (valuesKits &&
+                valuesKits.length === parseInt(valuesTempoPasseio) + 1 &&
+                !valuesKits.includes(kit.uuid));
             return (
               <div
                 className={`col-2 offset-${
@@ -102,7 +107,10 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                 } mt-3 d-flex`}
                 key={indice}
               >
-                <div className="card card-kits w-100">
+                <div
+                  className={`card card-kits w-100 ${CARD_DISABLED &&
+                    "card-disabled"}`}
+                >
                   <div className="card-body p-2">
                     <div className="row">
                       <div className="col-6">
@@ -117,13 +125,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                           value={kit.uuid}
                           className="float-right"
                           name={name}
-                          disabled={
-                            !valuesTempoPasseio ||
-                            (valuesKits &&
-                              valuesKits.length ===
-                                parseInt(valuesTempoPasseio) + 1 &&
-                              !valuesKits.includes(kit.uuid))
-                          }
+                          disabled={CARD_DISABLED}
                         />
                         <span className="checkmark" />
                       </div>
@@ -191,7 +193,10 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
   );
 };
 
-export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
+export const AlunosDietaEspecial = ({
+  alunosComDietaEspecial,
+  solicitacao
+}) => {
   const [collapseAlunos, setCollapseAlunos] = useState(false);
 
   return (
@@ -202,10 +207,10 @@ export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
           <div className="row">
             <div className="col-2">{"Código EOL"}</div>
             <div className="col-8">{"Nome do Aluno"}</div>
-            <div className="pl-5 col-1">
+            <div className="pl-5 col-1 toggle-right">
               <ToggleExpandir
                 onClick={() => setCollapseAlunos(!collapseAlunos)}
-                ativo={!collapseAlunos}
+                ativo={collapseAlunos}
               />
             </div>
           </div>
@@ -221,7 +226,7 @@ export const AlunosDietaEspecial = ({ alunosComDietaEspecial }) => {
                         component="input"
                         type="checkbox"
                         value={aluno.uuid}
-                        name="solicitacao_emei.alunos_com_dieta_especial_participantes"
+                        name={`${solicitacao}.alunos_com_dieta_especial_participantes`}
                       />
                     </td>
                     <td>{aluno.codigo_eol}</td>
