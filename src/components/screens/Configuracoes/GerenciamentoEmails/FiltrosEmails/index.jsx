@@ -45,9 +45,9 @@ export default props => {
           toastError(erro.response.data.terceirizada[0]);
         } else {
           if (erro.response.data.email) {
-            if (erro.response.data.email[0].includes('existe')) {
+            if (erro.response.data.email[0].includes("existe")) {
               toastError("E-mail já cadastrado para esta empresa");
-            } else { 
+            } else {
               toastError(erro.response.data.email[0]);
             }
           } else {

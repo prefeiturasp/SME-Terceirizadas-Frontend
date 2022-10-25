@@ -24,7 +24,7 @@ export default () => {
   const [empresas, setEmpresas] = useState([]);
 
   useEffect(() => {
-    getTerceirizadas()
+    getTerceirizadas();
   }, []);
 
   const getTerceirizadas = async () => {
@@ -34,7 +34,7 @@ export default () => {
         normalizaLabelValueEmpresaSocial(responseEmpresa.data.results)
       );
     }
-  }
+  };
 
   const buscarTerceirizadas = async (page, mod, busca) => {
     setCarregando(true);
