@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Pagination } from "antd";
 
 import "./style.scss";
-import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhEscola,
+  usuarioEhNutricionistaSupervisao,
+  usuarioEhTerceirizada
+} from "helpers/utilities";
 
 const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   const [page, setPage] = useState(1);
@@ -10,6 +16,13 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   const onChangePagination = page => {
     setPage(page);
   };
+
+  const exibirNomeTerceirizada =
+    !usuarioEhEscola() &&
+    !usuarioEhTerceirizada() &&
+    !usuarioEhCODAEGestaoAlimentacao() &&
+    !usuarioEhNutricionistaSupervisao() &&
+    !usuarioEhCODAENutriManifestacao();
 
   const totalResultados = dadosProdutos && dadosProdutos.length;
   const pageSize = 10;
@@ -22,9 +35,7 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
       <table className="table table-bordered table-items">
         <thead>
           <tr className="table-head-items">
-            {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
-              <th>Terceirizada</th>
-            )}
+            {exibirNomeTerceirizada && <th>Terceirizada</th>}
             <th>Produto</th>
             <th>Marca</th>
             <th>Edital</th>
@@ -38,9 +49,7 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
             dadosProdutosPaginado.map((produto, index) => {
               return (
                 <tr key={index} className="table-body-items">
-                  {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
-                    <td>{produto.terceirizada}</td>
-                  )}
+                  {exibirNomeTerceirizada && <td>{produto.terceirizada}</td>}
                   <td>{produto.nome}</td>
                   <td>{produto.marca}</td>
                   <td>{produto.edital}</td>

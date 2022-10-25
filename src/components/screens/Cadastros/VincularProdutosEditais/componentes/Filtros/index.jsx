@@ -46,7 +46,7 @@ export default ({
     if (value) {
       const reg = new RegExp(value, "iu");
       return listaEditais
-        .map(edital => edital.edital__numero)
+        .map(edital => edital.numero)
         .filter(edital => reg.test(edital));
     }
     return [];

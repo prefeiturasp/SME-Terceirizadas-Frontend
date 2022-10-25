@@ -24,7 +24,8 @@ const MenuRelatorios = () => {
       !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    usuarioEhCODAENutriManifestacao();
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhDRE();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
@@ -43,6 +44,7 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
+    usuarioEhDRE() ||
     (usuarioEhEscola() &&
       !usuarioEscolaEhGestaoMistaParceira() &&
       !usuarioEscolaEhGestaoDireta()) ||

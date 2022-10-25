@@ -36,7 +36,7 @@ export default ({ conferencia, reposicaoFlag }) => {
       <table className={`table table-bordered table-detalhe`}>
         <thead>
           <tr>
-            <th scope="col" rowSpan="3" className="text-center">
+            <th scope="col" rowSpan="3" className="text-center align-middle">
               Nome do Alimento
             </th>
             <th

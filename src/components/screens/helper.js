@@ -6,6 +6,7 @@ import {
   INVERSAO_CARDAPIO,
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
+  SOLICITACAO_KIT_LANCHE_CEMEI,
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   SUSPENSAO_ALIMENTACAO,
   SUSPENSAO_ALIMENTACAO_CEI
@@ -27,6 +28,7 @@ const INC_ALIMENTA_CONTINUA = "INC_ALIMENTA_CONTINUA";
 const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
 const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
 const KIT_LANCHE_AVULSA_CEI = "KIT_LANCHE_AVULSA_CEI";
+const KIT_LANCHE_CEMEI = "KIT_LANCHE_CEMEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -128,6 +130,10 @@ export const ajustarFormatoLog = (logs, card) => {
       case INC_ALIMENTA_CONTINUA:
         solicitacao = INCLUSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
+        descricao =
+          usuarioEhEscola() && log.motivo === "ETEC"
+            ? descricao.replace("Contínua", "- ETEC")
+            : descricao;
         break;
 
       case INC_ALIMENTA_CEI:
@@ -143,6 +149,11 @@ export const ajustarFormatoLog = (logs, card) => {
       case KIT_LANCHE_AVULSA_CEI:
         solicitacao = SOLICITACAO_KIT_LANCHE;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        break;
+
+      case KIT_LANCHE_CEMEI:
+        solicitacao = SOLICITACAO_KIT_LANCHE_CEMEI;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEMEI;
         break;
 
       default:
