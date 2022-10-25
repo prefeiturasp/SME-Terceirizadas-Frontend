@@ -46,12 +46,12 @@ export default () => {
     if (response.data.results.length) {
       setTerceirizadas(response.data.results);
       setTotal(response.data.count);
-      setResultados(true);
-      setModulo(mod);
     } else {
       setTotal(response.data.count);
+      setTerceirizadas([])
     }
-
+    setModulo(mod);
+    setResultados(true);
     setAtivos([]);
     setCarregando(false);
   };
