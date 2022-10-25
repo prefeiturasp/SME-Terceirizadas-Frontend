@@ -48,7 +48,7 @@ export default () => {
       setTotal(response.data.count);
     } else {
       setTotal(response.data.count);
-      setTerceirizadas([])
+      setTerceirizadas([]);
     }
     setModulo(mod);
     setResultados(true);
@@ -75,6 +75,12 @@ export default () => {
     buscarTerceirizadas(page ? page : 1, modulo);
   };
 
+  const escolheModolo = (mod) => {
+    if (modulo !== mod) {
+      buscarTerceirizadas(1, mod);
+    }
+  }
+
   return (
     <div>
       <div className="row mt-3">
@@ -86,7 +92,7 @@ export default () => {
           <CardLogo
             titulo={"Gestão de Alimentação"}
             onClick={() => {
-              buscarTerceirizadas(1, "Gestão de Alimentação");
+              escolheModolo("Gestão de Alimentação");
             }}
           >
             <IconeGestaoDeAlimentacao />
@@ -100,7 +106,7 @@ export default () => {
           <CardLogo
             titulo={"Dieta Especial"}
             onClick={() => {
-              buscarTerceirizadas(1, "Dieta Especial");
+              escolheModolo("Dieta Especial");
             }}
           >
             <IconeDietaEspecial />
@@ -114,7 +120,7 @@ export default () => {
           <CardLogo
             titulo={"Gestão de Produto"}
             onClick={() => {
-              buscarTerceirizadas(1, "Gestão de Produto");
+              escolheModolo("Gestão de Produto");
             }}
           >
             <IconeGestaoDeProduto />

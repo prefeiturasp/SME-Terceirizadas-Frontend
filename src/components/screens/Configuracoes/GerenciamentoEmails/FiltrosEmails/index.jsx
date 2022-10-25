@@ -26,7 +26,7 @@ export default props => {
   const handleAdicionarEmail = async () => {
     setShowModal(true);
   };
-  const CadastrarEmail = async values => {
+  const CadastrarEmail = async (form, values) => {
     const payload = {
       email: values.email,
       terceirizada: empresaSelect,
@@ -36,6 +36,8 @@ export default props => {
       const resultado = await getCriaEmailsTerceirizadasPorModulo(payload);
       if (resultado.status === CREATED) {
         setShowModal(false);
+        resetForm(form);
+        setEmpresaSelect("");
         toastSuccess("E-mail cadastrado com sucesso!");
         props.atualizaTabela();
       }
@@ -57,6 +59,11 @@ export default props => {
       }
     }
   };
+  const resetForm = async form => {
+    await form.change("empresa", null);
+    await form.change("email", null);
+  };
+
   return (
     <>
       <div className="filtros-requisicoes-emails">
@@ -97,6 +104,8 @@ export default props => {
                 show={showModal}
                 onHide={() => {
                   setShowModal(false);
+                  setEmpresaSelect("");
+                  resetForm(form);
                 }}
               >
                 <Spin tip="Enviando..." spinning={false}>
@@ -146,7 +155,7 @@ export default props => {
                       texto="Adicionar"
                       type={BUTTON_TYPE.SUBMIT}
                       onClick={() => {
-                        CadastrarEmail(values);
+                        CadastrarEmail(form, values);
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-2"
