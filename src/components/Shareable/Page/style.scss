@@ -32,3 +32,18 @@
     }
   }
 }
+
+.dark-content {
+  #wrapper {
+    #content-wrapper {
+      background-color: #464646;
+      div.content-wrapper-div {
+        background-color: #464646;
+      }
+    }
+  }
+
+  .page-title {
+    color: #fff;
+  }
+}
