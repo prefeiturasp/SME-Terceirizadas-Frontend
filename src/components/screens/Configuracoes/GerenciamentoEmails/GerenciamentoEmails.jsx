@@ -75,11 +75,11 @@ export default () => {
     buscarTerceirizadas(page ? page : 1, modulo);
   };
 
-  const escolheModolo = (mod) => {
+  const escolheModolo = mod => {
     if (modulo !== mod) {
       buscarTerceirizadas(1, mod);
     }
-  }
+  };
 
   return (
     <div>
