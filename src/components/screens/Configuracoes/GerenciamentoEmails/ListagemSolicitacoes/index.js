@@ -4,7 +4,7 @@ import "./styles.scss";
 
 export default ({ terceirizadas, ativos, setAtivos, modulo }) => {
   return (
-    <section className="resultado-busca-requisicao-entrega-dilog">
+    <section className="resultado-busca-emails-terceirizadas">
       <article>
         <div className="grid-table header-table">
           <div>Empresas e E-mails Cadastrados no Módulo de {modulo}</div>
