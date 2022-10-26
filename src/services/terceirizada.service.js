@@ -30,6 +30,25 @@ export const getTerceirizada = () => {
     });
 };
 
+export const getTerceirizada_razoes = () => {
+  const url = `${API_URL}/terceirizadas/lista-razoes/`;
+  let status = 0;
+  return fetch(url, {
+    headers: authToken,
+    method: "GET"
+  })
+    .then(response => {
+      status = response.status;
+      return response.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const getTerceirizadaUUID = uuid => {
   const url = `${API_URL}/terceirizadas/${uuid}/`;
   let status = 0;
@@ -107,4 +126,13 @@ export const getPdfRelatorioQuantitativo = async params => {
     }
   );
   saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
+};
+
+export const getEmailsTerceirizadasPorModulo = async params => {
+  const url = `/terceirizadas/emails-por-modulo/`;
+  return await axios.get(url, { params });
+};
+
+export const getCriaEmailsTerceirizadasPorModulo = async payload => {
+  return axios.post(`/emails-terceirizadas-modulos/`, payload);
 };
