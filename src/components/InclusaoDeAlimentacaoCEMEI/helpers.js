@@ -17,7 +17,11 @@ export const tiposAlimentacaoPorPeriodoETipoUnidade = (
         vinculo.periodo_escolar.nome === periodo &&
         vinculo.tipo_unidade_escolar.iniciais.includes(tipoUnidade)
     )
-    .tipos_alimentacao.map(tipo_alimentação => tipo_alimentação.nome)
+    .tipos_alimentacao.filter(
+      tipo_alimentacao =>
+        tipo_alimentacao.nome.toUpperCase() !== "LANCHE EMERGENCIAL"
+    )
+    .map(tipo_alimentação => tipo_alimentação.nome)
     .join(", ");
 };
 
