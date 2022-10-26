@@ -30,6 +30,41 @@
         color: $grayHeader;
         font-size: 10px;
       }
+      .icone-verde {
+        font-size: 14px;
+        color: #fff;
+      }
+      .icone-verde-fundo {
+        background-color: $green;
+        border-radius: 67px;
+        border: 0px;
+        padding: 8px 8px;
+        font-size: 11px;
+        height: 28px;
+        width: 28px;
+        margin: auto;
+      }
+    }
+  }
+}
+
+.dark-content {
+  .navbar {
+    background-color: #202020 !important;
+    .navbar-nav {
+      .nav-item {
+        p {
+          color: #fff;
+        }
+
+        .icone-verde-fundo {
+          background-color: #e7e7e7;
+
+          .icone-verde {
+            color: #3a3a3a;
+          }
+        }
+      }
     }
   }
 }
