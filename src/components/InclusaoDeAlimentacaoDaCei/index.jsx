@@ -15,27 +15,32 @@ import {
   meusRascunhosDeInclusaoDeAlimentacao,
   minhasFaixasEtarias
 } from "services/inclusaoDeAlimentacao/cei.legacy.service";
-import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "../../configs/constants";
-import { faixaToString } from "../../helpers/faixasEtarias";
-import { maxValue, required } from "../../helpers/fieldValidators";
+import { STATUS_DRE_A_VALIDAR, STATUS_RASCUNHO } from "configs/constants";
+import { faixaToString } from "helpers/faixasEtarias";
+import { maxValue, required } from "helpers/fieldValidators";
 import {
   agregarDefault,
+  checaSeDataEstaEntre2e5DiasUteis,
   formatarParaMultiselect,
   getError
-} from "../../helpers/utilities";
-import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../services/cadastroTipoAlimentacao.service";
-import Botao from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { InputComData } from "../Shareable/DatePicker";
-import InputText from "../Shareable/Input/InputText";
-import { Select } from "../Shareable/Select";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+} from "helpers/utilities";
+import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { InputComData } from "components/Shareable/DatePicker";
+import InputText from "components/Shareable/Input/InputText";
+import { Select } from "components/Shareable/Select";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   renderizarLabelTipoAlimentacao,
   retornaUuidEscolaPeriodoEscolar
 } from "./helper";
 import Rascunho from "./Rascunhos";
 import "./style.scss";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 
 const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
@@ -58,10 +63,26 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       tiposAlimentacaoSelecionados: [],
       vinculosPorTipoAlimentacaoEPeriodoEscolar: null,
       uuidRascunho: null,
-      ehOutroMotivo: false
+      ehOutroMotivo: false,
+      showModal: false
     };
     this.removerRascunho = this.removerRascunho.bind(this);
     this.carregarRascunho = this.carregarRascunho.bind(this);
+  }
+
+  onDataChanged(value) {
+    const { proximos_dois_dias_uteis, proximos_cinco_dias_uteis } = this.props;
+
+    if (
+      value &&
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        proximos_dois_dias_uteis,
+        proximos_cinco_dias_uteis
+      )
+    ) {
+      this.setState({ showModal: true });
+    }
   }
 
   carregarRascunho(param) {
@@ -486,7 +507,8 @@ class InclusaoDeAlimentacaoDaCei extends Component {
       totalFaixasEtarias,
       totalQuantidade,
       tiposAlimentacaoSelecionados,
-      ehOutroMotivo
+      ehOutroMotivo,
+      showModal
     } = this.state;
     const {
       periodos,
@@ -517,33 +539,38 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                 <div className="titulo-solicitacao">
                   Descrição da Inclusão de Alimentação
                 </div>
-                <div className="motivo-data mt-3">
-                  <Field
-                    component={Select}
-                    label="Motivo"
-                    name="motivo"
-                    required
-                    validate={required}
-                    options={agregarDefault(motivos)}
-                    onChange={event => {
-                      this.verificaSeEhOutroMotivo(event.target.value);
-                    }}
-                  />
-                  <Field
-                    className="input-data"
-                    component={InputComData}
-                    label="Dia"
-                    name="data"
-                    required
-                    validate={required}
-                    minDate={this.props.proximos_dois_dias_uteis}
-                    maxDate={moment()
-                      .endOf("year")
-                      .toDate()}
-                    onChange={value => {
-                      this.setadiaInclusao(value);
-                    }}
-                  />
+                <div className="row mt-3">
+                  <div className="col-7">
+                    <Field
+                      component={Select}
+                      label="Motivo"
+                      name="motivo"
+                      required
+                      validate={required}
+                      options={agregarDefault(motivos)}
+                      onChange={event => {
+                        this.verificaSeEhOutroMotivo(event.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="col-5">
+                    <Field
+                      className="input-data"
+                      component={InputComData}
+                      label="Dia"
+                      name="data"
+                      required
+                      validate={required}
+                      minDate={this.props.proximos_dois_dias_uteis}
+                      maxDate={moment()
+                        .endOf("year")
+                        .toDate()}
+                      onChange={value => {
+                        this.onDataChanged(value);
+                        this.setadiaInclusao(value);
+                      }}
+                    />
+                  </div>
                 </div>
                 {ehOutroMotivo && (
                   <div className="grid-outro-motivo pb-2">
@@ -557,54 +584,57 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                   </div>
                 )}
                 <div className="periodo-e-tipo-de-alimentacoes mt-3">
-                  <div>Períodos</div>
-                  <div>Tipos de Alimentação</div>
-
-                  <div className="periodos-da-cei">
-                    {periodos.map((periodo, indice) => {
-                      return (
-                        <div key={indice} className="input-radio-periodo">
-                          <label className="container-radio-input">
-                            <Field
-                              component={"input"}
-                              type="radio"
-                              name="periodo_escolar"
-                              value={periodo.uuid}
-                              onChange={() => {
-                                this.loadTiposAlimentacao(periodo);
-                                this.buscarFaixasEtariasEQuantidadesNoPeriodo(
-                                  periodo.escola_periodo,
-                                  diaInclusao
-                                );
-                              }}
-                            />
-                            <span className="checkmark" />
-                            <nav>{periodo.nome}</nav>
-                          </label>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div>
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="tipos_alimentacao"
-                      selected={tiposAlimentacaoSelecionados}
-                      options={formatarParaMultiselect(tiposAlimentacao)}
-                      disableSearch={true}
-                      overrideStrings={{
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                      valueRenderer={(selected, options) =>
-                        renderizarLabelTipoAlimentacao(selected, options)
-                      }
-                      onSelectedChanged={values =>
-                        this.onSelectedChanged(values)
-                      }
-                    />
+                  <div className="row">
+                    <div className="col-7">
+                      <div className="mb-2">Períodos</div>
+                      <div className="periodos-da-cei">
+                        {periodos.map((periodo, indice) => {
+                          return (
+                            <div key={indice} className="input-radio-periodo">
+                              <label className="container-radio-input">
+                                <Field
+                                  component={"input"}
+                                  type="radio"
+                                  name="periodo_escolar"
+                                  value={periodo.uuid}
+                                  onChange={() => {
+                                    this.loadTiposAlimentacao(periodo);
+                                    this.buscarFaixasEtariasEQuantidadesNoPeriodo(
+                                      periodo.escola_periodo,
+                                      diaInclusao
+                                    );
+                                  }}
+                                />
+                                <span className="checkmark" />
+                                <nav>{periodo.nome}</nav>
+                              </label>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="col-5">
+                      <div className="mb-2">Tipos de Alimentação</div>
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="tipos_alimentacao"
+                        selected={tiposAlimentacaoSelecionados}
+                        options={formatarParaMultiselect(tiposAlimentacao)}
+                        disableSearch={true}
+                        overrideStrings={{
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                        valueRenderer={(selected, options) =>
+                          renderizarLabelTipoAlimentacao(selected, options)
+                        }
+                        onSelectedChanged={values =>
+                          this.onSelectedChanged(values)
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -689,6 +719,10 @@ class InclusaoDeAlimentacaoDaCei extends Component {
                 </div>
               </div>
             </div>
+            <ModalDataPrioritaria
+              showModal={showModal}
+              closeModal={() => this.setState({ showModal: false })}
+            />
           </form>
         )}
       </div>
