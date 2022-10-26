@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .rascunhos-inclusao {
   display: flex;
   justify-content: space-between;
@@ -32,9 +34,8 @@
   }
 
   .periodo-e-tipo-de-alimentacoes {
-    display: grid;
-    grid-template-columns: 60% 39%;
-    column-gap: 1%;
+    font-size: 14px;
+    color: $gray;
 
     .periodos-da-cei {
       display: flex;
