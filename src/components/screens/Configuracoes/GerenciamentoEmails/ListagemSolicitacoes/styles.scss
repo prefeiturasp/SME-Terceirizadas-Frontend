@@ -85,9 +85,6 @@
         border-bottom: 1px solid #e9eaea;
         text-align: left;
         padding-left: 8px;
-        &:not(:last-child) {
-          border-right: 1px solid #e9eaea;
-        }
       }
 
       div:last-child {
@@ -121,7 +118,6 @@
       .grid-table {
         line-height: 12px;
         height: 36px;
-        //grid-template-columns: 0.05fr 0.25fr 0.5fr 0.25fr;
         border-left: 1px solid #e9eaea;
 
         div {
@@ -165,8 +161,23 @@
       color: #fc2122;
     }
   }
+
+  .icons {
+    svg {
+      color: $green;
+      font-size: 20px;
+      &:hover {
+        cursor: pointer;
+        filter: brightness(0.8);
+      }
+    }
+  }
 }
+
 .icon-green {
   color: $green;
   font-size: 18px;
+  &:before {
+    cursor: pointer;
+  }
 }
