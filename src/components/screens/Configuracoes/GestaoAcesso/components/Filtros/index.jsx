@@ -12,9 +12,25 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 
 const FORM_NAME = "buscaGestaoAcesso";
 
-export default ({ setFiltros, setShowCadastro, visoes, perfis }) => {
+export default ({
+  setFiltros,
+  setShowCadastro,
+  visoes,
+  perfis,
+  listaPerfis,
+  diretor_escola
+}) => {
   const initialValues = {};
   const inicioResultado = useRef();
+
+  const getPerfis = visao => {
+    return listaPerfis
+      .filter(perfil => perfil.visao === visao)
+      .map(perfil => ({
+        uuid: perfil.nome,
+        nome: perfil.nome
+      }));
+  };
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -58,6 +74,8 @@ export default ({ setFiltros, setShowCadastro, visoes, perfis }) => {
                   placeholder="Selecione a Visão"
                   name="visao"
                   options={visoes}
+                  defaultValue={diretor_escola ? "ESCOLA" : ""}
+                  disabled={diretor_escola ? true : false}
                 />
               </div>
               <div className="col-6">
@@ -66,7 +84,7 @@ export default ({ setFiltros, setShowCadastro, visoes, perfis }) => {
                   component={SelectSelecione}
                   placeholder="Selecione o perfil do Usuário"
                   name="perfil"
-                  options={perfis}
+                  options={diretor_escola ? getPerfis("ESCOLA") : perfis}
                 />
               </div>
             </div>
