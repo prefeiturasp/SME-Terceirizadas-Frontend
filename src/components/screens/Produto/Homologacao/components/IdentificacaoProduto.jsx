@@ -1,8 +1,9 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
-export const IdentificacaoProduto = () => {
+export const IdentificacaoProduto = ({ homologacao }) => {
   return (
     <div className="row">
       <div className="col-12">
@@ -63,6 +64,17 @@ export const IdentificacaoProduto = () => {
           Relacioná-los conforme dispõe a RDC nº 26 de 02/07/15
         </p>
       </div>
+      {/* Campo acrescentado de acordo com história 76458 */}
+      {homologacao.produto.aditivos && (
+        <div className="col-12" style={{ marginTop: `-0.5rem` }}>
+          <Field
+            component={TextArea}
+            label="Aditivos"
+            name="produto.aditivos"
+            disabled={true}
+          />
+        </div>
+      )}
       <div className="col-12">
         <hr />
       </div>
