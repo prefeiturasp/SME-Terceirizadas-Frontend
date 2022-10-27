@@ -5,6 +5,7 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
+  usuarioEhAdmEscolaTerceirizada,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
@@ -116,7 +117,7 @@ export const SidebarContent = () => {
     !usuarioEhMedicao();
 
   const exibirConfiguracoes =
-    !usuarioEhEscola() &&
+    !usuarioEhAdmEscolaTerceirizada() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE() &&
