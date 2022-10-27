@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
 import "antd/dist/antd.css";
@@ -26,13 +26,16 @@ import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getDadosUsuarioEOLCompleto } from "services/permissoes.service";
 import { useEffect } from "react";
 import { getSubdivisoesCodae } from "services/vinculos.service";
+import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const ModalCadastroVinculo = ({
   show,
   toggleShow,
   listaPerfis,
   listaVisao,
+  diretor_escola,
   onSubmit,
   vinculo,
   toggleExclusao
@@ -41,6 +44,9 @@ const ModalCadastroVinculo = ({
   const [subdivisoes, setSubdivisoes] = useState();
   const [showExclusao, setShowExclusao] = useState(false);
   const [valoresEdicao, setValoresEdicao] = useState();
+
+  const { meusDados } = useContext(MeusDadosContext);
+
   let buscarRF = useRef();
 
   const handleClose = () => {
@@ -72,6 +78,12 @@ const ModalCadastroVinculo = ({
       values.registro_funcional
     );
     const usuarioEOL = response.data;
+    if (diretor_escola) {
+      const codigo_eol_unidade = meusDados.vinculo_atual.instituicao.codigo_eol;
+      if (codigo_eol_unidade !== usuarioEOL.codigo_eol_unidade) {
+        return toastError("RF não pertence a sua unidade!");
+      }
+    }
     values.nome_servidor = usuarioEOL.nome;
     values.cargo_servidor = usuarioEOL.cargo;
     values.email_servidor = usuarioEOL.email;
@@ -102,7 +114,10 @@ const ModalCadastroVinculo = ({
       values.perfil = vinculo.nome_perfil;
       setValoresEdicao(values);
     }
-  }, [vinculo, show]);
+    if (diretor_escola) {
+      setTipoUsuario("SERVIDOR");
+    }
+  }, [vinculo, show, diretor_escola]);
 
   return (
     <>
@@ -122,24 +137,25 @@ const ModalCadastroVinculo = ({
             <>
               <Modal.Body>
                 <form onSubmit={handleSubmit} className="">
-                  {!vinculo && (
-                    <div className="row mx-0 my-1">
-                      <span className="label-radio">
-                        Selecione o tipo de usuário:
-                      </span>
-                      <Radio.Group
-                        onChange={event => setTipoUsuario(event.target.value)}
-                        value={tipoUsuario}
-                      >
-                        <Radio className="" value={"SERVIDOR"}>
-                          Servidor
-                        </Radio>
-                        <Radio className="" value={"NAO_SERVIDOR"}>
-                          Não Servidor
-                        </Radio>
-                      </Radio.Group>
-                    </div>
-                  )}
+                  {diretor_escola ||
+                    (!vinculo && (
+                      <div className="row mx-0 my-1">
+                        <span className="label-radio">
+                          Selecione o tipo de usuário:
+                        </span>
+                        <Radio.Group
+                          onChange={event => setTipoUsuario(event.target.value)}
+                          value={tipoUsuario}
+                        >
+                          <Radio className="" value={"SERVIDOR"}>
+                            Servidor
+                          </Radio>
+                          <Radio className="" value={"NAO_SERVIDOR"}>
+                            Não Servidor
+                          </Radio>
+                        </Radio.Group>
+                      </div>
+                    ))}
                   {tipoUsuario === "SERVIDOR" && (
                     <>
                       <div className="row">
@@ -214,13 +230,15 @@ const ModalCadastroVinculo = ({
                         <div className="col-6">
                           <Field
                             component={SelectSelecione}
-                            label="Perfil de Acesso"
+                            label="Visão"
                             name="visao_servidor"
                             placeholder="Selecione a visão"
                             className="input-busca-produto"
                             required
                             options={listaVisao}
+                            defaultValue={diretor_escola ? "ESCOLA" : ""}
                             validate={required}
+                            disabled={diretor_escola ? true : false}
                           />
                         </div>
                         <div className="col-6">
@@ -231,7 +249,11 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={getPerfis(values.visao_servidor)}
+                            options={
+                              diretor_escola
+                                ? getPerfis("ESCOLA")
+                                : getPerfis(values.visao_servidor)
+                            }
                             validate={required}
                             disabled={!values.visao_servidor}
                           />

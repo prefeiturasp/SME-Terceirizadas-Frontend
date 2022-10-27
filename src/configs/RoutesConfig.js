@@ -112,7 +112,8 @@ import {
   usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
-  usuarioEhCoordenadorCODAE
+  usuarioEhCoordenadorCODAE,
+  usuarioEhDiretorEscola
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -170,7 +171,8 @@ import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
-import GestaoAcessoPage from "pages/Configuracoes/GestaoAcessoPage";
+import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
+import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
 
 const routesConfig = [
@@ -661,10 +663,18 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
-    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO}`,
-    component: GestaoAcessoPage,
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
+    component: GestaoAcessoCodaeDilogPage,
     exact: true,
     tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${
+      constants.GESTAO_ACESSO_DIRETOR_ESCOLA
+    }`,
+    component: GestaoAcessoDiretorEscolaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDiretorEscola()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,

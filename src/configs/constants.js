@@ -177,7 +177,8 @@ export const PERIODO_LANCAMENTO = "periodo-lancamento";
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
 
-export const GESTAO_ACESSO = "gestao-acesso";
+export const GESTAO_ACESSO_CODAE_DILOG = "gestao-acesso-codae-dilog";
+export const GESTAO_ACESSO_DIRETOR_ESCOLA = "gestao-acesso-diretor-escola";
 export const CARGAS_USUARIOS = "cargas-usuarios";
 // Status dos pedidos
 
