@@ -147,6 +147,8 @@ export default props => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModal(false);
+                        setEmpresaSelect("");
+                        resetForm(form);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
