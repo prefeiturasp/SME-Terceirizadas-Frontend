@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
+import { normalizaLabelValueEmpresaSocial } from "components/screens/Cadastros/EditaisContratos/helper";
 import CardLogo from "components/Shareable/CardLogo/CardLogo";
 import IconeDietaEspecial from "components/Shareable/Icones/IconeDietaEspecial";
 import IconeGestaoDeAlimentacao from "components/Shareable/Icones/IconeGestaoDeAlimentacao";
 import IconeGestaoDeProduto from "components/Shareable/Icones/IconeGestaoDeProduto";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import FiltrosEmails from "./FiltrosEmails";
 import ListagemEmails from "./ListagemSolicitacoes";
-import "./style.scss";
 import {
   getEmailsTerceirizadasPorModulo,
   getTerceirizada_razoes
 } from "services/terceirizada.service";
-import { normalizaLabelValueEmpresaSocial } from "components/screens/Cadastros/EditaisContratos/helper";
+import "./style.scss";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -43,12 +45,16 @@ export default () => {
       modulo: mod,
       busca: busca
     });
-    if (response.data.results.length) {
-      setTerceirizadas(response.data.results);
-      setTotal(response.data.count);
+    if (response.status === HTTP_STATUS.OK) {
+      if (response.data.results.length) {
+        setTerceirizadas(response.data.results);
+        setTotal(response.data.count);
+      } else {
+        setTotal(response.data.count);
+        setTerceirizadas([]);
+      }
     } else {
-      setTotal(response.data.count);
-      setTerceirizadas([]);
+      toastError("Erro ao buscar!");
     }
     setModulo(mod);
     setResultados(true);
@@ -75,7 +81,7 @@ export default () => {
     buscarTerceirizadas(page ? page : 1, modulo);
   };
 
-  const escolheModolo = mod => {
+  const escolheModulo = mod => {
     if (modulo !== mod) {
       buscarTerceirizadas(1, mod);
     }
@@ -92,7 +98,7 @@ export default () => {
           <CardLogo
             titulo={"Gestão de Alimentação"}
             onClick={() => {
-              escolheModolo("Gestão de Alimentação");
+              escolheModulo("Gestão de Alimentação");
             }}
           >
             <IconeGestaoDeAlimentacao />
@@ -106,7 +112,7 @@ export default () => {
           <CardLogo
             titulo={"Dieta Especial"}
             onClick={() => {
-              escolheModolo("Dieta Especial");
+              escolheModulo("Dieta Especial");
             }}
           >
             <IconeDietaEspecial />
@@ -120,7 +126,7 @@ export default () => {
           <CardLogo
             titulo={"Gestão de Produto"}
             onClick={() => {
-              escolheModolo("Gestão de Produto");
+              escolheModulo("Gestão de Produto");
             }}
           >
             <IconeGestaoDeProduto />
@@ -147,6 +153,8 @@ export default () => {
                   atualizaTabela={atualizaTabela}
                 />
                 <ListagemEmails
+                  empresas={empresas}
+                  buscarTerceirizadas={buscarTerceirizadas}
                   terceirizadas={terceirizadas}
                   ativos={ativos}
                   setAtivos={setAtivos}
