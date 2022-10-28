@@ -82,7 +82,7 @@ export const Homologacao = ({
               {homologacao.logs.filter(
                 log => log.status_evento_explicacao === "CODAE homologou"
               ).length > 0 && <EditaisVinculados />}
-              <IdentificacaoProduto />
+              <IdentificacaoProduto homologacao={homologacao} />
               <InformacoesNutricionais homologacao={homologacao} />
               <InformacoesProduto homologacao={homologacao} />
               <FotosProduto homologacao={homologacao} />
