@@ -63,7 +63,9 @@ export const IdentificacaoProduto = ({ homologacao }) => {
         </p>
       </div>
       {homologacao.produto.aditivos && (
-        <div className={`${homologacao.produto.aditivos && "ajusta-mt"} col-12`}>
+        <div
+          className={`${homologacao.produto.aditivos && "ajusta-mt"} col-12`}
+        >
           <Field
             component={InputText}
             label="Quais Alergênicos"
