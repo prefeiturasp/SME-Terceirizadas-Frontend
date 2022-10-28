@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Select } from "antd";
-import { Field, Form } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
 import { composeValidators, getError } from "helpers/utilities";
@@ -26,6 +26,8 @@ export const ModalEditarEmail = ({ ...props }) => {
     buscarTerceirizadas
   } = props;
 
+  const [desabilitaBotaoSalvar, setDesabilitaBotaoSalvar] = useState(true);
+
   const onSubmit = async values => {
     const payload = {
       email: values.email
@@ -33,7 +35,7 @@ export const ModalEditarEmail = ({ ...props }) => {
     const response = await endpoint(emailDict.uuid, payload);
     if (response.status === HTTP_STATUS.OK) {
       closeModal();
-      toastSuccess("E-mail editado com sucesso!");
+      toastSuccess("E-mail atualizado com sucesso!");
       buscarTerceirizadas(1, emailDict.modulo);
     } else {
       closeModal();
@@ -84,6 +86,14 @@ export const ModalEditarEmail = ({ ...props }) => {
                   className="input-add-emails"
                   validate={composeValidators(emailValidation, required)}
                 />
+                <FormSpy
+                  subscription={{ values: true }}
+                  onChange={changes =>
+                    changes.values["email"] !== emailDict.email
+                      ? setDesabilitaBotaoSalvar(false)
+                      : setDesabilitaBotaoSalvar(true)
+                  }
+                />
               </div>
             </Modal.Body>
             <Modal.Footer>
@@ -99,7 +109,9 @@ export const ModalEditarEmail = ({ ...props }) => {
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="ml-2"
-                disabled={Object.keys(errors).length > 0}
+                disabled={
+                  Object.keys(errors).length > 0 || desabilitaBotaoSalvar
+                }
               />
             </Modal.Footer>
           </form>
