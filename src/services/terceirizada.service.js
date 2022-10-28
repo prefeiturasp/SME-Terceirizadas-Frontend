@@ -5,6 +5,7 @@ import authService from "./auth";
 
 import axios from "./_base";
 import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -130,9 +131,31 @@ export const getPdfRelatorioQuantitativo = async params => {
 
 export const getEmailsTerceirizadasPorModulo = async params => {
   const url = `/terceirizadas/emails-por-modulo/`;
-  return await axios.get(url, { params });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getCriaEmailsTerceirizadasPorModulo = async payload => {
+export const createEmailsTerceirizadasPorModulo = async payload => {
   return axios.post(`/emails-terceirizadas-modulos/`, payload);
+};
+
+export const updateEmailsTerceirizadasPorModulo = async (uuid, payload) => {
+  const url = `/emails-terceirizadas-modulos/${uuid}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteEmailsTerceirizadasPorModulo = async uuid => {
+  const url = `/emails-terceirizadas-modulos/${uuid}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

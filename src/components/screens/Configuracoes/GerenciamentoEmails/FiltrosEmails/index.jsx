@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import { BAD_REQUEST, CREATED } from "http-status-codes";
 import { Spin, Select } from "antd";
+import { Modal } from "react-bootstrap";
+import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
-import "../../../../screens/Logistica/ConsultaRequisicaoEntregaDilog/components/ListagemSolicitacoes/styles.scss";
+import { BAD_REQUEST, CREATED } from "http-status-codes";
+import { email } from "helpers/fieldValidators";
+import Botao from "components/Shareable/Botao";
 import {
   toastSuccess,
   toastError
 } from "components/Shareable/Toast/dialogs.js";
-import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
-import { Modal } from "react-bootstrap";
-import { Form, Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
-import { getCriaEmailsTerceirizadasPorModulo } from "services/terceirizada.service.js";
-import { email } from "../../../../../helpers/fieldValidators";
+import { createEmailsTerceirizadasPorModulo } from "services/terceirizada.service.js";
+import "../../../../screens/Logistica/ConsultaRequisicaoEntregaDilog/components/ListagemSolicitacoes/styles.scss";
 
 export default props => {
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +26,7 @@ export default props => {
   const handleAdicionarEmail = async () => {
     setShowModal(true);
   };
+
   const CadastrarEmail = async (form, values) => {
     const payload = {
       email: values.email,
@@ -33,7 +34,7 @@ export default props => {
       modulo: props.modulo
     };
     try {
-      const resultado = await getCriaEmailsTerceirizadasPorModulo(payload);
+      const resultado = await createEmailsTerceirizadasPorModulo(payload);
       if (resultado.status === CREATED) {
         setShowModal(false);
         resetForm(form);
@@ -59,6 +60,7 @@ export default props => {
       }
     }
   };
+
   const resetForm = async form => {
     await form.change("empresa", null);
     await form.change("email", null);
