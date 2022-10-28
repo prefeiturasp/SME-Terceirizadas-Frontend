@@ -17,7 +17,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import { InputText } from "components/Shareable/Input/InputText";
 import { createEmailsTerceirizadasPorModulo } from "services/terceirizada.service.js";
-import "../../../../screens/Logistica/ConsultaRequisicaoEntregaDilog/components/ListagemSolicitacoes/styles.scss";
 
 export default props => {
   const [showModal, setShowModal] = useState(false);

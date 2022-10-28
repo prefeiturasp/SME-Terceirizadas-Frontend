@@ -163,6 +163,8 @@
   }
 
   .icons {
+    position: absolute;
+    right: 24px;
     svg {
       color: $green;
       font-size: 20px;
