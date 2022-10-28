@@ -1,7 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 export const IdentificacaoProduto = ({ homologacao }) => {
   return (
@@ -50,7 +49,6 @@ export const IdentificacaoProduto = ({ homologacao }) => {
         />
       </div>
       <div className="col-7">
-        {/* aqui */}
         <Field
           component={InputText}
           label="O produto contém ou pode conter ingredientes/aditivos alergênicos?"
@@ -64,17 +62,27 @@ export const IdentificacaoProduto = ({ homologacao }) => {
           Relacioná-los conforme dispõe a RDC nº 26 de 02/07/15
         </p>
       </div>
-      {/* Campo acrescentado de acordo com história 76458 */}
       {homologacao.produto.aditivos && (
-        <div className="col-12" style={{ marginTop: `-0.5rem` }}>
+        <div className={`${homologacao.produto.aditivos && "ajusta-mt"} col-12`}>
           <Field
-            component={TextArea}
-            label="Aditivos"
+            component={InputText}
+            label="Quais Alergênicos"
             name="produto.aditivos"
             disabled={true}
           />
         </div>
       )}
+      <div
+        className={`${!homologacao.produto.tem_aditivos_alergenicos &&
+          "ajusta-mt"} col-7`}
+      >
+        <Field
+          component={InputText}
+          label="Contém Glútem?"
+          name="produto.tem_gluten"
+          disabled={true}
+        />
+      </div>
       <div className="col-12">
         <hr />
       </div>
