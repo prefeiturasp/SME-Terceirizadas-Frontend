@@ -157,7 +157,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       {produto.tem_aditivos_alergenicos && (
         <div className="row">
           <div className="col-12 report-label-value">
-            <p>Quais Alergênicos</p>
+            <p>Quais Alergênicos?</p>
             <p className="value">{produto.aditivos || "Não possui aditivos"}</p>
           </div>
         </div>
