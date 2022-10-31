@@ -676,18 +676,27 @@ export const exibirGA = () => {
       case `"diretoriaregional"`:
         return (
           localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA")
+          localStorage.getItem("nome_instituicao").includes("PIRITUBA") ||
+          localStorage
+            .getItem("nome_instituicao")
+            .includes("FREGUESIA/BRASILANDIA")
         );
       case `"escola"`:
         return (
-          localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-          localStorage.getItem("dre_nome").includes("PIRITUBA")
+          (localStorage.getItem("dre_nome").includes("IPIRANGA") ||
+            localStorage.getItem("dre_nome").includes("PIRITUBA") ||
+            localStorage
+              .getItem("dre_nome")
+              .includes("FREGUESIA/BRASILANDIA")) &&
+          !localStorage.getItem("nome_instituicao").includes(`"CEMEI `) &&
+          !localStorage.getItem("nome_instituicao").includes(`"CEU CEMEI `)
         );
       case `"terceirizada"`:
         return JSON.parse(localStorage.getItem("lotes")).find(
           lote =>
             lote.diretoria_regional.nome.includes("IPIRANGA") ||
-            lote.diretoria_regional.nome.includes("PIRITUBA")
+            lote.diretoria_regional.nome.includes("PIRITUBA") ||
+            lote.diretoria_regional.nome.includes("FREGUESIA/BRASILANDIA")
         );
       default:
         return false;
