@@ -68,7 +68,7 @@ export const IdentificacaoProduto = ({ homologacao }) => {
         >
           <Field
             component={InputText}
-            label="Quais Alergênicos"
+            label="Quais Alergênicos?"
             name="produto.aditivos"
             disabled={true}
           />
