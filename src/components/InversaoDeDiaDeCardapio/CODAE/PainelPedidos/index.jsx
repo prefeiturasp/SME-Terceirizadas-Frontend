@@ -2,7 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
 import { FiltroEnum, TIPODECARD } from "../../../../constants/shared";
-import { filtraPrioritarios } from "../../../../helpers/painelPedidos";
+import {
+  filtraPrioritarios,
+  ordenarPedidosDataMaisRecente
+} from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY } from "../../../../helpers/utilities";
 import { getCODAEPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 import Select from "../../../Shareable/Select";
@@ -24,9 +27,15 @@ class PainelPedidos extends Component {
 
   filtrar(filtro) {
     getCODAEPedidosDeInversoes(filtro).then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
+      let pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(response.results)
+      );
+      let pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(response.results)
+      );
+      let pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(response.results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

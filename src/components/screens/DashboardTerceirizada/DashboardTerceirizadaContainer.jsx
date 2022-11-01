@@ -1,56 +1,53 @@
-import React, { Component } from "react";
-import { meusDados as getMeusDados } from "../../../services/perfil.service";
+import React, { useContext, useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import DashboardTerceirizada from "./DashboardTerceirizada";
-import { TIPOS_SOLICITACAO_LISTA } from "../../../constants/shared";
-import { formatarLotesParaVisao } from "../../../helpers/utilities";
+import { TIPOS_SOLICITACAO_LISTA } from "constants/shared";
+import { formatarLotesParaVisao } from "helpers/utilities";
+import MeusDadosContext from "context/MeusDadosContext";
+import { Spin } from "antd";
+import { getMeusLotes } from "services/lote.service";
 
-class DashboardTerceirizadaContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      vision_by: [
-        {
-          nome: "Tipo de Solicitação",
-          uuid: "tipo_solicitacao"
-        },
-        {
-          nome: "Lote",
-          uuid: "lote"
-        }
-      ],
-      filtro_por: [
-        {
-          nome: "Sem filtro",
-          uuid: "sem_filtro"
-        },
-        {
-          nome: "Semana",
-          uuid: "daqui_a_7_dias"
-        },
-        {
-          nome: "Mês",
-          uuid: "daqui_a_30_dias"
-        }
-      ],
-      meusDados: null,
-      cards: TIPOS_SOLICITACAO_LISTA,
-      tiposSolicitacao: TIPOS_SOLICITACAO_LISTA,
-      lotes: null
-    };
-  }
+export const Container = () => {
+  const [listaLotes, setListaLotes] = useState(null);
+  const [erro, setErro] = useState("");
 
-  componentDidMount() {
-    getMeusDados().then(response => {
-      this.setState({
-        meusDados: response,
-        lotes: formatarLotesParaVisao(response.vinculo_atual.instituicao.lotes)
-      });
-    });
-  }
+  const getMeusLotesAsync = async () => {
+    const response = await getMeusLotes();
+    if (response.status === HTTP_STATUS.OK) {
+      setListaLotes(
+        [{ nome: "Selecione um lote", uuid: "" }].concat(response.results)
+      );
+    } else {
+      setErro("Erro ao carregar lotes");
+    }
+  };
 
-  render() {
-    return <DashboardTerceirizada {...this.state} {...this.props} />;
-  }
-}
+  const { meusDados } = useContext(MeusDadosContext);
 
-export default DashboardTerceirizadaContainer;
+  useEffect(() => {
+    getMeusLotesAsync();
+  }, []);
+
+  const LOADING = !meusDados || !listaLotes;
+
+  return (
+    <>
+      {erro && <div>{erro}</div>}
+      {!erro && (
+        <Spin tip="Carregando..." spinning={LOADING}>
+          {!LOADING && (
+            <DashboardTerceirizada
+              meusDados={meusDados}
+              lotes={formatarLotesParaVisao(
+                meusDados.vinculo_atual.instituicao.lotes
+              )}
+              cards={TIPOS_SOLICITACAO_LISTA}
+              listaLotes={listaLotes}
+              tiposSolicitacao={TIPOS_SOLICITACAO_LISTA}
+            />
+          )}
+        </Spin>
+      )}
+    </>
+  );
+};

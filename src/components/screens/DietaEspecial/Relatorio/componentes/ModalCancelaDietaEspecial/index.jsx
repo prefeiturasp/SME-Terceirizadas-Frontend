@@ -8,7 +8,7 @@ import {
   required,
   textAreaRequired
 } from "../../../../../../helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { escolaCancelaSolicitacao } from "../../../../../../services/dietaEspecial.service";
 import Botao from "../../../../../Shareable/Botao";
 import {
@@ -54,7 +54,7 @@ const ModalCancelaDietaEspecial = ({
             </Modal.Header>
             <Modal.Body>
               <Field
-                component={TextAreaWYSIWYG}
+                component={CKEditorField}
                 label="Justificativa"
                 name="justificativa"
                 required

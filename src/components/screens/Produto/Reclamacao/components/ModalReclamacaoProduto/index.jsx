@@ -9,7 +9,7 @@ import {
   required,
   requiredOptionSearchSelect
 } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import { InputComData } from "components/Shareable/DatePicker";
 import { OnChange } from "react-final-form-listeners";
@@ -275,7 +275,7 @@ export default class ModalReclamacaoProduto extends Component {
                 <div className="form-row row-reclamacao">
                   <div className="col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Reclamação"
                       name="reclamacao"
                       required

@@ -13,7 +13,7 @@ import { getOptions } from "./helper";
 import "./style.scss";
 import Select from "../../Shareable/Select";
 import InputText from "../../Shareable/Input/InputText";
-import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 
@@ -88,7 +88,7 @@ class Mensagem extends Component {
                 <div className="col-12">
                   <Field
                     label="Template"
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     name="template_html"
                     temOpcoesCustomizadas
                   />

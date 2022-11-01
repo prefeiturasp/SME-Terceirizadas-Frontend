@@ -1,3 +1,4 @@
+import { ordenarPedidosDataMaisRecente } from "helpers/painelPedidos";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
@@ -21,9 +22,15 @@ class PainelPedidos extends Component {
 
   filtrar(filtro) {
     getCODAEPedidosSolicitacoesUnificadas(filtro).then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
+      let pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(response.results)
+      );
+      let pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(response.results)
+      );
+      let pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(response.results)
+      );
       this.setState({
         pedidosPrioritarios,
         pedidosNoPrazoLimite,

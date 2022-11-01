@@ -9,13 +9,13 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { InputComData } from "components/Shareable/DatePicker";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { required } from "helpers/fieldValidators";
 
-import "./styles.scss";
 import { updateSolicitacaoCadastroProdutoDieta } from "services/produto.service";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { converterDDMMYYYYparaYYYYMMDD } from "helpers/utilities";
+import "./styles.scss";
 
 export default ({ onUpdate, uuidSolicitacao }) => {
   const onSubmit = async values => {
@@ -50,7 +50,7 @@ export default ({ onUpdate, uuidSolicitacao }) => {
             }
           />
           <Field
-            component={TextAreaWYSIWYG}
+            component={CKEditorField}
             label="Justificativa"
             name="justificativa_previsao_cadastro"
           />

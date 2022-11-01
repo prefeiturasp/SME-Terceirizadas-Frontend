@@ -5,7 +5,8 @@ import { FiltroEnum, TIPODECARD, TIPO_SOLICITACAO } from "constants/shared";
 import {
   filtraNoLimite,
   filtraPrioritarios,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "../../../../helpers/painelPedidos";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { Select } from "../../../Shareable/Select";
@@ -39,9 +40,15 @@ class PainelPedidos extends Component {
       )
     ]);
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
-    const pedidosPrioritarios = filtraPrioritarios(inclusoes);
-    const pedidosNoPrazoLimite = filtraNoLimite(inclusoes);
-    const pedidosNoPrazoRegular = filtraRegular(inclusoes);
+    const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+      filtraPrioritarios(inclusoes)
+    );
+    const pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+      filtraNoLimite(inclusoes)
+    );
+    const pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+      filtraRegular(inclusoes)
+    );
     this.setState({
       pedidosPrioritarios,
       pedidosNoPrazoLimite,

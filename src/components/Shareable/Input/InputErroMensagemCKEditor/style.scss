@@ -1,0 +1,9 @@
+@import "../../../../styles/variables.scss";
+
+div.error-or-warning-message {
+  padding-top: 5px;
+  font-size: 12px;
+  div.error-message {
+    color: $red;
+  }
+}
