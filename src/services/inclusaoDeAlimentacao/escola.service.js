@@ -152,3 +152,12 @@ export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacaoCEMEI = async uuid 
     return data;
   }
 };
+
+export const getInclusaoCEMEI = async uuid => {
+  const url = `inclusao-alimentacao-cemei/${uuid}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
