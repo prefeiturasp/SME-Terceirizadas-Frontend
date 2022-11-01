@@ -1,3 +1,4 @@
+import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -93,6 +94,45 @@ export const CorpoRelatorio = ({ solicitacao }) => {
         </div>
       )}
       <hr />
+      <p>
+        <strong>Solicitação de Inclusão de Alimentação</strong>
+      </p>
+      <table className="table-reasons">
+        <tbody>
+          {Object.entries(
+            formataMotivosDias(solicitacao.dias_motivos_da_inclusao_cemei)
+          ).map((dadosMotivo, key) => {
+            const [motivo, datas] = dadosMotivo;
+            return (
+              <div key={key}>
+                <tr className="row">
+                  <th className="col-2">Motivo</th>
+                  <th className="col-10">Dia(s) de inclusão</th>
+                </tr>
+                <tr className="row">
+                  <td className="col-2">{motivo}</td>
+                  {datas.map((dia, key) => {
+                    return (
+                      <td
+                        key={key}
+                        className={`col-2 ${
+                          solicitacao.dias_motivos_da_inclusao_cemei.find(
+                            i => i.data === dia
+                          ).cancelado
+                            ? `red`
+                            : ""
+                        }`}
+                      >
+                        {dia}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </div>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
