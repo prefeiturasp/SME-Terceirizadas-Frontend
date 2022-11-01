@@ -15,6 +15,7 @@ import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
+import * as RelatoriosInclusaoDeAlimentacaoCEMEI from "pages/InclusaoDeAlimentacaoCEMEIRelatorios";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatorioSolicitacaoKitLancheCEMEI from "../pages/SolicitacaoDeKitLancheCEMEI/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
@@ -118,6 +119,13 @@ export const relatoriosInclusaoDeAlimentacao = () => {
       return RelatoriosInclusaoDeAlimentacao.RelatorioTerceirizada;
     default:
       return RelatoriosInclusaoDeAlimentacao.RelatorioEscola;
+  }
+};
+
+export const relatoriosInclusaoDeAlimentacaoCEMEI = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    default:
+      return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioEscola;
   }
 };
 

@@ -91,7 +91,8 @@ import {
   relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoAlimentacao
+  inclusaoAlimentacao,
+  relatoriosInclusaoDeAlimentacaoCEMEI
 } from "./helper";
 import {
   usuarioEhEscola,
@@ -679,6 +680,12 @@ const routesConfig = [
   {
     path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosInclusaoDeAlimentacao(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.INCLUSAO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacaoCEMEI(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },

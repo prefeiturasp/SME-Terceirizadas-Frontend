@@ -143,3 +143,12 @@ export const deleteInclusaoDeAlimentacaoCEMEI = async uuid => {
     return data;
   }
 };
+
+export const escolaCancelarSolicitacaoDeInclusaoDeAlimentacaoCEMEI = async uuid => {
+  const url = `inclusao-alimentacao-cemei/${uuid}/${FLUXO.INICIO_PEDIDO}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
