@@ -14,6 +14,7 @@ export const Container = () => {
   const [motivos, setMotivos] = useState(null);
   const [periodos, setPeriodos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [todasFaixas, setTodasFaixas] = useState(null);
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
 
@@ -63,6 +64,9 @@ export const Container = () => {
       setProximosDoisDiasUteis(
         dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
       );
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
+      );
     } else {
       setErro(true);
     }
@@ -81,6 +85,7 @@ export const Container = () => {
     motivos &&
     periodos &&
     proximosDoisDiasUteis &&
+    proximosCincoDiasUteis &&
     todasFaixas &&
     vinculosAlimentacao;
 
@@ -96,6 +101,7 @@ export const Container = () => {
           motivos={motivos}
           periodos={periodos}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
+          proximosCincoDiasUteis={proximosCincoDiasUteis}
           todasFaixas={todasFaixas}
           vinculosAlimentacao={vinculosAlimentacao}
         />

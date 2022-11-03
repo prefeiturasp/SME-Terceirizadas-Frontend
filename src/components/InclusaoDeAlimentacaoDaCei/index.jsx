@@ -15,7 +15,12 @@ import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import arrayMutators from "final-form-arrays";
 import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, deepCopy, getError } from "helpers/utilities";
+import {
+  agregarDefault,
+  deepCopy,
+  getError,
+  checaSeDataEstaEntre2e5DiasUteis
+} from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -29,6 +34,8 @@ import TabelaFaixasCEI from "./TabelaFaixasCEI";
 import { formataPayload } from "./helper";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
+
 import "./style.scss";
 
 export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
@@ -37,6 +44,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     motivos,
     periodos,
     proximosDoisDiasUteis,
+    proximosCincoDiasUteis,
     todasFaixas,
     vinculosAlimentacao
   } = props;
@@ -45,6 +53,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
   const [alunosMatriculados, setAlunosMatriculados] = useState(null);
   const [motivoSelecionado, setMotivoSelecionado] = useState(null);
   const [rascunhos, setRascunhos] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const [erro, setErro] = useState(false);
 
@@ -194,6 +203,19 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
+  const onDataChanged = value => {
+    if (
+      value &&
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        proximosDoisDiasUteis,
+        proximosCincoDiasUteis
+      )
+    ) {
+      setShowModal(true);
+    }
+  };
+
   return (
     <div>
       <Form
@@ -262,7 +284,10 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                         .toDate()}
                     />
                     <OnChange name="data">
-                      {async value => getFaixasEtariasPorPeriodoAsync(value)}
+                      {async value => {
+                        onDataChanged(value);
+                        getFaixasEtariasPorPeriodoAsync(value);
+                      }}
                     </OnChange>
                   </div>
                 </div>
@@ -378,6 +403,10 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
           </form>
         )}
       </Form>
+      <ModalDataPrioritaria
+        showModal={showModal}
+        closeModal={() => setShowModal(false)}
+      />
     </div>
   );
 };
