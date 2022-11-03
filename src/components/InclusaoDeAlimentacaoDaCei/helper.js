@@ -82,3 +82,65 @@ export const renderizarLabelTipoAlimentacao = (selected, options) => {
   }
   return `${selected.length} tipos de alimentações selecionados`;
 };
+
+export const backgroundLabelPeriodo = periodos => {
+  const periodosComStyles = periodos.map(periodo => {
+    switch (periodo.nome) {
+      case "MANHA":
+        periodo["background"] = "#fff7cb";
+        periodo["borderColor"] = "#ffd79b";
+        break;
+
+      case "TARDE":
+        periodo["background"] = "#ffeed6";
+        periodo["borderColor"] = "#ffbb8a";
+        break;
+
+      case "NOITE":
+        periodo["background"] = "#e4f1ff";
+        periodo["borderColor"] = "#82b7e8";
+        break;
+
+      case "INTEGRAL":
+        periodo["background"] = "#ebedff";
+        periodo["borderColor"] = "#b2baff";
+        break;
+
+      default:
+        periodo["background"] = "#eaffe3";
+        periodo["borderColor"] = "#79cf91";
+        break;
+    }
+    return periodo;
+  });
+  return periodosComStyles;
+};
+
+export const formataPayload = values => {
+  let payload = {};
+  payload["escola"] = values.escola;
+  payload["data"] = values.data;
+  payload["motivo"] = values.motivo;
+  if (values.outro_motivo) {
+    payload["outro_motivo"] = values.outro_motivo;
+  }
+  if (values.uuid) {
+    payload["uuid"] = values.uuid;
+  }
+  let faixas = [];
+  values.inclusoes
+    .filter(i => i.checked === true)
+    .forEach(inclusao => {
+      inclusao.faixas_etarias
+        .filter(f => f.quantidade_alunos)
+        .forEach(f => {
+          faixas.push({
+            periodo: inclusao.periodo_uuid,
+            quantidade_alunos: f.quantidade_alunos,
+            faixa_etaria: f.faixa_etaria_uuid
+          });
+        });
+    });
+  payload["quantidade_alunos_por_faixas_etarias"] = faixas;
+  return payload;
+};
