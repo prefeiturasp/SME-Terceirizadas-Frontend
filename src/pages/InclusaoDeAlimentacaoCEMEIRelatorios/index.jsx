@@ -8,6 +8,7 @@ import { RelatorioInclusaoDeAlimentacaoCEMEI } from "components/InclusaoDeAlimen
 import { ESCOLA } from "configs/constants";
 import { ModalCancelarInclusaoAlimentacao } from "components/Shareable/ModalCancelarInclusaoAlimentacao";
 import { escolaCancelarSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -50,6 +51,7 @@ export const RelatorioEscola = () => {
         escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
       }
       textoBotaoNaoAprova="Cancelar"
+      tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
     />
   );
 };
