@@ -1,0 +1,78 @@
+@import "styles/variables.scss";
+
+div.relatorio-inclusao-cemei {
+  .period-quantity {
+    border-radius: 7px;
+    padding: 0.5em;
+    color: $blackInput;
+
+    &.number-0 {
+      background-color: #fff7cb;
+      border: 1px solid $yellow;
+    }
+    &.number-1 {
+      background-color: #ebedff;
+      border: 1px solid $blue;
+    }
+    &.number-2 {
+      background-color: #ffeed6;
+      border: 1px solid $orange;
+    }
+    &.number-3 {
+      background-color: #eaffe3;
+    }
+    &.number-4 {
+      background-color: #e4f1ff;
+    }
+    &.number-5 {
+      background-color: #d6ffea;
+    }
+  }
+
+  div.tipos-alimentacao {
+    font-weight: 500;
+    font-size: 14px;
+
+    span {
+      color: $green;
+      font-weight: 700;
+    }
+  }
+
+  table.faixas-etarias-cei {
+    width: 98%;
+    margin-left: 1em;
+
+    thead {
+      tr {
+        background-color: $grayBackground;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid $grayDisabled;
+        color: $blackInput;
+
+        th {
+          padding: 1em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border: 1px solid $grayDisabled;
+        border-top: none;
+        color: $blackSubtle;
+
+        td {
+          padding: 0.5em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+  }
+}

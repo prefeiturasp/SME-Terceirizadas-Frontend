@@ -1,4 +1,5 @@
 import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
+import { tiposAlimentacaoPorPeriodoETipoUnidade } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_ICON,
@@ -9,10 +10,15 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import { corDaMensagem, prazoDoPedidoMensagem } from "helpers/utilities";
 import React from "react";
+import {
+  inclusaoPossuiCEInestePeriodo,
+  periodosDaInclusao
+} from "../../helpers";
+import "./style.scss";
 
-export const CorpoRelatorio = ({ solicitacao }) => {
+export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
   return (
-    <div>
+    <div className="relatorio-inclusao-cemei">
       <div className="row">
         <p
           className={`col-12 title-message ${corDaMensagem(
@@ -133,6 +139,81 @@ export const CorpoRelatorio = ({ solicitacao }) => {
           })}
         </tbody>
       </table>
+      {periodosDaInclusao(solicitacao).map((periodo, key) => {
+        let totalMatriculados = 0;
+        let totalQuantidadeAlunos = 0;
+
+        return (
+          <div key={key}>
+            <div className={`period-quantity number-${key}`}>{periodo}</div>
+            <div className="pl-3 pr-3 pb-3">
+              {inclusaoPossuiCEInestePeriodo(solicitacao, periodo) && (
+                <>
+                  <div className="alunos-label mt-3">Alunos CEI</div>
+                  <div className="tipos-alimentacao mt-3 mb-3">
+                    Tipos de inclusão de alimentação:{" "}
+                    <span>
+                      {tiposAlimentacaoPorPeriodoETipoUnidade(
+                        vinculos,
+                        periodo,
+                        "CEI"
+                      )}
+                    </span>
+                  </div>
+                  <table className="faixas-etarias-cei">
+                    <thead>
+                      <tr className="row">
+                        <th className="col-8">Faixa Etária</th>
+                        <th className="col-2 text-center">
+                          Alunos matriculados
+                        </th>
+                        <th className="col-2 text-center">Quantidade</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
+                        .filter(q => q.periodo_escolar.nome === periodo)
+                        .map((faixa, key) => {
+                          return (
+                            <tr key={key} className="row">
+                              <td className="col-8">
+                                {faixa.faixa_etaria.__str__}
+                              </td>
+                              <td className="col-2 text-center">
+                                {faixa.matriculados_quando_criado}
+                              </td>
+                              <td className="col-2 text-center">
+                                {" "}
+                                {faixa.quantidade_alunos}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      <tr className="row">
+                        <td className="col-8 font-weight-bold">Total</td>
+                        <td className="col-2 text-center">
+                          {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
+                            .filter(q => q.periodo_escolar.nome === periodo)
+                            .reduce(function(total, faixa) {
+                              return total + faixa.matriculados_quando_criado;
+                            }, totalMatriculados)}
+                        </td>
+                        <td className="col-2 text-center">
+                          {solicitacao.quantidade_alunos_cei_da_inclusao_cemei
+                            .filter(q => q.periodo_escolar.nome === periodo)
+                            .reduce(function(total, faixa) {
+                              return total + faixa.quantidade_alunos;
+                            }, totalQuantidadeAlunos)}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
