@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Spin, TreeSelect } from "antd";
 import "./styles.scss";
+import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -13,20 +14,25 @@ import {
   getListaTermosContratoSAFI
 } from "services/safi.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import SelectSelecione from "components/Shareable/SelectSelecione";
 import createDecorator from "final-form-calculate";
 import { InputComData } from "components/Shareable/DatePicker";
+import { getArmazens } from "services/terceirizada.service";
+import SelectSelecione from "components/Shareable/SelectSelecione";
+import { cadastraCronograma, getEtapas } from "services/cronograma.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default () => {
-  const [carregando] = useState(false);
+  const [carregando, setCarregando] = useState(false);
+  const [contratoAtual, setContratoAtual] = useState();
   const [contratos, setContratos] = useState([]);
   const [contratosOptions, setContratosOptions] = useState([]);
   const [collapse, setCollapse] = useState([]);
   const [produtosOptions, setProdutosOptions] = useState([]);
   const [empenhoOptions, setEmpenhoOptions] = useState([]);
-  const [empenhos, setEmpenhos] = useState([{}]);
   const [etapas, setEtapas] = useState([{}]);
+  const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
+  const [armazens, setArmazens] = useState([{}]);
 
   const onSubmit = () => {};
 
@@ -38,6 +44,14 @@ export default () => {
     return contratosOptions;
   };
 
+  const getEtapasFiltrado = etapa => {
+    if (etapa) {
+      const reg = new RegExp(etapa, "iu");
+      return etapasOptions.filter(a => reg.test(a.value));
+    }
+    return etapasOptions;
+  };
+
   const buscaContrato = async values => {
     if (values.termo_contrato) {
       let contrato_uuid = contratos.find(
@@ -46,9 +60,14 @@ export default () => {
       let response = await getContratoSAFI(contrato_uuid);
 
       let contrato = response.data;
+      setContratoAtual(contrato);
+      values.contrato_uuid = contrato_uuid;
       values.empresa = contrato.empresa_contratada
         ? contrato.empresa_contratada.nome
-        : "";
+        : undefined;
+      values.empresa_uuid = contrato.empresa_contratada
+        ? contrato.empresa_contratada.uuid
+        : undefined;
       values.numero_processo = contrato.processo;
 
       if (contrato.ata) {
@@ -87,10 +106,8 @@ export default () => {
     }
   };
 
-  const onChangeEmpenho = (empenho, index) => {
-    let empenhosNovo = empenhos;
-    empenhosNovo[index] = empenho;
-    setEmpenhos(empenhosNovo);
+  const onChangeEmpenho = (empenho, index, values) => {
+    values[`empenho_${index}`] = empenho;
   };
 
   const adicionaEtapa = () => {
@@ -127,6 +144,173 @@ export default () => {
     });
   };
 
+  const validaParte = (values, index) => {
+    let flagErro = false;
+    etapas.forEach((e, i) => {
+      if (i === index) return;
+      if (values[`parte_${i}`] === values[`parte_${index}`]) {
+        if (values[`etapa_${i}`] === values[`etapa_${index}`]) {
+          flagErro = true;
+        }
+      }
+    });
+    return flagErro ? "Parte já selecionada" : undefined;
+  };
+
+  const quantidadeFaltante = values => {
+    let restante = values.quantidade_total;
+    etapas.forEach((e, index) => {
+      if (values[`quantidade_${index}`])
+        restante = restante - values[`quantidade_${index}`];
+    });
+    return restante;
+  };
+
+  const textoFaltante = values => {
+    let qtdFaltante = quantidadeFaltante(values);
+    let textoPadrao = (
+      <div>
+        Faltam
+        <span className="font-weight-bold">
+          &nbsp;
+          {qtdFaltante}
+          &nbsp;
+          {values.unidade_medida}
+          &nbsp;
+        </span>
+        para programar
+      </div>
+    );
+
+    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
+
+    return (
+      <div className="row">
+        <div
+          className={`col-12 texto-alimento-faltante ${
+            qtdFaltante === 0 ? "verde" : "vermelho"
+          }`}
+        >
+          {qtdFaltante < 0 ? textoAcima : textoPadrao}
+        </div>
+      </div>
+    );
+  };
+
+  const getOptionsDataProgramada = values => {
+    let options = [];
+    etapas.forEach((e, index) => {
+      if (values[`etapa_${index}`] && values[`data_programada_${index}`]) {
+        let nomeConcatenado = `${values[`data_programada_${index}`]} - ${
+          values[`etapa_${index}`]
+        } ${values[`parte_${index}`] ? ` - ${values[`parte_${index}`]}` : ""}`;
+        options.push({
+          uuid: nomeConcatenado,
+          nome: nomeConcatenado
+        });
+      }
+    });
+    return options;
+  };
+
+  const buscaEmpenho = uuid => {
+    if (!uuid) return;
+    let nome;
+    contratoAtual.dotacoes.forEach(d => {
+      let emp = d.empenhos.find(e => e.uuid === uuid);
+      if (emp) {
+        nome = emp.numero;
+        return;
+      }
+    });
+    return nome;
+  };
+
+  const formataPayload = (values, rascunho) => {
+    let payload = {};
+    payload.cadastro_finalizado = !rascunho;
+    payload.contrato = values.termo_contrato;
+    payload.contrato_uuid = values.contrato_uuid;
+    payload.empresa_uuid = values.empresa_uuid;
+    payload.nome_empresa = values.empresa;
+    payload.processo_sei = values.numero_processo;
+    payload.nome_produto = values.produto
+      ? produtosOptions.find(x => x.uuid === values.produto).nome
+      : undefined;
+    payload.produto_uuid = values.produto;
+    payload.qtd_total_programada = values.quantidade_total;
+    payload.unidade_medida = values.unidade_medida;
+    payload.armazem = values.armazem;
+    payload.tipo_embalagem = values.tipo_embalagem;
+
+    payload.etapas = etapas.map((etapa, index) => ({
+      empenho_uuid: values[`empenho_${index}`],
+      numero_empenho: buscaEmpenho(values[`empenho_${index}`]),
+      etapa: values[`etapa_${index}`],
+      parte: values[`parte_${index}`],
+      data_programada: values[`data_programada_${index}`]
+        ? moment(values[`data_programada_${index}`], "DD/MM/YYYY").format(
+            "YYYY-MM-DD"
+          )
+        : undefined,
+      quantidade: values[`quantidade_${index}`],
+      total_embalagens: values[`total_embalagens_${index}`]
+    }));
+
+    payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
+      data_recebimento: values[`data_programada_${index}`],
+      tipo_carga: values[`tipo_recebimento_${index}`]
+    }));
+
+    return payload;
+  };
+
+  const salvarCronograma = async (values, rascunho) => {
+    setCarregando(true);
+    let payload = formataPayload(values, rascunho);
+
+    let response = await cadastraCronograma(payload);
+    if (response.status === 201) {
+      toastSuccess(
+        rascunho
+          ? "Rascunho salvo com sucesso!"
+          : "Cadastro de Cronograma salvo e enviado para aprovação!"
+      );
+    } else {
+      toastError("Ocorreu um erro ao salvar o Cronograma");
+      setCarregando(false);
+    }
+  };
+
+  const validaRascunho = values => {
+    return !values.contrato_uuid;
+  };
+
+  const validaSalvarEnviar = values => {
+    let valido = true;
+
+    valido =
+      valido &&
+      values.contrato_uuid &&
+      values.produto &&
+      values.armazem &&
+      values.tipo_embalagem;
+
+    etapas.forEach((e, index) => {
+      valido =
+        valido &&
+        values[`empenho_${index}`] &&
+        values[`etapa_${index}`] &&
+        values[`data_programada_${index}`] &&
+        values[`quantidade_${index}`] &&
+        values[`total_embalagens_${index}`];
+    });
+
+    if (quantidadeFaltante(values) !== 0) valido = false;
+
+    return !valido;
+  };
+
   useEffect(() => {
     const buscaListaContratos = async () => {
       const response = await getListaTermosContratoSAFI();
@@ -139,7 +323,24 @@ export default () => {
       );
     };
 
+    const buscaArmazens = async () => {
+      const response = await getArmazens();
+      setArmazens(
+        response.data.results.map(armazem => ({
+          nome: armazem.nome_fantasia,
+          uuid: armazem.uuid
+        }))
+      );
+    };
+
+    const buscaEtapas = async () => {
+      const response = await getEtapas();
+      setEtapasOptions(response.data);
+    };
+
     buscaListaContratos();
+    buscaArmazens();
+    buscaEtapas();
   }, []);
 
   return (
@@ -254,7 +455,8 @@ export default () => {
                               label="Quantidade Total Programada"
                               name="quantidade_total"
                               className="input-busca-produto"
-                              disabled={false}
+                              disabled={true}
+                              required
                             />
                           </div>
                           <div className="col-3">
@@ -264,6 +466,7 @@ export default () => {
                               name="unidade_medida"
                               className="input-busca-produto"
                               disabled={true}
+                              required
                             />
                           </div>
                         </div>
@@ -272,7 +475,7 @@ export default () => {
                             <Field
                               component={SelectSelecione}
                               naoDesabilitarPrimeiraOpcao
-                              options={produtosOptions} // MUDAR
+                              options={armazens}
                               label="Armazém"
                               name="armazem"
                               required
@@ -283,9 +486,22 @@ export default () => {
                             <Field
                               component={SelectSelecione}
                               naoDesabilitarPrimeiraOpcao
-                              options={produtosOptions} // MUDAR
+                              options={[
+                                {
+                                  uuid: "CAIXA",
+                                  nome: "Caixa"
+                                },
+                                {
+                                  uuid: "FARDO",
+                                  nome: "Fardo"
+                                },
+                                {
+                                  uuid: "TUBET",
+                                  nome: "Tubet"
+                                }
+                              ]}
                               label="Tipo de Embalagem"
-                              name="armazem"
+                              name="tipo_embalagem"
                               required
                               placeholder={"Selecione a Embalagem"}
                             />
@@ -325,17 +541,18 @@ export default () => {
                                 <TreeSelect
                                   treeData={empenhoOptions}
                                   value={values.empenho}
-                                  onChange={e => onChangeEmpenho(e, index)}
+                                  onChange={e =>
+                                    onChangeEmpenho(e, index, values)
+                                  }
                                   placeholder="Selecione o Empenho"
-                                  treeNodeFilterProp="title"
                                   style={{ width: "100%" }}
                                 />
                               </div>
                               <div className="col-4">
                                 <Field
                                   component={AutoCompleteField}
-                                  options={getContratosFiltrado(
-                                    values.termo_contrato
+                                  options={getEtapasFiltrado(
+                                    values[`etapa_${index}`]
                                   )}
                                   label="Etapa"
                                   name={`etapa_${index}`}
@@ -349,10 +566,32 @@ export default () => {
                                 <Field
                                   component={SelectSelecione}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={produtosOptions} // MUDAR
+                                  options={[
+                                    {
+                                      uuid: "Parte 1",
+                                      nome: "Parte 1"
+                                    },
+                                    {
+                                      uuid: "Parte 2",
+                                      nome: "Parte 2"
+                                    },
+                                    {
+                                      uuid: "Parte 3",
+                                      nome: "Parte 3"
+                                    },
+                                    {
+                                      uuid: "Parte 4",
+                                      nome: "Parte 4"
+                                    },
+                                    {
+                                      uuid: "Parte 5",
+                                      nome: "Parte 5"
+                                    }
+                                  ]}
                                   label="Parte"
                                   name={`parte_${index}`}
                                   placeholder={"Selecione a Parte"}
+                                  validate={() => validaParte(values, index)}
                                 />
                               </div>
                             </div>
@@ -365,6 +604,7 @@ export default () => {
                                   placeholder="Selecionar a Data"
                                   required
                                   writable={false}
+                                  minDate={null}
                                 />
                               </div>
                               <div className="col-4">
@@ -391,6 +631,8 @@ export default () => {
                             </div>
                           </>
                         ))}
+
+                        {values.quantidade_total && textoFaltante(values)}
 
                         <div className="text-center mb-2 mt-2">
                           <Botao
@@ -468,7 +710,7 @@ export default () => {
                                 <Field
                                   component={SelectSelecione}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={produtosOptions} // MUDAR
+                                  options={getOptionsDataProgramada(values)}
                                   label="Data Programada"
                                   name={`data_recebimento_${index}`}
                                   placeholder={"Selecione a Data"}
@@ -478,7 +720,16 @@ export default () => {
                                 <Field
                                   component={SelectSelecione}
                                   naoDesabilitarPrimeiraOpcao
-                                  options={produtosOptions} // MUDAR
+                                  options={[
+                                    {
+                                      uuid: "PALETIZADA",
+                                      nome: "Paletizada"
+                                    },
+                                    {
+                                      uuid: "ESTIVADA_BATIDA",
+                                      nome: "Estivada/Batida"
+                                    }
+                                  ]}
                                   label="Tipo de Carga"
                                   name={`tipo_recebimento_${index}`}
                                   placeholder={"Selecione a Carga"}
@@ -507,12 +758,20 @@ export default () => {
 
                 <div className="mt-4 mb-4">
                   <Botao
-                    texto="Voltar"
+                    texto="Salvar e Enviar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-right ml-3"
+                    onClick={() => salvarCronograma(values, false)}
+                    disabled={validaSalvarEnviar(values)}
+                  />
+                  <Botao
+                    texto="Salvar Rascunho"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-right ml-3"
-                    //onClick={goToInsucesso}
-                    disabled={submitting}
+                    onClick={() => salvarCronograma(values, true)}
+                    disabled={validaRascunho(values)}
                   />
                 </div>
               </form>

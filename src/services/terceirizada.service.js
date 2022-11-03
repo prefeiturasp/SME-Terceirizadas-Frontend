@@ -108,3 +108,6 @@ export const getPdfRelatorioQuantitativo = async params => {
   );
   saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
 };
+
+export const getArmazens = async () =>
+  await axios.get("/terceirizadas/lista-armazens/");
