@@ -20,9 +20,13 @@ import { getArmazens } from "services/terceirizada.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { cadastraCronograma, getEtapas } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { Modal } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [contratoAtual, setContratoAtual] = useState();
   const [contratos, setContratos] = useState([]);
   const [contratosOptions, setContratosOptions] = useState([]);
@@ -33,6 +37,7 @@ export default () => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
+  const history = useHistory();
 
   const onSubmit = () => {};
 
@@ -271,11 +276,13 @@ export default () => {
 
     let response = await cadastraCronograma(payload);
     if (response.status === 201) {
-      toastSuccess(
-        rascunho
-          ? "Rascunho salvo com sucesso!"
-          : "Cadastro de Cronograma salvo e enviado para aprovação!"
-      );
+      if (rascunho) {
+        toastSuccess("Rascunho salvo com sucesso!");
+      } else {
+        toastSuccess("Cadastro de Cronograma salvo e enviado para aprovação!");
+        setShowModal(false);
+        history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+      }
     } else {
       toastError("Ocorreu um erro ao salvar o Cronograma");
       setCarregando(false);
@@ -762,7 +769,7 @@ export default () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
-                    onClick={() => salvarCronograma(values, false)}
+                    onClick={() => setShowModal(true)}
                     disabled={validaSalvarEnviar(values)}
                   />
                   <Botao
@@ -774,6 +781,40 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
+                <Modal
+                  show={showModal}
+                  onHide={() => {
+                    setShowModal(false);
+                  }}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>Salvar e Enviar</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Deseja salvar o Cadastro do Cronograma e enviar para
+                    aprovação?
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Botao
+                      texto="Continuar Editando"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => {
+                        setShowModal(false);
+                      }}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="ml-3"
+                    />
+                    <Botao
+                      texto="Salvar e Enviar"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => {
+                        salvarCronograma(values, false);
+                      }}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                    />
+                  </Modal.Footer>
+                </Modal>
               </form>
             )}
           />
