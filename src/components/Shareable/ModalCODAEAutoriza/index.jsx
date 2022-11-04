@@ -9,7 +9,7 @@ import {
   maxLengthProduto,
   textAreaRequiredAndAtLeastOneCharacter
 } from "helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "../TextArea/TextAreaWYSIWYG";
+import CKEditorField from "../CKEditorField";
 import { toastError, toastSuccess, toastWarn } from "../Toast/dialogs";
 import { MENSAGEM_VAZIA } from "../TextArea/constants";
 import { composeValidators } from "helpers/utilities";
@@ -72,7 +72,7 @@ export class ModalCODAEAutoriza extends Component {
                 <div className="form-row mb-3">
                   <div className="form-group col-12">
                     <Field
-                      component={TextAreaWYSIWYG}
+                      component={CKEditorField}
                       label="Informações da CODAE"
                       name="justificativa_autorizacao"
                       required
@@ -96,7 +96,7 @@ export class ModalCODAEAutoriza extends Component {
                       texto="Não"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
-                      style={BUTTON_STYLE.BLUE_OUTLINE}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
                     />
                     <Botao
@@ -105,7 +105,7 @@ export class ModalCODAEAutoriza extends Component {
                       onClick={() => {
                         this.autorizarSolicitacao(uuid, values);
                       }}
-                      style={BUTTON_STYLE.BLUE}
+                      style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                       disabled={this.state.desabilitarSubmit}
                     />

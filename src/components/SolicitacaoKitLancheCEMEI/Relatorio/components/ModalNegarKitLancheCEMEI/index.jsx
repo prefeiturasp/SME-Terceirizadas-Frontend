@@ -15,7 +15,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 
 export const ModalNegarKitLancheCEMEI = ({ ...props }) => {
   const {
@@ -64,7 +64,7 @@ export const ModalNegarKitLancheCEMEI = ({ ...props }) => {
               <div className="form-row">
                 <div className="form-group col-12">
                   <Field
-                    component={TextAreaWYSIWYG}
+                    component={CKEditorField}
                     label="Justificativa"
                     name="justificativa"
                     required

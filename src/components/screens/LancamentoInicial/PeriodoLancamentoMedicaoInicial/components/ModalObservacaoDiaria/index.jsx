@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
 import { Spin } from "antd";
+import { format, getYear } from "date-fns";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -10,13 +12,11 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 import InputText from "components/Shareable/Input/InputText";
-import { TextAreaWYSIWYG } from "components/Shareable/TextArea/TextAreaWYSIWYG";
-import "./styles.scss";
-import { format, getYear } from "date-fns";
-import { peloMenosUmCaractere } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { deleteObservacaoValoresPeriodosLancamentos } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { peloMenosUmCaractere } from "helpers/fieldValidators";
+import { deleteObservacaoValoresPeriodosLancamentos } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import "./styles.scss";
 
 export default ({
   closeModal,
@@ -180,7 +180,7 @@ export default ({
           <div className="col-12 mt-3">
             <label className="font-weight-bold">Observação</label>
             <Field
-              component={TextAreaWYSIWYG}
+              component={CKEditorField}
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
               ehModal={true}
             />

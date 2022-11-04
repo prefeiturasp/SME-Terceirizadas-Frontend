@@ -406,7 +406,8 @@ export const escolaEhCei = () => {
 export const escolaEhCEMEI = () => {
   return (
     localStorage.getItem("nome_instituicao") &&
-    localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`)
+    (localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`) ||
+      localStorage.getItem("nome_instituicao").startsWith(`"CEU CEMEI`))
   );
 };
 
@@ -675,19 +676,32 @@ export const exibirGA = () => {
       case `"diretoriaregional"`:
         return (
           localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA")
+          localStorage.getItem("nome_instituicao").includes("PIRITUBA") ||
+          localStorage
+            .getItem("nome_instituicao")
+            .includes("FREGUESIA/BRASILANDIA")
         );
       case `"escola"`:
         return (
-          localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-          localStorage.getItem("dre_nome").includes("PIRITUBA")
+          (localStorage.getItem("dre_nome").includes("IPIRANGA") ||
+            localStorage.getItem("dre_nome").includes("PIRITUBA") ||
+            localStorage
+              .getItem("dre_nome")
+              .includes("FREGUESIA/BRASILANDIA")) &&
+          !localStorage.getItem("nome_instituicao").includes(`"CEMEI `) &&
+          !localStorage.getItem("nome_instituicao").includes(`"CEU CEMEI `)
         );
       case `"terceirizada"`:
         return JSON.parse(localStorage.getItem("lotes")).find(
           lote =>
             lote.diretoria_regional.nome.includes("IPIRANGA") ||
-            lote.diretoria_regional.nome.includes("PIRITUBA")
+            lote.diretoria_regional.nome.includes("PIRITUBA") ||
+            lote.diretoria_regional.nome.includes("FREGUESIA/BRASILANDIA")
         );
+      case `"nutricao_manifestacao"`:
+        return true;
+      case `"supervisao_nutricao"`:
+        return true;
       default:
         return false;
     }

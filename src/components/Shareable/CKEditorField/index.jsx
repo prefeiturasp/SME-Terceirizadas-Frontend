@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { HelpText } from "../HelpText";
-import InputErroMensagem from "../Input/InputErroMensagem";
+import InputErroMensagemCKEditor from "../Input/InputErroMensagemCKEditor";
 
 const CKEditorField = props => {
   const {
@@ -16,11 +16,14 @@ const CKEditorField = props => {
     required,
     ...rest
   } = props;
+
+  const [touched, setTouched] = useState(false);
+
   return (
     <div className="select">
       {label && [
         required && (
-          <span key={1} className="required-asterisk">
+          <span key={1} className="required-asterisk float-left">
             *
           </span>
         ),
@@ -35,9 +38,10 @@ const CKEditorField = props => {
           onChange(editor.getData());
         }}
         {...rest}
+        onBlur={() => setTouched(true)}
       />
       <HelpText helpText={helpText} />
-      <InputErroMensagem meta={meta} />
+      <InputErroMensagemCKEditor meta={meta} touched={touched} />
     </div>
   );
 };

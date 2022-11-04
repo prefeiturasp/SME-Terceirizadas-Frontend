@@ -1,8 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
-import { corrigeLinkAnexo } from "helpers/utilities";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import { Spin, Pagination } from "antd";
-import { API_URL } from "constants/config";
 
 const TabelaResultado = ({
   produtosCount,
@@ -20,11 +19,11 @@ const TabelaResultado = ({
   const nextPage = page => {
     setCarregando(true);
     setPage(page);
-    const params = {
+    const params = gerarParametrosConsulta({
       ...filtros,
       page: page,
       page_size: pageSize
-    };
+    });
     getProdutosRelatorioSuspenso(params).then(response => {
       setProdutos(response.data.results);
       setCarregando(false);
@@ -161,9 +160,7 @@ const TabelaResultado = ({
                                             key={anexoIdx}
                                             rel="noopener noreferrer"
                                             target="_blank"
-                                            href={corrigeLinkAnexo(
-                                              `${API_URL}${anexo.arquivo}`
-                                            )}
+                                            href={anexo.arquivo_url}
                                           >
                                             {anexo.nome}
                                           </a>

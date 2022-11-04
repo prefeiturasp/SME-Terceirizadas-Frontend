@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import ModalAtivarInativar from "../ModalAtivarInativar";
-import { ReadOutlined } from "@ant-design/icons";
+import { ReloadOutlined } from "@ant-design/icons";
 import "./style.scss";
 
 export default ({ resultado, changePage }) => {
@@ -55,7 +55,7 @@ export default ({ resultado, changePage }) => {
                             className="botaoExcluir ml-2"
                             onClick={() => openModal(item)}
                           >
-                            <ReadOutlined className="mr-1" />
+                            <ReloadOutlined className="mr-1" />
                             {item.ativo ? "Inativar" : "Ativar"}
                           </button>
                         </td>

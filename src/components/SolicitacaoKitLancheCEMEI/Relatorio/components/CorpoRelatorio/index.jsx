@@ -30,6 +30,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import "../../style.scss";
+import { getRelatorioKitLancheCEMEI } from "services/relatorios";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -56,6 +57,7 @@ export const CorpoRelatorio = ({ ...props }) => {
   );
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
   const [respostaSimNao, setRespostaSimNao] = useState(null);
+  const [imprimindo, setImprimindo] = useState(false);
 
   const urlParams = new URLSearchParams(window.location.search);
   const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -145,9 +147,14 @@ export const CorpoRelatorio = ({ ...props }) => {
         <div className="col-6">
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
-            onClick={() => {}}
+            style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+            disabled={imprimindo}
+            icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+            onClick={async () => {
+              setImprimindo(true);
+              await getRelatorioKitLancheCEMEI(solicitacaoKitLancheCEMEI.uuid);
+              setImprimindo(false);
+            }}
             className="float-right"
           />
         </div>

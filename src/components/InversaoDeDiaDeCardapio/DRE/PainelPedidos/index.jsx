@@ -8,7 +8,8 @@ import { CardInversaoPendenciaAprovacao } from "../../components/CardPendenteAca
 import {
   filtraPrioritarios,
   filtraNoLimite,
-  filtraRegular
+  filtraRegular,
+  ordenarPedidosDataMaisRecente
 } from "./../../../../helpers/painelPedidos";
 import { getDREPedidosDeInversoes } from "../../../../services/inversaoDeDiaDeCardapio.service";
 
@@ -25,9 +26,15 @@ class PainelPedidos extends Component {
 
   filtrar(filtro) {
     getDREPedidosDeInversoes(filtro).then(response => {
-      let pedidosPrioritarios = filtraPrioritarios(response.results);
-      let pedidosNoPrazoLimite = filtraNoLimite(response.results);
-      let pedidosNoPrazoRegular = filtraRegular(response.results);
+      let pedidosPrioritarios = ordenarPedidosDataMaisRecente(
+        filtraPrioritarios(response.results)
+      );
+      let pedidosNoPrazoLimite = ordenarPedidosDataMaisRecente(
+        filtraNoLimite(response.results)
+      );
+      let pedidosNoPrazoRegular = ordenarPedidosDataMaisRecente(
+        filtraRegular(response.results)
+      );
       this.setState({
         pedidosCarregados: true,
         pedidosPrioritarios,

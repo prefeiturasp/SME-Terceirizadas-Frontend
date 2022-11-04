@@ -1,3 +1,5 @@
+import { deepCopy } from "./utilities";
+
 export const formatarPedidos = pedidos => {
   return pedidos.map(pedido => {
     let novoPedido = pedido;
@@ -33,6 +35,27 @@ export const filtraRegular = (pedidos, filtro = null) => {
 
     return prioridade === "REGULAR";
   });
+};
+
+export const ordenarPedidosDataMaisRecente = pedidos => {
+  const pedidosFiltradosCopy = deepCopy(pedidos).map(obj => {
+    const dataMaisProxima = obj.inclusoes
+      ? obj.inclusoes[0].data
+      : obj.solicitacao_kit_lanche
+      ? obj.solicitacao_kit_lanche.data
+      : obj.data;
+    const arrayData = (obj.data_inicial || dataMaisProxima).split("/");
+    return {
+      ...obj,
+      date: new Date(arrayData[2], arrayData[1] - 1, arrayData[0])
+    };
+  });
+
+  const pedidosOrdenados = pedidosFiltradosCopy.sort(
+    (objA, objB) => Number(objA.date) - Number(objB.date)
+  );
+
+  return pedidosOrdenados;
 };
 
 // de informativo

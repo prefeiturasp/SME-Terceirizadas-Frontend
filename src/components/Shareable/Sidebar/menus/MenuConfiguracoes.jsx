@@ -1,6 +1,11 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
-import { CONFIGURACOES, PERMISSOES, MENSAGEM } from "configs/constants";
+import {
+  CONFIGURACOES,
+  PERMISSOES,
+  MENSAGEM,
+  GERENCIAMENTO_EMAILS
+} from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
@@ -26,6 +31,10 @@ const MenuConfiguracoes = () => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhTerceirizada();
+  const exibirGerenciamentoEmails =
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCoordenadorGpCODAE();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
@@ -40,6 +49,11 @@ const MenuConfiguracoes = () => {
             Configuração de Mensagem
           </LeafItem>
         </>
+      )}
+      {exibirGerenciamentoEmails && (
+        <LeafItem to={`/${CONFIGURACOES}/${GERENCIAMENTO_EMAILS}`}>
+          Gerenciamento de E-mails
+        </LeafItem>
       )}
     </Menu>
   );

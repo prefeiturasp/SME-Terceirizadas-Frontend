@@ -62,9 +62,12 @@ export const updateListaVinculosTipoAlimentacaoPorTipoUnidadeEscolar = async val
   }
 };
 
-export const getVinculosTipoAlimentacaoPorEscola = async uuid => {
+export const getVinculosTipoAlimentacaoPorEscola = async (
+  uuid,
+  params = null
+) => {
   const url = `/vinculos-tipo-alimentacao-u-e-periodo-escolar/escola/${uuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

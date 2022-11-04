@@ -4,6 +4,10 @@ body {
   background-color: #f7f6f8 !important;
 }
 
+body.dark-content {
+  background-color: #464646 !important;
+}
+
 .navbar-sme {
   width: 100%;
 }
@@ -15,6 +19,101 @@ body {
   background-size: cover;
   margin-left: -15px;
   height: 100%;
+}
+
+.dark-content {
+  .bg-gradiente-sme {
+    background-color: #242424;
+  }
+
+  .sidebar {
+    &:not(.toggled) {
+      .sidebar-wrapper {
+        &.div-submenu {
+          background: #404040;
+        }
+      }
+    }
+  }
+
+  .sidebar-dark {
+    // ::-webkit-scrollbar {
+    //   width: 8px;
+    // }
+    // ::-webkit-scrollbar-track {
+    //   background: $grayDisabled;
+    // }
+    // ::-webkit-scrollbar-thumb {
+    //   background: $grayHeader;
+    // }
+    // ::-webkit-scrollbar-thumb:hover {
+    //   background: $gray;
+    // }
+    i.fa-chevron-circle-left,
+    i.fa-chevron-circle-right {
+      padding-right: 10px;
+      color: white;
+    }
+    .sidebar-wrapper {
+      &.div-submenu {
+        height: max-content;
+      }
+      .nav-item {
+        position: relative;
+        text-align: -webkit-center;
+        .bg-white.collapse-inner.rounded {
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
+          border-top-left-radius: 0 !important;
+          border-top-right-radius: 0 !important;
+          width: 15rem;
+          .submenu {
+            .collapse-item {
+              padding-left: 2rem;
+              &:not(:last-child) {
+                border-bottom: none !important;
+              }
+              .quebra-titulos {
+                white-space: break-spaces;
+              }
+            }
+          }
+          .collapse-item {
+            color: white;
+            background-color: #202020;
+            &:hover {
+              border-left: 10px solid #919191;
+              background-color: #525252;
+            }
+            &:not(:hover):not(:last-child) {
+              border-bottom: 1px solid #919191;
+            }
+          }
+        }
+        .nav-link {
+          &:hover,
+          &:not(.collapsed) {
+            border-radius: 5px;
+            background-color: #202020 !important;
+            span {
+              color: white !important;
+            }
+            i {
+              color: white !important;
+            }
+            &.nav-link[data-toggle="collapse"]::after {
+              color: white !important;
+            }
+          }
+          &.keep-hover-settings,
+          &:not(.collapsed) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+        }
+      }
+    }
+  }
 }
 
 .sidebar {

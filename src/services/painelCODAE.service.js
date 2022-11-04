@@ -16,6 +16,8 @@ import { getSuspensaoDeAlimentacaoCODAE } from "services/suspensaoDeAlimentacao.
 import { SOLICITACOES } from "./constants";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { safeConcatOn } from "helpers/utilities";
+import { ErrorHandlerFunction } from "./service-helpers";
+import axios from "./_base";
 
 // TODO: isso pode ser simplificado, igual aos demais painel*.service, mas faltam testes
 
@@ -26,35 +28,21 @@ const authToken = {
 
 const TODAS_SOLICITACOES_CODAE_URL = `${API_URL}/codae-solicitacoes`;
 
-export const getSolicitacoesAutorizadasCodae = async () => {
+export const getSolicitacoesAutorizadasCodae = async params => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.AUTORIZADOS}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
-export const getSolicitacoesCanceladasCodae = async () => {
+export const getSolicitacoesCanceladasCodae = async params => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.CANCELADOS}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
@@ -76,21 +64,22 @@ export const getSolicitacoesPendentesAutorizacaoCodae = async filtro => {
   }
 };
 
-export const getSolicitacoesComQuestionamentoCodae = async () => {
+export const getSolicitacoesPendentesAutorizacaoCodaeSemFiltro = async params => {
+  const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.PENDENTES}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+export const getSolicitacoesComQuestionamentoCodae = async params => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
     SOLICITACOES.QUESTIONAMENTOS
   }/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
@@ -114,19 +103,12 @@ export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
   }
 };
 
-export const getSolicitacoesNegadasCodae = async () => {
+export const getSolicitacoesNegadasCodae = async params => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${SOLICITACOES.NEGADOS}/`;
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 

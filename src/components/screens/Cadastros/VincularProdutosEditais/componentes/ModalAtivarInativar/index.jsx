@@ -61,7 +61,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
                       texto="Não"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
-                      style={BUTTON_STYLE.DARK_OUTLINE}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
                     />
                     <Botao

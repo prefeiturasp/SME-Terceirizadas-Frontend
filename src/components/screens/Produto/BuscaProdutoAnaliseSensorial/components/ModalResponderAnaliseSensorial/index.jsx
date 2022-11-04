@@ -19,11 +19,10 @@ import {
 import { withRouter } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
 import "antd/dist/antd.css";
-import moment from "moment";
 import "./styles.scss";
 import { formataData, DATA_MINIMA, DATA_MAXIMA } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
-import { getError } from "helpers/utilities";
+import { deepCopy, getError } from "helpers/utilities";
 import { respostaAnaliseSensorial } from "services/produto.service";
 import { ATimePicker } from "../../../../../Shareable/MakeField";
 
@@ -61,27 +60,26 @@ class ModalResponderAnaliseSensorial extends Component {
   onSubmit = values => {
     const { arquivos } = this.state;
     const { uuid } = this.props.homologacao;
+    const values_ = deepCopy(values);
 
     if (arquivos.length <= 0) {
       toastError(`Obrigatório anexar documento.`);
     } else {
-      values["hora"] = moment(values.hora_min._i, "HH:mm:ss").format(
-        "HH:mm:ss"
-      );
-      values["data"] = formataData(values.data_resp);
+      values_["hora"] = new Date(values_.hora_min).toTimeString().split(" ")[0];
+      values_["data"] = formataData(values_.data_resp);
 
-      values["anexos"] = arquivos.map(anexo => {
+      values_["anexos"] = arquivos.map(anexo => {
         return {
           nome: anexo.nome,
           base64: anexo.arquivo
         };
       });
-      values["homologacao_de_produto"] = uuid;
+      values_["homologacao_de_produto"] = uuid;
 
-      delete values["hora_min"];
-      delete values["data_resp"];
+      delete values_["hora_min"];
+      delete values_["data_resp"];
 
-      respostaAnaliseSensorial(values).then(response => {
+      respostaAnaliseSensorial(values_).then(response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess("Resposta para análise sensorial enviada com sucesso.");
           this.props.history.push(

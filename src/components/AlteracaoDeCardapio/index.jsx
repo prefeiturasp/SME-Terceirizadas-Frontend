@@ -1,12 +1,13 @@
+import React, { Component, Fragment } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import CKEditorField from "components/Shareable/CKEditorField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputText } from "components/Shareable/Input/InputText";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
 import { getDiasUteis } from "services/diasUteis.service";
 import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import {
@@ -39,7 +40,6 @@ import CardMatriculados from "../Shareable/CardMatriculados";
 import { InputComData } from "../Shareable/DatePicker";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
 import { Select } from "../Shareable/Select";
-import { TextAreaWYSIWYG } from "../Shareable/TextArea/TextAreaWYSIWYG";
 import {
   toastError,
   toastSuccess,
@@ -504,6 +504,11 @@ class AlteracaoCardapio extends Component {
                   this.resetForm("alteracaoCardapio");
                 }
                 this.resetForm();
+              }
+              if (response.status === HTTP_STATUS.BAD_REQUEST) {
+                response.data.non_field_errors.forEach(erro => {
+                  toastError(erro);
+                });
               }
             })
             .catch(error => {
@@ -1159,7 +1164,7 @@ class AlteracaoCardapio extends Component {
               <hr />
               <div className="card-body">
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Motivo/Justificativa"
                   name="observacao"
                   required

@@ -43,7 +43,7 @@ export const TabelaFaixasCEMEI = ({
               borderRadius: "5px",
               margin: "1% 0px",
               width: "100%",
-              padding: "1% 1%",
+              padding: "8px 15px",
               height: "40px"
             }}
           >
