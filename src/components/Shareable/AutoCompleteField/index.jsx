@@ -15,6 +15,7 @@ export default class AutoCompleteField extends Component {
       input,
       name,
       required,
+      esconderIcone,
       ...props
     } = this.props;
     return (
@@ -35,16 +36,28 @@ export default class AutoCompleteField extends Component {
           {...input}
           onSearch={onSearch}
         >
-          <Input.Search
-            {...input}
-            className={`${className} ${meta &&
-              meta.touched &&
-              (meta.error || meta.warning) &&
-              "invalid-field"}`}
-            name={name}
-            size="large"
-            onSearch={onSearch}
-          />
+          {esconderIcone ? (
+            <Input
+              {...input}
+              className={`${className} ${meta &&
+                meta.touched &&
+                (meta.error || meta.warning) &&
+                "invalid-field"}`}
+              name={name}
+              size="large"
+            />
+          ) : (
+            <Input.Search
+              {...input}
+              className={`${className} ${meta &&
+                meta.touched &&
+                (meta.error || meta.warning) &&
+                "invalid-field"}`}
+              name={name}
+              size="large"
+              onSearch={onSearch}
+            />
+          )}
         </AutoComplete>
         <HelpText helpText={helpText} />
         <InputErroMensagem meta={meta} />
