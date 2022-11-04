@@ -5,10 +5,15 @@ import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { HOME } from "constants/config";
 import { RelatorioInclusaoDeAlimentacaoCEMEI } from "components/InclusaoDeAlimentacaoCEMEI/Relatorio";
-import { ESCOLA } from "configs/constants";
+import { DRE, ESCOLA } from "configs/constants";
 import { ModalCancelarInclusaoAlimentacao } from "components/Shareable/ModalCancelarInclusaoAlimentacao";
-import { escolaCancelarSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import {
+  dreReprovarSolicitacaoDeInclusaoDeAlimentacao,
+  dreValidarSolicitacaoDeInclusaoDeAlimentacao,
+  escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
+} from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -62,6 +67,29 @@ export const RelatorioEscola = () => {
         escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
       }
       textoBotaoNaoAprova="Cancelar"
+      tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
+    />
+  );
+};
+
+export const RelatorioDRE = () => {
+  return (
+    <RelatorioBase
+      visao={DRE}
+      ModalNaoAprova={ModalNaoValidarKitLancheCEMEI}
+      toastNaoAprovaMensagem={
+        "Inclusão de Alimentação não validada com sucesso!"
+      }
+      toastAprovaMensagem={"Inclusão de Alimentação validada com sucesso!"}
+      toastAprovaMensagemErro={
+        "Houve um erro ao validar a Inclusão de Alimentação"
+      }
+      endpointAprovaSolicitacao={dreValidarSolicitacaoDeInclusaoDeAlimentacao}
+      endpointNaoAprovaSolicitacao={
+        dreReprovarSolicitacaoDeInclusaoDeAlimentacao
+      }
+      textoBotaoNaoAprova="Não Validar"
+      textoBotaoAprova="Validar"
       tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
     />
   );
