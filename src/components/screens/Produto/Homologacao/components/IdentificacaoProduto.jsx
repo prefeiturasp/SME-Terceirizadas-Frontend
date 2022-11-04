@@ -1,6 +1,7 @@
 import React from "react";
 import { Field } from "react-final-form";
 import { InputText } from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 export const IdentificacaoProduto = ({ homologacao }) => {
   return (
@@ -8,15 +9,7 @@ export const IdentificacaoProduto = ({ homologacao }) => {
       <div className="col-12">
         <p className="titulo-section">Identificação do Produto</p>
       </div>
-      <div className="col-7">
-        <Field
-          component={InputText}
-          label="O produto se destina a alimentação de alunos com dieta especial?"
-          name="produto.dieta_especial"
-          disabled={true}
-        />
-      </div>
-      <div className="col-5">
+      <div className="col-12">
         <Field
           component={InputText}
           label="Nome do Produto"
@@ -24,7 +17,7 @@ export const IdentificacaoProduto = ({ homologacao }) => {
           disabled={true}
         />
       </div>
-      <div className="col-7">
+      <div className="col-6">
         <Field
           component={InputText}
           label="Marca"
@@ -32,7 +25,7 @@ export const IdentificacaoProduto = ({ homologacao }) => {
           disabled={true}
         />
       </div>
-      <div className="col-5">
+      <div className="col-6">
         <Field
           component={InputText}
           label="Fabricante"
@@ -43,6 +36,14 @@ export const IdentificacaoProduto = ({ homologacao }) => {
       <div className="col-12">
         <Field
           component={InputText}
+          label="O produto se destina a alimentação de alunos com dieta especial?"
+          name="produto.dieta_especial"
+          disabled={true}
+        />
+      </div>
+      <div className="col-12">
+        <Field
+          component={TextArea}
           label="Componentes do Produto"
           name="produto.componentes"
           disabled={true}
