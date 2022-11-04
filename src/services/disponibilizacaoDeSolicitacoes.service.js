@@ -41,6 +41,7 @@ export const enviaSolicitacoesDaGrade = async values => {
       return { data: data, status: status };
     })
     .catch(error => {
-      return error.json();
+      return { data: error, status: status };
+      //return error.json();
     });
 };

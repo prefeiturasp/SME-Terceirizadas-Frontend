@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
-import HTTP_STATUS from "http-status-codes";
+import HTTP_STATUS, { BAD_REQUEST } from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
@@ -46,16 +46,25 @@ export default () => {
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getRequisicoesListagem(params);
-    if (response.data.count) {
-      setSolicitacoes(response.data.results);
-      setTotal(response.data.count);
-      setNumEnviadas(response.data.num_enviadas);
-      setNumConfirmadas(response.data.num_confirmadas);
-      inicioResultado.current.scrollIntoView();
-    } else {
-      setTotal(response.data.count);
-      setSolicitacoes();
+    try {
+      const response = await getRequisicoesListagem(params);
+      if (response.data.count) {
+        setSolicitacoes(response.data.results);
+        setTotal(response.data.count);
+        setNumEnviadas(response.data.num_enviadas);
+        setNumConfirmadas(response.data.num_confirmadas);
+        inicioResultado.current.scrollIntoView();
+      } else {
+        setTotal(response.data.count);
+        setSolicitacoes();
+      }
+    } catch (erro) {
+      let msg_erro = Object.keys(erro.response.data);
+      if (erro.response && erro.response.status === BAD_REQUEST) {
+        setSolicitacoes(null);
+        setTotal(erro.response.data.count);
+        toastError(erro.response.data[msg_erro[0]][0]);
+      }
     }
     setAtivos([]);
     setCarregando(false);
