@@ -317,46 +317,6 @@ class WizardFormPrimeiraPagina extends React.Component {
         <section className="identificacao-produto">
           <header>Identificação do Produto</header>
 
-          <section className="dieta-especial-form">
-            <article>
-              <label className="label-formulario-produto">
-                <span>*</span>O produto se destina ao atendimento de alunos com
-                dieta especial?
-              </label>
-              <div className="checks">
-                <label className="container-radio">
-                  Sim
-                  <Field
-                    component={"input"}
-                    type="radio"
-                    value="1"
-                    name="eh_para_alunos_com_dieta"
-                    onClick={() => {
-                      this.dietaEspecialCheck("1");
-                    }}
-                    disabled={desabilitarEhParaAlunosComDietaField}
-                    required
-                  />
-                  <span className="checkmark" />
-                </label>
-                <label className="container-radio">
-                  Não
-                  <Field
-                    component={"input"}
-                    type="radio"
-                    value="0"
-                    name="eh_para_alunos_com_dieta"
-                    onClick={() => {
-                      this.dietaEspecialCheck("0");
-                    }}
-                    disabled={desabilitarEhParaAlunosComDietaField}
-                  />
-                  <span className="checkmark" />
-                </label>
-              </div>
-            </article>
-          </section>
-
           <div className="section-produto-nome">
             <label className="label-formulario-produto">
               <nav>*</nav>Nome do produto
@@ -437,6 +397,46 @@ class WizardFormPrimeiraPagina extends React.Component {
                 }}
               />
             </div>
+          </section>
+
+          <section className="dieta-especial-form">
+            <article>
+              <label className="label-formulario-produto">
+                <span>*</span>O produto se destina ao atendimento de alunos com
+                dieta especial?
+              </label>
+              <div className="checks">
+                <label className="container-radio">
+                  Sim
+                  <Field
+                    component={"input"}
+                    type="radio"
+                    value="1"
+                    name="eh_para_alunos_com_dieta"
+                    onClick={() => {
+                      this.dietaEspecialCheck("1");
+                    }}
+                    disabled={desabilitarEhParaAlunosComDietaField}
+                    required
+                  />
+                  <span className="checkmark" />
+                </label>
+                <label className="container-radio">
+                  Não
+                  <Field
+                    component={"input"}
+                    type="radio"
+                    value="0"
+                    name="eh_para_alunos_com_dieta"
+                    onClick={() => {
+                      this.dietaEspecialCheck("0");
+                    }}
+                    disabled={desabilitarEhParaAlunosComDietaField}
+                  />
+                  <span className="checkmark" />
+                </label>
+              </div>
+            </article>
           </section>
 
           <div className="componentes-do-produto">
