@@ -46,16 +46,33 @@ export default () => {
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getRequisicoesListagem(params);
-    if (response.data.count) {
-      setSolicitacoes(response.data.results);
-      setTotal(response.data.count);
-      setNumEnviadas(response.data.num_enviadas);
-      setNumConfirmadas(response.data.num_confirmadas);
-      inicioResultado.current.scrollIntoView();
-    } else {
-      setTotal(response.data.count);
-      setSolicitacoes();
+    try {
+      const response = await getRequisicoesListagem(params);
+      if (response.data.count) {
+        setSolicitacoes(response.data.results);
+        setTotal(response.data.count);
+        setNumEnviadas(response.data.num_enviadas);
+        setNumConfirmadas(response.data.num_confirmadas);
+        inicioResultado.current.scrollIntoView();
+      } else {
+        setTotal(response.data.count);
+        setSolicitacoes();
+      }
+    } catch (erro) {
+      if (erro.response) {
+        if (typeof erro.response.data === "object") {
+          let chave = Object.keys(erro.response.data);
+          let msn_erro_return = erro.response.data[chave[0]];
+          let msg_erro = Array.isArray(msn_erro_return)
+            ? msn_erro_return[0]
+            : msn_erro_return;
+          toastError(msg_erro);
+        } else {
+          toastError("Erro do Servidor Interno");
+        }
+        setSolicitacoes(null);
+        setTotal(null);
+      }
     }
     setAtivos([]);
     setCarregando(false);
