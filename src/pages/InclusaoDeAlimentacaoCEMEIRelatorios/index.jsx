@@ -24,6 +24,17 @@ export const RelatorioBase = ({ ...props }) => {
     getMotivosDREnaoValidaData();
   }, []);
 
+  const anteriores = [
+    {
+      href: `/painel-gestao-alimentacao`,
+      titulo: "Gestão de Alimentação"
+    },
+    {
+      href: `/painel-gestao-alimentacao`,
+      titulo: "Painel de Solicitações"
+    }
+  ];
+
   const atual = {
     href: "#",
     titulo: "Relatório"
@@ -31,7 +42,7 @@ export const RelatorioBase = ({ ...props }) => {
 
   return (
     <Page botaoVoltar>
-      <Breadcrumb home={HOME} atual={atual} />
+      <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
       <RelatorioInclusaoDeAlimentacaoCEMEI
         motivosDREnaoValida={motivosDREnaoValida}
         {...props}
