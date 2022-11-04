@@ -178,6 +178,10 @@ export const PERIODO_LANCAMENTO = "periodo-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
+
+export const PRE_RECEBIMENTO = "pre-recebimento";
+export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
+export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

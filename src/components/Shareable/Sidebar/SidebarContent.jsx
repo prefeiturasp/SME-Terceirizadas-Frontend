@@ -31,7 +31,8 @@ import {
   MenuGestaoDeProduto,
   MenuLancamentoInicial,
   MenuRelatorios,
-  MenuLogistica
+  MenuLogistica,
+  MenuPreRecebimento
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -132,6 +133,8 @@ export const SidebarContent = () => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
+  const exibirMenuPreRecebimento = usuarioEhLogistica();
+
   const _props = {
     activeMenu,
     onSubmenuClick: onSubmenuClick,
@@ -152,6 +155,7 @@ export const SidebarContent = () => {
     exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} />
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={10} />
   ];
 };

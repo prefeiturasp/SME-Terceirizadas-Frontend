@@ -124,6 +124,8 @@ export const relatoriosInclusaoDeAlimentacao = () => {
 
 export const relatoriosInclusaoDeAlimentacaoCEMEI = () => {
   switch (localStorage.getItem("tipo_perfil")) {
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioDRE;
     default:
       return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioEscola;
   }

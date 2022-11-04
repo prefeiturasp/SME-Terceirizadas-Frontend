@@ -6,7 +6,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import { Relatorio } from "components/SolicitacaoKitLancheCEMEI/Relatorio";
 // import { ModalTerceirizadaRespondeQuestionamento } from "components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCancelarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCancelarKitLancheCEMEI";
-import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
+import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
 import {
   cancelaFluxoSolicitacaoKitLancheCEMEI,
   CODAEAutorizaKitLancheCEMEI,
@@ -73,7 +73,7 @@ export const RelatorioEscola = () => (
 export const RelatorioDRE = () => (
   <RelatorioBase
     visao={DRE}
-    ModalNaoAprova={ModalNaoValidarKitLancheCEMEI}
+    ModalNaoAprova={ModalNaoValidarFinalForm}
     toastAprovaMensagem={"Kit Lanche Passeio validado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao validar o Kit Lanche Passeio"}
     endpointNaoAprovaSolicitacao={DRENaoValidaKitLancheCEMEI}
