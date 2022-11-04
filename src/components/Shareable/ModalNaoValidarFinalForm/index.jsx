@@ -15,14 +15,15 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import Select from "components/Shareable/Select";
 
-export const ModalNaoValidarKitLancheCEMEI = ({ ...props }) => {
+export const ModalNaoValidarFinalForm = ({ ...props }) => {
   const {
     showModal,
     closeModal,
     solicitacao,
     endpoint,
     loadSolicitacao,
-    motivosDREnaoValida
+    motivosDREnaoValida,
+    tipoSolicitacao
   } = props;
   const [desabilitaBotaoSim, setDesabilitaBotaoSim] = useState(true);
 
@@ -38,13 +39,17 @@ export const ModalNaoValidarKitLancheCEMEI = ({ ...props }) => {
         ).nome
       } - ${values.justificativa}`
     };
-    const resp = await endpoint(solicitacao.uuid, justificativa);
+    const resp = await endpoint(
+      solicitacao.uuid,
+      justificativa,
+      tipoSolicitacao
+    );
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       toastSuccess("Solicitação não validada com sucesso!");
       if (loadSolicitacao) {
         const response = await loadSolicitacao(solicitacao.uuid);
-        if (response.status === HTTP_STATUS.OK) {
+        if (response && response.status === HTTP_STATUS.OK) {
           solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
             response.data
           );
