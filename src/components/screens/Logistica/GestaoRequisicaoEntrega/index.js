@@ -59,11 +59,17 @@ export default () => {
         setSolicitacoes();
       }
     } catch (erro) {
-      let msg_erro = Object.keys(erro.response.data);
-      if (erro.response && erro.response.status === BAD_REQUEST) {
+      if (erro.response) { 
+        if (typeof erro.response.data === 'object' ) { 
+          let chave = Object.keys(erro.response.data);
+          let msn_erro_return = erro.response.data[chave[0]]
+          let msg_erro = Array.isArray(msn_erro_return) ? msn_erro_return[0] : msn_erro_return
+          toastError(msg_erro);
+        } else {
+          toastError("Erro do Servidor Interno");
+        }
         setSolicitacoes(null);
-        setTotal(erro.response.data.count);
-        toastError(erro.response.data[msg_erro[0]][0]);
+        setTotal(null);
       }
     }
     setAtivos([]);
