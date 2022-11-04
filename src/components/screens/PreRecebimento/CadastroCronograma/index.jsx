@@ -64,7 +64,16 @@ export default () => {
       );
       if (!contrato_find) {
         toastError("Termo de Contrato Inválido");
+
         values.termo_contrato = undefined;
+        values.contrato_uuid = undefined;
+        values.empresa = undefined;
+        values.empresa_uuid = undefined;
+        values.numero_processo = undefined;
+
+        document.getElementById("autocomplete-contrato").focus();
+        document.activeElement.blur();
+
         return;
       }
       let contrato_uuid = contrato_find.uuid;
@@ -106,7 +115,7 @@ export default () => {
         }
 
         document.getElementById("autocomplete-contrato").focus();
-        document.getElementById("autocomplete-contrato").blur();
+        document.activeElement.blur();
       } catch (error) {
         toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
       }
