@@ -15,7 +15,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import Select from "components/Shareable/Select";
 
-export const ModalNaoValidarKitLancheCEMEI = ({ ...props }) => {
+export const ModalNaoValidarFinalForm = ({ ...props }) => {
   const {
     showModal,
     closeModal,

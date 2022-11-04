@@ -13,7 +13,7 @@ import {
   escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
-import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
+import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -76,7 +76,7 @@ export const RelatorioDRE = () => {
   return (
     <RelatorioBase
       visao={DRE}
-      ModalNaoAprova={ModalNaoValidarKitLancheCEMEI}
+      ModalNaoAprova={ModalNaoValidarFinalForm}
       toastNaoAprovaMensagem={
         "Inclusão de Alimentação não validada com sucesso!"
       }
