@@ -59,47 +59,57 @@ export default () => {
 
   const buscaContrato = async values => {
     if (values.termo_contrato) {
-      let contrato_uuid = contratos.find(
+      let contrato_find = contratos.find(
         c => c.termo_contrato === values.termo_contrato
-      ).uuid;
-      let response = await getContratoSAFI(contrato_uuid);
-
-      let contrato = response.data;
-      setContratoAtual(contrato);
-      values.contrato_uuid = contrato_uuid;
-      values.empresa = contrato.empresa_contratada
-        ? contrato.empresa_contratada.nome
-        : undefined;
-      values.empresa_uuid = contrato.empresa_contratada
-        ? contrato.empresa_contratada.uuid
-        : undefined;
-      values.numero_processo = contrato.processo;
-
-      if (contrato.ata) {
-        setProdutosOptions(
-          contrato.ata.produtos.map(produto => ({
-            ...produto,
-            nome: produto.nome_produto
-          }))
-        );
+      );
+      if (!contrato_find) {
+        toastError("Termo de Contrato Inválido");
+        values.termo_contrato = undefined;
+        return;
       }
+      let contrato_uuid = contrato_find.uuid;
+      try {
+        let response = await getContratoSAFI(contrato_uuid);
 
-      if (contrato.dotacoes) {
-        let treeData = contrato.dotacoes.map(dotacao => ({
-          title: dotacao.numero_dotacao,
-          value: dotacao.uuid,
-          selectable: false,
-          children: dotacao.empenhos.map(empenho => ({
-            title: empenho.numero,
-            value: empenho.uuid
-          }))
-        }));
+        let contrato = response.data;
+        setContratoAtual(contrato);
+        values.contrato_uuid = contrato_uuid;
+        values.empresa = contrato.empresa_contratada
+          ? contrato.empresa_contratada.nome
+          : undefined;
+        values.empresa_uuid = contrato.empresa_contratada
+          ? contrato.empresa_contratada.uuid
+          : undefined;
+        values.numero_processo = contrato.processo;
 
-        setEmpenhoOptions(treeData);
+        if (contrato.ata) {
+          setProdutosOptions(
+            contrato.ata.produtos.map(produto => ({
+              ...produto,
+              nome: produto.nome_produto
+            }))
+          );
+        }
+
+        if (contrato.dotacoes) {
+          let treeData = contrato.dotacoes.map(dotacao => ({
+            title: dotacao.numero_dotacao,
+            value: dotacao.uuid,
+            selectable: false,
+            children: dotacao.empenhos.map(empenho => ({
+              title: empenho.numero,
+              value: empenho.uuid
+            }))
+          }));
+
+          setEmpenhoOptions(treeData);
+        }
+
+        document.getElementById("autocomplete-contrato").focus();
+        document.getElementById("autocomplete-contrato").blur();
+      } catch (error) {
+        toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
       }
-
-      document.getElementById("autocomplete-contrato").focus();
-      document.getElementById("autocomplete-contrato").blur();
     }
   };
 
@@ -278,7 +288,9 @@ export default () => {
     if (response.status === 201) {
       if (rascunho) {
         toastSuccess("Rascunho salvo com sucesso!");
+        setCarregando(false);
       } else {
+        setCarregando(false);
         toastSuccess("Cadastro de Cronograma salvo e enviado para aprovação!");
         setShowModal(false);
         history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
@@ -320,14 +332,20 @@ export default () => {
 
   useEffect(() => {
     const buscaListaContratos = async () => {
-      const response = await getListaTermosContratoSAFI();
-      setContratos(response.data);
-      setContratosOptions(
-        response.data.map(contrato => ({
-          value: contrato.termo_contrato,
-          uuid: contrato.uuid
-        }))
-      );
+      try {
+        const response = await getListaTermosContratoSAFI();
+        setContratos(response.data);
+        setContratosOptions(
+          response.data.map(contrato => ({
+            value: contrato.termo_contrato,
+            uuid: contrato.uuid
+          }))
+        );
+      } catch (error) {
+        toastError(
+          "Houve um erro na conexão com o SAFI. A lista de contratos pode estar indisponível."
+        );
+      }
     };
 
     const buscaArmazens = async () => {
