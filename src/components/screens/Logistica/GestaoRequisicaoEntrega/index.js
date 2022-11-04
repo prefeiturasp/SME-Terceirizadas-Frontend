@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
-import HTTP_STATUS, { BAD_REQUEST } from "http-status-codes";
+import HTTP_STATUS from "http-status-codes";
 import { Spin, Pagination } from "antd";
 import {
   getRequisicoesListagem,
@@ -59,11 +59,13 @@ export default () => {
         setSolicitacoes();
       }
     } catch (erro) {
-      if (erro.response) { 
-        if (typeof erro.response.data === 'object' ) { 
+      if (erro.response) {
+        if (typeof erro.response.data === "object") {
           let chave = Object.keys(erro.response.data);
-          let msn_erro_return = erro.response.data[chave[0]]
-          let msg_erro = Array.isArray(msn_erro_return) ? msn_erro_return[0] : msn_erro_return
+          let msn_erro_return = erro.response.data[chave[0]];
+          let msg_erro = Array.isArray(msn_erro_return)
+            ? msn_erro_return[0]
+            : msn_erro_return;
           toastError(msg_erro);
         } else {
           toastError("Erro do Servidor Interno");
