@@ -143,9 +143,7 @@ export class Login extends Component {
     }
   };
 
-  handleSubmitPrimeiroAcesso = values => {
-    console.log(values);
-  };
+  handleSubmitPrimeiroAcesso = values => {};
 
   switchTab(tab) {
     this.setState({ tab });
