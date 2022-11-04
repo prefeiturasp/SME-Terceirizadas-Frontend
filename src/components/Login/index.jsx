@@ -16,6 +16,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
 import { InputPassword } from "../Shareable/Input/InputPassword";
 import Select from "../Shareable/Select";
+import RequisitosSenha from "../Shareable/RequisitosSenha";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
@@ -26,6 +27,7 @@ import {
 } from "../screens/Cadastros/CadastroEmpresa/helper";
 import { connect } from "react-redux";
 import { composeValidators } from "helpers/utilities";
+import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -53,7 +55,8 @@ export class Login extends Component {
     RECUPERAR_SENHA: 1,
     CADASTRAR: 2,
     RECUPERACAO_SENHA_OK: 3,
-    RECUPERACAO_SENHA_NAO_OK: 4
+    RECUPERACAO_SENHA_NAO_OK: 4,
+    PRIMEIRO_ACESSO: 5
   };
 
   componentDidMount() {
@@ -64,7 +67,7 @@ export class Login extends Component {
       componenteAtivo:
         tab === TABS.TERCEIRIZADAS
           ? this.COMPONENTE.CADASTRAR
-          : this.COMPONENTE.LOGIN
+          : this.COMPONENTE.PRIMEIRO_ACESSO
     });
   }
 
@@ -138,6 +141,10 @@ export class Login extends Component {
         }
       });
     }
+  };
+
+  handleSubmitPrimeiroAcesso = values => {
+    console.log(values);
   };
 
   switchTab(tab) {
@@ -560,6 +567,90 @@ export class Login extends Component {
     );
   }
 
+  renderPrimeiroAcesso() {
+    return (
+      <div className="form primeiro-acesso">
+        <Form
+          onSubmit={this.handleSubmitPrimeiroAcesso}
+          initialValues={{}}
+          validate={() => {}}
+          render={({ form, handleSubmit, values }) => {
+            const letra = values.nova_senha
+              ? values.nova_senha.match(/[a-zA-Z]/g)
+              : false;
+            const numero = values.nova_senha
+              ? values.nova_senha.match(/[0-9]/g)
+              : false;
+            const tamanho = values.nova_senha
+              ? values.nova_senha.length >= 8
+              : false;
+            return (
+              <form onSubmit={handleSubmit}>
+                <p>
+                  Seja bem-vindo(a) ao SISTEMA DE GESTÂO DO PROGRAMA DE
+                  ALIMENTAÇÂO ESCOLAR!
+                </p>
+                <p className="font-weight-bold">
+                  Atualize sua senha de acesso:
+                </p>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Nova Senha"
+                      name="nova_senha"
+                      placeholder={"Digite uma nova senha de acesso"}
+                      onChange={event =>
+                        this.onSenhaChanged(event.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Confirmação da Nova Senha"
+                      name="confirma_senha"
+                      placeholder={"Confirme a senha digitada"}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <Botao
+                      className="w-100 my-2"
+                      style={BUTTON_STYLE.GREEN}
+                      texto="Confirmar"
+                      disabled={
+                        !letra ||
+                        !numero ||
+                        !tamanho ||
+                        values.nova_senha !== values.confirma_senha
+                      }
+                      type={BUTTON_TYPE.SUBMIT}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <RequisitosSenha
+                      letra={letra}
+                      numero={numero}
+                      tamanho={tamanho}
+                    />
+                  </div>
+                </div>
+              </form>
+            );
+          }}
+        />
+      </div>
+    );
+  }
+
   renderSwitch(param) {
     switch (param) {
       case this.COMPONENTE.LOGIN:
@@ -572,6 +663,8 @@ export class Login extends Component {
         return this.renderRecuperacaoOK();
       case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
         return this.renderRecuperacaoNOK();
+      case this.COMPONENTE.PRIMEIRO_ACESSO:
+        return this.renderPrimeiroAcesso();
       default:
         return this.renderLogin();
     }
@@ -585,9 +678,16 @@ export class Login extends Component {
         <div className="login-bg" />
         <div className="right-half">
           <div className="container my-auto">
-            <div className="logo-sigpae">
-              <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
-            </div>
+            {componenteAtivo !== this.COMPONENTE.PRIMEIRO_ACESSO ? (
+              <div className="logo-sigpae">
+                <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
+              </div>
+            ) : (
+              <div className="logo-sigpae-primeiro-acesso">
+                <img src="/assets/image/logo-sigpae.png" alt="" />
+                <div className="titulo">Primeiro Acesso</div>
+              </div>
+            )}
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
               <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />
