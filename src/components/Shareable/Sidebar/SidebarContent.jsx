@@ -12,6 +12,7 @@ import {
   usuarioEhAdministradorDRE,
   usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
+  usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
@@ -113,7 +114,8 @@ export const SidebarContent = () => {
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
     !usuarioEscolaEhGestaoDireta() &&
-    !usuarioEhMedicao();
+    !usuarioEhMedicao() &&
+    !usuarioEhPreRecebimento();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
@@ -123,7 +125,8 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimento() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
-    !usuarioEhDistribuidora();
+    !usuarioEhDistribuidora() &&
+    !usuarioEhPreRecebimento();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -133,7 +136,7 @@ export const SidebarContent = () => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
-  const exibirMenuPreRecebimento = usuarioEhLogistica();
+  const exibirMenuPreRecebimento = usuarioEhPreRecebimento();
 
   const _props = {
     activeMenu,
