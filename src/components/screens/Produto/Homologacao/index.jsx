@@ -68,7 +68,6 @@ export const Homologacao = ({
               listaDeStatus={homologacao.logs}
               fluxo={fluxoPartindoTerceirizada}
             />
-            <hr />
           </div>
         </div>
         <Respostas
@@ -78,6 +77,7 @@ export const Homologacao = ({
         <Form initialValues={formValues} onSubmit={() => {}}>
           {({ handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
+              <hr />
               <DadosDaEmpresa />
               {homologacao.logs.filter(
                 log => log.status_evento_explicacao === "CODAE homologou"
