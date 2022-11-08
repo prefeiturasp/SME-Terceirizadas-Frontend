@@ -123,7 +123,19 @@ export default ({ solicitacaoSuspensao }) => {
         })}
       </table>
       <div className="row">
-        <div className="col-12 report-label-value" />
+        <div className="col-12 report-label-value">
+          {solicitacaoSuspensao.observacao && (
+            <>
+              <p>Observações</p>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: solicitacaoSuspensao.observacao
+                }}
+              />
+            </>
+          )}
+        </div>
       </div>
     </>
   );
