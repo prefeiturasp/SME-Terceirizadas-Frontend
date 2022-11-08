@@ -17,8 +17,8 @@ import {
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
-import { ModalNegarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNegarKitLancheCEMEI";
-import { ModalCODAEQuestionaKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCODAEQuestionaKitLancheCEMEI";
+import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -104,8 +104,8 @@ export const RelatorioCODAE = () => {
   return (
     <RelatorioBase
       visao={CODAE}
-      ModalNaoAprova={ModalNegarKitLancheCEMEI}
-      ModalQuestionamento={ModalCODAEQuestionaKitLancheCEMEI}
+      ModalNaoAprova={ModalNegarFinalForm}
+      ModalQuestionamento={ModalCODAEQuestionaFinalForm}
       toastAprovaMensagem={"Inclusão de alimentação autorizada com sucesso!"}
       toastAprovaMensagemErro={
         "Houve um erro ao autorizar a Inclusão de Alimentação"
