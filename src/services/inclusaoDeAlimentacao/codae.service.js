@@ -2,6 +2,7 @@ import axios from "../_base";
 import authService from "../auth";
 import { PEDIDOS, FLUXO, TIPO_SOLICITACAO } from "../constants";
 import { getPath } from "./helper";
+import { ErrorHandlerFunction } from "services/service-helpers";
 
 const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
@@ -66,28 +67,17 @@ export const codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao = (
     });
 };
 
-export const codaeNegarSolicitacaoDeInclusaoDeAlimentacao = (
+export const codaeNegarSolicitacaoDeInclusaoDeAlimentacao = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao = async (

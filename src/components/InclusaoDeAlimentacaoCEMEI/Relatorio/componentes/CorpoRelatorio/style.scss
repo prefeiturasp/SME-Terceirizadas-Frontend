@@ -1,6 +1,18 @@
 @import "styles/variables.scss";
 
 div.relatorio-inclusao-cemei {
+  .red {
+    color: $red;
+  }
+
+  .yellow {
+    color: $yellow;
+  }
+
+  .green {
+    color: $green;
+  }
+
   .period-quantity {
     border-radius: 7px;
     padding: 0.5em;

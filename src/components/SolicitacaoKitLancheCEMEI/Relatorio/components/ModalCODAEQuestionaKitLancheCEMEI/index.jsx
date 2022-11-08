@@ -17,11 +17,12 @@ export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
     closeModal,
     solicitacao,
     endpoint,
-    loadSolicitacao
+    loadSolicitacao,
+    tipoSolicitacao
   } = props;
 
   const onSubmit = async values => {
-    const resp = await endpoint(solicitacao.uuid, values);
+    const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       toastSuccess("Questionamento enviado com sucesso!");

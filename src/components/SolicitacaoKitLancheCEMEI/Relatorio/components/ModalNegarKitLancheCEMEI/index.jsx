@@ -23,7 +23,8 @@ export const ModalNegarKitLancheCEMEI = ({ ...props }) => {
     closeModal,
     solicitacao,
     endpoint,
-    loadSolicitacao
+    loadSolicitacao,
+    tipoSolicitacao
   } = props;
   const [justificativa, setJustificativa] = useState("");
 
@@ -32,13 +33,13 @@ export const ModalNegarKitLancheCEMEI = ({ ...props }) => {
   );
 
   const onSubmit = async values => {
-    const resp = await endpoint(solicitacao.uuid, values);
+    const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       toastSuccess("Solicitação negada com sucesso!");
       if (loadSolicitacao) {
         const response = await loadSolicitacao(solicitacao.uuid);
-        if (response.status === HTTP_STATUS.OK) {
+        if (response && response.status === HTTP_STATUS.OK) {
           solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
             response.data
           );

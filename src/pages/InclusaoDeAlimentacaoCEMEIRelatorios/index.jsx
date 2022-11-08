@@ -5,15 +5,20 @@ import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { HOME } from "constants/config";
 import { RelatorioInclusaoDeAlimentacaoCEMEI } from "components/InclusaoDeAlimentacaoCEMEI/Relatorio";
-import { DRE, ESCOLA } from "configs/constants";
+import { CODAE, DRE, ESCOLA } from "configs/constants";
 import { ModalCancelarInclusaoAlimentacao } from "components/Shareable/ModalCancelarInclusaoAlimentacao";
 import {
+  codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao,
+  codaeNegarSolicitacaoDeInclusaoDeAlimentacao,
+  codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao,
   dreReprovarSolicitacaoDeInclusaoDeAlimentacao,
   dreValidarSolicitacaoDeInclusaoDeAlimentacao,
   escolaCancelarSolicitacaoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
+import { ModalNegarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNegarKitLancheCEMEI";
+import { ModalCODAEQuestionaKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCODAEQuestionaKitLancheCEMEI";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -90,6 +95,30 @@ export const RelatorioDRE = () => {
       }
       textoBotaoNaoAprova="Não Validar"
       textoBotaoAprova="Validar"
+      tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
+    />
+  );
+};
+
+export const RelatorioCODAE = () => {
+  return (
+    <RelatorioBase
+      visao={CODAE}
+      ModalNaoAprova={ModalNegarKitLancheCEMEI}
+      ModalQuestionamento={ModalCODAEQuestionaKitLancheCEMEI}
+      toastAprovaMensagem={"Inclusão de alimentação autorizada com sucesso!"}
+      toastAprovaMensagemErro={
+        "Houve um erro ao autorizar a Inclusão de Alimentação"
+      }
+      endpointNaoAprovaSolicitacao={
+        codaeNegarSolicitacaoDeInclusaoDeAlimentacao
+      }
+      endpointAprovaSolicitacao={
+        codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao
+      }
+      endpointQuestionamento={codaeQuestionarSolicitacaoDeInclusaoDeAlimentacao}
+      textoBotaoNaoAprova="Negar"
+      textoBotaoAprova="Autorizar"
       tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
     />
   );
