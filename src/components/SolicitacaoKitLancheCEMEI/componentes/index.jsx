@@ -95,6 +95,11 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
         {kits
           .filter(kit => kit.status === "Ativo")
           .map((kit, indice) => {
+            const CARD_DISABLED =
+              !valuesTempoPasseio ||
+              (valuesKits &&
+                valuesKits.length === parseInt(valuesTempoPasseio) + 1 &&
+                !valuesKits.includes(kit.uuid));
             return (
               <div
                 className={`col-2 offset-${
@@ -102,7 +107,10 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                 } mt-3 d-flex`}
                 key={indice}
               >
-                <div className="card card-kits w-100">
+                <div
+                  className={`card card-kits w-100 ${CARD_DISABLED &&
+                    "card-disabled"}`}
+                >
                   <div className="card-body p-2">
                     <div className="row">
                       <div className="col-6">
@@ -117,13 +125,7 @@ export const Kits = ({ kits, values, name, nameTempoPasseio }) => {
                           value={kit.uuid}
                           className="float-right"
                           name={name}
-                          disabled={
-                            !valuesTempoPasseio ||
-                            (valuesKits &&
-                              valuesKits.length ===
-                                parseInt(valuesTempoPasseio) + 1 &&
-                              !valuesKits.includes(kit.uuid))
-                          }
+                          disabled={CARD_DISABLED}
                         />
                         <span className="checkmark" />
                       </div>

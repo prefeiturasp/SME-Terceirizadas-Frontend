@@ -61,9 +61,14 @@ export default class ModalHistorico extends Component {
         visible={visible}
         onOk={onOk}
         okText={"Fechar"}
+        cancelText={"Cancelar"}
         onCancel={onCancel}
         width={800}
         maskClosable={false}
+        cancelButtonProps={{ style: { background: "white", onHover: "none" } }}
+        okButtonProps={{
+          style: { background: "#198459", borderColor: "#198459" }
+        }}
       >
         <section className="body-modal-produto">
           <div>Usuário</div>

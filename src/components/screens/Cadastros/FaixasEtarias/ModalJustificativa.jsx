@@ -4,7 +4,7 @@ import {
   peloMenosUmCaractere,
   required
 } from "../../../../helpers/fieldValidators";
-import { TextAreaWYSIWYG } from "../../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { toastWarn } from "../../../Shareable/Toast/dialogs";
 import Botao from "../../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
@@ -41,7 +41,7 @@ export class ModalJustificativa extends Component {
         </Modal.Header>
         <Modal.Body>
           <div className="modal-justificativa-body">
-            <TextAreaWYSIWYG
+            <CKEditorField
               label="Justificativa"
               required
               validate={[required, peloMenosUmCaractere]}

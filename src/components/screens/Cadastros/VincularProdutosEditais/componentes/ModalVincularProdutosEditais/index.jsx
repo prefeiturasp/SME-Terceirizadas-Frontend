@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import { Form, Field } from "react-final-form";
+import { Form, Field, FormSpy } from "react-final-form";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { formatarParaMultiselect } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { TreeSelect, Spin } from "antd";
 import "antd/dist/antd.css";
@@ -19,11 +20,15 @@ import {
 } from "services/produto.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { formataEditais, formatarOpcoes, validatePayload } from "./helper";
+import { formatarOpcoes, validatePayload } from "./helper";
 import "./style.scss";
 
 export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
   const [carregando, setCarregando] = useState(false);
+  const [desabilitarCampos, setDesabilitarCampos] = useState(true);
+  const [loadingProdutos, setLoadingProdutos] = useState(false);
+  const [editalOrigem, setEditalOrigem] = useState(null);
+  const [tipoProdEditalOrigem, setTipoProdEditalOrigem] = useState(null);
   const [opcoesEditaisOrigem, setOpcoesEditaisOrigem] = useState([]);
   const [opcoesEditaisDestino, setOpcoesEditaisDestino] = useState([]);
   const [opcoesProdutosEditais, setOpcoesProdutosEditais] = useState([]);
@@ -31,19 +36,27 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
     produtosEditaisSelecionados,
     setProdutosEditaisSelecionados
   ] = useState([]);
+  const [
+    qtdProdutosGetListaProdutos,
+    setQtdProdutosGetListaProdutos
+  ] = useState(0);
   const [erros, setErros] = useState({
-    editaisOrigem: false,
+    editalOrigem: false,
     editaisDestino: false,
     tipoProduto: false,
     produtos: false
   });
 
   const { SHOW_PARENT } = TreeSelect;
+  const { Option } = SelectAntd;
 
   const onSubmit = async formValues => {
     let payload = formValues;
     if (produtosEditaisSelecionados.length !== 0) {
-      payload["produtos_editais"] = produtosEditaisSelecionados;
+      const produtos_editais = produtosEditaisSelecionados.filter(
+        prod => prod !== "todos"
+      );
+      payload["produtos_editais"] = produtos_editais;
     }
     let resultadoValidacao = await validatePayload(payload);
     setErros(resultadoValidacao);
@@ -69,6 +82,19 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
 
   const onChangeProdutosEditais = (_value, _label, extra) => {
     setErros({ ...erros, produtos: _value.length === 0 });
+    if (extra.triggerValue === "todos") {
+      let checked = [];
+      if (produtosEditaisSelecionados.length > 0) {
+        setProdutosEditaisSelecionados([]);
+      } else {
+        opcoesProdutosEditais
+          .filter(op => op.key !== "todos")
+          .map(op => op.children.map(ch => checked.push(ch.key)));
+        checked.push("todos");
+        setProdutosEditaisSelecionados(checked);
+      }
+      return;
+    }
     let resultado = produtosEditaisSelecionados;
     if (extra.triggerNode && extra.triggerNode.props.todos) {
       let uuids;
@@ -93,19 +119,100 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
         );
       }
     }
+    if (extra.preValue.find(v => v.value === "todos")) {
+      resultado = resultado.filter(prod => prod !== "todos");
+    }
+    resultado = [...new Set(resultado)];
+    if (qtdProdutosGetListaProdutos === resultado.length) {
+      resultado.push("todos");
+    }
     setProdutosEditaisSelecionados(resultado);
   };
 
   useEffect(() => {
     setCarregando(true);
     if (listaEditais) {
-      let opcoes = listaEditais.map(edital => {
-        return { nome: edital.numero, uuid: edital.uuid };
+      const opcoes = listaEditais.map(edital => {
+        return <Option key={edital.uuid}>{edital.numero}</Option>;
       });
       setOpcoesEditaisOrigem(opcoes);
       setCarregando(false);
     }
   }, [listaEditais]);
+
+  const onChangeEditalDeOrigem = (value, form) => {
+    form.change("edital_origem", value);
+    setErros({
+      ...erros,
+      editalOrigem: value && value.length > 0 ? false : true
+    });
+
+    return;
+  };
+
+  const onChangeFormSpy = async changes => {
+    if (
+      changes.values["edital_origem"] &&
+      changes.values["tipo_produto_edital_origem"] &&
+      (changes.values["tipo_produto_edital_origem"] !== tipoProdEditalOrigem ||
+        changes.values["edital_origem"] !== editalOrigem) &&
+      ["edital_origem", "tipo_produto_edital_origem"].includes(
+        changes.active
+      ) &&
+      !loadingProdutos
+    ) {
+      setOpcoesProdutosEditais([]);
+      setProdutosEditaisSelecionados([]);
+      setDesabilitarCampos(false);
+      setLoadingProdutos(true);
+      setCarregando(true);
+      setEditalOrigem(changes.values["edital_origem"]);
+      setTipoProdEditalOrigem(changes.values["tipo_produto_edital_origem"]);
+      let opcoesDestino = listaEditais
+        .filter(
+          edital => !changes.values["edital_origem"].includes(edital.uuid)
+        )
+        .map(edital => {
+          return { nome: edital.numero, uuid: edital.uuid };
+        });
+      setOpcoesEditaisDestino(opcoesDestino);
+      try {
+        const response = await getListaProdutos({
+          editais: changes.values["edital_origem"],
+          tipo_produto_edital_origem:
+            changes.values["tipo_produto_edital_origem"]
+        });
+        if (response.status === HTTP_STATUS.OK) {
+          let t = [];
+          if (response.data.length > 0) {
+            t.push({
+              title: (
+                <span
+                  style={{
+                    display: "inline-block",
+                    cursor: "pointer"
+                  }}
+                >
+                  Todos
+                </span>
+              ),
+              value: "todos",
+              key: "todos"
+            });
+          }
+          t.push(...formatarOpcoes(response.data));
+          setOpcoesProdutosEditais(t);
+          setLoadingProdutos(false);
+          setCarregando(false);
+          setQtdProdutosGetListaProdutos(response.data.length);
+        }
+      } catch (e) {
+        toastError("Houve um erro ao carregar opções dos produtos");
+        setLoadingProdutos(false);
+        setCarregando(false);
+      }
+    }
+  };
 
   return (
     <Modal
@@ -127,60 +234,75 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
           render={({ handleSubmit, submitting, values, form }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
-                <div className="row mb-3">
+                <FormSpy
+                  subscription={{ values: true, active: true }}
+                  onChange={changes => onChangeFormSpy(changes)}
+                />
+                <div className="row">
                   <div className="col-4">
                     <span className="required-asterisk">*</span>
                     <label className="col-form-label pb-3">
                       Edital de origem
                     </label>
                     <Field
-                      component={StatefulMultiSelect}
-                      name="editais_origem"
-                      selected={values.editais_origem_selecionados || []}
-                      options={formatarParaMultiselect(opcoesEditaisOrigem)}
-                      onSelectedChanged={async values_ => {
-                        setProdutosEditaisSelecionados([]);
-                        setOpcoesProdutosEditais([]);
-                        form.change(`produtos_editais`, []);
-                        form.change(`editais_origem_selecionados`, values_);
-                        let opcoesDestino = opcoesEditaisOrigem.filter(
-                          opcao => !values_.includes(opcao.uuid)
-                        );
-                        setOpcoesEditaisDestino(opcoesDestino);
-                        setErros({
-                          ...erros,
-                          editaisOrigem: values_.length === 0
-                        });
-                        if (values_.length > 0) {
-                          try {
-                            const editaisString = formataEditais(values_);
-                            const response = await getListaProdutos({
-                              editais: editaisString
-                            });
-                            if (response.status === HTTP_STATUS.OK) {
-                              let t = formatarOpcoes(response.data);
-                              setOpcoesProdutosEditais(t);
-                            }
-                          } catch (e) {
-                            toastError(
-                              "Houve um erro ao carregar opções dos produtos"
-                            );
-                          }
-                        }
-                      }}
-                      disableSearch={true}
-                      overrideStrings={{
-                        selectSomeItems: "Selecione um edital",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                    {erros.editaisOrigem && (
-                      <div className="ant-form-explain">Campo obrigatório</div>
+                      component={ASelect}
+                      placeholder={"Selecione um edital"}
+                      suffixIcon={<CaretDownOutlined />}
+                      name="edital_origem"
+                      onChange={value =>
+                        onChangeEditalDeOrigem(value, form, values)
+                      }
+                      filterOption={(inputValue, option) =>
+                        option.props.children
+                          .toString()
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      }
+                    >
+                      {opcoesEditaisOrigem}
+                    </Field>
+                    {erros.editalOrigem && (
+                      <div className="ant-form-explain customError">
+                        Campo obrigatório
+                      </div>
                     )}
                   </div>
-                  <div className="col-8">
+                  <div className="col-4">
+                    <span className="required-asterisk">*</span>
+                    <label className="col-form-label pb-3">
+                      Tipo de Produto Edital de Origem
+                    </label>
+                    <Field
+                      component={ASelect}
+                      placeholder={"Selecione o tipo de produto"}
+                      suffixIcon={<CaretDownOutlined />}
+                      name="tipo_produto_edital_origem"
+                      onChange={value => {
+                        form.change("tipo_produto_edital_origem", value);
+                        setErros({
+                          ...erros,
+                          tipoProdutoEditalOrigem:
+                            value && value.length > 0 ? false : true
+                        });
+                      }}
+                      filterOption={(inputValue, option) =>
+                        option.props.children
+                          .toString()
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
+                      }
+                    >
+                      {opcoesTipos}
+                    </Field>
+                    {erros.tipoProdutoEditalOrigem && (
+                      <div className="ant-form-explain customError">
+                        Campo obrigatório
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col">
                     <span className="required-asterisk">*</span>
                     <label className="col-form-label pb-3">Produtos</label>
                     <TreeSelect
@@ -189,9 +311,10 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onChange={onChangeProdutosEditais}
                       treeCheckable={true}
                       showCheckedStrategy={SHOW_PARENT}
-                      searchPlaceholder="Selecione os produtos"
+                      placeholder="Selecione os produtos"
                       treeNodeFilterProp="title"
                       style={{ width: "100%" }}
+                      disabled={desabilitarCampos}
                     />
                     {erros.produtos && (
                       <div className="ant-form-explain">Campo obrigatório</div>
@@ -222,6 +345,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                           .toLowerCase()
                           .includes(inputValue.toLowerCase())
                       }
+                      disabled={desabilitarCampos}
                     >
                       {opcoesTipos}
                     </Field>
@@ -255,6 +379,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                           "Todos os itens estão selecionados",
                         selectAll: "Todos"
                       }}
+                      disabled={desabilitarCampos}
                     />
                     {erros.editaisDestino && (
                       <div className="ant-form-explain">Campo obrigatório</div>
@@ -269,6 +394,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       placeholder="Descreva mais informações do produto ou edital..."
                       label={"Outras informações"}
                       name="outras_informacoes"
+                      disabled={desabilitarCampos}
                     />
                   </div>
                 </div>
@@ -282,6 +408,7 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                       onClick={() => {
                         setProdutosEditaisSelecionados([]);
                         setOpcoesProdutosEditais([]);
+                        setDesabilitarCampos(true);
                         closeModal();
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}

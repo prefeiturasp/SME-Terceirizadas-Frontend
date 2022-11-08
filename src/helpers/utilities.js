@@ -698,6 +698,10 @@ export const exibirGA = () => {
             lote.diretoria_regional.nome.includes("PIRITUBA") ||
             lote.diretoria_regional.nome.includes("FREGUESIA/BRASILANDIA")
         );
+      case `"nutricao_manifestacao"`:
+        return true;
+      case `"supervisao_nutricao"`:
+        return true;
       default:
         return false;
     }

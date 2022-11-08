@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "redux-form";
 import ManagedInputFileField from "../../../../../Shareable/Input/InputFile/ManagedField";
-import { TextAreaWYSIWYG } from "../../../../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { required } from "helpers/fieldValidators";
 
 export default ({ pertence_a_escola }) => {
@@ -14,8 +14,8 @@ export default ({ pertence_a_escola }) => {
             Laudo
           </div>
           <div className="text">
-            Anexe o laudo de alta médica fornecido pelo profissional. Sem ele, a
-            solicitação de cancelamento será negada.
+            Anexe o laudo fornecido pelo profissional. Sem ele, a solicitação de
+            dieta especial será negada.
           </div>
           <div className="card-warning mt-2">
             <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc, .docx,
@@ -40,7 +40,7 @@ export default ({ pertence_a_escola }) => {
       <section className="row mt-5 mb-5">
         <div className="col-12">
           <Field
-            component={TextAreaWYSIWYG}
+            component={CKEditorField}
             label="Observações"
             name="observacoes"
             className="form-control"

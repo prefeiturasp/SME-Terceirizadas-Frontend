@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
 import {
@@ -10,7 +9,10 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_COM_QUESTIONAMENTO
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/shared";
+import {
+  FILTRO_VISAO,
+  PAGINACAO_DASHBOARD_DEFAULT
+} from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -19,22 +21,22 @@ import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
 } from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import TabelaHistoricoLotesDREs from "../../Shareable/TabelaHistoricoLotesDREs";
 import { ajustarFormatoLog, slugify } from "../helper";
 import Select from "../../Shareable/Select";
 import { FILTRO } from "../const";
 import "./style.scss";
 import {
-  getSolicitacoesPendentesAutorizacaoCodae,
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
   getSolicitacoesAutorizadasCodae,
   getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias,
-  getSolicitacoesComQuestionamentoCodae
+  getSolicitacoesComQuestionamentoCodae,
+  getSolicitacoesPendentesAutorizacaoCodaeSemFiltro
 } from "../../../services/painelCODAE.service";
 import { toastError } from "../../Shareable/Toast/dialogs";
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
 
+const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 class DashboardCODAE extends Component {
   constructor(props) {
     super(props);
@@ -118,43 +120,45 @@ class DashboardCODAE extends Component {
     });
   }
 
-  async componentDidMount() {
-    this.carregaResumoPendencias();
-
-    getSolicitacoesPendentesAutorizacaoCodae("sem_filtro").then(response => {
-      let pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(response);
+  async getSolicitacoesAsync(params = null) {
+    getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(response => {
+      let pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
+        response.data.results
+      );
       this.setState({
         pendentesAutorizacaoListSolicitacao,
         pendentesAutorizacaoListFiltered: pendentesAutorizacaoListSolicitacao
       });
     });
 
-    getSolicitacoesCanceladasCodae().then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response);
+    getSolicitacoesCanceladasCodae(params).then(response => {
+      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
       });
     });
 
-    getSolicitacoesNegadasCodae().then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response);
+    getSolicitacoesNegadasCodae(params).then(response => {
+      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
       });
     });
 
-    getSolicitacoesAutorizadasCodae().then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response);
+    getSolicitacoesAutorizadasCodae(params).then(response => {
+      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
       this.setState({
         autorizadasListSolicitacao: autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao
       });
     });
 
-    getSolicitacoesComQuestionamentoCodae().then(response => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(response);
+    getSolicitacoesComQuestionamentoCodae(params).then(response => {
+      let questionamentosListSolicitacao = ajustarFormatoLog(
+        response.data.results
+      );
       this.setState({
         questionamentosListSolicitacao: questionamentosListSolicitacao,
         questionamentosListFiltered: questionamentosListSolicitacao
@@ -162,48 +166,28 @@ class DashboardCODAE extends Component {
     });
   }
 
-  onPesquisaChanged(values) {
-    if (values.titulo === undefined) values.titulo = "";
-    const {
-      questionamentosListSolicitacao,
-      pendentesAutorizacaoListSolicitacao,
-      canceladasListSolicitacao,
-      autorizadasListSolicitacao,
-      negadasListSolicitacao
-    } = this.state;
+  async componentDidMount() {
+    this.carregaResumoPendencias();
+    this.getSolicitacoesAsync(PARAMS);
+  }
 
-    this.setState({
-      pendentesAutorizacaoListFiltered: this.filtrarNome(
-        pendentesAutorizacaoListSolicitacao,
-        values.titulo
-      ),
-      autorizadasListFiltered: this.filtrarNome(
-        autorizadasListSolicitacao,
-        values.titulo
-      ),
-      questionamentosListFiltered: this.filtrarNome(
-        questionamentosListSolicitacao,
-        values.titulo
-      ),
-      negadasListFiltered: this.filtrarNome(
-        negadasListSolicitacao,
-        values.titulo
-      ),
-      canceladasListFiltered: this.filtrarNome(
-        canceladasListSolicitacao,
-        values.titulo
-      )
-    });
+  onPesquisaChanged(values) {
+    if (values.titulo && values.titulo.length > 2) {
+      setTimeout(async () => {
+        this.getSolicitacoesAsync({
+          busca: values.titulo,
+          ...PARAMS
+        });
+      }, 500);
+    } else {
+      setTimeout(async () => {
+        this.getSolicitacoesAsync(PARAMS);
+      }, 500);
+    }
   }
 
   render() {
-    const {
-      handleSubmit,
-      vision_by,
-      filtro_por,
-      meusDados,
-      lotesRaw
-    } = this.props;
+    const { handleSubmit, visaoPor, filtroPor, meusDados } = this.props;
     const {
       cards,
       collapsed,
@@ -230,13 +214,7 @@ class DashboardCODAE extends Component {
                 meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
               0
             }
-          >
-            {meusDados && (
-              <Collapse isOpened={!collapsed}>
-                <TabelaHistoricoLotesDREs lotes={lotesRaw} />
-              </Collapse>
-            )}
-          </CardMatriculados>
+          />
           <div className="card mt-3">
             <div className="card-body">
               <div className="card-title font-weight-bold dashboard-card-title">
@@ -249,7 +227,7 @@ class DashboardCODAE extends Component {
                         this.setfiltroPorVencimento(event.target.value)
                       }
                       placeholder={"Filtro por"}
-                      options={filtro_por}
+                      options={filtroPor}
                     />
                   </div>
                   <div className="col-3 text-right my-auto">
@@ -258,7 +236,7 @@ class DashboardCODAE extends Component {
                       disabled={resumo.length === 0}
                       onChange={event => this.setVisao(event.target.value)}
                       placeholder={"Visão por"}
-                      options={vision_by}
+                      options={visaoPor}
                     />
                   </div>
                 </div>

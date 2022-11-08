@@ -40,7 +40,9 @@ export const diasAntecedencia = value => {
 
 // XXX: Workaround for labelAndTextArea component
 export const textAreaRequired = value => {
-  return value !== "<p></p>\n" ? undefined : "Campo obrigatório";
+  return value !== "<p></p>\n" && value !== undefined
+    ? undefined
+    : "Campo obrigatório";
 };
 
 export const peloMenosUmCaractere = value => {
@@ -189,7 +191,7 @@ export const maxValueLancheRefeicaoSobremesa1Oferta = (
 
 export const email = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
-    ? "Email inválido"
+    ? "E-mail inválido"
     : undefined;
 
 export const cep = value =>

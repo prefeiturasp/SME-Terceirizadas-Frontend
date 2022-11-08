@@ -24,7 +24,7 @@ export const formatarSubmissao = (formValues, dadosUsuario) => {
     local: formValues.local,
     solicitacao_kit_lanche: {
       data: formValues.data,
-      descricao: formValues.descricao,
+      descricao: formValues.descricao || "<p></p>",
       kits: []
     }
   };

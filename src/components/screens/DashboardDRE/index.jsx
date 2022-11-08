@@ -9,7 +9,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO } from "../../../constants/shared";
+import { FILTRO_VISAO, PAGINACAO_DEFAULT } from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
 import CardBody from "../../Shareable/CardBody";
 import CardMatriculados from "../../Shareable/CardMatriculados";
@@ -35,6 +35,7 @@ import Botao from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
 import "./style.scss";
 
+const PARAMS = { limit: PAGINACAO_DEFAULT, offset: 0 };
 class DashboardDRE extends Component {
   constructor(props) {
     super(props);
@@ -109,33 +110,38 @@ class DashboardDRE extends Component {
 
   async componentDidMount() {
     this.carregaResumoPendencias();
+    this.getSolicitacoesAsync(PARAMS);
+  }
 
-    getSolicitacoesPendentesDRE().then(request => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(request.results);
+  async getSolicitacoesAsync(params = null) {
+    getSolicitacoesPendentesDRE(params).then(request => {
+      let questionamentosListSolicitacao = ajustarFormatoLog(
+        request.data.results
+      );
       this.setState({
         questionamentosListSolicitacao,
         questionamentosListFiltered: questionamentosListSolicitacao
       });
     });
 
-    getSolicitacoesCanceladasDRE().then(request => {
-      let canceladasListSolicitacao = ajustarFormatoLog(request.results);
+    getSolicitacoesCanceladasDRE(params).then(request => {
+      let canceladasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         canceladasListSolicitacao,
         canceladasListFiltered: canceladasListSolicitacao
       });
     });
 
-    getSolicitacoesNegadasDRE().then(request => {
-      let negadasListSolicitacao = ajustarFormatoLog(request.results);
+    getSolicitacoesNegadasDRE(params).then(request => {
+      let negadasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         negadasListSolicitacao,
         negadasListFiltered: negadasListSolicitacao
       });
     });
 
-    getSolicitacoesAutorizadasDRE().then(request => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(request.results);
+    getSolicitacoesAutorizadasDRE(params).then(request => {
+      let autorizadasListSolicitacao = ajustarFormatoLog(request.data.results);
       this.setState({
         autorizadasListSolicitacao: autorizadasListSolicitacao,
         autorizadasListFiltered: autorizadasListSolicitacao
@@ -144,36 +150,18 @@ class DashboardDRE extends Component {
   }
 
   onPesquisaChanged(values) {
-    if (values.titulo === undefined) values.titulo = "";
-    const {
-      questionamentosListSolicitacao,
-      canceladasListSolicitacao,
-      autorizadasListSolicitacao,
-      negadasListSolicitacao
-    } = this.state;
-
-    this.setState({
-      questionamentosListFiltered: this.filtrarNome(
-        questionamentosListSolicitacao,
-        values.titulo
-      ),
-      autorizadasListFiltered: this.filtrarNome(
-        autorizadasListSolicitacao,
-        values.titulo
-      ),
-      negadasListFiltered: this.filtrarNome(
-        negadasListSolicitacao,
-        values.titulo
-      ),
-      canceladasListFiltered: this.filtrarNome(
-        canceladasListSolicitacao,
-        values.titulo
-      )
-    });
+    if (values.titulo && values.titulo.length > 2) {
+      this.getSolicitacoesAsync({
+        busca: values.titulo,
+        ...PARAMS
+      });
+    } else {
+      this.getSolicitacoesAsync(PARAMS);
+    }
   }
 
   render() {
-    const { handleSubmit, vision_by, filtro_por, meusDados } = this.props;
+    const { handleSubmit, visaoPor, filtroPor, meusDados } = this.props;
 
     const {
       cards,
@@ -221,7 +209,7 @@ class DashboardDRE extends Component {
                         this.setfiltroPorVencimento(event.target.value)
                       }
                       placeholder={"Filtro por"}
-                      options={filtro_por}
+                      options={filtroPor}
                     />
                   </div>
                   <div className="col-3 text-right my-auto">
@@ -230,7 +218,7 @@ class DashboardDRE extends Component {
                       disabled={resumo.length === 0}
                       onChange={event => this.setVisao(event.target.value)}
                       placeholder={"Visão por"}
-                      options={vision_by}
+                      options={visaoPor}
                     />
                   </div>
                 </div>

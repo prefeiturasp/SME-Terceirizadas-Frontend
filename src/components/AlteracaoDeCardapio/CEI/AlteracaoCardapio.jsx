@@ -30,17 +30,11 @@ import { agregarDefault } from "../../../helpers/utilities";
 import { getVinculosTipoAlimentacaoPorTipoUnidadeEscolar } from "../../../services/cadastroTipoAlimentacao.service";
 import "../style.scss";
 import "./style.scss";
-import { TextAreaWYSIWYG } from "../../Shareable/TextArea/TextAreaWYSIWYG";
+import CKEditorField from "components/Shareable/CKEditorField";
 import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  // FIXME: remove unused imports
-  /*   getMeusRascunhosAlteracoesCardapioCei,
-  criaAlteracaoCardapioCei,
-  iniciaFluxoAlteracaoCardapioCei,
-  atualizaAlteracaoCardapioCei,
-  deleteAlteracaoCardapioCei */
   escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
@@ -355,6 +349,11 @@ class AlteracaoCardapio extends Component {
         }
       } else if (response.status === statusOk) {
         toastSuccess("Rascunho salvo com sucesso");
+        this.resetForm("alteracaoCardapio");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        response.data.data.forEach(erro => {
+          toastError(erro);
+        });
         this.refresh();
         this.resetForm("alteracaoCardapio");
       } else {
@@ -708,7 +707,7 @@ class AlteracaoCardapio extends Component {
               <hr />
               <article className="card-body">
                 <Field
-                  component={TextAreaWYSIWYG}
+                  component={CKEditorField}
                   label="Observações"
                   name="observacao"
                   required

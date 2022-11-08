@@ -59,9 +59,13 @@ export const Container = () => {
     }
   };
 
-  const getQuantidadeAlunosCEMEIporCEIEMEIAsync = async escola => {
+  const getQuantidadeAlunosCEMEIporCEIEMEIAsync = async (
+    escola,
+    manha_e_tarde_sempre = null
+  ) => {
     const response = await getQuantidadeAlunosCEMEIporCEIEMEI(
-      escola.codigo_eol
+      escola.codigo_eol,
+      manha_e_tarde_sempre
     );
     if (response.status === HTTP_STATUS.OK) {
       setPeriodos(response.data);
@@ -84,7 +88,7 @@ export const Container = () => {
       );
       const escola_uuid = response.data.vinculo_atual.instituicao.uuid;
       getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
-      getQuantidadeAlunosCEMEIporCEIEMEIAsync(escola);
+      getQuantidadeAlunosCEMEIporCEIEMEIAsync(escola, true);
       getVinculosTipoAlimentacaoPorEscolaAsync(escola);
     } else {
       setErro(true);

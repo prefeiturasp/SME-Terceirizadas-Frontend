@@ -305,35 +305,8 @@ export const getResumoPendenciasTerceirizadaSolicitacoesUnificadas = async (
 
 const SOLICITACOES_TERCEIRIZADA = `${API_URL}/terceirizada-solicitacoes`;
 
-export const getSolicitacoesPendentesTerceirizada = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.PENDENTES
-  }/${TerceirizadaUuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
-  if (response) {
-    const data = { data: response.data, status: response.status };
-    return data;
-  }
-};
-
-export const getSolicitacoesCanceladasTerceirizada = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.CANCELADOS
-  }/${TerceirizadaUuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
-  if (response) {
-    const data = { data: response.data, status: response.status };
-    return data;
-  }
-};
-
-export const getSolicitacoesAutorizadasTerceirizada = async (
-  TerceirizadaUuid,
-  params
-) => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.AUTORIZADOS
-  }/${TerceirizadaUuid}/`;
+export const getSolicitacoesPendentesTerceirizada = async params => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.PENDENTES}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -341,11 +314,27 @@ export const getSolicitacoesAutorizadasTerceirizada = async (
   }
 };
 
-export const getSolicitacoesNegadasTerceirizada = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.NEGADOS
-  }/${TerceirizadaUuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+export const getSolicitacoesCanceladasTerceirizada = async params => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.CANCELADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesAutorizadasTerceirizada = async params => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.AUTORIZADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesNegadasTerceirizada = async params => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.NEGADOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
@@ -367,11 +356,9 @@ export const getSolicitacoesPendenteCienciaTerceirizada = async (
   }
 };
 
-export const getSolicitacoesComQuestionamento = async TerceirizadaUuid => {
-  const url = `${SOLICITACOES_TERCEIRIZADA}/${
-    SOLICITACOES.QUESTIONAMENTOS
-  }/${TerceirizadaUuid}/`;
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+export const getSolicitacoesComQuestionamento = async params => {
+  const url = `${SOLICITACOES_TERCEIRIZADA}/${SOLICITACOES.QUESTIONAMENTOS}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

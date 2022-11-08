@@ -23,6 +23,7 @@ export const BUTTON_ICON = {
   FILE_PDF: "far fa-file-pdf",
   FILE_ALT: "far fa-file-alt",
   FILTER: "fas fa-filter",
+  LOADING: "fas fa-spinner fa-spin",
   PLUS: "fas fa-plus-circle",
   PRINT: "fas fa-print",
   SAIR: "fas fa-door-open",
