@@ -12,7 +12,14 @@ import MeusDadosContext from "context/MeusDadosContext";
 export const Page = ({ ...props }) => {
   const history = useHistory();
 
-  const { children, titulo, botaoVoltar, voltarPara } = props;
+  const {
+    children,
+    titulo,
+    botaoVoltar,
+    voltarPara,
+    temModalVoltar,
+    setModalVoltar
+  } = props;
 
   const [nome, setNome] = useState(null);
   const [toggled, setToggled] = useState(false);
@@ -38,6 +45,14 @@ export const Page = ({ ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleBack = () => {
+    if (temModalVoltar) {
+      setModalVoltar(true);
+    } else {
+      voltarPara ? history.push(voltarPara) : history.goBack();
+    }
+  };
+
   return (
     <div id="wrapper">
       <Header toggled={toggled} />
@@ -54,13 +69,7 @@ export const Page = ({ ...props }) => {
           {children.length ? children[0] : children}
           <h1 className="page-title">
             <span className="texto-titulo">{titulo}</span>
-            {botaoVoltar && (
-              <BotaoVoltar
-                onClick={() => {
-                  voltarPara ? history.push(voltarPara) : history.goBack();
-                }}
-              />
-            )}
+            {botaoVoltar && <BotaoVoltar onClick={handleBack} />}
           </h1>
           {(usuarioEhDistribuidora() || usuarioEhLogistica()) &&
             window.location.pathname === "/" && (
