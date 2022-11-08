@@ -28,6 +28,9 @@ const anteriores = [
 export default () => (
   <Page
     botaoVoltar
+    temModalVoltar
+    textoModalVoltar="Existem informações não salvas no Cronograma. 
+    Ao voltar à tela anterior, as informações inseridas serão perdidas."
     voltarPara={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}
     titulo={atual.titulo}
   >
