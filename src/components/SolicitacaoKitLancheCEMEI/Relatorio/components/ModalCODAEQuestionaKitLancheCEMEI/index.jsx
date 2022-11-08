@@ -59,7 +59,7 @@ export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
                   <Field
                     component={CKEditorField}
                     label="Observação"
-                    name="justificativa"
+                    name="observacao_questionamento_codae"
                     placeholder="Alguma observação para a Terceirizada?"
                   />
                 </div>
