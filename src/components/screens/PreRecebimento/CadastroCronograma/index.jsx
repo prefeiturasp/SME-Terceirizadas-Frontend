@@ -24,7 +24,7 @@ import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 
-export default ({ modalVoltar, setModalVoltar }) => {
+export default () => {
   const [carregando, setCarregando] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [contratoAtual, setContratoAtual] = useState();
@@ -808,47 +808,6 @@ export default ({ modalVoltar, setModalVoltar }) => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
-                {/* teste modal de voltar */}
-                <Modal
-                  show={modalVoltar}
-                  onHide={() => {
-                    setModalVoltar(false);
-                  }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>
-                      <b>Voltar a tela anterior</b>
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <p>
-                      Existem informações não salvas no Cronograma. Ao voltar à
-                      tela anterior, as informações inseridas serão perdidas.
-                    </p>
-                    <p>Deseja retornar a tela anterior?</p>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Botao
-                      texto="Voltar sem Salvar"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        history.goBack();
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Permanecer"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setModalVoltar(false);
-                      }}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </Modal.Footer>
-                </Modal>
-
                 <Modal
                   show={showModal}
                   onHide={() => {

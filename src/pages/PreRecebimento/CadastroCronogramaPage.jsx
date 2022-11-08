@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
@@ -25,23 +25,16 @@ const anteriores = [
   }
 ];
 
-export default () => {
-  const [modalVoltar, setModalVoltar] = useState(false);
-  const temModalVoltar = true;
-
-  return (
-    <Page
-      botaoVoltar
-      voltarPara={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}
-      temModalVoltar={temModalVoltar}
-      setModalVoltar={setModalVoltar}
-      titulo={atual.titulo}
-    >
-      <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-      <CadastroCronograma
-        modalVoltar={modalVoltar}
-        setModalVoltar={setModalVoltar}
-      />
-    </Page>
-  );
-};
+export default () => (
+  <Page
+    botaoVoltar
+    temModalVoltar
+    textoModalVoltar="Existem informações não salvas no Cronograma. 
+    Ao voltar à tela anterior, as informações inseridas serão perdidas."
+    voltarPara={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}
+    titulo={atual.titulo}
+  >
+    <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
+    <CadastroCronograma />
+  </Page>
+);

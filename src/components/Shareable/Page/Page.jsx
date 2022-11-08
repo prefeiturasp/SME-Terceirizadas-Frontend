@@ -8,6 +8,7 @@ import { usuarioEhLogistica, usuarioEhDistribuidora } from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
+import ModalVoltar from "./ModalVoltar";
 
 export const Page = ({ ...props }) => {
   const history = useHistory();
@@ -18,11 +19,12 @@ export const Page = ({ ...props }) => {
     botaoVoltar,
     voltarPara,
     temModalVoltar,
-    setModalVoltar
+    textoModalVoltar
   } = props;
 
   const [nome, setNome] = useState(null);
   const [toggled, setToggled] = useState(false);
+  const [modalVoltar, setModalVoltar] = useState(false);
 
   const { setMeusDados } = useContext(MeusDadosContext);
 
@@ -84,6 +86,11 @@ export const Page = ({ ...props }) => {
           })}
         </div>
       </div>
+      <ModalVoltar
+        modalVoltar={modalVoltar}
+        setModalVoltar={setModalVoltar}
+        textoModalVoltar={textoModalVoltar}
+      />
     </div>
   );
 };
