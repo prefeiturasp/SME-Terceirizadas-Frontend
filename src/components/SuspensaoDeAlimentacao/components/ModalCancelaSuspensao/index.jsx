@@ -1,16 +1,16 @@
-import { required } from "helpers/fieldValidators";
-import HTTP_STATUS from "http-status-codes";
 import React from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { escolaCancelaSuspensao } from "services/suspensaoDeAlimentacao.service";
-import { getError, mensagemCancelamento } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { required } from "helpers/fieldValidators";
+import { getError, mensagemCancelamento } from "helpers/utilities";
+import { escolaCancelaSuspensao } from "services/suspensaoDeAlimentacao.service";
 
 export const ModalCancelaSuspensao = ({ ...props }) => {
   const {
@@ -71,13 +71,13 @@ export const ModalCancelaSuspensao = ({ ...props }) => {
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
                 onClick={closeModal}
-                style={BUTTON_STYLE.BLUE_OUTLINE}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 disabled={submitting}
                 className="ml-3"
               />
