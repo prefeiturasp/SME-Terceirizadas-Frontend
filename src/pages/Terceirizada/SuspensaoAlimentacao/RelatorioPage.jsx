@@ -1,12 +1,12 @@
 import React from "react";
-import Breadcrumb from "../../../components/Shareable/Breadcrumb";
-import Page from "../../../components/Shareable/Page/Page";
-import Relatorio from "../../../components/SuspensaoDeAlimentacao/Relatorio";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Page from "components/Shareable/Page/Page";
+import Relatorio from "components/SuspensaoDeAlimentacao/Relatorio";
 import { HOME } from "../constants";
 import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "configs/constants";
 import { usuarioEhTerceirizada } from "helpers/utilities";
 
-let voltarPara = "/";
+let voltarPara = "/painel-gestao-alimentacao";
 
 if (usuarioEhTerceirizada())
   voltarPara = `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`;
