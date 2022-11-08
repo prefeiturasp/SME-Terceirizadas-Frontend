@@ -108,6 +108,8 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
+  usuarioEhPreRecebimento,
+  usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
@@ -1442,13 +1444,18 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica()
+    tipoUsuario: usuarioEhPreRecebimento()
   },
   {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica()
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
   }
 ];
 
