@@ -101,6 +101,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
     this.props.change("motivo", suspensao.motivo.uuid);
     this.props.change("data", suspensao.data);
+    this.props.change("observacao", suspensao.observacao);
 
     this.setState({
       uuid: suspensao.uuid,
@@ -288,7 +289,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
             onKeyPress={this.onKeyPress}
           >
             {suspensoesDeAlimentacaoList.length > 0 && (
-              <div className="mt-3">
+              <div className="my-3">
                 <span ref={this.titleRef} className="page-title">
                   Rascunhos
                 </span>
