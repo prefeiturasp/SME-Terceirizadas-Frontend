@@ -840,9 +840,6 @@ export default ({ modalVoltar, setModalVoltar }) => {
                     <Botao
                       texto="Permanecer"
                       type={BUTTON_TYPE.BUTTON}
-                      // onClick={() => {
-                      //   salvarCronograma(values, false);
-                      // }}
                       onClick={() => {
                         setModalVoltar(false);
                       }}
