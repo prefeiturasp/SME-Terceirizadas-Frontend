@@ -128,6 +128,8 @@ export const relatoriosInclusaoDeAlimentacaoCEMEI = () => {
       return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioDRE;
     case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
       return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioTerceirizada;
     default:
       return RelatoriosInclusaoDeAlimentacaoCEMEI.RelatorioEscola;
   }

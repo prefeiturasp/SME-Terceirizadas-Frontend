@@ -19,6 +19,7 @@ import RelatorioHistoricoJustificativaEscola from "components/Shareable/Relatori
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [uuid, setUuid] = useState(null);
@@ -27,6 +28,9 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
 
   const {
     endpointAprovaSolicitacao,
@@ -107,6 +111,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           statusEnum.CODAE_AUTORIZADO
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
+
   const EXIBIR_BOTAO_QUESTIONAMENTO =
     [
       TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
@@ -116,6 +121,12 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     (solicitacao.prioridade !== "REGULAR" ||
       (visao === CODAE && solicitacao.prioridade !== "REGULAR")) &&
     [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+      solicitacao.status
+    );
+  const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+    visao === TERCEIRIZADA &&
+    solicitacao &&
+    [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
       solicitacao.status
     );
 
@@ -136,12 +147,11 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                       vinculos={vinculos}
                     />
                     {visualizaBotoesDoFluxo(solicitacao) && (
-                      <>
-                        <div className="form-group row float-right mt-4">
+                      <div className="row">
+                        <div className="col-12 text-right">
                           {EXIBIR_BOTAO_NAO_APROVAR && (
                             <Botao
                               texto={textoBotaoNaoAprova}
-                              className="float-right"
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() => {
@@ -170,19 +180,50 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                           {EXIBIR_BOTAO_APROVAR &&
                             (textoBotaoAprova !== "Ciente" &&
                               (visao === CODAE &&
-                              solicitacao.logs.filter(
-                                log =>
-                                  log.status_evento_explicacao ===
-                                    "Terceirizada respondeu questionamento" &&
-                                  !log.resposta_sim_nao
-                              ).length > 0 ? null : (
+                                solicitacao.logs.filter(
+                                  log =>
+                                    log.status_evento_explicacao ===
+                                      "Terceirizada respondeu questionamento" &&
+                                    log.resposta_sim_nao
+                                ).length > 0 && (
+                                  <Botao
+                                    texto={textoBotaoAprova}
+                                    type={BUTTON_TYPE.SUBMIT}
+                                    style={BUTTON_STYLE.GREEN}
+                                    className="ml-3"
+                                  />
+                                )))}
+                          {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                            <div className="form-group float-right mt-4">
+                              {solicitacao.terceirizada_conferiu_gestao ? (
+                                <label className="ml-3 conferido">
+                                  <i className="fas fa-check mr-2" />
+                                  Solicitação Conferida
+                                </label>
+                              ) : (
                                 <Botao
-                                  texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.SUBMIT}
+                                  texto="Marcar Conferência"
+                                  type={BUTTON_TYPE.BUTTON}
                                   style={BUTTON_STYLE.GREEN}
                                   className="ml-3"
+                                  onClick={() => {
+                                    setShowModalMarcarConferencia(true);
+                                  }}
                                 />
-                              )))}
+                              )}
+                            </div>
+                          )}
+                          <ModalMarcarConferencia
+                            showModal={showModalMarcarConferencia}
+                            closeModal={() =>
+                              setShowModalMarcarConferencia(false)
+                            }
+                            onMarcarConferencia={() => {
+                              getInclusaoCEMEIAsync();
+                            }}
+                            uuid={solicitacao.uuid}
+                            endpoint={"inclusao-alimentacao-cemei"}
+                          />
                           {ModalNaoAprova && (
                             <ModalNaoAprova
                               showModal={showNaoAprovaModal}
@@ -210,7 +251,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                             />
                           )}
                         </div>
-                      </>
+                      </div>
                     )}
                     {solicitacao.dias_motivos_da_inclusao_cemei.find(
                       inclusao => inclusao.cancelado
