@@ -32,6 +32,7 @@ import {
 } from "services/produto.service";
 import { SelectWithHideOptions } from "../SelectWithHideOptions";
 import { STATUS_RECLAMACAO_PRODUTO } from "constants/shared";
+import { required } from "helpers/fieldValidators";
 
 const tiposProdutos = [
   { nome: "Comum", key: "Comum" },
@@ -185,6 +186,8 @@ export const FormBuscaProduto = ({
                           className="input-busca-produto"
                           onSearch={v => onSearch("editais", v)}
                           name="nome_edital"
+                          required
+                          validate={required}
                           disabled={usuarioEhEscola()}
                         />
                       </div>
@@ -250,6 +253,8 @@ export const FormBuscaProduto = ({
                             .toLowerCase()
                             .includes(inputValue.toLowerCase())
                         }
+                        required
+                        validate={required}
                         options={editaisDRE}
                       />
                     </>
@@ -262,6 +267,8 @@ export const FormBuscaProduto = ({
                         className="input-busca-produto mt-1"
                         onSearch={v => onSearch("editais", v)}
                         name="nome_edital"
+                        required
+                        validate={required}
                         disabled={usuarioEhEscola()}
                       />
                     </>
