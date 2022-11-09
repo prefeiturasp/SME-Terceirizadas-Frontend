@@ -570,7 +570,7 @@ export default () => {
                               <div className="col-4">
                                 <span className="required-asterisk">*</span>
                                 <label className="col-form-label">
-                                  Produtos
+                                  Nº do Empenho
                                 </label>
                                 <TreeSelect
                                   treeData={empenhoOptions}
