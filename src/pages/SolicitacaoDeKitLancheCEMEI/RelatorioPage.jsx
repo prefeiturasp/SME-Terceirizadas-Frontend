@@ -18,8 +18,8 @@ import {
   terceirizadaTomaCienciaKitLanche
 } from "services/kitLanche";
 import { getMotivosDREnaoValida } from "services/relatorios";
-import { ModalNegarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNegarKitLancheCEMEI";
-import { ModalCODAEQuestionaKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCODAEQuestionaKitLancheCEMEI";
+import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
@@ -86,8 +86,8 @@ export const RelatorioDRE = () => (
 export const RelatorioCODAE = () => (
   <RelatorioBase
     visao={CODAE}
-    ModalNaoAprova={ModalNegarKitLancheCEMEI}
-    ModalQuestionamento={ModalCODAEQuestionaKitLancheCEMEI}
+    ModalNaoAprova={ModalNegarFinalForm}
+    ModalQuestionamento={ModalCODAEQuestionaFinalForm}
     toastAprovaMensagem={"Kit Lanche Passeio autorizado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao autorizar o Kit Lanche Passeio"}
     endpointNaoAprovaSolicitacao={CODAENegaKitLancheCEMEI}

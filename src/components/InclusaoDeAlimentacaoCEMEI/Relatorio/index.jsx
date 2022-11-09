@@ -4,7 +4,10 @@ import HTTP_STATUS from "http-status-codes";
 import { getInclusaoCEMEI } from "services/inclusaoDeAlimentacao";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { visualizaBotoesDoFluxo } from "helpers/utilities";
+import {
+  justificativaAoNegarSolicitacao,
+  visualizaBotoesDoFluxo
+} from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -15,6 +18,7 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 
 export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [uuid, setUuid] = useState(null);
@@ -22,12 +26,15 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [vinculos, setVinculos] = useState(null);
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+  const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
 
   const {
     endpointAprovaSolicitacao,
     endpointNaoAprovaSolicitacao,
+    endpointQuestionamento,
     motivosDREnaoValida,
     ModalNaoAprova,
+    ModalQuestionamento,
     textoBotaoAprova,
     textoBotaoNaoAprova,
     visao,
@@ -35,6 +42,9 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     toastAprovaMensagem,
     toastAprovaMensagemErro
   } = props;
+
+  const justificativaNegacao =
+    solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
@@ -97,6 +107,17 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
           statusEnum.CODAE_AUTORIZADO
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
+  const EXIBIR_BOTAO_QUESTIONAMENTO =
+    [
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.TERCEIRIZADA
+    ].includes(tipoPerfil) &&
+    solicitacao &&
+    (solicitacao.prioridade !== "REGULAR" ||
+      (visao === CODAE && solicitacao.prioridade !== "REGULAR")) &&
+    [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+      solicitacao.status
+    );
 
   return (
     <Spin tip="Carregando..." spinning={!solicitacao || !vinculos}>
@@ -129,6 +150,23 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               }}
                             />
                           )}
+                          {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                            <Botao
+                              texto={
+                                tipoPerfil ===
+                                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                  ? "Questionar"
+                                  : "Sim"
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              onClick={() => {
+                                setRespostaSimNao("Sim");
+                                setShowQuestionamentoModal(true);
+                              }}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          )}
                           {EXIBIR_BOTAO_APROVAR &&
                             (textoBotaoAprova !== "Ciente" &&
                               (visao === CODAE &&
@@ -158,6 +196,19 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               tipoSolicitacao={tipoSolicitacao}
                             />
                           )}
+                          {ModalQuestionamento && (
+                            <ModalQuestionamento
+                              closeModal={() =>
+                                setShowQuestionamentoModal(false)
+                              }
+                              showModal={showQuestionamentoModal}
+                              loadSolicitacao={getInclusaoCEMEIAsync}
+                              resposta_sim_nao={respostaSimNao}
+                              endpoint={endpointQuestionamento}
+                              tipoSolicitacao={tipoSolicitacao}
+                              solicitacao={solicitacao}
+                            />
+                          )}
                         </div>
                       </>
                     )}
@@ -182,7 +233,23 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                         </p>
                       </>
                     )}
+                    {justificativaNegacao && (
+                      <div className="row">
+                        <div className="col-12 report-label-value">
+                          <p>Justificativa da negação</p>
+                          <p
+                            className="value"
+                            dangerouslySetInnerHTML={{
+                              __html: justificativaNegacao
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                     <RelatorioHistoricoJustificativaEscola
+                      solicitacao={solicitacao}
+                    />
+                    <RelatorioHistoricoQuestionamento
                       solicitacao={solicitacao}
                     />
                   </div>
