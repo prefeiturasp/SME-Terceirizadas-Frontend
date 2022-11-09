@@ -11,17 +11,18 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import CKEditorField from "components/Shareable/CKEditorField";
 
-export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
+export const ModalCODAEQuestionaFinalForm = ({ ...props }) => {
   const {
     showModal,
     closeModal,
     solicitacao,
     endpoint,
-    loadSolicitacao
+    loadSolicitacao,
+    tipoSolicitacao
   } = props;
 
   const onSubmit = async values => {
-    const resp = await endpoint(solicitacao.uuid, values);
+    const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       toastSuccess("Questionamento enviado com sucesso!");
@@ -58,7 +59,7 @@ export const ModalCODAEQuestionaKitLancheCEMEI = ({ ...props }) => {
                   <Field
                     component={CKEditorField}
                     label="Observação"
-                    name="justificativa"
+                    name="observacao_questionamento_codae"
                     placeholder="Alguma observação para a Terceirizada?"
                   />
                 </div>
