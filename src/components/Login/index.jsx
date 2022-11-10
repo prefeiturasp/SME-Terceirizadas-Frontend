@@ -10,7 +10,11 @@ import {
   validaCPF
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
-import { recuperaSenha, setUsuario } from "../../services/perfil.service";
+import {
+  atualizarSenhaLogado,
+  recuperaSenha,
+  setUsuario
+} from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
@@ -26,7 +30,7 @@ import {
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
 import { connect } from "react-redux";
-import { composeValidators } from "helpers/utilities";
+import { composeValidators, deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
@@ -45,7 +49,8 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA
+      tab: TABS.ESCOLA,
+      senhaAtual: null
     };
     this.emailInput = React.createRef();
   }
@@ -84,10 +89,27 @@ export class Login extends Component {
     this.setState({ termos });
   }
 
-  handleSubmit = values => {
+  handleSubmit = async values => {
     const { login, password } = values;
     if (login && password) {
-      authService.login(login, password);
+      const retorno = await authService.login(login, password);
+      if (retorno === "primeiro_acesso") {
+        this.setState({
+          senhaAtual: password,
+          componenteAtivo: this.COMPONENTE.PRIMEIRO_ACESSO
+        });
+      }
+    }
+  };
+
+  handleAtualizarSenhaPrimeiroAcesso = async values => {
+    const { senhaAtual } = this.state;
+    const values_ = deepCopy(values);
+    values_["senha_atual"] = senhaAtual;
+    const response = await atualizarSenhaLogado(values_);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("senha atualizada com sucesso!");
+      this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
     }
   };
 
@@ -573,21 +595,17 @@ export class Login extends Component {
           initialValues={{}}
           validate={() => {}}
           render={({ form, handleSubmit, values }) => {
-            const letra = values.nova_senha
-              ? values.nova_senha.match(/[a-zA-Z]/g)
+            const letra = values.senha
+              ? values.senha.match(/[a-zA-Z]/g)
               : false;
-            const numero = values.nova_senha
-              ? values.nova_senha.match(/[0-9]/g)
-              : false;
-            const tamanho = values.nova_senha
-              ? values.nova_senha.length >= 8
-              : false;
+            const numero = values.senha ? values.senha.match(/[0-9]/g) : false;
+            const tamanho = values.senha ? values.senha.length >= 8 : false;
             return (
               <form onSubmit={handleSubmit}>
-                <p>
-                  Seja bem-vindo(a) ao SISTEMA DE GESTÂO DO PROGRAMA DE
-                  ALIMENTAÇÂO ESCOLAR!
+                <p className="mb-0">
+                  Seja bem-vindo(a) ao <strong>SIGPAE</strong>
                 </p>
+                <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
                 <p className="font-weight-bold">
                   Atualize sua senha de acesso:
                 </p>
@@ -596,7 +614,7 @@ export class Login extends Component {
                     <FieldFF
                       component={InputPassword}
                       label="Nova Senha"
-                      name="nova_senha"
+                      name="senha"
                       placeholder={"Digite uma nova senha de acesso"}
                       onChange={event =>
                         this.onSenhaChanged(event.target.value)
@@ -609,7 +627,7 @@ export class Login extends Component {
                     <FieldFF
                       component={InputPassword}
                       label="Confirmação da Nova Senha"
-                      name="confirma_senha"
+                      name="confirmar_senha"
                       placeholder={"Confirme a senha digitada"}
                     />
                   </div>
@@ -625,22 +643,21 @@ export class Login extends Component {
                         !letra ||
                         !numero ||
                         !tamanho ||
-                        values.nova_senha !== values.confirma_senha
+                        values.senha !== values.confirmar_senha
                       }
-                      type={BUTTON_TYPE.SUBMIT}
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => {
+                        this.handleAtualizarSenhaPrimeiroAcesso(values);
+                      }}
                     />
                   </div>
                 </div>
 
-                <div className="row">
-                  <div className="col-12">
-                    <RequisitosSenha
-                      letra={letra}
-                      numero={numero}
-                      tamanho={tamanho}
-                    />
-                  </div>
-                </div>
+                <RequisitosSenha
+                  letra={letra}
+                  numero={numero}
+                  tamanho={tamanho}
+                />
               </form>
             );
           }}

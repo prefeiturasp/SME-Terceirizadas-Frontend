@@ -27,6 +27,10 @@ const login = async (login, password) => {
         }
       });
 
+      if (login.length === 11 && !json.last_login) {
+        return "primeiro_acesso";
+      }
+
       await fetch(`${CONFIG.API_URL}/usuarios/meus-dados/`, {
         method: "GET",
         headers: {

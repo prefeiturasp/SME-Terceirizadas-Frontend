@@ -63,7 +63,8 @@ a.hyperlink {
     .logo-sigpae-primeiro-acesso {
       display: flex;
       text-align: center;
-      justify-content: space-evenly;
+      justify-content: center;
+
       @media screen and (max-width: 768px) {
         padding-top: 1rem;
         padding-bottom: 0.5rem;
@@ -87,6 +88,7 @@ a.hyperlink {
         font-weight: bold;
         margin-top: auto;
         margin-bottom: auto;
+        margin-left: 1em;
       }
     }
     .terms {
