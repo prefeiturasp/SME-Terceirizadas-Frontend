@@ -72,7 +72,7 @@ export class Login extends Component {
       componenteAtivo:
         tab === TABS.TERCEIRIZADAS
           ? this.COMPONENTE.CADASTRAR
-          : this.COMPONENTE.PRIMEIRO_ACESSO
+          : this.COMPONENTE.LOGIN
     });
   }
 
@@ -164,8 +164,6 @@ export class Login extends Component {
       });
     }
   };
-
-  handleSubmitPrimeiroAcesso = () => {};
 
   switchTab(tab) {
     this.setState({ tab });
