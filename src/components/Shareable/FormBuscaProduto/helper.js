@@ -1,6 +1,6 @@
 import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
 
-export const getInitalState = (editais, nomeInstituicao) => {
+export const getInitalState = editais => {
   if (usuarioEhEscola()) {
     return {
       agrupado_por_nome_e_marca: false,
@@ -8,8 +8,7 @@ export const getInitalState = (editais, nomeInstituicao) => {
     };
   } else if (usuarioEhTerceirizada()) {
     return {
-      agrupado_por_nome_e_marca: false,
-      nome_terceirizada: nomeInstituicao
+      agrupado_por_nome_e_marca: false
     };
   } else {
     return { agrupado_por_nome_e_marca: false };
