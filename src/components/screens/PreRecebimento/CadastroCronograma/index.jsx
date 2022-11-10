@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spin, TreeSelect } from "antd";
+import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import moment from "moment";
 import Botao from "components/Shareable/Botao";
@@ -18,11 +19,16 @@ import createDecorator from "final-form-calculate";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getArmazens } from "services/terceirizada.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
-import { cadastraCronograma, getEtapas } from "services/cronograma.service";
+import {
+  cadastraCronograma,
+  getEtapas,
+  getRascunhos
+} from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import Rascunhos from "../Rascunhos";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -38,7 +44,19 @@ export default () => {
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const history = useHistory();
+  const [listaRascunhos, setListaRascunhos] = useState(null);
 
+  const getRascunhosAsync = async () => {
+    try {
+      const response = await getRascunhos();
+      if (response.status === HTTP_STATUS.OK) {
+        setListaRascunhos(response.data.results);
+      }
+    } catch (erro) {
+      setListaRascunhos();
+      toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
+    }
+  };
   const onSubmit = () => {};
 
   const getContratosFiltrado = termoContrato => {
@@ -297,6 +315,7 @@ export default () => {
     if (response.status === 201) {
       if (rascunho) {
         toastSuccess("Rascunho salvo com sucesso!");
+        getRascunhosAsync();
         setCarregando(false);
       } else {
         setCarregando(false);
@@ -375,10 +394,12 @@ export default () => {
     buscaListaContratos();
     buscaArmazens();
     buscaEtapas();
+    getRascunhosAsync();
   }, []);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <Rascunhos listaRascunhos={listaRascunhos} />
       <div className="card mt-3 card-cadastro-cronograma">
         <div className="card-body cadastro-cronograma">
           <Form

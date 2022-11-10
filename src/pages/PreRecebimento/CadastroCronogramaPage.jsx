@@ -8,7 +8,6 @@ import {
   PRE_RECEBIMENTO
 } from "configs/constants";
 import CadastroCronograma from "components/screens/PreRecebimento/CadastroCronograma";
-import Rascunhos from "components/screens/PreRecebimento/Rascunhos";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`,
@@ -36,7 +35,6 @@ export default () => (
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <Rascunhos />
     <CadastroCronograma />
   </Page>
 );

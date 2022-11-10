@@ -1,32 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Spin } from "antd";
-import { getRascunhos } from "services/cronograma.service";
-import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 
-export default () => {
-  const [carregando, setCarregando] = useState(false);
-  const [listaRascunhos, setListaRascunhos] = useState([{}]);
-  const [temRascunho, setTemRascunho] = useState(false);
-
-  useEffect(() => {
-    async function fetch() {
-      setCarregando(true);
-      const response = await getRascunhos();
-      if (
-        response.status === HTTP_STATUS.OK &&
-        response.data.results.length > 0
-      ) {
-        setListaRascunhos(response.data.results);
-        setTemRascunho(true);
-      } else {
-        setTemRascunho(false);
-      }
-      setCarregando(false);
-    }
-    fetch();
-  }, []);
-
+export default ({ listaRascunhos }) => {
   const so_data = data => {
     if (data) {
       return data.slice(0, 10);
@@ -39,8 +15,8 @@ export default () => {
   };
   return (
     <>
-      {temRascunho && (
-        <Spin tip="Carregando..." spinning={carregando}>
+      <Spin tip="Carregando..." spinning={!listaRascunhos}>
+        {listaRascunhos && listaRascunhos.length > 0 && (
           <div className="card mt-3">
             <div className="card-body body-rascunho">
               <span className="titulo-rascunho">Rascunhos</span>
@@ -66,8 +42,8 @@ export default () => {
               </div>
             </div>
           </div>
-        </Spin>
-      )}
+        )}
+      </Spin>
     </>
   );
 };
