@@ -97,6 +97,7 @@ export const TabelaFaixasCEI = ({
                               <Field
                                 component={InputText}
                                 type="number"
+                                step="1"
                                 name={`inclusoes[${periodoIndice}][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
                                 validate={composeValidators(
                                   naoPodeSerZero,
