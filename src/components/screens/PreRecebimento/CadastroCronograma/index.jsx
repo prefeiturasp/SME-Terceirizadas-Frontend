@@ -28,7 +28,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
-import Rascunhos from "../Rascunhos";
+import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
@@ -309,10 +309,9 @@ export default () => {
     }));
 
     payload.programacoes_de_recebimento = recebimentos.map((etapa, index) => ({
-      data_recebimento: values[`data_programada_${index}`],
+      data_programada: values[`data_recebimento_${index}`],
       tipo_carga: values[`tipo_recebimento_${index}`]
     }));
-
     return payload;
   };
 
