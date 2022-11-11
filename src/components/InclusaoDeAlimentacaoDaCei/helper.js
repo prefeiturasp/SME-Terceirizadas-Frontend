@@ -144,3 +144,12 @@ export const formataPayload = values => {
   payload["quantidade_alunos_por_faixas_etarias"] = faixas;
   return payload;
 };
+
+export const validarForm = values => {
+  let erro = "";
+  if (!values.quantidade_alunos_por_faixas_etarias.length) {
+    erro =
+      "Necessário selecionar ao menos período e preencher uma faixa etária";
+  }
+  return erro;
+};

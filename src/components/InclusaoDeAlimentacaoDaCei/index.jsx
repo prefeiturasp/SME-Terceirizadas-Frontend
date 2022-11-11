@@ -31,12 +31,13 @@ import { Select } from "components/Shareable/Select";
 import { required } from "helpers/fieldValidators";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import TabelaFaixasCEI from "./TabelaFaixasCEI";
-import { formataPayload } from "./helper";
+import { formataPayload, validarForm } from "./helper";
 import { Rascunhos } from "./Rascunhos";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 
 import "./style.scss";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 
 export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
   const {
@@ -166,6 +167,11 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   const onSubmit = async (values, form) => {
     const payload = formataPayload(values);
+    const erro = validarForm(payload);
+    if (erro) {
+      toastError(erro);
+      return;
+    }
     if (payload.uuid) {
       const response = await atualizarInclusoesDaCEI(payload, payload.uuid);
       if (response.status === HTTP_STATUS.OK) {
@@ -228,6 +234,13 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
       >
         {({ handleSubmit, submitting, form, values }) => (
           <form onSubmit={handleSubmit}>
+            <Field component={"input"} type="hidden" name="uuid" />
+            <CardMatriculados
+              meusDados={meusDados}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+              }
+            />
             {rascunhos && rascunhos.length > 0 && (
               <div className="mt-3">
                 <span className="page-title">Rascunhos</span>
@@ -304,68 +317,72 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                     </div>
                   </div>
                 )}
-                <div className="row my-2">
-                  <div className="col-12">
-                    <p>Períodos</p>
-                  </div>
-                  <div className="col-12">
-                    <label
-                      style={{
-                        background: "#D4FFE0",
-                        border: `1px solid #DADADA`,
-                        borderRadius: "5px",
-                        marginBottom: "1%",
-                        width: "100%",
-                        padding: "8px 15px",
-                        height: "40px"
-                      }}
-                    >
-                      <Field
-                        component={"input"}
-                        type="checkbox"
-                        checked
-                        name="periodo_cei"
-                      />
-                      <span
-                        className="checkbox-custom"
-                        data-cy={`checkbox-INTEGRAL`}
-                      />
-                      INTEGRAL
-                    </label>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12">
-                    <div className="container-fluid">
-                      Selecione o período da Inclusão da Alimentação
-                    </div>
-                  </div>
-                </div>
-                {erro ? (
-                  <div className="row">
-                    <div className="col-12">
-                      <div className="container-fluid">
-                        Erro ao carregar faixas etárias. Tente novamente mais
-                        tarde.
+                {values.data && (
+                  <>
+                    <div className="row my-2">
+                      <div className="col-12">
+                        <p>Períodos</p>
+                      </div>
+                      <div className="col-12">
+                        <label
+                          style={{
+                            background: "#D4FFE0",
+                            border: `1px solid #DADADA`,
+                            borderRadius: "5px",
+                            marginBottom: "1%",
+                            width: "100%",
+                            padding: "8px 15px",
+                            height: "40px"
+                          }}
+                        >
+                          <Field
+                            component={"input"}
+                            type="checkbox"
+                            checked
+                            name="periodo_cei"
+                          />
+                          <span
+                            className="checkbox-custom"
+                            data-cy={`checkbox-INTEGRAL`}
+                          />
+                          INTEGRAL
+                        </label>
                       </div>
                     </div>
-                  </div>
-                ) : (
-                  periodos.map((periodo, periodoIndice) => {
-                    return (
-                      <TabelaFaixasCEI
-                        key={periodoIndice}
-                        values={values}
-                        form={form}
-                        periodoIndice={periodoIndice}
-                        periodo={periodo}
-                        faixasEtarias={faixasEtarias}
-                        alunosMatriculados={alunosMatriculados}
-                        todasFaixas={todasFaixas}
-                        vinculosAlimentacao={vinculosAlimentacao}
-                      />
-                    );
-                  })
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="container-fluid">
+                          Selecione o período da Inclusão da Alimentação
+                        </div>
+                      </div>
+                    </div>
+                    {erro ? (
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="container-fluid">
+                            Erro ao carregar faixas etárias. Tente novamente
+                            mais tarde.
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      periodos.map((periodo, periodoIndice) => {
+                        return (
+                          <TabelaFaixasCEI
+                            key={periodoIndice}
+                            values={values}
+                            form={form}
+                            periodoIndice={periodoIndice}
+                            periodo={periodo}
+                            faixasEtarias={faixasEtarias}
+                            alunosMatriculados={alunosMatriculados}
+                            todasFaixas={todasFaixas}
+                            vinculosAlimentacao={vinculosAlimentacao}
+                          />
+                        );
+                      })
+                    )}
+                  </>
                 )}
                 <div className="row float-right mt-4">
                   <div className="col-12">

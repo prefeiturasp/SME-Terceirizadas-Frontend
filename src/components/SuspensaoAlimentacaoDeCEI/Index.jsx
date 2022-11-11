@@ -21,6 +21,7 @@ import {
 } from "../../services/suspensaoAlimentacaoCei.service";
 import "../Shareable/Checkbox/style.scss";
 import "./styles.scss";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 
 const ENTER = 13;
 
@@ -273,10 +274,16 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       loading,
       ehOutroMotivo,
       periodos,
+      uuid,
       salvarAtualizarLbl,
       suspensoesDeAlimentacaoList
     } = this.state;
-    const { motivos, proximos_dois_dias_uteis, handleSubmit } = this.props;
+    const {
+      motivos,
+      proximos_dois_dias_uteis,
+      handleSubmit,
+      meusDados
+    } = this.props;
     return (
       <section className="section-main-form">
         {loading ? (
@@ -288,6 +295,12 @@ class SuspensaoAlimentacaoDeCEI extends Component {
             }}
             onKeyPress={this.onKeyPress}
           >
+            <CardMatriculados
+              meusDados={meusDados}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+              }
+            />
             {suspensoesDeAlimentacaoList.length > 0 && (
               <div className="my-3">
                 <span ref={this.titleRef} className="page-title">
@@ -302,6 +315,9 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 />
               </div>
             )}
+            <div className="mt-2 mb-2 page-title">
+              {uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
+            </div>
             <main className="card">
               <article className="card-body">
                 <header className="card-title font-weight-bold">
@@ -346,24 +362,28 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                     />
                   </section>
                 )}
-                <section className="section-descricao-periodo">Periodo</section>
+                <section className="section-descricao-periodo">Período</section>
                 <section className="form-check-periodos">
-                  {periodos.map((periodo, index) => {
-                    return (
-                      <label
-                        className={`container check-${periodo.nome}`}
-                        key={index}
-                      >
-                        {periodo.nome}
-                        <input
-                          type="checkbox"
-                          checked={periodo.check}
-                          onClick={() => this.checkItem(periodo)}
-                        />
-                        <span className={`checkmark check-${periodo.check}`} />
-                      </label>
-                    );
-                  })}
+                  {periodos
+                    .filter(periodo => periodo.nome === "INTEGRAL")
+                    .map((periodo, index) => {
+                      return (
+                        <label
+                          className={`container check-${periodo.nome}`}
+                          key={index}
+                        >
+                          {periodo.nome}
+                          <input
+                            type="checkbox"
+                            checked={periodo.check}
+                            onClick={() => this.checkItem(periodo)}
+                          />
+                          <span
+                            className={`checkmark check-${periodo.check}`}
+                          />
+                        </label>
+                      );
+                    })}
                 </section>
                 <div className="form-group pb-5">
                   <Field
