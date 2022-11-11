@@ -28,15 +28,11 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
-<<<<<<< HEAD
 import Rascunhos from "../RascunhosCronograma";
-=======
-import Rascunhos from "../Rascunhos";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault } from "helpers/utilities";
->>>>>>> origin/development
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
