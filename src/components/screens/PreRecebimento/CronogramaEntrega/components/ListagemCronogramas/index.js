@@ -1,6 +1,8 @@
 import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
+import { NavLink } from "react-router-dom";
+import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   return (
@@ -32,7 +34,20 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                     : undefined}
                 </div>
                 <div className={`${bordas}`}>{cronograma.status}</div>
-                <div className={`${bordas}`} />
+                <div className={`${bordas}`}>
+                  {cronograma.status !== "Rascunho" && (
+                    <>
+                      <NavLink
+                        className="float-left"
+                        to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+                          cronograma.uuid
+                        }`}
+                      >
+                        <span className="link-acoes green">Detalhar</span>
+                      </NavLink>
+                    </>
+                  )}{" "}
+                </div>
               </div>
             </>
           );
