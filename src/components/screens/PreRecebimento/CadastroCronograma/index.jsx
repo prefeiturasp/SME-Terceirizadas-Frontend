@@ -8,7 +8,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { Field, Form } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import {
   getContratoSAFI,
@@ -29,6 +29,10 @@ import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../Rascunhos";
+import "../CronogramaEntrega/styles.scss";
+import { required } from "helpers/fieldValidators";
+import { OnChange } from "react-final-form-listeners";
+import { agregarDefault } from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -45,6 +49,9 @@ export default () => {
   const [armazens, setArmazens] = useState([{}]);
   const history = useHistory();
   const [listaRascunhos, setListaRascunhos] = useState(null);
+  const [duplicados, setDuplicados] = useState([]);
+  const [restante, setRestante] = useState(undefined);
+  const [datasProgramadas, setDatasProgramadas] = useState([]);
 
   const getRascunhosAsync = async () => {
     try {
@@ -57,7 +64,9 @@ export default () => {
       toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
     }
   };
-  const onSubmit = () => {};
+  const onSubmit = () => {
+    setShowModal(true);
+  };
 
   const getContratosFiltrado = termoContrato => {
     if (termoContrato) {
@@ -131,7 +140,20 @@ export default () => {
 
           setEmpenhoOptions(treeData);
         }
-
+        etapas.forEach((_, i) => {
+          onChangeEmpenho(undefined, i, values);
+          values[`etapa_${i}`] = undefined;
+          values[`parte_${i}`] = undefined;
+          values[`data_programada_${i}`] = undefined;
+          values[`quantidade_${i}`] = undefined;
+          values[`total_embalagens_${i}`] = undefined;
+        });
+        values.produto = undefined;
+        values.quantidade_total = undefined;
+        values.unidade_medida = undefined;
+        values.armazem = undefined;
+        values.tipo_embalagem = undefined;
+        setEtapas([{}]);
         document.getElementById("autocomplete-contrato").focus();
         document.activeElement.blur();
       } catch (error) {
@@ -184,19 +206,6 @@ export default () => {
     setCollapse({
       [index]: !collapse[index]
     });
-  };
-
-  const validaParte = (values, index) => {
-    let flagErro = false;
-    etapas.forEach((e, i) => {
-      if (i === index) return;
-      if (values[`parte_${i}`] === values[`parte_${index}`]) {
-        if (values[`etapa_${i}`] === values[`etapa_${index}`]) {
-          flagErro = true;
-        }
-      }
-    });
-    return flagErro ? "Parte já selecionada" : undefined;
   };
 
   const quantidadeFaltante = values => {
@@ -252,7 +261,7 @@ export default () => {
         });
       }
     });
-    return options;
+    return agregarDefault(options);
   };
 
   const buscaEmpenho = uuid => {
@@ -333,31 +342,6 @@ export default () => {
     return !values.contrato_uuid;
   };
 
-  const validaSalvarEnviar = values => {
-    let valido = true;
-
-    valido =
-      valido &&
-      values.contrato_uuid &&
-      values.produto &&
-      values.armazem &&
-      values.tipo_embalagem;
-
-    etapas.forEach((e, index) => {
-      valido =
-        valido &&
-        values[`empenho_${index}`] &&
-        values[`etapa_${index}`] &&
-        values[`data_programada_${index}`] &&
-        values[`quantidade_${index}`] &&
-        values[`total_embalagens_${index}`];
-    });
-
-    if (quantidadeFaltante(values) !== 0) valido = false;
-
-    return !valido;
-  };
-
   useEffect(() => {
     const buscaListaContratos = async () => {
       try {
@@ -397,6 +381,35 @@ export default () => {
     getRascunhosAsync();
   }, []);
 
+  const onChangeFormSpy = async changes => {
+    let restante = changes.values.quantidade_total;
+    etapas.forEach((e, index) => {
+      if (changes.values[`quantidade_${index}`])
+        restante = restante - changes.values[`quantidade_${index}`];
+    });
+    setRestante(restante);
+    if (etapas.length < 2) return;
+    const partes_etapas = [];
+    etapas.forEach((_, i) => {
+      partes_etapas.push({
+        parte: changes.values[`parte_${i}`],
+        etapa: changes.values[`etapa_${i}`],
+        index: i
+      });
+    });
+    const duplicados = [];
+    partes_etapas.forEach(pe => {
+      if (
+        partes_etapas.filter(
+          pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
+        ).length > 1
+      ) {
+        duplicados.push(pe.index);
+      }
+    });
+    setDuplicados(duplicados);
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <Rascunhos listaRascunhos={listaRascunhos} />
@@ -409,6 +422,10 @@ export default () => {
             validate={() => {}}
             render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
+                <FormSpy
+                  subscription={{ values: true, active: true, valid: true }}
+                  onChange={changes => onChangeFormSpy(changes)}
+                />
                 <div className="row">
                   <div className="col-5">
                     <Field
@@ -418,6 +435,7 @@ export default () => {
                       label="Pesquisar Contrato"
                       name="termo_contrato"
                       className="input-busca-produto"
+                      validate={required}
                       required
                       esconderIcone
                     />
@@ -442,6 +460,7 @@ export default () => {
                       label="Empresa"
                       name="empresa"
                       className="input-busca-produto"
+                      validate={required}
                       disabled={true}
                     />
                   </div>
@@ -451,374 +470,416 @@ export default () => {
                       label="Nº do Processo SEI - Contratos"
                       name="numero_processo"
                       className="input-busca-produto"
+                      validate={required}
                       disabled={true}
                     />
                   </div>
                 </div>
 
-                <div className="accordion mt-1" id="accordionCronograma">
-                  <div className="card mt-3">
-                    <div className={`card-header card-tipo`} id={`heading_1`}>
-                      <div className="row card-header-content">
-                        <span className="nome-alimento">Dados do Produto</span>
-                        <div className="col-1 align-self-center">
-                          <button
-                            onClick={() => toggleCollapse(1)}
-                            className="btn btn-link btn-block text-left px-0"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target={`#collapse_1`}
-                            aria-expanded="true"
-                            aria-controls={`collapse_1`}
-                          >
-                            <span className="span-icone-toogle">
-                              <i
-                                className={
-                                  collapse[1]
-                                    ? "fas fa-chevron-up"
-                                    : "fas fa-chevron-down"
-                                }
-                              />
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      id={`collapse_1`}
-                      className="collapse"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordionCronograma"
-                    >
-                      <div className="card-body">
-                        <div className="row">
-                          <div className="col-6">
-                            <Field
-                              component={SelectSelecione}
-                              naoDesabilitarPrimeiraOpcao
-                              options={produtosOptions}
-                              label="Produto"
-                              name="produto"
-                              placeholder={"Selecione um Produto"}
-                              required
-                            />
-                          </div>
-                          <div className="col-3">
-                            <Field
-                              component={InputText}
-                              label="Quantidade Total Programada"
-                              name="quantidade_total"
-                              className="input-busca-produto"
-                              disabled={true}
-                              required
-                            />
-                          </div>
-                          <div className="col-3">
-                            <Field
-                              component={InputText}
-                              label="Unidade de Medida"
-                              name="unidade_medida"
-                              className="input-busca-produto"
-                              disabled={true}
-                              required
-                            />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-6">
-                            <Field
-                              component={SelectSelecione}
-                              naoDesabilitarPrimeiraOpcao
-                              options={armazens}
-                              label="Armazém"
-                              name="armazem"
-                              required
-                              placeholder={"Selecione o Armazém"}
-                            />
-                          </div>
-                          <div className="col-3">
-                            <Field
-                              component={SelectSelecione}
-                              naoDesabilitarPrimeiraOpcao
-                              options={[
-                                {
-                                  uuid: "CAIXA",
-                                  nome: "Caixa"
-                                },
-                                {
-                                  uuid: "FARDO",
-                                  nome: "Fardo"
-                                },
-                                {
-                                  uuid: "TUBET",
-                                  nome: "Tubet"
-                                }
-                              ]}
-                              label="Tipo de Embalagem"
-                              name="tipo_embalagem"
-                              required
-                              placeholder={"Selecione a Embalagem"}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="subtitulo">Cronograma das Entregas</div>
-                        <hr className="linha-verde" />
-
-                        {etapas.map((etapa, index) => (
-                          <>
-                            {index !== 0 && (
-                              <>
-                                <hr />
-                                <div className="row">
-                                  <div className="w-100">
-                                    <Botao
-                                      texto=""
-                                      type={BUTTON_TYPE.BUTTON}
-                                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                                      icon="fas fa-trash"
-                                      className="float-right ml-3"
-                                      onClick={() => deletaEtapa(index)}
-                                      disabled={submitting}
-                                    />
-                                  </div>
-                                </div>
-                              </>
-                            )}
-
-                            <div className="row">
-                              <div className="col-4">
-                                <span className="required-asterisk">*</span>
-                                <label className="col-form-label">
-                                  Nº do Empenho
-                                </label>
-                                <TreeSelect
-                                  treeData={empenhoOptions}
-                                  value={values.empenho}
-                                  onChange={e =>
-                                    onChangeEmpenho(e, index, values)
+                {values.empresa && (
+                  <div className="accordion mt-1" id="accordionCronograma">
+                    <div className="card mt-3">
+                      <div className={`card-header card-tipo`} id={`heading_1`}>
+                        <div className="row card-header-content">
+                          <span className="nome-alimento">
+                            Dados do Produto
+                          </span>
+                          <div className="col-1 align-self-center">
+                            <button
+                              onClick={() => toggleCollapse(1)}
+                              className="btn btn-link btn-block text-left px-0"
+                              type="button"
+                              data-toggle="collapse"
+                              data-target={`#collapse_1`}
+                              aria-expanded="true"
+                              aria-controls={`collapse_1`}
+                            >
+                              <span className="span-icone-toogle">
+                                <i
+                                  className={
+                                    collapse[1]
+                                      ? "fas fa-chevron-up"
+                                      : "fas fa-chevron-down"
                                   }
-                                  placeholder="Selecione o Empenho"
-                                  style={{ width: "100%" }}
                                 />
-                              </div>
-                              <div className="col-4">
-                                <Field
-                                  component={AutoCompleteField}
-                                  options={getEtapasFiltrado(
-                                    values[`etapa_${index}`]
-                                  )}
-                                  label="Etapa"
-                                  name={`etapa_${index}`}
-                                  className="input-busca-produto"
-                                  placeholder="Selecione a Etapa"
-                                  required
-                                  esconderIcone
-                                />
-                              </div>
-                              <div className="col-4">
-                                <Field
-                                  component={SelectSelecione}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={[
-                                    {
-                                      uuid: "Parte 1",
-                                      nome: "Parte 1"
-                                    },
-                                    {
-                                      uuid: "Parte 2",
-                                      nome: "Parte 2"
-                                    },
-                                    {
-                                      uuid: "Parte 3",
-                                      nome: "Parte 3"
-                                    },
-                                    {
-                                      uuid: "Parte 4",
-                                      nome: "Parte 4"
-                                    },
-                                    {
-                                      uuid: "Parte 5",
-                                      nome: "Parte 5"
-                                    }
-                                  ]}
-                                  label="Parte"
-                                  name={`parte_${index}`}
-                                  placeholder={"Selecione a Parte"}
-                                  validate={() => validaParte(values, index)}
-                                />
-                              </div>
-                            </div>
-                            <div className="row">
-                              <div className="col-4">
-                                <Field
-                                  component={InputComData}
-                                  label="Data Programada"
-                                  name={`data_programada_${index}`}
-                                  placeholder="Selecionar a Data"
-                                  required
-                                  writable={false}
-                                  minDate={null}
-                                />
-                              </div>
-                              <div className="col-4">
-                                <Field
-                                  component={InputText}
-                                  label="Quantidade"
-                                  name={`quantidade_${index}`}
-                                  placeholder="Digite a Quantidade"
-                                  required
-                                  type="number"
-                                  pattern="[0-9]*"
-                                />
-                              </div>
-                              <div className="col-4">
-                                <Field
-                                  component={InputText}
-                                  label="Total de Embalagens"
-                                  name={`total_embalagens_${index}`}
-                                  placeholder="Digite a Quantidade"
-                                  required
-                                  apenasNumeros
-                                />
-                              </div>
-                            </div>
-                          </>
-                        ))}
-
-                        {values.quantidade_total && textoFaltante(values)}
-
-                        <div className="text-center mb-2 mt-2">
-                          <Botao
-                            texto="+ Adicionar Etapa"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className=""
-                            onClick={() => adicionaEtapa()}
-                            disabled={submitting}
-                          />
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="card mt-3">
-                    <div className={`card-header card-tipo`} id={`heading_2`}>
-                      <div className="row card-header-content">
-                        <span className="nome-alimento">
-                          Dados do Recebimento
-                        </span>
-                        <div className="col-1 align-self-center">
-                          <button
-                            onClick={() => toggleCollapse(2)}
-                            className="btn btn-link btn-block text-left px-0"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target={`#collapse_2`}
-                            aria-expanded="true"
-                            aria-controls={`collapse_2`}
-                          >
-                            <span className="span-icone-toogle">
-                              <i
-                                className={
-                                  collapse[2]
-                                    ? "fas fa-chevron-up"
-                                    : "fas fa-chevron-down"
-                                }
+
+                      <div
+                        id={`collapse_1`}
+                        className="collapse"
+                        aria-labelledby="headingOne"
+                        data-parent="#accordionCronograma"
+                      >
+                        <div className="card-body">
+                          <div className="row">
+                            <div className="col-6">
+                              <Field
+                                component={SelectSelecione}
+                                naoDesabilitarPrimeiraOpcao
+                                options={produtosOptions}
+                                label="Produto"
+                                name="produto"
+                                placeholder={"Selecione um Produto"}
+                                required
                               />
-                            </span>
-                          </button>
+                            </div>
+                            <div className="col-3">
+                              <Field
+                                component={InputText}
+                                label="Quantidade Total Programada"
+                                name="quantidade_total"
+                                className="input-busca-produto"
+                                disabled={true}
+                                required
+                              />
+                            </div>
+                            <div className="col-3">
+                              <Field
+                                component={InputText}
+                                label="Unidade de Medida"
+                                name="unidade_medida"
+                                className="input-busca-produto"
+                                disabled={true}
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-6">
+                              <Field
+                                component={SelectSelecione}
+                                naoDesabilitarPrimeiraOpcao
+                                options={armazens}
+                                label="Armazém"
+                                name="armazem"
+                                required
+                                placeholder={"Selecione o Armazém"}
+                              />
+                            </div>
+                            <div className="col-3">
+                              <Field
+                                component={SelectSelecione}
+                                naoDesabilitarPrimeiraOpcao
+                                options={[
+                                  {
+                                    uuid: "CAIXA",
+                                    nome: "Caixa"
+                                  },
+                                  {
+                                    uuid: "FARDO",
+                                    nome: "Fardo"
+                                  },
+                                  {
+                                    uuid: "TUBET",
+                                    nome: "Tubet"
+                                  }
+                                ]}
+                                label="Tipo de Embalagem"
+                                name="tipo_embalagem"
+                                required
+                                placeholder={"Selecione a Embalagem"}
+                              />
+                            </div>
+                          </div>
+
+                          <div className="subtitulo">
+                            Cronograma das Entregas
+                          </div>
+                          <hr className="linha-verde" />
+
+                          {etapas.map((etapa, index) => (
+                            <>
+                              {index !== 0 && (
+                                <>
+                                  <hr />
+                                  <div className="row">
+                                    <div className="w-100">
+                                      <Botao
+                                        texto=""
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                                        icon="fas fa-trash"
+                                        className="float-right ml-3"
+                                        onClick={() => deletaEtapa(index)}
+                                        disabled={submitting}
+                                      />
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+
+                              <div className="row">
+                                <div className="col-4">
+                                  <span className="required-asterisk">*</span>
+                                  <label className="col-form-label">
+                                    Nº do Empenho
+                                  </label>
+                                  <Field
+                                    component={TreeSelect}
+                                    treeData={empenhoOptions}
+                                    name={`empenho_${index}`}
+                                    required
+                                    validate={required}
+                                    allowClear
+                                    onChange={e =>
+                                      onChangeEmpenho(e, index, values)
+                                    }
+                                    placeholder="Selecione o Empenho"
+                                    style={{ width: "100%" }}
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <Field
+                                    component={AutoCompleteField}
+                                    options={getEtapasFiltrado(
+                                      values[`etapa_${index}`]
+                                    )}
+                                    label="Etapa"
+                                    name={`etapa_${index}`}
+                                    className="input-busca-produto"
+                                    placeholder="Selecione a Etapa"
+                                    required
+                                    esconderIcone
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <Field
+                                    component={SelectSelecione}
+                                    naoDesabilitarPrimeiraOpcao
+                                    options={[
+                                      {
+                                        uuid: "Parte 1",
+                                        nome: "Parte 1"
+                                      },
+                                      {
+                                        uuid: "Parte 2",
+                                        nome: "Parte 2"
+                                      },
+                                      {
+                                        uuid: "Parte 3",
+                                        nome: "Parte 3"
+                                      },
+                                      {
+                                        uuid: "Parte 4",
+                                        nome: "Parte 4"
+                                      },
+                                      {
+                                        uuid: "Parte 5",
+                                        nome: "Parte 5"
+                                      }
+                                    ]}
+                                    label="Parte"
+                                    name={`parte_${index}`}
+                                    placeholder={"Selecione a Parte"}
+                                    validate={() =>
+                                      duplicados.includes(index) &&
+                                      "Parte já selecionada"
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <div className="row">
+                                <div className="col-4">
+                                  <Field
+                                    component={InputComData}
+                                    label="Data Programada"
+                                    name={`data_programada_${index}`}
+                                    placeholder="Selecionar a Data"
+                                    required
+                                    writable={false}
+                                    minDate={null}
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <Field
+                                    component={InputText}
+                                    label="Quantidade"
+                                    name={`quantidade_${index}`}
+                                    placeholder="Digite a Quantidade"
+                                    validate={() =>
+                                      restante !== 0 &&
+                                      `quantidade total é diferente de ${values.quantidade_total ||
+                                        0}`
+                                    }
+                                    required
+                                    type="number"
+                                    pattern="[0-9]*"
+                                  />
+                                </div>
+                                <div className="col-4">
+                                  <Field
+                                    component={InputText}
+                                    label="Total de Embalagens"
+                                    name={`total_embalagens_${index}`}
+                                    placeholder="Digite a Quantidade"
+                                    required
+                                    apenasNumeros
+                                  />
+                                </div>
+                              </div>
+                            </>
+                          ))}
+
+                          {values.quantidade_total && textoFaltante(values)}
+
+                          <div className="text-center mb-2 mt-2">
+                            <Botao
+                              texto="+ Adicionar Etapa"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className=""
+                              onClick={() => adicionaEtapa()}
+                              disabled={submitting}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div className="card mt-3">
+                      <div className={`card-header card-tipo`} id={`heading_2`}>
+                        <div className="row card-header-content">
+                          <span className="nome-alimento">
+                            Dados do Recebimento
+                          </span>
+                          <div className="col-1 align-self-center">
+                            <button
+                              onClick={() => toggleCollapse(2)}
+                              className="btn btn-link btn-block text-left px-0"
+                              type="button"
+                              data-toggle="collapse"
+                              data-target={`#collapse_2`}
+                              aria-expanded="true"
+                              aria-controls={`collapse_2`}
+                            >
+                              <span className="span-icone-toogle">
+                                <i
+                                  className={
+                                    collapse[2]
+                                      ? "fas fa-chevron-up"
+                                      : "fas fa-chevron-down"
+                                  }
+                                />
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
 
-                    <div
-                      id={`collapse_2`}
-                      className="collapse"
-                      aria-labelledby="headingOne"
-                      data-parent="#accordionCronograma"
-                    >
-                      <div className="card-body">
-                        {recebimentos.map((recebimento, index) => (
-                          <>
-                            {index !== 0 && (
-                              <>
-                                <hr />
-                                <div className="row">
-                                  <div className="w-100">
-                                    <Botao
-                                      texto=""
-                                      type={BUTTON_TYPE.BUTTON}
-                                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                                      icon="fas fa-trash"
-                                      className="float-right ml-3"
-                                      onClick={() => deletaRecebimento(index)}
-                                      disabled={submitting}
-                                    />
+                      <div
+                        id={`collapse_2`}
+                        className="collapse"
+                        aria-labelledby="headingOne"
+                        data-parent="#accordionCronograma"
+                      >
+                        <div className="card-body">
+                          {recebimentos.map((recebimento, index) => (
+                            <>
+                              {index !== 0 && (
+                                <>
+                                  <hr />
+                                  <div className="row">
+                                    <div className="w-100">
+                                      <Botao
+                                        texto=""
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                                        icon="fas fa-trash"
+                                        className="float-right ml-3"
+                                        onClick={() => deletaRecebimento(index)}
+                                        disabled={submitting}
+                                      />
+                                    </div>
                                   </div>
+                                </>
+                              )}
+
+                              <div className="row">
+                                <div className="col-4">
+                                  <Field
+                                    component={SelectSelecione}
+                                    naoDesabilitarPrimeiraOpcao
+                                    options={getOptionsDataProgramada(
+                                      values
+                                    ).filter(
+                                      op =>
+                                        !datasProgramadas.find(
+                                          dp =>
+                                            dp.nome === op.nome &&
+                                            dp.index !== index
+                                        )
+                                    )}
+                                    label="Data Programada"
+                                    name={`data_recebimento_${index}`}
+                                    placeholder={"Selecione a Data"}
+                                  />
+                                  <OnChange name={`data_recebimento_${index}`}>
+                                    {async value => {
+                                      const index_ = datasProgramadas.findIndex(
+                                        dp => dp.index === index
+                                      );
+                                      if (index_ !== -1) {
+                                        datasProgramadas.splice(index_, 1);
+                                      }
+                                      datasProgramadas.push({
+                                        nome: value,
+                                        index
+                                      });
+                                      setDatasProgramadas(datasProgramadas);
+                                      form.change("reload", !values.reload);
+                                    }}
+                                  </OnChange>
                                 </div>
-                              </>
-                            )}
-
-                            <div className="row">
-                              <div className="col-4">
-                                <Field
-                                  component={SelectSelecione}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={getOptionsDataProgramada(values)}
-                                  label="Data Programada"
-                                  name={`data_recebimento_${index}`}
-                                  placeholder={"Selecione a Data"}
-                                />
+                                <div className="col-4">
+                                  <Field
+                                    component={SelectSelecione}
+                                    naoDesabilitarPrimeiraOpcao
+                                    options={[
+                                      {
+                                        uuid: "PALETIZADA",
+                                        nome: "Paletizada"
+                                      },
+                                      {
+                                        uuid: "ESTIVADA_BATIDA",
+                                        nome: "Estivada/Batida"
+                                      }
+                                    ]}
+                                    label="Tipo de Carga"
+                                    name={`tipo_recebimento_${index}`}
+                                    placeholder={"Selecione a Carga"}
+                                  />
+                                </div>
                               </div>
-                              <div className="col-4">
-                                <Field
-                                  component={SelectSelecione}
-                                  naoDesabilitarPrimeiraOpcao
-                                  options={[
-                                    {
-                                      uuid: "PALETIZADA",
-                                      nome: "Paletizada"
-                                    },
-                                    {
-                                      uuid: "ESTIVADA_BATIDA",
-                                      nome: "Estivada/Batida"
-                                    }
-                                  ]}
-                                  label="Tipo de Carga"
-                                  name={`tipo_recebimento_${index}`}
-                                  placeholder={"Selecione a Carga"}
-                                />
-                              </div>
-                            </div>
-                          </>
-                        ))}
+                            </>
+                          ))}
 
-                        <div className="text-center mb-2 mt-2">
-                          <Botao
-                            texto="+ Adicionar Recebimento"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            className=""
-                            onClick={() => adicionaRecebimento()}
-                            disabled={submitting}
-                          />
+                          <div className="text-center mb-2 mt-2">
+                            <Botao
+                              texto="+ Adicionar Recebimento"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              className=""
+                              onClick={() => adicionaRecebimento()}
+                              disabled={submitting}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <hr />
 
                 <div className="mt-4 mb-4">
                   <Botao
                     texto="Salvar e Enviar"
-                    type={BUTTON_TYPE.BUTTON}
+                    type={BUTTON_TYPE.SUBMIT}
                     style={BUTTON_STYLE.GREEN}
                     className="float-right ml-3"
-                    onClick={() => setShowModal(true)}
-                    disabled={validaSalvarEnviar(values)}
                   />
                   <Botao
                     texto="Salvar Rascunho"
