@@ -176,6 +176,7 @@ import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
+import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 
 const routesConfig = [
   {
@@ -1452,6 +1453,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
+    component: DetalharCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento()
   },
