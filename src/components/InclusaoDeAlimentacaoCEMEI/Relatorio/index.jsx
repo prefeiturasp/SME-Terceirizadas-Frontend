@@ -180,19 +180,19 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                           {EXIBIR_BOTAO_APROVAR &&
                             (textoBotaoAprova !== "Ciente" &&
                               (visao === CODAE &&
-                                solicitacao.logs.filter(
-                                  log =>
-                                    log.status_evento_explicacao ===
-                                      "Terceirizada respondeu questionamento" &&
-                                    log.resposta_sim_nao
-                                ).length > 0 && (
-                                  <Botao
-                                    texto={textoBotaoAprova}
-                                    type={BUTTON_TYPE.SUBMIT}
-                                    style={BUTTON_STYLE.GREEN}
-                                    className="ml-3"
-                                  />
-                                )))}
+                              solicitacao.logs.filter(
+                                log =>
+                                  log.status_evento_explicacao ===
+                                    "Terceirizada respondeu questionamento" &&
+                                  !log.resposta_sim_nao
+                              ).length > 0 ? null : (
+                                <Botao
+                                  texto={textoBotaoAprova}
+                                  type={BUTTON_TYPE.SUBMIT}
+                                  style={BUTTON_STYLE.GREEN}
+                                  className="ml-3"
+                                />
+                              )))}
                           {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
                             <div className="form-group float-right mt-4">
                               {solicitacao.terceirizada_conferiu_gestao ? (
