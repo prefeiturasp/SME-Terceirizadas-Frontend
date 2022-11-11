@@ -16,6 +16,7 @@ import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/Rel
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacao from "../pages/InclusaoDeAlimentacao/RelatorioPage";
 import * as RelatoriosInclusaoDeAlimentacaoCEMEI from "pages/InclusaoDeAlimentacaoCEMEIRelatorios";
+import * as RelatoriosAlteracaoDeCardapioCEMEI from "../pages/AlteracaoDeCardapioCEMEIRelatorios";
 import * as RelatoriosSolicitacaoKitLanche from "../pages/SolicitacaoDeKitLanche/RelatorioPage";
 import * as RelatorioSolicitacaoKitLancheCEMEI from "../pages/SolicitacaoDeKitLancheCEMEI/RelatorioPage";
 import * as RelatoriosSolicitacaoUnificada from "../pages/SolicitacaoUnificada/RelatoriosPage";
@@ -106,6 +107,19 @@ export const relatoriosAlteracaoDeCardapio = () => {
       return RelatoriosAlteracaoDeCardapio.RelatorioTerceirizada;
     default:
       return RelatoriosAlteracaoDeCardapio.RelatorioEscola;
+  }
+};
+
+export const relatoriosAlteracaoDeCardapioCEMEI = () => {
+  switch (localStorage.getItem("tipo_perfil")) {
+    // case TIPO_PERFIL.DIRETORIA_REGIONAL:
+    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioDRE;
+    // case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioCODAE;
+    // case TIPO_PERFIL.TERCEIRIZADA:
+    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioTerceirizada;
+    default:
+      return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioEscola;
   }
 };
 
