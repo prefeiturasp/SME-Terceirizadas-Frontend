@@ -59,7 +59,7 @@ export default () => {
               <hr />
 
               <p className="head-green">
-                Dados do Produto e datas das entregas
+                Dados do produto e datas das entregas
               </p>
               <br />
               <div className="row">
@@ -130,7 +130,7 @@ export default () => {
                   </tbody>
                 </table>
               </div>
-              <hr />
+              <hr className="hr-detalhar" />
               <p className="head-green mt-3">Dados do Recebimento</p>
               <br />
               {cronograma.programacoes_de_recebimento.length > 0 &&
