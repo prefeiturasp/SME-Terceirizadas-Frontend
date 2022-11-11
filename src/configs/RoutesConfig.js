@@ -84,6 +84,7 @@ import {
   permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
+  relatoriosAlteracaoDeCardapioCEMEI,
   relatoriosDietaEspecial,
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
@@ -678,6 +679,14 @@ const routesConfig = [
   {
     path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosAlteracaoDeCardapio(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO_CEMEI}/${
+      constants.RELATORIO
+    }`,
+    component: relatoriosAlteracaoDeCardapioCEMEI(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
