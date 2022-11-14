@@ -98,6 +98,10 @@ export const TabelaFaixasCEI = ({
                                 component={InputText}
                                 type="number"
                                 step="1"
+                                min="0"
+                                max={parseInt(
+                                  qtdMatriculados ? qtdMatriculados.count : 0
+                                )}
                                 name={`inclusoes[${periodoIndice}][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
                                 validate={composeValidators(
                                   naoPodeSerZero,
