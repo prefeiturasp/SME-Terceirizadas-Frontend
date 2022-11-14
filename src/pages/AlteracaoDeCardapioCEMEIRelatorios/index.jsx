@@ -21,14 +21,28 @@ export const RelatorioBase = ({ ...props }) => {
     getMotivosDREnaoValidaData();
   }, []);
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const uuid = urlParams.get("uuid");
+
+  const anteriores = [
+    {
+      href: `#`,
+      titulo: "Gestão de Alimentação"
+    },
+    {
+      href: `/painel-gestao-alimentacao`,
+      titulo: "Painel de Solicitações"
+    }
+  ];
+
   const atual = {
-    href: "#",
+    href: `/alteracao-do-tipo-de-alimentacao-cemei/relatorio?uuid=${uuid}&ehInclusaoContinua=false&tipoSolicitacao=solicitacao-cemei&card=undefined`,
     titulo: "Relatório"
   };
 
   return (
     <Page>
-      <Breadcrumb home={HOME} atual={atual} />
+      <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
   );
