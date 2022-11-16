@@ -5,7 +5,7 @@ import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { Relatorio } from "components/AlteracaoDeCardapioCEMEI/Relatorio";
 import Page from "components/Shareable/Page/Page";
-import { ESCOLA } from "configs/constants";
+import { ESCOLA, CODAE, TERCEIRIZADA, DRE } from "configs/constants";
 import { HOME } from "constants/config";
 
 export const RelatorioBase = ({ ...props }) => {
@@ -52,6 +52,36 @@ export const RelatorioBase = ({ ...props }) => {
 export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
+    endpointNaoAprovaSolicitacao={
+      escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+    }
+  />
+);
+
+// CODAE
+export const RelatorioCODAE = () => (
+  <RelatorioBase
+    visao={CODAE}
+    endpointNaoAprovaSolicitacao={
+      escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+    }
+  />
+);
+
+// TERCEIRIZADA
+export const RelatorioTerceirizada = () => (
+  <RelatorioBase
+    visao={TERCEIRIZADA}
+    endpointNaoAprovaSolicitacao={
+      escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+    }
+  />
+);
+
+// DRE
+export const RelatorioDRE = () => (
+  <RelatorioBase
+    visao={DRE}
     endpointNaoAprovaSolicitacao={
       escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
     }
