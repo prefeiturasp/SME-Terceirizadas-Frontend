@@ -112,12 +112,12 @@ export const relatoriosAlteracaoDeCardapio = () => {
 
 export const relatoriosAlteracaoDeCardapioCEMEI = () => {
   switch (localStorage.getItem("tipo_perfil")) {
-    // case TIPO_PERFIL.DIRETORIA_REGIONAL:
-    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioDRE;
-    // case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioCODAE;
-    // case TIPO_PERFIL.TERCEIRIZADA:
-    //   return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioTerceirizada;
+    case TIPO_PERFIL.DIRETORIA_REGIONAL:
+      return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioDRE;
+    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
+      return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioCODAE;
+    case TIPO_PERFIL.TERCEIRIZADA:
+      return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioTerceirizada;
     default:
       return RelatoriosAlteracaoDeCardapioCEMEI.RelatorioEscola;
   }
