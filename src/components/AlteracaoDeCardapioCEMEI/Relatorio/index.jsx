@@ -27,8 +27,10 @@ export const Relatorio = ({ ...props }) => {
   const {
     endpointAprovaSolicitacao,
     endpointNaoAprovaSolicitacao,
+    endpointQuestionamento,
     motivosDREnaoValida,
     ModalNaoAprova,
+    ModalQuestionamento,
     textoBotaoAprova,
     textoBotaoNaoAprova,
     tipoSolicitacao,
@@ -42,6 +44,7 @@ export const Relatorio = ({ ...props }) => {
   const [dadosTabela, setDadosTabela] = useState([]);
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
+  const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
   const [uuid, setUuid] = useState(null);
 
   const [
@@ -90,6 +93,18 @@ export const Relatorio = ({ ...props }) => {
           statusEnum.CODAE_AUTORIZADO
         ].includes(solicitacao.status)) &&
       textoBotaoAprova);
+
+  const EXIBIR_BOTAO_QUESTIONAMENTO =
+    [
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.TERCEIRIZADA
+    ].includes(tipoPerfil) &&
+    solicitacao &&
+    (solicitacao.prioridade !== "REGULAR" ||
+      (visao === CODAE && solicitacao.prioridade !== "REGULAR")) &&
+    [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
+      solicitacao.status
+    );
 
   const onSubmit = async values => {
     endpointAprovaSolicitacao(uuid, values, tipoSolicitacao).then(
@@ -167,6 +182,23 @@ export const Relatorio = ({ ...props }) => {
                               }}
                             />
                           )}
+                          {EXIBIR_BOTAO_QUESTIONAMENTO && (
+                            <Botao
+                              texto={
+                                tipoPerfil ===
+                                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                  ? "Questionar"
+                                  : "Sim"
+                              }
+                              type={BUTTON_TYPE.BUTTON}
+                              onClick={() => {
+                                setRespostaSimNao("Sim");
+                                setShowQuestionamentoModal(true);
+                              }}
+                              style={BUTTON_STYLE.GREEN}
+                              className="ml-3"
+                            />
+                          )}
                           {EXIBIR_BOTAO_APROVAR &&
                             (textoBotaoAprova !== "Ciente" &&
                               (visao === CODAE &&
@@ -194,6 +226,19 @@ export const Relatorio = ({ ...props }) => {
                               resposta_sim_nao={respostaSimNao}
                               loadSolicitacao={getSolicitacao}
                               tipoSolicitacao={tipoSolicitacao}
+                            />
+                          )}
+                          {ModalQuestionamento && (
+                            <ModalQuestionamento
+                              closeModal={() =>
+                                setShowQuestionamentoModal(false)
+                              }
+                              showModal={showQuestionamentoModal}
+                              loadSolicitacao={getSolicitacao}
+                              resposta_sim_nao={respostaSimNao}
+                              endpoint={endpointQuestionamento}
+                              tipoSolicitacao={tipoSolicitacao}
+                              solicitacao={solicitacao}
                             />
                           )}
                         </div>
