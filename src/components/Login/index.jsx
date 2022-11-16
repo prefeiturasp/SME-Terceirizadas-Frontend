@@ -589,7 +589,7 @@ export class Login extends Component {
     return (
       <div className="form primeiro-acesso">
         <Form
-          onSubmit={this.handleSubmitPrimeiroAcesso}
+          onSubmit={this.handleAtualizarSenhaPrimeiroAcesso}
           initialValues={{}}
           validate={() => {}}
           render={({ form, handleSubmit, values }) => {
