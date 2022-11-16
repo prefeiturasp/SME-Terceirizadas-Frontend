@@ -51,6 +51,7 @@ export const RESUMO_POR = {
 export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
 export const API_ALTERACOES_CARDAPIO = `${API_URL}/alteracoes-cardapio`;
 export const API_ALTERACOES_CARDAPIO_CEI = `${API_URL}/alteracoes-cardapio-cei`;
+export const API_ALTERACOES_CARDAPIO_CEMEI = `${API_URL}/alteracoes-cardapio-cemei`;
 
 export const URL_INCLUSAO_NORMAL = `${API_URL}/grupos-inclusao-alimentacao-normal`;
 export const URL_INCLUSAO_CONTINUA = `${API_URL}/inclusoes-alimentacao-continua`;
