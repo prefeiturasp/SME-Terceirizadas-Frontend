@@ -10,12 +10,17 @@ import {
   validaCPF
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
-import { recuperaSenha, setUsuario } from "../../services/perfil.service";
+import {
+  atualizarSenhaLogado,
+  recuperaSenha,
+  setUsuario
+} from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
 import { InputPassword } from "../Shareable/Input/InputPassword";
 import Select from "../Shareable/Select";
+import RequisitosSenha from "../Shareable/RequisitosSenha";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
@@ -25,7 +30,8 @@ import {
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
 import { connect } from "react-redux";
-import { composeValidators } from "helpers/utilities";
+import { composeValidators, deepCopy } from "helpers/utilities";
+import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -43,7 +49,8 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA
+      tab: TABS.ESCOLA,
+      senhaAtual: null
     };
     this.emailInput = React.createRef();
   }
@@ -53,7 +60,8 @@ export class Login extends Component {
     RECUPERAR_SENHA: 1,
     CADASTRAR: 2,
     RECUPERACAO_SENHA_OK: 3,
-    RECUPERACAO_SENHA_NAO_OK: 4
+    RECUPERACAO_SENHA_NAO_OK: 4,
+    PRIMEIRO_ACESSO: 5
   };
 
   componentDidMount() {
@@ -81,10 +89,27 @@ export class Login extends Component {
     this.setState({ termos });
   }
 
-  handleSubmit = values => {
+  handleSubmit = async values => {
     const { login, password } = values;
     if (login && password) {
-      authService.login(login, password);
+      const retorno = await authService.login(login, password);
+      if (retorno === "primeiro_acesso") {
+        this.setState({
+          senhaAtual: password,
+          componenteAtivo: this.COMPONENTE.PRIMEIRO_ACESSO
+        });
+      }
+    }
+  };
+
+  handleAtualizarSenhaPrimeiroAcesso = async values => {
+    const { senhaAtual } = this.state;
+    const values_ = deepCopy(values);
+    values_["senha_atual"] = senhaAtual;
+    const response = await atualizarSenhaLogado(values_);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("senha atualizada com sucesso!");
+      this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
     }
   };
 
@@ -560,6 +585,85 @@ export class Login extends Component {
     );
   }
 
+  renderPrimeiroAcesso() {
+    return (
+      <div className="form primeiro-acesso">
+        <Form
+          onSubmit={this.handleSubmitPrimeiroAcesso}
+          initialValues={{}}
+          validate={() => {}}
+          render={({ form, handleSubmit, values }) => {
+            const letra = values.senha
+              ? values.senha.match(/[a-zA-Z]/g)
+              : false;
+            const numero = values.senha ? values.senha.match(/[0-9]/g) : false;
+            const tamanho = values.senha ? values.senha.length >= 8 : false;
+            return (
+              <form onSubmit={handleSubmit}>
+                <p className="mb-0">
+                  Seja bem-vindo(a) ao <strong>SIGPAE</strong>
+                </p>
+                <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
+                <p className="font-weight-bold">
+                  Atualize sua senha de acesso:
+                </p>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Nova Senha"
+                      name="senha"
+                      placeholder={"Digite uma nova senha de acesso"}
+                      onChange={event =>
+                        this.onSenhaChanged(event.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Confirmação da Nova Senha"
+                      name="confirmar_senha"
+                      placeholder={"Confirme a senha digitada"}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <Botao
+                      className="w-100 my-2"
+                      style={BUTTON_STYLE.GREEN}
+                      texto="Confirmar"
+                      disabled={
+                        !letra ||
+                        !numero ||
+                        !tamanho ||
+                        values.senha !== values.confirmar_senha
+                      }
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => {
+                        this.handleAtualizarSenhaPrimeiroAcesso(values);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <RequisitosSenha
+                  letra={letra}
+                  numero={numero}
+                  tamanho={tamanho}
+                />
+              </form>
+            );
+          }}
+        />
+      </div>
+    );
+  }
+
   renderSwitch(param) {
     switch (param) {
       case this.COMPONENTE.LOGIN:
@@ -572,6 +676,8 @@ export class Login extends Component {
         return this.renderRecuperacaoOK();
       case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
         return this.renderRecuperacaoNOK();
+      case this.COMPONENTE.PRIMEIRO_ACESSO:
+        return this.renderPrimeiroAcesso();
       default:
         return this.renderLogin();
     }
@@ -585,9 +691,16 @@ export class Login extends Component {
         <div className="login-bg" />
         <div className="right-half">
           <div className="container my-auto">
-            <div className="logo-sigpae">
-              <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
-            </div>
+            {componenteAtivo !== this.COMPONENTE.PRIMEIRO_ACESSO ? (
+              <div className="logo-sigpae">
+                <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
+              </div>
+            ) : (
+              <div className="logo-sigpae-primeiro-acesso">
+                <img src="/assets/image/logo-sigpae.png" alt="" />
+                <div className="titulo">Primeiro Acesso</div>
+              </div>
+            )}
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
               <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />

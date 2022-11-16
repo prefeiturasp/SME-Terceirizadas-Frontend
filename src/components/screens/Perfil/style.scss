@@ -47,27 +47,5 @@
 .modal-50w {
   .custom-margin {
     margin-top: 8em;
-    .password-requirements {
-      margin-top: auto;
-      font-size: 12px;
-      .title {
-        font-size: 13px;
-        color: $grayPlaceholder;
-        font-weight: bold;
-      }
-      .requirements {
-        .accepted {
-          padding: 5px 0;
-          color: $green;
-        }
-        .denied {
-          padding: 3px 0;
-          color: $red;
-        }
-        i {
-          padding-left: 10px;
-        }
-      }
-    }
   }
 }
