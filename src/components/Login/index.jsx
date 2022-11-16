@@ -103,6 +103,10 @@ export class Login extends Component {
   };
 
   handleAtualizarSenhaPrimeiroAcesso = async values => {
+    if (values.senha !== values.confirmar_senha) {
+      toastError("As senhas não conferem!");
+      return;
+    }
     const { senhaAtual } = this.state;
     const values_ = deepCopy(values);
     values_["senha_atual"] = senhaAtual;
@@ -637,12 +641,7 @@ export class Login extends Component {
                       className="w-100 my-2"
                       style={BUTTON_STYLE.GREEN}
                       texto="Confirmar"
-                      disabled={
-                        !letra ||
-                        !numero ||
-                        !tamanho ||
-                        values.senha !== values.confirmar_senha
-                      }
+                      disabled={!letra || !numero || !tamanho}
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         this.handleAtualizarSenhaPrimeiroAcesso(values);
