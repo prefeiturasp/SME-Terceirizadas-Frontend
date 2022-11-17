@@ -46,7 +46,11 @@ export const ordenarPedidosDataMaisRecente = pedidos => {
       : obj.solicitacao_kit_lanche
       ? obj.solicitacao_kit_lanche.data
       : obj.data;
-    const arrayData = (obj.data_inicial || dataMaisProxima).split("/");
+    const arrayData = (
+      obj.data_inicial ||
+      obj.alterar_dia ||
+      dataMaisProxima
+    ).split("/");
     return {
       ...obj,
       date: new Date(arrayData[2], arrayData[1] - 1, arrayData[0])

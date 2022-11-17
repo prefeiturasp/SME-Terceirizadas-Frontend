@@ -147,7 +147,7 @@ class AlteracaoCardapio extends Component {
     this.refresh();
   }
 
-  removerOpcoesSubstitutos(value, periodo, indice) {
+  removerOpcoesSubstitutos(value, periodo) {
     let periodos = this.state.periodos;
     let motivo = this.state.motivo;
     let opcoesSubstitutos = [];
@@ -178,7 +178,9 @@ class AlteracaoCardapio extends Component {
         uuid: substituto.uuid
       };
     });
-    periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+    periodos.find(p => p.nome === periodo.nome).substituicoes = agregarDefault(
+      opcoesSubstitutos
+    );
     this.setState({
       periodos: periodos
     });
@@ -197,16 +199,14 @@ class AlteracaoCardapio extends Component {
   retornaTurnoAlteracao = substituicao => {
     let substituicoesEdit = this.state.substituicoesEdit;
     let periodos = this.state.periodos;
-    substituicoesEdit.forEach((item, indice) => {
+    substituicoesEdit.forEach(item => {
       if (item.turno === substituicao.periodo_escolar.nome) {
         item.substituicoes = substituicao.tipos_alimentacao_de.substituicoes;
       }
-      if (
-        periodos[indice] &&
-        periodos[indice].nome === substituicao.periodo_escolar.nome
-      ) {
-        periodos[indice].checado = true;
-      }
+
+      periodos.find(
+        p => p.nome === substituicao.periodo_escolar.nome
+      ).checado = true;
     });
     this.setState({ substituicoesEdit, periodos });
   };
@@ -443,15 +443,23 @@ class AlteracaoCardapio extends Component {
 
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
-    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
-    periodos[indice].checked = !periodos[indice].checked;
-    this.props.change(input, periodos[indice].checked);
+    this.limpaCamposAlteracaoDoPeriodo(
+      periodos.find(p => p.nome === periodoNome, periodoNome)
+    );
+    periodos.find(p => p.nome === periodoNome).checked = !periodos.find(
+      p => p.nome === periodoNome
+    ).checked;
+    this.props.change(
+      input,
+      periodos.find(p => p.nome === periodoNome).checked
+    );
     this.setState({ periodos });
   }
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
     let periodos = this.state.periodos;
-    const tiposAlimentacao = periodos[indice].tipos_alimentacao;
+    const tiposAlimentacao = periodos.find(p => p.nome === "INTEGRAL")
+      .tipos_alimentacao;
     let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
     tiposAlimentacao.forEach(tipoAlimentacao => {
       if (tipoAlimentacao.uuid === alimentacaoUUID) {
