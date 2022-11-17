@@ -147,7 +147,7 @@ class AlteracaoCardapio extends Component {
     this.refresh();
   }
 
-  removerOpcoesSubstitutos(value, periodo, indice) {
+  removerOpcoesSubstitutos(value, periodo) {
     let periodos = this.state.periodos;
     let motivo = this.state.motivo;
     let opcoesSubstitutos = [];
