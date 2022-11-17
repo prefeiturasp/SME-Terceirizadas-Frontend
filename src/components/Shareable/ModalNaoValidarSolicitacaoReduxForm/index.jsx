@@ -34,10 +34,12 @@ export const ModalNaoValidarSolicitacao = ({ ...props }) => {
     }
     const resp = await endpoint(
       uuid,
-      `${
-        motivosDREnaoValida.find(motivo => motivo.uuid === motivoCancelamento)
-          .nome
-      } - ${justificativa}`,
+      {
+        justificativa: `${
+          motivosDREnaoValida.find(motivo => motivo.uuid === motivoCancelamento)
+            .nome
+        } - ${justificativa}`
+      },
       tipoSolicitacao
     );
     if (resp.status === HTTP_STATUS.OK) {
