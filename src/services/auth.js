@@ -28,7 +28,8 @@ const login = async (login, password) => {
       });
 
       if (login.length === 11 && !json.last_login) {
-        return "primeiro_acesso";
+        localStorage.setItem("senhaAtual", password);
+        window.location.href = "/login?tab=PRIMEIRO_ACESSO";
       }
 
       await fetch(`${CONFIG.API_URL}/usuarios/meus-dados/`, {

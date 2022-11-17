@@ -49,8 +49,7 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA,
-      senhaAtual: null
+      tab: TABS.ESCOLA
     };
     this.emailInput = React.createRef();
   }
@@ -72,6 +71,8 @@ export class Login extends Component {
       componenteAtivo:
         tab === TABS.TERCEIRIZADAS
           ? this.COMPONENTE.CADASTRAR
+          : tab === TABS.PRIMEIRO_ACESSO
+          ? this.COMPONENTE.PRIMEIRO_ACESSO
           : this.COMPONENTE.LOGIN
     });
   }
@@ -92,28 +93,25 @@ export class Login extends Component {
   handleSubmit = async values => {
     const { login, password } = values;
     if (login && password) {
-      const retorno = await authService.login(login, password);
-      if (retorno === "primeiro_acesso") {
-        this.setState({
-          senhaAtual: password,
-          componenteAtivo: this.COMPONENTE.PRIMEIRO_ACESSO
-        });
-      }
+      await authService.login(login, password);
     }
   };
 
   handleAtualizarSenhaPrimeiroAcesso = async values => {
     if (values.senha !== values.confirmar_senha) {
-      toastError("As senhas não conferem!");
       return;
     }
-    const { senhaAtual } = this.state;
     const values_ = deepCopy(values);
-    values_["senha_atual"] = senhaAtual;
+    values_["senha_atual"] = localStorage.getItem("senhaAtual");
     const response = await atualizarSenhaLogado(values_);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("senha atualizada com sucesso!");
+      localStorage.removeItem("senhaAtual");
       this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
+    } else {
+      toastError(
+        "Erro ao tentar atualizar a senha. Tente novamente mais tarde."
+      );
     }
   };
 
@@ -647,6 +645,15 @@ export class Login extends Component {
                         this.handleAtualizarSenhaPrimeiroAcesso(values);
                       }}
                     />
+                    {values.senha &&
+                      values.confirmar_senha &&
+                      values.senha !== values.confirmar_senha && (
+                        <div className="error-or-warning-message mb-3">
+                          <div className="error-message">
+                            As senhas não conferem!
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
 
