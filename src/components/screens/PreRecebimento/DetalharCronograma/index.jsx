@@ -19,6 +19,14 @@ export default () => {
     }
   };
 
+  const converte_tipo_carga = tipo => {
+    if (tipo === "PALETIZADA") {
+      return "Paletizada";
+    } else if (tipo === "ESTIVADA_BATIDA") {
+      return "Estivada/Batida";
+    }
+  };
+
   useEffect(() => {
     getDetalhes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,7 +79,7 @@ export default () => {
                   </p>
                 </div>
                 <div className="col-4">
-                  <p>Quantiade Total Programada:</p>
+                  <p>Quantidade Total Programada:</p>
                   <p>
                     <b>{cronograma.qtd_total_programada}</b>
                   </p>
@@ -149,7 +157,9 @@ export default () => {
                           <div className="col-3">
                             <p>Tipo de Carga:</p>
                             <p>
-                              <b>{programacao.tipo_carga}</b>
+                              <b>
+                                {converte_tipo_carga(programacao.tipo_carga)}
+                              </b>
                             </p>
                           </div>
                         </div>
