@@ -6,16 +6,14 @@ import {
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { toastInfo } from "components/Shareable/Toast/dialogs";
+import { corDaMensagem, prazoDoPedidoMensagem } from "helpers/utilities";
 import React from "react";
 
 export const CorpoRelatorio = ({ ...props }) => {
-  const {
-    dadosTabela,
-    matriculados,
-    solicitacao,
-    justificativaCancelamentoEscola
-  } = props;
+  const { dadosTabela, matriculados, solicitacao } = props;
 
   const totalAlunosPorPeriodoCEI = (faixas, keyName) => {
     let totalAlunos = 0;
@@ -26,24 +24,20 @@ export const CorpoRelatorio = ({ ...props }) => {
 
   return (
     <>
-      <div className="row">
-        <div className="col-11">
-          <p>
-            {solicitacao.foi_solicitado_fora_do_prazo
-              ? "Solicitação fora do prazo limite"
-              : "Solicitação no prazo limite"}
-          </p>
-        </div>
-        <div className="col-1">
-          <Botao
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
-            className="float-right"
-            onClick={() => toastInfo("Ainda não implementado")}
-          />
-        </div>
-      </div>
+      <p
+        className={`col-12 title-message ${corDaMensagem(
+          prazoDoPedidoMensagem(solicitacao.prioridade)
+        )}`}
+      >
+        {prazoDoPedidoMensagem(solicitacao.prioridade)}
+        <Botao
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          icon={BUTTON_ICON.PRINT}
+          className="float-right"
+          onClick={() => toastInfo("Ainda não implementado")}
+        />
+      </p>
       <div className="row mt-3">
         <div className="col-3">
           <div className="id-externo-style">
@@ -319,26 +313,8 @@ export const CorpoRelatorio = ({ ...props }) => {
         </div>
       </div>
       <hr />
-      {justificativaCancelamentoEscola &&
-        justificativaCancelamentoEscola.map((log, idx) => {
-          return (
-            <div className="row mt-3" key={idx}>
-              <div className="col-12">
-                <div className="container-fluid">
-                  <p className="label-escola-cancela">
-                    {log.criado_em} - Escola cancelou
-                  </p>
-                  <p
-                    className="observacao-alteracao-cardapio-cemei"
-                    dangerouslySetInnerHTML={{
-                      __html: log.justificativa
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      <RelatorioHistoricoJustificativaEscola solicitacao={solicitacao} />
+      <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
     </>
   );
 };

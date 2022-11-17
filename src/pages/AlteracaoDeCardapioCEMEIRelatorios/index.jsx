@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import {
+  codaeAutorizarSolicitacaoDeAlteracaoDeCardapio,
+  codaeNegarSolicitacaoDeAlteracaoDeCardapio,
+  codaeQuestionarSolicitacaoDeAlteracaoDeCardapio,
   dreReprovarSolicitacaoDeAlteracaoDeCardapio,
   dreValidarSolicitacaoDeAlteracaoDeCardapio,
-  escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+  escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI,
+  terceirizadaRespondeQuestionamentoAlteracaoCardapio,
+  TerceirizadaTomaCienciaAlteracaoCardapio
 } from "services/alteracaoDeCardapio";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "components/Shareable/Breadcrumb";
@@ -14,6 +19,9 @@ import { HOME } from "constants/config";
 import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { ModalEscolaCancela } from "components/AlteracaoDeCardapioCEMEI/Relatorio/componentes/ModalEscolaCancela";
+import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -48,7 +56,7 @@ export const RelatorioBase = ({ ...props }) => {
   };
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
@@ -94,14 +102,45 @@ export const RelatorioDRE = () => (
 );
 
 // CODAE
-export const RelatorioCODAE = () => <RelatorioBase visao={CODAE} />;
+export const RelatorioCODAE = () => (
+  <RelatorioBase
+    visao={CODAE}
+    ModalNaoAprova={ModalNegarFinalForm}
+    ModalQuestionamento={ModalCODAEQuestionaFinalForm}
+    toastAprovaMensagem={
+      "Alteração do Tipo de Alimentação autorizada com sucesso!"
+    }
+    toastAprovaMensagemErro={
+      "Houve um erro ao autorizar a Alteração do Tipo de Alimentação"
+    }
+    endpointNaoAprovaSolicitacao={codaeNegarSolicitacaoDeAlteracaoDeCardapio}
+    endpointAprovaSolicitacao={codaeAutorizarSolicitacaoDeAlteracaoDeCardapio}
+    endpointQuestionamento={codaeQuestionarSolicitacaoDeAlteracaoDeCardapio}
+    textoBotaoNaoAprova="Negar"
+    textoBotaoAprova="Autorizar"
+    tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
+  />
+);
 
 // TERCEIRIZADA
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     visao={TERCEIRIZADA}
-    endpointNaoAprovaSolicitacao={
-      escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+    ModalNaoAprova={ModalTercRespondeQuestFinalForm}
+    ModalQuestionamento={ModalTercRespondeQuestFinalForm}
+    toastAprovaMensagem={
+      "Ciência de Alteração do Tipo de Alimentação enviado com sucesso!"
     }
+    toastAprovaMensagemErro={
+      "Houve um erro ao tomar ciência da Alteração do Tipo de Alimentação"
+    }
+    endpointAprovaSolicitacao={TerceirizadaTomaCienciaAlteracaoCardapio}
+    endpointNaoAprovaSolicitacao={
+      terceirizadaRespondeQuestionamentoAlteracaoCardapio
+    }
+    endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}
+    textoBotaoNaoAprova="Não"
+    textoBotaoAprova="Ciente"
+    tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
   />
 );
