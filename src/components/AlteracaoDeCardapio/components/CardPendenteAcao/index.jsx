@@ -3,7 +3,10 @@ import { Collapse } from "react-collapse";
 import { Link } from "react-router-dom";
 import { calcularNumeroDeEscolasUnicas } from "./helper";
 import { talvezPluralizar, gerarLinkRelatorio } from "helpers/utilities";
-import { ALTERACAO_TIPO_ALIMENTACAO } from "../../../../configs/constants";
+import {
+  ALTERACAO_TIPO_ALIMENTACAO,
+  ALTERACAO_TIPO_ALIMENTACAO_CEMEI
+} from "../../../../configs/constants";
 import "../../../Shareable/style.scss";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 
@@ -89,11 +92,11 @@ export class CardPendenteAcao extends Component {
             </div>
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr>
-                  <th>Código do Pedido</th>
-                  <th>Código EOL</th>
-                  <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel || "Data"}</th>
+                <tr className="row">
+                  <th className="col-3">Código do Pedido</th>
+                  <th className="col-3">Código EOL</th>
+                  <th className="col-3">Nome da Escola</th>
+                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -104,16 +107,19 @@ export class CardPendenteAcao extends Component {
                     <Link
                       key={key}
                       to={gerarLinkRelatorio(
-                        ALTERACAO_TIPO_ALIMENTACAO,
+                        pedido.alunos_cei_e_ou_emei
+                          ? ALTERACAO_TIPO_ALIMENTACAO_CEMEI
+                          : ALTERACAO_TIPO_ALIMENTACAO,
                         pedido
                       )}
                     >
-                      <tr>
-                        <td>{pedido.id_externo}</td>
-                        <td>{pedido.escola.codigo_eol}</td>
-                        <td>{pedido.escola.nome}</td>
-                        <td>
+                      <tr className="row">
+                        <td className="col-3">{pedido.id_externo}</td>
+                        <td className="col-3">{pedido.escola.codigo_eol}</td>
+                        <td className="col-3">{pedido.escola.nome}</td>
+                        <td className="col-3">
                           {pedido.data_inicial ||
+                            pedido.alterar_dia ||
                             dataMaisProxima ||
                             pedido.data}
                         </td>
