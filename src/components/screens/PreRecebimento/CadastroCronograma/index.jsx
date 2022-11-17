@@ -90,68 +90,6 @@ export default () => {
     return etapasOptions;
   };
 
-  const buscaContratoEdicao = async values => {
-    if (values.contrato) {
-      let contrato_find = contratos.find(
-        c => c.termo_contrato === values.contrato
-      );
-      if (!contrato_find) {
-        toastError("Termo de Contrato Inválido");
-
-        values.termo_contrato = undefined;
-        values.contrato_uuid = undefined;
-        values.empresa = undefined;
-        values.empresa_uuid = undefined;
-        values.numero_processo = undefined;
-
-        document.getElementById("autocomplete-contrato").focus();
-        document.activeElement.blur();
-
-        return;
-      }
-      let contrato_uuid = contrato_find.uuid;
-      try {
-        let response = await getContratoSAFI(contrato_uuid);
-
-        let contrato = response.data;
-        setContratoAtual(contrato);
-        values.contrato_uuid = contrato_uuid;
-        values.empresa = contrato.empresa_contratada
-          ? contrato.empresa_contratada.nome
-          : undefined;
-        values.empresa_uuid = contrato.empresa_contratada
-          ? contrato.empresa_contratada.uuid
-          : undefined;
-        values.numero_processo = contrato.processo;
-
-        if (contrato.ata) {
-          setProdutosOptions(
-            contrato.ata.produtos.map(produto => ({
-              ...produto,
-              nome: produto.nome_produto
-            }))
-          );
-        }
-
-        if (contrato.dotacoes) {
-          let treeData = contrato.dotacoes.map(dotacao => ({
-            title: dotacao.numero_dotacao,
-            value: dotacao.uuid,
-            selectable: false,
-            children: dotacao.empenhos.map(empenho => ({
-              title: empenho.numero,
-              value: empenho.uuid
-            }))
-          }));
-
-          setEmpenhoOptions(treeData);
-        }
-      } catch (error) {
-        toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
-      }
-    }
-  };
-
   const buscaContrato = async values => {
     const termo_contrato = values.termo_contrato
       ? values.termo_contrato
@@ -213,22 +151,24 @@ export default () => {
 
           setEmpenhoOptions(treeData);
         }
-        etapas.forEach((_, i) => {
-          onChangeEmpenho(undefined, i, values);
-          values[`etapa_${i}`] = undefined;
-          values[`parte_${i}`] = undefined;
-          values[`data_programada_${i}`] = undefined;
-          values[`quantidade_${i}`] = undefined;
-          values[`total_embalagens_${i}`] = undefined;
-        });
-        values.produto = undefined;
-        values.quantidade_total = undefined;
-        values.unidade_medida = undefined;
-        values.armazem = undefined;
-        values.tipo_embalagem = undefined;
-        setEtapas([{}]);
-        document.getElementById("autocomplete-contrato").focus();
-        document.activeElement.blur();
+        if (!edicao) {
+          etapas.forEach((_, i) => {
+            onChangeEmpenho(undefined, i, values);
+            values[`etapa_${i}`] = undefined;
+            values[`parte_${i}`] = undefined;
+            values[`data_programada_${i}`] = undefined;
+            values[`quantidade_${i}`] = undefined;
+            values[`total_embalagens_${i}`] = undefined;
+          });
+          values.produto = undefined;
+          values.quantidade_total = undefined;
+          values.unidade_medida = undefined;
+          values.armazem = undefined;
+          values.tipo_embalagem = undefined;
+          setEtapas([{}]);
+          document.getElementById("autocomplete-contrato").focus();
+          document.activeElement.blur();
+        }
       } catch (error) {
         toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
       }
@@ -430,13 +370,12 @@ export default () => {
         setCronograma(responseCronograma.data);
         setEtapas(responseCronograma.data.etapas);
         setRecebimentos(responseCronograma.data.programacoes_de_recebimento);
-        buscaContratoEdicao(responseCronograma.data);
+        buscaContrato(responseCronograma.data);
         setCarregando(false);
       }
     } catch (e) {
       toastError("Ocorreu um erro ao salvar o Cronograma");
     }
-    setValoresIniciais(false);
   };
 
   useEffect(() => {
@@ -492,6 +431,7 @@ export default () => {
   //apenas puxa dados de cronograma se ja tiver baixado a lista de contratos
   if (valoresIniciais && edicao && contratos.length > 0) {
     getDadosCronograma();
+    setValoresIniciais(false);
   }
 
   const onChangeFormSpy = async changes => {
