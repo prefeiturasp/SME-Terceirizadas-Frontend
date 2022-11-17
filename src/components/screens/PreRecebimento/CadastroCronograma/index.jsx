@@ -486,7 +486,7 @@ export default () => {
                           <div className="col-1 align-self-center">
                             <button
                               onClick={() => toggleCollapse(1)}
-                              className="btn btn-link btn-block text-left px-0"
+                              className="btn btn-link btn-block text-right px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target={`#collapse_1`}
@@ -747,7 +747,7 @@ export default () => {
                           <div className="col-1 align-self-center">
                             <button
                               onClick={() => toggleCollapse(2)}
-                              className="btn btn-link btn-block text-left px-0"
+                              className="btn btn-link btn-block text-right px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target={`#collapse_2`}
@@ -813,7 +813,7 @@ export default () => {
                                     )}
                                     label="Data Programada"
                                     name={`data_recebimento_${index}`}
-                                    placeholder={"Selecione a Data"}
+                                    placeholder={"Selecionar a Data"}
                                   />
                                   <OnChange name={`data_recebimento_${index}`}>
                                     {async value => {

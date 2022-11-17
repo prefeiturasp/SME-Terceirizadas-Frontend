@@ -56,7 +56,7 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
                   component={InputText}
                   label="N° do Cronograma"
                   name="numero"
-                  placeholder="Digite o n° do Cronogramao"
+                  placeholder="Digite o n° do Cronograma"
                   className="input-busca-produto"
                 />
               </div>
@@ -126,7 +126,7 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
 
             <div className="mt-4 mb-4" ref={inicioResultado}>
               <Botao
-                texto="Consultar"
+                texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="float-right ml-3"
