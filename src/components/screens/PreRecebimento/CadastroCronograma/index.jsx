@@ -21,6 +21,8 @@ import { getArmazens } from "services/terceirizada.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   cadastraCronograma,
+  editaCronograma,
+  getCronograma,
   getEtapas,
   getRascunhos
 } from "services/cronograma.service";
@@ -35,7 +37,7 @@ import { OnChange } from "react-final-form-listeners";
 import { agregarDefault } from "helpers/utilities";
 
 export default () => {
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [contratoAtual, setContratoAtual] = useState();
   const [contratos, setContratos] = useState([]);
@@ -52,6 +54,10 @@ export default () => {
   const [duplicados, setDuplicados] = useState([]);
   const [restante, setRestante] = useState(undefined);
   const [datasProgramadas, setDatasProgramadas] = useState([]);
+  const [edicao, setEdicao] = useState(false);
+  const [cronograma, setCronograma] = useState({});
+  const [valoresIniciais, setValoresIniciais] = useState(true);
+  const [uuidCronograma, setUuidCronograma] = useState(null);
 
   const getRascunhosAsync = async () => {
     try {
@@ -84,11 +90,78 @@ export default () => {
     return etapasOptions;
   };
 
-  const buscaContrato = async values => {
-    if (values.termo_contrato) {
+  const buscaContratoEdicao = async values => {
+    if (values.contrato) {
       let contrato_find = contratos.find(
-        c => c.termo_contrato === values.termo_contrato
+        c => c.termo_contrato === values.contrato
       );
+      if (!contrato_find) {
+        toastError("Termo de Contrato Inválido");
+
+        values.termo_contrato = undefined;
+        values.contrato_uuid = undefined;
+        values.empresa = undefined;
+        values.empresa_uuid = undefined;
+        values.numero_processo = undefined;
+
+        document.getElementById("autocomplete-contrato").focus();
+        document.activeElement.blur();
+
+        return;
+      }
+      let contrato_uuid = contrato_find.uuid;
+      try {
+        let response = await getContratoSAFI(contrato_uuid);
+
+        let contrato = response.data;
+        setContratoAtual(contrato);
+        values.contrato_uuid = contrato_uuid;
+        values.empresa = contrato.empresa_contratada
+          ? contrato.empresa_contratada.nome
+          : undefined;
+        values.empresa_uuid = contrato.empresa_contratada
+          ? contrato.empresa_contratada.uuid
+          : undefined;
+        values.numero_processo = contrato.processo;
+
+        if (contrato.ata) {
+          setProdutosOptions(
+            contrato.ata.produtos.map(produto => ({
+              ...produto,
+              nome: produto.nome_produto
+            }))
+          );
+        }
+
+        if (contrato.dotacoes) {
+          let treeData = contrato.dotacoes.map(dotacao => ({
+            title: dotacao.numero_dotacao,
+            value: dotacao.uuid,
+            selectable: false,
+            children: dotacao.empenhos.map(empenho => ({
+              title: empenho.numero,
+              value: empenho.uuid
+            }))
+          }));
+
+          setEmpenhoOptions(treeData);
+        }
+      } catch (error) {
+        toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
+      }
+    }
+  };
+
+  const buscaContrato = async values => {
+    const termo_contrato = values.termo_contrato
+      ? values.termo_contrato
+      : values.contrato;
+
+    if (termo_contrato) {
+      let contrato_find = contratos.find(
+        c => c.termo_contrato === termo_contrato
+      );
+
       if (!contrato_find) {
         toastError("Termo de Contrato Inválido");
 
@@ -319,19 +392,28 @@ export default () => {
     setCarregando(true);
     let payload = formataPayload(values, rascunho);
 
-    let response = await cadastraCronograma(payload);
-    if (response.status === 201) {
-      if (rascunho) {
-        toastSuccess("Rascunho salvo com sucesso!");
-        getRascunhosAsync();
-        setCarregando(false);
+    try {
+      let response = edicao
+        ? await editaCronograma(payload, uuidCronograma)
+        : await cadastraCronograma(payload);
+      if (response.status === 201 || response.status === 200) {
+        if (rascunho) {
+          toastSuccess("Rascunho salvo com sucesso!");
+          getRascunhosAsync();
+          setCarregando(false);
+        } else {
+          setCarregando(false);
+          toastSuccess(
+            "Cadastro de Cronograma salvo e enviado para aprovação!"
+          );
+          setShowModal(false);
+          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+        }
       } else {
+        toastError("Ocorreu um erro ao salvar o Cronograma");
         setCarregando(false);
-        toastSuccess("Cadastro de Cronograma salvo e enviado para aprovação!");
-        setShowModal(false);
-        history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
       }
-    } else {
+    } catch (error) {
       toastError("Ocorreu um erro ao salvar o Cronograma");
       setCarregando(false);
     }
@@ -341,7 +423,34 @@ export default () => {
     return !values.contrato_uuid;
   };
 
+  const getDadosCronograma = async () => {
+    try {
+      const responseCronograma = await getCronograma(uuidCronograma);
+      if (responseCronograma.status === HTTP_STATUS.OK) {
+        setCronograma(responseCronograma.data);
+        setEtapas(responseCronograma.data.etapas);
+        setRecebimentos(responseCronograma.data.programacoes_de_recebimento);
+        buscaContratoEdicao(responseCronograma.data);
+        setCarregando(false);
+      }
+    } catch (e) {
+      toastError("Ocorreu um erro ao salvar o Cronograma");
+    }
+    setValoresIniciais(false);
+  };
+
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid && valoresIniciais) {
+      setUuidCronograma(uuid);
+      setCarregando(true);
+      setEdicao(true);
+    } else {
+      setCarregando(false);
+    }
+
     const buscaListaContratos = async () => {
       try {
         const response = await getListaTermosContratoSAFI();
@@ -378,7 +487,12 @@ export default () => {
     buscaArmazens();
     buscaEtapas();
     getRascunhosAsync();
-  }, []);
+  }, [valoresIniciais]);
+
+  //apenas puxa dados de cronograma se ja tiver baixado a lista de contratos
+  if (valoresIniciais && edicao && contratos.length > 0) {
+    getDadosCronograma();
+  }
 
   const onChangeFormSpy = async changes => {
     let restante = changes.values.quantidade_total;
@@ -408,15 +522,26 @@ export default () => {
     });
     setDuplicados(duplicados);
   };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <Rascunhos listaRascunhos={listaRascunhos} />
+      {!edicao && <Rascunhos listaRascunhos={listaRascunhos} />}
       <div className="card mt-3 card-cadastro-cronograma">
         <div className="card-body cadastro-cronograma">
           <Form
             onSubmit={onSubmit}
-            initialValues={{}}
+            initialValues={{
+              termo_contrato: cronograma.contrato,
+              contrato_uuid: cronograma.contrato_uuid,
+              empresa: cronograma.nome_empresa,
+              empresa_uuid: cronograma.empresa_uuid,
+              numero_processo: cronograma.processo_sei,
+              quantidade_total: cronograma.qtd_total_programada,
+              unidade_medida: cronograma.unidade_medida,
+              produto: cronograma.produto_uuid,
+              armazem: cronograma.armazem ? cronograma.armazem.uuid : "",
+              tipo_embalagem: cronograma.tipo_embalagem,
+              empenho_2: "824c722d-768b-4d99-b159-7b4910a8e7fb"
+            }}
             decorators={[calculator]}
             validate={() => {}}
             render={({ form, handleSubmit, submitting, values }) => (
@@ -450,6 +575,15 @@ export default () => {
                       disabled={submitting}
                     />
                   </div>
+                  {edicao && (
+                    <div className="col-6 text-right numero-cronograma">
+                      <p>
+                        <b>Nº do Cronograma: </b>
+
+                        <span className="head-green">{cronograma.numero}</span>
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="row">
@@ -589,7 +723,6 @@ export default () => {
                             Cronograma das Entregas
                           </div>
                           <hr className="linha-verde" />
-
                           {etapas.map((etapa, index) => (
                             <>
                               {index !== 0 && (
@@ -624,6 +757,8 @@ export default () => {
                                     required
                                     validate={required}
                                     allowClear
+                                    value="bunda"
+                                    defaultValue="porra"
                                     onChange={e =>
                                       onChangeEmpenho(e, index, values)
                                     }
@@ -641,6 +776,7 @@ export default () => {
                                     name={`etapa_${index}`}
                                     className="input-busca-produto"
                                     placeholder="Selecione a Etapa"
+                                    defaultValue={etapa.etapa}
                                     required
                                     esconderIcone
                                   />
@@ -673,6 +809,7 @@ export default () => {
                                     ]}
                                     label="Parte"
                                     name={`parte_${index}`}
+                                    defaultValue={etapa.parte}
                                     placeholder={"Selecione a Parte"}
                                     validate={() =>
                                       duplicados.includes(index) &&
@@ -689,6 +826,7 @@ export default () => {
                                     name={`data_programada_${index}`}
                                     placeholder="Selecionar a Data"
                                     required
+                                    defaultValue={etapa.data_programada}
                                     writable={false}
                                     minDate={null}
                                   />
@@ -705,6 +843,7 @@ export default () => {
                                         0}`
                                     }
                                     required
+                                    defaultValue={etapa.quantidade}
                                     type="number"
                                     pattern="[0-9]*"
                                   />
@@ -715,6 +854,7 @@ export default () => {
                                     label="Total de Embalagens"
                                     name={`total_embalagens_${index}`}
                                     placeholder="Digite a Quantidade"
+                                    defaultValue={etapa.total_embalagens}
                                     required
                                     apenasNumeros
                                   />
@@ -813,6 +953,7 @@ export default () => {
                                     )}
                                     label="Data Programada"
                                     name={`data_recebimento_${index}`}
+                                    defaultValue={recebimento.data_programada}
                                     placeholder={"Selecione a Data"}
                                   />
                                   <OnChange name={`data_recebimento_${index}`}>
@@ -849,6 +990,7 @@ export default () => {
                                     label="Tipo de Carga"
                                     name={`tipo_recebimento_${index}`}
                                     placeholder={"Selecione a Carga"}
+                                    defaultValue={recebimento.tipo_carga}
                                   />
                                 </div>
                               </div>
@@ -908,6 +1050,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModal(false);
+                        setCarregando(false);
                       }}
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
