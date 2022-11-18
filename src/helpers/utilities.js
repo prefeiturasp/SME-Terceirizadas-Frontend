@@ -693,13 +693,9 @@ export const exibirGA = () => {
         );
       case `"escola"`:
         return (
-          (localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-            localStorage.getItem("dre_nome").includes("PIRITUBA") ||
-            localStorage
-              .getItem("dre_nome")
-              .includes("FREGUESIA/BRASILANDIA")) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEMEI `) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEU CEMEI `)
+          localStorage.getItem("dre_nome").includes("IPIRANGA") ||
+          localStorage.getItem("dre_nome").includes("PIRITUBA") ||
+          localStorage.getItem("dre_nome").includes("FREGUESIA/BRASILANDIA")
         );
       case `"terceirizada"`:
         return JSON.parse(localStorage.getItem("lotes")).find(
