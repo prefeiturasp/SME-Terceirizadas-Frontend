@@ -1,6 +1,7 @@
 import React from "react";
 import { RECLAMACAO_PRODUTO_STATUS_EXPLICACAO } from "constants/shared";
 import "./style.scss";
+import { corrigeLinkAnexo } from "helpers/utilities";
 
 const {
   CODAE_AUTORIZOU_RECLAMACAO,
@@ -96,21 +97,46 @@ const Reclamacao = ({ reclamacao }) => {
 
   const blocoRespostaTerceirizada = log => {
     return (
-      <div className="row mb-4">
-        <div className="col-4">
-          <div className="label-item">Data resposta Terceirizada</div>
-          <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+      <>
+        <div className="row mb-4">
+          <div className="col-4">
+            <div className="label-item">Data resposta Terceirizada</div>
+            <div className="value-item">{log.criado_em.split(" ")[0]}</div>
+          </div>
+          <div className="col-8">
+            <div className="label-item">Resposta terceirizada</div>
+            <div
+              className="value-item value-uppercase"
+              dangerouslySetInnerHTML={{
+                __html: log.justificativa
+              }}
+            />
+          </div>
         </div>
-        <div className="col-8">
-          <div className="label-item">Resposta terceirizada</div>
-          <div
-            className="value-item value-uppercase"
-            dangerouslySetInnerHTML={{
-              __html: log.justificativa
-            }}
-          />
-        </div>
-      </div>
+        {log.anexos.length > 0 && (
+          <div className="mb-3">
+            <div key={1}>
+              <p className="botao-reclamacao-title">Anexos da resposta</p>
+            </div>
+            <div key={2}>
+              {log.anexos.map((anexo, key) => {
+                return (
+                  <div key={key}>
+                    <a
+                      href={corrigeLinkAnexo(anexo.arquivo)}
+                      className="value-important link"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {`Anexo ${key + 1}`}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </>
     );
   };
 

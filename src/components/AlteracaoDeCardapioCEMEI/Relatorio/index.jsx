@@ -8,22 +8,17 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
+  BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { useHistory } from "react-router-dom";
 import "./style.scss";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
-import {
-  justificativaAoNegarSolicitacao,
-  visualizaBotoesDoFluxo
-} from "helpers/utilities";
+import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 export const Relatorio = ({ ...props }) => {
-  const history = useHistory();
   const {
     endpointAprovaSolicitacao,
     endpointNaoAprovaSolicitacao,
@@ -45,6 +40,9 @@ export const Relatorio = ({ ...props }) => {
   const [respostaSimNao, setRespostaSimNao] = useState(null);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
+  const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
   const [uuid, setUuid] = useState(null);
 
   const [
@@ -106,6 +104,13 @@ export const Relatorio = ({ ...props }) => {
       solicitacao.status
     );
 
+  const EXIBIR_BOTAO_MARCAR_CONFERENCIA =
+    visao === TERCEIRIZADA &&
+    solicitacao &&
+    [statusEnum.CODAE_AUTORIZADO, statusEnum.ESCOLA_CANCELOU].includes(
+      solicitacao.status
+    );
+
   const onSubmit = async values => {
     endpointAprovaSolicitacao(uuid, values, tipoSolicitacao).then(
       response => {
@@ -139,26 +144,10 @@ export const Relatorio = ({ ...props }) => {
           <Form onSubmit={onSubmit}>
             {({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
-                <div className="row mt-3">
-                  <div className="col-10">
-                    <h1 className="page-title mt-0">
-                      Alteração do Tipo de Alimentação - Solicitação #{" "}
-                      {solicitacao.id_externo}
-                    </h1>
-                  </div>
-                  <div className="col-2">
-                    <Botao
-                      texto="Voltar"
-                      titulo="Voltar"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.ARROW_LEFT}
-                      className="float-right"
-                      onClick={() => history.goBack()}
-                    />
-                  </div>
-                </div>
-                <div className="card style-padrao-inclusao-cei">
+                <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
+                  solicitacao.id_externo
+                }`}</span>
+                <div className="card style-padrao-inclusao-cei mt-3">
                   <div className="card-body">
                     <CorpoRelatorio
                       solicitacao={solicitacao}
@@ -215,6 +204,37 @@ export const Relatorio = ({ ...props }) => {
                                   className="ml-3"
                                 />
                               )))}
+                          {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (
+                            <div className="form-group float-right mt-4">
+                              {solicitacao.terceirizada_conferiu_gestao ? (
+                                <label className="ml-3 conferido">
+                                  <i className="fas fa-check mr-2" />
+                                  Solicitação Conferida
+                                </label>
+                              ) : (
+                                <Botao
+                                  texto="Marcar Conferência"
+                                  type={BUTTON_TYPE.BUTTON}
+                                  style={BUTTON_STYLE.GREEN}
+                                  className="ml-3"
+                                  onClick={() => {
+                                    setShowModalMarcarConferencia(true);
+                                  }}
+                                />
+                              )}
+                            </div>
+                          )}
+                          <ModalMarcarConferencia
+                            showModal={showModalMarcarConferencia}
+                            closeModal={() =>
+                              setShowModalMarcarConferencia(false)
+                            }
+                            onMarcarConferencia={() => {
+                              getSolicitacao();
+                            }}
+                            uuid={solicitacao.uuid}
+                            endpoint={"alteracoes-cardapio-cemei"}
+                          />
                           {ModalNaoAprova && (
                             <ModalNaoAprova
                               showModal={showNaoAprovaModal}
@@ -244,22 +264,6 @@ export const Relatorio = ({ ...props }) => {
                         </div>
                       </div>
                     )}
-                    {solicitacao &&
-                      justificativaAoNegarSolicitacao(solicitacao.logs) && (
-                        <div className="row">
-                          <div className="col-12 report-label-value">
-                            <p>Justificativa da negação</p>
-                            <p
-                              className="value"
-                              dangerouslySetInnerHTML={{
-                                __html: justificativaAoNegarSolicitacao(
-                                  solicitacao.logs
-                                )
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
                   </div>
                 </div>
               </form>

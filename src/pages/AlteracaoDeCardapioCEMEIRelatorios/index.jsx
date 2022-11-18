@@ -6,7 +6,9 @@ import {
   codaeQuestionarSolicitacaoDeAlteracaoDeCardapio,
   dreReprovarSolicitacaoDeAlteracaoDeCardapio,
   dreValidarSolicitacaoDeAlteracaoDeCardapio,
-  escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+  escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI,
+  terceirizadaRespondeQuestionamentoAlteracaoCardapio,
+  TerceirizadaTomaCienciaAlteracaoCardapio
 } from "services/alteracaoDeCardapio";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "components/Shareable/Breadcrumb";
@@ -19,6 +21,7 @@ import { TIPO_SOLICITACAO } from "constants/shared";
 import { ModalEscolaCancela } from "components/AlteracaoDeCardapioCEMEI/Relatorio/componentes/ModalEscolaCancela";
 import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
 import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -53,7 +56,7 @@ export const RelatorioBase = ({ ...props }) => {
   };
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
@@ -123,8 +126,21 @@ export const RelatorioCODAE = () => (
 export const RelatorioTerceirizada = () => (
   <RelatorioBase
     visao={TERCEIRIZADA}
-    endpointNaoAprovaSolicitacao={
-      escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI
+    ModalNaoAprova={ModalTercRespondeQuestFinalForm}
+    ModalQuestionamento={ModalTercRespondeQuestFinalForm}
+    toastAprovaMensagem={
+      "Ciência de Alteração do Tipo de Alimentação enviado com sucesso!"
     }
+    toastAprovaMensagemErro={
+      "Houve um erro ao tomar ciência da Alteração do Tipo de Alimentação"
+    }
+    endpointAprovaSolicitacao={TerceirizadaTomaCienciaAlteracaoCardapio}
+    endpointNaoAprovaSolicitacao={
+      terceirizadaRespondeQuestionamentoAlteracaoCardapio
+    }
+    endpointQuestionamento={terceirizadaRespondeQuestionamentoAlteracaoCardapio}
+    textoBotaoNaoAprova="Não"
+    textoBotaoAprova="Ciente"
+    tipoSolicitacao={TIPO_SOLICITACAO.SOLICITACAO_CEMEI}
   />
 );
