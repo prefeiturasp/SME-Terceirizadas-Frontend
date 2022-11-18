@@ -12,10 +12,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
-import {
-  justificativaAoNegarSolicitacao,
-  visualizaBotoesDoFluxo
-} from "helpers/utilities";
+import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -267,22 +264,6 @@ export const Relatorio = ({ ...props }) => {
                         </div>
                       </div>
                     )}
-                    {solicitacao &&
-                      justificativaAoNegarSolicitacao(solicitacao.logs) && (
-                        <div className="row">
-                          <div className="col-12 report-label-value">
-                            <p>Justificativa da negação</p>
-                            <p
-                              className="value"
-                              dangerouslySetInnerHTML={{
-                                __html: justificativaAoNegarSolicitacao(
-                                  solicitacao.logs
-                                )
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
                   </div>
                 </div>
               </form>
