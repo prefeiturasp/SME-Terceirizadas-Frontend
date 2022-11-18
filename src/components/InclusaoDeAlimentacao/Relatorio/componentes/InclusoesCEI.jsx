@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import HTTP_STATUS from "http-status-codes";
 import TabelaFaixaEtaria from "components/Shareable/TabelaFaixaEtaria";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { formataPeriodos } from "./helper";
 
 export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
@@ -13,6 +14,8 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
       qa => qa.periodo.nome
     )
   );
+
+  const periodos_formatados = formataPeriodos(nomes_periodos);
 
   const getVinculosAlimentacao = async () => {
     const escola_uuid = inclusaoDeAlimentacao.escola.uuid;
@@ -33,8 +36,8 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
         <div className="col-12">
           <label
             style={{
-              background: "#E0E0E0",
-              border: `1px solid #E0E0E0`,
+              background: "#D4FFE0",
+              border: `1px solid #DADADA`,
               borderRadius: "5px",
               margin: "1% 0px",
               width: "100%",
@@ -46,23 +49,23 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
           </label>
         </div>
       </div>
-      {nomes_periodos &&
-        nomes_periodos.map((p, key) => {
+      {periodos_formatados &&
+        periodos_formatados.map((p, key) => {
           const qtd_por_faixa = inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.filter(
-            qa => qa.periodo.nome === p
+            qa => qa.periodo.nome === p.nome
           );
           const alimentosFormatados = vinculosAlimentacao
-            .find(v => v.periodo_escolar.nome === p)
+            .find(v => v.periodo_escolar.nome === p.nome)
             .tipos_alimentacao.map(ta => ta.nome)
             .join(", ");
           return (
             <div key={key} className="row">
               <div className="col-12">
-                <div className="container-fluid">
+                <div className="container-fluid pr-0">
                   <label
                     style={{
-                      background: "#E0E0E0",
-                      border: `1px solid #E0E0E0`,
+                      background: p.background,
+                      border: p.borderColor,
                       borderRadius: "5px",
                       margin: "1% 0px",
                       width: "100%",
@@ -70,20 +73,20 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                       height: "40px"
                     }}
                   >
-                    {p}
+                    {p.nome}
                   </label>
                 </div>
               </div>
               <div className="col-12 mt-3">
-                <div className="container-fluid">
+                <div className="container-fluid pr-0">
                   <span>
-                    Tipos de alimentação no período {p.toLowerCase()}:{" "}
+                    Tipos de alimentação no período {p.nome.toLowerCase()}:{" "}
                     <b>{alimentosFormatados}</b>
                   </span>
                 </div>
               </div>
               <div className="col-12">
-                <div className="container-fluid">
+                <div className="container-fluid pr-0">
                   <TabelaFaixaEtaria key={key} faixas={qtd_por_faixa} />
                 </div>
               </div>
