@@ -11,7 +11,7 @@ import {
 } from "configs/constants";
 import { usuarioEhDRE, usuarioEhTerceirizada } from "helpers/utilities";
 
-let voltarPara = "/";
+let voltarPara = "/painel-gestao-alimentacao";
 
 if (usuarioEhTerceirizada())
   voltarPara = `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`;

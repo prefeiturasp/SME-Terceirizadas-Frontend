@@ -31,6 +31,33 @@ export const backgroundLabelPeriodo = periodos => {
   return periodosComStyles;
 };
 
+export const formataDadosTabelaCEMEI = solicitacao => {
+  let substituicoes = solicitacao.substituicoes_cemei_cei_periodo_escolar.concat(
+    solicitacao.substituicoes_cemei_emei_periodo_escolar
+  );
+  let periodos = substituicoes.sort(
+    (a, b) => a.periodo_escolar.posicao - b.periodo_escolar.posicao
+  );
+  periodos = periodos.map(s => s.periodo_escolar.nome);
+  periodos = [...new Set(periodos)];
+  periodos = periodos.map(p => {
+    return { nome: p };
+  });
+  periodos = backgroundLabelPeriodo(periodos);
+  substituicoes = periodos.map(p => {
+    const alunosPorFaixaCEI = solicitacao.substituicoes_cemei_cei_periodo_escolar.filter(
+      s => s.periodo_escolar.nome === p.nome
+    )[0];
+    const alunosPorFaixaEMEI = solicitacao.substituicoes_cemei_emei_periodo_escolar.filter(
+      s => s.periodo_escolar.nome === p.nome
+    )[0];
+    p["substituicoesCEI"] = alunosPorFaixaCEI;
+    p["substituicoesEMEI"] = alunosPorFaixaEMEI;
+    return p;
+  });
+  return substituicoes;
+};
+
 export const totalMatriculados = faixas => {
   let total = 0;
   faixas.forEach(faixa => {

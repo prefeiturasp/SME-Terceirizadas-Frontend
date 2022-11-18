@@ -391,6 +391,22 @@ export const usuarioEhLogistica = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhPreRecebimento = () => {
+  /*
+  TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+  temporariamente ao Pré Recebimento. Após finalização da definição de
+  permissionamento deve se remover usuarioEhLogistica() desta regra.
+  */
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
+    usuarioEhLogistica()
+  );
+};
+
+export const usuarioEhCronograma = () => {
+  return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhDistribuidora = () => {
   return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
     localStorage.getItem("perfil")
@@ -428,12 +444,6 @@ export const usuarioEhAdministradorDRE = () => {
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {
-  /*
-   * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
-   * Para se adaptar ao perfil da CODAE. (Segundo o Fabricio)
-   * Inicialmente a regra é que o perfil DILOG tenha os mesmo acessos de CODAE.
-   * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
-   */
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   return tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA;
 };
@@ -669,34 +679,24 @@ export const retornaDuplicadasArray = arr =>
 
 export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
+
+  const dresPermitidas = ["IPIRANGA", "PIRITUBA", "FREGUESIA/BRASILANDIA"];
+
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
       case `"gestao_alimentacao_terceirizada"`:
         return true;
       case `"diretoriaregional"`:
-        return (
-          localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA") ||
-          localStorage
-            .getItem("nome_instituicao")
-            .includes("FREGUESIA/BRASILANDIA")
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("nome_instituicao").includes(dre)
         );
       case `"escola"`:
-        return (
-          (localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-            localStorage.getItem("dre_nome").includes("PIRITUBA") ||
-            localStorage
-              .getItem("dre_nome")
-              .includes("FREGUESIA/BRASILANDIA")) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEMEI `) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEU CEMEI `)
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return JSON.parse(localStorage.getItem("lotes")).find(
-          lote =>
-            lote.diretoria_regional.nome.includes("IPIRANGA") ||
-            lote.diretoria_regional.nome.includes("PIRITUBA") ||
-            lote.diretoria_regional.nome.includes("FREGUESIA/BRASILANDIA")
+        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
+          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
       case `"nutricao_manifestacao"`:
         return true;

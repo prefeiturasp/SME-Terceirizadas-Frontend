@@ -6,7 +6,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import { Relatorio } from "components/SolicitacaoKitLancheCEMEI/Relatorio";
 // import { ModalTerceirizadaRespondeQuestionamento } from "components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCancelarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCancelarKitLancheCEMEI";
-import { ModalNaoValidarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNaoValidarKitLancheCEMEI";
+import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
 import {
   cancelaFluxoSolicitacaoKitLancheCEMEI,
   CODAEAutorizaKitLancheCEMEI,
@@ -18,8 +18,8 @@ import {
   terceirizadaTomaCienciaKitLanche
 } from "services/kitLanche";
 import { getMotivosDREnaoValida } from "services/relatorios";
-import { ModalNegarKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalNegarKitLancheCEMEI";
-import { ModalCODAEQuestionaKitLancheCEMEI } from "components/SolicitacaoKitLancheCEMEI/Relatorio/components/ModalCODAEQuestionaKitLancheCEMEI";
+import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
@@ -73,7 +73,7 @@ export const RelatorioEscola = () => (
 export const RelatorioDRE = () => (
   <RelatorioBase
     visao={DRE}
-    ModalNaoAprova={ModalNaoValidarKitLancheCEMEI}
+    ModalNaoAprova={ModalNaoValidarFinalForm}
     toastAprovaMensagem={"Kit Lanche Passeio validado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao validar o Kit Lanche Passeio"}
     endpointNaoAprovaSolicitacao={DRENaoValidaKitLancheCEMEI}
@@ -86,8 +86,8 @@ export const RelatorioDRE = () => (
 export const RelatorioCODAE = () => (
   <RelatorioBase
     visao={CODAE}
-    ModalNaoAprova={ModalNegarKitLancheCEMEI}
-    ModalQuestionamento={ModalCODAEQuestionaKitLancheCEMEI}
+    ModalNaoAprova={ModalNegarFinalForm}
+    ModalQuestionamento={ModalCODAEQuestionaFinalForm}
     toastAprovaMensagem={"Kit Lanche Passeio autorizado com sucesso!"}
     toastAprovaMensagemErro={"Houve um erro ao autorizar o Kit Lanche Passeio"}
     endpointNaoAprovaSolicitacao={CODAENegaKitLancheCEMEI}

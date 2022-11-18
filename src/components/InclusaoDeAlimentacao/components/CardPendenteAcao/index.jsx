@@ -90,28 +90,37 @@ export class CardPendenteAcao extends Component {
             </div>
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr>
-                  <th>Código do Pedido</th>
-                  <th>Código EOL</th>
-                  <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel || "Data"}</th>
+                <tr className="row">
+                  <th className="col-3">Código do Pedido</th>
+                  <th className="col-3">Código EOL</th>
+                  <th className="col-3">Nome da Escola</th>
+                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
                 {pedidosFiltrados.map((pedido, key) => {
                   const dataMaisProxima = pedido.inclusoes
                     ? pedido.inclusoes[0].data
+                    : pedido.dias_motivos_da_inclusao_cemei
+                    ? pedido.dias_motivos_da_inclusao_cemei[0].data
                     : pedido.data;
                   return (
                     <Link
                       key={key}
-                      to={gerarLinkRelatorio("inclusao-de-alimentacao", pedido)}
+                      to={gerarLinkRelatorio(
+                        `inclusao-de-alimentacao${
+                          pedido.dias_motivos_da_inclusao_cemei ? "-cemei" : ""
+                        }`,
+                        pedido
+                      )}
                     >
-                      <tr>
-                        <td>{pedido.id_externo}</td>
-                        <td>{pedido.escola.codigo_eol}</td>
-                        <td>{pedido.escola.nome}</td>
-                        <td>{pedido.data_inicial || dataMaisProxima}</td>
+                      <tr className="row">
+                        <td className="col-3">{pedido.id_externo}</td>
+                        <td className="col-3">{pedido.escola.codigo_eol}</td>
+                        <td className="col-3">{pedido.escola.nome}</td>
+                        <td className="col-3">
+                          {pedido.data_inicial || dataMaisProxima}
+                        </td>
                       </tr>
                     </Link>
                   );

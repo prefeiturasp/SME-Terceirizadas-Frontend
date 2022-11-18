@@ -12,6 +12,7 @@ import {
   usuarioEhAdministradorDRE,
   usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
+  usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
@@ -31,7 +32,8 @@ import {
   MenuGestaoDeProduto,
   MenuLancamentoInicial,
   MenuRelatorios,
-  MenuLogistica
+  MenuLogistica,
+  MenuPreRecebimento
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -112,7 +114,8 @@ export const SidebarContent = () => {
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
     !usuarioEscolaEhGestaoDireta() &&
-    !usuarioEhMedicao();
+    !usuarioEhMedicao() &&
+    !usuarioEhPreRecebimento();
 
   const exibirConfiguracoes =
     !usuarioEhEscola() &&
@@ -122,7 +125,8 @@ export const SidebarContent = () => {
     !usuarioEhEscolaAbastecimento() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
-    !usuarioEhDistribuidora();
+    !usuarioEhDistribuidora() &&
+    !usuarioEhPreRecebimento();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -131,6 +135,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
+
+  const exibirMenuPreRecebimento = usuarioEhPreRecebimento();
 
   const _props = {
     activeMenu,
@@ -152,6 +158,7 @@ export const SidebarContent = () => {
     exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} />
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={10} />
   ];
 };

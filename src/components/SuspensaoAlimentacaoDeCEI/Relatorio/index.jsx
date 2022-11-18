@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
-import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
 import CorpoRelatorio from "./components/CorpoRelatorio";
 import ModalCancelaSuspensao from "./components/ModalCancelaSuspensao";
-import { usuarioEhEscola } from "helpers/utilities";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Botao from "components/Shareable/Botao";
-import { statusEnum } from "constants/shared";
-import "./style.scss";
-import { TERCEIRIZADA } from "configs/constants";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import { statusEnum } from "constants/shared";
+import { TERCEIRIZADA } from "configs/constants";
+import { usuarioEhEscola } from "helpers/utilities";
+import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
+import "./style.scss";
 
 export default ({ ...props }) => {
   const [carregando, setCarregando] = useState(true);
@@ -63,6 +64,11 @@ export default ({ ...props }) => {
         <div className="card-body">
           {solicitacaoSuspensao && (
             <CorpoRelatorio solicitacaoSuspensao={solicitacaoSuspensao} />
+          )}
+          {solicitacaoSuspensao && (
+            <RelatorioHistoricoJustificativaEscola
+              solicitacao={solicitacaoSuspensao}
+            />
           )}
           {solicitacaoSuspensao &&
             usuarioEhEscola() &&

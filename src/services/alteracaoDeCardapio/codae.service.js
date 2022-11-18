@@ -1,4 +1,6 @@
+import axios from "../_base";
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
+import { ErrorHandlerFunction } from "services/service-helpers";
 import { getPath } from "./helper";
 
 export const codaeListarSolicitacoesDeAlteracaoDeCardapio = (
@@ -34,70 +36,41 @@ export const codaeListarSolicitacoesDeAlteracaoDeCardapioReprovadas = tipoSolici
     });
 };
 
-export const codaeAutorizarSolicitacaoDeAlteracaoDeCardapio = (
+export const codaeAutorizarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
+  payload,
   tipoSolicitacao
 ) => {
-  const url = `${getPath(tipoSolicitacao)}/${uuid}/codae-autoriza-pedido/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const codaeNegarSolicitacaoDeAlteracaoDeCardapio = (
+export const codaeNegarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const codaeQuestionarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
-  observacao_questionamento_codae,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify({ observacao_questionamento_codae })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };

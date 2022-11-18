@@ -1,0 +1,82 @@
+.card-cadastro-cronograma {
+  .cadastro-cronograma {
+    .botao-pesquisar {
+      height: 37px;
+      margin-top: 30px;
+    }
+
+    #accordionCronograma > .card {
+      border-radius: 5px;
+    }
+
+    #accordionCronograma > .card > .card-header {
+      border-radius: 5px;
+      margin-bottom: 0;
+      background-color: #fff;
+    }
+
+    #accordionCronograma .card-header,
+    #accordionCronograma .card-body {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .card-header {
+      height: 50px;
+      border-left: #198459 solid 8px;
+
+      .card-header-content {
+        height: 100%;
+        align-content: center;
+        justify-content: space-between;
+        color: #42474a;
+
+        .nome-alimento {
+          margin: auto 0;
+        }
+      }
+    }
+
+    .span-icone-toogle {
+      color: #42474a;
+    }
+
+    .subtitulo {
+      color: #0c6b45;
+      font-size: 18px;
+      margin: 16px 0px;
+    }
+
+    .texto-alimento-faltante {
+      text-align: right;
+      font-size: 12px;
+    }
+
+    .vermelho {
+      color: #b40c02;
+    }
+
+    .verde {
+      color: #0c6b45;
+    }
+
+    .ant-select-selector {
+      margin: 0 !important;
+    }
+
+    .card {
+      overflow: visible;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+  }
+}

@@ -22,7 +22,7 @@ export class ModalNegarSolicitacao extends Component {
     } else {
       const resp = await this.props.endpoint(
         uuid,
-        `${justificativa}`,
+        this.state,
         this.props.tipoSolicitacao
       );
       if (resp.status === HTTP_STATUS.OK) {

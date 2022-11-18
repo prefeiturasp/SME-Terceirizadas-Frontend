@@ -1,7 +1,14 @@
 import React from "react";
 import { fluxoInformativoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
-import { stringSeparadaPorVirgulas } from "helpers/utilities";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import { stringSeparadaPorVirgulas } from "helpers/utilities";
+import { imprimeRelatorioSuspensaoAlimentacao } from "services/relatorios";
 
 export default ({ solicitacaoSuspensao }) => {
   return (
@@ -28,7 +35,20 @@ export default ({ solicitacaoSuspensao }) => {
             {solicitacaoSuspensao.escola.codigo_eol}
           </span>
         </div>
-        <div className="col-2 my-auto" />
+        <p className={`col-2 title-message px-0`}>
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            icon={BUTTON_ICON.PRINT}
+            className="float-right"
+            onClick={() =>
+              imprimeRelatorioSuspensaoAlimentacao(
+                solicitacaoSuspensao.uuid,
+                true
+              )
+            }
+          />
+        </p>
       </div>
       <div className="row">
         <div className="col-3 report-label-value">
@@ -103,7 +123,19 @@ export default ({ solicitacaoSuspensao }) => {
         })}
       </table>
       <div className="row">
-        <div className="col-12 report-label-value" />
+        <div className="col-12 report-label-value">
+          {solicitacaoSuspensao.observacao && (
+            <>
+              <p>Observações</p>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: solicitacaoSuspensao.observacao
+                }}
+              />
+            </>
+          )}
+        </div>
       </div>
     </>
   );

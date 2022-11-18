@@ -130,8 +130,12 @@ export const getDetalheInversaoCardapio = async uuid => {
   saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
 };
 
-export const imprimeRelatorioSuspensaoAlimentacao = async uuid => {
-  const url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+export const imprimeRelatorioSuspensaoAlimentacao = async (
+  uuid,
+  ehCei = false
+) => {
+  let url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+  if (ehCei) url = `/suspensao-alimentacao-de-cei/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob"
   });
