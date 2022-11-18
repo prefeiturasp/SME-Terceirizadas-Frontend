@@ -90,7 +90,7 @@ export const Container = () => {
     vinculosAlimentacao;
 
   return (
-    <div>
+    <div className="mt-3">
       {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
       {erro && (
         <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
