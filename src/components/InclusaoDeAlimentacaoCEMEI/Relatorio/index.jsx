@@ -4,10 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import { getInclusaoCEMEI } from "services/inclusaoDeAlimentacao";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import {
-  justificativaAoNegarSolicitacao,
-  visualizaBotoesDoFluxo
-} from "helpers/utilities";
+import { visualizaBotoesDoFluxo } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -15,10 +12,8 @@ import {
 } from "components/Shareable/Botao/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { CODAE, TERCEIRIZADA } from "configs/constants";
-import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
@@ -46,9 +41,6 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     toastAprovaMensagem,
     toastAprovaMensagemErro
   } = props;
-
-  const justificativaNegacao =
-    solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
 
   const getVinculosTipoAlimentacaoPorEscolaAsync = async escola => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola.uuid);
@@ -253,46 +245,6 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                         </div>
                       </div>
                     )}
-                    {solicitacao.dias_motivos_da_inclusao_cemei.find(
-                      inclusao => inclusao.cancelado
-                    ) && (
-                      <>
-                        <hr />
-                        <p>
-                          <strong>Histórico de cancelamento parcial</strong>
-                          {solicitacao.dias_motivos_da_inclusao_cemei
-                            .filter(inclusao => inclusao.cancelado)
-                            .map((inclusao, key) => {
-                              return (
-                                <div key={key}>
-                                  {inclusao.data}
-                                  {" - "}
-                                  {inclusao.cancelado_justificativa}
-                                </div>
-                              );
-                            })}
-                        </p>
-                      </>
-                    )}
-                    {justificativaNegacao && (
-                      <div className="row">
-                        <div className="col-12 report-label-value">
-                          <p>Justificativa da negação</p>
-                          <p
-                            className="value"
-                            dangerouslySetInnerHTML={{
-                              __html: justificativaNegacao
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                    <RelatorioHistoricoJustificativaEscola
-                      solicitacao={solicitacao}
-                    />
-                    <RelatorioHistoricoQuestionamento
-                      solicitacao={solicitacao}
-                    />
                   </div>
                 </div>
               </div>

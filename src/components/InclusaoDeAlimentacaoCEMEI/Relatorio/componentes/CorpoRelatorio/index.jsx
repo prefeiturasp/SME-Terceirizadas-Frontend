@@ -8,7 +8,13 @@ import {
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
-import { corDaMensagem, prazoDoPedidoMensagem } from "helpers/utilities";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao,
+  prazoDoPedidoMensagem
+} from "helpers/utilities";
 import React from "react";
 import {
   inclusaoPossuiCEInestePeriodo,
@@ -18,6 +24,9 @@ import {
 import "./style.scss";
 
 export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
+  const justificativaNegacao =
+    solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
+
   return (
     <div className="relatorio-inclusao-cemei">
       <div className="row">
@@ -250,6 +259,44 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                   </table>
                 </>
               )}
+              {solicitacao.dias_motivos_da_inclusao_cemei.find(
+                inclusao => inclusao.cancelado
+              ) && (
+                <>
+                  <hr />
+                  <p>
+                    <strong>Histórico de cancelamento parcial</strong>
+                    {solicitacao.dias_motivos_da_inclusao_cemei
+                      .filter(inclusao => inclusao.cancelado)
+                      .map((inclusao, key) => {
+                        return (
+                          <div key={key}>
+                            {inclusao.data}
+                            {" - "}
+                            {inclusao.cancelado_justificativa}
+                          </div>
+                        );
+                      })}
+                  </p>
+                </>
+              )}
+              {justificativaNegacao && (
+                <div className="row">
+                  <div className="col-12 report-label-value">
+                    <p>Justificativa da negação</p>
+                    <p
+                      className="value"
+                      dangerouslySetInnerHTML={{
+                        __html: justificativaNegacao
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              <RelatorioHistoricoJustificativaEscola
+                solicitacao={solicitacao}
+              />
+              <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
             </div>
           </div>
         );

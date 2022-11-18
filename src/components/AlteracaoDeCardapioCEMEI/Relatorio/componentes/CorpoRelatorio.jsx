@@ -9,7 +9,11 @@ import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { toastInfo } from "components/Shareable/Toast/dialogs";
-import { corDaMensagem, prazoDoPedidoMensagem } from "helpers/utilities";
+import {
+  corDaMensagem,
+  justificativaAoNegarSolicitacao,
+  prazoDoPedidoMensagem
+} from "helpers/utilities";
 import React from "react";
 
 export const CorpoRelatorio = ({ ...props }) => {
@@ -313,6 +317,19 @@ export const CorpoRelatorio = ({ ...props }) => {
         </div>
       </div>
       <hr />
+      {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Justificativa da negação</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaAoNegarSolicitacao(solicitacao.logs)
+              }}
+            />
+          </div>
+        </div>
+      )}
       <RelatorioHistoricoJustificativaEscola solicitacao={solicitacao} />
       <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
     </>
