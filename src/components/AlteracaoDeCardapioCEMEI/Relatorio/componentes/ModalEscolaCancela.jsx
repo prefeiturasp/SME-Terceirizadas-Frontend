@@ -17,14 +17,14 @@ export const ModalEscolaCancela = ({ ...props }) => {
     closeModal,
     solicitacao,
     endpoint,
-    getSolicitacao
+    loadSolicitacao
   } = props;
 
   const onSubmit = async values => {
     const response = await endpoint(solicitacao.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Alteração do Tipo de Alimentação cancelada com sucesso!");
-      getSolicitacao();
+      loadSolicitacao();
     } else {
       toastError(response.data.detail);
     }
