@@ -58,6 +58,8 @@ export default () => {
   const [cronograma, setCronograma] = useState({});
   const [valoresIniciais, setValoresIniciais] = useState(true);
   const [uuidCronograma, setUuidCronograma] = useState(null);
+  const [etapasValues, setEtapasValues] = useState({});
+  const [recebimentosValues, setRecebimentosValues] = useState({});
 
   const getRascunhosAsync = async () => {
     try {
@@ -367,10 +369,31 @@ export default () => {
     try {
       const responseCronograma = await getCronograma(uuidCronograma);
       if (responseCronograma.status === HTTP_STATUS.OK) {
+        const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
         setCronograma(responseCronograma.data);
         setEtapas(responseCronograma.data.etapas);
-        setRecebimentos(responseCronograma.data.programacoes_de_recebimento);
+        setRecebimentos(programacoes_de_recebimento);
         buscaContrato(responseCronograma.data);
+
+        const etapaValues = {};
+        responseCronograma.data.etapas.forEach((etapa, i) => {
+          etapaValues[`empenho_${i}`] = etapa.empenho_uuid;
+          etapaValues[`etapa_${i}`] = etapa.etapa;
+          etapaValues[`parte_${i}`] = etapa.parte;
+          etapaValues[`data_programada_${i}`] = etapa.data_programada;
+          etapaValues[`quantidade_${i}`] = etapa.quantidade;
+          etapaValues[`total_embalagens_${i}`] = etapa.total_embalagens;
+        });
+        setEtapasValues(etapaValues);
+
+        const recebimentoValues = {};
+        programacoes_de_recebimento.forEach((recebimento, i) => {
+          recebimentoValues[`data_recebimento_${i}`] =
+            recebimento.data_programada;
+          recebimentoValues[`tipo_recebimento_${i}`] = recebimento.tipo_carga;
+        });
+        setRecebimentosValues(recebimentoValues);
+
         setCarregando(false);
       }
     } catch (e) {
@@ -480,7 +503,8 @@ export default () => {
               produto: cronograma.produto_uuid,
               armazem: cronograma.armazem ? cronograma.armazem.uuid : "",
               tipo_embalagem: cronograma.tipo_embalagem,
-              empenho_2: "824c722d-768b-4d99-b159-7b4910a8e7fb"
+              ...etapasValues,
+              ...recebimentosValues
             }}
             decorators={[calculator]}
             validate={() => {}}
@@ -516,7 +540,7 @@ export default () => {
                     />
                   </div>
                   {edicao && (
-                    <div className="col-6 text-right numero-cronograma">
+                    <div className="col-6 text-right">
                       <p>
                         <b>Nº do Cronograma: </b>
 
@@ -560,7 +584,7 @@ export default () => {
                           <div className="col-1 align-self-center">
                             <button
                               onClick={() => toggleCollapse(1)}
-                              className="btn btn-link btn-block text-left px-0"
+                              className="btn btn-link btn-block text-right px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target={`#collapse_1`}
@@ -663,145 +687,138 @@ export default () => {
                             Cronograma das Entregas
                           </div>
                           <hr className="linha-verde" />
-                          {etapas.map((etapa, index) => (
-                            <>
-                              {index !== 0 && (
-                                <>
-                                  <hr />
-                                  <div className="row">
-                                    <div className="w-100">
-                                      <Botao
-                                        texto=""
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                                        icon="fas fa-trash"
-                                        className="float-right ml-3"
-                                        onClick={() => deletaEtapa(index)}
-                                        disabled={submitting}
-                                      />
+                          {etapas &&
+                            etapas.map((etapa, index) => (
+                              <>
+                                {index !== 0 && (
+                                  <>
+                                    <hr />
+                                    <div className="row">
+                                      <div className="w-100">
+                                        <Botao
+                                          texto=""
+                                          type={BUTTON_TYPE.BUTTON}
+                                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                                          icon="fas fa-trash"
+                                          className="float-right ml-3"
+                                          onClick={() => deletaEtapa(index)}
+                                          disabled={submitting}
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
-                                </>
-                              )}
-
-                              <div className="row">
-                                <div className="col-4">
-                                  <span className="required-asterisk">*</span>
-                                  <label className="col-form-label">
-                                    Nº do Empenho
-                                  </label>
-                                  <Field
-                                    component={TreeSelect}
-                                    treeData={empenhoOptions}
-                                    name={`empenho_${index}`}
-                                    required
-                                    validate={required}
-                                    allowClear
-                                    value="bunda"
-                                    defaultValue="porra"
-                                    onChange={e =>
-                                      onChangeEmpenho(e, index, values)
-                                    }
-                                    placeholder="Selecione o Empenho"
-                                    style={{ width: "100%" }}
-                                  />
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={AutoCompleteField}
-                                    options={getEtapasFiltrado(
-                                      values[`etapa_${index}`]
-                                    )}
-                                    label="Etapa"
-                                    name={`etapa_${index}`}
-                                    className="input-busca-produto"
-                                    placeholder="Selecione a Etapa"
-                                    defaultValue={etapa.etapa}
-                                    required
-                                    esconderIcone
-                                  />
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={SelectSelecione}
-                                    naoDesabilitarPrimeiraOpcao
-                                    options={[
-                                      {
-                                        uuid: "Parte 1",
-                                        nome: "Parte 1"
-                                      },
-                                      {
-                                        uuid: "Parte 2",
-                                        nome: "Parte 2"
-                                      },
-                                      {
-                                        uuid: "Parte 3",
-                                        nome: "Parte 3"
-                                      },
-                                      {
-                                        uuid: "Parte 4",
-                                        nome: "Parte 4"
-                                      },
-                                      {
-                                        uuid: "Parte 5",
-                                        nome: "Parte 5"
+                                  </>
+                                )}
+                                <div className="row">
+                                  <div className="col-4">
+                                    <span className="required-asterisk">*</span>
+                                    <label className="col-form-label">
+                                      Nº do Empenho
+                                    </label>
+                                    <TreeSelect
+                                      treeData={empenhoOptions}
+                                      name={`empenho_${index} `}
+                                      required
+                                      validate={required}
+                                      allowClear
+                                      value={etapa.empenho_uuid}
+                                      onChange={e =>
+                                        onChangeEmpenho(e, index, values)
                                       }
-                                    ]}
-                                    label="Parte"
-                                    name={`parte_${index}`}
-                                    defaultValue={etapa.parte}
-                                    placeholder={"Selecione a Parte"}
-                                    validate={() =>
-                                      duplicados.includes(index) &&
-                                      "Parte já selecionada"
-                                    }
-                                  />
+                                      placeholder="Selecione o Empenho"
+                                      style={{ width: "100%" }}
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    <Field
+                                      component={AutoCompleteField}
+                                      options={getEtapasFiltrado(
+                                        values[`etapa_${index}`]
+                                      )}
+                                      label="Etapa"
+                                      name={`etapa_${index}`}
+                                      className="input-busca-produto"
+                                      placeholder="Selecione a Etapa"
+                                      required
+                                      esconderIcone
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    <Field
+                                      component={SelectSelecione}
+                                      naoDesabilitarPrimeiraOpcao
+                                      options={[
+                                        {
+                                          uuid: "Parte 1",
+                                          nome: "Parte 1"
+                                        },
+                                        {
+                                          uuid: "Parte 2",
+                                          nome: "Parte 2"
+                                        },
+                                        {
+                                          uuid: "Parte 3",
+                                          nome: "Parte 3"
+                                        },
+                                        {
+                                          uuid: "Parte 4",
+                                          nome: "Parte 4"
+                                        },
+                                        {
+                                          uuid: "Parte 5",
+                                          nome: "Parte 5"
+                                        }
+                                      ]}
+                                      label="Parte"
+                                      name={`parte_${index}`}
+                                      placeholder={"Selecione a Parte"}
+                                      validate={() =>
+                                        duplicados.includes(index) &&
+                                        "Parte já selecionada"
+                                      }
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                              <div className="row">
-                                <div className="col-4">
-                                  <Field
-                                    component={InputComData}
-                                    label="Data Programada"
-                                    name={`data_programada_${index}`}
-                                    placeholder="Selecionar a Data"
-                                    required
-                                    defaultValue={etapa.data_programada}
-                                    writable={false}
-                                    minDate={null}
-                                  />
+                                <div className="row">
+                                  <div className="col-4">
+                                    <Field
+                                      component={InputComData}
+                                      label="Data Programada"
+                                      name={`data_programada_${index}`}
+                                      placeholder="Selecionar a Data"
+                                      required
+                                      writable={false}
+                                      minDate={null}
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    <Field
+                                      component={InputText}
+                                      label="Quantidade"
+                                      name={`quantidade_${index}`}
+                                      placeholder="Digite a Quantidade"
+                                      validate={() =>
+                                        restante !== 0 &&
+                                        `quantidade total é diferente de ${values.quantidade_total ||
+                                          0}`
+                                      }
+                                      required
+                                      type="number"
+                                      pattern="[0-9]*"
+                                    />
+                                  </div>
+                                  <div className="col-4">
+                                    <Field
+                                      component={InputText}
+                                      label="Total de Embalagens"
+                                      name={`total_embalagens_${index}`}
+                                      placeholder="Digite a Quantidade"
+                                      required
+                                      apenasNumeros
+                                    />
+                                  </div>
                                 </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={InputText}
-                                    label="Quantidade"
-                                    name={`quantidade_${index}`}
-                                    placeholder="Digite a Quantidade"
-                                    validate={() =>
-                                      restante !== 0 &&
-                                      `quantidade total é diferente de ${values.quantidade_total ||
-                                        0}`
-                                    }
-                                    required
-                                    defaultValue={etapa.quantidade}
-                                    type="number"
-                                    pattern="[0-9]*"
-                                  />
-                                </div>
-                                <div className="col-4">
-                                  <Field
-                                    component={InputText}
-                                    label="Total de Embalagens"
-                                    name={`total_embalagens_${index}`}
-                                    placeholder="Digite a Quantidade"
-                                    defaultValue={etapa.total_embalagens}
-                                    required
-                                    apenasNumeros
-                                  />
-                                </div>
-                              </div>
-                            </>
-                          ))}
+                              </>
+                            ))}
 
                           {values.quantidade_total && textoFaltante(values)}
 
@@ -827,7 +844,7 @@ export default () => {
                           <div className="col-1 align-self-center">
                             <button
                               onClick={() => toggleCollapse(2)}
-                              className="btn btn-link btn-block text-left px-0"
+                              className="btn btn-link btn-block text-right px-0"
                               type="button"
                               data-toggle="collapse"
                               data-target={`#collapse_2`}
@@ -893,8 +910,7 @@ export default () => {
                                     )}
                                     label="Data Programada"
                                     name={`data_recebimento_${index}`}
-                                    defaultValue={recebimento.data_programada}
-                                    placeholder={"Selecione a Data"}
+                                    placeholder={"Selecionar a Data"}
                                   />
                                   <OnChange name={`data_recebimento_${index}`}>
                                     {async value => {
@@ -930,7 +946,6 @@ export default () => {
                                     label="Tipo de Carga"
                                     name={`tipo_recebimento_${index}`}
                                     placeholder={"Selecione a Carga"}
-                                    defaultValue={recebimento.tipo_carga}
                                   />
                                 </div>
                               </div>

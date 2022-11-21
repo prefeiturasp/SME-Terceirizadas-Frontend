@@ -144,8 +144,9 @@ export default () => {
               <p className="head-green mt-3">Dados do Recebimento</p>
               <br />
               {cronograma.programacoes_de_recebimento.length > 0 &&
-                cronograma.programacoes_de_recebimento.map(
-                  (programacao, key) => {
+                cronograma.programacoes_de_recebimento
+                  .reverse()
+                  .map((programacao, key) => {
                     return (
                       <>
                         <div key={key} className="row mb-3">
@@ -166,8 +167,7 @@ export default () => {
                         </div>
                       </>
                     );
-                  }
-                )}
+                  })}
             </>
           )}
         </div>
