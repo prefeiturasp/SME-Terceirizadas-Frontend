@@ -687,34 +687,24 @@ export const retornaDuplicadasArray = arr =>
 
 export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
+
+  const dresPermitidas = ["IPIRANGA", "PIRITUBA", "FREGUESIA/BRASILANDIA"];
+
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
       case `"gestao_alimentacao_terceirizada"`:
         return true;
       case `"diretoriaregional"`:
-        return (
-          localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA") ||
-          localStorage
-            .getItem("nome_instituicao")
-            .includes("FREGUESIA/BRASILANDIA")
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("nome_instituicao").includes(dre)
         );
       case `"escola"`:
-        return (
-          (localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-            localStorage.getItem("dre_nome").includes("PIRITUBA") ||
-            localStorage
-              .getItem("dre_nome")
-              .includes("FREGUESIA/BRASILANDIA")) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEMEI `) &&
-          !localStorage.getItem("nome_instituicao").includes(`"CEU CEMEI `)
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return JSON.parse(localStorage.getItem("lotes")).find(
-          lote =>
-            lote.diretoria_regional.nome.includes("IPIRANGA") ||
-            lote.diretoria_regional.nome.includes("PIRITUBA") ||
-            lote.diretoria_regional.nome.includes("FREGUESIA/BRASILANDIA")
+        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
+          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
       case `"nutricao_manifestacao"`:
         return true;
