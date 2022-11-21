@@ -177,12 +177,14 @@ export class Login extends Component {
     return (
       <div className="form">
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
+          {/* TODO: critério 1.2.4 */}
           <Field
             component={InputText}
+            className="input-login"
             esconderAsterisco
-            label="Login"
+            label="Usuário"
             name="login"
-            placeholder={"RF ou CPF"}
+            placeholder={"Digite seu RF ou CPF ou Código Operador"}
             required
             type="text"
             maxlength="11"
@@ -191,6 +193,7 @@ export class Login extends Component {
           />
           <Field
             component={InputPassword}
+            className="input-login"
             esconderAsterisco
             label="Senha"
             name="password"
@@ -198,7 +201,14 @@ export class Login extends Component {
             required
             validate={required}
           />
-          <p className="mt-2">
+          <Botao
+            className="col-12 btn-acessar"
+            style={BUTTON_STYLE.GREEN}
+            texto="Acessar"
+            disabled={submitting || bloquearBotao}
+            type={BUTTON_TYPE.SUBMIT}
+          />
+          <p className="mt-3">
             <Link
               className="hyperlink"
               to="#"
@@ -210,26 +220,6 @@ export class Login extends Component {
               }
             >
               Esqueci minha senha
-            </Link>
-          </p>
-          <Botao
-            className="col-12"
-            style={BUTTON_STYLE.GREEN}
-            texto="Acessar"
-            disabled={submitting || bloquearBotao}
-            type={BUTTON_TYPE.SUBMIT}
-          />
-          <p className="mt-3">
-            Não possui uma conta? &nbsp;
-            <Link
-              className="hyperlink"
-              data-cy="ainda-nao-cadastrado"
-              onClick={() =>
-                this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
-              }
-              to="#"
-            >
-              Cadastre-se
             </Link>
           </p>
         </form>
@@ -699,7 +689,7 @@ export class Login extends Component {
           <div className="container my-auto">
             {componenteAtivo !== this.COMPONENTE.PRIMEIRO_ACESSO ? (
               <div className="logo-sigpae">
-                <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
+                <img src="/assets/image/logo-sigpae.png" alt="" />
               </div>
             ) : (
               <div className="logo-sigpae-primeiro-acesso">
