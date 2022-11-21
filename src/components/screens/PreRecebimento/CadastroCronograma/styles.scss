@@ -36,6 +36,10 @@
       }
     }
 
+    .span-icone-toogle {
+      color: #42474a;
+    }
+
     .subtitulo {
       color: #0c6b45;
       font-size: 18px;
@@ -75,8 +79,4 @@
       -moz-appearance: textfield;
     }
   }
-}
-.numero-cronograma {
-  flex: 1;
-  align-self: flex-end;
 }
