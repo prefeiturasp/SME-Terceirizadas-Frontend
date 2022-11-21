@@ -481,8 +481,8 @@ class CadastroEmpresa extends Component {
     if (uuid) this.setState({ carregando: true });
     getLotesSimples().then(response => {
       this.setState({
-        lotes: transformaObjetos(response),
-        lotesRaw: response.results
+        lotes: transformaObjetos(response.data),
+        lotesRaw: response.data.results
       });
     });
   }
