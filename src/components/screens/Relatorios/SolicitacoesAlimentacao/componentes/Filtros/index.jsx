@@ -13,6 +13,7 @@ import "../../style.scss";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
 import { getEscolasTrecTotal } from "services/escola.service";
+import { InputComData } from "components/Shareable/DatePicker";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -164,6 +165,21 @@ export const Filtros = ({ ...props }) => {
                         "Todos os tipos de unidade estão selecionados",
                       selectAll: "Todos"
                     }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Período do Evento</label>
+              </div>
+              <div className="row">
+                <div className="col-3">
+                  <Field component={InputComData} placeholder="De" name="de" />
+                </div>
+                <div className="col-3">
+                  <Field
+                    component={InputComData}
+                    placeholder="Até"
+                    name="ate"
                   />
                 </div>
               </div>
