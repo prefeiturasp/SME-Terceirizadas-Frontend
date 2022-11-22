@@ -1,7 +1,6 @@
 import { TreeSelect } from "antd";
 import React from "react";
 import { InputErroMensagem } from "components/Shareable/Input/InputErroMensagem";
-import "./style.scss";
 
 const TreeSelectForm = props => {
   const { label, meta, treeData, input, name, required } = props;
