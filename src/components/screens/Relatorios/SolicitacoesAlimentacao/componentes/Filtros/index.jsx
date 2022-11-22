@@ -37,7 +37,9 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getTiposUnidadeEscolarAsync = async () => {
-    const response = await getTiposUnidadeEscolar();
+    const response = await getTiposUnidadeEscolar({
+      pertence_relatorio_solicitacoes_alimentacao: true
+    });
     if (response.status === HTTP_STATUS.OK) {
       setTiposUnidades(response.data.results);
     } else {
