@@ -177,6 +177,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 
 const routesConfig = [
   {
@@ -1470,6 +1471,19 @@ const routesConfig = [
     */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
+  },
+  {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${
+      constants.EDITAR
+    }`,
+    component: EditarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
   }

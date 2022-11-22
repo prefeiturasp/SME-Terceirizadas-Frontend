@@ -1,6 +1,12 @@
 import React from "react";
 import { Spin } from "antd";
 import "./styles.scss";
+import { NavLink } from "react-router-dom";
+import {
+  CADASTRO_CRONOGRAMA,
+  EDITAR,
+  PRE_RECEBIMENTO
+} from "configs/constants";
 
 export default ({ listaRascunhos }) => {
   const so_data = data => {
@@ -29,12 +35,18 @@ export default ({ listaRascunhos }) => {
                       }`}</div>
                       <div className="col-7 data-rascunho ">
                         {`Rascunho salvo em ${so_data(
-                          rascunho.criado_em
-                        )} às ${so_hora(rascunho.criado_em)}`}
+                          rascunho.alterado_em
+                        )} às ${so_hora(rascunho.alterado_em)}`}
 
-                        <span className="icon-editar-rascunho">
-                          <i className="fas fa-edit" />
-                        </span>
+                        <NavLink
+                          to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
+                            rascunho.uuid
+                          }`}
+                        >
+                          <span className="icon-editar-rascunho">
+                            <i className="fas fa-edit" />
+                          </span>
+                        </NavLink>
                       </div>
                     </div>
                   );
