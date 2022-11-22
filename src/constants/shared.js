@@ -407,3 +407,16 @@ export const OPTIONS_STATUS_DIETA = [
 
 export const PAGINACAO_DEFAULT = 10;
 export const PAGINACAO_DASHBOARD_DEFAULT = 6;
+
+export const TIPOS_SOLICITACOES_OPTIONS = [
+  { nome: "Tipo de Solicitação", uuid: "" },
+  { nome: "Inclusão de Alimentação", uuid: "INCLUSAO_ALIMENTACAO" },
+  {
+    nome: "Alteração do Tipo de Alimentação",
+    uuid: "ALTERACAO_TIPO_ALIMENTACAO"
+  },
+  { nome: "Kit Lanche", uuid: "KIT_LANCHE" },
+  { nome: "Kit Lanche Unificado", uuid: "KIT_LANCHE_UNIFICADO" },
+  { nome: "Inversão de dia de Cardápio", uuid: "INVERSAO_CARDAPIO" },
+  { nome: "Suspensão de Alimentação", uuid: "SUSPENSAO_ALIMENTACAO" }
+];

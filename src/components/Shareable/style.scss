@@ -141,25 +141,6 @@ textarea {
   }
 }
 
-.dashboard-card-title {
-  color: $blue;
-  i {
-    color: #334d6e;
-    padding-right: 15px;
-    &:nth-child(2) {
-      padding-left: 15px;
-      color: #c2cfe0;
-    }
-  }
-  span {
-    &:nth-child(2) {
-      i {
-        color: #686868;
-      }
-    }
-  }
-}
-
 .current-date {
   font-size: 10px;
   color: $grayPlaceholder;
