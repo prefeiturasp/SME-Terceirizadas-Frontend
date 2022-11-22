@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, TreeSelect } from "antd";
+import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import moment from "moment";
@@ -35,6 +35,7 @@ import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault } from "helpers/utilities";
+import TreeSelectForm from "components/Shareable/TreeSelectForm";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -356,7 +357,21 @@ export default () => {
         setCarregando(false);
       }
     } catch (error) {
-      toastError("Ocorreu um erro ao salvar o Cronograma");
+      if (typeof error.response.data === "object") {
+        let chave = Object.keys(error.response.data);
+        let msn_erro_return = error.response.data[chave[0]];
+        let msg_erro = Array.isArray(msn_erro_return)
+          ? msn_erro_return[0]
+          : msn_erro_return;
+        if (typeof msg_erro === "object") {
+          let chave2 = Object.keys(msg_erro);
+          toastError(`${chave2[0]}: ${msg_erro[chave2[0]][0]}`);
+        } else if (typeof msg_erro === "string") {
+          toastError(msg_erro);
+        }
+      } else {
+        toastError("Ocorreu um erro ao salvar o Cronograma");
+      }
       setCarregando(false);
     }
   };
@@ -654,6 +669,7 @@ export default () => {
                                 label="Armazém"
                                 name="armazem"
                                 required
+                                validate={required}
                                 placeholder={"Selecione o Armazém"}
                               />
                             </div>
@@ -678,6 +694,7 @@ export default () => {
                                 label="Tipo de Embalagem"
                                 name="tipo_embalagem"
                                 required
+                                validate={required}
                                 placeholder={"Selecione a Embalagem"}
                               />
                             </div>
@@ -714,13 +731,14 @@ export default () => {
                                     <label className="col-form-label">
                                       Nº do Empenho
                                     </label>
-                                    <TreeSelect
+                                    <Field
+                                      component={TreeSelectForm}
                                       treeData={empenhoOptions}
-                                      name={`empenho_${index} `}
+                                      name={`empenho_${index}`}
                                       required
                                       validate={required}
                                       allowClear
-                                      value={etapa.empenho_uuid}
+                                      defaultValue={values[`empenho_${index}`]}
                                       onChange={e =>
                                         onChangeEmpenho(e, index, values)
                                       }
@@ -739,6 +757,7 @@ export default () => {
                                       className="input-busca-produto"
                                       placeholder="Selecione a Etapa"
                                       required
+                                      validate={required}
                                       esconderIcone
                                     />
                                   </div>
@@ -786,6 +805,7 @@ export default () => {
                                       name={`data_programada_${index}`}
                                       placeholder="Selecionar a Data"
                                       required
+                                      validate={required}
                                       writable={false}
                                       minDate={null}
                                     />
@@ -813,6 +833,7 @@ export default () => {
                                       name={`total_embalagens_${index}`}
                                       placeholder="Digite a Quantidade"
                                       required
+                                      validate={required}
                                       apenasNumeros
                                     />
                                   </div>
