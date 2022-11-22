@@ -8,7 +8,7 @@ import {
   SOLICITACOES_CANCELADAS
 } from "configs/constants";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
-import { dataAtual } from "helpers/utilities";
+import { dataAtual, deepCopy } from "helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,
   getSolicitacoesComQuestionamento,
@@ -114,6 +114,7 @@ class DashboardTerceirizada extends Component {
 
   onPesquisaChanged(values, previous) {
     const params = PARAMS;
+    const values_ = deepCopy(values);
     if (values.titulo && values.titulo.length > 2) {
       params["busca"] = values.titulo;
       if (previous && previous.length >= 2) {
@@ -128,7 +129,12 @@ class DashboardTerceirizada extends Component {
     params["status"] = values.status;
     params["lote"] = values.lote;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
-    params["data_evento"] = values.data_evento;
+    params["data_evento"] =
+      values_.data_evento &&
+      values_.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
     if (
       values.status ||
       values.lote ||
