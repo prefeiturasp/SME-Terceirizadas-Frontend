@@ -1,5 +1,50 @@
 @import "../../styles/variables.scss";
 
+.modal-como-acessar {
+  width: 55vw !important;
+  max-width: 55vw !important;
+  margin: 33vh auto !important;
+
+  text-align: center;
+  .flex-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 8px;
+    height: 100%;
+
+    div {
+      margin: 4px 0;
+    }
+
+    .titulo {
+      color: $greenButtonHover;
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    .texto {
+      font-size: 15px;
+      line-height: 17px;
+      color: $blackInput;
+    }
+
+    .icone {
+      color: $green;
+      font-size: 60px;
+    }
+
+    .rodape {
+      padding: 8px;
+      color: $blackInput;
+      font-size: 12px;
+      line-height: 14px;
+      background-color: #f3f3f3;
+    }
+  }
+}
+
 .login-bg {
   background: url("/assets/image/bg.png");
   width: 50%;
@@ -42,7 +87,7 @@ a.hyperlink {
       }
 
       .input {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       .input-login {
@@ -51,11 +96,24 @@ a.hyperlink {
 
       .btn-acessar {
         height: 44px;
+        margin-top: 7px;
         margin-bottom: 2.5rem;
+      }
+
+      .como-acessar {
+        cursor: pointer;
+        color: #035d96;
+        margin: 0;
+        :hover {
+          text-decoration: underline;
+        }
       }
     }
     .logo-sigpae {
+      display: flex;
       text-align: center;
+      justify-content: center;
+
       @media screen and (max-width: 768px) {
         padding-top: 3.5rem;
         padding-bottom: 0.5rem;
@@ -72,8 +130,17 @@ a.hyperlink {
           width: auto;
         }
       }
+
+      .titulo {
+        font-size: 24px;
+        color: #42474a;
+        font-weight: bold;
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: 1em;
+      }
     }
-    .logo-sigpae-primeiro-acesso {
+    .logo-sigpae-texto {
       display: flex;
       text-align: center;
       justify-content: center;
@@ -93,15 +160,6 @@ a.hyperlink {
           height: auto;
           width: 125px;
         }
-      }
-
-      .titulo {
-        font-size: 24px;
-        color: #42474a;
-        font-weight: bold;
-        margin-top: auto;
-        margin-bottom: auto;
-        margin-left: 1em;
       }
     }
     .terms {
