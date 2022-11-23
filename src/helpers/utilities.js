@@ -35,7 +35,7 @@ export const checaSeDataEstaEntre2e5DiasUteis = (
   const _date = value.split("/");
   if (
     two_working_days <= new Date(_date[2], _date[1] - 1, _date[0]) &&
-    new Date(_date[2], _date[1] - 1, _date[0]) < five_working_days
+    new Date(_date[2], _date[1] - 1, _date[0]) <= five_working_days
   ) {
     return true;
   }
