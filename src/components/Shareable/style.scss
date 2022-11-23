@@ -26,6 +26,10 @@ textarea {
   padding: 1.25rem !important;
 }
 
+.dash-terc {
+  min-height: 70vh;
+}
+
 .dashboard-card-title {
   input.input-search {
     font-size: 14px;
@@ -138,25 +142,6 @@ textarea {
   width: 100%;
   input {
     margin-right: -30px;
-  }
-}
-
-.dashboard-card-title {
-  color: $blue;
-  i {
-    color: #334d6e;
-    padding-right: 15px;
-    &:nth-child(2) {
-      padding-left: 15px;
-      color: #c2cfe0;
-    }
-  }
-  span {
-    &:nth-child(2) {
-      i {
-        color: #686868;
-      }
-    }
   }
 }
 

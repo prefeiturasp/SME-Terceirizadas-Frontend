@@ -391,6 +391,14 @@ export const usuarioEhLogistica = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhCronogramaObservacao = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.DILOG_DIRETORIA,
+    PERFIL.DINUTRE_DIRETORIA
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhPreRecebimento = () => {
   /*
   TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso

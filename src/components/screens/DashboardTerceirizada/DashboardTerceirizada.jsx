@@ -8,13 +8,12 @@ import {
   SOLICITACOES_CANCELADAS
 } from "configs/constants";
 import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
-import { dataAtual } from "helpers/utilities";
+import { dataAtual, deepCopy } from "helpers/utilities";
 import {
   getSolicitacoesCanceladasTerceirizada,
   getSolicitacoesComQuestionamento,
   getSolicitacoesNegadasTerceirizada,
-  getSolicitacoesAutorizadasTerceirizada,
-  getSolicitacoesPendenteCienciaTerceirizada
+  getSolicitacoesAutorizadasTerceirizada
 } from "services/painelTerceirizada.service";
 import CardBody from "components/Shareable/CardBody";
 import CardMatriculados from "components/Shareable/CardMatriculados";
@@ -35,14 +34,13 @@ class DashboardTerceirizada extends Component {
       cards: this.props.cards,
 
       lotes: [],
-      resumo: [],
 
       collapsed: true,
       questionamentosListSolicitacao: [],
       autorizadasListSolicitacao: [],
       canceladasListSolicitacao: [],
       negadasListSolicitacao: [],
-      loadingPainelSolicitacoes: true,
+      loadingFiltro: false,
 
       listaStatus: [
         { nome: "Conferência Status", uuid: "" },
@@ -58,22 +56,6 @@ class DashboardTerceirizada extends Component {
     this.setState({ collapsed: !this.state.collapsed });
   }
 
-  async carregaResumosQuestionamentos() {
-    const { meusDados } = this.props;
-    let minhaTerceirizada = meusDados.vinculo_atual.instituicao.uuid;
-    const { visao, filtroPorVencimento } = this.state;
-    this.setState({ loadingPainelSolicitacoes: true });
-    const resumo = await getSolicitacoesPendenteCienciaTerceirizada(
-      minhaTerceirizada,
-      filtroPorVencimento,
-      visao
-    );
-    this.setState({
-      resumo: resumo.results,
-      loadingPainelSolicitacoes: false
-    });
-  }
-
   async getSolicitacoesAsync(params = null) {
     getSolicitacoesComQuestionamento(params).then(request => {
       let questionamentosListSolicitacao = ajustarFormatoLog(
@@ -81,7 +63,8 @@ class DashboardTerceirizada extends Component {
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
-        questionamentosListSolicitacao
+        questionamentosListSolicitacao,
+        loadingFiltro: false
       });
     });
 
@@ -126,19 +109,43 @@ class DashboardTerceirizada extends Component {
         secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO
       });
     }
-    this.carregaResumosQuestionamentos();
     this.getSolicitacoesAsync(PARAMS);
   }
 
-  onPesquisaChanged(values) {
+  onPesquisaChanged(values, previous) {
     const params = PARAMS;
+    const values_ = deepCopy(values);
     if (values.titulo && values.titulo.length > 2) {
       params["busca"] = values.titulo;
+      if (previous && previous.length >= 2) {
+        this.setState({ loadingFiltro: true });
+      }
     } else {
+      if (previous && previous.length > 2) {
+        this.setState({ loadingFiltro: true });
+      }
       delete params["busca"];
     }
     params["status"] = values.status;
     params["lote"] = values.lote;
+    params["tipo_solicitacao"] = values.tipo_solicitacao;
+    params["data_evento"] =
+      values_.data_evento &&
+      values_.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
+    if (
+      values.status ||
+      values.lote ||
+      values.tipo_solicitacao ||
+      values.data_evento
+    ) {
+      this.setState({
+        loadingFiltro: true
+      });
+    }
+
     setTimeout(async () => {
       this.getSolicitacoesAsync(params);
     }, 500);
@@ -153,7 +160,8 @@ class DashboardTerceirizada extends Component {
       canceladasListSolicitacao,
       negadasListSolicitacao,
       autorizadasListSolicitacao,
-      listaStatus
+      listaStatus,
+      loadingFiltro
     } = this.state;
 
     const LOADING =
@@ -176,7 +184,7 @@ class DashboardTerceirizada extends Component {
               0
             }
           />
-          <Spin tip="Carregando..." spinning={LOADING}>
+          <Spin tip="Carregando..." spinning={LOADING || loadingFiltro}>
             <CardBody
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
