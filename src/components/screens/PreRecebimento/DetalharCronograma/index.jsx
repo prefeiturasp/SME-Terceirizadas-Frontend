@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Spin } from "antd";
-import { getDetalharCronograma } from "services/cronograma.service";
+import { getCronograma } from "services/cronograma.service";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 
@@ -12,7 +12,7 @@ export default () => {
 
   const getDetalhes = async () => {
     if (uuid) {
-      const responseCronograma = await getDetalharCronograma(uuid);
+      const responseCronograma = await getCronograma(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         setCronograma(responseCronograma.data);
       }
