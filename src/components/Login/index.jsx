@@ -190,7 +190,7 @@ export class Login extends Component {
           dialogClassName="modal-como-acessar"
         >
           <Modal.Header closeButton>
-            <Modal.Title>Como Acessar?</Modal.Title>
+            <Modal.Title>Como acessar o SIGPAE</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div className="row">
@@ -200,9 +200,12 @@ export class Login extends Component {
                   <div className="icone">
                     <i className="fas fa-chalkboard-teacher" />
                   </div>
-                  <div className="texto">Acesse com seu RF de 7 dígitos</div>
+                  <div className="texto">
+                    Acesse com seu <strong>RF</strong> de 7 dígitos
+                  </div>
                   <div className="rodape">
-                    A senha é a mesma de acesso ao Plateia e ao SGP
+                    A <strong>senha</strong> é a mesma de acesso ao Plateia e ao
+                    SGP
                   </div>
                 </div>
               </div>
@@ -212,9 +215,11 @@ export class Login extends Component {
                   <div className="icone">
                     <i className="fas fa-truck" />
                   </div>
-                  <div className="texto">Acesse com seu CPF de 11 dígitos</div>
+                  <div className="texto">
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
+                  </div>
                   <div className="rodape">
-                    A senha é a cadastrada no primeiro acesso
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
                   </div>
                 </div>
               </div>
@@ -225,10 +230,11 @@ export class Login extends Component {
                     <i className="fas fa-hotel" />
                   </div>
                   <div className="texto">
-                    Acesse com seu Código Operador de 7 caracteres
+                    Acesse com seu <strong>Código Operador</strong> de 7
+                    caracteres
                   </div>
                   <div className="rodape">
-                    A senha é a mesma de acesso ao EOL
+                    A <strong>senha</strong> é a mesma de acesso ao EOL
                   </div>
                 </div>
               </div>
@@ -260,7 +266,7 @@ export class Login extends Component {
             esconderAsterisco
             label="Senha"
             name="password"
-            placeholder={"******"}
+            placeholder={"Digite sua Senha"}
             required
             validate={required}
           />
