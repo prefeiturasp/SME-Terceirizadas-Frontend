@@ -1,4 +1,5 @@
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
+import moment from "moment";
 import Select from "components/Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
@@ -49,7 +50,7 @@ export const Filtros = ({ ...props }) => {
 
   const getEscolasSimplissimaComDREUnpaginatedAsync = async () => {
     const response = await getEscolasTrecTotal(
-      usuarioEhDRE() && meusDados.vinculo_atual.instituicao.uuid
+      usuarioEhDRE() ? meusDados.vinculo_atual.instituicao.uuid : null
     );
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(response.data);
@@ -64,6 +65,23 @@ export const Filtros = ({ ...props }) => {
     getEscolasSimplissimaComDREUnpaginatedAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const filtroEscolas = (unidadesEducacionais, values) => {
+    if (values.lotes && values.lotes.length > 0) {
+      unidadesEducacionais = unidadesEducacionais.filter(ue =>
+        values.lotes.includes(ue.lote)
+      );
+    }
+    if (values.tipos_unidade && values.tipos_unidade.length > 0) {
+      unidadesEducacionais = unidadesEducacionais.filter(ue =>
+        values.tipos_unidade.includes(ue.tipo_unidade)
+      );
+    }
+    return unidadesEducacionais.map(unidadeEducacional => ({
+      label: unidadeEducacional.nome,
+      value: unidadeEducacional.uuid
+    }));
+  };
 
   const onSubmit = async () => {};
 
@@ -102,6 +120,7 @@ export const Filtros = ({ ...props }) => {
                       allItemsAreSelected: "Todos os lotes estão selecionados",
                       selectAll: "Todos"
                     }}
+                    disabled={!values.status}
                   />
                 </div>
                 <div className="col-4">
@@ -121,6 +140,7 @@ export const Filtros = ({ ...props }) => {
                         "Todos os tipos de alimentação estão selecionados",
                       selectAll: "Todos"
                     }}
+                    disabled={!values.status}
                   />
                 </div>
               </div>
@@ -145,6 +165,7 @@ export const Filtros = ({ ...props }) => {
                         "Todos os tipos de unidade estão selecionados",
                       selectAll: "Todos"
                     }}
+                    disabled={!values.status}
                   />
                 </div>
                 <div className="col-8">
@@ -153,10 +174,7 @@ export const Filtros = ({ ...props }) => {
                     component={StatefulMultiSelect}
                     name="unidades_educacionais"
                     selected={values.unidades_educacionais || []}
-                    options={unidadesEducacionais.map(unidadeEducacional => ({
-                      label: unidadeEducacional.nome,
-                      value: unidadeEducacional.uuid
-                    }))}
+                    options={filtroEscolas(unidadesEducacionais, values)}
                     onSelectedChanged={values_ =>
                       form.change(`unidades_educacionais`, values_)
                     }
@@ -167,6 +185,7 @@ export const Filtros = ({ ...props }) => {
                         "Todos os tipos de unidade estão selecionados",
                       selectAll: "Todos"
                     }}
+                    disabled={!values.status}
                   />
                 </div>
               </div>
@@ -175,13 +194,23 @@ export const Filtros = ({ ...props }) => {
               </div>
               <div className="row">
                 <div className="col-3">
-                  <Field component={InputComData} placeholder="De" name="de" />
+                  <Field
+                    component={InputComData}
+                    placeholder="De"
+                    minDate={null}
+                    maxDate={moment(values.ate, "DD/MM/YYYY")._d}
+                    name="de"
+                    disabled={!values.status}
+                  />
                 </div>
                 <div className="col-3">
                   <Field
                     component={InputComData}
                     placeholder="Até"
+                    minDate={moment(values.de, "DD/MM/YYYY")._d}
+                    maxDate={moment()._d}
                     name="ate"
+                    disabled={!values.status}
                   />
                 </div>
               </div>
