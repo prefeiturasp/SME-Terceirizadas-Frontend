@@ -1,13 +1,13 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Field, formValueSelector, reduxForm } from "redux-form";
+import { Field, reduxForm } from "redux-form";
+import { Modal } from "react-bootstrap";
 import {
   length,
   required,
-  rfOuCpf,
-  semCaracteresEspeciais,
-  validaCPF
+  rfOuCpfOuCodOperador,
+  semCaracteresEspeciais
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
 import {
@@ -29,8 +29,7 @@ import {
   fieldCnpj,
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
-import { connect } from "react-redux";
-import { composeValidators, deepCopy } from "helpers/utilities";
+import { deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
@@ -49,7 +48,8 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA
+      tab: TABS.ESCOLA,
+      showModal: false
     };
     this.emailInput = React.createRef();
   }
@@ -171,34 +171,113 @@ export class Login extends Component {
     this.setState({ tab });
   }
 
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  openModal() {
+    this.setState({ showModal: true });
+  }
+
   renderLogin() {
     const { handleSubmit, submitting } = this.props;
-    const { bloquearBotao } = this.state;
+    const { bloquearBotao, showModal } = this.state;
     return (
       <div className="form">
+        <Modal
+          show={showModal}
+          onHide={this.closeModal.bind(this)}
+          dialogClassName="modal-como-acessar"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Como acessar o SIGPAE</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Servidor Municipal</div>
+                  <div className="icone">
+                    <i className="fas fa-chalkboard-teacher" />
+                  </div>
+                  <div className="texto">
+                    Acesse com seu <strong>RF</strong> de 7 dígitos
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a mesma de acesso ao Plateia e ao
+                    SGP
+                  </div>
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Fornecedor ou Distribuidor</div>
+                  <div className="icone">
+                    <i className="fas fa-truck" />
+                  </div>
+                  <div className="texto">
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
+                  </div>
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Rede Parceira</div>
+                  <div className="icone">
+                    <i className="fas fa-hotel" />
+                  </div>
+                  <div className="texto">
+                    Acesse com seu <strong>Código Operador</strong> de 7
+                    caracteres
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a mesma de acesso ao EOL
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
+          <p
+            onClick={() => this.openModal()}
+            className="como-acessar text-right"
+          >
+            Como Acessar?
+          </p>
           <Field
             component={InputText}
+            className="input-login"
             esconderAsterisco
-            label="Login"
+            label="Usuário"
             name="login"
-            placeholder={"RF ou CPF"}
+            placeholder={"Digite seu RF ou CPF ou Código Operador"}
             required
             type="text"
             maxlength="11"
-            apenasNumeros
-            validate={[required, rfOuCpf]}
+            validate={[required, rfOuCpfOuCodOperador]}
           />
           <Field
             component={InputPassword}
+            className="input-login"
             esconderAsterisco
             label="Senha"
             name="password"
-            placeholder={"******"}
+            placeholder={"Digite sua Senha"}
             required
             validate={required}
           />
-          <p className="mt-2">
+          <Botao
+            className="col-12 btn-acessar"
+            style={BUTTON_STYLE.GREEN}
+            texto="Acessar"
+            disabled={submitting || bloquearBotao}
+            type={BUTTON_TYPE.SUBMIT}
+          />
+          <p className="mt-3 text-center">
             <Link
               className="hyperlink"
               to="#"
@@ -210,26 +289,6 @@ export class Login extends Component {
               }
             >
               Esqueci minha senha
-            </Link>
-          </p>
-          <Botao
-            className="col-12"
-            style={BUTTON_STYLE.GREEN}
-            texto="Acessar"
-            disabled={submitting || bloquearBotao}
-            type={BUTTON_TYPE.SUBMIT}
-          />
-          <p className="mt-3">
-            Não possui uma conta? &nbsp;
-            <Link
-              className="hyperlink"
-              data-cy="ainda-nao-cadastrado"
-              onClick={() =>
-                this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
-              }
-              to="#"
-            >
-              Cadastre-se
             </Link>
           </p>
         </form>
@@ -445,8 +504,7 @@ export class Login extends Component {
   }
   renderRecuperacaoOK() {
     return (
-      <div>
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+      <div className="mt-4">
         <center>
           <div className="mt-3">
             <div className="alerta-verde mt-2">
@@ -454,7 +512,7 @@ export class Login extends Component {
               <p>E-mail de recuperação enviado com sucesso</p>
             </div>
             <p className="mt-1">
-              {`Seu link de recuperação de senha foi enviado para
+              {`O link de recuperação de senha foi enviado para
             ${this.state.email_recuperacao}`}
             </p>
             <p className="mt-2">Verifique sua caixa de entrada ou spam</p>
@@ -477,8 +535,7 @@ export class Login extends Component {
 
   renderRecuperacaoNOK() {
     return (
-      <div>
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+      <div className="mt-4">
         <center className="mt-4">
           <div className="mt-3">
             <div className="alerta-vermelho mt-2">
@@ -486,10 +543,8 @@ export class Login extends Component {
               <p>Usuário não encontrado</p>
             </div>
             <p className="mt-1">
-              Você não tem um usuário cadastrado para recuperar sua senha.
-            </p>
-            <p className="mt-2">
-              Para restabelecer o seu acesso, procure o Diretor da sua unidade.
+              Não encontramos o usuário informado. Procure o responsável pelo
+              sistema na sua Unidade
             </p>
           </div>
         </center>
@@ -509,80 +564,75 @@ export class Login extends Component {
   }
 
   renderEsqueciSenha() {
-    const { servidor, handleSubmit } = this.props;
     return (
       <div className="form">
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <p className="texto-simples mt-4">
-          Caso você tenha cadastro, ao continuar você receberá um e-mail com as
-          orientações para redefinição da sua senha.
-        </p>
-        <p className="texto-simples">
-          Se você não tem e-mail cadastrado ou não tem mais acesso ao endereço
-          de e-mail cadastrado, procure o responsável pelo SIGPAE na sua
-          unidade.
-        </p>
-        <p>É Servidor?</p>
-        <form className="login">
-          <div className="row ml-0">
-            <div className="col-3">
-              <label className="container-radio">
-                Sim
-                <Field
-                  component={"input"}
-                  type="radio"
-                  value="1"
-                  name="servidor"
-                />
-                <span className="checkmark" />
-              </label>
-            </div>
-            <div className="col-3">
-              <label className="container-radio">
-                Não
-                <Field
-                  component={"input"}
-                  type="radio"
-                  value="0"
-                  name="servidor"
-                />
-                <span className="checkmark" />
-              </label>
-            </div>
-          </div>
-          {servidor !== undefined && (
-            <Field
-              component={InputText}
-              type="number"
-              label={servidor === "1" ? "RF" : "CPF"}
-              name="recuperar_login"
-              placeholder={`Digite seu ${servidor === "1" ? "RF" : "CPF"}`}
-              validate={composeValidators(
-                required,
-                servidor === "1" ? length(7) : validaCPF
-              )}
-            />
-          )}
-        </form>
-
-        <div className="alinha-direita mt-3 ml-4 mr-4">
-          <Botao
-            className="col-md-2 ml-3"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            texto="Cancelar"
-            type={BUTTON_TYPE.SUBMIT}
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-            }
-          />
-          <Botao
-            className="col-md-2 ml-3"
-            style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
-            type={BUTTON_TYPE.SUBMIT}
-            onClick={handleSubmit(values => this.handleRecuperaSenha(values))}
-          />
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Servidor Municipal: &nbsp;
+          </span>
+          Digite seu <strong>RF</strong>.
         </div>
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Fornecedor ou Distribuidor: &nbsp;
+          </span>
+          Digite seu <strong>CPF</strong>.
+        </div>
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Rede Parceira: &nbsp;
+          </span>
+          Digite seu <strong>Código Operador</strong>.
+        </div>
+        <Form
+          onSubmit={this.handleRecuperaSenha}
+          initialValues={{}}
+          validate={() => {}}
+          render={({ values }) => {
+            return (
+              <>
+                <form className="login mt-3">
+                  <FieldFF
+                    component={InputText}
+                    label="Usuário"
+                    name="recuperar_login"
+                    placeholder="Digite seu RF, CPF ou Código Operador"
+                    validate={required}
+                  />
+                </form>
+
+                <div className="alinha-direita mt-3 ml-4 mr-4">
+                  <Botao
+                    className="col-md-2 ml-3"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    texto="Cancelar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={() =>
+                      this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+                    }
+                  />
+                  <Botao
+                    className="col-md-2 ml-3"
+                    style={BUTTON_STYLE.GREEN}
+                    texto="Continuar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={() => this.handleRecuperaSenha(values)}
+                    disabled={!values.recuperar_login}
+                  />
+                </div>
+              </>
+            );
+          }}
+        />
+
+        <p className="texto-simples mt-4">
+          Você receberá um e-mail com as orientações para redefinição da sua
+          senha.
+        </p>
+        <p className="texto-simples mt-4">
+          Caso você não tenha cadastro ou não tenha mais acesso ao e-mail
+          cadastrado, procure o responsável pelo SIGPAE na sua unidade.
+        </p>
       </div>
     );
   }
@@ -689,6 +739,30 @@ export class Login extends Component {
     }
   }
 
+  renderLogoTexto(texto) {
+    return (
+      <div className="logo-sigpae">
+        <img src="/assets/image/logo-sigpae.png" alt="" />
+        {texto && <div className="titulo">{texto}</div>}
+      </div>
+    );
+  }
+
+  renderLogoSwitch(param) {
+    switch (param) {
+      case this.COMPONENTE.RECUPERAR_SENHA:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.RECUPERACAO_SENHA_OK:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.PRIMEIRO_ACESSO:
+        return this.renderLogoTexto("Primeiro Acesso");
+      default:
+        return this.renderLogoTexto();
+    }
+  }
+
   render() {
     const { componenteAtivo } = this.state;
 
@@ -697,16 +771,7 @@ export class Login extends Component {
         <div className="login-bg" />
         <div className="right-half">
           <div className="container my-auto">
-            {componenteAtivo !== this.COMPONENTE.PRIMEIRO_ACESSO ? (
-              <div className="logo-sigpae">
-                <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
-              </div>
-            ) : (
-              <div className="logo-sigpae-primeiro-acesso">
-                <img src="/assets/image/logo-sigpae.png" alt="" />
-                <div className="titulo">Primeiro Acesso</div>
-              </div>
-            )}
+            {this.renderLogoSwitch(componenteAtivo)}
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
               <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />
@@ -723,11 +788,5 @@ Login = reduxForm({
   destroyOnUnmount: false,
   initialValues: { tipo_email: 0 }
 })(Login);
-const selector = formValueSelector("login");
-const mapStateToProps = state => {
-  return {
-    servidor: selector(state, "servidor")
-  };
-};
 
-export default connect(mapStateToProps)(Login);
+export default Login;
