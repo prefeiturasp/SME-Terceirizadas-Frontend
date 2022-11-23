@@ -279,7 +279,7 @@ class DashboardDRE extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Autorização"}
+                  cardTitle={"Aguardando Validação da DRE"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={questionamentosListFiltered}
                   icon={"fa-exclamation-triangle"}
