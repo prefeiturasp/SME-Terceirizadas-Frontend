@@ -8,7 +8,7 @@ import {
   PRE_RECEBIMENTO,
   EDITAR
 } from "configs/constants";
-import { usuarioEhCronogramaObservacao } from "helpers/utilities";
+import { usuarioEhCronogramaCriacaoEdicao } from "helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   return (
@@ -54,7 +54,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                     </>
                   ) : (
                     <>
-                      {!usuarioEhCronogramaObservacao() && (
+                      {usuarioEhCronogramaCriacaoEdicao() && (
                         <NavLink
                           className="float-left"
                           to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${

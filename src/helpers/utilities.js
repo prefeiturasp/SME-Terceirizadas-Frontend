@@ -391,11 +391,11 @@ export const usuarioEhLogistica = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhCronogramaObservacao = () => {
+export const usuarioEhCronogramaCriacaoEdicao = () => {
   return [
-    PERFIL.DILOG_QUALIDADE,
-    PERFIL.DILOG_DIRETORIA,
-    PERFIL.DINUTRE_DIRETORIA
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.COORDENADOR_LOGISTICA
   ].includes(localStorage.getItem("perfil"));
 };
 

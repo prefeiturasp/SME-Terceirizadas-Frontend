@@ -379,6 +379,9 @@ export default () => {
   const validaRascunho = values => {
     return !values.contrato_uuid;
   };
+  const lengthOrUnderfined = value => {
+    return value && value.length > 0 ? value : undefined;
+  };
 
   const getDadosCronograma = async () => {
     try {
@@ -392,27 +395,33 @@ export default () => {
 
         const etapaValues = {};
         responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = etapa.empenho_uuid;
-          etapaValues[`etapa_${i}`] = etapa.etapa;
-          etapaValues[`parte_${i}`] = etapa.parte;
-          etapaValues[`data_programada_${i}`] = etapa.data_programada;
-          etapaValues[`quantidade_${i}`] = etapa.quantidade;
-          etapaValues[`total_embalagens_${i}`] = etapa.total_embalagens;
+          etapaValues[`empenho_${i}`] = lengthOrUnderfined(etapa.empenho_uuid);
+          etapaValues[`etapa_${i}`] = lengthOrUnderfined(etapa.etapa);
+          etapaValues[`parte_${i}`] = lengthOrUnderfined(etapa.parte);
+          etapaValues[`data_programada_${i}`] = lengthOrUnderfined(
+            etapa.data_programada
+          );
+          etapaValues[`quantidade_${i}`] = lengthOrUnderfined(etapa.quantidade);
+          etapaValues[`total_embalagens_${i}`] = lengthOrUnderfined(
+            etapa.total_embalagens
+          );
         });
         setEtapasValues(etapaValues);
 
         const recebimentoValues = {};
         programacoes_de_recebimento.forEach((recebimento, i) => {
-          recebimentoValues[`data_recebimento_${i}`] =
-            recebimento.data_programada;
-          recebimentoValues[`tipo_recebimento_${i}`] = recebimento.tipo_carga;
+          recebimentoValues[`data_recebimento_${i}`] = lengthOrUnderfined(
+            recebimento.data_programada
+          );
+          recebimentoValues[`tipo_recebimento_${i}`] = lengthOrUnderfined(
+            recebimento.tipo_carga
+          );
         });
         setRecebimentosValues(recebimentoValues);
-
         setCarregando(false);
       }
     } catch (e) {
-      toastError("Ocorreu um erro ao salvar o Cronograma");
+      toastError("Ocorreu um erro ao carregar o Cronograma");
     }
   };
 
