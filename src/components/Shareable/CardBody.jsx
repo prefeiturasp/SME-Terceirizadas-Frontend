@@ -42,7 +42,7 @@ const CardBody = props => {
                   <div
                     className={`${
                       ehTerceirizada && props.listaStatus && props.listaLotes
-                        ? "offset-6 col-3"
+                        ? "offset-3 col-6"
                         : "offset-3 col-3"
                     }`}
                   >
