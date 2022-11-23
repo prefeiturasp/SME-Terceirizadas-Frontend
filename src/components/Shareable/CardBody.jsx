@@ -16,7 +16,7 @@ const CardBody = props => {
 
   return (
     <div className="card mt-3">
-      <div className="card-body">
+      <div className="card-body dash-terc">
         <div className="card-title font-weight-bold dashboard-card-title">
           <Form
             onSubmit={() => {}}
@@ -138,6 +138,7 @@ const CardBody = props => {
                     <div className="col-3">
                       <Field
                         name="data_evento"
+                        minDate={null}
                         component={InputComData}
                         placeholder="Data do evento"
                       />
