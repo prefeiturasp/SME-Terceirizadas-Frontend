@@ -6,12 +6,12 @@ export const STATUS_SOLICITACOES = [
 ];
 
 export const TIPOS_SOLICITACAO = [
-  { label: "Inclusão de Alimentação", value: "INCLUSAO_ALIMENTACAO" },
+  { label: "Inclusão de Alimentação", value: "Inclusão de" },
   {
     label: "Alteração do Tipo de Alimentação",
-    value: "ALTERACAO_TIPO_ALIMENTACAO"
+    value: "Alteração"
   },
   { label: "Kit Lanche", value: "KIT_LANCHE" },
-  { label: "Inversão de Dia de Cardápio", value: "INVERSAO_CARDAPIO" },
-  { label: "Suspensão de Alimentação", value: "SUSPENSAO_ALIMENTACAO" }
+  { label: "Inversão de Dia de Cardápio", value: "Inversão" },
+  { label: "Suspensão de Alimentação", value: "Suspensão" }
 ];
