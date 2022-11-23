@@ -242,11 +242,8 @@ export class Login extends Component {
           </Modal.Body>
         </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
-          <p
-            onClick={() => this.openModal()}
-            className="como-acessar text-right"
-          >
-            Como Acessar?
+          <p className="como-acessar text-right">
+            <span onClick={() => this.openModal()}>Como Acessar?</span>
           </p>
           <Field
             component={InputText}
@@ -601,9 +598,9 @@ export class Login extends Component {
                   />
                 </form>
 
-                <div className="alinha-direita mt-3 ml-4 mr-4">
+                <div className="alinha-direita">
                   <Botao
-                    className="col-md-2 ml-3"
+                    className="col-md-3 ml-3"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     texto="Cancelar"
                     type={BUTTON_TYPE.SUBMIT}
@@ -612,7 +609,7 @@ export class Login extends Component {
                     }
                   />
                   <Botao
-                    className="col-md-2 ml-3"
+                    className="col-md-3 ml-3"
                     style={BUTTON_STYLE.GREEN}
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}
