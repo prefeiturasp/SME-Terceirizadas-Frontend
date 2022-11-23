@@ -101,11 +101,14 @@ a.hyperlink {
       }
 
       .como-acessar {
-        cursor: pointer;
-        color: #035d96;
         margin: 0;
-        :hover {
-          text-decoration: underline;
+
+        span {
+          cursor: pointer;
+          color: #035d96;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
     }
