@@ -70,12 +70,14 @@ export const TempoPasseio = ({ form, ehEMEI, name, nameKits }) => {
               <b>De 5 a 7 horas:</b> 2 Kit lanche/aluno: Escolher 2 Kits
               distintos entre os modelos estabelecidos contratualmente;
             </label>
-            <br />
             {ehEMEI && (
-              <label>
-                <b>8 horas ou mais:</b> 3 Kit lanche/aluno: Escolher 3 Kits
-                distintos entre os modelos estabelecidos contratualmente;
-              </label>
+              <>
+                <br />
+                <label>
+                  <b>8 horas ou mais:</b> 3 Kit lanche/aluno: Escolher 3 Kits
+                  distintos entre os modelos estabelecidos contratualmente;
+                </label>
+              </>
             )}
           </div>
         </div>
