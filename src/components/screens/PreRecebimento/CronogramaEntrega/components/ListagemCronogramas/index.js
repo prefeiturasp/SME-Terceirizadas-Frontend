@@ -2,7 +2,13 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  CADASTRO_CRONOGRAMA,
+  DETALHE_CRONOGRAMA,
+  PRE_RECEBIMENTO,
+  EDITAR
+} from "configs/constants";
+import { usuarioEhCronogramaObservacao } from "helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   return (
@@ -35,7 +41,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                 </div>
                 <div className={`${bordas}`}>{cronograma.status}</div>
                 <div className={`${bordas}`}>
-                  {cronograma.status !== "Rascunho" && (
+                  {cronograma.status !== "Rascunho" ? (
                     <>
                       <NavLink
                         className="float-left"
@@ -46,7 +52,20 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                         <span className="link-acoes green">Detalhar</span>
                       </NavLink>
                     </>
-                  )}{" "}
+                  ) : (
+                    <>
+                      {!usuarioEhCronogramaObservacao() && (
+                        <NavLink
+                          className="float-left"
+                          to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
+                            cronograma.uuid
+                          }`}
+                        >
+                          <span className="link-acoes green">Editar</span>
+                        </NavLink>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </>
