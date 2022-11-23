@@ -380,7 +380,7 @@ export default () => {
     return !values.contrato_uuid;
   };
   const lengthOrUnderfined = value => {
-    return value.length > 0 ? value : undefined;
+    return value && value.length > 0 ? value : undefined;
   };
 
   const getDadosCronograma = async () => {
@@ -418,7 +418,6 @@ export default () => {
           );
         });
         setRecebimentosValues(recebimentoValues);
-
         setCarregando(false);
       }
     } catch (e) {
