@@ -15,11 +15,18 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
 import { getEscolasTrecTotal } from "services/escola.service";
 import { InputComData } from "components/Shareable/DatePicker";
+import { getNomesTerceirizadas } from "services/produto.service";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
   const [tiposUnidades, setTiposUnidades] = useState([]);
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
+  const [terceirizadas, setTerceirizadas] = useState([]);
 
   const { erroAPI, meusDados, setErroAPI } = props;
 
@@ -59,10 +66,24 @@ export const Filtros = ({ ...props }) => {
     }
   };
 
+  const getTerceirizadasAsync = async () => {
+    let params = {};
+    if (usuarioEhDRE()) {
+      params["dre_uuid"] = meusDados.vinculo_atual.instituicao.uuid;
+    }
+    const response = await getNomesTerceirizadas(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setTerceirizadas(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar terceirizadas.");
+    }
+  };
+
   useEffect(() => {
     getLotesSimplesAsync();
     getTiposUnidadeEscolarAsync();
     getEscolasSimplissimaComDREUnpaginatedAsync();
+    getTerceirizadasAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,7 +107,10 @@ export const Filtros = ({ ...props }) => {
   const onSubmit = async () => {};
 
   const LOADING =
-    !lotes.length || !tiposUnidades.length || !unidadesEducacionais.length;
+    !lotes.length ||
+    !tiposUnidades.length ||
+    !unidadesEducacionais.length ||
+    !terceirizadas.length;
 
   return (
     <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
@@ -144,73 +168,111 @@ export const Filtros = ({ ...props }) => {
                   />
                 </div>
               </div>
-              <div className="row">
-                <div className="col-4">
-                  <label>Tipo de Unidade</label>
-                  <Field
-                    component={StatefulMultiSelect}
-                    name="tipos_unidade"
-                    selected={values.tipos_unidade || []}
-                    options={tiposUnidades.map(tipoUnidade => ({
-                      label: tipoUnidade.iniciais,
-                      value: tipoUnidade.uuid
-                    }))}
-                    onSelectedChanged={values_ =>
-                      form.change(`tipos_unidade`, values_)
-                    }
-                    hasSelectAll
-                    overrideStrings={{
-                      selectSomeItems: "Selecione",
-                      allItemsAreSelected:
-                        "Todos os tipos de unidade estão selecionados",
-                      selectAll: "Todos"
-                    }}
-                    disabled={!values.status}
-                  />
+              {values.status !== "RECEBIDAS" && (
+                <div className="row mt-3">
+                  <div className="col-4">
+                    <label>Tipo de Unidade</label>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="tipos_unidade"
+                      selected={values.tipos_unidade || []}
+                      options={tiposUnidades.map(tipoUnidade => ({
+                        label: tipoUnidade.iniciais,
+                        value: tipoUnidade.uuid
+                      }))}
+                      onSelectedChanged={values_ =>
+                        form.change(`tipos_unidade`, values_)
+                      }
+                      hasSelectAll
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected:
+                          "Todos os tipos de unidade estão selecionados",
+                        selectAll: "Todos"
+                      }}
+                      disabled={!values.status}
+                    />
+                  </div>
+                  <div className="col-8">
+                    <label>Unidades Educacionais</label>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="unidades_educacionais"
+                      selected={values.unidades_educacionais || []}
+                      options={filtroEscolas(unidadesEducacionais, values)}
+                      onSelectedChanged={values_ =>
+                        form.change(`unidades_educacionais`, values_)
+                      }
+                      hasSelectAll
+                      overrideStrings={{
+                        selectSomeItems: "Selecione",
+                        allItemsAreSelected:
+                          "Todos os tipos de unidade estão selecionados",
+                        selectAll: "Todos"
+                      }}
+                      disabled={!values.status}
+                    />
+                  </div>
                 </div>
-                <div className="col-8">
-                  <label>Unidades Educacionais</label>
-                  <Field
-                    component={StatefulMultiSelect}
-                    name="unidades_educacionais"
-                    selected={values.unidades_educacionais || []}
-                    options={filtroEscolas(unidadesEducacionais, values)}
-                    onSelectedChanged={values_ =>
-                      form.change(`unidades_educacionais`, values_)
-                    }
-                    hasSelectAll
-                    overrideStrings={{
-                      selectSomeItems: "Selecione",
-                      allItemsAreSelected:
-                        "Todos os tipos de unidade estão selecionados",
-                      selectAll: "Todos"
-                    }}
-                    disabled={!values.status}
-                  />
+              )}
+              <div className="row mt-3">
+                {values.status === "RECEBIDAS" && (
+                  <div className="col-6">
+                    <Field
+                      component={Select}
+                      label="Terceirizada"
+                      name="terceirizada"
+                      options={agregarDefault(
+                        terceirizadas.map(terceirizada => ({
+                          nome: terceirizada.nome_fantasia,
+                          uuid: terceirizada.uuid
+                        }))
+                      )}
+                      naoDesabilitarPrimeiraOpcao
+                    />
+                  </div>
+                )}
+                <div className="col-6">
+                  <div>
+                    <label>Período do Evento</label>
+                  </div>
+                  <div className="row">
+                    <div className="col-6">
+                      <Field
+                        component={InputComData}
+                        placeholder="De"
+                        minDate={null}
+                        maxDate={moment(values.ate, "DD/MM/YYYY")._d}
+                        name="de"
+                        disabled={!values.status}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <Field
+                        component={InputComData}
+                        placeholder="Até"
+                        minDate={moment(values.de, "DD/MM/YYYY")._d}
+                        maxDate={moment()._d}
+                        name="ate"
+                        disabled={!values.status}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label>Período do Evento</label>
-              </div>
-              <div className="row">
-                <div className="col-3">
-                  <Field
-                    component={InputComData}
-                    placeholder="De"
-                    minDate={null}
-                    maxDate={moment(values.ate, "DD/MM/YYYY")._d}
-                    name="de"
-                    disabled={!values.status}
+              <div className="row mt-3">
+                <div className="col-12 text-right">
+                  <Botao
+                    texto="Limpar Filtros"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    onClick={() => form.reset()}
                   />
-                </div>
-                <div className="col-3">
-                  <Field
-                    component={InputComData}
-                    placeholder="Até"
-                    minDate={moment(values.de, "DD/MM/YYYY")._d}
-                    maxDate={moment()._d}
-                    name="ate"
-                    disabled={!values.status}
+                  <Botao
+                    texto="Consultar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
                   />
                 </div>
               </div>
