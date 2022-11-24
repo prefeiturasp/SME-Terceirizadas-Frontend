@@ -388,10 +388,35 @@ export default () => {
       const responseCronograma = await getCronograma(uuidCronograma);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
-        setCronograma(responseCronograma.data);
         setEtapas(responseCronograma.data.etapas);
         setRecebimentos(programacoes_de_recebimento);
         buscaContrato(responseCronograma.data);
+
+        const cronogramaValues = {};
+        const crono = responseCronograma.data;
+        cronogramaValues["termo_contrato"] = lengthOrUnderfined(crono.contrato);
+        cronogramaValues["contrato_uuid"] = lengthOrUnderfined(
+          crono.contrato_uuid
+        );
+        cronogramaValues["empresa"] = lengthOrUnderfined(crono.nome_empresa);
+        cronogramaValues["empresa_uuid"] = lengthOrUnderfined(
+          crono.empresa_uuid
+        );
+        cronogramaValues["numero_processo"] = lengthOrUnderfined(
+          crono.processo_sei
+        );
+        cronogramaValues["quantidade_total"] = lengthOrUnderfined(
+          crono.qtd_total_programada
+        );
+        cronogramaValues["unidade_medida"] = lengthOrUnderfined(
+          crono.unidade_medida
+        );
+        cronogramaValues["produto"] = lengthOrUnderfined(crono.produto_uuid);
+        cronogramaValues["armazem"] = lengthOrUnderfined(crono.armazem);
+        cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
+          crono.tipo_embalagem
+        );
+        setCronograma(cronogramaValues);
 
         const etapaValues = {};
         responseCronograma.data.etapas.forEach((etapa, i) => {
@@ -517,16 +542,7 @@ export default () => {
           <Form
             onSubmit={onSubmit}
             initialValues={{
-              termo_contrato: cronograma.contrato,
-              contrato_uuid: cronograma.contrato_uuid,
-              empresa: cronograma.nome_empresa,
-              empresa_uuid: cronograma.empresa_uuid,
-              numero_processo: cronograma.processo_sei,
-              quantidade_total: cronograma.qtd_total_programada,
-              unidade_medida: cronograma.unidade_medida,
-              produto: cronograma.produto_uuid,
-              armazem: cronograma.armazem ? cronograma.armazem.uuid : "",
-              tipo_embalagem: cronograma.tipo_embalagem,
+              ...cronograma,
               ...etapasValues,
               ...recebimentosValues
             }}
