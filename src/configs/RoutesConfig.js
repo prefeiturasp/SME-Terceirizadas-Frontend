@@ -177,6 +177,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 
 const routesConfig = [
@@ -1300,6 +1301,12 @@ const routesConfig = [
     component: CriarCopiaProtocoloPadraoDieta,
     exact: true,
     tipoUsuario: usuarioEhCODAEDietaEspecial()
+  },
+  {
+    path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
+    component: RelatorioSolicitacoesAlimentacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
