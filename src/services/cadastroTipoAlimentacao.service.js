@@ -8,9 +8,9 @@ const authHeader = {
   Authorization: `JWT ${authService.getToken()}`
 };
 
-export const getTiposUnidadeEscolar = async () => {
+export const getTiposUnidadeEscolar = async (params = null) => {
   const url = CONFIG.API_URL + "/tipos-unidade-escolar/";
-  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

@@ -2,6 +2,7 @@ import { saveAs } from "file-saver";
 
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 import axios from "./_base";
 
 const authToken = {
@@ -105,8 +106,13 @@ export const getResponderReclamacaoNomesMarcas = async () =>
 export const getResponderReclamacaoNomesFabricantes = async () =>
   await axios.get("/fabricantes/lista-nomes-responder-reclamacao/");
 
-export const getNomesTerceirizadas = async () => {
-  return await axios.get(`/terceirizadas/lista-nomes/`);
+export const getNomesTerceirizadas = async params => {
+  const url = `/terceirizadas/lista-nomes/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getEditaisDre = async () => {

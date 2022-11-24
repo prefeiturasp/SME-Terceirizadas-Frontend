@@ -57,6 +57,9 @@ const MenuRelatorios = () => {
     usuarioEhDRE() ||
     (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
 
+  const exibirRelatorioSOlicitacoeAlimentacao =
+    usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao();
+
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>
       {exibirProdutosHomologados && (
@@ -143,6 +146,11 @@ const MenuRelatorios = () => {
           }`}
         >
           Relatório de gestão de dieta esp.
+        </LeafItem>
+      )}
+      {exibirRelatorioSOlicitacoeAlimentacao && (
+        <LeafItem to={`/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
+          Solicitações de Alimentação
         </LeafItem>
       )}
     </Menu>
