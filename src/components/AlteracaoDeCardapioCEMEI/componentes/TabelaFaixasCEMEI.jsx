@@ -35,8 +35,7 @@ export const TabelaFaixasCEMEI = ({
   return (
     <>
       {(periodo.nome === "INTEGRAL" ||
-        (periodo.nome !== "INTEGRAL" &&
-          ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei))) && (
+        ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei)) && (
         <div className="row">
           <div className="col-12">
             <label
