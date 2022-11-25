@@ -380,7 +380,8 @@ export default () => {
     return !values.contrato_uuid;
   };
   const lengthOrUnderfined = value => {
-    return value && value.length > 0 ? value : undefined;
+    let valor = value ? value.toString() : undefined;
+    return valor && valor.length > 0 ? valor : undefined;
   };
 
   const getDadosCronograma = async () => {
@@ -412,10 +413,13 @@ export default () => {
           crono.unidade_medida
         );
         cronogramaValues["produto"] = lengthOrUnderfined(crono.produto_uuid);
-        cronogramaValues["armazem"] = lengthOrUnderfined(crono.armazem);
+        cronogramaValues["armazem"] = lengthOrUnderfined(
+          crono.armazem ? crono.armazem.uuid : undefined
+        );
         cronogramaValues["tipo_embalagem"] = lengthOrUnderfined(
           crono.tipo_embalagem
         );
+        cronogramaValues["numero"] = crono.numero ? crono.numero : undefined;
         setCronograma(cronogramaValues);
 
         const etapaValues = {};
