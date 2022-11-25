@@ -22,6 +22,9 @@
 }
 
 table.faixas-etarias-cei-alteracao {
+  font-family: "Roboto";
+  font-size: 14px;
+
   thead {
     tr {
       background-color: $grayBackground;
@@ -46,7 +49,7 @@ table.faixas-etarias-cei-alteracao {
       color: $blackSubtle;
 
       td {
-        padding: 0.5em;
+        padding: 1em;
         &:not(:first-child) {
           border-left: 1px solid $grayDisabled;
         }

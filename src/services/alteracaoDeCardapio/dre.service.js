@@ -1,5 +1,6 @@
-//import axios from "../_base";
+import axios from "../_base";
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
+import { ErrorHandlerFunction } from "services/service-helpers";
 import { getPath } from "./helper";
 
 // TODO Rever métodos get por prioridade. Esse já consolida todos em um consulta única.
@@ -21,55 +22,28 @@ export const dreListarSolicitacoesDeAlteracaoDeCardapio = (
     });
 };
 
-export const dreValidarSolicitacaoDeAlteracaoDeCardapio = (
+export const dreValidarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_VALIDA}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const dreReprovarSolicitacaoDeAlteracaoDeCardapio = (
+export const dreReprovarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
-
-/*   export const getDREPedidosDeAlteracaoCardapio = async filtroAplicado => {
-    const url = `${ENDPOINT.ALTERACOES_CARDAPIO_CEI}/${
-      PEDIDOS.DRE
-    }/${filtroAplicado}/`;
-   
-  }; */

@@ -1,6 +1,7 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
 export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
+export const INCLUSAO_ALIMENTACAO_CEMEI = "inclusao-de-alimentacao-cemei";
 export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
   "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
@@ -8,6 +9,8 @@ export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SUSPENSAO_ALIMENTACAO_CEI = "suspensao-de-alimentacao-cei";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
+export const ALTERACAO_TIPO_ALIMENTACAO_CEMEI =
+  "alteracao-do-tipo-de-alimentacao-cemei";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const SOLICITACAO_KIT_LANCHE_CEMEI = "solicitacao-de-kit-lanche-cemei";
 
@@ -177,6 +180,11 @@ export const PERIODO_LANCAMENTO = "periodo-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
+
+export const PRE_RECEBIMENTO = "pre-recebimento";
+export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
+export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
+export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

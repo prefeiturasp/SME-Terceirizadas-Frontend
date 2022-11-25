@@ -139,7 +139,7 @@ class Relatorio extends Component {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
     const tipoSolicitacao = this.state.tipoSolicitacao;
-    this.props.endpointAprovaSolicitacao(uuid, tipoSolicitacao).then(
+    this.props.endpointAprovaSolicitacao(uuid, {}, tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);

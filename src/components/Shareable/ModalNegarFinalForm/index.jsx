@@ -3,105 +3,79 @@ import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Modal } from "react-bootstrap";
 import HTTP_STATUS from "http-status-codes";
-import { agregarDefault, getError } from "helpers/utilities";
-import { required } from "helpers/fieldValidators";
+import { composeValidators, getError } from "helpers/utilities";
+import {
+  peloMenosUmCaractere,
+  textAreaRequired
+} from "helpers/fieldValidators";
 import Botao from "components/Shareable/Botao";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
-import Select from "components/Shareable/Select";
+import CKEditorField from "components/Shareable/CKEditorField";
 
-export const ModalNaoValidarKitLancheCEMEI = ({ ...props }) => {
+export const ModalNegarFinalForm = ({ ...props }) => {
   const {
     showModal,
     closeModal,
     solicitacao,
     endpoint,
     loadSolicitacao,
-    motivosDREnaoValida
+    tipoSolicitacao
   } = props;
-  const [desabilitaBotaoSim, setDesabilitaBotaoSim] = useState(true);
+  const [justificativa, setJustificativa] = useState("");
 
   const solicitacaoAlimentacaoContext = useContext(
     SolicitacaoAlimentacaoContext
   );
 
   const onSubmit = async values => {
-    const justificativa = {
-      justificativa: `${
-        motivosDREnaoValida.find(
-          motivo => motivo.uuid === values.motivo_nao_valida
-        ).nome
-      } - ${values.justificativa}`
-    };
-    const resp = await endpoint(solicitacao.uuid, justificativa);
+    const resp = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
-      toastSuccess("Solicitação não validada com sucesso!");
+      toastSuccess("Solicitação negada com sucesso!");
       if (loadSolicitacao) {
         const response = await loadSolicitacao(solicitacao.uuid);
-        if (response.status === HTTP_STATUS.OK) {
+        if (response && response.status === HTTP_STATUS.OK) {
           solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
             response.data
           );
         }
       }
     } else {
-      toastError(
-        `Houve um erro ao não validar a solicitação: ${getError(resp.data)}`
-      );
       closeModal();
+      toastError(`Houve um erro ao negar solicitação: ${getError(resp.data)}`);
     }
-  };
-
-  const onChangeForm = values => {
-    if (values.justificativa && values.motivo_nao_valida) {
-      setDesabilitaBotaoSim(false);
-    } else setDesabilitaBotaoSim(true);
   };
 
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Deseja não validar solicitação?</Modal.Title>
+        <Modal.Title>Deseja negar a solicitação?</Modal.Title>
       </Modal.Header>
       <Form
         onSubmit={onSubmit}
         initialValues={{}}
-        render={({ handleSubmit, values }) => (
+        render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Body>
               <div className="form-row">
                 <div className="form-group col-12">
                   <Field
-                    component={Select}
-                    name="motivo_nao_valida"
-                    label="Motivo"
-                    //TODO: criar campos a mais no backend?
-                    naoDesabilitarPrimeiraOpcao
-                    options={agregarDefault(motivosDREnaoValida)}
-                    validate={required}
-                    required
-                  />
-                  <OnChange name="motivo_nao_valida">
-                    {() => onChangeForm(values)}
-                  </OnChange>
-                </div>
-                <div className="form-group col-12">
-                  <Field
-                    component={TextArea}
-                    placeholder="Obrigatório"
+                    component={CKEditorField}
                     label="Justificativa"
                     name="justificativa"
-                    validate={required}
                     required
+                    validate={composeValidators(
+                      textAreaRequired,
+                      peloMenosUmCaractere
+                    )}
                   />
                   <OnChange name="justificativa">
-                    {() => onChangeForm(values)}
+                    {value => setJustificativa(value)}
                   </OnChange>
                 </div>
               </div>
@@ -118,7 +92,7 @@ export const ModalNaoValidarKitLancheCEMEI = ({ ...props }) => {
                 texto="Sim"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
-                disabled={desabilitaBotaoSim}
+                disabled={justificativa === "" || justificativa === undefined}
                 className="ml-3"
               />
             </Modal.Footer>

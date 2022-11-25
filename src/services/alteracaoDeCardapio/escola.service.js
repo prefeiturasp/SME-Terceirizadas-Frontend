@@ -139,6 +139,29 @@ export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
     });
 };
 
+export const getAlteracaoCEMEI = async uuid => {
+  const url = `alteracoes-cardapio-cemei/`;
+  const response = await axios
+    .get(`${url}${uuid}/`)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const escolaCancelarSolicitacaoDeAlteracaoDeCardapioCEMEI = async (
+  uuid,
+  payload
+) => {
+  const url = `alteracoes-cardapio-cemei/${uuid}/escola-cancela-pedido-48h-antes/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 // FIXME: Revisar nome do método
 export const getAlteracoesComLancheDoMesCorrente = memoize(
   (escola_uuid, tipoSolicitacao) => {
@@ -147,6 +170,7 @@ export const getAlteracoesComLancheDoMesCorrente = memoize(
     )}/com-lanche-do-mes-corrente/${escola_uuid}/`;
     const OBJ_REQUEST = {
       headers: AUTH_TOKEN,
+
       method: "GET"
     };
     return fetch(url, OBJ_REQUEST)

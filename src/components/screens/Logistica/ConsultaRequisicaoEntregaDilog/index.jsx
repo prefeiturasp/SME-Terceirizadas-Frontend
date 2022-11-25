@@ -48,14 +48,31 @@ export default () => {
   const buscarSolicitacoes = async page => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getRequisicoesListagem(params);
-    if (response.data.count) {
-      setSolicitacoes(response.data.results);
-      setTotal(response.data.count);
-      inicioResultado.current.scrollIntoView();
-    } else {
-      setSolicitacoes(null);
-      setTotal(response.data.count);
+    try {
+      const response = await getRequisicoesListagem(params);
+      if (response.data.count) {
+        setSolicitacoes(response.data.results);
+        setTotal(response.data.count);
+        inicioResultado.current.scrollIntoView();
+      } else {
+        setSolicitacoes(null);
+        setTotal(response.data.count);
+      }
+    } catch (erro) {
+      if (erro.response) {
+        if (typeof erro.response.data === "object") {
+          let chave = Object.keys(erro.response.data);
+          let msn_erro_return = erro.response.data[chave[0]];
+          let msg_erro = Array.isArray(msn_erro_return)
+            ? msn_erro_return[0]
+            : msn_erro_return;
+          toastError(msg_erro);
+        } else {
+          toastError("Erro do Servidor Interno");
+        }
+        setSolicitacoes(null);
+        setTotal(null);
+      }
     }
     setAtivos([]);
     setCarregando(false);
@@ -68,25 +85,32 @@ export default () => {
     if (response.status === HTTP_STATUS.OK && response.data.length === 0) {
       atualizaTabela();
       setShowModal(false);
-      response.status = 500;
+      response.status = 428;
     } else if (response.status === HTTP_STATUS.OK && response.data.length > 0) {
       atualizaTabela();
       setShowModal(false);
-    } else {
-      response.status = 500;
     }
     setCarregandoModal(false);
-
-    exibeToastPeloStatus(response.status);
+    exibeToastPeloStatus(response.status, response.data);
   };
 
-  const exibeToastPeloStatus = status => {
+  const exibeToastPeloStatus = (status, data) => {
     if (status === HTTP_STATUS.OK) {
       toastSuccess("Requisições de entrega enviadas com sucesso");
     } else if (status === HTTP_STATUS.BAD_REQUEST) {
-      toastError("Erro de transição de estado");
-    } else {
+      if (data.detail.includes("transição de estado")) {
+        toastError("Erro de transição de estado");
+      } else {
+        toastError(data.detail);
+      }
+    } else if (status === HTTP_STATUS.PRECONDITION_REQUIRED) {
       toastInfo("Nenhuma requisição de entrega a enviar");
+    } else {
+      if (data.detail && data.detail.length > 0) {
+        toastError(data.detail);
+      } else {
+        toastError("Erro do Servidor Interno");
+      }
     }
   };
 

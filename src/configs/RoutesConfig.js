@@ -84,6 +84,7 @@ import {
   permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
+  relatoriosAlteracaoDeCardapioCEMEI,
   relatoriosDietaEspecial,
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
@@ -91,7 +92,8 @@ import {
   relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoAlimentacao
+  inclusaoAlimentacao,
+  relatoriosInclusaoDeAlimentacaoCEMEI
 } from "./helper";
 import {
   usuarioEhEscola,
@@ -107,6 +109,8 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
+  usuarioEhPreRecebimento,
+  usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
@@ -170,6 +174,9 @@ import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
+import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
+import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 
 const routesConfig = [
   {
@@ -677,8 +684,22 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO_CEMEI}/${
+      constants.RELATORIO
+    }`,
+    component: relatoriosAlteracaoDeCardapioCEMEI(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosInclusaoDeAlimentacao(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.INCLUSAO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacaoCEMEI(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
@@ -1428,6 +1449,29 @@ const routesConfig = [
     component: CentralDownloadsPage,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
+    component: CronogramaEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
+    component: DetalharCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
+  },
+  {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
+    component: CadastroCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
   }
 ];
 
