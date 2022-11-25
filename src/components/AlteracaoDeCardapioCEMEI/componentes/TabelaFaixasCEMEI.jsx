@@ -175,12 +175,21 @@ export const TabelaFaixasCEMEI = ({
                                   `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`,
                                   faixa.uuid
                                 );
+                                form.change(
+                                  `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
+                                  parseInt(faixa.quantidade_alunos)
+                                );
                               }}
                             </OnChange>
                             <Field
                               component={"input"}
                               type="hidden"
                               name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`}
+                            />
+                            <Field
+                              component={"input"}
+                              type="hidden"
+                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`}
                             />
                           </td>
                         </tr>
@@ -278,6 +287,21 @@ export const TabelaFaixasCEMEI = ({
                                 maxValue(parseInt(periodo.EMEI))
                               )}
                               className="input-quantidades"
+                            />
+                            <OnChange
+                              name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
+                            >
+                              {async () => {
+                                form.change(
+                                  `substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`,
+                                  parseInt(periodo.EMEI)
+                                );
+                              }}
+                            </OnChange>
+                            <Field
+                              component={"input"}
+                              type="hidden"
+                              name={`substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`}
                             />
                           </div>
                         </div>
