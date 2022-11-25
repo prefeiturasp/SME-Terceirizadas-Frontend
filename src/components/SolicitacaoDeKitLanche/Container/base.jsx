@@ -225,13 +225,17 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
+    const _alunosPorFaixaEtaria = this.props.alunosPorFaixaEtaria;
     values.kit_lanche = this.state.kitsChecked;
     const { ehCei } = this.state;
     if (!ehCei) {
       values.quantidade_alunos = parseInt(values.quantidade_alunos);
     }
     values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
+    let solicitacao_kit_lanche = montaObjetoRequisicao(
+      values,
+      _alunosPorFaixaEtaria
+    );
     if (values.confirmar) {
       solicitacao_kit_lanche.confirmar = values.confirmar;
     }
