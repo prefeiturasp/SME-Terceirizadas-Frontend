@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Radio, Spin } from "antd";
-import HTTP_STATUS from "http-status-codes";
+import { Radio, Spin, Tooltip } from "antd";
 import "./style.scss";
-import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { Field, Form, FormSpy } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
+import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
-import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
-import { required } from "helpers/fieldValidators";
-import { OnChange } from "react-final-form-listeners";
-import { agregarDefault } from "helpers/utilities";
-import TreeSelectForm from "components/Shareable/TreeSelectForm";
-import { cadastraLaboratorio } from "services/laboratorio.service";
+import {
+  alphaNumericAndSingleSpaceBetweenCharacters,
+  email,
+  noSpaceStartOrEnd,
+  required
+} from "helpers/fieldValidators";
+import {
+  cadastraLaboratorio,
+  getListaLaboratorios
+} from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-
-const ENTER = 13;
+import {
+  composeValidators,
+  removeCaracteresEspeciais
+} from "helpers/utilities";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -28,6 +33,7 @@ export default () => {
   const [showModalCancelar, setShowModalCancelar] = useState(false);
   const [contatos, setContatos] = useState([{}]);
   const [credenciado, setCredenciado] = useState(null);
+  const [laboratorios, setLaboratorios] = useState(null);
   const history = useHistory();
 
   const onSubmit = () => {
@@ -61,63 +67,39 @@ export default () => {
     let payload = {};
 
     payload.nome = values.nome_laboratorio;
-    payload.cnpj = values.cnpj;
-    payload.cep = values.cep;
+    payload.cnpj = removeCaracteresEspeciais(values.cnpj);
+    payload.cep = removeCaracteresEspeciais(values.cep);
     payload.logradouro = values.logradouro;
     payload.numero = values.numero;
     payload.complemento = values.complemento;
     payload.bairro = values.bairro;
     payload.cidade = values.cidade;
     payload.estado = values.estado;
-    payload.credenciado = values.credenciado; //corrigir
+    payload.credenciado = values.credenciado;
 
     payload.contatos = contatos.map((contatos, index) => ({
       nome: values[`nome_${index}`],
-      telefone: values[`telefone_${index}`],
+      telefone: removeCaracteresEspeciais(values[`telefone_${index}`]),
       email: values[`email_${index}`]
     }));
 
     return payload;
   };
 
-  // const calculator = createDecorator({
-  //   field: "produto",
-  //   updates: {
-  //     dummy: (minimumValue, allValues) =>
-  //       selecionaProduto(minimumValue, allValues)
-  //   }
-  // });
-
-  useEffect(() => {}, []);
-
-  const onChangeFormSpy = async changes => {
-    // let restante = changes.values.quantidade_total;
-    // etapas.forEach((e, index) => {
-    //   if (changes.values[`quantidade_${index}`])
-    //     restante = restante - changes.values[`quantidade_${index}`];
-    // });
-    // setRestante(restante);
-    // if (etapas.length < 2) return;
-    // const partes_etapas = [];
-    // etapas.forEach((_, i) => {
-    //   partes_etapas.push({
-    //     parte: changes.values[`parte_${i}`],
-    //     etapa: changes.values[`etapa_${i}`],
-    //     index: i
-    //   });
-    // });
-    // const duplicados = [];
-    // partes_etapas.forEach(pe => {
-    //   if (
-    //     partes_etapas.filter(
-    //       pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
-    //     ).length > 1
-    //   ) {
-    //     duplicados.push(pe.index);
-    //   }
-    // });
-    // setDuplicados(duplicados);
+  const validaNomeLab = value => {
+    if (laboratorios.includes(value.toUpperCase()))
+      return "Laboratório já cadastrado";
+    else return undefined;
   };
+
+  useEffect(() => {
+    const buscaListaLabs = async () => {
+      const response = await getListaLaboratorios();
+      setLaboratorios(response.data.results);
+    };
+
+    buscaListaLabs();
+  }, []);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -125,29 +107,30 @@ export default () => {
         <div className="card-body cadastro-cronograma">
           <Form
             onSubmit={onSubmit}
-            initialValues={{}}
-            //decorators={[calculator]}
+            initialValues={{
+              data_cadastro: new Date().toLocaleDateString()
+            }}
             validate={() => {}}
-            render={({ form, handleSubmit, submitting, values }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                <FormSpy
-                  subscription={{ values: true, active: true, valid: true }}
-                  onChange={changes => onChangeFormSpy(changes)}
-                />
-
                 <div className="card-title green">Dados do Laboratório</div>
 
                 <div className="row">
                   <div className="col-8">
-                    {/* TODO: Validação dos critérios 1.4.1.x */}
                     <Field
                       component={InputText}
                       label="Nome do Laboratório"
                       name="nome_laboratorio"
                       className="input-busca-produto"
                       placeholder="Digite o Nome do Laboratório"
-                      validate={required}
+                      validate={composeValidators(
+                        required,
+                        validaNomeLab,
+                        alphaNumericAndSingleSpaceBetweenCharacters,
+                        noSpaceStartOrEnd
+                      )}
                       required
+                      toUppercaseActive
                     />
                   </div>
                   <div className="col-4">
@@ -163,9 +146,28 @@ export default () => {
 
                 <div className="row">
                   <div className="col-5">
-                    {/* TODO: Mascara de CNPJ */}
                     <Field
-                      component={InputText}
+                      component={MaskedInputText}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/
+                      ]}
                       label="CNPJ"
                       name="cnpj"
                       className="input-busca-produto"
@@ -182,7 +184,18 @@ export default () => {
                 <div className="row">
                   <div className="col-4">
                     <Field
-                      component={InputText}
+                      component={MaskedInputText}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/,
+                        /\d/
+                      ]}
                       label="CEP"
                       name="cep"
                       className="input-busca-produto"
@@ -279,7 +292,24 @@ export default () => {
                       </div>
                       <div className="col-3">
                         <Field
-                          component={InputText}
+                          component={MaskedInputText}
+                          mask={[
+                            "(",
+                            /\d/,
+                            /\d/,
+                            ")",
+                            " ",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            "-",
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/
+                          ]}
                           label="Telefone"
                           name={`telefone_${index}`}
                           className="input-busca-produto"
@@ -295,32 +325,40 @@ export default () => {
                           name={`email_${index}`}
                           className="input-busca-produto"
                           placeholder="Digite o E-mail do Contato"
-                          validate={required}
+                          validate={composeValidators(required, email)}
                           required
                         />
                       </div>
                       <div className={`col-1 mt-auto mb-1`}>
                         {index === 0 ? (
-                          <Botao
-                            texto="+"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            onClick={() => {
-                              let newContatos = [...contatos, {}];
-                              setContatos(newContatos);
-                            }}
-                          />
+                          <Tooltip title="Adicionar Contato">
+                            <span>
+                              <Botao
+                                texto="+"
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                onClick={() => {
+                                  let newContatos = [...contatos, {}];
+                                  setContatos(newContatos);
+                                }}
+                              />
+                            </span>
+                          </Tooltip>
                         ) : (
-                          <Botao
-                            icon="fas fa-trash"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            onClick={() => {
-                              let contatosNovo = [...contatos];
-                              contatosNovo.splice(index, 1);
-                              setContatos(contatosNovo);
-                            }}
-                          />
+                          <Tooltip title="Remover Contato">
+                            <span>
+                              <Botao
+                                icon="fas fa-trash"
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                onClick={() => {
+                                  let contatosNovo = [...contatos];
+                                  contatosNovo.splice(index, 1);
+                                  setContatos(contatosNovo);
+                                }}
+                              />
+                            </span>
+                          </Tooltip>
                         )}
                       </div>
                     </>

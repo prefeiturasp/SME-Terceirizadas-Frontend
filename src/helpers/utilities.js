@@ -204,6 +204,9 @@ export const validarCPF = cpf => {
   return true;
 };
 
+export const removeCaracteresEspeciais = valor =>
+  valor.replace(/[^\w\s]/gi, "");
+
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
