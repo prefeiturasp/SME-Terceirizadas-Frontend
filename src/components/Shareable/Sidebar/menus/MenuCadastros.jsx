@@ -9,10 +9,12 @@ import {
   TIPOS_ALIMENTACAO,
   FAIXAS_ETARIAS,
   HORARIO_COMBOS_ALIMENTACAO,
-  SOBREMESA_DOCE
+  SOBREMESA_DOCE,
+  LABORATORIO
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhDilogQualidade,
   usuarioEhEscola,
   usuarioEhLogistica,
   usuarioEhMedicao
@@ -31,6 +33,11 @@ const MenuCadastros = () => {
       {usuarioEhLogistica() && (
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`}>
           Empresas
+        </LeafItem>
+      )}
+      {usuarioEhDilogQualidade() && (
+        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}`}>
+          Laboratórios
         </LeafItem>
       )}
       {usuarioEhCODAEGestaoAlimentacao() && (
