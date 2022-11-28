@@ -21,6 +21,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { OnChange } from "react-final-form-listeners";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -119,7 +120,7 @@ export const Filtros = ({ ...props }) => {
           {({ form, handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <div className="row">
-                <div className="col-4">
+                <div className="col-lg-3 col-xl-4">
                   <Field
                     component={Select}
                     name="status"
@@ -129,6 +130,14 @@ export const Filtros = ({ ...props }) => {
                     validate={required}
                     naoDesabilitarPrimeiraOpcao
                   />
+                  <OnChange name="status">
+                    {async value => {
+                      if (value) {
+                        form.reset();
+                        form.change("status", value);
+                      }
+                    }}
+                  </OnChange>
                 </div>
                 <div className="col-4">
                   <label>Lote</label>
@@ -141,13 +150,13 @@ export const Filtros = ({ ...props }) => {
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
-                      allItemsAreSelected: "Todos os lotes estão selecionados",
+                      allItemsAreSelected: "Todos os lotes",
                       selectAll: "Todos"
                     }}
                     disabled={!values.status}
                   />
                 </div>
-                <div className="col-4">
+                <div className="col-lg-5 col-xl-4">
                   <label>Tipo de Solicitação</label>
                   <Field
                     component={StatefulMultiSelect}
@@ -160,8 +169,7 @@ export const Filtros = ({ ...props }) => {
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
-                      allItemsAreSelected:
-                        "Todos os tipos de alimentação estão selecionados",
+                      allItemsAreSelected: "Todos os tipos de alimentação",
                       selectAll: "Todos"
                     }}
                     disabled={!values.status}
@@ -186,8 +194,7 @@ export const Filtros = ({ ...props }) => {
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os tipos de unidade estão selecionados",
+                        allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
                       disabled={!values.status}
@@ -206,8 +213,7 @@ export const Filtros = ({ ...props }) => {
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os tipos de unidade estão selecionados",
+                        allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
                       disabled={!values.status}
@@ -242,7 +248,11 @@ export const Filtros = ({ ...props }) => {
                         component={InputComData}
                         placeholder="De"
                         minDate={null}
-                        maxDate={moment(values.ate, "DD/MM/YYYY")._d}
+                        maxDate={
+                          values.ate
+                            ? moment(values.ate, "DD/MM/YYYY")._d
+                            : moment()._d
+                        }
                         name="de"
                         disabled={!values.status}
                       />

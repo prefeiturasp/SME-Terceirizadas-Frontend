@@ -16,7 +16,8 @@ export const CARD_TYPE_ENUM = {
   RECLAMACAO: "card-complained",
   AGUARDANDO_ANALISE_SENSORIAL: "card-awaiting-sensory",
   CORRECAO: "card-product-correction",
-  AGUARDANDO_ANALISE_RECLAMACAO: "card-awaiting-complain"
+  AGUARDANDO_ANALISE_RECLAMACAO: "card-awaiting-complain",
+  AGUARDANDO_CODAE: "card-waiting"
 };
 
 export const ICON_CARD_TYPE_ENUM = {

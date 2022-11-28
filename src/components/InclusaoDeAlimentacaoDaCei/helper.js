@@ -137,7 +137,8 @@ export const formataPayload = values => {
           faixas.push({
             periodo: inclusao.periodo_uuid,
             quantidade_alunos: f.quantidade_alunos,
-            faixa_etaria: f.faixa_etaria_uuid
+            faixa_etaria: f.faixa_etaria_uuid,
+            matriculados_quando_criado: f.matriculados_quando_criado
           });
         });
     });
