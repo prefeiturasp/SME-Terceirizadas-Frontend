@@ -178,6 +178,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
 import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
@@ -331,6 +332,12 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
+    exact: false,
+    tipoUsuario: usuarioEhDRE()
+  },
+  {
+    path: `/${constants.DRE}/${constants.SOLICITACOES_AGUARDADAS}`,
+    component: StatusSolicitacoesAguardandoDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
   },

@@ -187,6 +187,12 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
                 ),
                 required
               )}
+              max={parseInt(
+                meusDados.vinculo_atual.instituicao
+                  .quantidade_alunos_emei_da_cemei
+              )}
+              min={0}
+              step="1"
             />
           </th>
         </tr>
@@ -274,6 +280,9 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
                     naoPodeSerZero,
                     maxValue(faixa.count)
                   )}
+                  max={parseInt(faixa.count)}
+                  min={0}
+                  step="1"
                 />
               </td>
             </tr>
