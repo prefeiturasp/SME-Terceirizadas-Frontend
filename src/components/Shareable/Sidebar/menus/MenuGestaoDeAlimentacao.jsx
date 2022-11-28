@@ -19,7 +19,8 @@ import {
   SOLICITACAO_KIT_LANCHE_UNIFICADA,
   CODAE,
   CADASTROS,
-  CONSULTA_KITS
+  CONSULTA_KITS,
+  RELATORIO_SOLICITACOES_ALIMENTACAO
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -139,6 +140,19 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         >
           <LeafItem to={`/${CODAE}/${CADASTROS}/${CONSULTA_KITS}`}>
             Consulta de Kits
+          </LeafItem>
+        </SubMenu>
+      )}
+      {(usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()) && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="relatorios"
+          onClick={onSubmenuClick}
+          title="Relatórios"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
+            Solicitações de Alimentação
           </LeafItem>
         </SubMenu>
       )}
