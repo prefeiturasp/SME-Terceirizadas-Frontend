@@ -149,7 +149,7 @@ export default () => {
               }
               return errors;
             }}
-            render={({ form, handleSubmit, values, errors }) => (
+            render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card-title green">Dados do Laboratório</div>
 
