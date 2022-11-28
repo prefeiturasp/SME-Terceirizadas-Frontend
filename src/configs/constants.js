@@ -38,6 +38,7 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AGUARDADAS = "solicitacoes-aguardadas";
 export const QUESTIONAMENTOS_CODAE = "questionamentos-codae";
 export const SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA =
   "solicitacoes-aguardando-inicio-vigencia";

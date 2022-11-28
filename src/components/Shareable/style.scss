@@ -661,4 +661,10 @@ table.table-reasons {
       color: $yellow;
     }
   }
+  &.card-waiting {
+    border-left-color: $blueButtonFont !important;
+    i {
+      color: $blueButtonFont;
+    }
+  }
 }

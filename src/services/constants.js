@@ -25,6 +25,7 @@ export const PEDIDOS = {
 
 export const SOLICITACOES = {
   AUTORIZADOS: "autorizados",
+  AGUARDANDO_CODAE: "aguardando-codae",
   PENDENTES: "pendentes-autorizacao",
   PENDENTES_CIENCIA: "pendentes-ciencia",
   NEGADOS: "negados",

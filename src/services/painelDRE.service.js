@@ -310,6 +310,15 @@ export const getSolicitacoesAutorizadasDRE = async params => {
   }
 };
 
+export const getSolicitacoesAguardandoCODAE = async params => {
+  const url = `${SOLICITACOES_DRE}/${SOLICITACOES.AGUARDANDO_CODAE}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+}
+
 export const getSolicitacoesCanceladasDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
