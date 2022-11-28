@@ -150,7 +150,7 @@ export const Filtros = ({ ...props }) => {
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
-                      allItemsAreSelected: "Todos os lotes estão selecionados",
+                      allItemsAreSelected: "Todos os lotes",
                       selectAll: "Todos"
                     }}
                     disabled={!values.status}
@@ -169,8 +169,7 @@ export const Filtros = ({ ...props }) => {
                     hasSelectAll
                     overrideStrings={{
                       selectSomeItems: "Selecione",
-                      allItemsAreSelected:
-                        "Todos os tipos de alimentação estão selecionados",
+                      allItemsAreSelected: "Todos os tipos de alimentação",
                       selectAll: "Todos"
                     }}
                     disabled={!values.status}
@@ -195,8 +194,7 @@ export const Filtros = ({ ...props }) => {
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os tipos de unidade estão selecionados",
+                        allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
                       disabled={!values.status}
@@ -215,8 +213,7 @@ export const Filtros = ({ ...props }) => {
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os tipos de unidade estão selecionados",
+                        allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
                       disabled={!values.status}
@@ -251,7 +248,11 @@ export const Filtros = ({ ...props }) => {
                         component={InputComData}
                         placeholder="De"
                         minDate={null}
-                        maxDate={moment(values.ate, "DD/MM/YYYY")._d}
+                        maxDate={
+                          values.ate
+                            ? moment(values.ate, "DD/MM/YYYY")._d
+                            : moment()._d
+                        }
                         name="de"
                         disabled={!values.status}
                       />
