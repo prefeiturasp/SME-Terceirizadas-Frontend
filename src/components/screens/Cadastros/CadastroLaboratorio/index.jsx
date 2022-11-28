@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Radio, Spin, Tooltip } from "antd";
 import "./style.scss";
 import Botao from "components/Shareable/Botao";
@@ -13,9 +14,11 @@ import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
+  cep,
   email,
   noSpaceStartOrEnd,
-  required
+  required,
+  tamanhoCnpjMascara
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
@@ -26,6 +29,8 @@ import {
   composeValidators,
   removeCaracteresEspeciais
 } from "helpers/utilities";
+import createDecorator from "final-form-calculate";
+import { getEnderecoPorCEP } from "services/cep.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -34,6 +39,7 @@ export default () => {
   const [contatos, setContatos] = useState([{}]);
   const [credenciado, setCredenciado] = useState(null);
   const [laboratorios, setLaboratorios] = useState(null);
+  const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
   const history = useHistory();
 
   const onSubmit = () => {
@@ -41,6 +47,7 @@ export default () => {
   };
 
   const salvarLaboratorio = async values => {
+    setCarregando(true);
     let payload = montaPayload(values);
 
     try {
@@ -48,6 +55,7 @@ export default () => {
       if (response.status === 201) {
         toastSuccess("Laboratório Cadastrado com sucesso!");
         setShowModalEnviar(false);
+        setCarregando(false);
       } else {
         toastError("Ocorreu um erro ao salvar o Laboratório");
         setCarregando(false);
@@ -61,6 +69,29 @@ export default () => {
   const handleOnChange = (event, values) => {
     values.credenciado = event.target.value;
     setCredenciado(event.target.value);
+  };
+
+  const calculator = createDecorator({
+    field: "cep",
+    updates: {
+      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
+    }
+  });
+
+  const buscaCEP = async (cep, values) => {
+    if (cep.length === 9) {
+      const response = await getEnderecoPorCEP(cep);
+      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
+        const { data } = response;
+        values.bairro = data.bairro;
+        values.cidade = data.localidade;
+        values.logradouro = data.logradouro;
+        values.estado = data.uf;
+        setDesabilitaEndereco(true);
+      } else {
+        setDesabilitaEndereco(false);
+      }
+    }
   };
 
   const montaPayload = values => {
@@ -107,11 +138,18 @@ export default () => {
         <div className="card-body cadastro-cronograma">
           <Form
             onSubmit={onSubmit}
+            decorators={[calculator]}
             initialValues={{
               data_cadastro: new Date().toLocaleDateString()
             }}
-            validate={() => {}}
-            render={({ form, handleSubmit, values }) => (
+            validate={values => {
+              const errors = {};
+              if (!values.credenciado) {
+                errors.credenciado = "Campo obrigatório";
+              }
+              return errors;
+            }}
+            render={({ form, handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card-title green">Dados do Laboratório</div>
 
@@ -172,7 +210,7 @@ export default () => {
                       name="cnpj"
                       className="input-busca-produto"
                       placeholder="Digite o CNPJ do Laboratório"
-                      validate={required}
+                      validate={composeValidators(required, tamanhoCnpjMascara)}
                       required
                     />
                   </div>
@@ -200,7 +238,7 @@ export default () => {
                       name="cep"
                       className="input-busca-produto"
                       placeholder="Digite o CEP"
-                      validate={required}
+                      validate={composeValidators(required, cep)}
                       required
                     />
                   </div>
@@ -213,6 +251,7 @@ export default () => {
                       placeholder="Nome do Logradouro"
                       validate={required}
                       required
+                      disabled={desabilitaEndereco}
                     />
                   </div>
                 </div>
@@ -245,6 +284,7 @@ export default () => {
                       placeholder="Nome do Bairro"
                       validate={required}
                       required
+                      disabled={desabilitaEndereco}
                     />
                   </div>
                 </div>
@@ -258,6 +298,7 @@ export default () => {
                       placeholder="Nome da Cidade"
                       validate={required}
                       required
+                      disabled={desabilitaEndereco}
                     />
                   </div>
                   <div className="col-6">
@@ -269,6 +310,7 @@ export default () => {
                       placeholder="Nome do Estado"
                       validate={required}
                       required
+                      disabled={desabilitaEndereco}
                     />
                   </div>
                 </div>
@@ -492,8 +534,6 @@ export default () => {
                       texto="Sim"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
-                        setShowModalEnviar(false);
-                        setCarregando(false);
                         salvarLaboratorio(values);
                       }}
                       style={BUTTON_STYLE.GREEN}
