@@ -21,6 +21,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { OnChange } from "react-final-form-listeners";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -119,7 +120,7 @@ export const Filtros = ({ ...props }) => {
           {({ form, handleSubmit, values }) => (
             <form onSubmit={handleSubmit}>
               <div className="row">
-                <div className="col-4">
+                <div className="col-lg-3 col-xl-4">
                   <Field
                     component={Select}
                     name="status"
@@ -129,6 +130,14 @@ export const Filtros = ({ ...props }) => {
                     validate={required}
                     naoDesabilitarPrimeiraOpcao
                   />
+                  <OnChange name="status">
+                    {async value => {
+                      if (value) {
+                        form.reset();
+                        form.change("status", value);
+                      }
+                    }}
+                  </OnChange>
                 </div>
                 <div className="col-4">
                   <label>Lote</label>
@@ -147,7 +156,7 @@ export const Filtros = ({ ...props }) => {
                     disabled={!values.status}
                   />
                 </div>
-                <div className="col-4">
+                <div className="col-lg-5 col-xl-4">
                   <label>Tipo de Solicitação</label>
                   <Field
                     component={StatefulMultiSelect}

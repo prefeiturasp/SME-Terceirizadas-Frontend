@@ -6,7 +6,7 @@ import { RelatorioSolicitacoesAlimentacao } from "components/screens/Relatorios/
 
 const atual = {
   href: `/${RELATORIO_SOLICITACOES_ALIMENTACAO}`,
-  titulo: "Relatório de Solicitações de Alimentações"
+  titulo: "Solicitações de Alimentações"
 };
 
 const anteriores = [
@@ -21,7 +21,11 @@ const anteriores = [
 ];
 
 export default props => (
-  <Page titulo={atual.titulo} botaoVoltar {...props}>
+  <Page
+    titulo="Relatório de Solicitações de Alimentação"
+    botaoVoltar
+    {...props}
+  >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <RelatorioSolicitacoesAlimentacao {...props} />
   </Page>
