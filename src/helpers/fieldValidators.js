@@ -245,6 +245,9 @@ export const phoneNumber = value =>
 export const tamanhoCnpj = value =>
   value.length < 14 ? "CNPJ Inválido" : undefined;
 
+export const tamanhoCnpjMascara = value =>
+  value.length < 18 ? "CNPJ Inválido" : undefined;
+
 export const semCaracteresEspeciais = value =>
   value && !/^[\w&.-]+$/i.test(value)
     ? `Não permite caracteres especiais`
