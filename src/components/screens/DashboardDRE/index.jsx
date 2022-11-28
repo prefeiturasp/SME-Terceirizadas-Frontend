@@ -152,11 +152,13 @@ class DashboardDRE extends Component {
     });
 
     getSolicitacoesAguardandoCODAE(params).then(request => {
-      let aguardandoCODAEListSolicitacao = ajustarFormatoLog(request.data.results);
+      let aguardandoCODAEListSolicitacao = ajustarFormatoLog(
+        request.data.results
+      );
       this.setState({
         aguardandoCODAEListFiltered: aguardandoCODAEListSolicitacao
-      })
-    })
+      });
+    });
   }
 
   onPesquisaChanged(values) {
@@ -183,7 +185,7 @@ class DashboardDRE extends Component {
       autorizadasListFiltered,
       aguardandoCODAEListFiltered,
       resumo,
-      loadingPainelSolicitacoes,
+      loadingPainelSolicitacoes
     } = this.state;
 
     return (

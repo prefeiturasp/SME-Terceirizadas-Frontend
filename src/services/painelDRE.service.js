@@ -317,7 +317,7 @@ export const getSolicitacoesAguardandoCODAE = async params => {
     const data = { data: response.data, status: response.status };
     return data;
   }
-}
+};
 
 export const getSolicitacoesCanceladasDRE = async params => {
   const url = `${SOLICITACOES_DRE}/${SOLICITACOES.CANCELADOS}/`;
