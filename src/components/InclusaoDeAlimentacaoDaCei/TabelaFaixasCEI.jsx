@@ -123,6 +123,12 @@ export const TabelaFaixasCEI = ({
                                     `inclusoes[${periodoIndice}][faixas_etarias][${faixaIndice}][faixa_etaria_uuid]`,
                                     faixa.uuid
                                   );
+                                  if (qtdMatriculados) {
+                                    form.change(
+                                      `inclusoes[${periodoIndice}][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
+                                      qtdMatriculados.count
+                                    );
+                                  }
                                 }}
                               </OnChange>
                             </td>
