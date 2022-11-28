@@ -35,7 +35,7 @@ export const checaSeDataEstaEntre2e5DiasUteis = (
   const _date = value.split("/");
   if (
     two_working_days <= new Date(_date[2], _date[1] - 1, _date[0]) &&
-    new Date(_date[2], _date[1] - 1, _date[0]) < five_working_days
+    new Date(_date[2], _date[1] - 1, _date[0]) <= five_working_days
   ) {
     return true;
   }
@@ -388,6 +388,14 @@ export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhCronogramaCriacaoEdicao = () => {
+  return [
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.COORDENADOR_LOGISTICA
   ].includes(localStorage.getItem("perfil"));
 };
 

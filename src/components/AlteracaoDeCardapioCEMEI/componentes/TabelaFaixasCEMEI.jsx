@@ -34,52 +34,61 @@ export const TabelaFaixasCEMEI = ({
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <label
-            style={{
-              background: periodo.background,
-              border: `1px solid ${periodo.borderColor}`,
-              borderRadius: "5px",
-              margin: "1% 0px",
-              width: "100%",
-              padding: "8px 15px",
-              height: "40px"
-            }}
-          >
+      {(periodo.nome === "INTEGRAL" ||
+        ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei)) && (
+        <div className="row">
+          <div className="col-12">
+            <label
+              style={{
+                background: periodo.background,
+                border: `1px solid ${periodo.borderColor}`,
+                borderRadius: "5px",
+                margin: "1% 0px",
+                width: "100%",
+                padding: "8px 15px",
+                height: "40px"
+              }}
+            >
+              <Field
+                component={"input"}
+                type="checkbox"
+                name={`substituicoes[${periodoIndice}][checked]`}
+                disabled={
+                  !values.alunos_cei_e_ou_emei ||
+                  !values.motivo ||
+                  !(values.alterar_dia || values.data_inicial)
+                }
+              />
+              <OnChange name={`substituicoes[${periodoIndice}][checked]`}>
+                {async () => {
+                  form.change(
+                    `substituicoes[${periodoIndice}][periodo_uuid]`,
+                    periodoCEI.periodo_escolar.uuid
+                  );
+                }}
+              </OnChange>
+              <span
+                className="checkbox-custom"
+                data-cy={`checkbox-${periodo.nome}`}
+              />
+              {periodo.nome}
+            </label>
+          </div>
+          <div className="col-12">
             <Field
               component={"input"}
-              type="checkbox"
-              name={`substituicoes[${periodoIndice}][checked]`}
+              type="hidden"
+              name={`substituicoes[${periodoIndice}][periodo_uuid]`}
             />
-            <OnChange name={`substituicoes[${periodoIndice}][checked]`}>
-              {async () => {
-                form.change(
-                  `substituicoes[${periodoIndice}][periodo_uuid]`,
-                  periodoCEI.periodo_escolar.uuid
-                );
-              }}
-            </OnChange>
-            <span
-              className="checkbox-custom"
-              data-cy={`checkbox-${periodo.nome}`}
-            />
-            {periodo.nome}
-          </label>
+          </div>
         </div>
-        <div className="col-12">
-          <Field
-            component={"input"}
-            type="hidden"
-            name={`substituicoes[${periodoIndice}][periodo_uuid]`}
-          />
-        </div>
-      </div>
+      )}
 
       {/* CEI */}
 
       {periodoCEI &&
         values.alunos_cei_e_ou_emei &&
+        periodo.nome === "INTEGRAL" &&
         ["CEI", "TODOS"].includes(values.alunos_cei_e_ou_emei) &&
         values.substituicoes[periodoIndice] &&
         values.substituicoes[periodoIndice].checked &&
