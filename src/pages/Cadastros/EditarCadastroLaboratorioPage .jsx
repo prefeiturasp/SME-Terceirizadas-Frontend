@@ -2,10 +2,9 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import CadastroLaboratorio from "components/screens/Cadastros/CadastroLaboratorio";
 import Page from "../../components/Shareable/Page/Page";
-import { CADASTROS, CONFIGURACOES, LABORATORIO } from "../../configs/constants";
+import { CADASTROS, CONFIGURACOES } from "../../configs/constants";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}`,
   titulo: "Editar Cadastro de Laboratório"
 };
 
