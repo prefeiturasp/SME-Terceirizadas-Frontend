@@ -514,9 +514,15 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>Cancelar Cadastro do Laboratório</Modal.Title>
+                    <Modal.Title>
+                      {`Cancelar ${
+                        edicao ? "Edição" : "Cadastro"
+                      } do Laboratório`}
+                    </Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Deseja cancelar o Cadastro?</Modal.Body>
+                  <Modal.Body>{`Deseja cancelar ${
+                    edicao ? "a edição d" : ""
+                  }o Cadastro?`}</Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"
@@ -546,9 +552,13 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>Salvar Cadastro do Laboratório</Modal.Title>
+                    <Modal.Title>{`Salvar ${
+                      edicao ? "Edição" : "Cadastro"
+                    } do Laboratório`}</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Confirma o cadastro do Laboratório?</Modal.Body>
+                  <Modal.Body>{`Confirma ${
+                    edicao ? "a edição d" : ""
+                  }o cadastro do Laboratório?`}</Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"
