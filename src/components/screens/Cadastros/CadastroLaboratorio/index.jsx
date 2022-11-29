@@ -11,7 +11,7 @@ import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   cep,
@@ -38,6 +38,11 @@ import {
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  LABORATORIOS_CADASTRADOS
+} from "configs/constants";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -226,8 +231,22 @@ export default () => {
             }}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                <div className="card-title green">Dados do Laboratório</div>
-
+                <div className="mb-4">
+                  <Link
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`}
+                  >
+                    <Botao
+                      texto="Laboratórios Cadastrados"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right"
+                      onClick={() => {}}
+                    />
+                  </Link>
+                </div>
+                <div className="row">
+                  <div className="card-title green">Dados do Laboratório</div>
+                </div>
                 <div className="row">
                   <div className="col-8">
                     <Field
@@ -538,7 +557,9 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push("/");
+                        history.push(
+                          "/configuracoes/cadastros/laboratorios-cadastrados"
+                        );
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"

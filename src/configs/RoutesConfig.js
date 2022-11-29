@@ -183,6 +183,7 @@ import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSoli
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 
 const routesConfig = [
   {
@@ -658,6 +659,14 @@ const routesConfig = [
     component: CadastroKitLanchePage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIOS_CADASTRADOS
+    }`,
+    component: LaboratoriosCadastradosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
