@@ -22,23 +22,15 @@ import {
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
-  editaLaboratorio,
-  getLaboratorio,
   getListaLaboratorios
 } from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   composeValidators,
-  exibeError,
-  formatarCEP,
-  formatarCPFouCNPJ,
-  formatarTelefone,
   removeCaracteresEspeciais
 } from "helpers/utilities";
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
-import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
-
 import {
   CADASTROS,
   CONFIGURACOES,
@@ -46,18 +38,13 @@ import {
 } from "configs/constants";
 
 export default () => {
-  const [carregando, setCarregando] = useState(true);
+  const [carregando, setCarregando] = useState(false);
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
   const [contatos, setContatos] = useState([{}]);
   const [credenciado, setCredenciado] = useState(null);
   const [laboratorios, setLaboratorios] = useState(null);
   const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
-  const [edicao, setEdicao] = useState(false);
-  const [valoresIniciais, setValoresIniciais] = useState(true);
-  const [uuidLaboratorio, setUuidLaboratorio] = useState(null);
-  const [laboratorio, setLaboratorio] = useState({});
-  const [contatosValues, setContatosValues] = useState({});
   const history = useHistory();
 
   const onSubmit = () => {
@@ -69,23 +56,19 @@ export default () => {
     let payload = montaPayload(values);
 
     try {
-      let response = edicao
-        ? await editaLaboratorio(payload, uuidLaboratorio)
-        : await cadastraLaboratorio(payload);
+      let response = await cadastraLaboratorio(payload);
       if (response.status === 201) {
         toastSuccess("Laboratório Cadastrado com sucesso!");
         setShowModalEnviar(false);
-      } else if (response.status === 200) {
-        toastSuccess("Edição do cadastro realizado com sucesso!");
-        setShowModalEnviar(false);
+        setCarregando(false);
       } else {
         toastError("Ocorreu um erro ao salvar o Laboratório");
+        setCarregando(false);
       }
-      setCarregando(false);
     } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Laboratório");
+      toastError("Ocorreu um erro ao salvar o Laboratório");
+      setCarregando(false);
     }
-    setCarregando(false);
   };
 
   const handleOnChange = (event, values) => {
@@ -140,80 +123,20 @@ export default () => {
   };
 
   const validaNomeLab = value => {
-    if (laboratorios && laboratorios.includes(value.toUpperCase()) && !edicao)
+    if (laboratorios.includes(value.toUpperCase()))
       return "Laboratório já cadastrado";
     else return undefined;
   };
 
-  const lengthOrUnderfined = value => {
-    let valor = value ? value.toString() : undefined;
-    return valor && valor.length > 0 ? valor : undefined;
-  };
-
-  const getDadosLaboratorio = async () => {
-    try {
-      const responseLaboratorio = await getLaboratorio(uuidLaboratorio);
-      if (responseLaboratorio.status === HTTP_STATUS.OK) {
-        const laboratorioValues = {};
-        const lab = responseLaboratorio.data;
-        laboratorioValues["nome_laboratorio"] = lengthOrUnderfined(lab.nome);
-        laboratorioValues["data_cadastro"] = lab.criado_em.slice(0, 10);
-        laboratorioValues["cnpj"] = formatarCPFouCNPJ(
-          lengthOrUnderfined(lab.cnpj)
-        );
-        laboratorioValues["cep"] = formatarCEP(lengthOrUnderfined(lab.cep));
-        laboratorioValues["logradouro"] = lengthOrUnderfined(lab.logradouro);
-        laboratorioValues["numero"] = lengthOrUnderfined(lab.numero);
-        laboratorioValues["complemento"] = lengthOrUnderfined(lab.complemento);
-        laboratorioValues["bairro"] = lengthOrUnderfined(lab.bairro);
-        laboratorioValues["cidade"] = lengthOrUnderfined(lab.cidade);
-        laboratorioValues["estado"] = lengthOrUnderfined(lab.estado);
-
-        laboratorioValues["credenciado"] = lab.credenciado ? true : false;
-        setCredenciado(lab.credenciado ? true : false);
-
-        setContatos(responseLaboratorio.data.contatos);
-        const contatosValues = {};
-        responseLaboratorio.data.contatos.forEach((contato, i) => {
-          contatosValues[`nome_${i}`] = lengthOrUnderfined(contato.nome);
-          contatosValues[`telefone_${i}`] = formatarTelefone(
-            lengthOrUnderfined(contato.telefone)
-          );
-          contatosValues[`email_${i}`] = lengthOrUnderfined(contato.email);
-        });
-        setContatosValues(contatosValues);
-        setLaboratorio(laboratorioValues);
-      }
-    } catch (e) {
-      toastError("Ocorreu um erro ao carregar dados do laboratório");
-    }
-    setCarregando(false);
-  };
-
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-
-    if (uuid && valoresIniciais) {
-      setUuidLaboratorio(uuid);
-      setCarregando(true);
-      setEdicao(true);
-    } else {
-      setCarregando(false);
-    }
-
     const buscaListaLabs = async () => {
       const response = await getListaLaboratorios();
       setLaboratorios(response.data.results);
     };
 
     buscaListaLabs();
-  }, [valoresIniciais]);
+  }, []);
 
-  if (valoresIniciais && edicao) {
-    getDadosLaboratorio();
-    setValoresIniciais(false);
-  }
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-laboratorio">
@@ -222,9 +145,7 @@ export default () => {
             onSubmit={onSubmit}
             decorators={[calculator]}
             initialValues={{
-              data_cadastro: new Date().toLocaleDateString(),
-              ...laboratorio,
-              ...contatosValues
+              data_cadastro: new Date().toLocaleDateString()
             }}
             validate={values => {
               const errors = {};
@@ -287,7 +208,26 @@ export default () => {
                   <div className="col-5">
                     <Field
                       component={MaskedInputText}
-                      mask={cnpjMask}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        ".",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "/",
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/
+                      ]}
                       label="CNPJ do Laboratório"
                       name="cnpj"
                       className="input-busca-produto"
@@ -305,7 +245,17 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={MaskedInputText}
-                      mask={cepMask}
+                      mask={[
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        "-",
+                        /\d/,
+                        /\d/,
+                        /\d/
+                      ]}
                       label="CEP"
                       name="cep"
                       className="input-busca-produto"
@@ -406,7 +356,23 @@ export default () => {
                     <div className="col-3">
                       <Field
                         component={MaskedInputText}
-                        mask={telefoneMask}
+                        mask={[
+                          "(",
+                          /\d/,
+                          /\d/,
+                          ")",
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          "-",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/
+                        ]}
                         label="Telefone"
                         name={`telefone_${index}`}
                         className="input-busca-produto"
@@ -541,15 +507,9 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>
-                      {`Cancelar ${
-                        edicao ? "Edição" : "Cadastro"
-                      } do Laboratório`}
-                    </Modal.Title>
+                    <Modal.Title>Cancelar Cadastro do Laboratório</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>{`Deseja cancelar ${
-                    edicao ? "a edição d" : ""
-                  }o Cadastro?`}</Modal.Body>
+                  <Modal.Body>Deseja cancelar o Cadastro?</Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"
@@ -565,9 +525,7 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push(
-                          "/configuracoes/cadastros/laboratorios-cadastrados"
-                        );
+                        history.push("/");
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
@@ -581,13 +539,9 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>{`Salvar ${
-                      edicao ? "Edição" : "Cadastro"
-                    } do Laboratório`}</Modal.Title>
+                    <Modal.Title>Salvar Cadastro do Laboratório</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>{`Confirma ${
-                    edicao ? "a edição d" : ""
-                  }o cadastro do Laboratório?`}</Modal.Body>
+                  <Modal.Body>Confirma o cadastro do Laboratório?</Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"

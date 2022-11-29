@@ -34,7 +34,7 @@ import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, exibeError } from "helpers/utilities";
+import { agregarDefault } from "helpers/utilities";
 import TreeSelectForm from "components/Shareable/TreeSelectForm";
 
 export default () => {
@@ -357,7 +357,21 @@ export default () => {
         setCarregando(false);
       }
     } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
+      if (typeof error.response.data === "object") {
+        let chave = Object.keys(error.response.data);
+        let msn_erro_return = error.response.data[chave[0]];
+        let msg_erro = Array.isArray(msn_erro_return)
+          ? msn_erro_return[0]
+          : msn_erro_return;
+        if (typeof msg_erro === "object") {
+          let chave2 = Object.keys(msg_erro);
+          toastError(`${chave2[0]}: ${msg_erro[chave2[0]][0]}`);
+        } else if (typeof msg_erro === "string") {
+          toastError(msg_erro);
+        }
+      } else {
+        toastError("Ocorreu um erro ao salvar o Cronograma");
+      }
       setCarregando(false);
     }
   };
