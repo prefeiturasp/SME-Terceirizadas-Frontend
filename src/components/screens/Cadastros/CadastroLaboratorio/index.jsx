@@ -22,6 +22,7 @@ import {
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
+  getLaboratorio,
   getListaLaboratorios
 } from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -40,6 +41,11 @@ export default () => {
   const [credenciado, setCredenciado] = useState(null);
   const [laboratorios, setLaboratorios] = useState(null);
   const [desabilitaEndereco, setDesabilitaEndereco] = useState(true);
+  const [edicao, setEdicao] = useState(false);
+  const [valoresIniciais, setValoresIniciais] = useState(true);
+  const [uuidLaboratorio, setUuidLaboratorio] = useState(null);
+  const [laboratorio, setLaboratorio] = useState({});
+  const [contatosValues, setContatosValues] = useState({});
   const history = useHistory();
 
   const onSubmit = () => {
@@ -118,19 +124,78 @@ export default () => {
   };
 
   const validaNomeLab = value => {
-    if (laboratorios.includes(value.toUpperCase()))
+    if (laboratorios.includes(value.toUpperCase()) && !edicao)
       return "Laboratório já cadastrado";
     else return undefined;
   };
 
+  const lengthOrUnderfined = value => {
+    let valor = value ? value.toString() : undefined;
+    return valor && valor.length > 0 ? valor : undefined;
+  };
+
+  const getDadosLaboratorio = async () => {
+    try {
+      const responseLaboratorio = await getLaboratorio(uuidLaboratorio);
+      if (responseLaboratorio.status === HTTP_STATUS.OK) {
+        const laboratorioValues = {};
+        const lab = responseLaboratorio.data;
+        laboratorioValues["nome_laboratorio"] = lengthOrUnderfined(lab.nome);
+        laboratorioValues["data_cadastro"] = lab.criado_em.slice(0, 10);
+        laboratorioValues["cnpj"] = lengthOrUnderfined(lab.cnpj);
+        laboratorioValues["cep"] = lengthOrUnderfined(lab.cep);
+        laboratorioValues["logradouro"] = lengthOrUnderfined(lab.logradouro);
+        laboratorioValues["numero"] = lengthOrUnderfined(lab.numero);
+        laboratorioValues["complemento"] = lengthOrUnderfined(lab.complemento);
+        laboratorioValues["bairro"] = lengthOrUnderfined(lab.bairro);
+        laboratorioValues["cidade"] = lengthOrUnderfined(lab.cidade);
+        laboratorioValues["estado"] = lengthOrUnderfined(lab.estado);
+
+        laboratorioValues["credenciado"] = lab.credenciado ? true : false;
+        setCredenciado(lab.credenciado ? true : false);
+
+        setContatos(responseLaboratorio.data.contatos);
+        const contatosValues = {};
+        responseLaboratorio.data.contatos.forEach((contato, i) => {
+          contatosValues[`nome_${i}`] = lengthOrUnderfined(contato.nome);
+          contatosValues[`telefone_${i}`] = lengthOrUnderfined(
+            contato.telefone
+          );
+          contatosValues[`email_${i}`] = lengthOrUnderfined(contato.email);
+        });
+        setContatosValues(contatosValues);
+        setLaboratorio(laboratorioValues);
+        setCarregando(false);
+      }
+    } catch (e) {
+      toastError("Ocorreu um erro ao carregar dados do laboratório");
+    }
+  };
+
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid && valoresIniciais) {
+      setUuidLaboratorio(uuid);
+      setCarregando(true);
+      setEdicao(true);
+    } else {
+      setCarregando(false);
+    }
+
     const buscaListaLabs = async () => {
       const response = await getListaLaboratorios();
       setLaboratorios(response.data.results);
     };
 
     buscaListaLabs();
-  }, []);
+  }, [valoresIniciais]);
+
+  if (valoresIniciais && edicao) {
+    getDadosLaboratorio();
+    setValoresIniciais(false);
+  }
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -140,7 +205,9 @@ export default () => {
             onSubmit={onSubmit}
             decorators={[calculator]}
             initialValues={{
-              data_cadastro: new Date().toLocaleDateString()
+              data_cadastro: new Date().toLocaleDateString(),
+              ...laboratorio,
+              ...contatosValues
             }}
             validate={values => {
               const errors = {};

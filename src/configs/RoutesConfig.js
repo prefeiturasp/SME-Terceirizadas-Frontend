@@ -667,6 +667,14 @@ const routesConfig = [
     tipoUsuario: usuarioEhDilogQualidade()
   },
   {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }/${constants.EDITAR}`,
+    component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
     path: `/configuracoes/cadastros`,
     component: CadastrosPage,
     exact: false,
