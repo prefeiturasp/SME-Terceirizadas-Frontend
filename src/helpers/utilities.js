@@ -405,6 +405,12 @@ export const usuarioEhCronogramaCriacaoEdicao = () => {
 export const usuarioEhDilogQualidade = () =>
   localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
+export const usuarioEhDilogQualidadeOuCronograma = () => {
+  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const usuarioEhPreRecebimento = () => {
   /*
   TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
