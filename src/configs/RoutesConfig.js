@@ -187,7 +187,6 @@ import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaborat
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 
-
 const routesConfig = [
   {
     path: `/${constants.ALUNO}/${constants.DIETA_ESPECIAL}`,
@@ -670,6 +669,7 @@ const routesConfig = [
     component: LaboratoriosCadastradosPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidade()
+  },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.EMBALAGEM
