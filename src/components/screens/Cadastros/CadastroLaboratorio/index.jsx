@@ -38,6 +38,7 @@ import {
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
+
 import {
   CADASTROS,
   CONFIGURACOES,
