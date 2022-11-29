@@ -288,7 +288,6 @@ export default () => {
                       component={MaskedInputText}
                       mask={cnpjMask}
                       label="CNPJ do Laboratório"
-
                       name="cnpj"
                       className="input-busca-produto"
                       placeholder="Digite o CNPJ do Laboratório"
