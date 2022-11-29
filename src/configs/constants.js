@@ -190,7 +190,6 @@ export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
 export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
-export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 
 // Status dos pedidos
 
