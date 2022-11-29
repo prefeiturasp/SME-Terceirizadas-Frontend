@@ -117,7 +117,8 @@ import {
   usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
-  usuarioEhDilogQualidade
+  usuarioEhDilogQualidade,
+  usuarioEhDilogQualidadeOuCronograma
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -184,6 +185,8 @@ import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
+import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
+
 
 const routesConfig = [
   {
@@ -667,6 +670,13 @@ const routesConfig = [
     component: LaboratoriosCadastradosPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidade()
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }`,
+    component: CadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
