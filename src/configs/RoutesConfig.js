@@ -182,6 +182,7 @@ import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSo
 import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 
 const routesConfig = [
   {
@@ -657,6 +658,14 @@ const routesConfig = [
     component: CadastroKitLanchePage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIOS_CADASTRADOS
+    }`,
+    component: LaboratoriosCadastradosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
