@@ -22,19 +22,25 @@ import {
 } from "helpers/fieldValidators";
 import {
   cadastraLaboratorio,
+  editaLaboratorio,
   getLaboratorio,
   getListaLaboratorios
 } from "services/laboratorio.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   composeValidators,
+  exibeError,
+  formatarCEP,
+  formatarCPFouCNPJ,
+  formatarTelefone,
   removeCaracteresEspeciais
 } from "helpers/utilities";
 import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
+import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
 
 export default () => {
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
   const [contatos, setContatos] = useState([{}]);
@@ -57,19 +63,20 @@ export default () => {
     let payload = montaPayload(values);
 
     try {
-      let response = await cadastraLaboratorio(payload);
-      if (response.status === 201) {
+      let response = edicao
+        ? await editaLaboratorio(payload, uuidLaboratorio)
+        : await cadastraLaboratorio(payload);
+      if (response.status === 201 || response.status === 200) {
         toastSuccess("Laboratório Cadastrado com sucesso!");
         setShowModalEnviar(false);
-        setCarregando(false);
       } else {
         toastError("Ocorreu um erro ao salvar o Laboratório");
-        setCarregando(false);
       }
-    } catch (error) {
-      toastError("Ocorreu um erro ao salvar o Laboratório");
       setCarregando(false);
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar o Laboratório");
     }
+    setCarregando(false);
   };
 
   const handleOnChange = (event, values) => {
@@ -124,7 +131,7 @@ export default () => {
   };
 
   const validaNomeLab = value => {
-    if (laboratorios.includes(value.toUpperCase()) && !edicao)
+    if (laboratorios && laboratorios.includes(value.toUpperCase()) && !edicao)
       return "Laboratório já cadastrado";
     else return undefined;
   };
@@ -142,8 +149,10 @@ export default () => {
         const lab = responseLaboratorio.data;
         laboratorioValues["nome_laboratorio"] = lengthOrUnderfined(lab.nome);
         laboratorioValues["data_cadastro"] = lab.criado_em.slice(0, 10);
-        laboratorioValues["cnpj"] = lengthOrUnderfined(lab.cnpj);
-        laboratorioValues["cep"] = lengthOrUnderfined(lab.cep);
+        laboratorioValues["cnpj"] = formatarCPFouCNPJ(
+          lengthOrUnderfined(lab.cnpj)
+        );
+        laboratorioValues["cep"] = formatarCEP(lengthOrUnderfined(lab.cep));
         laboratorioValues["logradouro"] = lengthOrUnderfined(lab.logradouro);
         laboratorioValues["numero"] = lengthOrUnderfined(lab.numero);
         laboratorioValues["complemento"] = lengthOrUnderfined(lab.complemento);
@@ -158,18 +167,18 @@ export default () => {
         const contatosValues = {};
         responseLaboratorio.data.contatos.forEach((contato, i) => {
           contatosValues[`nome_${i}`] = lengthOrUnderfined(contato.nome);
-          contatosValues[`telefone_${i}`] = lengthOrUnderfined(
-            contato.telefone
+          contatosValues[`telefone_${i}`] = formatarTelefone(
+            lengthOrUnderfined(contato.telefone)
           );
           contatosValues[`email_${i}`] = lengthOrUnderfined(contato.email);
         });
         setContatosValues(contatosValues);
         setLaboratorio(laboratorioValues);
-        setCarregando(false);
       }
     } catch (e) {
       toastError("Ocorreu um erro ao carregar dados do laboratório");
     }
+    setCarregando(false);
   };
 
   useEffect(() => {
@@ -196,7 +205,6 @@ export default () => {
     getDadosLaboratorio();
     setValoresIniciais(false);
   }
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-cronograma">
@@ -253,26 +261,7 @@ export default () => {
                   <div className="col-5">
                     <Field
                       component={MaskedInputText}
-                      mask={[
-                        /\d/,
-                        /\d/,
-                        ".",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        ".",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        "/",
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        "-",
-                        /\d/,
-                        /\d/
-                      ]}
+                      mask={cnpjMask}
                       label="CNPJ"
                       name="cnpj"
                       className="input-busca-produto"
@@ -290,17 +279,7 @@ export default () => {
                   <div className="col-4">
                     <Field
                       component={MaskedInputText}
-                      mask={[
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        "-",
-                        /\d/,
-                        /\d/,
-                        /\d/
-                      ]}
+                      mask={cepMask}
                       label="CEP"
                       name="cep"
                       className="input-busca-produto"
@@ -402,23 +381,7 @@ export default () => {
                       <div className="col-3">
                         <Field
                           component={MaskedInputText}
-                          mask={[
-                            "(",
-                            /\d/,
-                            /\d/,
-                            ")",
-                            " ",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            "-",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/
-                          ]}
+                          mask={telefoneMask}
                           label="Telefone"
                           name={`telefone_${index}`}
                           className="input-busca-produto"

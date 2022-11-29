@@ -423,3 +423,44 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
   { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
   { nome: "Suspensão de Alimentação", uuid: "Suspensão" }
 ];
+
+export const cnpjMask = [
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/
+];
+
+export const cepMask = [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/];
+
+export const telefoneMask = [
+  "(",
+  /\d/,
+  /\d/,
+  ")",
+  " ",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/
+];

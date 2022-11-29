@@ -8,3 +8,6 @@ export const getListaLaboratorios = async () =>
 
 export const cadastraLaboratorio = async payload =>
   await axios.post("/laboratorios/", payload);
+
+export const editaLaboratorio = async (payload, uuid) =>
+  await axios.put(`/laboratorios/${uuid}/`, payload);
