@@ -188,6 +188,7 @@ export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
 export const LABORATORIO = "laboratorio";
+export const EMBALAGEM = "embalagem";
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
