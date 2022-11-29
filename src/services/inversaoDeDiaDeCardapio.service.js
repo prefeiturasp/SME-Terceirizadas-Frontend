@@ -1,6 +1,8 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 import { FLUXO } from "./constants";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -140,26 +142,15 @@ export const dreValidaPedidoEscola = uuid => {
     });
 };
 
-export const DRENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+export const DRENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.DRE_NAO_VALIDA
   }/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const CODAEAutorizaPedidoDRE = (uuid, justificativa) => {
@@ -184,46 +175,24 @@ export const CODAEAutorizaPedidoDRE = (uuid, justificativa) => {
     });
 };
 
-export const CODAENegaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+export const CODAENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const CODAEQuestionaInversaoDeDiaDeCardapio = (uuid, justificativa) => {
+export const CODAEQuestionaInversaoDeDiaDeCardapio = async (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.CODAE_QUESTIONA
   }/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const TerceirizadaRespondeQuestionamentoInversaoDeDiaDeCardapio = (
