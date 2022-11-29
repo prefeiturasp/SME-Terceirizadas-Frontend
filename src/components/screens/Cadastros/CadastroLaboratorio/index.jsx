@@ -134,8 +134,8 @@ export default () => {
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-cadastro-cronograma">
-        <div className="card-body cadastro-cronograma">
+      <div className="card mt-3 card-cadastro-laboratorio">
+        <div className="card-body cadastro-laboratorio">
           <Form
             onSubmit={onSubmit}
             decorators={[calculator]}
@@ -144,7 +144,10 @@ export default () => {
             }}
             validate={values => {
               const errors = {};
-              if (!values.credenciado) {
+              if (
+                values.credenciado === undefined ||
+                values.credenciado === null
+              ) {
                 errors.credenciado = "Campo obrigatório";
               }
               return errors;
@@ -206,7 +209,7 @@ export default () => {
                         /\d/,
                         /\d/
                       ]}
-                      label="CNPJ"
+                      label="CNPJ do Laboratório"
                       name="cnpj"
                       className="input-busca-produto"
                       placeholder="Digite o CNPJ do Laboratório"
@@ -318,94 +321,95 @@ export default () => {
                 <div className="card-title green">Contatos</div>
                 <hr />
 
-                <div className="row">
-                  {contatos.map((contato, index) => (
-                    <>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Nome"
-                          name={`nome_${index}`}
-                          className="input-busca-produto"
-                          placeholder="Nome do Contato"
-                          validate={required}
-                          required
-                        />
-                      </div>
-                      <div className="col-3">
-                        <Field
-                          component={MaskedInputText}
-                          mask={[
-                            "(",
-                            /\d/,
-                            /\d/,
-                            ")",
-                            " ",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            "-",
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/,
-                            /\d/
-                          ]}
-                          label="Telefone"
-                          name={`telefone_${index}`}
-                          className="input-busca-produto"
-                          placeholder="(00) 0000-00000"
-                          validate={required}
-                          required
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="E-mail"
-                          name={`email_${index}`}
-                          className="input-busca-produto"
-                          placeholder="Digite o E-mail do Contato"
-                          validate={composeValidators(required, email)}
-                          required
-                        />
-                      </div>
-                      <div className={`col-1 mt-auto mb-1`}>
-                        {index === 0 ? (
-                          <Tooltip title="Adicionar Contato">
-                            <span>
-                              <Botao
-                                texto="+"
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.GREEN_OUTLINE}
-                                onClick={() => {
-                                  let newContatos = [...contatos, {}];
-                                  setContatos(newContatos);
-                                }}
-                              />
-                            </span>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title="Remover Contato">
-                            <span>
-                              <Botao
-                                icon="fas fa-trash"
-                                type={BUTTON_TYPE.BUTTON}
-                                style={BUTTON_STYLE.GREEN_OUTLINE}
-                                onClick={() => {
-                                  let contatosNovo = [...contatos];
-                                  contatosNovo.splice(index, 1);
-                                  setContatos(contatosNovo);
-                                }}
-                              />
-                            </span>
-                          </Tooltip>
-                        )}
-                      </div>
-                    </>
-                  ))}
-                </div>
+                {contatos.map((contato, index) => (
+                  <div key={index} className="row">
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="Nome"
+                        name={`nome_${index}`}
+                        className="input-busca-produto"
+                        placeholder="Nome do Contato"
+                        validate={required}
+                        required
+                      />
+                    </div>
+                    <div className="col-3">
+                      <Field
+                        component={MaskedInputText}
+                        mask={[
+                          "(",
+                          /\d/,
+                          /\d/,
+                          ")",
+                          " ",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          "-",
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/
+                        ]}
+                        label="Telefone"
+                        name={`telefone_${index}`}
+                        className="input-busca-produto"
+                        placeholder="(00) 0000-00000"
+                        validate={required}
+                        required
+                      />
+                    </div>
+                    <div className="col-4">
+                      <Field
+                        component={InputText}
+                        label="E-mail"
+                        name={`email_${index}`}
+                        className="input-busca-produto"
+                        placeholder="Digite o E-mail do Contato"
+                        validate={composeValidators(required, email)}
+                        required
+                      />
+                    </div>
+                    <div className={`col-1 mt-auto mb-1`}>
+                      {index === 0 ? (
+                        <Tooltip title="Adicionar Contato">
+                          <span>
+                            <Botao
+                              texto="+"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() => {
+                                let newContatos = [...contatos, {}];
+                                setContatos(newContatos);
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title="Remover Contato">
+                          <span>
+                            <Botao
+                              icon="fas fa-trash"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() => {
+                                let contatosNovo = [...contatos];
+                                values[`nome_${index}`] = null;
+                                values[`telefone_${index}`] = null;
+                                values[`email_${index}`] = null;
+                                contatosNovo.splice(index, 1);
+                                setContatos(contatosNovo);
+                              }}
+                            />
+                          </span>
+                        </Tooltip>
+                      )}
+                    </div>
+                  </div>
+                ))}
 
                 <div className="card-title green">
                   Laboratórios Credenciados
