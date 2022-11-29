@@ -71,8 +71,11 @@ export default () => {
       let response = edicao
         ? await editaLaboratorio(payload, uuidLaboratorio)
         : await cadastraLaboratorio(payload);
-      if (response.status === 201 || response.status === 200) {
+      if (response.status === 201) {
         toastSuccess("Laboratório Cadastrado com sucesso!");
+        setShowModalEnviar(false);
+      } else if (response.status === 200) {
+        toastSuccess("Edição do cadastro realizado com sucesso!");
         setShowModalEnviar(false);
       } else {
         toastError("Ocorreu um erro ao salvar o Laboratório");
