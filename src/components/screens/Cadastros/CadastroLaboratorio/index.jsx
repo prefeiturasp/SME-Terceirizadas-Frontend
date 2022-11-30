@@ -565,9 +565,11 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push(
-                          "/configuracoes/cadastros/laboratorios-cadastrados"
-                        );
+                        edicao
+                          ? history.push(
+                              "/configuracoes/cadastros/laboratorios-cadastrados"
+                            )
+                          : history.push("/");
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
