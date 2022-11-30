@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { Pagination, Spin } from "antd";
+import { Pagination, Spin, Tooltip } from "antd";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
 import { getLaboratorios } from "services/laboratorio.service";
@@ -94,16 +94,20 @@ export default () => {
                     <td>{laboratorio.credenciado ? "SIM" : "NÃO"}</td>
 
                     <td className="btn-action botao-direita">
-                      <div className="mr-4">
-                        <NavLink
-                          className="float-right ml-4"
-                          to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}/editar?uuid=${
-                            laboratorio.uuid
-                          }`}
-                        >
-                          <i className="fas fa-edit" />
-                        </NavLink>
-                      </div>
+                      <Tooltip title="Editar">
+                        <span>
+                          <div className="mr-4">
+                            <NavLink
+                              className="float-right ml-4"
+                              to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}/editar?uuid=${
+                                laboratorio.uuid
+                              }`}
+                            >
+                              <i className="fas fa-edit" />
+                            </NavLink>
+                          </div>
+                        </span>
+                      </Tooltip>
                       <ToggleExpandir
                         onClick={() => expandirLaboratorio(laboratorio)}
                         ativo={laboratorio.ativo}
