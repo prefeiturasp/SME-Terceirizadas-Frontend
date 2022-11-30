@@ -128,7 +128,7 @@ export default () => {
     payload.bairro = values.bairro;
     payload.cidade = values.cidade;
     payload.estado = values.estado;
-    payload.credenciado = values.credenciado;
+    payload.credenciado = credenciado;
 
     payload.contatos = contatos.map((contatos, index) => ({
       nome: values[`nome_${index}`],
