@@ -541,12 +541,12 @@ export const converterDDMMYYYYparaYYYYMMDD = data => {
 };
 
 export const obtemIdentificacaoNutricionista = () =>
-  `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
-    "crn_numero"
+  `Elaborado por ${localStorage.getItem("nome")} - RF ${localStorage.getItem(
+    "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
 
 export const obtemIdentificacaoNutricionistaDieta = usuario =>
-  `Elaborado por ${usuario.nome} - CRN ${usuario.crn_numero}`.replace(
+  `Elaborado por ${usuario.nome} - RF ${usuario.registro_funcional}`.replace(
     /[^\w\s-]/g,
     ""
   );
