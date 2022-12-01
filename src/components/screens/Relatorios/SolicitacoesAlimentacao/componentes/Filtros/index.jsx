@@ -198,7 +198,7 @@ export const Filtros = ({ ...props }) => {
                   />
                 </div>
               </div>
-              {values.status !== "RECEBIDAS" && (
+              {values.status !== "EM_ANDAMENTO" && (
                 <div className="row mt-3">
                   <div className="col-4">
                     <label>Tipo de Unidade</label>
@@ -244,7 +244,7 @@ export const Filtros = ({ ...props }) => {
                 </div>
               )}
               <div className="row mt-3">
-                {values.status === "RECEBIDAS" && (
+                {values.status === "EM_ANDAMENTO" && (
                   <div className="col-6">
                     <Field
                       component={Select}
