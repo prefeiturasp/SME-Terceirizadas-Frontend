@@ -3,7 +3,7 @@ import moment from "moment";
 import Select from "components/Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
-import { agregarDefault, usuarioEhDRE } from "helpers/utilities";
+import { agregarDefault, deepCopy, usuarioEhDRE } from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
@@ -29,7 +29,16 @@ export const Filtros = ({ ...props }) => {
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
   const [terceirizadas, setTerceirizadas] = useState([]);
 
-  const { erroAPI, meusDados, setErroAPI } = props;
+  const {
+    erroAPI,
+    meusDados,
+    setErroAPI,
+    setSolicitacoes,
+    setTotalBusca,
+    setPage,
+    setFiltros,
+    endpoint
+  } = props;
 
   const getLotesSimplesAsync = async () => {
     let params = {};
@@ -105,7 +114,20 @@ export const Filtros = ({ ...props }) => {
     }));
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async values => {
+    let _values = deepCopy(values);
+    setFiltros(values);
+    const page = 1;
+    _values["limit"] = 10;
+    _values["offset"] = (page - 1) * _values["limit"];
+    setPage(1);
+
+    const response = await endpoint(_values);
+    if (response.status === HTTP_STATUS.OK) {
+      setSolicitacoes(response.data.results);
+      setTotalBusca(response.data.count);
+    }
+  };
 
   const LOADING =
     !lotes.length ||
@@ -276,7 +298,13 @@ export const Filtros = ({ ...props }) => {
                     texto="Limpar Filtros"
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
-                    onClick={() => form.reset()}
+                    onClick={() => {
+                      form.reset();
+                      setFiltros(undefined);
+                      setTotalBusca(undefined);
+                      setSolicitacoes(undefined);
+                      setPage(1);
+                    }}
                   />
                   <Botao
                     texto="Consultar"
