@@ -1,6 +1,7 @@
 export const formatarPayloadPeriodoLancamento = (
   values,
   tableAlimentacaoRows,
+  tabelaDietaEnteralRows,
   dadosIniciaisFiltered
 ) => {
   const valuesAsArray = Object.entries(values);
@@ -24,16 +25,22 @@ export const formatarPayloadPeriodoLancamento = (
     const idCategoria = categoria.match(/\d/g).join("");
     const dia = keySplitted[1].match(/\d/g).join("");
     const nome_campo = keySplitted[0];
-    const uuidTipoAlimentacao = tableAlimentacaoRows.find(
+    let tipoAlimentacao = tableAlimentacaoRows.find(
       alimentacao => alimentacao.name === nome_campo
-    ).uuid;
+    );
+
+    if (!tipoAlimentacao) {
+      tipoAlimentacao = tabelaDietaEnteralRows.find(
+        row => row.name === nome_campo
+      );
+    }
 
     return valoresMedicao.push({
       dia: dia,
       valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
       nome_campo: nome_campo,
       categoria_medicao: idCategoria,
-      tipo_alimentacao: uuidTipoAlimentacao || ""
+      tipo_alimentacao: tipoAlimentacao.uuid || ""
     });
   });
 
@@ -64,6 +71,7 @@ export const deveExistirObservacao = (
     ([key, value]) =>
       key.includes("categoria") &&
       !key.includes("matriculados") &&
+      !key.includes("dietas_autorizadas") &&
       !key.includes("frequencia") &&
       !key.includes("observacoes") &&
       !["Mês anterior", "Mês posterior", null].includes(value) &&
