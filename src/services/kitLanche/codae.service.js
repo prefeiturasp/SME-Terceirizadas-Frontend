@@ -5,45 +5,27 @@ import { ErrorHandlerFunction } from "services/service-helpers";
 
 export const CODAEquestionaKitLancheAvulso = async (
   uuid,
-  observacao_questionamento_codae,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_QUESTIONA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify({ observacao_questionamento_codae })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
 export const CODAENegaKitLancheAvulso = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 

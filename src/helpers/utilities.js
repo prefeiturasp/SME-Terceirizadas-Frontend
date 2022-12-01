@@ -734,7 +734,12 @@ export const retornaDuplicadasArray = arr =>
 export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
 
-  const dresPermitidas = ["IPIRANGA", "PIRITUBA", "FREGUESIA/BRASILANDIA"];
+  const dresPermitidas = [
+    "IPIRANGA",
+    "PIRITUBA",
+    "FREGUESIA/BRASILANDIA",
+    "SAO MATEUS"
+  ];
 
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {

@@ -1,4 +1,6 @@
+import axios from "../_base";
 import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
+import { ErrorHandlerFunction } from "services/service-helpers";
 import { getPath } from "./helper";
 
 export const getDREPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
@@ -55,22 +57,13 @@ export const DREValidaKitLancheAvulso = (uuid, _, tipoSolicitacao) => {
 
 export const DRENaoValidaKitLancheAvulso = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.DRE_NAO_VALIDA}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
