@@ -1,17 +1,14 @@
 export const STATUS_SOLICITACOES = [
-  { nome: "Autorizadas", uuid: "AUTORIZADAS" },
-  { nome: "Canceladas", uuid: "CANCELADAS" },
-  { nome: "Negadas", uuid: "NEGADAS" },
-  { nome: "Recebidas", uuid: "RECEBIDAS" }
+  { nome: "Autorizadas", uuid: "AUTORIZADOS" },
+  { nome: "Canceladas", uuid: "CANCELADOS" },
+  { nome: "Negadas", uuid: "NEGADOS" },
+  { nome: "Recebidas", uuid: "EM_ANDAMENTO" }
 ];
 
 export const TIPOS_SOLICITACAO = [
-  { label: "Inclusão de Alimentação", value: "Inclusão de" },
-  {
-    label: "Alteração do Tipo de Alimentação",
-    value: "Alteração"
-  },
-  { label: "Kit Lanche", value: "KIT_LANCHE" },
-  { label: "Inversão de Dia de Cardápio", value: "Inversão" },
-  { label: "Suspensão de Alimentação", value: "Suspensão" }
+  { label: "Inclusão de Alimentação", value: "INC_ALIMENTA" },
+  { label: "Alteração do Tipo de Alimentação", value: "ALT_CARDAPIO" },
+  { label: "Kit Lanche", value: "KIT_LANCHE_AVULSA" },
+  { label: "Inversão de Dia de Cardápio", value: "INV_CARDAPIO" },
+  { label: "Suspensão de Alimentação", value: "SUSP_ALIMENTACAO" }
 ];

@@ -2,6 +2,7 @@ import { API_URL } from "../constants/config";
 import axios from "./_base";
 import { saveAs } from "file-saver";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -274,4 +275,27 @@ export const getRelatorioReclamacao = async params => {
     }
   );
   saveAs(data, "relatorio_reclamacao.pdf");
+};
+
+export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
+  const response = await axios
+    .get(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, { params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const filtrarSolicitacoesAlimentacaoDRE = async params => {
+  const response = await axios
+    .get(
+      `${API_URL}/diretoria-regional-solicitacoes/filtrar-solicitacoes-ga/`,
+      { params }
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
