@@ -325,18 +325,29 @@ class FoodSuspensionEditor extends Component {
     if (alunosCEIouEMEI[period.nome]) {
       if (alunosCEIouEMEI[period.nome].length === 2) {
         periodos = vinculos
-          .find(v => v.tipo_unidade_escolar.iniciais.includes("CEI"))
+          .find(
+            v =>
+              v.tipo_unidade_escolar.iniciais.includes("CEI") &&
+              v.periodo_escolar.nome === period.nome
+          )
           .tipos_alimentacao.concat(
-            vinculos.find(v => v.tipo_unidade_escolar.iniciais.includes("EMEI"))
-              .tipos_alimentacao
+            vinculos.find(
+              v =>
+                v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
+                v.periodo_escolar.nome === period.nome
+            ).tipos_alimentacao
           );
       } else if (alunosCEIouEMEI[period.nome].includes("CEI")) {
-        periodos = vinculos.find(v =>
-          v.tipo_unidade_escolar.iniciais.includes("CEI")
+        periodos = vinculos.find(
+          v =>
+            v.tipo_unidade_escolar.iniciais.includes("CEI") &&
+            v.periodo_escolar.nome === period.nome
         ).tipos_alimentacao;
       } else if (alunosCEIouEMEI[period.nome].includes("EMEI")) {
-        periodos = vinculos.find(v =>
-          v.tipo_unidade_escolar.iniciais.includes("EMEI")
+        periodos = vinculos.find(
+          v =>
+            v.tipo_unidade_escolar.iniciais.includes("EMEI") &&
+            v.periodo_escolar.nome === period.nome
         ).tipos_alimentacao;
       }
     }
@@ -368,6 +379,8 @@ class FoodSuspensionEditor extends Component {
             ...this.state,
             options: options
           });
+          escolaEhCEMEI() &&
+            this.props.change(field + ".alunos_cei_ou_emei", "");
           this.props.change(field + ".tipo_de_refeicao", []);
           this.props.change(field + ".numero_de_alunos", "");
         }
@@ -690,23 +703,15 @@ class FoodSuspensionEditor extends Component {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   type={BUTTON_TYPE.BUTTON}
                 />
-                <div className="row table-titles">
-                  <div className="col-3">Período</div>
-                  {escolaEhCEMEI() && (
-                    <div className="col-2 mr-5 type-food">Alunos</div>
-                  )}
-                  <div
-                    className={`${
-                      escolaEhCEMEI() ? "col-2 ml-5 mr-5" : "col-5 mr-4"
-                    } type-food`}
-                  >
+                <div className="row labels mt-3 mb-2">
+                  <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
+                    Período
+                  </div>
+                  {escolaEhCEMEI() && <div className="col-3">Alunos</div>}
+                  <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                     Tipo de Alimentação
                   </div>
-                  <div
-                    className={`${
-                      escolaEhCEMEI() ? "col-2 pl-4 ml-5" : "col-3 pl-2"
-                    } n-students`}
-                  >
+                  <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                     Nº de Alunos
                   </div>
                 </div>
@@ -717,9 +722,9 @@ class FoodSuspensionEditor extends Component {
                   );
                   return (
                     <FormSection key={key} name={`suspensoes_${period.nome}`}>
-                      <div className="form-row">
+                      <div className="row">
                         <Field component={"input"} type="hidden" name="value" />
-                        <div className="form-check col-md-3 mr-3">
+                        <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                           <div
                             className={`period-quantity number-${key} pl-5 pt-2 pb-2`}
                           >
@@ -738,7 +743,7 @@ class FoodSuspensionEditor extends Component {
                           </div>
                         </div>
                         {escolaEhCEMEI() && (
-                          <div className="form-group col-md-3 mr-3">
+                          <div className="col-3">
                             <div
                               className={
                                 checkMap[period.nome]
@@ -775,11 +780,7 @@ class FoodSuspensionEditor extends Component {
                             </div>
                           </div>
                         )}
-                        <div
-                          className={`form-group ${
-                            escolaEhCEMEI() ? "col-md-3" : "col-md-5"
-                          } mr-3`}
-                        >
+                        <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                           <div
                             className={
                               checkMap[period.nome]
@@ -811,7 +812,7 @@ class FoodSuspensionEditor extends Component {
                             />
                           </div>
                         </div>
-                        <div className="form-group col-md-2">
+                        <div className={`col-${escolaEhCEMEI() ? "3" : "4"}`}>
                           <Field
                             component={InputText}
                             disabled={!checkMap[period.nome]}

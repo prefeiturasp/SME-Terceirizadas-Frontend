@@ -3,7 +3,7 @@ import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import InputText from "components/Shareable/Input/InputText";
-import { maxValue, naoPodeSerZero } from "helpers/fieldValidators";
+import { maxValue, naoPodeSerZero, required } from "helpers/fieldValidators";
 import { composeValidators } from "helpers/utilities";
 import { formatarParaMultiselect } from "helpers/utilities";
 import { totalMatriculados, totalSolicitacao } from "../helpers";
@@ -31,55 +31,66 @@ export const TabelaFaixasCEMEI = ({
   );
   const [alimentoSelecionadoCEI, setAlimentoSelecionadoCEI] = useState([]);
   const [alimentoSelecionadoEMEI, setAlimentoSelecionadoEMEI] = useState([]);
+  const [totalFrequenciaEMEI, setTotalFrequenciaEMEI] = useState(0);
+  const [totalFrequenciaCEI, setTotalFrequenciaCEI] = useState(0);
 
   return (
     <>
-      <div className="row">
-        <div className="col-12">
-          <label
-            style={{
-              background: periodo.background,
-              border: `1px solid ${periodo.borderColor}`,
-              borderRadius: "5px",
-              margin: "1% 0px",
-              width: "100%",
-              padding: "8px 15px",
-              height: "40px"
-            }}
-          >
+      {(periodo.nome === "INTEGRAL" ||
+        ["EMEI", "TODOS"].includes(values.alunos_cei_e_ou_emei)) && (
+        <div className="row">
+          <div className="col-12">
+            <label
+              style={{
+                background: periodo.background,
+                border: `1px solid ${periodo.borderColor}`,
+                borderRadius: "5px",
+                margin: "1% 0px",
+                width: "100%",
+                padding: "8px 15px",
+                height: "40px"
+              }}
+            >
+              <Field
+                component={"input"}
+                type="checkbox"
+                name={`substituicoes[${periodoIndice}][checked]`}
+                disabled={
+                  !values.alunos_cei_e_ou_emei ||
+                  !values.motivo ||
+                  !(values.alterar_dia || values.data_inicial)
+                }
+              />
+              <OnChange name={`substituicoes[${periodoIndice}][checked]`}>
+                {async () => {
+                  form.change(
+                    `substituicoes[${periodoIndice}][periodo_uuid]`,
+                    periodoCEI.periodo_escolar.uuid
+                  );
+                }}
+              </OnChange>
+              <span
+                className="checkbox-custom"
+                data-cy={`checkbox-${periodo.nome}`}
+              />
+              {periodo.nome}
+            </label>
+          </div>
+          <div className="col-12">
             <Field
               component={"input"}
-              type="checkbox"
-              name={`substituicoes[${periodoIndice}][checked]`}
+              type="hidden"
+              name={`substituicoes[${periodoIndice}][periodo_uuid]`}
             />
-            <OnChange name={`substituicoes[${periodoIndice}][checked]`}>
-              {async () => {
-                form.change(
-                  `substituicoes[${periodoIndice}][periodo_uuid]`,
-                  periodoCEI.periodo_escolar.uuid
-                );
-              }}
-            </OnChange>
-            <span
-              className="checkbox-custom"
-              data-cy={`checkbox-${periodo.nome}`}
-            />
-            {periodo.nome}
-          </label>
+          </div>
         </div>
-        <div className="col-12">
-          <Field
-            component={"input"}
-            type="hidden"
-            name={`substituicoes[${periodoIndice}][periodo_uuid]`}
-          />
-        </div>
-      </div>
+      )}
 
       {/* CEI */}
 
       {periodoCEI &&
         values.alunos_cei_e_ou_emei &&
+        periodo.nome === "INTEGRAL" &&
         ["CEI", "TODOS"].includes(values.alunos_cei_e_ou_emei) &&
         values.substituicoes[periodoIndice] &&
         values.substituicoes[periodoIndice].checked &&
@@ -102,6 +113,7 @@ export const TabelaFaixasCEMEI = ({
                     ).tipos_alimentacao
                   )}
                   nomeDoItemNoPlural="Alimentos"
+                  validate={totalFrequenciaCEI > 0 && required}
                 />
                 <OnChange
                   name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
@@ -126,6 +138,7 @@ export const TabelaFaixasCEMEI = ({
                       )
                   )}
                   nomeDoItemNoPlural="Substitutos"
+                  validate={totalFrequenciaCEI > 0 && required}
                 />
               </div>
             </div>
@@ -156,6 +169,9 @@ export const TabelaFaixasCEMEI = ({
                                 naoPodeSerZero,
                                 maxValue(parseInt(faixa.quantidade_alunos))
                               )}
+                              max={parseInt(faixa.quantidade_alunos)}
+                              min={0}
+                              step="1"
                               className="input-quantidades"
                             />
                             <OnChange
@@ -166,12 +182,24 @@ export const TabelaFaixasCEMEI = ({
                                   `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`,
                                   faixa.uuid
                                 );
+                                form.change(
+                                  `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
+                                  parseInt(faixa.quantidade_alunos)
+                                );
+                                setTotalFrequenciaCEI(
+                                  totalSolicitacao(values, periodoCEI)
+                                );
                               }}
                             </OnChange>
                             <Field
                               component={"input"}
                               type="hidden"
                               name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`}
+                            />
+                            <Field
+                              component={"input"}
+                              type="hidden"
+                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`}
                             />
                           </td>
                         </tr>
@@ -219,6 +247,7 @@ export const TabelaFaixasCEMEI = ({
                     ).tipos_alimentacao
                   )}
                   nomeDoItemNoPlural="Alimentos"
+                  validate={totalFrequenciaEMEI > 0 && required}
                 />
                 <OnChange
                   name={`substituicoes[${periodoIndice}][emei][tipos_alimentacao_de]`}
@@ -243,6 +272,7 @@ export const TabelaFaixasCEMEI = ({
                       )
                   )}
                   nomeDoItemNoPlural="Substitutos"
+                  validate={totalFrequenciaEMEI > 0 && required}
                 />
               </div>
             </div>
@@ -268,7 +298,26 @@ export const TabelaFaixasCEMEI = ({
                                 naoPodeSerZero,
                                 maxValue(parseInt(periodo.EMEI))
                               )}
+                              max={parseInt(periodo.EMEI)}
+                              min={0}
+                              step="1"
                               className="input-quantidades"
+                            />
+                            <OnChange
+                              name={`substituicoes[${periodoIndice}][emei][quantitade_alunos]`}
+                            >
+                              {async value => {
+                                form.change(
+                                  `substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`,
+                                  parseInt(periodo.EMEI)
+                                );
+                                setTotalFrequenciaEMEI(parseInt(value));
+                              }}
+                            </OnChange>
+                            <Field
+                              component={"input"}
+                              type="hidden"
+                              name={`substituicoes[${periodoIndice}][emei][matriculados_quando_criado]`}
                             />
                           </div>
                         </div>

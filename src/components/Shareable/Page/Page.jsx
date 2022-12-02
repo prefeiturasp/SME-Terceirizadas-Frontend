@@ -38,6 +38,10 @@ export const Page = ({ ...props }) => {
             "crn_numero",
             JSON.stringify(meusDados.crn_numero)
           );
+          localStorage.setItem(
+            "registro_funcional",
+            JSON.stringify(meusDados.registro_funcional)
+          );
         }
         setNome(meusDados.nome);
       });

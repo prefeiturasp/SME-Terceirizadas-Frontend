@@ -5,6 +5,7 @@ import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
 //       Dá pra separar por tipo de helper:
@@ -204,6 +205,9 @@ export const validarCPF = cpf => {
   return true;
 };
 
+export const removeCaracteresEspeciais = valor =>
+  valor.replace(/[^\w\s]/gi, "");
+
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -306,6 +310,21 @@ export const formatarCPFouCNPJ = value => {
   );
 };
 
+export const formatarCEP = value => {
+  const cep = value.replace(/\D/g, "");
+  if (cep.length === 8) {
+    return cep.replace(/(\d{5})(\d{3})/g, "$1-$2");
+  }
+};
+
+export const formatarTelefone = value => {
+  const cep = value.replace(/\D/g, "");
+  if (cep.length === 11) {
+    return cep.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
+  }
+  return cep.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
+};
+
 export const usuarioEhCoordenadorEscola = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
 };
@@ -389,6 +408,23 @@ export const usuarioEhLogistica = () => {
     PERFIL.COORDENADOR_LOGISTICA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
   ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhCronogramaCriacaoEdicao = () => {
+  return [
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.COORDENADOR_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDilogQualidade = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
+
+export const usuarioEhDilogQualidadeOuCronograma = () => {
+  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEhPreRecebimento = () => {
@@ -505,12 +541,12 @@ export const converterDDMMYYYYparaYYYYMMDD = data => {
 };
 
 export const obtemIdentificacaoNutricionista = () =>
-  `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
-    "crn_numero"
+  `Elaborado por ${localStorage.getItem("nome")} - RF ${localStorage.getItem(
+    "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
 
 export const obtemIdentificacaoNutricionistaDieta = usuario =>
-  `Elaborado por ${usuario.nome} - CRN ${usuario.crn_numero}`.replace(
+  `Elaborado por ${usuario.nome} - RF ${usuario.registro_funcional}`.replace(
     /[^\w\s-]/g,
     ""
   );
@@ -534,6 +570,24 @@ export const getError = obj => {
     else return obj[getKey(obj)][0];
   }
   return result;
+};
+
+export const exibeError = (error, msg) => {
+  if (error.response && typeof error.response.data === "object") {
+    let chave = Object.keys(error.response.data);
+    let msn_erro_return = error.response.data[chave[0]];
+    let msg_erro = Array.isArray(msn_erro_return)
+      ? msn_erro_return[0]
+      : msn_erro_return;
+    if (typeof msg_erro === "object") {
+      let chave2 = Object.keys(msg_erro);
+      toastError(`${chave2[0]}: ${msg_erro[chave2[0]][0]}`);
+    } else if (typeof msg_erro === "string") {
+      toastError(`${chave[0]}: ${msg_erro}`);
+    }
+  } else {
+    toastError(msg);
+  }
 };
 
 export const formatarLotesParaVisao = lotes => {

@@ -38,6 +38,7 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AGUARDADAS = "solicitacoes-aguardadas";
 export const QUESTIONAMENTOS_CODAE = "questionamentos-codae";
 export const SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA =
   "solicitacoes-aguardando-inicio-vigencia";
@@ -130,6 +131,7 @@ export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
+export const RELATORIO_SOLICITACOES_ALIMENTACAO = `${RELATORIO}/solicitacoes-alimentacao`;
 export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
@@ -185,6 +187,10 @@ export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
+export const LABORATORIO = "laboratorio";
+export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
+export const EMBALAGEM = "embalagem";
+
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";

@@ -100,7 +100,8 @@ export const formatarPayload = (values, meusDados) => {
             .map(faixa => {
               return {
                 faixa_etaria: faixa.faixa_uuid,
-                quantidade: faixa.quantidade_alunos
+                quantidade: faixa.quantidade_alunos,
+                matriculados_quando_criado: faixa.matriculados_quando_criado
               };
             })
             .filter(faixa => faixa.faixa_etaria !== undefined)
@@ -109,6 +110,8 @@ export const formatarPayload = (values, meusDados) => {
       if (substituicao.emei) {
         substituicoes_cemei_emei_periodo_escolar.push({
           qtd_alunos: substituicao.emei.quantitade_alunos,
+          matriculados_quando_criado:
+            substituicao.emei.matriculados_quando_criado,
           periodo_escolar: substituicao.periodo_uuid,
           tipos_alimentacao_de: substituicao.emei.tipos_alimentacao_de,
           tipos_alimentacao_para: substituicao.emei.tipos_alimentacao_para
