@@ -108,9 +108,79 @@ export const naoPodeSerZero = value =>
 export const maxValue = max => value =>
   value && value > max ? `Não pode ser maior que ${max}` : undefined;
 
-export const maxValueFrequencia = (max, inputName) => value => {
+export const maxValueFrequenciaAlimentacao = (max, inputName) => value => {
   return value && value > max && inputName.includes("frequencia")
-    ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados"
+    ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados."
+    : undefined;
+};
+
+export const maxValueFrequenciaDietas = (max, inputName) => value => {
+  return value && value > max && inputName.includes("frequencia")
+    ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos com dietas autorizadas."
+    : undefined;
+};
+
+export const maxValueFrequenciaDietasMaisAlimentacao = (
+  max,
+  inputName,
+  dia,
+  values,
+  idCategoriaAlimentacao
+) => value => {
+  return value &&
+    Number(value) +
+      Number(
+        values[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+      ) >
+      max &&
+    inputName.includes("frequencia")
+    ? "O apontamento informado ultrapassou o número de frequentes informados no dia. É preciso subtrair o aluno com Dieta Especial Autorizada do lançamento na planilha de Alimentação."
+    : undefined;
+};
+
+export const maxValueLanche4h5hDietas = (max, inputName) => value => {
+  return value &&
+    value > max &&
+    (inputName.includes("lanche_4h") ||
+      inputName.includes("lanche_5h") ||
+      inputName.includes("refeicao"))
+    ? "A quantidade não pode ser maior do que a quantidade inserida em Frequência."
+    : undefined;
+};
+
+export const maxValueRefeicaoDietasMaisAlimentacao = (
+  max,
+  inputName,
+  dia,
+  values,
+  idCategoriaAlimentacao
+) => value => {
+  return value &&
+    Number(value) +
+      Number(
+        values[`refeicao__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+      ) >
+      max &&
+    inputName.includes("refeicao")
+    ? "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Refeição na planilha de Alimentação."
+    : undefined;
+};
+
+export const maxValueLanchesDietasMaisAlimentacao = (
+  max,
+  inputName,
+  dia,
+  values,
+  idCategoriaAlimentacao
+) => value => {
+  return value &&
+    Number(value) +
+      Number(
+        values[`lanche__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
+      ) >
+      max &&
+    (inputName.includes("lanche_4h") || inputName.includes("lanche_5h"))
+    ? "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Lanche na planilha de Alimentação."
     : undefined;
 };
 
