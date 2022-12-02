@@ -58,7 +58,7 @@ export class InputFile extends Component {
     if (accept) {
       let nova_lista_extensoes = [];
       lista_extensoes.forEach(ext => {
-        if (accept.includes(ext)) {
+        if (accept.toLowerCase().includes(ext)) {
           nova_lista_extensoes.push(ext);
         }
       });
