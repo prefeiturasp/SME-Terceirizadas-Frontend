@@ -12,7 +12,6 @@ import {
   editaGuiaComOcorrencia
 } from "services/logistica.service";
 import { Spin } from "antd";
-import moment from "moment";
 import { useHistory } from "react-router-dom";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
@@ -85,12 +84,14 @@ export default ({ values, disabled, uuidEdicao }) => {
             <Modal.Title>Registro de conferência</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Deseja realizar o registro de sua conferência?</p>
-            <strong>
-              <i>
-                Data de conferência: {moment(new Date()).format("DD/MM/YYYY")}
-              </i>
-            </strong>
+            <p>
+              Você está finalizando o registro de conferência da Guia{" "}
+              {values.numero_guia}
+              <br />
+              Estes apontamentos não poderão ser editados ou alterados.
+            </p>
+
+            <p>Deseja prosseguir com o registro?</p>
           </Modal.Body>
           <Modal.Footer>
             <Botao
