@@ -122,8 +122,7 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
-    !usuarioEhOutrosDilog() &&
-    !usuarioEhDistribuidora();
+    !usuarioEhOutrosDilog();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||

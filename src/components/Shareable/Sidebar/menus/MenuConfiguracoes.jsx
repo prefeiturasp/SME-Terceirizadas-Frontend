@@ -6,7 +6,8 @@ import {
   MENSAGEM,
   GESTAO_ACESSO_CODAE_DILOG,
   GESTAO_ACESSO_DIRETOR_ESCOLA,
-  CARGAS_USUARIOS
+  CARGAS_USUARIOS,
+  GESTAO_ACESSO_EMPRESA
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -19,7 +20,8 @@ import {
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
-  usuarioEhLogistica
+  usuarioEhLogistica,
+  usuarioEhEmpresa
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -78,6 +80,19 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           activeMenu={activeMenu}
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_DIRETOR_ESCOLA}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {usuarioEhEmpresa() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_EMPRESA}/`}>
             Gestão de Acesso
           </LeafItem>
         </SubMenu>

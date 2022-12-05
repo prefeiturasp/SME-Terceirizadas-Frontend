@@ -358,6 +358,14 @@ export const usuarioEhDiretorEscola = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhEmpresa = () => {
+  return [
+    PERFIL.ADMINISTRADOR_TERCEIRIZADA,
+    PERFIL.ADMINISTRADOR_DISTRIBUIDORA,
+    PERFIL.ADMINISTRADOR_FORNECEDOR
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEscolaEhGestaoMistaParceira = () => {
   return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
     localStorage.getItem("tipo_gestao")

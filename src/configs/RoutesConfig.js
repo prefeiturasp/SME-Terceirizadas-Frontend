@@ -113,7 +113,8 @@ import {
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
   usuarioEhCoordenadorCODAE,
-  usuarioEhDiretorEscola
+  usuarioEhDiretorEscola,
+  usuarioEhEmpresa
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -174,6 +175,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 
 const routesConfig = [
   {
@@ -675,6 +677,12 @@ const routesConfig = [
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
     tipoUsuario: usuarioEhDiretorEscola()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
+    component: GestaoAcessoEmpresaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresa()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
