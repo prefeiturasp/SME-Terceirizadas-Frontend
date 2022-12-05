@@ -118,7 +118,8 @@ import {
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
   usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhCodaeDilog
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1427,7 +1428,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
     component: ConferenciaInconsistenciasPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica()
+    tipoUsuario: usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
