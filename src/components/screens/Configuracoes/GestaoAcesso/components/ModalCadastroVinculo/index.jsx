@@ -1,4 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
 import "antd/dist/antd.css";
@@ -29,6 +30,7 @@ import { getSubdivisoesCodae } from "services/vinculos.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { getMeusDados } from "services/perfil.service";
 
 const ModalCadastroVinculo = ({
   show,
@@ -38,7 +40,8 @@ const ModalCadastroVinculo = ({
   diretor_escola,
   onSubmit,
   vinculo,
-  toggleExclusao
+  toggleExclusao,
+  empresa
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -101,7 +104,17 @@ const ModalCadastroVinculo = ({
     toggleShow(false, vinculo);
   };
 
+  const getMeusDadosAsync = async () => {
+    const response = await getMeusDados();
+    if (response.status === HTTP_STATUS.OK) {
+      return "";
+    } else {
+      return toastError("Ocorreu um erro inesperado");
+    }
+  };
+
   useEffect(() => {
+    getMeusDadosAsync();
     buscaSubdivisoes();
 
     if (vinculo && show) {
@@ -116,6 +129,8 @@ const ModalCadastroVinculo = ({
     }
     if (diretor_escola) {
       setTipoUsuario("SERVIDOR");
+    } else if (empresa) {
+      setTipoUsuario("NAO_SERVIDOR");
     }
   }, [vinculo, show, diretor_escola]);
 
@@ -138,6 +153,7 @@ const ModalCadastroVinculo = ({
               <Modal.Body>
                 <form onSubmit={handleSubmit} className="">
                   {diretor_escola ||
+                    empresa ||
                     (!vinculo && (
                       <div className="row mx-0 my-1">
                         <span className="label-radio">
@@ -236,7 +252,6 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             required
                             options={listaVisao}
-                            defaultValue={diretor_escola ? "ESCOLA" : ""}
                             validate={required}
                             disabled={diretor_escola ? true : false}
                           />
@@ -280,7 +295,7 @@ const ModalCadastroVinculo = ({
                   {tipoUsuario === "NAO_SERVIDOR" && (
                     <>
                       <div className="row">
-                        <div className="col-12">
+                        <div className="col-7">
                           <Field
                             component={InputText}
                             label="Nome do Usuário"
@@ -290,19 +305,6 @@ const ModalCadastroVinculo = ({
                             validate={required}
                             required
                             disabled={valoresEdicao}
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-7">
-                          <Field
-                            component={InputText}
-                            label="E-mail"
-                            name="email"
-                            placeholder="Digite o e-mail do Usuário"
-                            className="input-busca-produto"
-                            validate={email}
-                            required
                           />
                         </div>
                         <div className="col-5">
@@ -335,7 +337,18 @@ const ModalCadastroVinculo = ({
                         </div>
                       </div>
                       <div className="row">
-                        <div className="col-6">
+                        <div className="col-7">
+                          <Field
+                            component={InputText}
+                            label="E-mail"
+                            name="email"
+                            placeholder="Digite o e-mail do Usuário"
+                            className="input-busca-produto"
+                            validate={email}
+                            required
+                          />
+                        </div>
+                        <div className="col-5">
                           <Field
                             mask={[
                               /\d/,
@@ -365,6 +378,22 @@ const ModalCadastroVinculo = ({
                             validate={composeValidators(required, tamanhoCnpj)}
                             required
                             disabled={valoresEdicao}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-6">
+                          <Field
+                            component={SelectSelecione}
+                            label="Visão"
+                            name="visao_servidor"
+                            placeholder="Selecione a visão"
+                            className="input-busca-produto"
+                            required
+                            options={listaVisao}
+                            validate={required}
+                            defaultValue={empresa ? "EMPRESA" : ""}
+                            disabled={empresa ? true : false}
                           />
                         </div>
                         <div className="col-6">

@@ -15,7 +15,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 
-export default ({ diretor_escola }) => {
+export default ({ diretor_escola, empresa }) => {
   const [carregando, setCarregando] = useState(false);
   const [vinculos, setVinculos] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -149,6 +149,7 @@ export default ({ diretor_escola }) => {
         listaPerfis={listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
+        empresa={empresa}
         onSubmit={salvarAcesso}
       />
       <ModalCadastroVinculo
@@ -174,6 +175,7 @@ export default ({ diretor_escola }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             diretor_escola={diretor_escola}
+            empresa={empresa}
           />
           {vinculos && (
             <>
