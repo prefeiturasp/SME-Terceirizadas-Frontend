@@ -1,8 +1,10 @@
 import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
+  ALTERACAO_TIPO_ALIMENTACAO_CEMEI,
   DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
+  INCLUSAO_ALIMENTACAO_CEMEI,
   INVERSAO_CARDAPIO,
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
@@ -17,6 +19,7 @@ import { usuarioEhEscola } from "../../helpers/utilities";
 import { STATUS_ALIMENTO } from "./const";
 
 export const ALT_CARDAPIO = "ALT_CARDAPIO";
+export const ALT_CARDAPIO_CEMEI = "ALT_CARDAPIO_CEMEI";
 const DIETA_ESP = "DIETA_ESPECIAL";
 const INC_ALIMENTA = "INC_ALIMENTA";
 const INV_CARDAPIO = "INV_CARDAPIO";
@@ -29,6 +32,7 @@ const INC_ALIMENTA_CEI = "INC_ALIMENTA_CEI";
 const ALT_CARDAPIO_CEI = "ALT_CARDAPIO_CEI";
 const KIT_LANCHE_AVULSA_CEI = "KIT_LANCHE_AVULSA_CEI";
 const KIT_LANCHE_CEMEI = "KIT_LANCHE_CEMEI";
+const INC_ALIMENTA_CEMEI = "INC_ALIMENTA_CEMEI";
 
 export const LOG_PARA = {
   ESCOLA: 0,
@@ -91,6 +95,11 @@ export const ajustarFormatoLog = (logs, card) => {
         tipo = TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
         break;
 
+      case ALT_CARDAPIO_CEMEI:
+        solicitacao = ALTERACAO_TIPO_ALIMENTACAO_CEMEI;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEMEI;
+        break;
+
       case DIETA_ESP:
         solicitacao = DIETA_ESPECIAL;
         descricao = log.descricao_dieta_especial;
@@ -139,6 +148,11 @@ export const ajustarFormatoLog = (logs, card) => {
       case INC_ALIMENTA_CEI:
         solicitacao = INCLUSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        break;
+
+      case INC_ALIMENTA_CEMEI:
+        solicitacao = INCLUSAO_ALIMENTACAO_CEMEI;
+        tipo = TIPO_SOLICITACAO.SOLICITACAO_CEMEI;
         break;
 
       case ALT_CARDAPIO_CEI:

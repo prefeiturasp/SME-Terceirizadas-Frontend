@@ -23,7 +23,7 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
     let resp = "";
     resp = await endpoint(
       uuid,
-      justificativa && justificativa !== "<p></p>\n" ? justificativa : "",
+      { observacao_questionamento_codae: justificativa },
       tipoSolicitacao
     );
     if (resp.status === HTTP_STATUS.OK) {

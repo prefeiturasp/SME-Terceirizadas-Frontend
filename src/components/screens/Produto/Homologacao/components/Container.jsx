@@ -59,8 +59,9 @@ export const Container = () => {
           data.produto.eh_para_alunos_com_dieta
         ),
         aditivos_alergicos: formataValoresBooleanos(
-          data.produto.aditivos_alergicos
-        )
+          data.produto.tem_aditivos_alergenicos
+        ),
+        tem_gluten: formataValoresBooleanos(data.produto.tem_gluten)
       },
       necessita_analise_sensorial: "1"
     };

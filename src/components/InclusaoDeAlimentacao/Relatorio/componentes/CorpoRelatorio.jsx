@@ -18,6 +18,7 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 import { WEEK } from "configs/constants";
+import InclusoesCEI from "./InclusoesCEI";
 
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
@@ -124,6 +125,10 @@ export class CorpoRelatorio extends Component {
       }
     } = this.props;
 
+    const exibirNovoComponeneteCEI =
+      !this.props.inclusaoDeAlimentacao.periodo_escolar &&
+      ehInclusaoCei(tipoSolicitacao);
+
     const justificativaNegacao = justificativaAoNegarSolicitacao(
       this.props.inclusaoDeAlimentacao.logs
     );
@@ -210,93 +215,112 @@ export class CorpoRelatorio extends Component {
                 }
               ]
             )}
-        <table className="table-report mt-3">
-          <tbody>
-            <tr>
-              {ehInclusaoContinua(tipoSolicitacao) &&
-                motivo.nome !== "ETEC" && <th>Repetir</th>}
-              <th>Período</th>
-              <th>Tipos de Alimentação</th>
-              <th>Nº de Alunos</th>
-            </tr>
-            {!ehInclusaoCei(tipoSolicitacao) ? (
-              quantidades_periodo.map((quantidade_por_periodo, key) => {
-                return [
-                  <tr key={key}>
-                    {ehInclusaoContinua(tipoSolicitacao) &&
-                      motivo.nome !== "ETEC" && (
-                        <td className="weekly">
-                          {WEEK.map((day, key) => {
-                            return (
-                              <span
-                                key={key}
-                                className={
-                                  quantidade_por_periodo.dias_semana
-                                    .map(String)
-                                    .includes(day.value)
-                                    ? "week-circle-clicked green"
-                                    : "week-circle"
-                                }
-                                data-cy={`dia-${key}`}
-                                value={day.value}
-                              >
-                                {day.label}
-                              </span>
-                            );
-                          })}
+        {exibirNovoComponeneteCEI ? (
+          <InclusoesCEI
+            inclusaoDeAlimentacao={this.props.inclusaoDeAlimentacao}
+          />
+        ) : (
+          <>
+            <table className="table-report mt-3">
+              <tbody>
+                <tr>
+                  {ehInclusaoContinua(tipoSolicitacao) &&
+                    motivo.nome !== "ETEC" && <th>Repetir</th>}
+                  <th>Período</th>
+                  <th>Tipos de Alimentação</th>
+                  <th>Nº de Alunos</th>
+                </tr>
+                {!ehInclusaoCei(tipoSolicitacao) ? (
+                  quantidades_periodo.map((quantidade_por_periodo, key) => {
+                    return [
+                      <tr key={key}>
+                        {ehInclusaoContinua(tipoSolicitacao) &&
+                          motivo.nome !== "ETEC" && (
+                            <td className="weekly">
+                              {WEEK.map((day, key) => {
+                                return (
+                                  <span
+                                    key={key}
+                                    className={
+                                      quantidade_por_periodo.dias_semana
+                                        .map(String)
+                                        .includes(day.value)
+                                        ? "week-circle-clicked green"
+                                        : "week-circle"
+                                    }
+                                    data-cy={`dia-${key}`}
+                                    value={day.value}
+                                  >
+                                    {day.label}
+                                  </span>
+                                );
+                              })}
+                            </td>
+                          )}
+                        <td>
+                          {quantidade_por_periodo.periodo_escolar &&
+                            quantidade_por_periodo.periodo_escolar.nome}
                         </td>
-                      )}
+                        <td>
+                          {stringSeparadaPorVirgulas(
+                            quantidade_por_periodo.tipos_alimentacao,
+                            "nome"
+                          )}
+                        </td>
+                        <td>{quantidade_por_periodo.numero_alunos}</td>
+                      </tr>,
+                      ehInclusaoContinua(tipoSolicitacao) && (
+                        <tr key={key}>
+                          <td colSpan="4">
+                            <p>
+                              <strong>Observações:</strong>
+                            </p>
+                            {quantidade_por_periodo.observacao !== "<p></p>" ? (
+                              <p
+                                className="value"
+                                dangerouslySetInnerHTML={{
+                                  __html: quantidade_por_periodo.observacao
+                                }}
+                              />
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    ];
+                  })
+                ) : (
+                  <tr>
                     <td>
-                      {quantidade_por_periodo.periodo_escolar &&
-                        quantidade_por_periodo.periodo_escolar.nome}
+                      {this.props.inclusaoDeAlimentacao.periodo_escolar &&
+                        this.props.inclusaoDeAlimentacao.periodo_escolar.nome}
                     </td>
                     <td>
                       {stringSeparadaPorVirgulas(
-                        quantidade_por_periodo.tipos_alimentacao,
+                        this.props.inclusaoDeAlimentacao.tipos_alimentacao,
                         "nome"
                       )}
                     </td>
-                    <td>{quantidade_por_periodo.numero_alunos}</td>
-                  </tr>,
-                  ehInclusaoContinua(tipoSolicitacao) && (
-                    <tr key={key}>
-                      <td colSpan="4">
-                        <p>
-                          <strong>Observações:</strong>
-                        </p>
-                        {quantidade_por_periodo.observacao !== "<p></p>" ? (
-                          <p
-                            className="value"
-                            dangerouslySetInnerHTML={{
-                              __html: quantidade_por_periodo.observacao
-                            }}
-                          />
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                    </tr>
-                  )
-                ];
-              })
-            ) : (
-              <tr>
-                <td>
-                  {this.props.inclusaoDeAlimentacao.periodo_escolar &&
-                    this.props.inclusaoDeAlimentacao.periodo_escolar.nome}
-                </td>
-                <td>
-                  {stringSeparadaPorVirgulas(
-                    this.props.inclusaoDeAlimentacao.tipos_alimentacao,
-                    "nome"
-                  )}
-                </td>
-              </tr>
+                    <td>
+                      {quantidade_alunos_por_faixas_etarias.reduce(function(
+                        acc,
+                        v
+                      ) {
+                        return acc + (v.quantidade || v.quantidade_alunos);
+                      },
+                      0)}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+            {ehInclusaoCei(tipoSolicitacao) && (
+              <TabelaFaixaEtaria
+                faixas={quantidade_alunos_por_faixas_etarias}
+              />
             )}
-          </tbody>
-        </table>
-        {ehInclusaoCei(tipoSolicitacao) && (
-          <TabelaFaixaEtaria faixas={quantidade_alunos_por_faixas_etarias} />
+          </>
         )}
 
         {justificativaNegacao && (

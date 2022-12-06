@@ -1,14 +1,14 @@
 import React from "react";
-import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { stringSeparadaPorVirgulas } from "../../../../helpers/utilities";
+import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
-} from "../../../Shareable/Botao/constants";
-import { imprimeRelatorioSuspensaoAlimentacao } from "../../../../services/relatorios";
-import Botao from "../../../Shareable/Botao";
-import { fluxoInformativoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
+} from "components/Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import { fluxoInformativoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
+import { stringSeparadaPorVirgulas } from "helpers/utilities";
+import { imprimeRelatorioSuspensaoAlimentacao } from "services/relatorios";
 
 export const CorpoRelatorio = props => {
   const { suspensaoAlimentacao, dadosEscola } = props;
@@ -39,10 +39,10 @@ export const CorpoRelatorio = props => {
               suspensaoAlimentacao.escola.codigo_eol}
           </span>
         </div>
-        <p className={`col-2 title-message`}>
+        <p className={`col-2 title-message pr-3`}>
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() =>

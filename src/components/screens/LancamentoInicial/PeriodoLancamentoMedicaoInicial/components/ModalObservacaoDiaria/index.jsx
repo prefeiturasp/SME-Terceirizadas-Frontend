@@ -40,25 +40,32 @@ export default ({
   };
 
   const onClickExcluir = async () => {
-    const valorAtual = valoresPeriodosLancamentos
-      .filter(valor => valor.nome_campo === rowName)
-      .filter(valor => String(valor.dia) === String(dia))
-      .filter(
-        valor => String(valor.categoria_medicao) === String(categoria)
-      )[0];
-    const uuidValor = valorAtual.uuid;
-    const response = await deleteObservacaoValoresPeriodosLancamentos(
-      uuidValor
-    );
-    if (response.status === HTTP_STATUS.NO_CONTENT) {
-      form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
-      valoresPeriodosLancamentos.splice(
-        valoresPeriodosLancamentos.findIndex(valor => valor.uuid === uuidValor),
-        1
+    const msgError = "Ocorreu um erro ao deletar a observação!";
+    try {
+      const valorAtual = valoresPeriodosLancamentos
+        .filter(valor => valor.nome_campo === rowName)
+        .filter(valor => String(valor.dia) === String(dia))
+        .filter(
+          valor => String(valor.categoria_medicao) === String(categoria)
+        )[0];
+      const uuidValor = valorAtual.uuid;
+      const response = await deleteObservacaoValoresPeriodosLancamentos(
+        uuidValor
       );
-      toastSuccess("Observação excluída com sucesso");
-    } else {
-      toastError("Ocorreu um erro ao deletar a observação!");
+      if (response.status === HTTP_STATUS.NO_CONTENT) {
+        form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+        valoresPeriodosLancamentos.splice(
+          valoresPeriodosLancamentos.findIndex(
+            valor => valor.uuid === uuidValor
+          ),
+          1
+        );
+        toastSuccess("Observação excluída com sucesso");
+      } else {
+        toastError(msgError);
+      }
+    } catch (e) {
+      toastError(msgError);
     }
     closeModal();
   };

@@ -35,7 +35,7 @@ class PainelPedidos extends Component {
 
   //FIXME: Nao trata errors, nao faz requisicoes em paralelo
   async atualizarDadosDasInclusoes(filtro) {
-    const [avulsas, continuas, cei] = await Promise.all([
+    const [avulsas, continuas, cei, cemei] = await Promise.all([
       dreListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
@@ -47,9 +47,13 @@ class PainelPedidos extends Component {
       dreListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEI
+      ),
+      dreListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
       )
     ]);
-    const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
+    const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
     const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
       filtraPrioritarios(inclusoes)
     );

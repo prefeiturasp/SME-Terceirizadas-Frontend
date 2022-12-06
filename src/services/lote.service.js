@@ -1,5 +1,7 @@
+import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -122,22 +124,11 @@ export const getMeusLotes = () => {
     });
 };
 
-export const getLotesSimples = payload => {
+export const getLotesSimples = async (params = null) => {
   const url = `${API_URL}/lotes-simples/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    body: payload,
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { ...data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

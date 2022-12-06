@@ -1,28 +1,25 @@
-import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Redirect } from "react-router-dom";
 import { reduxForm } from "redux-form";
-import {
-  SUSPENSAO_ALIMENTACAO,
-  TERCEIRIZADA
-} from "../../../configs/constants";
-import { getError, usuarioEhEscola } from "../../../helpers/utilities";
-import {
-  getSuspensaoDeAlimentacaoUUID,
-  terceirizadaTomaCienciaSuspensaoDeAlimentacao
-} from "../../../services/suspensaoDeAlimentacao.service";
-import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import { ModalCancelaSuspensao } from "../components/ModalCancelaSuspensao";
 import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
-
+import { getError, usuarioEhEscola } from "helpers/utilities";
+import {
+  getSuspensaoDeAlimentacaoUUID,
+  terceirizadaTomaCienciaSuspensaoDeAlimentacao
+} from "services/suspensaoDeAlimentacao.service";
 import "./style.scss";
-import { ModalCancelaSuspensao } from "../components/ModalCancelaSuspensao";
 
 class RelatorioSuspensaoAlimentacao extends Component {
   constructor(props) {
@@ -197,6 +194,9 @@ class RelatorioSuspensaoAlimentacao extends Component {
                 <CorpoRelatorio
                   suspensaoAlimentacao={suspensaoAlimentacao}
                   dadosEscola={dadosEscola}
+                />
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={suspensaoAlimentacao}
                 />
                 {usuarioEhEscola() &&
                   suspensaoAlimentacao.status !== "ESCOLA_CANCELOU" && (

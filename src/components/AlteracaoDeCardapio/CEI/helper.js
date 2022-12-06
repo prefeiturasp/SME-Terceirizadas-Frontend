@@ -16,15 +16,20 @@ export const parseFormValues = ({
       tipo_alimentacao_para,
       ...dadosFaixasEtarias
     } = dadosSubstituicao;
+    const matriculados = dadosFaixasEtarias.alunosPorFaixaEtaria;
     delete dadosFaixasEtarias.alunosPorFaixaEtaria;
     if (!check) {
       continue;
     }
     let faixas_etarias = [];
     Object.entries(dadosFaixasEtarias.faixas_etarias).forEach(([k, v]) => {
+      const matriculados_quando_criado = matriculados.find(
+        f => f.faixa_etaria.uuid === k
+      );
       faixas_etarias.push({
         faixa_etaria: k,
-        quantidade: parseInt(v)
+        quantidade: parseInt(v),
+        matriculados_quando_criado: parseInt(matriculados_quando_criado.count)
       });
     });
     substituicoes.push({

@@ -225,13 +225,17 @@ export class SolicitacaoDeKitLanche extends Component {
   };
 
   onSubmit(values) {
+    const _alunosPorFaixaEtaria = this.props.alunosPorFaixaEtaria;
     values.kit_lanche = this.state.kitsChecked;
     const { ehCei } = this.state;
     if (!ehCei) {
       values.quantidade_alunos = parseInt(values.quantidade_alunos);
     }
     values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-    let solicitacao_kit_lanche = montaObjetoRequisicao(values);
+    let solicitacao_kit_lanche = montaObjetoRequisicao(
+      values,
+      _alunosPorFaixaEtaria
+    );
     if (values.confirmar) {
       solicitacao_kit_lanche.confirmar = values.confirmar;
     }
@@ -489,25 +493,32 @@ export class SolicitacaoDeKitLanche extends Component {
         ) : (
           <form onKeyPress={this.onKeyPress} className="solicitacao-kit-lanche">
             <Field component={"input"} type="hidden" name="uuid" />
-            {!ehCei && (
-              <CardMatriculados
-                meusDados={meusDados}
-                numeroAlunos={meusDados.quantidade_alunos}
-              />
-            )}
+            <CardMatriculados
+              meusDados={meusDados}
+              numeroAlunos={meusDados.quantidade_alunos}
+            />
             <Spin tip="Carregando Rascunhos..." spinning={carregandoRascunhos}>
-              <Rascunhos
-                rascunhosSolicitacoesKitLanche={rascunhosSolicitacoesKitLanche}
-                OnDeleteButtonClicked={(id_externo, uuid) =>
-                  this.OnDeleteButtonClicked(id_externo, uuid)
-                }
-                resetForm={event => this.resetForm(event)}
-                refreshComponent={this.refresh.bind(this)}
-                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-              />
+              {rascunhosSolicitacoesKitLanche.length > 0 && (
+                <div className="mt-3">
+                  <span className="page-title">Rascunhos</span>
+                  <Rascunhos
+                    rascunhosSolicitacoesKitLanche={
+                      rascunhosSolicitacoesKitLanche
+                    }
+                    OnDeleteButtonClicked={(id_externo, uuid) =>
+                      this.OnDeleteButtonClicked(id_externo, uuid)
+                    }
+                    resetForm={event => this.resetForm(event)}
+                    refreshComponent={this.refresh.bind(this)}
+                    OnEditButtonClicked={params =>
+                      this.OnEditButtonClicked(params)
+                    }
+                  />
+                </div>
+              )}
             </Spin>
             <br />
-            {!ehCei && <h3 className="page-title">{this.state.title}</h3>}
+            <h3 className="page-title mt-0">{this.state.title}</h3>
             <div className="card mt-3 p-4">
               {ehCei && (
                 <div className="form-group row">

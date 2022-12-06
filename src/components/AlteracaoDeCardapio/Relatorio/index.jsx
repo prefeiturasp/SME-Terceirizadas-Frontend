@@ -1,28 +1,30 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import HTTP_STATUS from "http-status-codes";
-import { Botao } from "../../Shareable/Botao";
+import { Botao } from "components/Shareable/Botao";
 import {
+  BUTTON_ICON,
   BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
-} from "../../Shareable/Botao/constants";
-import { reduxForm, formValueSelector } from "redux-form";
-import { connect } from "react-redux";
-import { getAlteracaoCardapio } from "../../../services/alteracaoDeCardapio";
-import { visualizaBotoesDoFluxo, getError } from "../../../helpers/utilities";
-import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants/shared";
-import { statusEnum } from "../../../constants/shared";
-import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
-import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
-import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { ModalAutorizarAposQuestionamento } from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
+import {
+  getError,
+  prazoDoPedidoMensagem,
+  visualizaBotoesDoFluxo
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { formValueSelector, reduxForm } from "redux-form";
+import { getAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { meusDados } from "services/perfil.service";
+import CorpoRelatorio from "./componentes/CorpoRelatorio";
+import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -139,7 +141,7 @@ class Relatorio extends Component {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
     const tipoSolicitacao = this.state.tipoSolicitacao;
-    this.props.endpointAprovaSolicitacao(uuid, tipoSolicitacao).then(
+    this.props.endpointAprovaSolicitacao(uuid, {}, tipoSolicitacao).then(
       response => {
         if (response.status === HTTP_STATUS.OK) {
           toastSuccess(toastAprovaMensagem);
@@ -167,7 +169,8 @@ class Relatorio extends Component {
       showAutorizarModal,
       erro,
       showModalConfirm,
-      showModalMarcarConferencia
+      showModalMarcarConferencia,
+      tipoSolicitacao
     } = this.state;
     const {
       justificativa,
@@ -253,7 +256,7 @@ class Relatorio extends Component {
             motivoCancelamento={motivo_cancelamento}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
             motivosDREnaoValida={motivosDREnaoValida}
           />
         )}
@@ -266,7 +269,7 @@ class Relatorio extends Component {
             loadSolicitacao={this.loadSolicitacao}
             resposta_sim_nao={resposta_sim_nao}
             endpoint={endpointQuestionamento}
-            tipoSolicitacao={this.state.tipoSolicitacao}
+            tipoSolicitacao={tipoSolicitacao}
           />
         )}
         {alteracaoDeCardapio && (
@@ -274,10 +277,12 @@ class Relatorio extends Component {
             showModal={showModalMarcarConferencia}
             closeModal={() => this.closeModalMarcarConferencia()}
             onMarcarConferencia={() => {
-              this.loadSolicitacao(uuid, this.state.tipoSolicitacao);
+              this.loadSolicitacao(uuid, tipoSolicitacao);
             }}
             uuid={alteracaoDeCardapio.uuid}
-            endpoint="alteracoes-cardapio"
+            endpoint={`alteracoes-cardapio${
+              tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CEI ? "-cei" : ""
+            }`}
           />
         )}
         {erro && (
@@ -294,7 +299,7 @@ class Relatorio extends Component {
                 closeModal={this.closeAutorizarModal}
                 endpoint={endpointAprovaSolicitacao}
                 uuid={uuid}
-                tipoSolicitacao={this.state.tipoSolicitacao}
+                tipoSolicitacao={tipoSolicitacao}
               />
             )}
             <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
@@ -315,7 +320,7 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   alteracaoDeCardapio={alteracaoDeCardapio}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
-                  tipoSolicitacao={this.state.tipoSolicitacao}
+                  tipoSolicitacao={tipoSolicitacao}
                   meusDados={meusDados}
                 />
                 <RelatorioHistoricoJustificativaEscola

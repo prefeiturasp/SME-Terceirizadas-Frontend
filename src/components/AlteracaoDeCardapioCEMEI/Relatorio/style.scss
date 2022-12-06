@@ -1,0 +1,62 @@
+.style-padrao-inclusao-cei {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  color: #42474a;
+
+  .id-externo-style {
+    background: #dadada;
+    border: 1px solid #e3e6f0;
+    border-radius: 4px;
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px 50px 0px 0px;
+
+    .id-externo-font {
+      font-weight: 700;
+      font-size: 24px;
+      margin-bottom: 0px;
+    }
+  }
+
+  .periodo-label-style {
+    background: #e6f7ea;
+    border: 1px solid #20aa73;
+    border-radius: 5px;
+    margin: 1% 0px;
+    width: 100%;
+    padding: 8px 15px;
+    height: 40px;
+    font-weight: 700;
+  }
+
+  .substituicoes-font-style {
+    margin: 1%;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    color: #686868;
+
+    .tipos-alimentacao-style {
+      font-weight: 700;
+      color: #198459;
+    }
+  }
+
+  .label-escola-cancela {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    color: #42474a;
+  }
+
+  .observacao-alteracao-cardapio-cemei {
+    font-weight: 700;
+    p {
+      font-weight: 700;
+    }
+  }
+}

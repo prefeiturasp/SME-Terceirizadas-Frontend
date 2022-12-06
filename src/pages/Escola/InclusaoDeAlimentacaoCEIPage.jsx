@@ -10,9 +10,16 @@ const atual = {
   titulo: "Inclusão de Alimentação"
 };
 
+const anteriores = [
+  {
+    href: `#`,
+    titulo: "Gestão de Alimentação"
+  }
+];
+
 export default () => (
-  <Page titulo={atual.titulo}>
-    <Breadcrumb home={HOME} atual={atual} />
+  <Page titulo={atual.titulo} botaoVoltar>
+    <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <Container />
   </Page>
 );

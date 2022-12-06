@@ -5,6 +5,7 @@ import authService from "./auth";
 
 import axios from "./_base";
 import { ENDPOINT_RELATORIO_QUANTITATIVO } from "constants/shared";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -13,6 +14,25 @@ const authToken = {
 
 export const getTerceirizada = () => {
   const url = `${API_URL}/terceirizadas/`;
+  let status = 0;
+  return fetch(url, {
+    headers: authToken,
+    method: "GET"
+  })
+    .then(response => {
+      status = response.status;
+      return response.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const getTerceirizada_razoes = () => {
+  const url = `${API_URL}/terceirizadas/lista-razoes/`;
   let status = 0;
   return fetch(url, {
     headers: authToken,
@@ -107,4 +127,38 @@ export const getPdfRelatorioQuantitativo = async params => {
     }
   );
   saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
+};
+
+export const getArmazens = async () =>
+  await axios.get("/terceirizadas/lista-armazens/");
+
+export const getEmailsTerceirizadasPorModulo = async params => {
+  const url = `/terceirizadas/emails-por-modulo/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const createEmailsTerceirizadasPorModulo = async payload => {
+  return axios.post(`/emails-terceirizadas-modulos/`, payload);
+};
+
+export const updateEmailsTerceirizadasPorModulo = async (uuid, payload) => {
+  const url = `/emails-terceirizadas-modulos/${uuid}/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteEmailsTerceirizadasPorModulo = async uuid => {
+  const url = `/emails-terceirizadas-modulos/${uuid}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

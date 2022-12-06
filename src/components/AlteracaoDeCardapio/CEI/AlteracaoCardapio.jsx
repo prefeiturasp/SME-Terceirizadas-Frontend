@@ -147,7 +147,7 @@ class AlteracaoCardapio extends Component {
     this.refresh();
   }
 
-  removerOpcoesSubstitutos(value, periodo, indice) {
+  removerOpcoesSubstitutos(value, periodo) {
     let periodos = this.state.periodos;
     let motivo = this.state.motivo;
     let opcoesSubstitutos = [];
@@ -178,7 +178,9 @@ class AlteracaoCardapio extends Component {
         uuid: substituto.uuid
       };
     });
-    periodos[indice].substituicoes = agregarDefault(opcoesSubstitutos);
+    periodos.find(p => p.nome === periodo.nome).substituicoes = agregarDefault(
+      opcoesSubstitutos
+    );
     this.setState({
       periodos: periodos
     });
@@ -197,16 +199,14 @@ class AlteracaoCardapio extends Component {
   retornaTurnoAlteracao = substituicao => {
     let substituicoesEdit = this.state.substituicoesEdit;
     let periodos = this.state.periodos;
-    substituicoesEdit.forEach((item, indice) => {
+    substituicoesEdit.forEach(item => {
       if (item.turno === substituicao.periodo_escolar.nome) {
         item.substituicoes = substituicao.tipos_alimentacao_de.substituicoes;
       }
-      if (
-        periodos[indice] &&
-        periodos[indice].nome === substituicao.periodo_escolar.nome
-      ) {
-        periodos[indice].checado = true;
-      }
+
+      periodos.find(
+        p => p.nome === substituicao.periodo_escolar.nome
+      ).checado = true;
     });
     this.setState({ substituicoesEdit, periodos });
   };
@@ -229,22 +229,25 @@ class AlteracaoCardapio extends Component {
 
   OnEditButtonClicked(param) {
     const alteracaoDeCardapio = param.alteracaoDeCardapio;
-    const periodos = this.state.periodos.map(periodo => {
-      const index = alteracaoDeCardapio.substituicoes.findIndex(
-        substituicao => substituicao.periodo_escolar.nome === periodo.nome
-      );
-      periodo.checked = index > -1;
-      periodo.substituicoes =
-        periodo.tipos_alimentacao.length > 0
-          ? agregarDefault([
-              alteracaoDeCardapio.substituicoes.find(
-                substituicao =>
-                  substituicao.periodo_escolar.nome === periodo.nome
-              ).tipo_alimentacao_para
-            ])
-          : agregarDefault([]);
-      return periodo;
-    });
+    const periodos = this.state.periodos
+      .filter(periodo => periodo.nome === "INTEGRAL")
+      .map(periodo => {
+        const index = alteracaoDeCardapio.substituicoes.findIndex(
+          substituicao => substituicao.periodo_escolar.nome === periodo.nome
+        );
+        periodo.checked = index > -1;
+
+        periodo.substituicoes =
+          periodo.tipos_alimentacao.length > 0
+            ? agregarDefault([
+                alteracaoDeCardapio.substituicoes.find(
+                  substituicao =>
+                    substituicao.periodo_escolar.nome === periodo.nome
+                ).tipo_alimentacao_para
+              ])
+            : agregarDefault([]);
+        return periodo;
+      });
     this.setState({ periodos });
     this.props.loadAlteracaoCardapioCei(alteracaoDeCardapio);
   }
@@ -349,6 +352,7 @@ class AlteracaoCardapio extends Component {
         }
       } else if (response.status === statusOk) {
         toastSuccess("Rascunho salvo com sucesso");
+        this.refresh();
         this.resetForm("alteracaoCardapio");
       } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
         response.data.data.forEach(erro => {
@@ -439,15 +443,23 @@ class AlteracaoCardapio extends Component {
 
   atualizaPeriodoCheck(input, indice, periodoNome) {
     let periodos = this.state.periodos;
-    this.limpaCamposAlteracaoDoPeriodo(periodos[indice], periodoNome);
-    periodos[indice].checked = !periodos[indice].checked;
-    this.props.change(input, periodos[indice].checked);
+    this.limpaCamposAlteracaoDoPeriodo(
+      periodos.find(p => p.nome === periodoNome, periodoNome)
+    );
+    periodos.find(p => p.nome === periodoNome).checked = !periodos.find(
+      p => p.nome === periodoNome
+    ).checked;
+    this.props.change(
+      input,
+      periodos.find(p => p.nome === periodoNome).checked
+    );
     this.setState({ periodos });
   }
 
   selectSubstituicoesAlimentacaoAPartirDe = (alimentacaoUUID, indice) => {
     let periodos = this.state.periodos;
-    const tiposAlimentacao = periodos[indice].tipos_alimentacao;
+    const tiposAlimentacao = periodos.find(p => p.nome === "INTEGRAL")
+      .tipos_alimentacao;
     let substituicoesAlimentacao = this.state.substituicoesAlimentacao;
     tiposAlimentacao.forEach(tipoAlimentacao => {
       if (tipoAlimentacao.uuid === alimentacaoUUID) {
@@ -609,100 +621,105 @@ class AlteracaoCardapio extends Component {
                   <div>Alterar alimentação de:</div>
                   <div>Para alimentação:</div>
                 </header>
-                {periodos.map((periodo, indice) => {
-                  const formSectionName = `substituicoes_${periodo.nome}`;
-                  this.props.change(`${formSectionName}.periodo`, periodo.uuid);
-                  let totalAlunos = 0;
-                  if (periodo.alunosPorFaixaEtaria) {
-                    periodo.alunosPorFaixaEtaria.forEach(faixaEtaria => {
-                      totalAlunos += faixaEtaria.count;
-                    });
-                  }
-                  let totalSelecionados = 0;
-                  if (
-                    formValues &&
-                    data_alteracao &&
-                    periodo.checked &&
-                    periodo.alunosPorFaixaEtaria &&
-                    formValues[formSectionName]["faixas_etarias"]
-                  ) {
-                    for (let [, valor] of Object.entries(
+                {periodos
+                  .filter(periodo => periodo.nome === "INTEGRAL")
+                  .map((periodo, indice) => {
+                    const formSectionName = `substituicoes_${periodo.nome}`;
+                    this.props.change(
+                      `${formSectionName}.periodo`,
+                      periodo.uuid
+                    );
+                    let totalAlunos = 0;
+                    if (periodo.alunosPorFaixaEtaria) {
+                      periodo.alunosPorFaixaEtaria.forEach(faixaEtaria => {
+                        totalAlunos += faixaEtaria.count;
+                      });
+                    }
+                    let totalSelecionados = 0;
+                    if (
+                      formValues &&
+                      data_alteracao &&
+                      periodo.checked &&
+                      periodo.alunosPorFaixaEtaria &&
                       formValues[formSectionName]["faixas_etarias"]
-                    )) {
-                      if (valor) {
-                        totalSelecionados += parseInt(valor);
+                    ) {
+                      for (let [, valor] of Object.entries(
+                        formValues[formSectionName]["faixas_etarias"]
+                      )) {
+                        if (valor) {
+                          totalSelecionados += parseInt(valor);
+                        }
                       }
                     }
-                  }
-                  return (
-                    <FormSection name={formSectionName} key={indice}>
-                      <div className="item-periodo-alimentacao">
-                        <Field
-                          component={CheckboxPeriodo}
-                          name="check"
-                          onChange={() =>
-                            this.atualizaPeriodoCheck(
-                              `substituicoes_${periodo.nome}.check`,
-                              indice,
-                              periodo.nome
-                            )
-                          }
-                          style={{
-                            background: periodo.style.background,
-                            border: `1px solid ${periodo.style.borderColor}`
-                          }}
-                          nomePeriodo={periodo.nome}
-                        />
-                        <div className="select-tipo-alimentacao-de">
+                    return (
+                      <FormSection name={formSectionName} key={indice}>
+                        <div className="item-periodo-alimentacao">
                           <Field
-                            component={MultiSelect}
-                            disableSearch
-                            name="tipos_alimentacao_de"
-                            multiple
-                            options={this.formataOpcoesDe(
-                              periodo.tipos_alimentacao
-                            )}
-                            nomeDoItemNoPlural="Alimentos"
-                            onChange={value =>
-                              this.removerOpcoesSubstitutos(
-                                value,
-                                periodo,
-                                indice
+                            component={CheckboxPeriodo}
+                            name="check"
+                            onChange={() =>
+                              this.atualizaPeriodoCheck(
+                                `substituicoes_${periodo.nome}.check`,
+                                indice,
+                                periodo.nome
                               )
                             }
-                            disabled={!periodo.checked}
+                            style={{
+                              background: periodo.style.background,
+                              border: `1px solid ${periodo.style.borderColor}`
+                            }}
+                            nomePeriodo={periodo.nome}
                           />
+                          <div className="select-tipo-alimentacao-de">
+                            <Field
+                              component={MultiSelect}
+                              disableSearch
+                              name="tipos_alimentacao_de"
+                              multiple
+                              options={this.formataOpcoesDe(
+                                periodo.tipos_alimentacao
+                              )}
+                              nomeDoItemNoPlural="Alimentos"
+                              onChange={value =>
+                                this.removerOpcoesSubstitutos(
+                                  value,
+                                  periodo,
+                                  indice
+                                )
+                              }
+                              disabled={!periodo.checked}
+                            />
+                          </div>
+                          <div className="select-tipo-alimentacao-de">
+                            <Field
+                              component={Select}
+                              name="tipo_alimentacao_para"
+                              options={
+                                periodo.substituicoes
+                                  ? periodo.substituicoes.filter(
+                                      ({ nome }) =>
+                                        nome.toUpperCase() !==
+                                        "Lanche emergencial".toUpperCase()
+                                    )
+                                  : agregarDefault([])
+                              }
+                              validate={periodo.checked && required}
+                              required={periodo.checked}
+                              disabled={!periodo.checked}
+                            />
+                          </div>
                         </div>
-                        <div className="select-tipo-alimentacao-de">
-                          <Field
-                            component={Select}
-                            name="tipo_alimentacao_para"
-                            options={
-                              periodo.substituicoes
-                                ? periodo.substituicoes.filter(
-                                    ({ nome }) =>
-                                      nome.toUpperCase() !==
-                                      "Lanche emergencial".toUpperCase()
-                                  )
-                                : agregarDefault([])
-                            }
-                            validate={periodo.checked && required}
-                            required={periodo.checked}
-                            disabled={!periodo.checked}
+                        {periodo.checked && periodo.alunosPorFaixaEtaria && (
+                          <TabelaQuantidadePorFaixaEtaria
+                            alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
+                            escondeTotalAlunos={periodo.nome === "PARCIAL"}
+                            totalAlunos={totalAlunos}
+                            totalSelecionados={totalSelecionados}
                           />
-                        </div>
-                      </div>
-                      {periodo.checked && periodo.alunosPorFaixaEtaria && (
-                        <TabelaQuantidadePorFaixaEtaria
-                          alunosPorFaixaEtaria={periodo.alunosPorFaixaEtaria}
-                          escondeTotalAlunos={periodo.nome === "PARCIAL"}
-                          totalAlunos={totalAlunos}
-                          totalSelecionados={totalSelecionados}
-                        />
-                      )}
-                    </FormSection>
-                  );
-                })}
+                        )}
+                      </FormSection>
+                    );
+                  })}
               </article>
               <hr />
               <article className="card-body">

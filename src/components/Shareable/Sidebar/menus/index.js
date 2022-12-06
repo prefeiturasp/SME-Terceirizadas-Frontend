@@ -9,3 +9,4 @@ export {
   default as MenuPesquisaDesenvolvimento
 } from "./MenuPesquisaDesenvolvimento";
 export { default as MenuLogistica } from "./MenuLogistica";
+export { default as MenuPreRecebimento } from "./MenuPreRecebimento";
