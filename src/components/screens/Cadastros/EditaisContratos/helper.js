@@ -31,6 +31,17 @@ export const normalizaLabelValueEmpresa = response => {
   return empresas;
 };
 
+export const normalizaLabelValueEmpresaSocial = response => {
+  let empresas = response.map(empresa => {
+    return {
+      label: empresa.razao_social,
+      value: empresa.uuid,
+      uuid: empresa.uuid
+    };
+  });
+  return empresas;
+};
+
 export const renderizarLabelLote = (selected, options) => {
   if (selected.length === 0) {
     return "Selecione um ou mais lotes...";

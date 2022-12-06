@@ -274,11 +274,9 @@ const CorpoRelatorio = ({
 
   const initialValues = () => {
     let logs = [...dietaEspecial.logs];
-    if (dietaEspecial.registro_funcional_nutricionista === "") {
-      dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionistaDieta(
-        logs.pop().usuario
-      );
-    }
+    dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionistaDieta(
+      logs.pop().usuario
+    );
     if (![undefined, null].includes(dietaEspecial.alergias_intolerancias)) {
       dietaEspecial.relacao_diagnosticos = formataAlergias(dietaEspecial)
         .map(a => a.nome)

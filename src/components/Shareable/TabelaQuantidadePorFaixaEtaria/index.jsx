@@ -48,6 +48,9 @@ export default class TabelaQuantidadePorFaixaEtaria extends Component {
                       naoPodeSerZero,
                       maxValue(faixa.count)
                     )}
+                    step="1"
+                    min={0}
+                    max={parseInt(faixa.count)}
                   />
                 </td>
               </tr>

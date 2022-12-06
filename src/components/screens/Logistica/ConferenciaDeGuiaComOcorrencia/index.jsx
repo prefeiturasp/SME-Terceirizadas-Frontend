@@ -101,9 +101,6 @@ export default () => {
   };
 
   const onSubmit = async values => {
-    values.data_recebimento = moment(values.data_entrega_real).format(
-      "DD/MM/YYYY"
-    );
     values.guia = uuid;
     values.arquivo = arquivoAtual;
 
@@ -114,7 +111,6 @@ export default () => {
       if (edicao) x.uuid_conferencia = values.uuid_conferencia;
       x.data_entrega = values.data_entrega;
       x.arquivo = values.arquivo[i];
-      x.data_recebimento = values.data_recebimento;
       x.data_entrega_real = values.data_entrega_real;
       x.hora_recebimento = values.hora_recebimento;
       x.nome_motorista = values.nome_motorista;

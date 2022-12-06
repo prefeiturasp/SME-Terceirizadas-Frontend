@@ -7,7 +7,8 @@ import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_PENDENTES,
   SOLICITACOES_NEGADAS,
-  SOLICITACOES_CANCELADAS
+  SOLICITACOES_CANCELADAS,
+  SOLICITACOES_AGUARDADAS
 } from "../../../configs/constants";
 import { FILTRO_VISAO, PAGINACAO_DEFAULT } from "../../../constants/shared";
 import { dataAtual } from "../../../helpers/utilities";
@@ -29,7 +30,8 @@ import {
   getSolicitacoesNegadasDRE,
   getSolicitacoesPendentesDRE,
   getSolicitacoesCanceladasDRE,
-  getSolicitacoesAutorizadasDRE
+  getSolicitacoesAutorizadasDRE,
+  getSolicitacoesAguardandoCODAE
 } from "../../../services/painelDRE.service";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
@@ -45,6 +47,7 @@ class DashboardDRE extends Component {
       canceladasListFiltered: [],
       negadasListFiltered: [],
       autorizadasListFiltered: [],
+      aguardandoCODAEListFiltered: [],
 
       lotes: [],
       resumo: [],
@@ -147,6 +150,15 @@ class DashboardDRE extends Component {
         autorizadasListFiltered: autorizadasListSolicitacao
       });
     });
+
+    getSolicitacoesAguardandoCODAE(params).then(request => {
+      let aguardandoCODAEListSolicitacao = ajustarFormatoLog(
+        request.data.results
+      );
+      this.setState({
+        aguardandoCODAEListFiltered: aguardandoCODAEListSolicitacao
+      });
+    });
   }
 
   onPesquisaChanged(values) {
@@ -171,6 +183,7 @@ class DashboardDRE extends Component {
       canceladasListFiltered,
       negadasListFiltered,
       autorizadasListFiltered,
+      aguardandoCODAEListFiltered,
       resumo,
       loadingPainelSolicitacoes
     } = this.state;
@@ -279,13 +292,24 @@ class DashboardDRE extends Component {
             <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Autorização"}
+                  cardTitle={"Aguardando Validação da DRE"}
                   cardType={CARD_TYPE_ENUM.PENDENTE}
                   solicitations={questionamentosListFiltered}
                   icon={"fa-exclamation-triangle"}
                   href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                 />
               </div>
+              <div className="col-6">
+                <CardStatusDeSolicitacao
+                  cardTitle={"Aguardando Retorno de CODAE"}
+                  cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
+                  solicitations={aguardandoCODAEListFiltered}
+                  icon={"fa-history"}
+                  href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                />
+              </div>
+            </div>
+            <div className="row pb-3">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Autorizadas"}
@@ -295,8 +319,6 @@ class DashboardDRE extends Component {
                   href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
                 />
               </div>
-            </div>
-            <div className="row">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Negadas"}
@@ -306,6 +328,8 @@ class DashboardDRE extends Component {
                   href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
                 />
               </div>
+            </div>
+            <div className="row">
               <div className="col-6">
                 <CardStatusDeSolicitacao
                   cardTitle={"Canceladas"}

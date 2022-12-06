@@ -78,21 +78,15 @@ export const CorpoRelatorio = props => {
         />
         <hr />
 
-        <div className="descricao-evento">
-          <div className="direita">
-            <div className="descricao-container">
-              <div className="descricao-titulo">Local do passeio</div>
-              <div className="descricao-texto">
-                {solicitacaoUnificada.local}
-              </div>
-            </div>
+        <div className="descricao-evento row mt-3 mb-3">
+          <div className="descricao-container col-6">
+            <div className="descricao-titulo">Local do passeio</div>
+            <div className="descricao-texto">{solicitacaoUnificada.local}</div>
           </div>
-          <div className="esquerda">
-            <div className="descricao-container">
-              <div className="descricao-titulo">Data do evento</div>
-              <div className="descricao-observacao">
-                {solicitacaoUnificada.solicitacao_kit_lanche.data}
-              </div>
+          <div className="descricao-container col-6">
+            <div className="descricao-titulo">Data do evento</div>
+            <div className="descricao-observacao">
+              {solicitacaoUnificada.solicitacao_kit_lanche.data}
             </div>
           </div>
         </div>

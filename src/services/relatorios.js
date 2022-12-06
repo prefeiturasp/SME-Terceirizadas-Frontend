@@ -130,8 +130,12 @@ export const getDetalheInversaoCardapio = async uuid => {
   saveAs(data, "relatorio_inversao_dia_cardapio.pdf");
 };
 
-export const imprimeRelatorioSuspensaoAlimentacao = async uuid => {
-  const url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+export const imprimeRelatorioSuspensaoAlimentacao = async (
+  uuid,
+  ehCei = false
+) => {
+  let url = `/grupos-suspensoes-alimentacao/${uuid}/relatorio/`;
+  if (ehCei) url = `/suspensao-alimentacao-de-cei/${uuid}/relatorio/`;
   const { data } = await axios.get(url, {
     responseType: "blob"
   });
@@ -325,4 +329,12 @@ export const getMotivosDREnaoValida = async () => {
     const data = { data: response.data, status: response.status };
     return data;
   }
+};
+
+export const getRelatorioKitLancheCEMEI = async uuid => {
+  const url = `/solicitacao-kit-lanche-cemei/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "relatorio_kit_lanche_cemei.pdf");
 };

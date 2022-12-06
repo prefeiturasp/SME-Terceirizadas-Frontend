@@ -20,7 +20,8 @@ export const Select = props => {
     options,
     tooltipText,
     required,
-    width
+    width,
+    usarDirty
   } = props;
   return (
     <div className="select">
@@ -42,7 +43,7 @@ export const Select = props => {
       <select
         {...input}
         className={`form-control ${className} ${meta &&
-          meta.touched &&
+          (usarDirty ? meta.dirty : meta.touched) &&
           meta.error &&
           "invalid-field"}`}
         disabled={disabled}
@@ -69,7 +70,7 @@ export const Select = props => {
           })}
       </select>
       <HelpText helpText={helpText} />
-      <InputErroMensagem meta={meta} />
+      <InputErroMensagem meta={meta} dirtyValidation={usarDirty} />
     </div>
   );
 };

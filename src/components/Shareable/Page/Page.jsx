@@ -8,14 +8,23 @@ import { usuarioEhLogistica, usuarioEhDistribuidora } from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
+import ModalVoltar from "./ModalVoltar";
 
 export const Page = ({ ...props }) => {
   const history = useHistory();
 
-  const { children, titulo, botaoVoltar } = props;
+  const {
+    children,
+    titulo,
+    botaoVoltar,
+    voltarPara,
+    temModalVoltar,
+    textoModalVoltar
+  } = props;
 
   const [nome, setNome] = useState(null);
   const [toggled, setToggled] = useState(false);
+  const [modalVoltar, setModalVoltar] = useState(false);
 
   const { setMeusDados } = useContext(MeusDadosContext);
 
@@ -29,6 +38,10 @@ export const Page = ({ ...props }) => {
             "crn_numero",
             JSON.stringify(meusDados.crn_numero)
           );
+          localStorage.setItem(
+            "registro_funcional",
+            JSON.stringify(meusDados.registro_funcional)
+          );
         }
         setNome(meusDados.nome);
       });
@@ -37,6 +50,14 @@ export const Page = ({ ...props }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleBack = () => {
+    if (temModalVoltar) {
+      setModalVoltar(true);
+    } else {
+      voltarPara ? history.push(voltarPara) : history.goBack();
+    }
+  };
 
   return (
     <div id="wrapper">
@@ -54,7 +75,7 @@ export const Page = ({ ...props }) => {
           {children.length ? children[0] : children}
           <h1 className="page-title">
             <span className="texto-titulo">{titulo}</span>
-            {botaoVoltar && <BotaoVoltar onClick={() => history.goBack()} />}
+            {botaoVoltar && <BotaoVoltar onClick={handleBack} />}
           </h1>
           {(usuarioEhDistribuidora() || usuarioEhLogistica()) &&
             window.location.pathname === "/" && (
@@ -69,6 +90,11 @@ export const Page = ({ ...props }) => {
           })}
         </div>
       </div>
+      <ModalVoltar
+        modalVoltar={modalVoltar}
+        setModalVoltar={setModalVoltar}
+        textoModalVoltar={textoModalVoltar}
+      />
     </div>
   );
 };

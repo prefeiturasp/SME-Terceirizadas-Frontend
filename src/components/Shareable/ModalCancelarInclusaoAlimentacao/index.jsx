@@ -21,9 +21,17 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     tipoSolicitacao,
     loadSolicitacao
   } = props;
+
+  const dias_motivos =
+    solicitacao &&
+    (solicitacao.inclusoes || solicitacao.dias_motivos_da_inclusao_cemei);
+
   const onSubmit = async values => {
     if (
-      tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
+      [
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+      ].includes(tipoSolicitacao) &&
       (!values.datas || values.datas.length === 0)
     ) {
       toastError("Selecione pelo menos uma data");
@@ -42,10 +50,12 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       if (
-        tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
-        values_.datas.length +
-          solicitacao.inclusoes.filter(i => i.cancelado).length !==
-          solicitacao.inclusoes.length
+        [
+          TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+          TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        ].includes(tipoSolicitacao) &&
+        values_.datas.length + dias_motivos.filter(i => i.cancelado).length !==
+          dias_motivos.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
       } else {
@@ -75,41 +85,43 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
                   </p>
                 </div>
               </div>
-              {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL && (
+              {[
+                TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+                TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+              ].includes(tipoSolicitacao) && (
                 <>
                   <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
-                  {Object.entries(
-                    formataMotivosDias(solicitacao.inclusoes)
-                  ).map((dadosMotivo, key) => {
-                    const [motivo, datas] = dadosMotivo;
-                    return (
-                      <div key={key}>
-                        <p>
-                          Motivo: <strong>{motivo}</strong>
-                        </p>
-                        {datas.map((dia, key_) => {
-                          return (
-                            <label key={key_} className="mr-3">
-                              <Field
-                                name="datas"
-                                component="input"
-                                disabled={
-                                  solicitacao.inclusoes.find(
-                                    i => i.data === dia
-                                  ).cancelado ||
-                                  moment(dia, "DD/MM/YYYY") <= moment()
-                                }
-                                type="checkbox"
-                                value={dia}
-                              />{" "}
-                              {dia}
-                            </label>
-                          );
-                        })}
-                        <hr />
-                      </div>
-                    );
-                  })}
+                  {Object.entries(formataMotivosDias(dias_motivos)).map(
+                    (dadosMotivo, key) => {
+                      const [motivo, datas] = dadosMotivo;
+                      return (
+                        <div key={key}>
+                          <p>
+                            Motivo: <strong>{motivo}</strong>
+                          </p>
+                          {datas.map((dia, key_) => {
+                            return (
+                              <label key={key_} className="mr-3">
+                                <Field
+                                  name="datas"
+                                  component="input"
+                                  disabled={
+                                    dias_motivos.find(i => i.data === dia)
+                                      .cancelado ||
+                                    moment(dia, "DD/MM/YYYY") <= moment()
+                                  }
+                                  type="checkbox"
+                                  value={dia}
+                                />{" "}
+                                {dia}
+                              </label>
+                            );
+                          })}
+                          <hr />
+                        </div>
+                      );
+                    }
+                  )}
                 </>
               )}
               {solicitacao.inclusoes &&

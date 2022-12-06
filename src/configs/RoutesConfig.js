@@ -32,6 +32,7 @@ import StatusSolicitacoesRecusadasNutriManifestacaoPage from "../pages/Nutricion
 import StatusSolicitacoesComQuestionamentosNutrisupervisaoPage from "../pages/Nutricionista/Solicitacoes/StatusSolicitacoesComQuestionamentosNutrisupervisaoPage";
 import ConfigEmailPage from "../pages/Configuracoes/ConfigEmailPage";
 import MensagemPage from "../pages/Configuracoes/MensagemPage";
+import GerenciamentoEmailsPage from "../pages/Configuracoes/GerenciamentoEmailsPage";
 import { DietaEspecialAluno } from "../pages/DietaEspecial/DashboardDietaEspecialPage";
 import RelatorioAlunosDietasAtivasInativasPage from "../pages/DietaEspecial/RelatorioAlunosDietasAtivasInativasPage.jsx";
 import ProtocoloPadraoDietaEspecialPage from "../pages/DietaEspecial/ProtocoloPadraoDietaEspecialPage.jsx";
@@ -83,6 +84,7 @@ import {
   permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
+  relatoriosAlteracaoDeCardapioCEMEI,
   relatoriosDietaEspecial,
   relatoriosInclusaoDeAlimentacao,
   relatoriosInversaoDiaCardapio,
@@ -90,7 +92,8 @@ import {
   relatoriosSolicitacaoKitLancheCEMEI,
   relatoriosSolicitacaoUnificada,
   StatusSolicitacoesDietaEspecial,
-  inclusaoAlimentacao
+  inclusaoAlimentacao,
+  relatoriosInclusaoDeAlimentacaoCEMEI
 } from "./helper";
 import {
   usuarioEhEscola,
@@ -106,6 +109,8 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
   usuarioEhDistribuidora,
+  usuarioEhPreRecebimento,
+  usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
@@ -114,7 +119,9 @@ import {
   exibirLancamentoMedicaoInicial,
   usuarioEhCoordenadorCODAE,
   usuarioEhDiretorEscola,
-  usuarioEhEmpresa
+  usuarioEhEmpresa,
+  usuarioEhDilogQualidade,
+  usuarioEhDilogQualidadeOuCronograma
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -175,6 +182,17 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
+import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
+import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
+import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
+import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
+import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 
 const routesConfig = [
@@ -326,6 +344,12 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
+    exact: false,
+    tipoUsuario: usuarioEhDRE()
+  },
+  {
+    path: `/${constants.DRE}/${constants.SOLICITACOES_AGUARDADAS}`,
+    component: StatusSolicitacoesAguardandoDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
   },
@@ -647,10 +671,64 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
   },
   {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIOS_CADASTRADOS
+    }`,
+    component: LaboratoriosCadastradosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }`,
+    component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }/${constants.EDITAR}`,
+    component: EditarCadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }`,
+    component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }`,
+    component: CadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGENS_CADASTRADAS
+    }`,
+    component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
     path: `/configuracoes/cadastros`,
     component: CadastrosPage,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/configuracoes/gerenciamento-emails`,
+    component: GerenciamentoEmailsPage,
+    exact: false,
+    tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
     path: `/configuracoes/mensagem`,
@@ -703,8 +781,22 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.ALTERACAO_TIPO_ALIMENTACAO_CEMEI}/${
+      constants.RELATORIO
+    }`,
+    component: relatoriosAlteracaoDeCardapioCEMEI(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
     path: `/${constants.INCLUSAO_ALIMENTACAO}/${constants.RELATORIO}`,
     component: relatoriosInclusaoDeAlimentacao(),
+    exact: false,
+    tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.INCLUSAO_ALIMENTACAO_CEMEI}/${constants.RELATORIO}`,
+    component: relatoriosInclusaoDeAlimentacaoCEMEI(),
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
   },
@@ -1306,6 +1398,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
   {
+    path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
+    component: RelatorioSolicitacoesAlimentacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
     path: `/${constants.LANCAMENTO_INICIAL}/${
       constants.LANCAMENTO_MEDICAO_INICIAL
     }`,
@@ -1454,6 +1552,42 @@ const routesConfig = [
     component: CentralDownloadsPage,
     exact: false,
     tipoUsuario: constants.QUALQUER_USUARIO
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
+    component: CronogramaEntregaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
+    component: DetalharCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
+  },
+  {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
+    component: CadastroCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
+  },
+  {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${
+      constants.EDITAR
+    }`,
+    component: EditarCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
   }
 ];
 

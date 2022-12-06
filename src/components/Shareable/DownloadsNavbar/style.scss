@@ -1,22 +1,6 @@
 @import "../../../styles/variables.scss";
 
 .navbar-notificacoes {
-  .icone-verde {
-    font-size: 14px;
-    color: #fff;
-  }
-
-  .icone-verde-fundo {
-    background-color: $green;
-    border-radius: 67px;
-    border: 0px;
-    padding: 8px 8px;
-    font-size: 11px;
-    height: 28px;
-    width: 28px;
-    margin: auto;
-  }
-
   .span-notificacoes-menor-que-10,
   .span-notificacoes-maior-que-10 {
     position: absolute;

@@ -17,6 +17,7 @@ const SelectSelecione = props => {
           : options
       }
       input={{ value: value || "0", onChange }}
+      usarDirty={true}
       {...rest}
     />
   );

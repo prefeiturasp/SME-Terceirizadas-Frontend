@@ -70,12 +70,14 @@ export const TempoPasseio = ({ form, ehEMEI, name, nameKits }) => {
               <b>De 5 a 7 horas:</b> 2 Kit lanche/aluno: Escolher 2 Kits
               distintos entre os modelos estabelecidos contratualmente;
             </label>
-            <br />
             {ehEMEI && (
-              <label>
-                <b>8 horas ou mais:</b> 3 Kit lanche/aluno: Escolher 3 Kits
-                distintos entre os modelos estabelecidos contratualmente;
-              </label>
+              <>
+                <br />
+                <label>
+                  <b>8 horas ou mais:</b> 3 Kit lanche/aluno: Escolher 3 Kits
+                  distintos entre os modelos estabelecidos contratualmente;
+                </label>
+              </>
             )}
           </div>
         </div>
@@ -185,6 +187,12 @@ export const QuantidadeAlunosEMEI = ({ meusDados }) => {
                 ),
                 required
               )}
+              max={parseInt(
+                meusDados.vinculo_atual.instituicao
+                  .quantidade_alunos_emei_da_cemei
+              )}
+              min={0}
+              step="1"
             />
           </th>
         </tr>
@@ -272,6 +280,9 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
                     naoPodeSerZero,
                     maxValue(faixa.count)
                   )}
+                  max={parseInt(faixa.count)}
+                  min={0}
+                  step="1"
                 />
               </td>
             </tr>
