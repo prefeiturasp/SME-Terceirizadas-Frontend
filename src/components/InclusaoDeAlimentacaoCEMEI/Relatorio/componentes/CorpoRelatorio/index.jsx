@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { formataMotivosDias } from "components/InclusaoDeAlimentacao/Relatorio/componentes/helper";
 import { tiposAlimentacaoPorPeriodoETipoUnidade } from "components/InclusaoDeAlimentacaoCEMEI/helpers";
 import Botao from "components/Shareable/Botao";
@@ -10,12 +11,13 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { getRelatorioInclusaoAlimentacaoCEMEI } from "services/relatorios";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem
 } from "helpers/utilities";
-import React from "react";
 import {
   inclusaoPossuiCEInestePeriodo,
   inclusaoPossuiEMEInestePeriodo,
@@ -24,6 +26,8 @@ import {
 import "./style.scss";
 
 export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
+  const [imprimindo, setImprimindo] = useState(false);
+
   const justificativaNegacao =
     solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
 
@@ -38,10 +42,18 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
           {prazoDoPedidoMensagem(solicitacao.prioridade)}
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
+            style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+            icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+            disabled={imprimindo}
             className="float-right"
-            onClick={() => {}}
+            onClick={async () => {
+              setImprimindo(true);
+              await getRelatorioInclusaoAlimentacaoCEMEI(
+                solicitacao.uuid,
+                TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+              );
+              setImprimindo(false);
+            }}
           />
         </p>
         <div className="col-2">
