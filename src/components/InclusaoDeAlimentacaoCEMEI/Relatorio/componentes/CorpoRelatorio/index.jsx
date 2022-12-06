@@ -11,8 +11,9 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
-import { getRelatorioInclusaoAlimentacaoCEMEI } from "services/relatorios";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { getRelatorioInclusaoAlimentacaoCEMEI } from "services/relatorios";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
@@ -31,6 +32,19 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
   const justificativaNegacao =
     solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs);
 
+  const imprimirRelatorio = async () => {
+    setImprimindo(true);
+    try {
+      await getRelatorioInclusaoAlimentacaoCEMEI(
+        solicitacao.uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+      );
+    } catch (e) {
+      toastError("Houve um erro ao imprimir o relatório");
+    }
+    setImprimindo(false);
+  };
+
   return (
     <div className="relatorio-inclusao-cemei">
       <div className="row">
@@ -46,14 +60,7 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
             icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
             disabled={imprimindo}
             className="float-right"
-            onClick={async () => {
-              setImprimindo(true);
-              await getRelatorioInclusaoAlimentacaoCEMEI(
-                solicitacao.uuid,
-                TIPO_SOLICITACAO.SOLICITACAO_CEMEI
-              );
-              setImprimindo(false);
-            }}
+            onClick={imprimirRelatorio}
           />
         </p>
         <div className="col-2">
