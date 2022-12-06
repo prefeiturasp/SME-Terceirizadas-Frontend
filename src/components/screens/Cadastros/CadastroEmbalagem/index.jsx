@@ -9,7 +9,7 @@ import {
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
@@ -21,6 +21,11 @@ import {
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EMBALAGENS_CADASTRADAS
+} from "configs/constants";
 
 const initialValues = {
   data_cadastro: new Date().toLocaleDateString()
@@ -91,7 +96,22 @@ export default () => {
             initialValues={initialValues}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                <div className="card-title green">Dados das Embalagens</div>
+                <div className="mb-4">
+                  <Link
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+                  >
+                    <Botao
+                      texto="Embalagens Cadastradas"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="float-right"
+                      onClick={() => {}}
+                    />
+                  </Link>
+                </div>
+                <div className="row">
+                  <div className="card-title green">Dados das Embalagens</div>
+                </div>
 
                 <div className="row">
                   <div className="col-6">
