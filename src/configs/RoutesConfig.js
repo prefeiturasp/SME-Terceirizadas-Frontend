@@ -186,6 +186,7 @@ import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
+import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 
 const routesConfig = [
   {
@@ -672,14 +673,6 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
-    }`,
-    component: CadastroEmbalagemPage,
-    exact: true,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
@@ -701,6 +694,22 @@ const routesConfig = [
     component: CadastroLaboratorioPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }`,
+    component: CadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGENS_CADASTRADAS
+    }`,
+    component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
   {
     path: `/configuracoes/cadastros`,
