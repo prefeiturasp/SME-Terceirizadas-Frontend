@@ -16,7 +16,6 @@ export const TODOS = "TODOS";
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,
   DIRETOR_CEI: `"DIRETOR_CEI"`,
-  DIRETOR_ABASTECIMENTO: `"DIRETOR_ABASTECIMENTO"`,
   COORDENADOR_ESCOLA: `"COORDENADOR_ESCOLA"`,
   ADMINISTRADOR_ESCOLA: `"ADMINISTRADOR_ESCOLA"`,
   ADMINISTRADOR_ESCOLA_ABASTECIMENTO: `"ADMINISTRADOR_ESCOLA_ABASTECIMENTO"`,
@@ -40,10 +39,13 @@ export const PERFIL = {
   COORDENADOR_SUPERVISAO_NUTRICAO: `"COORDENADOR_SUPERVISAO_NUTRICAO"`,
   ADMINISTRADOR_SUPERVISAO_NUTRICAO: `"ADMINISTRADOR_SUPERVISAO_NUTRICAO"`,
   ADMINISTRADOR_DISTRIBUIDORA: `"ADMINISTRADOR_DISTRIBUIDORA"`,
-  ADMINISTRADOR_FORNECEDOR: `"ADMINISTRADOR_FORNECEDOR"`,
   ADMINISTRADOR_CODAE_GABINETE: `"ADMINISTRADOR_CODAE_GABINETE"`,
   ADMINISTRADOR_CODAE_DILOG_CONTABIL: `"ADMINISTRADOR_CODAE_DILOG_CONTABIL"`,
-  ADMINISTRADOR_CODAE_DILOG_JURIDICO: `"ADMINISTRADOR_CODAE_DILOG_JURIDICO"`
+  ADMINISTRADOR_CODAE_DILOG_JURIDICO: `"ADMINISTRADOR_CODAE_DILOG_JURIDICO"`,
+  DILOG_CRONOGRAMA: `"DILOG_CRONOGRAMA"`,
+  DILOG_QUALIDADE: `"DILOG_QUALIDADE"`,
+  DILOG_DIRETORIA: `"DILOG_DIRETORIA"`,
+  DINUTRE_DIRETORIA: `"DINUTRE_DIRETORIA"`
 };
 
 export const VISAO = {
@@ -64,7 +66,8 @@ export const TIPO_PERFIL = {
   TERCEIRIZADA: `"terceirizada"`,
   LOGISTICA: `"logistica_abastecimento"`,
   NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`,
-  MEDICAO: `"medicao"`
+  MEDICAO: `"medicao"`,
+  PRE_RECEBIMENTO: `"pre_recebimento"`
 };
 
 export const TIPO_USUARIO = {
@@ -407,3 +410,74 @@ export const OPTIONS_STATUS_DIETA = [
 
 export const PAGINACAO_DEFAULT = 10;
 export const PAGINACAO_DASHBOARD_DEFAULT = 6;
+
+export const TIPOS_SOLICITACOES_OPTIONS = [
+  { nome: "Tipo de Solicitação", uuid: "" },
+  { nome: "Inclusão de Alimentação", uuid: "Inclusão de" },
+  {
+    nome: "Alteração do Tipo de Alimentação",
+    uuid: "Alteração"
+  },
+  { nome: "Kit Lanche", uuid: "KIT_LANCHE" },
+  { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Passeio Unificado" },
+  { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
+  { nome: "Suspensão de Alimentação", uuid: "Suspensão" }
+];
+
+export const cnpjMask = [
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/
+];
+
+export const cepMask = [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/];
+
+export const telefoneMask = [
+  "(",
+  /\d/,
+  /\d/,
+  ")",
+  " ",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/
+];
+
+export const cpfMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/
+];

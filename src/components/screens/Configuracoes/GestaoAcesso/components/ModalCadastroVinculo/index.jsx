@@ -1,5 +1,4 @@
 import React, { useContext, useState, useRef } from "react";
-import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
 import "antd/dist/antd.css";
@@ -26,11 +25,14 @@ import {
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getDadosUsuarioEOLCompleto } from "services/permissoes.service";
 import { useEffect } from "react";
-import { getSubdivisoesCodae } from "services/vinculos.service";
+import {
+  getSubdivisoesCodae,
+  getVinculoEmpresa
+} from "services/vinculos.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
-import { getMeusDados } from "services/perfil.service";
+import { cnpjMask, cpfMask } from "constants/shared";
 
 const ModalCadastroVinculo = ({
   show,
@@ -104,36 +106,45 @@ const ModalCadastroVinculo = ({
     toggleShow(false, vinculo);
   };
 
-  const getMeusDadosAsync = async () => {
-    const response = await getMeusDados();
-    if (response.status === HTTP_STATUS.OK) {
-      return "";
+  const getVinculoEmpresaAsync = async () => {
+    const response = await getVinculoEmpresa();
+    if (response.cnpj) {
+      let valueCnpj = {};
+      valueCnpj.cnpj = formatarCPFouCNPJ(response.cnpj);
+      setValoresEdicao(valueCnpj);
     } else {
-      return toastError("Ocorreu um erro inesperado");
+      return toastError(response.erro);
     }
   };
 
   useEffect(() => {
-    getMeusDadosAsync();
-    buscaSubdivisoes();
-
-    if (vinculo && show) {
-      setTipoUsuario("NAO_SERVIDOR");
-      let values = {};
-      values.nome = vinculo.nome_usuario;
-      values.email = vinculo.email_usuario;
-      values.cpf = formatarCPFouCNPJ(vinculo.cpf_usuario);
-      values.cnpj = formatarCPFouCNPJ(vinculo.cnpj_empresa);
-      values.perfil = vinculo.nome_perfil;
-      setValoresEdicao(values);
+    if (empresa) {
+      getVinculoEmpresaAsync();
     }
+    buscaSubdivisoes();
+    try {
+      if (vinculo && show) {
+        setTipoUsuario("NAO_SERVIDOR");
+        let values = {};
+        values.nome = vinculo.nome_usuario;
+        values.email = vinculo.email_usuario;
+        values.cpf = formatarCPFouCNPJ(vinculo.cpf_usuario);
+        values.cnpj = formatarCPFouCNPJ(vinculo.cnpj_empresa);
+        values.perfil = vinculo.nome_perfil;
+        values.visao = vinculo.visao_perfil;
+        setValoresEdicao(values);
+      }
+    } catch (error) {
+      toggleShow(false, null);
+      toastError("Ocorreu um erro ao carregar este usuário.", error);
+    }
+
     if (diretor_escola) {
       setTipoUsuario("SERVIDOR");
     } else if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
     }
   }, [vinculo, show, diretor_escola]);
-
   return (
     <>
       <ModalExclusaoVinculo show={showExclusao} setShow={setShowExclusao} />
@@ -304,35 +315,20 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             validate={required}
                             required
-                            disabled={valoresEdicao}
+                            disabled={valoresEdicao && !empresa}
                           />
                         </div>
                         <div className="col-5">
                           <Field
                             component={MaskedInputText}
-                            mask={[
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              ".",
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              ".",
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              "-",
-                              /\d/,
-                              /\d/
-                            ]}
+                            mask={cpfMask}
                             label="CPF"
                             name="cpf"
                             placeholder="Digite o CPF do usuário"
                             className="input-busca-produto"
                             validate={composeValidators(required, validaCPF)}
                             required
-                            disabled={valoresEdicao}
+                            disabled={valoresEdicao && !empresa}
                           />
                         </div>
                       </div>
@@ -350,26 +346,7 @@ const ModalCadastroVinculo = ({
                         </div>
                         <div className="col-5">
                           <Field
-                            mask={[
-                              /\d/,
-                              /\d/,
-                              ".",
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              ".",
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              "/",
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              /\d/,
-                              "-",
-                              /\d/,
-                              /\d/
-                            ]}
+                            mask={cnpjMask}
                             component={MaskedInputText}
                             label="CNPJ da Empresa"
                             name="cnpj"
@@ -386,14 +363,14 @@ const ModalCadastroVinculo = ({
                           <Field
                             component={SelectSelecione}
                             label="Visão"
-                            name="visao_servidor"
+                            name="visao"
                             placeholder="Selecione a visão"
                             className="input-busca-produto"
                             required
                             options={listaVisao}
                             validate={required}
                             defaultValue={empresa ? "EMPRESA" : ""}
-                            disabled={empresa ? true : false}
+                            disabled={empresa || vinculo}
                           />
                         </div>
                         <div className="col-6">
@@ -406,7 +383,7 @@ const ModalCadastroVinculo = ({
                             required
                             options={getPerfis("EMPRESA")}
                             validate={required}
-                            disabled={valoresEdicao}
+                            disabled={valoresEdicao && !empresa}
                           />
                         </div>
                       </div>

@@ -156,6 +156,7 @@ export default ({ diretor_escola, empresa }) => {
         show={showEdicao}
         toggleShow={toggleEdicao}
         toggleExclusao={toggleExclusao}
+        listaVisao={visoes}
         vinculo={vinculoModal}
         listaPerfis={listaPerfis}
         onSubmit={editarAcesso}
