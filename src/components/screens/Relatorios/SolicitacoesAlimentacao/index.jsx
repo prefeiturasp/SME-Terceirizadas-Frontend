@@ -39,7 +39,6 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   };
 
   const exportarXLSX = () => {
-    console.log(endpointGerarExcel);
     endpointGerarExcel(filtros)
       .then(() => {})
       .catch(error => {
