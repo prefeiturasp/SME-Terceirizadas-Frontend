@@ -11,7 +11,7 @@ import {
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`,
-  titulo: "Embalagens Casastradas"
+  titulo: "Embalagens Cadastradas"
 };
 
 const anteriores = [

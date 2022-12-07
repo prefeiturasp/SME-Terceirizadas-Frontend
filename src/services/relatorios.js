@@ -88,6 +88,17 @@ export const getRelatorioInclusaoAlimentacao = (uuid, tipoSolicitacao) => {
     });
 };
 
+export const getRelatorioInclusaoAlimentacaoCEMEI = async (
+  uuid,
+  tipoSolicitacao
+) => {
+  const url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "inclusao_alimentacao_cemei.pdf");
+};
+
 export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
   const url = `${getKitLanchePath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {
