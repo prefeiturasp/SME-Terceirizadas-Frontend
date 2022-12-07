@@ -7,9 +7,16 @@ import { TabelaResultado } from "./componentes/TabelaResultado";
 import { Paginacao } from "components/Shareable/Paginacao";
 import "./style.scss";
 import { STATUS_SOLICITACOES } from "./constants";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
-  const { endpoint } = props;
+  const { endpoint, endpointGerarExcel } = props;
   const { meusDados } = useContext(MeusDadosContext);
 
   const [erroAPI, setErroAPI] = useState("");
@@ -29,6 +36,15 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
       setSolicitacoes(response.data.results);
       setTotalBusca(response.data.count);
     }
+  };
+
+  const exportarXLSX = () => {
+    console.log(endpointGerarExcel);
+    endpointGerarExcel(filtros)
+      .then(() => {})
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+      });
   };
 
   return (
@@ -68,12 +84,25 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
           <TabelaResultado solicitacoes={solicitacoes} filtros={filtros} />
         )}
         {solicitacoes && solicitacoes.length && filtros ? (
-          <Paginacao
-            onChange={page => onPageChanged(page, filtros)}
-            total={totalBusca}
-            pageSize={10}
-            current={page}
-          />
+          <>
+            <Paginacao
+              onChange={page => onPageChanged(page, filtros)}
+              total={totalBusca}
+              pageSize={10}
+              current={page}
+            />
+            <div className="row">
+              <div className="col-12 text-right">
+                <Botao
+                  texto="Baixar Excel"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  icon={BUTTON_ICON.FILE_EXCEL}
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={() => exportarXLSX()}
+                />
+              </div>
+            </div>
+          </>
         ) : (
           <></>
         )}

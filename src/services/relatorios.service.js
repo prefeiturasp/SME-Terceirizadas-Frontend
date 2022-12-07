@@ -299,3 +299,15 @@ export const filtrarSolicitacoesAlimentacaoDRE = async params => {
     return data;
   }
 };
+
+export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async params => {
+  const url = `/diretoria-regional-solicitacoes/exportar-xlsx/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_solicitacoes_alimentacao.xlsx");
+};
+
+export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
+  const url = `/codae-solicitacoes/exportar-xlsx/`;
+  const { data } = await axios.get(url, { params, responseType: "blob" });
+  saveAs(data, "relatorio_solicitacoes_alimentacao.xlsx");
+};

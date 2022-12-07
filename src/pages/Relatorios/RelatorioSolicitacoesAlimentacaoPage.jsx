@@ -9,7 +9,9 @@ import {
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
-  filtrarSolicitacoesAlimentacaoDRE
+  filtrarSolicitacoesAlimentacaoDRE,
+  gerarExcelRelatorioSolicitacoesAlimentacaoCODAE,
+  gerarExcelRelatorioSolicitacoesAlimentacaoDRE
 } from "services/relatorios.service";
 
 const atual = {
@@ -31,13 +33,22 @@ const anteriores = [
 const endpointPorPerfil = () => {
   if (usuarioEhDRE()) {
     return filtrarSolicitacoesAlimentacaoDRE;
-  }
-  if (usuarioEhCODAEGestaoAlimentacao()) {
+  } else if (usuarioEhCODAEGestaoAlimentacao()) {
     return filtrarSolicitacoesAlimentacaoCODAE;
+  } else {
+    return "PERFIL_INVALIDO";
   }
 };
 
-const endpoint = endpointPorPerfil();
+const endpointGerarExcel = () => {
+  if (usuarioEhDRE()) {
+    return gerarExcelRelatorioSolicitacoesAlimentacaoDRE;
+  } else if (usuarioEhCODAEGestaoAlimentacao()) {
+    return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
+  } else {
+    return "PERFIL_INVALIDO";
+  }
+};
 
 export default props => (
   <Page
@@ -46,6 +57,10 @@ export default props => (
     {...props}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <RelatorioSolicitacoesAlimentacao endpoint={endpoint} {...props} />
+    <RelatorioSolicitacoesAlimentacao
+      endpoint={endpointPorPerfil()}
+      endpointGerarExcel={endpointGerarExcel()}
+      {...props}
+    />
   </Page>
 );
