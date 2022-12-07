@@ -44,7 +44,7 @@ export default ({ reposicao }) => {
     if (reposicao) payload.eh_reposicao = true;
     payload.nome_motorista = ultimoItem.nome_motorista;
     payload.placa_veiculo = ultimoItem.placa_veiculo;
-    payload.data_recebimento = ultimoItem.data_recebimento;
+    payload.data_recebimento = ultimoItem.data_entrega_real;
     payload.hora_recebimento = ultimoItem.hora_recebimento;
     payload.conferencia_dos_alimentos = [];
     valoresForm.forEach((item, index) => {
@@ -343,7 +343,7 @@ export default ({ reposicao }) => {
                           <td className="recebimento">
                             {
                               valoresForm[valoresForm.length - 1]
-                                .data_recebimento
+                                .data_entrega_real
                             }
                           </td>
                         </tr>

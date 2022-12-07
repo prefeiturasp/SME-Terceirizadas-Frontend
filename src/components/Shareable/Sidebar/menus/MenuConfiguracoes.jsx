@@ -4,6 +4,7 @@ import {
   CONFIGURACOES,
   PERMISSOES,
   MENSAGEM,
+  GERENCIAMENTO_EMAILS,
   GESTAO_ACESSO_CODAE_DILOG,
   GESTAO_ACESSO_DIRETOR_ESCOLA,
   CARGAS_USUARIOS,
@@ -37,6 +38,10 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhTerceirizada();
+  const exibirGerenciamentoEmails =
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCoordenadorGpCODAE();
 
   const exibirGestaoUsuario =
     usuarioEhLogistica() || usuarioEhCoordenadorCODAE();
@@ -54,6 +59,11 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
             Configuração de Mensagem
           </LeafItem>
         </>
+      )}
+      {exibirGerenciamentoEmails && (
+        <LeafItem to={`/${CONFIGURACOES}/${GERENCIAMENTO_EMAILS}`}>
+          Gerenciamento de E-mails
+        </LeafItem>
       )}
 
       {exibirGestaoUsuario && (

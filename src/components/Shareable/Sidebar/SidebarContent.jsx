@@ -13,6 +13,7 @@ import {
   usuarioEhAdministradorDRE,
   usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
+  usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhDistribuidora,
@@ -22,7 +23,9 @@ import {
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhMedicao,
   exibirGA,
-  usuarioEhOutrosDilog
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhOutrosDilog,
+  usuarioEhPreRecebimentoSemLogistica
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -33,7 +36,8 @@ import {
   MenuGestaoDeProduto,
   MenuLancamentoInicial,
   MenuRelatorios,
-  MenuLogistica
+  MenuLogistica,
+  MenuPreRecebimento
 } from "./menus";
 
 export const SidebarContent = () => {
@@ -104,6 +108,7 @@ export const SidebarContent = () => {
   const exibirCadastros =
     usuarioEhLogistica() ||
     usuarioEhMedicao() ||
+    usuarioEhDilogQualidadeOuCronograma() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
@@ -114,7 +119,8 @@ export const SidebarContent = () => {
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
     !usuarioEscolaEhGestaoDireta() &&
-    !usuarioEhMedicao();
+    !usuarioEhMedicao() &&
+    !usuarioEhPreRecebimento();
 
   const exibirConfiguracoes =
     !usuarioEhAdmEscolaTerceirizada() &&
@@ -122,7 +128,9 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorNutriSupervisao() &&
     !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
-    !usuarioEhOutrosDilog();
+    !usuarioEhOutrosDilog() &&
+    !usuarioEhDistribuidora() &&
+    !usuarioEhPreRecebimentoSemLogistica();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -131,6 +139,8 @@ export const SidebarContent = () => {
     usuarioEhEscolaAbastecimento() ||
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
+
+  const exibirMenuPreRecebimento = usuarioEhPreRecebimento();
 
   const _props = {
     activeMenu,
@@ -152,6 +162,7 @@ export const SidebarContent = () => {
     exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />
   ];
 };

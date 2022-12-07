@@ -40,10 +40,13 @@ export const deleteFotoAluno = async codigo_eol_aluno => {
   }
 };
 
-export const getQuantidadeAlunosCEMEIporCEIEMEI = async codigo_eol_escola => {
+export const getQuantidadeAlunosCEMEIporCEIEMEI = async (
+  codigo_eol_escola,
+  manha_e_tarde_sempre = null
+) => {
   const url = `/alunos/quantidade-cemei-por-cei-emei/`;
   const response = await axios
-    .get(url, { params: { codigo_eol_escola } })
+    .get(url, { params: { codigo_eol_escola, manha_e_tarde_sempre } })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

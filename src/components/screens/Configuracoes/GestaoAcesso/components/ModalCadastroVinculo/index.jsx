@@ -144,7 +144,7 @@ const ModalCadastroVinculo = ({
     } else if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola]);
+  }, [vinculo, show, diretor_escola, empresa, toggleShow]);
   return (
     <>
       <ModalExclusaoVinculo show={showExclusao} setShow={setShowExclusao} />

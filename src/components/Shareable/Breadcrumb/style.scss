@@ -62,3 +62,19 @@
     color: $blackSubtle;
   }
 }
+
+.dark-content {
+  .contrast {
+    color: #fff;
+  }
+  .br-breadcrumb {
+    li {
+      a {
+        color: #fff;
+      }
+    }
+    .is-active {
+      color: #fff;
+    }
+  }
+}

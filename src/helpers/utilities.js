@@ -5,6 +5,7 @@ import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 // TODO: Quebrar esse arquivo, tem muitos helpers de diferentes tipo num único arquivo
 //       Dá pra separar por tipo de helper:
@@ -35,7 +36,7 @@ export const checaSeDataEstaEntre2e5DiasUteis = (
   const _date = value.split("/");
   if (
     two_working_days <= new Date(_date[2], _date[1] - 1, _date[0]) &&
-    new Date(_date[2], _date[1] - 1, _date[0]) < five_working_days
+    new Date(_date[2], _date[1] - 1, _date[0]) <= five_working_days
   ) {
     return true;
   }
@@ -204,6 +205,9 @@ export const validarCPF = cpf => {
   return true;
 };
 
+export const removeCaracteresEspeciais = valor =>
+  valor.replace(/[^\w\s]/gi, "");
+
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
@@ -304,6 +308,21 @@ export const formatarCPFouCNPJ = value => {
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/g,
     "$1.$2.$3/$4-$5"
   );
+};
+
+export const formatarCEP = value => {
+  const cep = value.replace(/\D/g, "");
+  if (cep.length === 8) {
+    return cep.replace(/(\d{5})(\d{3})/g, "$1-$2");
+  }
+};
+
+export const formatarTelefone = value => {
+  const cep = value.replace(/\D/g, "");
+  if (cep.length === 11) {
+    return cep.replace(/(\d{2})(\d{5})(\d{4})/g, "($1) $2-$3");
+  }
+  return cep.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
 };
 
 export const usuarioEhCoordenadorEscola = () => {
@@ -419,6 +438,47 @@ export const usuarioEhLogistica = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhCronogramaCriacaoEdicao = () => {
+  return [
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.COORDENADOR_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDilogQualidade = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
+
+export const usuarioEhDilogQualidadeOuCronograma = () => {
+  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
+/*
+  TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+  temporariamente ao Pré Recebimento. Após finalização da definição de
+  permissionamento deve se remover usuarioEhLogistica() desta regra.
+  Quando essa mudança for realizada, apagar o usuarioEhPreRecebimentoSemLogistica,
+  ele é uma solucao temporaria pro menu de configurações aparecer pros usuarios
+  de Logistica
+  */
+
+export const usuarioEhPreRecebimento = () => {
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
+    usuarioEhLogistica()
+  );
+};
+
+export const usuarioEhPreRecebimentoSemLogistica = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO;
+};
+
+export const usuarioEhCronograma = () => {
+  return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhDistribuidora = () => {
   return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
     localStorage.getItem("perfil")
@@ -434,7 +494,8 @@ export const escolaEhCei = () => {
 export const escolaEhCEMEI = () => {
   return (
     localStorage.getItem("nome_instituicao") &&
-    localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`)
+    (localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`) ||
+      localStorage.getItem("nome_instituicao").startsWith(`"CEU CEMEI`))
   );
 };
 
@@ -455,12 +516,6 @@ export const usuarioEhAdministradorDRE = () => {
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {
-  /*
-   * TODO: aqui foi adicionado o recurso de verificação de usuario DILOG em 12/11/2020.
-   * Para se adaptar ao perfil da CODAE. (Segundo o Fabricio)
-   * Inicialmente a regra é que o perfil DILOG tenha os mesmo acessos de CODAE.
-   * Quando esta regra mudar, favor, modularizar essa função para validar apenas perfil de CODAE.
-   */
   const tipoPerfil = localStorage.getItem("tipo_perfil");
   return tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA;
 };
@@ -522,12 +577,12 @@ export const converterDDMMYYYYparaYYYYMMDD = data => {
 };
 
 export const obtemIdentificacaoNutricionista = () =>
-  `Elaborado por ${localStorage.getItem("nome")} - CRN ${localStorage.getItem(
-    "crn_numero"
+  `Elaborado por ${localStorage.getItem("nome")} - RF ${localStorage.getItem(
+    "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
 
 export const obtemIdentificacaoNutricionistaDieta = usuario =>
-  `Elaborado por ${usuario.nome} - CRN ${usuario.crn_numero}`.replace(
+  `Elaborado por ${usuario.nome} - RF ${usuario.registro_funcional}`.replace(
     /[^\w\s-]/g,
     ""
   );
@@ -551,6 +606,24 @@ export const getError = obj => {
     else return obj[getKey(obj)][0];
   }
   return result;
+};
+
+export const exibeError = (error, msg) => {
+  if (error.response && typeof error.response.data === "object") {
+    let chave = Object.keys(error.response.data);
+    let msn_erro_return = error.response.data[chave[0]];
+    let msg_erro = Array.isArray(msn_erro_return)
+      ? msn_erro_return[0]
+      : msn_erro_return;
+    if (typeof msg_erro === "object") {
+      let chave2 = Object.keys(msg_erro);
+      toastError(`${chave2[0]}: ${msg_erro[chave2[0]][0]}`);
+    } else if (typeof msg_erro === "string") {
+      toastError(`${chave[0]}: ${msg_erro}`);
+    }
+  } else {
+    toastError(msg);
+  }
 };
 
 export const formatarLotesParaVisao = lotes => {
@@ -696,25 +769,29 @@ export const retornaDuplicadasArray = arr =>
 
 export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
+
+  const dresPermitidas = [
+    "IPIRANGA",
+    "PIRITUBA",
+    "FREGUESIA/BRASILANDIA",
+    "SAO MATEUS"
+  ];
+
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
       case `"gestao_alimentacao_terceirizada"`:
         return true;
       case `"diretoriaregional"`:
-        return (
-          localStorage.getItem("nome_instituicao").includes("IPIRANGA") ||
-          localStorage.getItem("nome_instituicao").includes("PIRITUBA")
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("nome_instituicao").includes(dre)
         );
       case `"escola"`:
-        return (
-          localStorage.getItem("dre_nome").includes("IPIRANGA") ||
-          localStorage.getItem("dre_nome").includes("PIRITUBA")
+        return dresPermitidas.some(dre =>
+          localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return JSON.parse(localStorage.getItem("lotes")).find(
-          lote =>
-            lote.diretoria_regional.nome.includes("IPIRANGA") ||
-            lote.diretoria_regional.nome.includes("PIRITUBA")
+        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
+          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
       case `"nutricao_manifestacao"`:
         return true;

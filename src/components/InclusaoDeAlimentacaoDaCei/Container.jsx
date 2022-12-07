@@ -1,56 +1,113 @@
-import React, { Component } from "react";
-import { getMotivosInclusaoNormal } from "../../services/inclusaoDeAlimentacao";
-import { meusDados } from "../../services/perfil.service";
-import { getDiasUteis } from "../../services/diasUteis.service";
-import { dataParaUTC } from "../../helpers/utilities";
+import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import InclusaoDeAlimentacaoDaCei from ".";
+import { backgroundLabelPeriodo } from "./helper";
+import { dataParaUTC } from "helpers/utilities";
+import { getMeusDados } from "services/perfil.service";
+import { getMotivosInclusaoNormal } from "services/inclusaoDeAlimentacao";
+import { getDiasUteis } from "services/diasUteis.service";
+import { minhasFaixasEtarias } from "services/inclusaoDeAlimentacao/cei.legacy.service";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
-class Container extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      meusDados: null,
-      motivos: [],
-      periodos: [],
-      proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
-    };
-  }
+export const Container = () => {
+  const [dados, setDados] = useState(null);
+  const [motivos, setMotivos] = useState(null);
+  const [periodos, setPeriodos] = useState(null);
+  const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
+  const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [todasFaixas, setTodasFaixas] = useState(null);
+  const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
 
-  componentDidMount() {
-    meusDados().then(response => {
-      const meusDados = response;
-      this.setState({
-        meusDados,
-        periodos: response.vinculo_atual.instituicao.periodos_escolares
-      });
-    });
+  const [erro, setErro] = useState(false);
 
-    // TODO: precisa ter Cei?
-    getMotivosInclusaoNormal().then(response => {
-      const motivos = response.data.results;
-      this.setState({
-        motivos
-      });
-    });
+  const getTodasFaixasEtarias = async () => {
+    const response = await minhasFaixasEtarias();
+    if (response.status === HTTP_STATUS.OK) {
+      setTodasFaixas(response.data.results);
+    }
+  };
 
-    getDiasUteis().then(response => {
-      const proximos_cinco_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_cinco_dias_uteis)
+  const getVinculosAlimentacao = async escola_uuid => {
+    const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setVinculosAlimentacao(response.data.results);
+    } else {
+      setErro(true);
+    }
+  };
+
+  const getMeusDadosAsync = async () => {
+    const response = await getMeusDados();
+    if (response.status === HTTP_STATUS.OK) {
+      setDados(response.data);
+      const escola = response.data.vinculo_atual.instituicao;
+      const periodosStyle = backgroundLabelPeriodo(escola.periodos_escolares);
+      setPeriodos(periodosStyle);
+      getVinculosAlimentacao(escola.uuid);
+    } else {
+      setErro(true);
+    }
+  };
+
+  const getMotivosInclusaoNormalAsync = async () => {
+    const response = await getMotivosInclusaoNormal();
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivos(response.data.results);
+    } else {
+      setErro(true);
+    }
+  };
+
+  const getDiasUteisAsync = async () => {
+    const response = await getDiasUteis();
+    if (response.status === HTTP_STATUS.OK) {
+      setProximosDoisDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_dois_dias_uteis))
       );
-      const proximos_dois_dias_uteis = dataParaUTC(
-        new Date(response.data.proximos_dois_dias_uteis)
+      setProximosCincoDiasUteis(
+        dataParaUTC(new Date(response.data.proximos_cinco_dias_uteis))
       );
-      this.setState({
-        proximos_dois_dias_uteis,
-        proximos_cinco_dias_uteis
-      });
-    });
-  }
+    } else {
+      setErro(true);
+    }
+  };
 
-  render() {
-    return <InclusaoDeAlimentacaoDaCei {...this.state} />;
-  }
-}
+  useEffect(() => {
+    getMeusDadosAsync();
+    getMotivosInclusaoNormalAsync();
+    getDiasUteisAsync();
+    getTodasFaixasEtarias();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const REQUISICOES_CONCLUIDAS =
+    dados &&
+    motivos &&
+    periodos &&
+    proximosDoisDiasUteis &&
+    proximosCincoDiasUteis &&
+    todasFaixas &&
+    vinculosAlimentacao;
+
+  return (
+    <div className="mt-3">
+      {!REQUISICOES_CONCLUIDAS && !erro && <div>Carregando...</div>}
+      {erro && (
+        <div>Erro ao carregar informações. Tente novamente mais tarde.</div>
+      )}
+      {REQUISICOES_CONCLUIDAS && (
+        <InclusaoDeAlimentacaoDaCei
+          meusDados={dados}
+          motivos={motivos}
+          periodos={periodos}
+          proximosDoisDiasUteis={proximosDoisDiasUteis}
+          proximosCincoDiasUteis={proximosCincoDiasUteis}
+          todasFaixas={todasFaixas}
+          vinculosAlimentacao={vinculosAlimentacao}
+        />
+      )}
+    </div>
+  );
+};
 
 export default Container;

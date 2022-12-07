@@ -1,25 +1,21 @@
-import React, { Component } from "react";
-import "./style.scss";
-import { TIPO_SOLICITACAO } from "constants/shared";
+import React from "react";
+import "components/Shareable/style.scss";
 
-export default class Rascunhos extends Component {
-  removerRascunho(id, uuid) {
-    this.props.removerRascunho(id, uuid, TIPO_SOLICITACAO.SOLICITACAO_CEI);
-    this.props.resetForm();
-  }
-
-  render() {
-    const { meusRascunhos, carregarRascunho } = this.props;
-    const cardsInclusoesCei = meusRascunhos.map(
-      (inclusaoAlimentacaoCei, indice) => {
-        const { id_externo, uuid } = inclusaoAlimentacaoCei;
+export const Rascunhos = ({
+  rascunhos,
+  removerRascunho,
+  form,
+  carregarRascunho,
+  values
+}) => {
+  return (
+    <div>
+      {rascunhos.map((inclusao, key) => {
+        const { id_externo, uuid } = inclusao;
         let backgroundColor = "#DADADA";
         return (
-          <div
-            key={indice}
-            className="draft bg-white border rounded rascunhos-inclusao"
-          >
-            <div className="">
+          <div key={key} className="draft bg-white border rounded mt-1 p-2">
+            <div className="mt-2">
               <label className="bold ml-3">
                 {`Inclusão de Alimentação # ${id_externo}`}
               </label>
@@ -27,36 +23,24 @@ export default class Rascunhos extends Component {
                 className="ml-3 p-1 border rounded"
                 style={{ background: backgroundColor }}
               >
-                {inclusaoAlimentacaoCei.status}
+                {inclusao.status}
               </span>
             </div>
-            <div className="icon-draft-card">
-              Criado em: {inclusaoAlimentacaoCei.criado_em}
-              <span
-                onClick={() =>
-                  this.removerRascunho(
-                    id_externo,
-                    uuid,
-                    TIPO_SOLICITACAO.SOLICITACAO_CEI
-                  )
-                }
-              >
+            <div className="icon-draft-card float-right">
+              Criado em: {inclusao.criado_em}
+              <span onClick={() => removerRascunho(id_externo, uuid, form)}>
                 <i className="fas fa-trash" />
               </span>
-              <span
-                onClick={() =>
-                  carregarRascunho({
-                    inclusaoAlimentacaoCei
-                  })
-                }
-              >
+              <span onClick={() => carregarRascunho(form, inclusao, values)}>
                 <i className="fas fa-edit" />
               </span>
             </div>
+            <div className="ml-3">
+              <p>{inclusao.data}</p>
+            </div>
           </div>
         );
-      }
-    );
-    return <div>{cardsInclusoesCei}</div>;
-  }
-}
+      })}
+    </div>
+  );
+};

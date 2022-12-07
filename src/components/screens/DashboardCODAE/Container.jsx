@@ -48,7 +48,7 @@ export const Container = () => {
   const getLotesAsync = async () => {
     const response = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
-      setLotes(formatarLotesParaVisao(response.results));
+      setLotes(formatarLotesParaVisao(response.data.results));
     } else {
       setErro("Erro ao carregar lotes");
     }

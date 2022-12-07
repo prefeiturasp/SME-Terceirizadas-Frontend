@@ -1,6 +1,7 @@
 export const INVERSAO_CARDAPIO = "inversao-de-dia-de-cardapio";
 export const INCLUSAO_ALIMENTACAO = "inclusao-de-alimentacao";
 export const INCLUSAO_ALIMENTACAO_CEI = "inclusao-de-alimentacao-de-cei";
+export const INCLUSAO_ALIMENTACAO_CEMEI = "inclusao-de-alimentacao-cemei";
 export const ALTERACAO_TIPO_ALIMENTACAO_CEI =
   "alteracao-do-tipo-de-alimentacao-de-cei";
 export const SOLICITACAO_KIT_LANCHE_CEI = "solicitacao-de-kit-lanche-de-cei";
@@ -8,6 +9,8 @@ export const SUSPENSAO_ALIMENTACAO = "suspensao-de-alimentacao";
 export const SUSPENSAO_ALIMENTACAO_CEI = "suspensao-de-alimentacao-cei";
 export const SOLICITACAO_KIT_LANCHE = "solicitacao-de-kit-lanche";
 export const ALTERACAO_TIPO_ALIMENTACAO = "alteracao-do-tipo-de-alimentacao";
+export const ALTERACAO_TIPO_ALIMENTACAO_CEMEI =
+  "alteracao-do-tipo-de-alimentacao-cemei";
 export const SOLICITACAO_KIT_LANCHE_UNIFICADA = "solicitacao-unificada";
 export const SOLICITACAO_KIT_LANCHE_CEMEI = "solicitacao-de-kit-lanche-cemei";
 
@@ -35,6 +38,7 @@ export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
 export const SOLICITACOES_CANCELADAS = "solicitacoes-canceladas";
 export const SOLICITACOES_AUTORIZADAS = "solicitacoes-autorizadas";
+export const SOLICITACOES_AGUARDADAS = "solicitacoes-aguardadas";
 export const QUESTIONAMENTOS_CODAE = "questionamentos-codae";
 export const SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA =
   "solicitacoes-aguardando-inicio-vigencia";
@@ -99,6 +103,7 @@ export const HISTORICO = "historico";
 export const SOLICITACOES = "solicitacoes";
 export const CONFIGURACOES = "configuracoes";
 export const MENSAGEM = "mensagem";
+export const GERENCIAMENTO_EMAILS = "gerenciamento-emails";
 export const PERMISSOES = "permissoes";
 export const PERFIL = "perfil";
 export const PESQUISA_DESENVOLVIMENTO = "pesquisa-desenvolvimento";
@@ -126,6 +131,7 @@ export const RELATORIO_GESTAO_DIETA_ESPECIAL =
   "relatorio-gestao-dieta-especial";
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
+export const RELATORIO_SOLICITACOES_ALIMENTACAO = `${RELATORIO}/solicitacoes-alimentacao`;
 export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
@@ -181,6 +187,16 @@ export const GESTAO_ACESSO_CODAE_DILOG = "gestao-acesso-codae-dilog";
 export const GESTAO_ACESSO_DIRETOR_ESCOLA = "gestao-acesso-diretor-escola";
 export const GESTAO_ACESSO_EMPRESA = "gestao-acesso-empresa";
 export const CARGAS_USUARIOS = "cargas-usuarios";
+
+export const PRE_RECEBIMENTO = "pre-recebimento";
+export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
+export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
+export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
+export const LABORATORIO = "laboratorio";
+export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
+export const EMBALAGEM = "embalagem";
+export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
+
 // Status dos pedidos
 
 export const STATUS_DRE_A_VALIDAR = "DRE_A_VALIDAR";
