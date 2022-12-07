@@ -66,9 +66,8 @@ export class InputFile extends Component {
     const QUANTIDADE_ARQUIVOS = event.target.files.length;
     if (accept) {
       let nova_lista_extensoes = [];
-      let accept_array = accept.split(",").map(ext => ext.trim().toLowerCase());
       lista_extensoes.forEach(ext => {
-        if (accept_array.includes(ext)) {
+        if (accept.toLowerCase().includes(ext)) {
           nova_lista_extensoes.push(ext);
         }
       });

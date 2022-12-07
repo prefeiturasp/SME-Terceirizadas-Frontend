@@ -79,65 +79,61 @@ export const FluxoDeStatus = props => {
 
   return (
     <div className="w-100">
-      <div className="row">
-        <div className="col-12">
-          <ul className={`progressbar-titles fluxos`}>
-            {fluxoUtilizadoEFormatado.map((status, key) => {
-              return (
-                <li key={key}>
-                  {cloneListaDeStatus[key]
-                    ? getTitulo(cloneListaDeStatus[key])
-                    : status.titulo}
-                </li>
-              );
-            })}
-          </ul>
-          <ul className="progressbar">
-            {fluxoUtilizadoEFormatado.map((status, key) => {
-              let novoStatus = cloneListaDeStatus[key] || status;
-              return (
-                <li
-                  key={key}
-                  className={`${
-                    tipoDeStatusClasse(novoStatus) !== "pending"
-                      ? tipoDeStatusClasse(novoStatus)
-                      : fluxoNaoFinalizado ||
-                        temStatusDeAnaliseSensorialCancelada
-                      ? "pending"
-                      : ""
-                  }`}
-                  style={{ width: 100 / fluxoUtilizadoEFormatado.length + "%" }}
-                >
-                  {novoStatus.criado_em}
-                  <br />
-                  {novoStatus.usuario && (
-                    <span>
-                      {!eh_importado &&
-                      novoStatus.usuario.registro_funcional !== undefined &&
-                      cloneListaDeStatus[key].usuario.tipo_usuario ===
-                        "terceirizada"
-                        ? `CPF: ${novoStatus.usuario.cpf}`
-                        : status.status_evento_explicacao !==
-                            "Cancelamento por alteração de unidade educacional" &&
-                          status.status_evento_explicacao !==
-                            "Cancelamento para aluno não matriculado na rede municipal" &&
-                          !eh_importado &&
-                          `RF: ${novoStatus.usuario.registro_funcional}`}
-                      {!eh_importado && <br />}
-                      {novoStatus.usuario &&
-                        (status.status_evento_explicacao !==
-                          "Cancelamento por alteração de unidade educacional" &&
-                          status.status_evento_explicacao !==
-                            "Cancelamento para aluno não matriculado na rede municipal") &&
-                        novoStatus.usuario.nome}
-                    </span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </div>
+      <ul className={`progressbar-titles fluxos`}>
+        {fluxoUtilizadoEFormatado.map((status, key) => {
+          return (
+            <li key={key}>
+              {cloneListaDeStatus[key]
+                ? getTitulo(cloneListaDeStatus[key])
+                : status.titulo}
+            </li>
+          );
+        })}
+      </ul>
+      <ul className="progressbar">
+        {fluxoUtilizadoEFormatado.map((status, key) => {
+          let novoStatus = cloneListaDeStatus[key] || status;
+          return (
+            <li
+              key={key}
+              className={`${
+                tipoDeStatusClasse(novoStatus) !== "pending"
+                  ? tipoDeStatusClasse(novoStatus)
+                  : fluxoNaoFinalizado || temStatusDeAnaliseSensorialCancelada
+                  ? "pending"
+                  : ""
+              }`}
+              style={{ width: 100 / fluxoUtilizadoEFormatado.length + "%" }}
+            >
+              {novoStatus.criado_em}
+              <br />
+              {novoStatus.usuario && (
+                <span>
+                  {!eh_importado &&
+                  novoStatus.usuario.registro_funcional !== undefined &&
+                  cloneListaDeStatus[key].usuario.tipo_usuario ===
+                    "terceirizada"
+                    ? `CPF: ${novoStatus.usuario.cpf}`
+                    : status.status_evento_explicacao !==
+                        "Cancelamento por alteração de unidade educacional" &&
+                      status.status_evento_explicacao !==
+                        "Cancelamento para aluno não matriculado na rede municipal" &&
+                      !eh_importado &&
+                      `RF: ${novoStatus.usuario.registro_funcional ||
+                        "sem RF"}`}
+                  {!eh_importado && <br />}
+                  {novoStatus.usuario &&
+                    (status.status_evento_explicacao !==
+                      "Cancelamento por alteração de unidade educacional" &&
+                      status.status_evento_explicacao !==
+                        "Cancelamento para aluno não matriculado na rede municipal") &&
+                    novoStatus.usuario.nome}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };

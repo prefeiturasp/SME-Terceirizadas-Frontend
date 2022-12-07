@@ -1,4 +1,13 @@
+@import "styles/variables.scss";
+
 .error-msg {
   color: #a50e05;
   font-size: 12px;
+}
+
+.solicitation {
+  .labels {
+    font-size: 14px;
+    color: $gray;
+  }
 }

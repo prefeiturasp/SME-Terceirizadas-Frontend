@@ -25,6 +25,7 @@ export const PEDIDOS = {
 
 export const SOLICITACOES = {
   AUTORIZADOS: "autorizados",
+  AGUARDANDO_CODAE: "aguardando-codae",
   PENDENTES: "pendentes-autorizacao",
   PENDENTES_CIENCIA: "pendentes-ciencia",
   NEGADOS: "negados",
@@ -51,10 +52,12 @@ export const RESUMO_POR = {
 export const SOLICITACOES_DIETA = `${API_URL}/dieta-especial`;
 export const API_ALTERACOES_CARDAPIO = `${API_URL}/alteracoes-cardapio`;
 export const API_ALTERACOES_CARDAPIO_CEI = `${API_URL}/alteracoes-cardapio-cei`;
+export const API_ALTERACOES_CARDAPIO_CEMEI = `${API_URL}/alteracoes-cardapio-cemei`;
 
 export const URL_INCLUSAO_NORMAL = `${API_URL}/grupos-inclusao-alimentacao-normal`;
 export const URL_INCLUSAO_CONTINUA = `${API_URL}/inclusoes-alimentacao-continua`;
 export const URL_INCLUSAO_CEI = `${API_URL}/inclusoes-alimentacao-da-cei`;
+export const URL_INCLUSAO_CEMEI = `${API_URL}/inclusao-alimentacao-cemei`;
 
 export const URL_KIT_LANCHES = `${API_URL}/kit-lanches`;
 export const URL_KIT_LANCHES_SOLICITACOES_AVULSA = `${API_URL}/solicitacoes-kit-lanche-avulsa`;

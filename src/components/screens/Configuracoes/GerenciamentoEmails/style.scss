@@ -1,0 +1,68 @@
+.card-verde {
+  .card-logo {
+    color: #198459;
+    &:not(.disabled):hover {
+      .card-title {
+        color: white !important;
+      }
+    }
+  }
+  .card-body .card-title {
+    color: #198459 !important;
+  }
+}
+.card-cinza {
+  .card-logo {
+    color: #858796;
+  }
+  &:not(.disabled):hover {
+    .card-title {
+      color: white !important;
+    }
+  }
+}
+
+.emails-terceirizadas {
+  width: inherit !important;
+  height: 40px !important;
+  .input {
+    width: inherit !important;
+    height: 40px !important;
+  }
+  .buscador-emails-terceirizadas {
+    width: inherit !important;
+    height: 40px !important;
+  }
+  .fas {
+    color: black !important;
+  }
+}
+.pagination-center {
+  justify-content: center;
+  display: flex;
+}
+.filtros-requisicoes-emails {
+  margin-bottom: 30px;
+  padding-left: 0;
+  .btn-add-emails {
+    display: flex;
+    padding-left: 0;
+  }
+  .emails-terceirizadas {
+    .input {
+      width: 100% !important;
+      .input-consulta-emails {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+.input-add-emails {
+  display: block;
+  .ant-select-selector {
+    border-radius: 0.35rem !important;
+    font-size: 14px;
+    font-weight: bold;
+  }
+}

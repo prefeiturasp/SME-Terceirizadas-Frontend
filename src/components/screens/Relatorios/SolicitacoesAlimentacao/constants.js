@@ -1,0 +1,14 @@
+export const STATUS_SOLICITACOES = [
+  { nome: "Autorizadas", uuid: "AUTORIZADOS" },
+  { nome: "Canceladas", uuid: "CANCELADOS" },
+  { nome: "Negadas", uuid: "NEGADOS" },
+  { nome: "Recebidas", uuid: "EM_ANDAMENTO" }
+];
+
+export const TIPOS_SOLICITACAO = [
+  { label: "Inclusão de Alimentação", value: "INC_ALIMENTA" },
+  { label: "Alteração do Tipo de Alimentação", value: "ALT_CARDAPIO" },
+  { label: "Kit Lanche", value: "KIT_LANCHE_AVULSA" },
+  { label: "Inversão de Dia de Cardápio", value: "INV_CARDAPIO" },
+  { label: "Suspensão de Alimentação", value: "SUSP_ALIMENTACAO" }
+];

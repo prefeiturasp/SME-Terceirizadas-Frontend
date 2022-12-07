@@ -89,6 +89,7 @@ const limpaRecorrencia = form => {
   form.change("tipos_alimentacao_selecionados", []);
   form.change("periodo_escolar");
   form.change("numero_alunos", undefined);
+  form.change("observacao", undefined);
 };
 
 export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
@@ -154,7 +155,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
             periodo_escolar: deepCopy(values.periodo_escolar),
             tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
             numero_alunos: deepCopy(values.numero_alunos),
-            observacao: deepCopy(values.observacao)
+            observacao: values.observacao ? deepCopy(values.observacao) : ""
           }
         ]);
         limpaRecorrencia(form);
@@ -164,7 +165,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
             dias_semana: deepCopy(values.dias_semana),
             periodo_escolar: deepCopy(values.periodo_escolar),
             tipos_alimentacao: deepCopy(values.tipos_alimentacao_selecionados),
-            observacao: deepCopy(values.observacao)
+            observacao: values.observacao ? deepCopy(values.observacao) : ""
           }
         ]);
         limpaRecorrencia(form);
@@ -180,7 +181,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
         ].forEach(async item => {
           await form.change(
             `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
-            deepCopy(values[item])
+            values[item] ? deepCopy(values[item]) : ""
           );
         });
         await form.change(
@@ -194,7 +195,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
         ["dias_semana", "periodo_escolar", "observacao"].forEach(async item => {
           await form.change(
             `quantidades_periodo[${values.quantidades_periodo.length}].${item}`,
-            deepCopy(values[item])
+            values[item] ? deepCopy(values[item]) : ""
           );
         });
         await form.change(

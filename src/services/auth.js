@@ -1,6 +1,8 @@
 import decode from "jwt-decode";
 import CONFIG from "../constants/config";
 import { toastError } from "../components/Shareable/Toast/dialogs";
+import HTTP_STATUS from "http-status-codes";
+import { getError } from "helpers/utilities";
 
 export const TOKEN_ALIAS = "TOKEN";
 
@@ -40,34 +42,38 @@ const login = async (login, password) => {
         }
       }).then(result => {
         const response = result.json();
-        response.then(result => {
-          localStorage.setItem(
-            "tipo_perfil",
-            JSON.stringify(result.tipo_usuario)
-          );
-          localStorage.setItem(
-            "perfil",
-            JSON.stringify(result.vinculo_atual.perfil.nome)
-          );
-          localStorage.setItem(
-            "tipo_gestao",
-            JSON.stringify(result.vinculo_atual.instituicao.tipo_gestao)
-          );
-          localStorage.setItem(
-            "nome_instituicao",
-            JSON.stringify(result.vinculo_atual.instituicao.nome)
-          );
-          localStorage.setItem(
-            "dre_nome",
-            result.vinculo_atual.instituicao.diretoria_regional &&
-              result.vinculo_atual.instituicao.diretoria_regional.nome
-          );
-          localStorage.setItem(
-            "lotes",
-            result.vinculo_atual.instituicao.lotes &&
-              JSON.stringify(result.vinculo_atual.instituicao.lotes)
-          );
-          window.location.href = "/";
+        response.then(result_ => {
+          if (result.status === HTTP_STATUS.OK) {
+            localStorage.setItem(
+              "tipo_perfil",
+              JSON.stringify(result_.tipo_usuario)
+            );
+            localStorage.setItem(
+              "perfil",
+              JSON.stringify(result_.vinculo_atual.perfil.nome)
+            );
+            localStorage.setItem(
+              "tipo_gestao",
+              JSON.stringify(result_.vinculo_atual.instituicao.tipo_gestao)
+            );
+            localStorage.setItem(
+              "nome_instituicao",
+              JSON.stringify(result_.vinculo_atual.instituicao.nome)
+            );
+            localStorage.setItem(
+              "dre_nome",
+              result_.vinculo_atual.instituicao.diretoria_regional &&
+                result_.vinculo_atual.instituicao.diretoria_regional.nome
+            );
+            localStorage.setItem(
+              "lotes",
+              result_.vinculo_atual.instituicao.lotes &&
+                JSON.stringify(result_.vinculo_atual.instituicao.lotes)
+            );
+            window.location.href = "/";
+          } else {
+            toastError(getError(result_));
+          }
         });
       });
     } else {

@@ -107,11 +107,11 @@ export class CardPendenteAcao extends Component {
             </div>
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
-                <tr>
-                  <th>Código do Pedido</th>
-                  <th>Código EOL</th>
-                  <th>Nome da Escola</th>
-                  <th>{ultimaColunaLabel || "Data"}</th>
+                <tr className="row">
+                  <th className="col-3">Código do Pedido</th>
+                  <th className="col-3">Código EOL</th>
+                  <th className="col-3">Nome da Escola</th>
+                  <th className="col-3">{ultimaColunaLabel || "Data"}</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,11 +132,11 @@ export class CardPendenteAcao extends Component {
                           pedido.uuid
                         }&tipoSolicitacao=${tipoSolicitacao}`}
                       >
-                        <tr>
-                          <td>{pedido.id_externo}</td>
-                          <td>{pedido.escola.codigo_eol}</td>
-                          <td>{pedido.escola.nome}</td>
-                          <td>
+                        <tr className="row">
+                          <td className="col-3">{pedido.id_externo}</td>
+                          <td className="col-3">{pedido.escola.codigo_eol}</td>
+                          <td className="col-3">{pedido.escola.nome}</td>
+                          <td className="col-3">
                             {pedido.solicitacao_kit_lanche
                               ? pedido.solicitacao_kit_lanche.data
                               : pedido.data}

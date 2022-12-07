@@ -25,7 +25,7 @@ class PainelPedidos extends Component {
   }
 
   async atualizarDadosDasInclusoes(filtro) {
-    const [avulsas, continuas, cei] = await Promise.all([
+    const [avulsas, continuas, cei, cemei] = await Promise.all([
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_NORMAL
@@ -37,9 +37,13 @@ class PainelPedidos extends Component {
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
         TIPO_SOLICITACAO.SOLICITACAO_CEI
+      ),
+      codaeListarSolicitacoesDeInclusaoDeAlimentacao(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
       )
     ]);
-    const inclusoes = safeConcatOn("results", avulsas, continuas, cei);
+    const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
     const pedidosPrioritarios = ordenarPedidosDataMaisRecente(
       filtraPrioritarios(inclusoes)
     );

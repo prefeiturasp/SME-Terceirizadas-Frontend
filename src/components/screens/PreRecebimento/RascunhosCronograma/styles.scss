@@ -1,0 +1,36 @@
+@import "styles/variables.scss";
+
+.body-rascunho {
+  overflow: auto;
+  .titulo-rascunho {
+    color: #353535;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 2rem;
+  }
+  .tabela-rascunho {
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 160px;
+    .row-rascunho {
+      margin-top: 1rem;
+      .numero-rascunho {
+        overflow: auto;
+        color: $green;
+        font-weight: bold;
+      }
+      .data-rascunho {
+        float: right !important;
+        text-align: right;
+        .icon-editar-rascunho {
+          color: $green;
+          font-weight: 400;
+          margin-top: 1rem;
+          margin-left: 1rem;
+          margin-right: 1rem;
+        }
+      }
+    }
+  }
+}

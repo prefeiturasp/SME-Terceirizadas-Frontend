@@ -1,20 +1,17 @@
 import React, { Component } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Field, reduxForm } from "redux-form";
-import { Select } from "../Shareable/Select";
-import { required } from "../../helpers/fieldValidators";
 import { connect } from "react-redux";
+import { Rascunhos } from "./Rascunhos";
+import CKEditorField from "components/Shareable/CKEditorField";
+import { Select } from "../Shareable/Select";
 import { InputComData } from "../Shareable/DatePicker";
 import InputText from "../Shareable/Input/InputText";
-
-import { Rascunhos } from "./Rascunhos";
-
-import "../Shareable/Checkbox/style.scss";
-
-import "./styles.scss";
 import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
 import { STATUS_INFORMA_TERCEIRIZADA } from "../../configs/constants";
+import { required } from "../../helpers/fieldValidators";
 import {
   EscolaSalvaRascunhoDeSuspensao,
   EscolaBuscaRascunhos,
@@ -22,7 +19,9 @@ import {
   EscolaAtualizaSuspensao,
   escolaInformaSuspensao
 } from "../../services/suspensaoAlimentacaoCei.service";
-import { toastSuccess, toastError } from "../Shareable/Toast/dialogs";
+import "../Shareable/Checkbox/style.scss";
+import "./styles.scss";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 
 const ENTER = 13;
 
@@ -103,6 +102,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
 
     this.props.change("motivo", suspensao.motivo.uuid);
     this.props.change("data", suspensao.data);
+    this.props.change("observacao", suspensao.observacao);
 
     this.setState({
       uuid: suspensao.uuid,
@@ -274,10 +274,16 @@ class SuspensaoAlimentacaoDeCEI extends Component {
       loading,
       ehOutroMotivo,
       periodos,
+      uuid,
       salvarAtualizarLbl,
       suspensoesDeAlimentacaoList
     } = this.state;
-    const { motivos, proximos_dois_dias_uteis, handleSubmit } = this.props;
+    const {
+      motivos,
+      proximos_dois_dias_uteis,
+      handleSubmit,
+      meusDados
+    } = this.props;
     return (
       <section className="section-main-form">
         {loading ? (
@@ -289,8 +295,14 @@ class SuspensaoAlimentacaoDeCEI extends Component {
             }}
             onKeyPress={this.onKeyPress}
           >
+            <CardMatriculados
+              meusDados={meusDados}
+              numeroAlunos={
+                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+              }
+            />
             {suspensoesDeAlimentacaoList.length > 0 && (
-              <div className="mt-3">
+              <div className="my-3">
                 <span ref={this.titleRef} className="page-title">
                   Rascunhos
                 </span>
@@ -303,6 +315,9 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 />
               </div>
             )}
+            <div className="mt-2 mb-2 page-title">
+              {uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
+            </div>
             <main className="card">
               <article className="card-body">
                 <header className="card-title font-weight-bold">
@@ -347,25 +362,36 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                     />
                   </section>
                 )}
-                <section className="section-descricao-periodo">Periodo</section>
+                <section className="section-descricao-periodo">Período</section>
                 <section className="form-check-periodos">
-                  {periodos.map((periodo, index) => {
-                    return (
-                      <label
-                        className={`container check-${periodo.nome}`}
-                        key={index}
-                      >
-                        {periodo.nome}
-                        <input
-                          type="checkbox"
-                          checked={periodo.check}
-                          onClick={() => this.checkItem(periodo)}
-                        />
-                        <span className={`checkmark check-${periodo.check}`} />
-                      </label>
-                    );
-                  })}
+                  {periodos
+                    .filter(periodo => periodo.nome === "INTEGRAL")
+                    .map((periodo, index) => {
+                      return (
+                        <label
+                          className={`container check-${periodo.nome}`}
+                          key={index}
+                        >
+                          {periodo.nome}
+                          <input
+                            type="checkbox"
+                            checked={periodo.check}
+                            onClick={() => this.checkItem(periodo)}
+                          />
+                          <span
+                            className={`checkmark check-${periodo.check}`}
+                          />
+                        </label>
+                      );
+                    })}
                 </section>
+                <div className="form-group pb-5">
+                  <Field
+                    component={CKEditorField}
+                    label="Observações"
+                    name="observacao"
+                  />
+                </div>
                 <section className="section-botoes-bottom">
                   <Botao
                     texto="Cancelar"

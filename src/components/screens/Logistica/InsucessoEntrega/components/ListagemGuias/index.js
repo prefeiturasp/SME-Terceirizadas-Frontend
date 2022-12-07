@@ -17,6 +17,13 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
       return false;
     }
   };
+
+  const validaLink = (desabilitar, event) => {
+    if (desabilitar) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <section className="resultado-insucesso-entrega">
       <header>Registros de Insucesso</header>
@@ -34,6 +41,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
           const bordas =
             ativos && ativos.includes(guia.uuid) ? "desativar-borda" : "";
           const icone = ativos && ativos.includes(guia.uuid) ? "minus" : "plus";
+          const desabilitar = isDisabled(guia);
           return (
             <>
               <div key={guia.uuid} className="grid-table body-table">
@@ -45,7 +53,7 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                 <div className={`${bordas}`}>
                   <Tooltip
                     title={
-                      isDisabled(guia)
+                      desabilitar
                         ? `Botão habilitado apenas para Guias de Remessa com status de "Pendente".`
                         : ""
                     }
@@ -56,11 +64,12 @@ const ListagemGuias = ({ guias, ativos, setAtivos }) => {
                         to={`/${LOGISTICA}/${REGISTRAR_INSUCESSO}?uuid=${
                           guia.uuid
                         }`}
-                        disabled={isDisabled(guia)}
+                        onClick={event => validaLink(desabilitar, event)}
+                        disabled={desabilitar}
                       >
                         <span
                           className={
-                            isDisabled(guia)
+                            desabilitar
                               ? "link-insucesso-desativado"
                               : "link-insucesso"
                           }

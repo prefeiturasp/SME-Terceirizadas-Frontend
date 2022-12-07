@@ -309,45 +309,6 @@ class Step1 extends Component {
     return (
       <div className="cadastro-produto-step1">
         <div className="card-title">Identificação do Produto</div>
-        <div className="link-with-student">
-          <div className="label">
-            <span className="required-asterisk">*</span>O produto se destina ao
-            atendimento de alunos com dieta especial?
-          </div>
-          <div className="row">
-            <div className="col-3">
-              <label className="container-radio">
-                Sim
-                <Field
-                  component={"input"}
-                  type="radio"
-                  value="1"
-                  name="eh_para_alunos_com_dieta"
-                  onClick={() => {
-                    this.abreOuFechaFormDietaEspecial(1);
-                  }}
-                  required
-                />
-                <span className="checkmark" />
-              </label>
-            </div>
-            <div className="col-3">
-              <label className="container-radio">
-                Não
-                <Field
-                  component={"input"}
-                  type="radio"
-                  value="0"
-                  name="eh_para_alunos_com_dieta"
-                  onClick={() => {
-                    this.abreOuFechaFormDietaEspecial(0);
-                  }}
-                />
-                <span className="checkmark" />
-              </label>
-            </div>
-          </div>
-        </div>
         <div className="row">
           <div className="col-12 pt-3">
             <label className="label-formulario-produto">
@@ -434,6 +395,45 @@ class Step1 extends Component {
                 this.showModalCadastrarItem();
               }}
             />
+          </div>
+        </div>
+        <div className="link-with-student">
+          <div className="label">
+            <span className="required-asterisk">*</span>O produto se destina ao
+            atendimento de alunos com dieta especial?
+          </div>
+          <div className="row">
+            <div className="col-3">
+              <label className="container-radio">
+                Sim
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="1"
+                  name="eh_para_alunos_com_dieta"
+                  onClick={() => {
+                    this.abreOuFechaFormDietaEspecial(1);
+                  }}
+                  required
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
+            <div className="col-3">
+              <label className="container-radio">
+                Não
+                <Field
+                  component={"input"}
+                  type="radio"
+                  value="0"
+                  name="eh_para_alunos_com_dieta"
+                  onClick={() => {
+                    this.abreOuFechaFormDietaEspecial(0);
+                  }}
+                />
+                <span className="checkmark" />
+              </label>
+            </div>
           </div>
         </div>
         <div className="row">
