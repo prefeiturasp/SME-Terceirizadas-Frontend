@@ -164,7 +164,6 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
                   dataSource={state.dados.editais}
                   label="Edital"
                   className="input-busca-produto"
-                  //onSearch={v => onSearch("editais", v)}
                   name="nome_edital"
                   required
                   validate={required}
