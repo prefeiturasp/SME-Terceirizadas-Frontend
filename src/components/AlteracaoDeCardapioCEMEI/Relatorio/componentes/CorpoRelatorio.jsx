@@ -29,7 +29,6 @@ export const CorpoRelatorio = ({ ...props }) => {
     }, totalAlunos);
   };
 
-
   const imprimirRelatorio = () => {
     setImprimindo(true);
     try {
@@ -42,7 +41,7 @@ export const CorpoRelatorio = ({ ...props }) => {
       setImprimindo(false);
     }
   };
-  
+
   return (
     <>
       <p

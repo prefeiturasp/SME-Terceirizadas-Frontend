@@ -108,7 +108,6 @@ export const getRelatorioAlteracaoTipoAlimentacao = async (
     responseType: "blob"
   });
   saveAs(data, "alteracao_tipo_alimentacao_cemei.pdf");
-  return 
 };
 
 export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
