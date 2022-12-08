@@ -13,6 +13,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
@@ -24,6 +25,10 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [totalBusca, setTotalBusca] = useState(undefined);
   const [page, setPage] = useState(1);
   const [filtros, setFiltros] = useState(undefined);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const onPageChanged = async (page, values) => {
     let _values = deepCopy(values);
@@ -38,12 +43,13 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
     }
   };
 
-  const exportarXLSX = () => {
-    endpointGerarExcel(filtros)
-      .then(() => {})
-      .catch(error => {
-        error.response.data.text().then(text => toastError(text));
-      });
+  const exportarXLSX = async () => {
+    const response = await endpointGerarExcel(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
+    }
   };
 
   return (
@@ -99,6 +105,12 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                   type={BUTTON_TYPE.BUTTON}
                   onClick={() => exportarXLSX()}
                 />
+                {exibirModalCentralDownloads && (
+                  <ModalSolicitacaoDownload
+                    show={exibirModalCentralDownloads}
+                    setShow={setExibirModalCentralDownloads}
+                  />
+                )}
               </div>
             </div>
           </>
