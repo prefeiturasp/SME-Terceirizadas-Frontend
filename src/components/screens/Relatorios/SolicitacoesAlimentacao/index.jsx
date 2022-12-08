@@ -25,6 +25,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   const [totalBusca, setTotalBusca] = useState(undefined);
   const [page, setPage] = useState(1);
   const [filtros, setFiltros] = useState(undefined);
+  const [submitting, setSubmitting] = useState(false);
   const [
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads
@@ -44,12 +45,14 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
   };
 
   const exportarXLSX = async () => {
+    setSubmitting(true);
     const response = await endpointGerarExcel(filtros);
     if (response.status === HTTP_STATUS.OK) {
       setExibirModalCentralDownloads(true);
     } else {
       toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
     }
+    setSubmitting(false);
   };
 
   return (
@@ -103,6 +106,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   icon={BUTTON_ICON.FILE_EXCEL}
                   type={BUTTON_TYPE.BUTTON}
+                  disabled={submitting}
                   onClick={() => exportarXLSX()}
                 />
                 {exibirModalCentralDownloads && (
