@@ -303,19 +303,21 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         );
       })}
-      <div className="row mt-3">
-        <div className="col-12">
-          <div className="container-fluid">
-            <p>Observações:</p>
-            <p
-              className="observacao-alteracao-cardapio-cemei"
-              dangerouslySetInnerHTML={{
-                __html: solicitacao.observacao
-              }}
-            />
+      {solicitacao && solicitacao.observacao && (
+        <div className="row mt-3">
+          <div className="col-12">
+            <div className="container-fluid">
+              <p>Observações:</p>
+              <p
+                className="observacao-alteracao-cardapio-cemei"
+                dangerouslySetInnerHTML={{
+                  __html: solicitacao.observacao
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <hr />
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">

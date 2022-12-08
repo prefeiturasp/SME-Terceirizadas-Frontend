@@ -3,7 +3,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import Select from "components/Shareable/Select";
-import { maxLength, required, textAreaRequired } from "helpers/fieldValidators";
+import { maxLength, required } from "helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
@@ -374,8 +374,6 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   component={CKEditorField}
                   label="Observações"
                   name="observacao"
-                  required
-                  validate={textAreaRequired}
                   className="form-control"
                 />
                 <hr />

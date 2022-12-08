@@ -18,15 +18,10 @@ import {
   agregarDefault,
   deepCopy,
   getError,
-  getDataObj,
-  composeValidators
+  getDataObj
 } from "helpers/utilities";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
-import {
-  required,
-  textAreaRequired,
-  peloMenosUmCaractere
-} from "helpers/fieldValidators";
+import { required } from "helpers/fieldValidators";
 import "./style.scss";
 import { TabelaFaixasCEMEI } from "./componentes/TabelaFaixasCEMEI";
 import { Rascunhos } from "./componentes/Rascunhos";
@@ -568,11 +563,6 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       component={CKEditorField}
                       label="Motivo/Justificativa"
                       name="observacao"
-                      required
-                      validate={composeValidators(
-                        textAreaRequired,
-                        peloMenosUmCaractere
-                      )}
                     />
                   </div>
                 </div>
