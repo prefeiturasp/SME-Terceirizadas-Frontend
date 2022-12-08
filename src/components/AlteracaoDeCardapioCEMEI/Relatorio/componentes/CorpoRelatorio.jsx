@@ -8,15 +8,18 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
-import { toastInfo } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem
 } from "helpers/utilities";
-import React from "react";
+import React, { useState } from "react";
+import { getRelatorioAlteracaoCardapio } from "services/relatorios";
 
 export const CorpoRelatorio = ({ ...props }) => {
+  const [imprimindo, setImprimindo] = useState(false);
   const { dadosTabela, matriculados, solicitacao } = props;
 
   const totalAlunosPorPeriodoCEI = (faixas, keyName) => {
@@ -26,6 +29,20 @@ export const CorpoRelatorio = ({ ...props }) => {
     }, totalAlunos);
   };
 
+
+  const imprimirRelatorio = () => {
+    setImprimindo(true);
+    try {
+      getRelatorioAlteracaoCardapio(
+        solicitacao.uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+      );
+    } catch (e) {
+      toastError("Houve um erro ao imprimir o relatório");
+      setImprimindo(false);
+    }
+  };
+  
   return (
     <>
       <p
@@ -36,10 +53,11 @@ export const CorpoRelatorio = ({ ...props }) => {
         {prazoDoPedidoMensagem(solicitacao.prioridade)}
         <Botao
           type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon={BUTTON_ICON.PRINT}
+          style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+          icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+          disabled={imprimindo}
           className="float-right"
-          onClick={() => toastInfo("Ainda não implementado")}
+          onClick={imprimirRelatorio}
         />
       </p>
       <div className="row mt-3">
