@@ -60,9 +60,11 @@ export const formataDadosTabelaCEMEI = solicitacao => {
 
 export const totalMatriculados = faixas => {
   let total = 0;
-  faixas.forEach(faixa => {
-    total += faixa.quantidade_alunos;
-  });
+  faixas
+    .filter(faixa => faixa.inicio > 11)
+    .forEach(faixa => {
+      total += faixa.quantidade_alunos;
+    });
   return total;
 };
 

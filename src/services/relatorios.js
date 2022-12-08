@@ -99,6 +99,17 @@ export const getRelatorioInclusaoAlimentacaoCEMEI = async (
   saveAs(data, "inclusao_alimentacao_cemei.pdf");
 };
 
+export const getRelatorioAlteracaoTipoAlimentacao = async (
+  uuid,
+  tipoSolicitacao
+) => {
+  const url = `${getAlteracaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
+  const { data } = await axios.get(url, {
+    responseType: "blob"
+  });
+  saveAs(data, "alteracao_tipo_alimentacao_cemei.pdf");
+};
+
 export const getDetalheKitLancheAvulso = (uuid, tipoSolicitacao) => {
   const url = `${getKitLanchePath(tipoSolicitacao)}/${uuid}/relatorio/`;
   fetch(url, {

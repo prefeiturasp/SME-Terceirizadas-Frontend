@@ -451,16 +451,18 @@ export const CorpoRelatorio = ({ ...props }) => {
           </p>
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <p>Observações:</p>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: solicitacaoKitLancheCEMEI.observacao
-            }}
-          />
+      {solicitacaoKitLancheCEMEI && solicitacaoKitLancheCEMEI.observacao && (
+        <div className="row">
+          <div className="col">
+            <p>Observações:</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: solicitacaoKitLancheCEMEI.observacao
+              }}
+            />
+          </div>
         </div>
-      </div>
+      )}
       {justificativaNegacao && (
         <div className="row">
           <div className="col-12 report-label-value">

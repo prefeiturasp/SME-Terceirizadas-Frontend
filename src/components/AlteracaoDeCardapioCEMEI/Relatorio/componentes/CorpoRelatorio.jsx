@@ -8,15 +8,18 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
-import { toastInfo } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem
 } from "helpers/utilities";
-import React from "react";
+import React, { useState } from "react";
+import { getRelatorioAlteracaoTipoAlimentacao } from "services/relatorios";
 
 export const CorpoRelatorio = ({ ...props }) => {
+  const [imprimindo, setImprimindo] = useState(false);
   const { dadosTabela, matriculados, solicitacao } = props;
 
   const totalAlunosPorPeriodoCEI = (faixas, keyName) => {
@@ -24,6 +27,19 @@ export const CorpoRelatorio = ({ ...props }) => {
     return faixas.reduce(function(total, faixa) {
       return total + faixa[keyName];
     }, totalAlunos);
+  };
+
+  const imprimirRelatorio = async () => {
+    setImprimindo(true);
+    try {
+      await getRelatorioAlteracaoTipoAlimentacao(
+        solicitacao.uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+      );
+    } catch (e) {
+      toastError("Houve um erro ao imprimir o relatório");
+    }
+    setImprimindo(false);
   };
 
   return (
@@ -36,10 +52,11 @@ export const CorpoRelatorio = ({ ...props }) => {
         {prazoDoPedidoMensagem(solicitacao.prioridade)}
         <Botao
           type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon={BUTTON_ICON.PRINT}
+          style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+          icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+          disabled={imprimindo}
           className="float-right"
-          onClick={() => toastInfo("Ainda não implementado")}
+          onClick={imprimirRelatorio}
         />
       </p>
       <div className="row mt-3">
@@ -303,19 +320,21 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         );
       })}
-      <div className="row mt-3">
-        <div className="col-12">
-          <div className="container-fluid">
-            <p>Observações:</p>
-            <p
-              className="observacao-alteracao-cardapio-cemei"
-              dangerouslySetInnerHTML={{
-                __html: solicitacao.observacao
-              }}
-            />
+      {solicitacao && solicitacao.observacao && (
+        <div className="row mt-3">
+          <div className="col-12">
+            <div className="container-fluid">
+              <p>Observações:</p>
+              <p
+                className="observacao-alteracao-cardapio-cemei"
+                dangerouslySetInnerHTML={{
+                  __html: solicitacao.observacao
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <hr />
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">
