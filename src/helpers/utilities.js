@@ -377,6 +377,14 @@ export const usuarioEhDiretorEscola = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhEmpresa = () => {
+  return [
+    PERFIL.ADMINISTRADOR_TERCEIRIZADA,
+    PERFIL.ADMINISTRADOR_DISTRIBUIDORA,
+    PERFIL.ADMINISTRADOR_FORNECEDOR
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEscolaEhGestaoMistaParceira = () => {
   return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
     localStorage.getItem("tipo_gestao")
@@ -477,6 +485,12 @@ export const usuarioEhDistribuidora = () => {
   );
 };
 
+export const usuarioEhFornecedor = () => {
+  return [PERFIL.ADMINISTRADOR_FORNECEDOR].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
@@ -556,7 +570,8 @@ export const usuarioEhQualquerCODAE = () => {
 export const usuarioEhTerceirizada = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_FORNECEDOR
   );
 };
 

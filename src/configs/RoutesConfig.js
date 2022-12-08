@@ -120,7 +120,8 @@ import {
   usuarioEhCoordenadorCODAE,
   usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhEmpresa
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -192,6 +193,7 @@ import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaborat
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
+import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 
 const routesConfig = [
   {
@@ -753,6 +755,12 @@ const routesConfig = [
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
     tipoUsuario: usuarioEhDiretorEscola()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
+    component: GestaoAcessoEmpresaPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresa()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
