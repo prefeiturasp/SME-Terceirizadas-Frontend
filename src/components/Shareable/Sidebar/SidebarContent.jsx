@@ -25,7 +25,8 @@ import {
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhOutrosDilog,
-  usuarioEhPreRecebimentoSemLogistica
+  usuarioEhPreRecebimentoSemLogistica,
+  usuarioEhFornecedor
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -118,6 +119,7 @@ export const SidebarContent = () => {
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
+    !usuarioEhFornecedor() &&
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
     !usuarioEhPreRecebimento();
