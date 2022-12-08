@@ -119,9 +119,9 @@ import {
   exibirLancamentoMedicaoInicial,
   usuarioEhCoordenadorCODAE,
   usuarioEhDiretorEscola,
-  usuarioEhEmpresa,
   usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhEmpresa
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
