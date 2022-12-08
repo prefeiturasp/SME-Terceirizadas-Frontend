@@ -16,7 +16,7 @@ import {
   prazoDoPedidoMensagem
 } from "helpers/utilities";
 import React, { useState } from "react";
-import { getRelatorioAlteracaoCardapio } from "services/relatorios";
+import { getRelatorioAlteracaoTipoAlimentacao } from "services/relatorios";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const [imprimindo, setImprimindo] = useState(false);
@@ -29,17 +29,17 @@ export const CorpoRelatorio = ({ ...props }) => {
     }, totalAlunos);
   };
 
-  const imprimirRelatorio = () => {
+  const imprimirRelatorio = async () => {
     setImprimindo(true);
     try {
-      getRelatorioAlteracaoCardapio(
+      await getRelatorioAlteracaoTipoAlimentacao(
         solicitacao.uuid,
         TIPO_SOLICITACAO.SOLICITACAO_CEMEI
       );
     } catch (e) {
       toastError("Houve um erro ao imprimir o relatório");
-      setImprimindo(false);
     }
+    setImprimindo(false);
   };
 
   return (
