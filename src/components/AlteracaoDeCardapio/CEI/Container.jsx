@@ -54,7 +54,9 @@ export const Container = () => {
         <AlteracaoDoTipoDeAlimentacaoCEI
           meusDados={meusDados}
           motivos={motivos}
-          periodos={meusDados.vinculo_atual.instituicao.periodos_escolares}
+          periodos={meusDados.vinculo_atual.instituicao.periodos_escolares.filter(
+            periodo => periodo.nome === "INTEGRAL"
+          )}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
         />
