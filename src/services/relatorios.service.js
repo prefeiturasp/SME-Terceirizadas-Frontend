@@ -299,3 +299,15 @@ export const filtrarSolicitacoesAlimentacaoDRE = async params => {
     return data;
   }
 };
+
+export const getSolicitacoesDetalhadas = async params => {
+  const response = await axios
+    .get(`${API_URL}/solicitacoes-genericas/solicitacoes-detalhadas/`, {
+      params
+    })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
