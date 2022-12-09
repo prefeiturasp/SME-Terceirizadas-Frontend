@@ -299,3 +299,25 @@ export const filtrarSolicitacoesAlimentacaoDRE = async params => {
     return data;
   }
 };
+
+export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async params => {
+  const url = `/diretoria-regional-solicitacoes/exportar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
+  const url = `/codae-solicitacoes/exportar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
