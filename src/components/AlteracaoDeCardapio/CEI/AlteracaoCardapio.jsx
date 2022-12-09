@@ -35,7 +35,7 @@ import ModalDataPrioritaria from "../../Shareable/ModalDataPrioritaria";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import {
   getAlunosPorFaixaEtariaNumaData,
-  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+  getRascunhosAlteracaoTipoAlimentacao,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaAlterarSolicitacaoDeAlteracaoCardapio,
   escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
@@ -255,7 +255,7 @@ class AlteracaoCardapio extends Component {
   refresh = async () => {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
     try {
-      const response = await escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
+      const response = await getRascunhosAlteracaoTipoAlimentacao(
         SOLICITACAO_CEI
       );
       if (response.status === HTTP_STATUS.OK) {

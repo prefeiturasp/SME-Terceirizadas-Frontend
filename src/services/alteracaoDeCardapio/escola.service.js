@@ -94,24 +94,13 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
   return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
 };
 
-export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicitacao => {
+export const getRascunhosAlteracaoTipoAlimentacao = async tipoSolicitacao => {
   const url = `${getPath(tipoSolicitacao)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
-
-  if (tipoSolicitacao) {
-    return axios.get(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
