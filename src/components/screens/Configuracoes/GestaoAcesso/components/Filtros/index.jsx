@@ -18,7 +18,8 @@ export default ({
   visoes,
   perfis,
   listaPerfis,
-  diretor_escola
+  diretor_escola,
+  empresa
 }) => {
   const initialValues = {};
   const inicioResultado = useRef();
@@ -74,8 +75,10 @@ export default ({
                   placeholder="Selecione a Visão"
                   name="visao"
                   options={visoes}
-                  defaultValue={diretor_escola ? "ESCOLA" : ""}
-                  disabled={diretor_escola ? true : false}
+                  defaultValue={
+                    diretor_escola ? "ESCOLA" : empresa ? "EMPRESA" : ""
+                  }
+                  disabled={diretor_escola || empresa ? true : false}
                 />
               </div>
               <div className="col-6">
@@ -84,7 +87,13 @@ export default ({
                   component={SelectSelecione}
                   placeholder="Selecione o perfil do Usuário"
                   name="perfil"
-                  options={diretor_escola ? getPerfis("ESCOLA") : perfis}
+                  options={
+                    diretor_escola
+                      ? getPerfis("ESCOLA")
+                      : empresa
+                      ? getPerfis("EMPRESA")
+                      : perfis
+                  }
                 />
               </div>
             </div>

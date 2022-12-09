@@ -68,8 +68,8 @@ export const TIPO_PERFIL = {
   TERCEIRIZADA: `"terceirizada"`,
   LOGISTICA: `"logistica_abastecimento"`,
   NUTRICAO_MANIFESTACAO: `"nutricao_manifestacao"`,
-  MEDICAO: `"medicao"`,
-  PRE_RECEBIMENTO: `"pre_recebimento"`
+  PRE_RECEBIMENTO: `"pre_recebimento"`,
+  MEDICAO: `"medicao"`
 };
 
 export const TIPO_USUARIO = {
@@ -463,6 +463,23 @@ export const telefoneMask = [
   /\d/,
   /\d/,
   /\d/,
+  /\d/,
+  /\d/
+];
+
+export const cpfMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
   /\d/,
   /\d/
 ];

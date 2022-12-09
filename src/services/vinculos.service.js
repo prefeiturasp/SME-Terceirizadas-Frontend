@@ -17,3 +17,6 @@ export const editarVinculo = async payload =>
 
 export const finalizarVinculo = async username =>
   await axios.post(`/cadastro-com-coresso/${username}/finalizar-vinculo/`);
+
+export const getVinculoEmpresa = async () =>
+  (await axios.get("/vinculos/vinculo-empresa/")).data;
