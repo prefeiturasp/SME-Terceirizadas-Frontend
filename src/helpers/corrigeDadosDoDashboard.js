@@ -31,12 +31,12 @@ export default results => {
       );
     }
     if (
-      results["Alteração de Cardápio de CEI"] ||
+      results["Alteração do Tipo de Alimentação CEI"] ||
       results["Alteração do tipo de Alimentação CEMEI"]
     ) {
       results["Alteração do tipo de Alimentação"] = sumObjectsByKey(
         results["Alteração do tipo de Alimentação"],
-        results["Alteração de Cardápio de CEI"],
+        results["Alteração do Tipo de Alimentação CEI"],
         results["Alteração do tipo de Alimentação CEMEI"]
       );
     }
