@@ -6,7 +6,9 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros } = props;
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(undefined);
   const [showDetail, setShowDetail] = useState(false);
-  // const logAutorizacao = solicitacao.logs.find((log) => log.status_evento_explicacao === "CODAE autorizou");
+  const logAutorizacao = solicitacao.logs.find(
+    log => log.status_evento_explicacao === "CODAE autorizou"
+  );
 
   const unique = arr => [...new Set(arr)];
 
@@ -84,11 +86,15 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                       <b>{inclusao.data}</b>
                     </p>
                   </div>
-                  <div className="col-4">
-                    <p>
-                      <b>{}</b>
-                    </p>
-                  </div>
+                  {idx === 0 ? (
+                    <div className="col-4">
+                      <p>
+                        <b>{logAutorizacao && logAutorizacao.criado_em}</b>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="col-4" />
+                  )}
                 </div>
               );
             })}
