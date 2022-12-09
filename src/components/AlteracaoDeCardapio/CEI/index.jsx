@@ -62,7 +62,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   const onSubmit = () => {};
 
   const getPeriodo = (values, indice) => {
-    console.log(values);
     return values.substituicoes[indice];
   };
 
