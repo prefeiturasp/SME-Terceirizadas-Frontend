@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Spin } from "antd";
-import "./style.scss";
+import { Pagination, Spin, Tooltip } from "antd";
+import { NavLink } from "react-router-dom";
 import { getEmbalagens } from "services/qualidade.service";
+import { CADASTROS, CONFIGURACOES, EDITAR, EMBALAGEM } from "configs/constants";
+import "./style.scss";
 
 const pageSize = 10;
 
@@ -75,7 +77,22 @@ export default () => {
                   <tr key={key}>
                     <td className="nome-empresa">{embalagem.nome}</td>
                     <td>{embalagem.abreviacao}</td>
-                    <td />
+                    <td className="btn-action botao-direita">
+                      <Tooltip title="Editar">
+                        <span>
+                          <div className="mr-4">
+                            <NavLink
+                              className="float-right ml-4"
+                              to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGEM}/${EDITAR}?uuid=${
+                                embalagem.uuid
+                              }`}
+                            >
+                              <i className="fas fa-edit" />
+                            </NavLink>
+                          </div>
+                        </span>
+                      </Tooltip>
+                    </td>
                   </tr>
                 ];
               })}
