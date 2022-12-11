@@ -187,6 +187,7 @@ import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaborat
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
+import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 
 const routesConfig = [
   {
@@ -689,14 +690,6 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
-    }`,
-    component: CadastroLaboratorioPage,
-    exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.EMBALAGEM
     }`,
     component: CadastroEmbalagemPage,
@@ -708,6 +701,14 @@ const routesConfig = [
       constants.EMBALAGENS_CADASTRADAS
     }`,
     component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }/${constants.EDITAR}`,
+    component: EditarCadastroEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
