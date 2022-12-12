@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .header-alteracao-cei {
   display: flex;
   section {
@@ -29,4 +31,34 @@
 
 .select-tipo-alimentacao-de {
   margin-top: 7px;
+}
+
+.form-alteracao-cei {
+  .period-quantity {
+    border-radius: 7px;
+    padding: 0.5em;
+    color: $blackInput;
+
+    &.number-0 {
+      background-color: #fff7cb;
+      border: 1px solid $yellow;
+    }
+    &.number-1 {
+      background-color: #ebedff;
+      border: 1px solid $blue;
+    }
+    &.number-2 {
+      background-color: #ffeed6;
+      border: 1px solid $orange;
+    }
+    &.number-3 {
+      background-color: #eaffe3;
+    }
+    &.number-4 {
+      background-color: #e4f1ff;
+    }
+    &.number-5 {
+      background-color: #d6ffea;
+    }
+  }
 }

@@ -7,10 +7,12 @@ import MeusDadosContext from "context/MeusDadosContext";
 import { useEffect } from "react";
 import { AlteracaoDoTipoDeAlimentacaoCEI } from ".";
 import { Spin } from "antd";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export const Container = () => {
   const { meusDados } = useContext(MeusDadosContext);
   const [motivos, setMotivos] = useState(null);
+  const [vinculos, setVinculos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
@@ -25,6 +27,16 @@ export const Container = () => {
       );
     }
   };
+
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async escola_uuid => {
+    const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setVinculos(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar vínculos de tipo de alimentação.");
+    }
+  };
+
   const getDiasUteisAsync = async () => {
     const response = await getDiasUteis();
     if (response.status === HTTP_STATUS.OK) {
@@ -42,10 +54,18 @@ export const Container = () => {
   useEffect(() => {
     getMotivosAlteracaoCardapioAsync();
     getDiasUteisAsync();
-  }, []);
+    meusDados &&
+      getVinculosTipoAlimentacaoPorEscolaAsync(
+        meusDados.vinculo_atual.instituicao.uuid
+      );
+  }, [meusDados]);
 
   const LOADING =
-    !meusDados || !proximosCincoDiasUteis || !proximosDoisDiasUteis || !motivos;
+    !meusDados ||
+    !proximosCincoDiasUteis ||
+    !proximosDoisDiasUteis ||
+    !motivos ||
+    !vinculos;
 
   return (
     <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
@@ -59,6 +79,9 @@ export const Container = () => {
           )}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
+          vinculos={vinculos.filter(
+            vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
+          )}
         />
       )}
     </Spin>
