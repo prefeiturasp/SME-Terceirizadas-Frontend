@@ -22,6 +22,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { OnChange } from "react-final-form-listeners";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const Filtros = ({ ...props }) => {
   const [lotes, setLotes] = useState([]);
@@ -37,7 +38,10 @@ export const Filtros = ({ ...props }) => {
     setTotalBusca,
     setPage,
     setFiltros,
-    endpoint
+    endpoint,
+    getSolicitacoesDetalhadasAsync,
+    setCarregando,
+    setResultadoPaginado
   } = props;
 
   const getLotesSimplesAsync = async () => {
@@ -115,6 +119,7 @@ export const Filtros = ({ ...props }) => {
   };
 
   const onSubmit = async values => {
+    setCarregando(true);
     let _values = deepCopy(values);
     setFiltros(values);
     const page = 1;
@@ -124,9 +129,15 @@ export const Filtros = ({ ...props }) => {
 
     const response = await endpoint(_values);
     if (response.status === HTTP_STATUS.OK) {
-      setSolicitacoes(response.data.results);
+      setResultadoPaginado(response.data.results);
       setTotalBusca(response.data.count);
+      await getSolicitacoesDetalhadasAsync(response.data.results);
+    } else {
+      toastError(
+        "Houve um erro ao filtrar solicitações, tente novamente mais tarde"
+      );
     }
+    setCarregando(false);
   };
 
   const LOADING =
@@ -303,6 +314,7 @@ export const Filtros = ({ ...props }) => {
                       setFiltros(undefined);
                       setTotalBusca(undefined);
                       setSolicitacoes(undefined);
+                      setResultadoPaginado(undefined);
                       setPage(1);
                     }}
                   />
