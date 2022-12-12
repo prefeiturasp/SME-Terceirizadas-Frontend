@@ -1,4 +1,7 @@
 import React from "react";
+import { AlteracaoBody } from "../AlteracaoBody";
+import { AlteracaoCEIBody } from "../AlteracaoCEIBody";
+import { AlteracaoCEMEIBody } from "../AlteracaoCEMEIBody";
 import { InclusaoBody } from "../InclusaoBody";
 import { InclusaoCEIBody } from "../InclusaoCEIBody";
 import { InclusaoCEMEIBody } from "../InclusaoCEMEIBody";
@@ -50,8 +53,35 @@ export const TabelaResultado = ({ ...props }) => {
           />
         );
       case "ALT_CARDAPIO":
+        return (
+          <AlteracaoBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       case "ALT_CARDAPIO_CEI":
+        return (
+          <AlteracaoCEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       case "ALT_CARDAPIO_CEMEI":
+        return (
+          <AlteracaoCEMEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       case "KIT_LANCHE_AVULSA":
       case "KIT_LANCHE_UNIFICADA":
       case "KIT_LANCHE_AVULSA_CEI":
