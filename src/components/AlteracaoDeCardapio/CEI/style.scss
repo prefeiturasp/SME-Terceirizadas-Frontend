@@ -61,4 +61,41 @@
       background-color: #d6ffea;
     }
   }
+
+  table.faixas-etarias-cei {
+    width: 98%;
+    margin-left: 1em;
+
+    thead {
+      tr {
+        background-color: $grayBackground;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid $grayDisabled;
+        color: $blackInput;
+
+        th {
+          padding: 1em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        border: 1px solid $grayDisabled;
+        border-top: none;
+        color: $blackSubtle;
+
+        td {
+          padding: 0.5em;
+          &:not(:first-child) {
+            border-left: 1px solid $grayDisabled;
+          }
+        }
+      }
+    }
+  }
 }

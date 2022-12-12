@@ -4,13 +4,18 @@ import arrayMutators from "final-form-arrays";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
-import { getRascunhosAlteracaoTipoAlimentacao } from "services/alteracaoDeCardapio";
+import {
+  getRascunhosAlteracaoTipoAlimentacao,
+  getAlunosPorFaixaEtariaNumaData
+} from "services/alteracaoDeCardapio";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { Rascunhos } from "../Rascunhos";
 import Select from "components/Shareable/Select";
 import moment from "moment";
 import { InputComData } from "components/Shareable/DatePicker";
 import {
+  maxValue,
+  naoPodeSerZero,
   peloMenosUmCaractere,
   required,
   textAreaRequired
@@ -26,6 +31,10 @@ import { FieldArray } from "react-final-form-arrays";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import "./style.scss";
 import CKEditorField from "components/Shareable/CKEditorField";
+import InputText from "components/Shareable/Input/InputText";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { Spin } from "antd";
+import { totalAlunosPorPeriodo } from "./helper";
 
 export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   const {
@@ -74,7 +83,23 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   const onSubmit = () => {};
 
   const getPeriodo = (values, indice) => {
-    return values.substituicoes[indice];
+    return values && values.substituicoes[indice];
+  };
+
+  const getFaixasEtariasPorPeriodo = async (periodo, data, index, form) => {
+    form.change(`substituicoes[${index}].loading_faixas`, true);
+    const response = await getAlunosPorFaixaEtariaNumaData(periodo, data);
+    if (response.status === HTTP_STATUS.OK) {
+      form.change(
+        `substituicoes[${index}].faixas_etarias`,
+        response.data.results.filter(
+          faixas => faixas.faixa_etaria.inicio > 11 && faixas.count > 0
+        )
+      );
+    } else {
+      toastError("Nenhuma faixa etária cadastrada para este período");
+    }
+    form.change(`substituicoes[${index}].loading_faixas`, false);
   };
 
   const ehMotivoRPL = values => {
@@ -328,6 +353,16 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                               "tipo_alimentacao_para",
                                               undefined
                                             );
+                                          } else {
+                                            getFaixasEtariasPorPeriodo(
+                                              values.substituicoes[indice].uuid,
+                                              values.data
+                                                .split("/")
+                                                .reverse()
+                                                .join("-"),
+                                              indice,
+                                              form
+                                            );
                                           }
                                         }}
                                       </OnChange>
@@ -397,6 +432,85 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                     />
                                   </div>
                                 </div>
+                                {values.substituicoes[indice][`checked`] && (
+                                  <Spin
+                                    tip="Carregando..."
+                                    spinning={
+                                      values.substituicoes[indice][
+                                        "loading_faixas"
+                                      ]
+                                    }
+                                  >
+                                    <table className="faixas-etarias-cei mt-3">
+                                      <thead>
+                                        <tr className="row">
+                                          <th className="col-8">
+                                            Faixa Etária
+                                          </th>
+                                          <th className="col-2 text-center">
+                                            Alunos matriculados
+                                          </th>
+                                          <th className="col-2 text-center">
+                                            Quantidade
+                                          </th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {values.substituicoes[indice]
+                                          .faixas_etarias &&
+                                          values.substituicoes[
+                                            indice
+                                          ].faixas_etarias.map((faixa, key) => {
+                                            return (
+                                              <tr key={key} className="row">
+                                                <td className="col-8">
+                                                  {faixa.faixa_etaria.__str__}
+                                                </td>
+                                                <td className="col-2 text-center">
+                                                  {faixa.count}
+                                                </td>
+                                                <td className="col-2 text-center">
+                                                  <Field
+                                                    component={InputText}
+                                                    type="number"
+                                                    name={`${name}.faixas.${
+                                                      faixa.faixa_etaria.uuid
+                                                    }`}
+                                                    validate={
+                                                      getPeriodo(indice)
+                                                        .checked &&
+                                                      composeValidators(
+                                                        naoPodeSerZero,
+                                                        maxValue(faixa.count)
+                                                      )
+                                                    }
+                                                  />
+                                                </td>
+                                              </tr>
+                                            );
+                                          })}
+                                        <tr className="row">
+                                          <td className="col-8 font-weight-bold">
+                                            Total
+                                          </td>
+                                          <td className="col-2 text-center">
+                                            {totalAlunosPorPeriodo(
+                                              values,
+                                              indice
+                                            )}
+                                          </td>
+                                          {/*
+                                        <td className="col-2 text-center">
+                                          {totalAlunosInputPorPeriodoCEI(
+                                            values,
+                                            getPeriodo(indice).nome
+                                          )}
+                                          </td>*/}
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </Spin>
+                                )}
                               </div>
                             ))
                           }

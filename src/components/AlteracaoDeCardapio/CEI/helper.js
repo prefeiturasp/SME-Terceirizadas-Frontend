@@ -46,3 +46,13 @@ export const parseFormValues = ({
     substituicoes
   };
 };
+
+export const totalAlunosPorPeriodo = (values, index) => {
+  let totalAlunos = 0;
+  return (
+    values.substituicoes[index].faixas_etarias &&
+    values.substituicoes[index].faixas_etarias.reduce(function(total, faixa) {
+      return total + faixa.count;
+    }, totalAlunos)
+  );
+};
