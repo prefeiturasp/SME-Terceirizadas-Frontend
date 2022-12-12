@@ -37,6 +37,38 @@ export const Container = () => {
       uuid: "daqui_a_30_dias"
     }
   ]);
+
+  const [filtroTipoSolicitacao] = useState([
+    {
+      nome: "Tipo de Solicitação",
+      uuid: ""
+    },
+    {
+      nome: "Inclusão de Autorização",
+      uuid: "inclusão"
+    },
+    {
+      nome: "Alteração do Tipo de Alimentação",
+      uuid: "alteração"
+    },
+    {
+      nome: "Kit Lanche Passeio",
+      uuid: "Kit Lanche Passeio"
+    },
+    {
+      nome: "Kit Lanche Passeio Unificado",
+      uuid: "Kit Lanche Passeio Unificado"
+    },
+    {
+      nome: "Inversão de dia de Cardápio",
+      uuid: "inversão"
+    },
+    {
+      nome: "Suspensão de Alimentação",
+      uuid: "suspensão"
+    }
+  ]);
+
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
   const [lotes, setLotes] = useState(null);
   const [erro, setErro] = useState("");
@@ -76,6 +108,7 @@ export const Container = () => {
           {!LOADING && (
             <DashboardCODAE
               filtroPor={filtroPor}
+              filtroPorSolicitacao={filtroTipoSolicitacao}
               visaoPor={visaoPor}
               meusDados={meusDados}
               lotes={lotes}

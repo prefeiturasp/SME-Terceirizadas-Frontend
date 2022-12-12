@@ -24,7 +24,7 @@ import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
 
-export const DashboardNutrimanifestacao = () => {
+export const DashboardNutrimanifestacao = props => {
   const [canceladas, setCanceladas] = useState(null);
   const [negadas, setNegadas] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
@@ -34,6 +34,7 @@ export const DashboardNutrimanifestacao = () => {
 
   const LOADING = !canceladas || !negadas || !autorizadas;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
+  const { filtroPorSolicitacao } = props;
 
   const getSolicitacoesAsync = async (params = null) => {
     const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
@@ -70,11 +71,23 @@ export const DashboardNutrimanifestacao = () => {
     if (values.titulo && values.titulo.length > 2) {
       getSolicitacoesAsync({
         busca: values.titulo,
-        ...PARAMS
+        ...prepararParametros(values)
       });
     } else {
-      getSolicitacoesAsync(PARAMS);
+      getSolicitacoesAsync(prepararParametros(values));
     }
+  };
+
+  const prepararParametros = values => {
+    const params = PARAMS;
+    params["tipo_solicitacao"] = values.tipo_solicitacao;
+    params["data_evento"] =
+      values.data_evento &&
+      values.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
+    return params;
   };
 
   return (
@@ -92,6 +105,8 @@ export const DashboardNutrimanifestacao = () => {
           )}
           {!LOADING && (
             <CardBody
+              exibirFiltrosDataEventoETipoSolicitacao={true}
+              filtroPorSolicitacao={filtroPorSolicitacao}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={onPesquisaChanged}
