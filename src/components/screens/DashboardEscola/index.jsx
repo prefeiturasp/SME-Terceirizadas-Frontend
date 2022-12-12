@@ -32,7 +32,6 @@ export const DashboardEscola = props => {
   const [negadas, setNegadas] = useState(null);
   const [canceladas, setCanceladas] = useState(null);
   const [erro, setErro] = useState("");
-  const { filtroPorSolicitacao } = props;
   const prepararParametros = values => {
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
@@ -113,7 +112,6 @@ export const DashboardEscola = props => {
 
               <CardBody
                 exibirFiltrosDataEventoETipoSolicitacao={true}
-                filtroPorSolicitacao={filtroPorSolicitacao}
                 titulo={"Acompanhamento solicitações"}
                 dataAtual={dataAtual()}
                 onChange={onPesquisaChanged}

@@ -48,8 +48,6 @@ export const DashboardNutrisupervisao = props => {
     !aguardandoRespostaEmpresa;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
-  const { filtroPorSolicitacao } = props;
-
   const getSolicitacoesAsync = async (params = null) => {
     const response = await getSolicitacoesCanceladasNutrisupervisao(params);
     if (response.status === HTTP_STATUS.OK) {
@@ -141,7 +139,6 @@ export const DashboardNutrisupervisao = props => {
           {!LOADING && (
             <CardBody
               exibirFiltrosDataEventoETipoSolicitacao={true}
-              filtroPorSolicitacao={filtroPorSolicitacao}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={onPesquisaChanged}

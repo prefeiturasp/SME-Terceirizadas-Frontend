@@ -303,7 +303,6 @@ class DashboardCODAE extends Component {
           </div>
           <CardBody
             exibirFiltrosDataEventoETipoSolicitacao={true}
-            filtroPorSolicitacao={this.props.filtroPorSolicitacao}
             titulo={"Acompanhamento solicitações"}
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}

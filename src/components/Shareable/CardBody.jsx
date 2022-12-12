@@ -94,7 +94,7 @@ const CardBody = props => {
                           name="tipo_solicitacao"
                           naoDesabilitarPrimeiraOpcao
                           placeholder="Tipo de Solicitação"
-                          options={props.filtroPorSolicitacao}
+                          options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                       </div>
                       <OnChange name="tipo_solicitacao">

@@ -34,7 +34,6 @@ export const DashboardNutrimanifestacao = props => {
 
   const LOADING = !canceladas || !negadas || !autorizadas;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
-  const { filtroPorSolicitacao } = props;
 
   const getSolicitacoesAsync = async (params = null) => {
     const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
@@ -106,7 +105,6 @@ export const DashboardNutrimanifestacao = props => {
           {!LOADING && (
             <CardBody
               exibirFiltrosDataEventoETipoSolicitacao={true}
-              filtroPorSolicitacao={filtroPorSolicitacao}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={onPesquisaChanged}
