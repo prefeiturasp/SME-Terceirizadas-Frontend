@@ -24,7 +24,7 @@ import { PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
 
-export const DashboardNutrimanifestacao = props => {
+export const DashboardNutrimanifestacao = () => {
   const [canceladas, setCanceladas] = useState(null);
   const [negadas, setNegadas] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);

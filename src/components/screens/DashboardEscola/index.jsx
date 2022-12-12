@@ -26,7 +26,7 @@ import { Spin } from "antd";
 import { ajustarFormatoLog } from "../helper";
 import MeusDadosContext from "context/MeusDadosContext";
 
-export const DashboardEscola = props => {
+export const DashboardEscola = () => {
   const [aguardandoAutorizacao, setAguardandoAutorizacao] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
   const [negadas, setNegadas] = useState(null);
