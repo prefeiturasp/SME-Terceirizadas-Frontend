@@ -12,9 +12,13 @@ export const InclusaoCEIBody = ({ ...props }) => {
 
   const unique = arr => [...new Set(arr)];
 
-  const nomes_periodos = unique(
-    solicitacao.quantidade_alunos_por_faixas_etarias.map(qa => qa.periodo.nome)
-  );
+  const nomes_periodos = solicitacao.periodo_escolar
+    ? [solicitacao.periodo_escolar.nome]
+    : unique(
+        solicitacao.quantidade_alunos_por_faixas_etarias.map(
+          qa => qa.periodo.nome
+        )
+      );
 
   const getVinculosAlimentacao = async () => {
     const escola_uuid = solicitacao.escola.uuid;
@@ -93,9 +97,15 @@ export const InclusaoCEIBody = ({ ...props }) => {
             </div>
             {vinculosAlimentacao &&
               nomes_periodos.map((periodo, idx) => {
-                const faixas_etarias = solicitacao.quantidade_alunos_por_faixas_etarias.filter(
-                  qpf => qpf.periodo.nome === periodo
-                );
+                let faixas_etarias = [];
+                if (solicitacao.periodo_escolar) {
+                  faixas_etarias =
+                    solicitacao.quantidade_alunos_por_faixas_etarias;
+                } else {
+                  faixas_etarias = solicitacao.quantidade_alunos_por_faixas_etarias.filter(
+                    qpf => qpf.periodo.nome === periodo
+                  );
+                }
                 const alimentosFormatados = vinculosAlimentacao
                   .find(v => v.periodo_escolar.nome === periodo)
                   .tipos_alimentacao.map(ta => ta.nome)
