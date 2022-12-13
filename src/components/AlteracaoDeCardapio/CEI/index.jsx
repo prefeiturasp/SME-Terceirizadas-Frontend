@@ -23,7 +23,8 @@ import {
 import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
-  composeValidators
+  composeValidators,
+  deepCopy
 } from "helpers/utilities";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import { OnChange } from "react-final-form-listeners";
@@ -34,7 +35,13 @@ import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { Spin } from "antd";
-import { totalAlunosPorPeriodo } from "./helper";
+import { totalAlunosInputPorPeriodo, totalAlunosPorPeriodo } from "./helper";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 
 export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   const {
@@ -80,7 +87,13 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     }
   };
 
-  const onSubmit = () => {};
+  const onSubmit = values => {
+    const values_ = deepCopy(values);
+    values_.data = values_.data
+      .split("/")
+      .reverse()
+      .join("-");
+  };
 
   const getPeriodo = (values, indice) => {
     return values && values.substituicoes[indice];
@@ -222,16 +235,18 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
             <div className="card-body">
               <Form
                 initialValues={{
-                  substituicoes: periodos
+                  substituicoes: periodos,
+                  escola: meusDados.vinculo_atual.instituicao.uuid
                 }}
                 mutators={{
                   ...arrayMutators
                 }}
                 onSubmit={onSubmit}
               >
-                {({ handleSubmit, form, values }) => (
+                {({ handleSubmit, form, values, submitting }) => (
                   <form onSubmit={handleSubmit}>
-                    <Field component={"input"} type="hidden" name="uuid" />
+                    <Field component="input" type="hidden" name="uuid" />
+                    <Field component="input" type="hidden" name="escola" />
                     <div className="card-title font-weight-bold descricao">
                       Descrição da Alteração do Tipo de Alimentação
                     </div>
@@ -477,7 +492,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                                       faixa.faixa_etaria.uuid
                                                     }`}
                                                     validate={
-                                                      getPeriodo(indice)
+                                                      getPeriodo(values, indice)
                                                         .checked &&
                                                       composeValidators(
                                                         naoPodeSerZero,
@@ -499,13 +514,12 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                               indice
                                             )}
                                           </td>
-                                          {/*
-                                        <td className="col-2 text-center">
-                                          {totalAlunosInputPorPeriodoCEI(
-                                            values,
-                                            getPeriodo(indice).nome
-                                          )}
-                                          </td>*/}
+                                          <td className="col-2 text-center">
+                                            {totalAlunosInputPorPeriodo(
+                                              values,
+                                              indice
+                                            )}
+                                          </td>
                                         </tr>
                                       </tbody>
                                     </table>
@@ -528,6 +542,39 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           peloMenosUmCaractere
                         )}
                       />
+                    </div>
+                    <div className="row float-right mt-4">
+                      <div className="col-12">
+                        <Botao
+                          texto="Cancelar"
+                          onClick={() => {
+                            form.reset();
+                          }}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                        <Botao
+                          texto={
+                            values.uuid
+                              ? "Atualizar rascunho"
+                              : "Salvar rascunho"
+                          }
+                          className="ml-3"
+                          disabled={submitting}
+                          type={BUTTON_TYPE.SUBMIT}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                        />
+                        <Botao
+                          texto="Enviar inclusão"
+                          type={BUTTON_TYPE.BUTTON}
+                          disabled={submitting}
+                          onClick={() => {
+                            values["status"] = STATUS_DRE_A_VALIDAR;
+                            handleSubmit(values => onSubmit(values, form));
+                          }}
+                          style={BUTTON_STYLE.GREEN}
+                          className="ml-3"
+                        />
+                      </div>
                     </div>
                     <ModalDataPrioritaria
                       showModal={showModalDataPrioritaria}

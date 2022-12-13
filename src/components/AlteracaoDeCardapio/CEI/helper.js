@@ -56,3 +56,12 @@ export const totalAlunosPorPeriodo = (values, index) => {
     }, totalAlunos)
   );
 };
+
+export const totalAlunosInputPorPeriodo = (values, index) => {
+  let totalAlunos = 0;
+  const faixas = values.substituicoes[index].faixas;
+  if (!faixas) return 0;
+  return Object.values(faixas).reduce(function(total, faixa) {
+    return total + parseInt(faixa);
+  }, totalAlunos);
+};
