@@ -84,7 +84,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
                   </div>
                   <div className="container-fluid pr-0">
                     <div className="row mt-3">
-                      <div className="col-12">
+                      <div className="col-4">
                         <p>Alteração de Alimentação De:</p>
                         <p>
                           <b>
@@ -94,12 +94,13 @@ export const AlteracaoCEIBody = ({ ...props }) => {
                           </b>
                         </p>
                       </div>
-                      <div className="col-12">
+                      <div className="col-4">
                         <p>Alteração de Alimentação Para:</p>
                         <p>
                           <b>{substituicao.tipo_alimentacao_para.nome}</b>
                         </p>
                       </div>
+                      <div className="col-4" />
                     </div>
                     <div className="row mt-3">
                       <div className="col-12">
