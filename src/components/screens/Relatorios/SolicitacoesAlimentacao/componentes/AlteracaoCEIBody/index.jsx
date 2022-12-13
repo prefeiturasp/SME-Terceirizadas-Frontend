@@ -12,7 +12,7 @@ export const AlteracaoCEIBody = ({ ...props }) => {
       <td>
         {item.dre_iniciais} - {item.lote_nome}
       </td>
-      {filtros.status && filtros.status === "EM_ANDAMENTO" ? (
+      {filtros.status && filtros.status === "RECEBIDAS" ? (
         <td>{item.terceirizada_nome}</td>
       ) : (
         <td>{item.escola_nome}</td>
