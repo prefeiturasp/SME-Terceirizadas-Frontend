@@ -2,6 +2,7 @@ import moment from "moment";
 import { format, getYear } from "date-fns";
 import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
+import { TIPO_PERFIL } from "constants/shared";
 
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
@@ -13,6 +14,17 @@ export const requiredOptionSearchSelect = escolas => value =>
   escolas.find(escola => escola.label === value)
     ? undefined
     : "Selecione uma opção válida";
+
+export const requiredSearchSelectUnidEducDietas = escolas => value => {
+  let value_ = value;
+  if (value && localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
+    return undefined;
+  }
+  return value_ === undefined ||
+    escolas.find(escola => escola.label === value_.split("- ")[1])
+    ? undefined
+    : "Selecione uma opção válida";
+};
 
 export const dataDuplicada = listaDatas => value => {
   return value &&

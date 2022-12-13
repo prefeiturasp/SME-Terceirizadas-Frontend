@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Form, Field } from "react-final-form";
+import { OnChange } from "react-final-form-listeners";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import { Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -9,16 +13,16 @@ import InputText from "components/Shareable/Input/InputText";
 import Select from "components/Shareable/Select";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { OnChange } from "react-final-form-listeners";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { length } from "helpers/fieldValidators";
+import {
+  length,
+  requiredSearchSelectUnidEducDietas
+} from "helpers/fieldValidators";
 
 import { TIPO_PERFIL } from "constants/shared";
 
 import {
-  formFiltrosObtemDreEEscolasNovo,
+  formFiltrosObtemDreEEscolasDietas,
   getDadosIniciais
 } from "helpers/dietaEspecial";
 
@@ -41,18 +45,24 @@ const FormFiltros = ({
   const [diretoriasRegionais, setDiretoriasRegionais] = useState([]);
   const [desabilitarAluno, setDesabilitarAluno] = useState(null);
   const [escolas, setEscolas] = useState([]);
+  const [nomeEscolas, setNomeEscolas] = useState([]);
   const [alunos, setAlunos] = useState([]);
 
   useEffect(() => {
     async function fetch() {
       const dadosUsuario = await meusDados();
       setDadosUsuario(dadosUsuario);
-      formFiltrosObtemDreEEscolasNovo(
+      formFiltrosObtemDreEEscolasDietas(
+        setNomeEscolas,
         setEscolas,
         setDiretoriasRegionais,
         dadosUsuario
       );
-      const dadosIniciais = await getDadosIniciais(dadosUsuario);
+      let dadosIniciais = await getDadosIniciais(dadosUsuario);
+      if (dadosUsuario.tipo_usuario === "escola") {
+        let { nome, codigo_eol } = dadosUsuario.vinculo_atual.instituicao;
+        dadosIniciais.escola = [`${codigo_eol} - ${nome}`];
+      }
 
       getAlunos(dadosIniciais);
 
@@ -66,23 +76,7 @@ const FormFiltros = ({
   }, []);
 
   const onSubmit = async formValues => {
-    setFiltros({ ...formValues });
-  };
-
-  const getEscolasFiltrado = dre => {
-    if (
-      tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
-      tipoUsuario === TIPO_PERFIL.ESCOLA
-    ) {
-      return escolas;
-    } else if (dre) {
-      if (dre.length === 0) {
-        return escolas;
-      } else {
-        return escolas.filter(escola => dre.includes(escola.dre.uuid));
-      }
-    }
-    return [];
+    setFiltros({ ...formValues, escolas: escolas });
   };
 
   const getAlunosFiltrado = nomeAluno => {
@@ -147,116 +141,137 @@ const FormFiltros = ({
     }
   };
 
+  const getNomesItemsFiltrado = value => {
+    if (value) {
+      let value_ = value;
+      if (localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
+        value_ = value[0];
+      }
+      return nomeEscolas.filter(a => a.includes(value_.toUpperCase()));
+    }
+    return [];
+  };
+
   const tipoUsuario = localStorage.getItem("tipo_perfil");
   return (
-    <Form
-      onSubmit={onSubmit}
-      initialValues={dadosIniciais}
-      subscription={{ submitting: true, values: true }}
-      render={({ form, handleSubmit, pristine, values }) => (
-        <form onSubmit={handleSubmit}>
-          <FinalFormToRedux form={FORM_NAME} />
-          <div className="row">
-            <div className="col-5">
-              <Field
-                label="Diretoria Regional de Educação"
-                component={Select}
-                className="input-busca-dre form-control"
-                name="dre"
-                options={[{ uuid: "", nome: "Todas" }].concat(
-                  diretoriasRegionais.map(dre => {
-                    return { uuid: dre.value, nome: dre.label };
-                  })
-                )}
-                disabled={
-                  tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
-                  tipoUsuario === TIPO_PERFIL.ESCOLA
-                }
-                naoDesabilitarPrimeiraOpcao
-              />
-            </div>
-            <div className="col-7">
-              <Field
-                label="Unidade Escolar"
-                component={Select}
-                name="escola"
-                className="input-busca-escola form-control"
-                options={[{ uuid: "", nome: "Todas" }].concat(
-                  getEscolasFiltrado(values.dre).map(escola => {
-                    return { uuid: escola.value, nome: escola.label };
-                  })
-                )}
-                disabled={tipoUsuario === TIPO_PERFIL.ESCOLA}
-                naoDesabilitarPrimeiraOpcao
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-3 cod-eol-aluno">
-              <Field
-                label="Cód. EOL do Aluno"
-                component={InputText}
-                name="codigo_eol"
-                placeholder="Insira o Código"
-                type="number"
-                validate={length(7)}
-                disabled={carregandoAluno}
-              />
-              <OnChange name="codigo_eol">
-                {value => {
-                  getAlunoPorEol(value, values);
-                }}
-              </OnChange>
-            </div>
-            <div className="col-9">
-              <Field
-                label="Nome Completo do Aluno"
-                component={AutoCompleteField}
-                dataSource={getAlunosFiltrado(values.nome_aluno)}
-                name="nome_aluno"
-                placeholder="Insira o Nome do Aluno"
-                className="input-busca-aluno"
-                disabled={carregandoAluno | desabilitarAluno}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-12 botoes-envio">
-              <div className="mt-4">
-                <Botao
-                  texto="Consultar"
-                  className="float-right ml-3"
-                  type={BUTTON_TYPE.SUBMIT}
-                  style={BUTTON_STYLE.GREEN}
+    <Spin tip="Carregando..." spinning={!escolas.length}>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={dadosIniciais}
+        subscription={{ submitting: true, values: true }}
+        render={({ form, handleSubmit, pristine, values }) => (
+          <form onSubmit={handleSubmit}>
+            <FinalFormToRedux form={FORM_NAME} />
+            <div className="row">
+              <div className="col-5">
+                <Field
+                  label="Diretoria Regional de Educação"
+                  component={Select}
+                  className="input-busca-dre form-control"
+                  name="dre"
+                  options={[{ uuid: "", nome: "Todas" }].concat(
+                    diretoriasRegionais.map(dre => {
+                      return { uuid: dre.value, nome: dre.label };
+                    })
+                  )}
+                  disabled={
+                    tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL ||
+                    tipoUsuario === TIPO_PERFIL.ESCOLA
+                  }
+                  naoDesabilitarPrimeiraOpcao
                 />
-                <Botao
-                  texto="Limpar Filtros"
-                  className="float-right ml-3"
-                  onClick={() => {
-                    if (tipoUsuario === TIPO_PERFIL.ESCOLA)
-                      form.restart({
-                        ...dadosIniciais,
-                        nome_aluno: undefined,
-                        codigo_eol: undefined
-                      });
-                    else if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL)
-                      form.restart({
-                        ...dadosIniciais,
-                        escolas: [],
-                        nome_aluno: undefined,
-                        codigo_eol: undefined
-                      });
-                    else form.restart({});
+                <OnChange name="dre">
+                  {async value => {
+                    setNomeEscolas(
+                      escolas
+                        .filter(escola => value.includes(escola.dre.uuid))
+                        .map(escola => `${escola.codigo_eol} - ${escola.label}`)
+                    );
+                    tipoUsuario !== TIPO_PERFIL.ESCOLA &&
+                      form.change("escola", undefined);
                   }}
-                  disabled={pristine}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                </OnChange>
+              </div>
+              <div className="col-7">
+                <Field
+                  dataSource={getNomesItemsFiltrado(values.escola)}
+                  component={AutoCompleteField}
+                  name="escola"
+                  label="Unidade Educacional"
+                  placeholder={"Digite um nome"}
+                  className="input-busca-nome-item"
+                  disabled={tipoUsuario === TIPO_PERFIL.ESCOLA || !values.dre}
+                  validate={requiredSearchSelectUnidEducDietas(escolas)}
                 />
               </div>
             </div>
-          </div>
-        </form>
-      )}
-    />
+            <div className="row">
+              <div className="col-3 cod-eol-aluno">
+                <Field
+                  label="Cód. EOL do Aluno"
+                  component={InputText}
+                  name="codigo_eol"
+                  placeholder="Insira o Código"
+                  type="number"
+                  validate={length(7)}
+                  disabled={carregandoAluno}
+                />
+                <OnChange name="codigo_eol">
+                  {value => {
+                    getAlunoPorEol(value, values);
+                  }}
+                </OnChange>
+              </div>
+              <div className="col-9">
+                <Field
+                  label="Nome Completo do Aluno"
+                  component={AutoCompleteField}
+                  dataSource={getAlunosFiltrado(values.nome_aluno)}
+                  name="nome_aluno"
+                  placeholder="Insira o Nome do Aluno"
+                  className="input-busca-aluno"
+                  disabled={carregandoAluno | desabilitarAluno}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12 botoes-envio">
+                <div className="mt-4">
+                  <Botao
+                    texto="Consultar"
+                    className="float-right ml-3"
+                    type={BUTTON_TYPE.SUBMIT}
+                    style={BUTTON_STYLE.GREEN}
+                  />
+                  <Botao
+                    texto="Limpar Filtros"
+                    className="float-right ml-3"
+                    onClick={() => {
+                      if (tipoUsuario === TIPO_PERFIL.ESCOLA)
+                        form.restart({
+                          ...dadosIniciais,
+                          nome_aluno: undefined,
+                          codigo_eol: undefined
+                        });
+                      else if (tipoUsuario === TIPO_PERFIL.DIRETORIA_REGIONAL)
+                        form.restart({
+                          ...dadosIniciais,
+                          escolas: [],
+                          nome_aluno: undefined,
+                          codigo_eol: undefined
+                        });
+                      else form.restart({});
+                    }}
+                    disabled={pristine}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                  />
+                </div>
+              </div>
+            </div>
+          </form>
+        )}
+      />
+    </Spin>
   );
 };
 
