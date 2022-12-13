@@ -4,7 +4,8 @@ import { meusDados } from "services/perfil.service";
 import {
   getEscolasSimplissimaComDRE,
   getEscolasSimplissimaComDREUnpaginated,
-  getEscolasSimplissimaPorDiretoriaRegional
+  getEscolasSimplissimaPorDiretoriaRegional,
+  getEscolasTrecTotal
 } from "services/escola.service";
 import {
   getDiretoriaregionalSimplissima,
@@ -61,6 +62,19 @@ const formataUuidNomeParaMultiSelect = results =>
     };
   });
 
+const formataUuidNomeComCodEol = results =>
+  results.map(r => {
+    return {
+      label: r.nome,
+      value: r.uuid,
+      dre: r.diretoria_regional,
+      codigo_eol: r.codigo_eol
+    };
+  });
+
+const formataNomeComCodEol = results =>
+  results.map(r => `${r.codigo_eol} - ${r.nome}`);
+
 export const formFiltrosObtemDreEEscolasNovo = async (
   setEscolas,
   setDiretoriasRegionais,
@@ -84,6 +98,45 @@ export const formFiltrosObtemDreEEscolasNovo = async (
         formataUuidNomeParaMultiSelect(respostaDre.data.results)
       );
       setEscolas(formataUuidNomeParaMultiSelect(respostaEscola.data));
+    }
+  }
+};
+
+export const formFiltrosObtemDreEEscolasDietas = async (
+  setNomeEscolas,
+  setEscolas,
+  setDiretoriasRegionais,
+  dadosUsuario
+) => {
+  if (dadosUsuario.tipo_usuario === "escola") {
+    let { uuid, nome, codigo_eol } = dadosUsuario.vinculo_atual.instituicao;
+    const dre = dadosUsuario.vinculo_atual.instituicao.diretoria_regional;
+    setNomeEscolas([`${codigo_eol} - ${nome}`]);
+    setEscolas([
+      {
+        label: nome,
+        value: uuid,
+        dre: dre,
+        codigo_eol: codigo_eol
+      }
+    ]);
+
+    setDiretoriasRegionais([{ value: dre.uuid, label: dre.nome }]);
+  } else {
+    if (dadosUsuario.tipo_usuario === "diretoriaregional") {
+      const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
+      const resposta2 = await getEscolasSimplissimaPorDiretoriaRegional(uuid);
+      setNomeEscolas(formataNomeComCodEol(resposta2));
+      setEscolas(formataUuidNomeComCodEol(resposta2));
+      setDiretoriasRegionais([{ value: uuid, label: nome }]);
+    } else {
+      const respostaDre = await getDiretoriaregionalSimplissimaAxios();
+      const respostaEscola = await getEscolasTrecTotal();
+      setDiretoriasRegionais(
+        formataUuidNomeComCodEol(respostaDre.data.results)
+      );
+      setNomeEscolas(formataNomeComCodEol(respostaEscola.data));
+      setEscolas(formataUuidNomeComCodEol(respostaEscola.data));
     }
   }
 };
