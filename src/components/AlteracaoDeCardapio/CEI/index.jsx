@@ -6,7 +6,9 @@ import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
 import {
   getRascunhosAlteracaoTipoAlimentacao,
-  getAlunosPorFaixaEtariaNumaData
+  getAlunosPorFaixaEtariaNumaData,
+  escolaCriarSolicitacaoDeAlteracaoCardapio,
+  escolaExcluirSolicitacaoDeAlteracaoCardapio
 } from "services/alteracaoDeCardapio";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { Rascunhos } from "../Rascunhos";
@@ -24,7 +26,8 @@ import {
   agregarDefault,
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
-  deepCopy
+  deepCopy,
+  getError
 } from "helpers/utilities";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import { OnChange } from "react-final-form-listeners";
@@ -33,15 +36,21 @@ import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import "./style.scss";
 import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Spin } from "antd";
-import { totalAlunosInputPorPeriodo, totalAlunosPorPeriodo } from "./helper";
+import {
+  formataPayload,
+  totalAlunosInputPorPeriodo,
+  totalAlunosPorPeriodo
+} from "./helper";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
+
+const { SOLICITACAO_CEI } = TIPO_SOLICITACAO;
 
 export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   const {
@@ -53,11 +62,12 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     vinculos
   } = props;
 
-  const [rascunhos, setRascunhos] = useState([]);
+  const [rascunhos, setRascunhos] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
   const [showModalDataPrioritaria, setShowModalDataPrioritaria] = useState(
     false
   );
+  const [solicitacao, setSolicitacao] = useState(null);
 
   const getRascunhos = async () => {
     const response = await getRascunhosAlteracaoTipoAlimentacao(
@@ -87,12 +97,15 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     }
   };
 
-  const onSubmit = values => {
-    const values_ = deepCopy(values);
-    values_.data = values_.data
-      .split("/")
-      .reverse()
-      .join("-");
+  const onSubmit = async (values, form) => {
+    const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+      formataPayload(values),
+      SOLICITACAO_CEI
+    );
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Alteração do tipo de alimentação criada com sucesso!");
+      refresh(form);
+    }
   };
 
   const getPeriodo = (values, indice) => {
@@ -103,16 +116,25 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     form.change(`substituicoes[${index}].loading_faixas`, true);
     const response = await getAlunosPorFaixaEtariaNumaData(periodo, data);
     if (response.status === HTTP_STATUS.OK) {
-      form.change(
+      await form.change(
         `substituicoes[${index}].faixas_etarias`,
         response.data.results.filter(
           faixas => faixas.faixa_etaria.inicio > 11 && faixas.count > 0
         )
       );
+      if (solicitacao) {
+        const faixasQuantidades = {};
+        solicitacao.substituicoes[index].faixas_etarias.forEach(faixa => {
+          faixasQuantidades[faixa.faixa_etaria.uuid] = faixa.quantidade;
+        });
+        await form.change(`substituicoes[${index}].faixas`, faixasQuantidades);
+        await form.change(`substituicoes[${index}].loading_faixas`, false);
+        setSolicitacao(null);
+      }
     } else {
-      toastError("Nenhuma faixa etária cadastrada para este período");
+      toastError(getError(response.data));
+      await form.change(`substituicoes[${index}].loading_faixas`, false);
     }
-    form.change(`substituicoes[${index}].loading_faixas`, false);
   };
 
   const ehMotivoRPL = values => {
@@ -135,6 +157,13 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
         motivo => motivo.nome.toUpperCase() === "LPR - LANCHE POR REFEIÇÃO"
       ).uuid === values.motivo
     );
+  };
+
+  const refresh = form => {
+    getRascunhos();
+    setTimeout(() => {
+      form.reset();
+    }, 100);
   };
 
   const getTiposAlimentacaoDe = values => {
@@ -167,7 +196,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     }
   };
 
-  const getTiposAlimentacaoPara = values => {
+  const getTiposAlimentacaoPara = (values, index) => {
     const tipos_alimentacao_de = vinculos.find(
       vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
     ).tipos_alimentacao;
@@ -197,11 +226,14 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
       return agregarDefault(
         tipos_alimentacao_de
           .filter(tipo_alimentacao =>
-            values.tipos_alimentacao_de_selecionados
-              ? !values.tipos_alimentacao_de_selecionados.includes(
+            values.substituicoes[index].tipos_alimentacao_de_selecionados
+              ? !values.substituicoes[
+                  index
+                ].tipos_alimentacao_de_selecionados.includes(
                   tipo_alimentacao.uuid
                 )
-              : tipo_alimentacao.uuid !== values.tipo_alimentacao_para
+              : tipo_alimentacao.uuid !==
+                values.substituicoes[index].tipo_alimentacao_para
           )
           .map(tipo_alimentacao => ({
             nome: tipo_alimentacao.nome,
@@ -211,40 +243,94 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     }
   };
 
+  const carregarRascunho = async (solicitacao, form, values) => {
+    const substituicoes = deepCopy(values.substituicoes);
+    setSolicitacao(solicitacao);
+    await form.change("motivo", solicitacao.motivo.uuid);
+    await form.change("escola", solicitacao.escola.uuid);
+    await form.change("uuid", solicitacao.uuid);
+    solicitacao.substituicoes.forEach(substituicao => {
+      const index = substituicoes.findIndex(
+        subs => subs.uuid === substituicao.periodo_escolar.uuid
+      );
+      substituicoes[index].checked = true;
+      substituicoes[index].tipo_alimentacao_para =
+        substituicao.tipo_alimentacao_para.uuid;
+      substituicoes[index].tipos_alimentacao_de =
+        solicitacao.motivo.nome.includes("RPL") &&
+        substituicao.tipos_alimentacao_de[0].uuid;
+      substituicoes[index].tipos_alimentacao_de_selecionados =
+        !solicitacao.motivo.nome.includes("RPL") &&
+        substituicao.tipos_alimentacao_de.map(ta => ta.uuid);
+    });
+    await form.change("substituicoes", substituicoes);
+    await form.change("data", solicitacao.data);
+    await form.change("uuid", solicitacao.uuid);
+    await form.change("observacao", solicitacao.observacao);
+  };
+
+  const removerRascunho = async (id_externo, uuid, form) => {
+    if (window.confirm("Deseja remover este rascunho?")) {
+      const response = await escolaExcluirSolicitacaoDeAlteracaoCardapio(
+        uuid,
+        SOLICITACAO_CEI
+      );
+      if (response.status === HTTP_STATUS.NO_CONTENT) {
+        toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
+        refresh(form);
+      } else {
+        toastError(
+          `Houve um erro ao excluir o rascunho: ${getError(response.data)}`
+        );
+      }
+    }
+  };
+
   return (
     <>
       {erroAPI && <div>{erroAPI}</div>}
       {!erroAPI && (
         <div className="form-alteracao-cei mt-3">
-          <CardMatriculados
-            meusDados={meusDados}
-            numeroAlunos={meusDados.vinculo_atual.instituicao.quantidade_alunos}
-          />
-          {rascunhos.length > 0 && (
-            <section className="mt-3">
-              <span className="page-title">Rascunhos</span>
-              <Rascunhos
-                alteracaoCardapioList={rascunhos}
-                OnDeleteButtonClicked={this.OnDeleteButtonClicked}
-                resetForm={event => this.resetForm(event)}
-                OnEditButtonClicked={params => this.OnEditButtonClicked(params)}
-              />
-            </section>
-          )}
-          <div className="card mt-3 mh-60">
-            <div className="card-body">
-              <Form
-                initialValues={{
-                  substituicoes: periodos,
-                  escola: meusDados.vinculo_atual.instituicao.uuid
-                }}
-                mutators={{
-                  ...arrayMutators
-                }}
-                onSubmit={onSubmit}
-              >
-                {({ handleSubmit, form, values, submitting }) => (
-                  <form onSubmit={handleSubmit}>
+          <Form
+            initialValues={{
+              substituicoes: periodos,
+              escola: meusDados.vinculo_atual.instituicao.uuid
+            }}
+            mutators={{
+              ...arrayMutators
+            }}
+            onSubmit={onSubmit}
+          >
+            {({ handleSubmit, form, values, submitting }) => (
+              <form onSubmit={handleSubmit}>
+                <CardMatriculados
+                  meusDados={meusDados}
+                  numeroAlunos={
+                    meusDados.vinculo_atual.instituicao.quantidade_alunos
+                  }
+                />
+                <Spin tip="Carregando rascunhos..." spinning={!rascunhos}>
+                  {rascunhos && rascunhos.length > 0 && (
+                    <section className="mt-3">
+                      <span className="page-title">Rascunhos</span>
+                      <Rascunhos
+                        alteracaoCardapioList={rascunhos}
+                        removerRascunho={removerRascunho}
+                        resetForm={() => form.reset()}
+                        carregarRascunho={carregarRascunho}
+                        form={form}
+                        values={values}
+                      />
+                    </section>
+                  )}
+                </Spin>
+                <div className="mt-3 page-title">
+                  {values.uuid
+                    ? `Solicitação # ${values.id_externo}`
+                    : "Nova Solicitação"}
+                </div>
+                <div className="card mt-3 mh-60">
+                  <div className="card-body">
                     <Field component="input" type="hidden" name="uuid" />
                     <Field component="input" type="hidden" name="escola" />
                     <div className="card-title font-weight-bold descricao">
@@ -288,7 +374,24 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                         />
                         <OnChange name="data">
                           {value => {
-                            onAlterarDiaChanged(value);
+                            if (value) {
+                              onAlterarDiaChanged(value);
+                              values.substituicoes.forEach(
+                                (substituicao, indice) => {
+                                  if (substituicao.checked) {
+                                    getFaixasEtariasPorPeriodo(
+                                      values.substituicoes[indice].uuid,
+                                      value
+                                        .split("/")
+                                        .reverse()
+                                        .join("-"),
+                                      indice,
+                                      form
+                                    );
+                                  }
+                                }
+                              );
+                            }
                           }}
                         </OnChange>
                       </div>
@@ -316,7 +419,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         <Field
                                           component={"input"}
                                           type="checkbox"
-                                          disabled={!values.data}
                                           name={`${name}.checked`}
                                         />
                                         <span
@@ -357,15 +459,15 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                         {value => {
                                           if (!value) {
                                             form.change(
-                                              "tipos_alimentacao_de",
+                                              `substituicoes[${indice}].tipos_alimentacao_de`,
                                               undefined
                                             );
                                             form.change(
-                                              "tipos_alimentacao_de_selecionados",
+                                              `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
                                               undefined
                                             );
                                             form.change(
-                                              "tipo_alimentacao_para",
+                                              `substituicoes[${indice}].tipo_alimentacao_para`,
                                               undefined
                                             );
                                           } else {
@@ -387,7 +489,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                     <div className="col-4">
                                       <Field
                                         component={Select}
-                                        name="tipos_alimentacao_de"
+                                        name={`${name}.tipos_alimentacao_de`}
                                         options={getTiposAlimentacaoDe(values)}
                                         validate={
                                           getPeriodo(values, indice).checked &&
@@ -406,15 +508,16 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                     <div className="col-4">
                                       <Field
                                         component={StatefulMultiSelect}
-                                        name="tipos_alimentacao_de"
+                                        name={`${name}.tipos_alimentacao_de`}
                                         selected={
-                                          values.tipos_alimentacao_de_selecionados ||
+                                          values.substituicoes[indice]
+                                            .tipos_alimentacao_de_selecionados ||
                                           []
                                         }
                                         options={getTiposAlimentacaoDe(values)}
                                         onSelectedChanged={values_ => {
                                           form.change(
-                                            `tipos_alimentacao_de_selecionados`,
+                                            `substituicoes[${indice}].tipos_alimentacao_de_selecionados`,
                                             values_
                                           );
                                         }}
@@ -432,8 +535,11 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                   <div className="col-4">
                                     <Field
                                       component={Select}
-                                      name="tipo_alimentacao_para"
-                                      options={getTiposAlimentacaoPara(values)}
+                                      name={`${name}.tipo_alimentacao_para`}
+                                      options={getTiposAlimentacaoPara(
+                                        values,
+                                        indice
+                                      )}
                                       validate={
                                         getPeriodo(values, indice).checked &&
                                         required
@@ -473,6 +579,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                       <tbody>
                                         {values.substituicoes[indice]
                                           .faixas_etarias &&
+                                          !values.substituicoes[indice]
+                                            .loading_faixas &&
                                           values.substituicoes[
                                             indice
                                           ].faixas_etarias.map((faixa, key) => {
@@ -580,11 +688,11 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                       showModal={showModalDataPrioritaria}
                       closeModal={() => setShowModalDataPrioritaria(false)}
                     />
-                  </form>
-                )}
-              </Form>
-            </div>
-          </div>
+                  </div>
+                </div>
+              </form>
+            )}
+          </Form>
         </div>
       )}
     </>

@@ -1,4 +1,7 @@
-import { converterDDMMYYYYparaYYYYMMDD } from "../../../helpers/utilities";
+import {
+  converterDDMMYYYYparaYYYYMMDD,
+  deepCopy
+} from "../../../helpers/utilities";
 
 export const parseFormValues = ({
   observacao,
@@ -64,4 +67,33 @@ export const totalAlunosInputPorPeriodo = (values, index) => {
   return Object.values(faixas).reduce(function(total, faixa) {
     return total + parseInt(faixa);
   }, totalAlunos);
+};
+
+export const formataPayload = values => {
+  const values_ = deepCopy(values);
+  values_.data = values_.data
+    .split("/")
+    .reverse()
+    .join("-");
+  const faixas_etarias = [];
+  values_.substituicoes.forEach(substituicao => {
+    substituicao.periodo_escolar = substituicao.uuid;
+    substituicao.faixas_etarias.forEach(faixa => {
+      faixas_etarias.push({
+        faixa_etaria: faixa.faixa_etaria.uuid,
+        quantidade: substituicao.faixas[faixa.faixa_etaria.uuid],
+        matriculados_quando_criado: faixa.count
+      });
+    });
+    substituicao.faixas_etarias = faixas_etarias;
+    if (typeof substituicao.tipos_alimentacao_de === "string") {
+      substituicao.tipos_alimentacao_de = [substituicao.tipos_alimentacao_de];
+    }
+    if (substituicao.tipos_alimentacao_de_selecionados) {
+      substituicao.tipos_alimentacao_de =
+        substituicao.tipos_alimentacao_de_selecionados;
+    }
+  });
+
+  return values_;
 };
