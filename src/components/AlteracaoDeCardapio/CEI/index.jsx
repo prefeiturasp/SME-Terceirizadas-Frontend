@@ -8,7 +8,9 @@ import {
   getRascunhosAlteracaoTipoAlimentacao,
   getAlunosPorFaixaEtariaNumaData,
   escolaCriarSolicitacaoDeAlteracaoCardapio,
-  escolaExcluirSolicitacaoDeAlteracaoCardapio
+  escolaExcluirSolicitacaoDeAlteracaoCardapio,
+  escolaAlterarSolicitacaoDeAlteracaoCardapio,
+  escolaIniciarSolicitacaoDeAlteracaoDeCardapio
 } from "services/alteracaoDeCardapio";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { Rascunhos } from "../Rascunhos";
@@ -97,14 +99,49 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     }
   };
 
-  const onSubmit = async (values, form) => {
-    const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
-      formataPayload(values),
+  const iniciarPedido = async (uuid, form) => {
+    const response = await escolaIniciarSolicitacaoDeAlteracaoDeCardapio(
+      uuid,
       SOLICITACAO_CEI
     );
-    if (response.status === HTTP_STATUS.CREATED) {
-      toastSuccess("Alteração do tipo de alimentação criada com sucesso!");
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Alteração do tipo de alimentação enviada com sucesso!");
       refresh(form);
+    } else {
+      toastError(getError(response.data));
+    }
+  };
+
+  const onSubmit = async (values, form) => {
+    if (!values.uuid) {
+      const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
+        formataPayload(values),
+        SOLICITACAO_CEI
+      );
+      if (response.status === HTTP_STATUS.CREATED) {
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(response.data.uuid, form);
+        } else {
+          toastSuccess("Alteração do tipo de alimentação criada com sucesso!");
+        }
+        refresh(form);
+      }
+    } else {
+      const response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
+        values.uuid,
+        formataPayload(values),
+        SOLICITACAO_CEI
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        if (values.status === STATUS_DRE_A_VALIDAR) {
+          iniciarPedido(response.data.uuid, form);
+        } else {
+          toastSuccess(
+            "Alteração do tipo de alimentação alterada com sucesso!"
+          );
+        }
+        refresh(form);
+      }
     }
   };
 
@@ -133,8 +170,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
       }
     } else {
       toastError(getError(response.data));
-      await form.change(`substituicoes[${index}].loading_faixas`, false);
     }
+    await form.change(`substituicoes[${index}].loading_faixas`, false);
   };
 
   const ehMotivoRPL = values => {
@@ -555,7 +592,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                 </div>
                                 {values.substituicoes[indice][`checked`] && (
                                   <Spin
-                                    tip="Carregando..."
+                                    tip="Carregando faixas etárias..."
                                     spinning={
                                       values.substituicoes[indice][
                                         "loading_faixas"
