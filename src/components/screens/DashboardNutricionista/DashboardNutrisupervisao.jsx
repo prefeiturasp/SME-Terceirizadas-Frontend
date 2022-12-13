@@ -100,14 +100,26 @@ export const DashboardNutrisupervisao = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const prepararParametros = values => {
+    const params = PARAMS;
+    params["tipo_solicitacao"] = values.tipo_solicitacao;
+    params["data_evento"] =
+      values.data_evento &&
+      values.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
+    return params;
+  };
+
   const onPesquisaChanged = values => {
     if (values.titulo && values.titulo.length > 2) {
       getSolicitacoesAsync({
         busca: values.titulo,
-        ...PARAMS
+        ...prepararParametros(values)
       });
     } else {
-      getSolicitacoesAsync(PARAMS);
+      getSolicitacoesAsync(prepararParametros(values));
     }
   };
 
@@ -126,6 +138,7 @@ export const DashboardNutrisupervisao = () => {
           )}
           {!LOADING && (
             <CardBody
+              exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={onPesquisaChanged}
