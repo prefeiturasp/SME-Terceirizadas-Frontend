@@ -137,107 +137,111 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                         </label>
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-fluid pr-0">
-                          <label className="label-periodo-cei-cemei">
-                            Alunos CEI
-                          </label>
+                    {faixasCEI.lenght > 0 && (
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="container-fluid pr-0">
+                            <label className="label-periodo-cei-cemei">
+                              Alunos CEI
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-12 mt-3">
+                          <div className=" container-fluid pr-0">
+                            <p>
+                              Tipos de Inclusão de Alimentação:{" "}
+                              <b>{tiposAlimentacaoCEI}</b>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className=" container-fluid pr-0">
+                            <table className="table table-bordered table-items">
+                              <thead>
+                                <tr className="table-head-items">
+                                  <th className="col-8">Faixa Etária</th>
+                                  <th className="col-2 text-center">
+                                    Alunos Matriculados
+                                  </th>
+                                  <th className="col-2 text-center">
+                                    Quantidade
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {faixasCEI.map((faixa, idxFaixa) => {
+                                  return (
+                                    <tr
+                                      className="table-body-items"
+                                      key={idxFaixa}
+                                    >
+                                      <td>{faixa.faixa_etaria.__str__}</td>
+                                      <td className="text-center">
+                                        {faixa.matriculados_quando_criado}
+                                      </td>
+                                      <td className="text-center">
+                                        {faixa.quantidade_alunos}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                                <tr className="table-head-items">
+                                  <td>Total</td>
+                                  <td className="text-center">
+                                    {total_matriculados}
+                                  </td>
+                                  <td className="text-center">{total}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
-                      <div className="col-12 mt-3">
-                        <div className=" container-fluid pr-0">
-                          <p>
-                            Tipos de Inclusão de Alimentação:{" "}
-                            <b>{tiposAlimentacaoCEI}</b>
-                          </p>
+                    )}
+                    {faixasEMEI.lenght > 0 && (
+                      <div className="row">
+                        <div className="col-12">
+                          <div className="container-fluid pr-0">
+                            <label className="label-periodo-cei-cemei">
+                              Alunos EMEI
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-12 mt-3">
+                          <div className=" container-fluid pr-0">
+                            <p>
+                              Tipos de Inclusão de Alimentação:{" "}
+                              <b>{tiposAlimentacaoEMEI}</b>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-12">
+                          <div className=" container-fluid pr-0">
+                            <table className="table table-bordered table-items">
+                              <thead>
+                                {faixasEMEI.map((faixa, idxFaixa) => {
+                                  return (
+                                    <tr
+                                      className="table-head-items"
+                                      key={idxFaixa}
+                                    >
+                                      <th className="col-8">
+                                        Alunos Matriculados:{" "}
+                                        {faixa.matriculados_quando_criado}
+                                      </th>
+                                      <th className="col-4 text-center">
+                                        Quantidade: {faixa.quantidade_alunos}
+                                      </th>
+                                    </tr>
+                                  );
+                                })}
+                              </thead>
+                              <tbody />
+                            </table>
+                          </div>
                         </div>
                       </div>
-                      <div className="col-12">
-                        <div className=" container-fluid pr-0">
-                          <table className="table table-bordered table-items">
-                            <thead>
-                              <tr className="table-head-items">
-                                <th className="col-8">Faixa Etária</th>
-                                <th className="col-2 text-center">
-                                  Alunos Matriculados
-                                </th>
-                                <th className="col-2 text-center">
-                                  Quantidade
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {faixasCEI.map((faixa, idxFaixa) => {
-                                return (
-                                  <tr
-                                    className="table-body-items"
-                                    key={idxFaixa}
-                                  >
-                                    <td>{faixa.faixa_etaria.__str__}</td>
-                                    <td className="text-center">
-                                      {faixa.matriculados_quando_criado}
-                                    </td>
-                                    <td className="text-center">
-                                      {faixa.quantidade_alunos}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                              <tr className="table-head-items">
-                                <td>Total</td>
-                                <td className="text-center">
-                                  {total_matriculados}
-                                </td>
-                                <td className="text-center">{total}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-fluid pr-0">
-                          <label className="label-periodo-cei-cemei">
-                            Alunos EMEI
-                          </label>
-                        </div>
-                      </div>
-                      <div className="col-12 mt-3">
-                        <div className=" container-fluid pr-0">
-                          <p>
-                            Tipos de Inclusão de Alimentação:{" "}
-                            <b>{tiposAlimentacaoEMEI}</b>
-                          </p>
-                        </div>
-                      </div>
-                      <div className="col-12">
-                        <div className=" container-fluid pr-0">
-                          <table className="table table-bordered table-items">
-                            <thead>
-                              {faixasEMEI.map((faixa, idxFaixa) => {
-                                return (
-                                  <tr
-                                    className="table-head-items"
-                                    key={idxFaixa}
-                                  >
-                                    <th className="col-8">
-                                      Alunos Matriculados:{" "}
-                                      {faixa.matriculados_quando_criado}
-                                    </th>
-                                    <th className="col-4 text-center">
-                                      Quantidade: {faixa.quantidade_alunos}
-                                    </th>
-                                  </tr>
-                                );
-                              })}
-                            </thead>
-                            <tbody />
-                          </table>
-                        </div>
-                      </div>
-                    </div>
+                    )}
                   </Fragment>
                 );
               })}
