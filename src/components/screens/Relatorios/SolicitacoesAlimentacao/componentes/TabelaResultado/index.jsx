@@ -1,7 +1,119 @@
 import React from "react";
+import { AlteracaoBody } from "../AlteracaoBody";
+import { AlteracaoCEIBody } from "../AlteracaoCEIBody";
+import { AlteracaoCEMEIBody } from "../AlteracaoCEMEIBody";
+import { InclusaoBody } from "../InclusaoBody";
+import { InclusaoCEIBody } from "../InclusaoCEIBody";
+import { InclusaoCEMEIBody } from "../InclusaoCEMEIBody";
+import { InclusaoContiniuaBody } from "../InclusaoContinuaBody";
 
 export const TabelaResultado = ({ ...props }) => {
-  const { solicitacoes, filtros } = props;
+  const { solicitacoes, filtros, resultadoPaginado } = props;
+
+  const mapComponentePorSolicitacao = (solicitacao, item, index) => {
+    switch (item.tipo_doc) {
+      case "INC_ALIMENTA":
+        return (
+          <InclusaoBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "INC_ALIMENTA_CONTINUA":
+        return (
+          <InclusaoContiniuaBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "INC_ALIMENTA_CEI":
+        return (
+          <InclusaoCEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "INC_ALIMENTA_CEMEI":
+        return (
+          <InclusaoCEMEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "ALT_CARDAPIO":
+        return (
+          <AlteracaoBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "ALT_CARDAPIO_CEI":
+        return (
+          <AlteracaoCEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "ALT_CARDAPIO_CEMEI":
+        return (
+          <AlteracaoCEMEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "KIT_LANCHE_AVULSA":
+      case "KIT_LANCHE_UNIFICADA":
+      case "KIT_LANCHE_AVULSA_CEI":
+      case "SUSP_ALIMENTACAO":
+      case "SUSP_ALIMENTACAO_CEI":
+      case "INV_CARDAPIO":
+      default:
+        return (
+          <tr className="table-body-items" key={index}>
+            <td>
+              {item.dre_iniciais} - {item.lote_nome}
+            </td>
+            {filtros.status && filtros.status === "EM_ANDAMENTO" ? (
+              <td>{item.terceirizada_nome}</td>
+            ) : (
+              <td>{item.escola_nome}</td>
+            )}
+            <td>{item.desc_doc}</td>
+            <td className="text-center">
+              {item.data_evento}{" "}
+              {item.data_evento_fim && item.data_evento !== item.data_evento_fim
+                ? `- ${item.data_evento_fim}`
+                : ""}
+            </td>
+            <td className="text-center">
+              {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
+            </td>
+            <td />
+          </tr>
+        );
+    }
+  };
 
   return solicitacoes.length ? (
     <div className="row">
@@ -27,33 +139,16 @@ export const TabelaResultado = ({ ...props }) => {
             </tr>
           </thead>
           <tbody>
-            {solicitacoes.map((solicitacao, index) => {
-              return (
-                <tr className="table-body-items" key={index}>
-                  <td>
-                    {solicitacao.dre_iniciais} - {solicitacao.lote_nome}
-                  </td>
-                  {filtros.status && filtros.status === "EM_ANDAMENTO" ? (
-                    <td>{solicitacao.terceirizada_nome}</td>
-                  ) : (
-                    <td>{solicitacao.escola_nome}</td>
-                  )}
-                  <td>{solicitacao.desc_doc}</td>
-                  <td className="text-center">
-                    {solicitacao.data_evento}{" "}
-                    {solicitacao.data_evento_fim &&
-                    solicitacao.data_evento !== solicitacao.data_evento_fim
-                      ? `- ${solicitacao.data_evento_fim}`
-                      : ""}
-                  </td>
-                  <td className="text-center">
-                    {solicitacao.numero_alunos !== 0
-                      ? solicitacao.numero_alunos
-                      : "-"}
-                  </td>
-                  <td />
-                </tr>
+            {resultadoPaginado.map((item, index) => {
+              const solicitacao = solicitacoes.find(
+                solicitacao => solicitacao.uuid === item.uuid
               );
+              const componente = mapComponentePorSolicitacao(
+                solicitacao,
+                item,
+                index
+              );
+              return componente;
             })}
           </tbody>
         </table>

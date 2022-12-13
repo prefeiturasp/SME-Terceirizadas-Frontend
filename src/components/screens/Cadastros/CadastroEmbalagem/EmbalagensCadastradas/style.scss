@@ -27,7 +27,7 @@
         }
         width: auto;
         &:last-child {
-          max-width: 150px;
+          max-width: 130px;
 
           input {
             width: 80%;
@@ -43,6 +43,10 @@
         &:first-child {
           padding-left: 20px;
           font-weight: bold;
+        }
+        .fa-edit {
+          color: $green;
+          font-size: 18px;
         }
       }
 
