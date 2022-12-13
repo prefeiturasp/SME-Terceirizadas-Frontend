@@ -43,7 +43,8 @@ import { Spin } from "antd";
 import {
   formataPayload,
   totalAlunosInputPorPeriodo,
-  totalAlunosPorPeriodo
+  totalAlunosPorPeriodo,
+  validaForm
 } from "./helper";
 import Botao from "components/Shareable/Botao";
 import {
@@ -113,6 +114,11 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
   };
 
   const onSubmit = async (values, form) => {
+    const erro = validaForm(values);
+    if (erro) {
+      toastError(erro);
+      return;
+    }
     if (!values.uuid) {
       const response = await escolaCriarSolicitacaoDeAlteracaoCardapio(
         formataPayload(values),
@@ -303,6 +309,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     await form.change("substituicoes", substituicoes);
     await form.change("data", solicitacao.data);
     await form.change("uuid", solicitacao.uuid);
+    await form.change("id_externo", solicitacao.id_externo);
     await form.change("observacao", solicitacao.observacao);
   };
 
@@ -709,7 +716,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
                         <Botao
-                          texto="Enviar inclusão"
+                          texto="Enviar"
                           type={BUTTON_TYPE.BUTTON}
                           disabled={submitting}
                           onClick={() => {

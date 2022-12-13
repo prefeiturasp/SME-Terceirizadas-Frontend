@@ -79,11 +79,13 @@ export const formataPayload = values => {
   values_.substituicoes.forEach(substituicao => {
     substituicao.periodo_escolar = substituicao.uuid;
     substituicao.faixas_etarias.forEach(faixa => {
-      faixas_etarias.push({
-        faixa_etaria: faixa.faixa_etaria.uuid,
-        quantidade: substituicao.faixas[faixa.faixa_etaria.uuid],
-        matriculados_quando_criado: faixa.count
-      });
+      if (substituicao.faixas[faixa.faixa_etaria.uuid]) {
+        faixas_etarias.push({
+          faixa_etaria: faixa.faixa_etaria.uuid,
+          quantidade: substituicao.faixas[faixa.faixa_etaria.uuid],
+          matriculados_quando_criado: faixa.count
+        });
+      }
     });
     substituicao.faixas_etarias = faixas_etarias;
     if (typeof substituicao.tipos_alimentacao_de === "string") {
@@ -96,4 +98,18 @@ export const formataPayload = values => {
   });
 
   return values_;
+};
+
+export const validaForm = values => {
+  let erro = "";
+  if (!values.substituicoes.find(subs => subs.checked)) {
+    erro = "É necessário selecionar pelo menos um período";
+  }
+  if (
+    !values.substituicoes.filter(subs => subs.checked).find(subs => subs.faixas)
+  ) {
+    erro =
+      "Ao selecionar um período, é necessário preencher ao menos uma faixa etária";
+  }
+  return erro;
 };
