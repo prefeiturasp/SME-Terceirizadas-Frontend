@@ -62,6 +62,7 @@ class DashboardDRE extends Component {
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+    this.prepararParametros = this.prepararParametros.bind(this);
   }
 
   alterarCollapse() {
@@ -165,11 +166,23 @@ class DashboardDRE extends Component {
     if (values.titulo && values.titulo.length > 2) {
       this.getSolicitacoesAsync({
         busca: values.titulo,
-        ...PARAMS
+        ...this.prepararParametros(values)
       });
     } else {
-      this.getSolicitacoesAsync(PARAMS);
+      this.getSolicitacoesAsync(this.prepararParametros(values));
     }
+  }
+
+  prepararParametros(values) {
+    const params = PARAMS;
+    params["tipo_solicitacao"] = values.tipo_solicitacao;
+    params["data_evento"] =
+      values.data_evento &&
+      values.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
+    return params;
   }
 
   render() {
@@ -285,6 +298,7 @@ class DashboardDRE extends Component {
             </div>
           </div>
           <CardBody
+            exibirFiltrosDataEventoETipoSolicitacao={true}
             titulo={"Acompanhamento solicitações"}
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}

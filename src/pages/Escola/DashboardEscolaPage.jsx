@@ -5,10 +5,12 @@ import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "./constants";
 
 export default () => (
-  <div>
-    <Page>
-      <Breadcrumb home={HOME} />
-      <DashboardEscola />
-    </Page>
-  </div>
+  <>
+    <div>
+      <Page>
+        <Breadcrumb home={HOME} />
+        <DashboardEscola />
+      </Page>
+    </div>
+  </>
 );
