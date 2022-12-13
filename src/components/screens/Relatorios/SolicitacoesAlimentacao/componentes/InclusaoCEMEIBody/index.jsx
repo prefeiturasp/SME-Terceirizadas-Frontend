@@ -36,7 +36,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
       <td>
         {item.dre_iniciais} - {item.lote_nome}
       </td>
-      {filtros.status && filtros.status === "EM_ANDAMENTO" ? (
+      {filtros.status && filtros.status === "RECEBIDAS" ? (
         <td>{item.terceirizada_nome}</td>
       ) : (
         <td>{item.escola_nome}</td>
@@ -137,7 +137,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                         </label>
                       </div>
                     </div>
-                    {faixasCEI.lenght > 0 && (
+                    {faixasCEI.length ? (
                       <div className="row">
                         <div className="col-12">
                           <div className="container-fluid pr-0">
@@ -197,8 +197,10 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                           </div>
                         </div>
                       </div>
+                    ) : (
+                      <></>
                     )}
-                    {faixasEMEI.lenght > 0 && (
+                    {faixasEMEI.length ? (
                       <div className="row">
                         <div className="col-12">
                           <div className="container-fluid pr-0">
@@ -241,6 +243,8 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                           </div>
                         </div>
                       </div>
+                    ) : (
+                      <></>
                     )}
                   </Fragment>
                 );
