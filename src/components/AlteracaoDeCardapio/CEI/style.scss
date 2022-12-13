@@ -62,9 +62,15 @@
     }
   }
 
+  div.tabela-header-periodos {
+    font-size: 14px;
+    color: $gray;
+  }
+
   table.faixas-etarias-cei {
     width: 98%;
     margin-left: 1em;
+    font-size: 14px;
 
     thead {
       tr {

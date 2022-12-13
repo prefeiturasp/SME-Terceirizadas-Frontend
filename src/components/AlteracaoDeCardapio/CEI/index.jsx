@@ -131,6 +131,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
           toastSuccess("Alteração do tipo de alimentação criada com sucesso!");
         }
         refresh(form);
+      } else {
+        toastError(getError(response.data));
       }
     } else {
       const response = await escolaAlterarSolicitacaoDeAlteracaoCardapio(
@@ -147,6 +149,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
           );
         }
         refresh(form);
+      } else {
+        toastError(getError(response.data));
       }
     }
   };
@@ -442,10 +446,10 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                     </div>
                     {values.motivo && values.data && (
                       <>
-                        <div className="row mt-3">
+                        <div className="row tabela-header-periodos mt-3">
                           <div className="col-4">Período</div>
-                          <div className="col-4">Alterar alimentação de</div>
-                          <div className="col-4">Para alimentação</div>
+                          <div className="col-4">Alterar alimentação de:</div>
+                          <div className="col-4">Para alimentação:</div>
                         </div>
                         <FieldArray name="substituicoes">
                           {({ fields }) =>
