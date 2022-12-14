@@ -119,7 +119,8 @@ import {
   exibirLancamentoMedicaoInicial,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
-  usuarioEhCodaeDilog
+  usuarioEhCodaeDilog,
+  usuarioEhFornecedor
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1526,7 +1527,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
