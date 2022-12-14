@@ -22,7 +22,7 @@ export const CorpoRelatorio = ({ ...props }) => {
   let totalMatriculados = 0;
   let totalQuantidadeAlunos = 0;
   const [imprimindo, setImprimindo] = useState(false);
-  const { dadosTabela, matriculados, solicitacao } = props;
+  const { dadosTabela, solicitacao } = props;
 
   const imprimirRelatorio = async () => {
     setImprimindo(true);
