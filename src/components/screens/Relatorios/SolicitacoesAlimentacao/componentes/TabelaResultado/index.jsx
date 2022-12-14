@@ -6,6 +6,10 @@ import { InclusaoBody } from "../InclusaoBody";
 import { InclusaoCEIBody } from "../InclusaoCEIBody";
 import { InclusaoCEMEIBody } from "../InclusaoCEMEIBody";
 import { InclusaoContiniuaBody } from "../InclusaoContinuaBody";
+import { KitLancheAvulsaBody } from "../KitLancheAvulsaBody";
+import { KitLancheAvulsaCEIBody } from "../KitLancheAvulsaCEIBody";
+import { KitLancheAvulsaCEMEIBody } from "../KitLancheAvulsaCEMEIBody";
+import { KitLancheUnificadoBody } from "../KitLancheUnificadoBody";
 
 export const TabelaResultado = ({ ...props }) => {
   const { solicitacoes, filtros, resultadoPaginado } = props;
@@ -83,8 +87,45 @@ export const TabelaResultado = ({ ...props }) => {
           />
         );
       case "KIT_LANCHE_AVULSA":
-      case "KIT_LANCHE_UNIFICADA":
+        return (
+          <KitLancheAvulsaBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       case "KIT_LANCHE_AVULSA_CEI":
+        return (
+          <KitLancheAvulsaCEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "KIT_LANCHE_CEMEI":
+        return (
+          <KitLancheAvulsaCEMEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "KIT_LANCHE_UNIFICADA":
+        return (
+          <KitLancheUnificadoBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       case "SUSP_ALIMENTACAO":
       case "SUSP_ALIMENTACAO_CEI":
       case "INV_CARDAPIO":
