@@ -3,13 +3,15 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
 
 const CardBody = props => {
   const ehTerceirizada = usuarioEhTerceirizada();
+  const ehEscola = usuarioEhEscola();
+  const { exibirFiltrosDataEventoETipoSolicitacao } = props;
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
   const loadingDietas = props.loadingDietas || false;
@@ -31,6 +33,8 @@ const CardBody = props => {
                         props.listaLotes) ||
                       ehDashboardGestaoProduto
                         ? "col-3"
+                        : exibirFiltrosDataEventoETipoSolicitacao
+                        ? "col-3 px-0"
                         : "col-6"
                     }`}
                   >
@@ -39,36 +43,80 @@ const CardBody = props => {
                       Data: <span>{props.dataAtual}</span>
                     </p>
                   </div>
-                  <div
-                    className={`${
-                      ehTerceirizada && props.listaStatus && props.listaLotes
-                        ? "offset-3 col-6"
-                        : "offset-3 col-3"
-                    }`}
-                  >
-                    {loadingDietas && (
-                      <div>
-                        <Spin
-                          className="carregando-filtro"
-                          tip="Carregando Filtro..."
+                  {!ehEscola && (
+                    <div
+                      className={`${
+                        ehTerceirizada && props.listaStatus && props.listaLotes
+                          ? "offset-3 col-6"
+                          : exibirFiltrosDataEventoETipoSolicitacao
+                          ? "col-3"
+                          : "offset-3 col-3"
+                      }`}
+                    >
+                      {loadingDietas && (
+                        <div>
+                          <Spin
+                            className="carregando-filtro"
+                            tip="Carregando Filtro..."
+                          />
+                        </div>
+                      )}
+                      <Field
+                        className={
+                          exibirFiltrosDataEventoETipoSolicitacao
+                            ? "input-com-filtros-adicionais"
+                            : ""
+                        }
+                        component={InputText}
+                        name="titulo"
+                        placeholder={loadingDietas ? "" : "Pesquisar"}
+                        disabled={loadingDietas || filtrosDesabilitados}
+                      />
+                      <div className="warning-num-charac">
+                        * mínimo de 3 caracteres
+                      </div>
+                      <OnChange name="titulo">
+                        {(value, previous) => {
+                          props.onChange(values, previous);
+                        }}
+                      </OnChange>
+                    </div>
+                  )}
+                  {exibirFiltrosDataEventoETipoSolicitacao && (
+                    <>
+                      <div
+                        className={`${
+                          ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
+                        }`}
+                      >
+                        <Field
+                          component={Select}
+                          name="tipo_solicitacao"
+                          naoDesabilitarPrimeiraOpcao
+                          placeholder="Tipo de Solicitação"
+                          options={TIPOS_SOLICITACOES_OPTIONS}
                         />
                       </div>
-                    )}
-                    <Field
-                      component={InputText}
-                      name="titulo"
-                      placeholder={loadingDietas ? "" : "Pesquisar"}
-                      disabled={loadingDietas || filtrosDesabilitados}
-                    />
-                    <div className="warning-num-charac">
-                      * mínimo de 3 caracteres
-                    </div>
-                    <OnChange name="titulo">
-                      {(value, previous) => {
-                        props.onChange(values, previous);
-                      }}
-                    </OnChange>
-                  </div>
+                      <OnChange name="tipo_solicitacao">
+                        {() => {
+                          props.onChange(values);
+                        }}
+                      </OnChange>
+                      <div className="col-3 pl-0">
+                        <Field
+                          name="data_evento"
+                          minDate={null}
+                          component={InputComData}
+                          placeholder="Data do evento"
+                        />
+                        <OnChange name="data_evento">
+                          {() => {
+                            props.onChange(values);
+                          }}
+                        </OnChange>
+                      </div>
+                    </>
+                  )}
                   {ehDashboardGestaoProduto && (
                     <div className="col-3">
                       <Field

@@ -20,7 +20,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
       <td>
         {item.dre_iniciais} - {item.lote_nome}
       </td>
-      {filtros.status && filtros.status === "EM_ANDAMENTO" ? (
+      {filtros.status && filtros.status === "RECEBIDAS" ? (
         <td>{item.terceirizada_nome}</td>
       ) : (
         <td>{item.escola_nome}</td>
@@ -112,8 +112,8 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                         </div>
                         <div className="row mt-3">
                           <div className="col-12">
-                            <p>Alteração do tipo de Alimentação de:</p>
                             <p>
+                              Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_de
                                   .map(ta => ta.nome)
@@ -122,8 +122,8 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                             </p>
                           </div>
                           <div className="col-12">
-                            <p>Alteração do tipo de Alimentação de:</p>
                             <p>
+                              Alteração do tipo de Alimentação de:
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_para
                                   .map(ta => ta.nome)
@@ -191,8 +191,8 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                         </div>
                         <div className="row mt-3">
                           <div className="col-12">
-                            <p>Alteração do tipo de Alimentação de:</p>
                             <p>
+                              Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoEMEI.tipos_alimentacao_de
                                   .map(ta => ta.nome)
@@ -201,8 +201,8 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                             </p>
                           </div>
                           <div className="col-12">
-                            <p>Alteração do tipo de Alimentação de:</p>
                             <p>
+                              Alteração do tipo de Alimentação de:{" "}
                               <b>
                                 {substituicaoEMEI.tipos_alimentacao_para
                                   .map(ta => ta.nome)
