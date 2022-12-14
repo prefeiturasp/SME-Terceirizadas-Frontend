@@ -4,9 +4,10 @@ import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero, required } from "helpers/fieldValidators";
-import { composeValidators } from "helpers/utilities";
+import { agregarDefault, composeValidators } from "helpers/utilities";
 import { formatarParaMultiselect } from "helpers/utilities";
 import { totalMatriculados, totalSolicitacao } from "../helpers";
+import Select from "components/Shareable/Select";
 
 export const TabelaFaixasCEMEI = ({
   values,
@@ -17,7 +18,8 @@ export const TabelaFaixasCEMEI = ({
   alimentosCEI,
   alimentosEMEI,
   substitutosCEI,
-  substitutosEMEI
+  substitutosEMEI,
+  ehMotivoRPL
 }) => {
   const periodoCEI = vinculos.find(
     vinculo =>
@@ -101,20 +103,36 @@ export const TabelaFaixasCEMEI = ({
                 <div className=" alunos-label">Alunos CEI</div>
               </div>
               <div className="col-4">
-                <Field
-                  label="Alterar alimentação de:"
-                  component={MultiSelect}
-                  disableSearch
-                  name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
-                  multiple
-                  options={formatarParaMultiselect(
-                    alimentosCEI.find(
-                      v => v.periodo_escolar.nome === periodo.nome
-                    ).tipos_alimentacao
-                  )}
-                  nomeDoItemNoPlural="Alimentos"
-                  validate={totalFrequenciaCEI > 0 && required}
-                />
+                {ehMotivoRPL(values) && (
+                  <Field
+                    label="Alterar alimentação de:"
+                    component={Select}
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
+                    options={agregarDefault(
+                      alimentosCEI.find(
+                        v => v.periodo_escolar.nome === periodo.nome
+                      ).tipos_alimentacao
+                    )}
+                    naoDesabilitarPrimeiraOpcao
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
+                {!ehMotivoRPL(values) && (
+                  <Field
+                    label="Alterar alimentação de:"
+                    component={MultiSelect}
+                    disableSearch
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
+                    multiple
+                    options={formatarParaMultiselect(
+                      alimentosCEI.find(
+                        v => v.periodo_escolar.nome === periodo.nome
+                      ).tipos_alimentacao
+                    )}
+                    nomeDoItemNoPlural="Alimentos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
                 <OnChange
                   name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
                 >

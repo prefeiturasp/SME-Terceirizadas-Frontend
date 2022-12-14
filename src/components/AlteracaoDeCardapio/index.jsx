@@ -28,7 +28,7 @@ import {
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
-  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+  getRascunhosAlteracaoTipoAlimentacao,
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -401,9 +401,7 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
-      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-    )
+    getRascunhosAlteracaoTipoAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL)
       .then(response => {
         alteracaoCardapioList =
           response.data.results.length > 0 ? response.data.results : [];
