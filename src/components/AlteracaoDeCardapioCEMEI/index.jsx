@@ -81,6 +81,17 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     }
   };
 
+  const ehMotivoRPL = values => {
+    return (
+      motivos.find(
+        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+      ) &&
+      motivos.find(
+        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+      ).uuid === values.motivo
+    );
+  };
+
   const onSubmit = async (values, form) => {
     const values_ = deepCopy(values);
     const erro = validarSubmit(values_);
@@ -341,10 +352,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunho = async (form, alteracao) => {
-    await form.change("uuid", alteracao.uuid);
-    await form.change("id_externo", alteracao.id_externo);
     const alteracao_ = deepCopy(alteracao);
     await carregarRascunhoNormal(form, alteracao_);
+    await form.change("id_externo", alteracao.id_externo);
     setUuid(alteracao.uuid);
   };
 
@@ -434,7 +444,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
               </div>
             )}
             <div className="mt-2 page-title">
-              {values.uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
+              {values.uuid
+                ? `Solicitação # ${values.id_externo}`
+                : "Nova Solicitação"}
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
@@ -554,6 +566,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       alimentosEMEI={alimentosEMEI}
                       substitutosCEI={substitutosCEI}
                       substitutosEMEI={substitutosEMEI}
+                      ehMotivoRPL={ehMotivoRPL}
                     />
                   );
                 })}
