@@ -459,6 +459,12 @@ export const usuarioEhDistribuidora = () => {
   );
 };
 
+export const usuarioEhFornecedor = () => {
+  return [PERFIL.ADMINISTRADOR_FORNECEDOR].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
@@ -538,7 +544,8 @@ export const usuarioEhQualquerCODAE = () => {
 export const usuarioEhTerceirizada = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_FORNECEDOR
   );
 };
 

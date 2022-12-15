@@ -11,10 +11,17 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import { usuarioEhFornecedor } from "helpers/utilities";
 
 const FORM_NAME = "buscaCronogramaDeEntrega";
 
-export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
+export default ({
+  setFiltros,
+  setCronogramas,
+  setTotal,
+  inicioResultado,
+  armazens
+}) => {
   const onSubmit = async values => {
     const filtros = { ...values };
     if (filtros.motivos) {
@@ -22,6 +29,44 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
     }
     setFiltros({ ...filtros });
   };
+
+  const options_status = usuarioEhFornecedor()
+    ? [
+        {
+          value: "ENVIADO_AO_FORNECEDOR",
+          label: "Recebido"
+        },
+        {
+          value: "ALTERACAO_FORNECEDOR",
+          label: "Alteração Fornecedor"
+        },
+        {
+          value: "VALIDADO_FORNECEDOR",
+          label: "Validado Fornecedor"
+        },
+        { value: "ENTREGA_CONFIRMADA", label: "Entrega Confirmada" }
+      ]
+    : [
+        {
+          value: "ENVIADO_AO_FORNECEDOR",
+          label: "Enviado ao Fornecedor"
+        },
+        {
+          value: "ALTERACAO_CODAE",
+          label: "Alteração CODAE"
+        },
+        { value: "APROVADO", label: "Aprovado" },
+        { value: "REPROVADO", label: "Reprovado" },
+        {
+          value: "ALTERACAO_FORNECEDOR",
+          label: "Alteração Fornecedor"
+        },
+        {
+          value: "VALIDADO_FORNECEDOR",
+          label: "Validado Fornecedor"
+        },
+        { value: "RASCUNHO", label: "Rascunho" }
+      ];
 
   return (
     <div className="filtros-cronograma-de-entrega">
@@ -37,35 +82,65 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
                   label="Produto"
                   name="nome_produto"
                   placeholder="Digite o produto"
-                  className="input-busca-produto"
+                  className="input-busca-cronograma"
                 />
               </div>
-              <div className="col-6">
-                <Field
-                  component={InputText}
-                  label="Empresa"
-                  name="nome_empresa"
-                  placeholder="Digite o nome da empresa"
-                  className="input-busca-produto"
-                />
-              </div>
+              {usuarioEhFornecedor() ? (
+                <div className="col-6">
+                  <Field
+                    label="Armazém"
+                    component={MultiSelect}
+                    disableSearch
+                    name="armazem"
+                    multiple
+                    nomeDoItemNoPlural="armazéns"
+                    placeholder="Selecione o Armazém"
+                    options={armazens}
+                  />
+                </div>
+              ) : (
+                <div className="col-6">
+                  <Field
+                    component={InputText}
+                    label="Empresa"
+                    name="nome_empresa"
+                    placeholder="Digite o nome da empresa"
+                    className="input-busca-cronograma"
+                  />
+                </div>
+              )}
             </div>
             <div className="row mt-3">
-              <div className="col-3">
+              {!usuarioEhFornecedor() && (
+                <div className="col-3">
+                  <Field
+                    component={InputText}
+                    label="N° do Cronograma"
+                    name="numero"
+                    placeholder="Digite o n° do Cronograma"
+                    className="input-busca-cronograma"
+                  />
+                </div>
+              )}
+              <div className={`col-${usuarioEhFornecedor() ? "6" : "3"}`}>
                 <Field
-                  component={InputText}
-                  label="N° do Cronograma"
-                  name="numero"
-                  placeholder="Digite o n° do Cronograma"
-                  className="input-busca-produto"
+                  label="Status"
+                  component={MultiSelect}
+                  disableSearch
+                  name="status"
+                  multiple
+                  nomeDoItemNoPlural="status"
+                  pluralFeminino
+                  options={options_status}
                 />
               </div>
+
               <div className="col-3">
                 <Field
                   component={InputComData}
                   label="Período de Recebimento"
                   name="data_inicial"
-                  className="data-inicial"
+                  className="data-field-cronograma"
                   placeholder="De"
                   minDate={null}
                   maxDate={
@@ -80,6 +155,7 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
                   component={InputComData}
                   label="&nbsp;"
                   name="data_final"
+                  className="data-field-cronograma"
                   popperPlacement="bottom-end"
                   placeholder="Até"
                   minDate={
@@ -88,38 +164,6 @@ export default ({ setFiltros, setCronogramas, setTotal, inicioResultado }) => {
                       : null
                   }
                   maxDate={null}
-                />
-              </div>
-              <div className="col-3">
-                <Field
-                  label="Status"
-                  component={MultiSelect}
-                  disableSearch
-                  name="status"
-                  multiple
-                  nomeDoItemNoPlural="classificações"
-                  pluralFeminino
-                  options={[
-                    {
-                      value: "ENVIADO_AO_FORNECEDOR",
-                      label: "Enviado ao Fornecedor"
-                    },
-                    {
-                      value: "ALTERACAO_CODAE",
-                      label: "Alteração CODAE"
-                    },
-                    { value: "APROVADO", label: "Aprovado" },
-                    { value: "REPROVADO", label: "Reprovado" },
-                    {
-                      value: "ALTERACAO_FORNECEDOR",
-                      label: "Alteração Fornecedor"
-                    },
-                    {
-                      value: "VALIDADO_FORNECEDOR",
-                      label: "Validado Fornecedor"
-                    },
-                    { value: "RASCUNHO", label: "Rascunho" }
-                  ]}
                 />
               </div>
             </div>
