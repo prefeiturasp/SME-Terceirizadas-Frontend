@@ -105,7 +105,6 @@ export default () => {
   ] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formValuesAtualizados, setFormValuesAtualizados] = useState(null);
-  // const [values, setFormValuesAtualizados] = useState(null);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -837,7 +836,7 @@ export default () => {
                 </div>
                 <div className="weeks-tabs mb-2">
                   <Tabs
-                    onChange={key => onChangeSemana(formValuesAtualizados, key)} //
+                    onChange={key => onChangeSemana(formValuesAtualizados, key)}
                     type="card"
                   >
                     {Array.apply(null, {
