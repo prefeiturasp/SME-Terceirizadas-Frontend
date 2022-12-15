@@ -6,10 +6,13 @@ import { InclusaoBody } from "../InclusaoBody";
 import { InclusaoCEIBody } from "../InclusaoCEIBody";
 import { InclusaoCEMEIBody } from "../InclusaoCEMEIBody";
 import { InclusaoContiniuaBody } from "../InclusaoContinuaBody";
+import { InversaoCardapioBody } from "../InversaoCardapioBody";
 import { KitLancheAvulsaBody } from "../KitLancheAvulsaBody";
 import { KitLancheAvulsaCEIBody } from "../KitLancheAvulsaCEIBody";
 import { KitLancheAvulsaCEMEIBody } from "../KitLancheAvulsaCEMEIBody";
 import { KitLancheUnificadoBody } from "../KitLancheUnificadoBody";
+import { SuspensaoAlimentacaoBody } from "../SuspensaoAlimentacaoBody";
+import { SuspensaoAlimentacaoCEIBody } from "../SuspensaoAlimentacaoCEIBody";
 
 export const TabelaResultado = ({ ...props }) => {
   const { solicitacoes, filtros, resultadoPaginado } = props;
@@ -126,9 +129,36 @@ export const TabelaResultado = ({ ...props }) => {
             key={index}
           />
         );
-      case "SUSP_ALIMENTACAO":
-      case "SUSP_ALIMENTACAO_CEI":
       case "INV_CARDAPIO":
+        return (
+          <InversaoCardapioBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "SUSP_ALIMENTACAO":
+        return (
+          <SuspensaoAlimentacaoBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
+      case "SUSP_ALIMENTACAO_CEI":
+        return (
+          <SuspensaoAlimentacaoCEIBody
+            solicitacao={solicitacao}
+            item={item}
+            index={index}
+            filtros={filtros}
+            key={index}
+          />
+        );
       default:
         return (
           <tr className="table-body-items" key={index}>
