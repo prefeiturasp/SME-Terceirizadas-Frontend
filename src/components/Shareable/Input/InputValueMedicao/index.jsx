@@ -32,7 +32,7 @@ export const InputText = props => {
   let msgTooltip = "";
 
   const validacaoMeta = () => {
-    return meta && meta.touched && (meta.error || meta.warning);
+    return meta && (meta.error || meta.warning);
   };
 
   const validacaoFrequencia = () => {
