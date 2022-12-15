@@ -814,3 +814,10 @@ export const tipoStatus = () => {
     }
   ];
 };
+
+export const fimDoCalendario = () => {
+  const DEZEMBRO = 11;
+  return new Date().getMonth() === DEZEMBRO
+    ? new Date(new Date().getFullYear() + 1, 11, 31)
+    : new Date(new Date().getFullYear(), 11, 31);
+};

@@ -22,6 +22,7 @@ import {
 import "../Shareable/Checkbox/style.scss";
 import "./styles.scss";
 import CardMatriculados from "components/Shareable/CardMatriculados";
+import { fimDoCalendario } from "helpers/utilities";
 
 const ENTER = 13;
 
@@ -346,6 +347,7 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                     component={InputComData}
                     name={`data`}
                     minDate={proximos_dois_dias_uteis}
+                    maxDate={fimDoCalendario()}
                     required
                     validate={required}
                   />

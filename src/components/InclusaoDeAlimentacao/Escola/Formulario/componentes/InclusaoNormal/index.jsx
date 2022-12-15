@@ -17,8 +17,11 @@ import {
   numericInteger,
   required
 } from "helpers/fieldValidators";
-import { composeValidators, formatarParaMultiselect } from "helpers/utilities";
-import moment from "moment";
+import {
+  composeValidators,
+  fimDoCalendario,
+  formatarParaMultiselect
+} from "helpers/utilities";
 import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
@@ -44,9 +47,7 @@ export const DataInclusaoNormal = ({ ...props }) => {
               component={InputComData}
               name={`${name}.data`}
               minDate={proximosDoisDiasUteis}
-              maxDate={moment()
-                .endOf("year")
-                .toDate()}
+              maxDate={fimDoCalendario()}
               label="Dia"
               required
               validate={composeValidators(
