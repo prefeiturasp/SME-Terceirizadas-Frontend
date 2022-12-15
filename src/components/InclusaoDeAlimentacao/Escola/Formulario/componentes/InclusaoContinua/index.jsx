@@ -24,10 +24,10 @@ import {
   composeValidators,
   deepCopy,
   deepEqual,
+  fimDoCalendario,
   formatarParaMultiselect,
   getDataObj
 } from "helpers/utilities";
-import moment from "moment";
 import React from "react";
 import { Field } from "react-final-form";
 import { FieldArray } from "react-final-form-arrays";
@@ -49,9 +49,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
               required
               validate={required}
               minDate={proximosDoisDiasUteis}
-              maxDate={moment()
-                .endOf("year")
-                .toDate()}
+              maxDate={fimDoCalendario()}
             />
             <OnChange name={`${name}.data_inicial`}>
               {value => {
@@ -68,9 +66,7 @@ export const DatasInclusaoContinua = ({ ...props }) => {
                 values.inclusoes[index].data_inicial &&
                 getDataObj(values.inclusoes[index].data_inicial)
               }
-              maxDate={moment()
-                .endOf("year")
-                .toDate()}
+              maxDate={fimDoCalendario()}
               disabled={!values.inclusoes[index].data_inicial}
               name={`${name}.data_final`}
               label="Até"
