@@ -26,6 +26,7 @@ export const ModalLancheEmergencial = ({
           O lanche emergencial somente é previsto para os alunos da EMEI da
           CEMEI.
         </label>
+        <br />
         <label className="font-weight-bold">
           Para realizar a solicitação selecione a opção de alunos EMEI.
         </label>
