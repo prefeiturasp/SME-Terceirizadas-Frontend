@@ -17,7 +17,7 @@ export const ModalLancheEmergencial = ({
   };
 
   return (
-    <Modal dialogClassName="modal-50w" show={showModal} onHide={() => {}}>
+    <Modal dialogClassName="modal-50w" show={showModal} backdrop={"static"}>
       <Modal.Header>
         <Modal.Title>Lanche Emergencial</Modal.Title>
       </Modal.Header>
