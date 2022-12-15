@@ -2,7 +2,6 @@ import { Spin } from "antd";
 import CKEditorField from "components/Shareable/CKEditorField";
 import HTTP_STATUS from "http-status-codes";
 import { isEqual } from "lodash";
-import moment from "moment";
 import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -27,6 +26,7 @@ import {
   checaSeDataEstaEntre2e5DiasUteis,
   converterDDMMYYYYparaYYYYMMDD,
   escolaEhCei,
+  fimDoCalendario,
   getError
 } from "../../../helpers/utilities";
 import { getDietasAtivasInativasPorAluno } from "../../../services/dietaEspecial.service";
@@ -535,9 +535,7 @@ export class SolicitacaoDeKitLanche extends Component {
                     name="evento_data"
                     onBlur={event => this.validaDiasUteis(event.target.value)}
                     minDate={proximos_dois_dias_uteis}
-                    maxDate={moment()
-                      .endOf("year")
-                      .toDate()}
+                    maxDate={fimDoCalendario()}
                     required
                     validate={required}
                     onChange={value => this.validaDiasUteis(value)}

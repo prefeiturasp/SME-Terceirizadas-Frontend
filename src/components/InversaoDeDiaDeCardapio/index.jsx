@@ -13,6 +13,7 @@ import {
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   dateDelta,
+  fimDoCalendario,
   getError
 } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
@@ -33,6 +34,7 @@ import { InputComData } from "../Shareable/DatePicker";
 import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import { JS_DATE_NOVEMBRO } from "constants/shared";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -262,13 +264,17 @@ export class InversaoDeDiaDeCardapio extends Component {
                         label="Referência"
                         placeholder="Cardápio dia"
                         required
-                        validate={[required, deveSerNoAnoCorrente]}
+                        validate={required}
                         onBlur={event =>
                           this.validaDiasUteis(event.target.value)
                         }
                         onChange={value => this.validaDiasUteis(value)}
                         minDate={proximos_dois_dias_uteis}
-                        maxDate={dateDelta(60)}
+                        maxDate={
+                          new Date().getMonth() === JS_DATE_NOVEMBRO
+                            ? fimDoCalendario()
+                            : dateDelta(60)
+                        }
                       />
                     </div>
                     <div className="col-md-12 col-lg-2 for-span">
@@ -283,13 +289,17 @@ export class InversaoDeDiaDeCardapio extends Component {
                         label="Aplicar em"
                         placeholder="Cardápio dia"
                         required
-                        validate={[required, deveSerNoAnoCorrente]}
+                        validate={required}
                         onBlur={event =>
                           this.validaDiasUteis(event.target.value)
                         }
                         onChange={value => this.validaDiasUteis(value)}
                         minDate={proximos_dois_dias_uteis}
-                        maxDate={dateDelta(60)}
+                        maxDate={
+                          new Date().getMonth() === JS_DATE_NOVEMBRO
+                            ? fimDoCalendario()
+                            : dateDelta(60)
+                        }
                       />
                     </div>
                   </div>

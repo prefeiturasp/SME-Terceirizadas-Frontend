@@ -15,7 +15,6 @@ import {
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { Rascunhos } from "../Rascunhos";
 import Select from "components/Shareable/Select";
-import moment from "moment";
 import { InputComData } from "components/Shareable/DatePicker";
 import {
   maxValue,
@@ -29,6 +28,7 @@ import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
   deepCopy,
+  fimDoCalendario,
   getError
 } from "helpers/utilities";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
@@ -413,9 +413,7 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           component={InputComData}
                           name="data"
                           minDate={proximosDoisDiasUteis}
-                          maxDate={moment()
-                            .endOf("year")
-                            .toDate()}
+                          maxDate={fimDoCalendario()}
                           label="Alterar dia"
                           required
                           validate={required}

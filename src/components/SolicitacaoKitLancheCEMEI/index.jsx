@@ -8,9 +8,9 @@ import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
   deepCopy,
+  fimDoCalendario,
   getError
 } from "helpers/utilities";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
@@ -251,9 +251,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       label="Data do passeio"
                       name="data"
                       minDate={proximosDoisDiasUteis}
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                       required
                       validate={required}
                     />

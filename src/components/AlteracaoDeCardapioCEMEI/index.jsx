@@ -18,7 +18,8 @@ import {
   agregarDefault,
   deepCopy,
   getError,
-  getDataObj
+  getDataObj,
+  fimDoCalendario
 } from "helpers/utilities";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 import { required } from "helpers/fieldValidators";
@@ -499,9 +500,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           ? moment().toDate()
                           : proximosDoisDiasUteis
                       }
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
                     />
@@ -523,9 +522,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={
                         maximo5DiasUteis
                           ? proximosCincoDiasUteis
-                          : moment()
-                              .endOf("year")
-                              .toDate()
+                          : fimDoCalendario()
                       }
                     />
                   </div>
@@ -546,9 +543,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={
                         maximo5DiasUteis
                           ? proximosCincoDiasUteis
-                          : moment()
-                              .endOf("year")
-                              .toDate()
+                          : fimDoCalendario()
                       }
                     />
                   </div>

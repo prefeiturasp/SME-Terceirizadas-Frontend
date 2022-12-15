@@ -24,6 +24,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  fimDoCalendario,
   getError
 } from "../../helpers/utilities";
 import ModalDataPrioritaria from "../Shareable/ModalDataPrioritaria";
@@ -324,6 +325,7 @@ const SolicitacaoUnificada = ({
                         component={InputComData}
                         name="data"
                         minDate={proximosDoisDiasUteis}
+                        maxDate={fimDoCalendario()}
                         label="Dia"
                         className="form-control"
                         validate={required}
