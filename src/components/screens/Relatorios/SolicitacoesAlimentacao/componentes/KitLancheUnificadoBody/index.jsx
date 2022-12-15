@@ -46,7 +46,7 @@ export const KitLancheUnificadoBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-4">
-                <p>No Total de Kits::</p>
+                <p>No Total de Kits:</p>
                 <p>
                   <b>{solicitacao.total_kit_lanche}</b>
                 </p>
