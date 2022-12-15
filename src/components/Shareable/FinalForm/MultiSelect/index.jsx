@@ -16,6 +16,7 @@ export default ({
   helpText,
   nomeDoItemNoPlural,
   pluralFeminino,
+  placeholder,
   ...props
 }) => {
   const allItemsAreSelectedText = `${
@@ -71,7 +72,7 @@ export default ({
           }}
           valueRenderer={(selected, options) => {
             if (selected.length === 0) {
-              return "Selecione";
+              return `${placeholder ? placeholder : "Selecione"}`;
             }
             if (selected.length === 1) {
               return selected.value;
