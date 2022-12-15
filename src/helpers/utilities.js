@@ -1,7 +1,11 @@
 import moment from "moment";
 import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
-import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
+import {
+  JS_DATE_DEZEMBRO,
+  statusEnum,
+  TIPO_SOLICITACAO
+} from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
@@ -816,8 +820,7 @@ export const tipoStatus = () => {
 };
 
 export const fimDoCalendario = () => {
-  const DEZEMBRO = 11;
-  return new Date().getMonth() === DEZEMBRO
+  return new Date().getMonth() === JS_DATE_DEZEMBRO
     ? new Date(new Date().getFullYear() + 1, 11, 31)
     : new Date(new Date().getFullYear(), 11, 31);
 };
