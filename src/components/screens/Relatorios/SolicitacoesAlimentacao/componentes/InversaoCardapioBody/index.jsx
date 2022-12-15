@@ -40,13 +40,13 @@ export const InversaoCardapioBody = ({ ...props }) => {
               <div className="col-4">
                 <p>Substituição De:</p>
                 <p>
-                  <b>{solicitacao.data_de_inversao}</b>
+                  <b>{solicitacao.data_de}</b>
                 </p>
               </div>
               <div className="col-4">
                 <p>Substituição Para:</p>
                 <p>
-                  <b>{solicitacao.data_para_inversao}</b>
+                  <b>{solicitacao.data_para}</b>
                 </p>
               </div>
               <div className="col-4">
