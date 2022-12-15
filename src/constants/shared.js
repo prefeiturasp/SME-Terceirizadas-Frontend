@@ -13,8 +13,8 @@ export const DOIS_MB = 2097152;
 export const DEZ_MB = 10485760;
 export const TODOS = "TODOS";
 
-export const JS_DATE_NOVEMBRO = 11;
-export const JS_DATE_DEZEMBRO = 12;
+export const JS_DATE_NOVEMBRO = 10;
+export const JS_DATE_DEZEMBRO = 11;
 
 export const PERFIL = {
   DIRETOR: `"DIRETOR"`,
