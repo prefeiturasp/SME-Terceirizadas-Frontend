@@ -29,9 +29,10 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
     solicitacao.solicitacao_cei && solicitacao.solicitacao_cei.kits
       ? solicitacao.solicitacao_cei.kits.length
       : 0;
+
   const numeroKitsEMEI =
-    solicitacao.solicitacao_emei && solicitacao.solicitacao_cei.kits
-      ? solicitacao.solicitacao_cei.kits.length
+    solicitacao.solicitacao_emei && solicitacao.solicitacao_emei.kits
+      ? solicitacao.solicitacao_emei.kits.length
       : 0;
   const numero_total_kits =
     (numeroKitsCEI + numeroKitsEMEI) * (total_CEI + total_EMEI);
