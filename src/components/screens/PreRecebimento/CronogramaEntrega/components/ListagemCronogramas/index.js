@@ -8,9 +8,22 @@ import {
   PRE_RECEBIMENTO,
   EDITAR
 } from "configs/constants";
-import { usuarioEhCronogramaCriacaoEdicao } from "helpers/utilities";
+import {
+  usuarioEhCronogramaCriacaoEdicao,
+  usuarioEhFornecedor
+} from "helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
+  const statusValue = status => {
+    if (usuarioEhFornecedor()) {
+      if (status === "Enviado ao Fornecedor") {
+        return "Recebido";
+      }
+    } else {
+      return status;
+    }
+  };
+
   return (
     <section className="resultado-cronograma-de-entrega">
       <header>Resultado de Pesquisa</header>
@@ -23,11 +36,11 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
           <div>Status</div>
           <div>Ações</div>
         </div>
-        {cronogramas.map(cronograma => {
+        {cronogramas.map((cronograma, index) => {
           const bordas =
             ativos && ativos.includes(cronograma.uuid) ? "desativar-borda" : "";
           return (
-            <>
+            <div key={`${cronograma.numero}_${index}`}>
               <div className="grid-table body-table">
                 <div className={`${bordas}`}>{cronograma.numero}</div>
                 <div className={`${bordas}`}>{cronograma.nome_produto}</div>
@@ -39,36 +52,43 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                     ? cronograma.armazem.nome_fantasia
                     : undefined}
                 </div>
-                <div className={`${bordas}`}>{cronograma.status}</div>
                 <div className={`${bordas}`}>
-                  {cronograma.status !== "Rascunho" ? (
+                  {statusValue(cronograma.status)}
+                </div>
+
+                <div className={`${bordas}`}>
+                  {!usuarioEhFornecedor() && (
                     <>
-                      <NavLink
-                        className="float-left"
-                        to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-                          cronograma.uuid
-                        }`}
-                      >
-                        <span className="link-acoes green">Detalhar</span>
-                      </NavLink>
-                    </>
-                  ) : (
-                    <>
-                      {usuarioEhCronogramaCriacaoEdicao() && (
-                        <NavLink
-                          className="float-left"
-                          to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
-                            cronograma.uuid
-                          }`}
-                        >
-                          <span className="link-acoes green">Editar</span>
-                        </NavLink>
+                      {cronograma.status !== "Rascunho" ? (
+                        <>
+                          <NavLink
+                            className="float-left"
+                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+                              cronograma.uuid
+                            }`}
+                          >
+                            <span className="link-acoes green">Detalhar</span>
+                          </NavLink>
+                        </>
+                      ) : (
+                        <>
+                          {usuarioEhCronogramaCriacaoEdicao() && (
+                            <NavLink
+                              className="float-left"
+                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
+                                cronograma.uuid
+                              }`}
+                            >
+                              <span className="link-acoes green">Editar</span>
+                            </NavLink>
+                          )}
+                        </>
                       )}
                     </>
                   )}
                 </div>
               </div>
-            </>
+            </div>
           );
         })}
       </article>
