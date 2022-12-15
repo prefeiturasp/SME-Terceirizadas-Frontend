@@ -28,10 +28,11 @@ export default ({
   values,
   rowName,
   valoresPeriodosLancamentos,
-  onSubmit
+  onSubmit,
+  dadosIniciais
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
-  const [showBotaoExcluir, setShowBotaoExcluir] = useState(true);
+  const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
 
   const formatarDataLancamento = () => {
     const mes = format(mesAnoConsiderado, "MM");
@@ -92,7 +93,6 @@ export default ({
       );
     }
     setDesabilitarBotaoSalvar(true);
-    setShowBotaoExcluir(true);
     closeModal();
   };
 
@@ -134,7 +134,6 @@ export default ({
       );
     }
     setDesabilitarBotaoSalvar(true);
-    setShowBotaoExcluir(true);
     closeModal();
   };
 
@@ -164,6 +163,8 @@ export default ({
             valor => String(valor.categoria_medicao) === String(categoria)
           ).length > 0
       );
+    } else {
+      setDesabilitarBotaoSalvar(true);
     }
   };
 
@@ -201,7 +202,11 @@ export default ({
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           ) &&
           valoresPeriodosLancamentos.length > 0 &&
-          showBotaoExcluir ? (
+          (showBotaoExcluir ||
+            (!!dadosIniciais[
+              `observacoes__dia_${dia}__categoria_${categoria}`
+            ] &&
+              !!values[`observacoes__dia_${dia}__categoria_${categoria}`])) ? (
             <Botao
               className="ml-3 float-left"
               texto="Excluir"
