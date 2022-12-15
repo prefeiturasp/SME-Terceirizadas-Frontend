@@ -380,9 +380,11 @@ const BuscaDietasForm = ({
       );
     }
     if (classificacoesSelecionadas.length) {
-      dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
-        classificacoesSelecionadas.includes(dieta.classificacao.id)
-      );
+      dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta => {
+        if (dieta.classificacao) {
+          return classificacoesSelecionadas.includes(dieta.classificacao.id);
+        }
+      });
     }
     if (protocolosSelecionados.length) {
       dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>

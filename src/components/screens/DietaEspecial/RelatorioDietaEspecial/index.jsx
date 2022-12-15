@@ -31,6 +31,8 @@ const RelatorioDietaEspecial = () => {
     []
   );
   const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
+  const [imprimindoPdf, setImprimindoPdf] = useState(false);
+  const [imprimindoExcel, setImprimindoExcel] = useState(false);
 
   const exportarXLSX = () => {
     const params = {
@@ -42,10 +44,14 @@ const RelatorioDietaEspecial = () => {
       data_inicial: dataInicial,
       data_final: dataFinal
     };
+    setImprimindoExcel(true);
     gerarExcelRelatorioDietaEspecial(params)
-      .then(() => {})
+      .then(() => {
+        setImprimindoExcel(false);
+      })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
+        setImprimindoExcel(false);
       });
   };
 
@@ -59,10 +65,14 @@ const RelatorioDietaEspecial = () => {
       data_inicial: dataInicial,
       data_final: dataFinal
     };
+    setImprimindoPdf(true);
     gerarPdfRelatorioDietaEspecial(params)
-      .then(() => {})
+      .then(() => {
+        setImprimindoPdf(false);
+      })
       .catch(error => {
         error.response.data.text().then(text => toastError(text));
+        setImprimindoPdf(false);
       });
   };
 
@@ -112,15 +122,31 @@ const RelatorioDietaEspecial = () => {
               <Fragment>
                 <Botao
                   texto="Exportar PDF"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  icon={BUTTON_ICON.FILE_PDF}
+                  style={
+                    imprimindoPdf
+                      ? BUTTON_STYLE.GREEN_OUTLINE
+                      : BUTTON_STYLE.GREEN
+                  }
+                  icon={
+                    imprimindoPdf ? BUTTON_ICON.LOADING : BUTTON_ICON.FILE_PDF
+                  }
+                  disabled={imprimindoPdf || imprimindoExcel}
                   className="float-right ml-3"
                   onClick={() => exportarPDF()}
                 />
                 <Botao
                   texto="Exportar XLSX"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  icon={BUTTON_ICON.FILE_EXCEL}
+                  style={
+                    imprimindoExcel
+                      ? BUTTON_STYLE.GREEN_OUTLINE
+                      : BUTTON_STYLE.GREEN
+                  }
+                  icon={
+                    imprimindoExcel
+                      ? BUTTON_ICON.LOADING
+                      : BUTTON_ICON.FILE_EXCEL
+                  }
+                  disabled={imprimindoPdf || imprimindoExcel}
                   className="float-right ml-3"
                   onClick={() => exportarXLSX()}
                 />
