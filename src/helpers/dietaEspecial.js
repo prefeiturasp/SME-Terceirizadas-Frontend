@@ -125,10 +125,10 @@ export const formFiltrosObtemDreEEscolasDietas = async (
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
-      const resposta2 = await getEscolasSimplissimaPorDiretoriaRegional(uuid);
-      setNomeEscolas(formataNomeComCodEol(resposta2));
-      setEscolas(formataUuidNomeComCodEol(resposta2));
+      const resposta2 = await getEscolasTrecTotal(uuid);
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
+      setNomeEscolas(formataNomeComCodEol(resposta2.data));
+      setEscolas(formataUuidNomeComCodEol(resposta2.data));
     } else {
       const respostaDre = await getDiretoriaregionalSimplissimaAxios();
       const respostaEscola = await getEscolasTrecTotal();
