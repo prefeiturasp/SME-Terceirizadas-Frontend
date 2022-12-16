@@ -26,7 +26,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
 
   return (
     <section className="resultado-cronograma-de-entrega">
-      <header>Resultado de Pesquisa</header>
+      <header>Resultados da Pesquisa</header>
       <article>
         <div className="grid-table header-table">
           <div>N° do Cronograma</div>
