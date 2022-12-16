@@ -140,7 +140,11 @@ export default () => {
   };
 
   const validaNomeLab = value => {
-    if (laboratorios && laboratorios.includes(value.toUpperCase()) && !edicao)
+    if (
+      laboratorios &&
+      laboratorios.includes(value.toUpperCase()) &&
+      (!edicao || laboratorio.nome_laboratorio !== value.toUpperCase())
+    )
       return "Laboratório já cadastrado";
     else return undefined;
   };
