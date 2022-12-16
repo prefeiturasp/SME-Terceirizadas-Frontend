@@ -21,7 +21,8 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhMedicao,
-  exibirGA
+  exibirGA,
+  usuarioEhDilogQualidadeOuCronograma
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -104,6 +105,7 @@ export const SidebarContent = () => {
   const exibirCadastros =
     usuarioEhLogistica() ||
     usuarioEhMedicao() ||
+    usuarioEhDilogQualidadeOuCronograma() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));

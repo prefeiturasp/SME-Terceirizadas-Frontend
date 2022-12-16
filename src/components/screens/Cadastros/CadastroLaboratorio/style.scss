@@ -1,0 +1,47 @@
+@import "../../../../styles/variables.scss";
+
+.card-cadastro-laboratorio {
+  .cadastro-laboratorio {
+    .card-title {
+      &.green {
+        color: $green !important;
+      }
+      font-weight: bold;
+      margin-top: 1.5rem;
+    }
+
+    hr {
+      margin-top: -0.5rem;
+
+      &:last-of-type {
+        margin-top: 1rem;
+      }
+    }
+    .texto-laboratorios {
+      margin: 12px;
+      padding: 12px;
+      border: 1px solid $green;
+      border-radius: 5px;
+    }
+
+    .texto-nao-credenciado {
+      color: #b40c02;
+      font-size: 14px;
+    }
+
+    .pergunta-credenciado {
+      margin: 12px;
+      color: $blackInput;
+
+      .texto-pergunta {
+        margin-right: 16px;
+        font-weight: bold;
+        &::after {
+          content: " *";
+          font-weight: normal;
+          color: $red;
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Spin } from "antd";
-import { getDetalharCronograma } from "services/cronograma.service";
+import { getCronograma } from "services/cronograma.service";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 
@@ -12,7 +12,7 @@ export default () => {
 
   const getDetalhes = async () => {
     if (uuid) {
-      const responseCronograma = await getDetalharCronograma(uuid);
+      const responseCronograma = await getCronograma(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         setCronograma(responseCronograma.data);
       }
@@ -29,6 +29,7 @@ export default () => {
 
   useEffect(() => {
     getDetalhes();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -143,8 +144,9 @@ export default () => {
               <p className="head-green mt-3">Dados do Recebimento</p>
               <br />
               {cronograma.programacoes_de_recebimento.length > 0 &&
-                cronograma.programacoes_de_recebimento.map(
-                  (programacao, key) => {
+                cronograma.programacoes_de_recebimento
+                  .reverse()
+                  .map((programacao, key) => {
                     return (
                       <>
                         <div key={key} className="row mb-3">
@@ -165,8 +167,7 @@ export default () => {
                         </div>
                       </>
                     );
-                  }
-                )}
+                  })}
             </>
           )}
         </div>

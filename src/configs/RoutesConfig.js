@@ -116,7 +116,9 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira,
-  exibirLancamentoMedicaoInicial
+  exibirLancamentoMedicaoInicial,
+  usuarioEhDilogQualidade,
+  usuarioEhDilogQualidadeOuCronograma
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -177,6 +179,13 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
+import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
+import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
+import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
+import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
+import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 
 const routesConfig = [
   {
@@ -327,6 +336,12 @@ const routesConfig = [
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasDREPage,
+    exact: false,
+    tipoUsuario: usuarioEhDRE()
+  },
+  {
+    path: `/${constants.DRE}/${constants.SOLICITACOES_AGUARDADAS}`,
+    component: StatusSolicitacoesAguardandoDREPage,
     exact: false,
     tipoUsuario: usuarioEhDRE()
   },
@@ -646,6 +661,46 @@ const routesConfig = [
     component: CadastroKitLanchePage,
     exact: true,
     tipoUsuario: usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIOS_CADASTRADOS
+    }`,
+    component: LaboratoriosCadastradosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }`,
+    component: CadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }`,
+    component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }/${constants.EDITAR}`,
+    component: EditarCadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.LABORATORIO
+    }`,
+    component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
   },
   {
     path: `/configuracoes/cadastros`,
@@ -1301,6 +1356,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhCODAEDietaEspecial()
   },
   {
+    path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
+    component: RelatorioSolicitacoesAlimentacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
+  },
+  {
     path: `/${constants.LANCAMENTO_INICIAL}/${
       constants.LANCAMENTO_MEDICAO_INICIAL
     }`,
@@ -1470,6 +1531,19 @@ const routesConfig = [
     */
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}`,
     component: CadastroCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
+  },
+  {
+    /*
+    TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
+    temporariamente ao Cadastro de Cronograma. Após finalização da definição de
+    permissionamento deve se remover usuarioEhLogistica() desta rota.
+    */
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.CADASTRO_CRONOGRAMA}/${
+      constants.EDITAR
+    }`,
+    component: EditarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
   }

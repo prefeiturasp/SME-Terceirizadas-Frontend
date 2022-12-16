@@ -57,3 +57,12 @@ export const getDiasCalendario = async params => {
     return data;
   }
 };
+
+export const getLogDietasAutorizadasPeriodo = async params => {
+  const url = "log-quantidade-dietas-autorizadas/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data };
+    return data;
+  }
+};
