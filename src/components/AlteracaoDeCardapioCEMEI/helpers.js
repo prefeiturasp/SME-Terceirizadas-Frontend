@@ -99,7 +99,10 @@ export const formatarPayload = (values, meusDados) => {
             typeof substituicao.cei.tipos_alimentacao_de === "string"
               ? [substituicao.cei.tipos_alimentacao_de]
               : substituicao.cei.tipos_alimentacao_de,
-          tipos_alimentacao_para: substituicao.cei.tipos_alimentacao_para,
+          tipos_alimentacao_para:
+            typeof substituicao.cei.tipos_alimentacao_para === "string"
+              ? [substituicao.cei.tipos_alimentacao_para]
+              : substituicao.cei.tipos_alimentacao_para,
           faixas_etarias: substituicao.cei.faixas_etarias
             .filter(faixa => faixa !== null)
             .map(faixa => {

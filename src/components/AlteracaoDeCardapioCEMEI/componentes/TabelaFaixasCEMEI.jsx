@@ -142,22 +142,40 @@ export const TabelaFaixasCEMEI = ({
                 </OnChange>
               </div>
               <div className="col-4">
-                <Field
-                  label="Para alimentação:"
-                  component={MultiSelect}
-                  disableSearch
-                  name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
-                  multiple
-                  options={formatarParaMultiselect(
-                    substitutosCEI
-                      .find(v => v.periodo_escolar.nome === periodo.nome)
-                      .tipos_alimentacao.filter(
-                        ta => !alimentoSelecionadoCEI.includes(ta.uuid)
-                      )
-                  )}
-                  nomeDoItemNoPlural="Substitutos"
-                  validate={totalFrequenciaCEI > 0 && required}
-                />
+                {!ehMotivoRPL(values) && (
+                  <Field
+                    label="Para alimentação:"
+                    component={MultiSelect}
+                    disableSearch
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
+                    multiple
+                    options={formatarParaMultiselect(
+                      substitutosCEI
+                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .tipos_alimentacao.filter(
+                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                        )
+                    )}
+                    nomeDoItemNoPlural="Substitutos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
+                {ehMotivoRPL(values) && (
+                  <Field
+                    label="Para alimentação:"
+                    component={Select}
+                    options={agregarDefault(
+                      substitutosCEI
+                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .tipos_alimentacao.filter(
+                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                        )
+                    )}
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
+                    nomeDoItemNoPlural="Substitutos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
               </div>
             </div>
             <div className="row mt-2">

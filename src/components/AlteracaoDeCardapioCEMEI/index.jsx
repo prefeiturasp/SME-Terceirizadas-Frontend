@@ -22,7 +22,8 @@ import {
   deepCopy,
   getError,
   getDataObj,
-  fimDoCalendario
+  fimDoCalendario,
+  checaSeDataEstaEntre2e5DiasUteis
 } from "helpers/utilities";
 import { formatarPayload, validarSubmit } from "./helpers";
 import { required } from "helpers/fieldValidators";
@@ -35,6 +36,7 @@ import {
   iniciaFluxoAlteracaoAlimentacaoCEMEI
 } from "services/alteracaoDeCardapio/escola.service";
 import "./style.scss";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 
 export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const {
@@ -57,6 +59,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const [desabilitarDeAte, setDesabilitarDeAte] = useState(false);
   const [maximo5DiasUteis, setMaximo5DiasUteis] = useState(false);
   const [showModalLancheEmergencial, setShowModalLancheEmergencial] = useState(
+    false
+  );
+  const [showModalDataPrioritaria, setShowModalDataPrioritaria] = useState(
     false
   );
   const [alimentosCEI, setAlimentosCEI] = useState(
@@ -83,6 +88,19 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
       refresh(form);
     } else {
       toastError(getError(response.data));
+    }
+  };
+
+  const onDataChanged = value => {
+    if (
+      value &&
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        proximosDoisDiasUteis,
+        proximosCincoDiasUteis
+      )
+    ) {
+      setShowModalDataPrioritaria(true);
     }
   };
 
@@ -532,6 +550,13 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
                     />
+                    <OnChange name="alterar_dia">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-1 text-center date-options">
                     <span>ou</span>
@@ -553,6 +578,13 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           : fimDoCalendario()
                       }
                     />
+                    <OnChange name="data_inicial">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-3">
                     <Field
@@ -574,6 +606,13 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                           : fimDoCalendario()
                       }
                     />
+                    <OnChange name="data_final">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                 </div>
                 {periodos.map((periodo, periodoIndice) => {
@@ -638,6 +677,10 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
               showModal={showModalLancheEmergencial}
               form={form}
               resetForm={() => resetForm(form)}
+            />
+            <ModalDataPrioritaria
+              showModal={showModalDataPrioritaria}
+              closeModal={() => setShowModalDataPrioritaria(false)}
             />
           </form>
         )}
