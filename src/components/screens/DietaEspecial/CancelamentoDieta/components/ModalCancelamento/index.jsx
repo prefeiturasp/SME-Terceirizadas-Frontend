@@ -45,7 +45,9 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
       onHide={() => setShowModal(false)}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Deseja cancelar Dieta Especial?</Modal.Title>
+        <Modal.Title>
+          Deseja solicitar cancelamento de Dieta Especial?
+        </Modal.Title>
       </Modal.Header>
 
       <Form
@@ -56,11 +58,11 @@ export default ({ dieta, showModal, setShowModal, filtros, setFiltros }) => {
               <section className="row attachments">
                 <div className="col-9">
                   <div className="card-title font-weight-bold cinza-escuro mt-4">
-                    * Laudo
+                    <span className="required-asterisk">*</span>Laudo
                   </div>
                   <div className="text">
-                    Anexe o laudo de alta médica fornecido pelo profissional.
-                    Sem ele, a solicitação de cancelamento será negada.
+                    Anexe o laudo de alta fornecido pelo profissional. Sem ele,
+                    a solicitação de cancelamento será negada.
                   </div>
                   <div className="card-warning mt-2">
                     <strong>IMPORTANTE:</strong> Envie um arquivo formato .doc,

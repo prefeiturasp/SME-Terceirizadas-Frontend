@@ -60,9 +60,11 @@ export const formataDadosTabelaCEMEI = solicitacao => {
 
 export const totalMatriculados = faixas => {
   let total = 0;
-  faixas.forEach(faixa => {
-    total += faixa.quantidade_alunos;
-  });
+  faixas
+    .filter(faixa => faixa.inicio > 11)
+    .forEach(faixa => {
+      total += faixa.quantidade_alunos;
+    });
   return total;
 };
 
@@ -93,8 +95,14 @@ export const formatarPayload = (values, meusDados) => {
       if (substituicao.cei) {
         substituicoes_cemei_cei_periodo_escolar.push({
           periodo_escolar: substituicao.periodo_uuid,
-          tipos_alimentacao_de: substituicao.cei.tipos_alimentacao_de,
-          tipos_alimentacao_para: substituicao.cei.tipos_alimentacao_para,
+          tipos_alimentacao_de:
+            typeof substituicao.cei.tipos_alimentacao_de === "string"
+              ? [substituicao.cei.tipos_alimentacao_de]
+              : substituicao.cei.tipos_alimentacao_de,
+          tipos_alimentacao_para:
+            typeof substituicao.cei.tipos_alimentacao_para === "string"
+              ? [substituicao.cei.tipos_alimentacao_para]
+              : substituicao.cei.tipos_alimentacao_para,
           faixas_etarias: substituicao.cei.faixas_etarias
             .filter(faixa => faixa !== null)
             .map(faixa => {

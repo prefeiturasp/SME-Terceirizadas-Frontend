@@ -22,7 +22,8 @@ import {
   usuarioEscolaEhGestaoMistaParceira,
   usuarioEhMedicao,
   exibirGA,
-  usuarioEhDilogQualidadeOuCronograma
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhFornecedor
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -115,6 +116,7 @@ export const SidebarContent = () => {
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
+    !usuarioEhFornecedor() &&
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
     !usuarioEhPreRecebimento();
@@ -128,6 +130,7 @@ export const SidebarContent = () => {
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
     !usuarioEhDistribuidora() &&
+    !usuarioEhFornecedor() &&
     !usuarioEhPreRecebimento();
 
   const exibirMenuLogistica =
@@ -138,7 +141,8 @@ export const SidebarContent = () => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
-  const exibirMenuPreRecebimento = usuarioEhPreRecebimento();
+  const exibirMenuPreRecebimento =
+    usuarioEhPreRecebimento() || usuarioEhFornecedor();
 
   const _props = {
     activeMenu,

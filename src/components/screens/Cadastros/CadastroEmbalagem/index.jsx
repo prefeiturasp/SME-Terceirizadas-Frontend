@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import "./style.scss";
 import Botao from "components/Shareable/Botao";
@@ -9,7 +10,7 @@ import {
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
@@ -17,20 +18,36 @@ import {
 } from "helpers/fieldValidators";
 import {
   cadastraEmbalagens,
-  getListaEmbalagens
+  editaEmbalagem,
+  getEmbalagem,
+  getListaNomesEmbalagens
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
+import {
+  CADASTROS,
+  CONFIGURACOES,
+  EMBALAGENS_CADASTRADAS
+} from "configs/constants";
 
-const initialValues = {
-  data_cadastro: new Date().toLocaleDateString()
-};
+let tituloModalSalvar = "Salvar Cadastro da Embalagem";
+let tituloModalCancelarSalvar = "Cancelar Cadastro da Embalagem";
+let tituloModalEditar = "Salvar Edição da Embalagem";
+let tituloModalCancelarEditar = "Cancelar Edição da Embalagem";
+
+let textoModalSalvar = "Confirma o cadastro da Embalagem?";
+let textoModalCancelarSalvar = "Deseja cancelar o Cadastro?";
+let textoModalEditar = "Confirma a edição do cadastro da Embalagem?";
+let textoModalCancelarEditar = "Deseja cancelar a edição do Cadastro?";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
-  const [embalagens, setEmbalagens] = useState(null);
+  const [nomesEmbalagens, setNomesEmbalagens] = useState(null);
+  const [edicao, setEdicao] = useState(false);
+  const [uuid, setUuid] = useState(null);
+  const [initialValues, setInitialValues] = useState({});
   const history = useHistory();
 
   const onSubmit = () => {
@@ -42,19 +59,26 @@ export default () => {
     let payload = montaPayload(values);
 
     try {
-      let response = await cadastraEmbalagens(payload);
-      if (response.status === 201) {
+      let response = edicao
+        ? await editaEmbalagem(payload, uuid)
+        : await cadastraEmbalagens(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Embalagem Cadastrada com sucesso!");
         setShowModalSalvar(false);
         form.restart(initialValues);
         setCarregando(false);
-      } else {
-        toastError("Ocorreu um erro ao salvar a embalagem");
+      } else if (response.status === HTTP_STATUS.OK) {
+        history.push(
+          `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
+        );
+        toastSuccess("Edição do cadastro realizado com sucesso!");
         setCarregando(false);
+        setShowModalSalvar(false);
       }
     } catch (error) {
       toastError("Ocorreu um erro ao salvar a embalagem");
       setCarregando(false);
+      setShowModalSalvar(false);
     }
   };
 
@@ -68,18 +92,52 @@ export default () => {
   };
 
   const validaNomeEmbalagem = value => {
-    if (embalagens.includes(value.toUpperCase()))
-      return "Embalagem já cadastrada";
-    else return undefined;
+    if (value !== initialValues.nome_embalagem) {
+      if (nomesEmbalagens && nomesEmbalagens.includes(value))
+        return "Embalagem já cadastrada";
+      else return undefined;
+    } else return undefined;
+  };
+
+  const buscaEmbalagem = async value => {
+    let response;
+    try {
+      response = await getEmbalagem(value);
+      if (response.status === HTTP_STATUS.OK) {
+        setInitialValues({
+          nome_embalagem: response.data.nome,
+          abreviacao: response.data.abreviacao,
+          data_cadastro: response.data.criado_em.slice(0, 10)
+        });
+        setCarregando(false);
+      }
+    } catch (e) {
+      toastError("Ocorreu um erro ao carregar dados da embalagem");
+      setCarregando(false);
+    }
   };
 
   useEffect(() => {
-    const buscaListaEmbalagens = async () => {
-      const response = await getListaEmbalagens();
-      setEmbalagens(response.data.results);
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid) {
+      setUuid(uuid);
+      setCarregando(true);
+      setEdicao(true);
+      buscaEmbalagem(uuid);
+    } else {
+      setInitialValues({
+        data_cadastro: new Date().toLocaleDateString()
+      });
+    }
+
+    const buscaListaNomesEmbalagens = async () => {
+      const response = await getListaNomesEmbalagens();
+      setNomesEmbalagens(response.data.results);
     };
 
-    buscaListaEmbalagens();
+    buscaListaNomesEmbalagens();
   }, []);
 
   return (
@@ -91,7 +149,32 @@ export default () => {
             initialValues={initialValues}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                <div className="card-title green">Dados das Embalagens</div>
+                {!edicao ? (
+                  <>
+                    <div className="mb-4">
+                      <Link
+                        to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+                      >
+                        <Botao
+                          texto="Embalagens Cadastradas"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-right"
+                          onClick={() => {}}
+                        />
+                      </Link>
+                    </div>
+                    <div className="row">
+                      <div className="card-title green">
+                        Dados das Embalagens
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="mt-4 card-title green">
+                    Dados das Embalagens
+                  </div>
+                )}
 
                 <div className="row">
                   <div className="col-6">
@@ -155,9 +238,17 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>Cancelar Cadastro da Embalagem</Modal.Title>
+                    <Modal.Title>
+                      {edicao
+                        ? tituloModalCancelarEditar
+                        : tituloModalCancelarSalvar}
+                    </Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Deseja cancelar o Cadastro?</Modal.Body>
+                  <Modal.Body>
+                    {edicao
+                      ? textoModalCancelarEditar
+                      : textoModalCancelarSalvar}
+                  </Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"
@@ -173,7 +264,11 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        history.push("/");
+                        edicao
+                          ? history.push(
+                              `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
+                            )
+                          : history.push("/");
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
@@ -187,9 +282,13 @@ export default () => {
                   }}
                 >
                   <Modal.Header closeButton>
-                    <Modal.Title>Salvar Cadastro da Embalagem</Modal.Title>
+                    <Modal.Title>
+                      {edicao ? tituloModalEditar : tituloModalSalvar}
+                    </Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Confirma o cadastro da Embalagem?</Modal.Body>
+                  <Modal.Body>
+                    {edicao ? textoModalEditar : textoModalSalvar}
+                  </Modal.Body>
                   <Modal.Footer>
                     <Botao
                       texto="Não"

@@ -58,7 +58,11 @@ const ListagemDietas = ({ dietasFiltradas, status }) => {
                 <div>{dietaEspecial.cod_eol_aluno || "--"}</div>
                 <div>{dietaEspecial.nome_aluno}</div>
                 <div>{dietaEspecial.nome_escola}</div>
-                <div>{dietaEspecial.classificacao.nome}</div>
+                <div>
+                  {dietaEspecial.classificacao
+                    ? dietaEspecial.classificacao.nome
+                    : "--"}
+                </div>
                 <div>
                   {(dietaEspecial.protocolo_padrao &&
                     dietaEspecial.protocolo_padrao.nome) ||

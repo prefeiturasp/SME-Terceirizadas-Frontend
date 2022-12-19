@@ -1,7 +1,11 @@
 import moment from "moment";
 import { createTextMask } from "redux-form-input-masks";
 import "moment/locale/pt-br";
-import { statusEnum, TIPO_SOLICITACAO } from "constants/shared";
+import {
+  JS_DATE_DEZEMBRO,
+  statusEnum,
+  TIPO_SOLICITACAO
+} from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
@@ -357,6 +361,12 @@ export const usuarioEhAdministradorNutriSupervisao = () => {
   );
 };
 
+export const usuarioEhCodaeDilog = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  );
+};
+
 export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
@@ -449,6 +459,12 @@ export const usuarioEhDistribuidora = () => {
   );
 };
 
+export const usuarioEhFornecedor = () => {
+  return [PERFIL.ADMINISTRADOR_FORNECEDOR].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
@@ -528,7 +544,8 @@ export const usuarioEhQualquerCODAE = () => {
 export const usuarioEhTerceirizada = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_FORNECEDOR
   );
 };
 
@@ -807,4 +824,10 @@ export const tipoStatus = () => {
       status: "Inativo"
     }
   ];
+};
+
+export const fimDoCalendario = () => {
+  return new Date().getMonth() === JS_DATE_DEZEMBRO
+    ? new Date(new Date().getFullYear() + 1, 11, 31)
+    : new Date(new Date().getFullYear(), 11, 31);
 };

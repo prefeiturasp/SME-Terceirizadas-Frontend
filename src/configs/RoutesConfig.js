@@ -118,7 +118,9 @@ import {
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
   usuarioEhDilogQualidade,
-  usuarioEhDilogQualidadeOuCronograma
+  usuarioEhDilogQualidadeOuCronograma,
+  usuarioEhCodaeDilog,
+  usuarioEhFornecedor
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -186,6 +188,8 @@ import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
+import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
+import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 
 const routesConfig = [
   {
@@ -672,14 +676,6 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
-    }`,
-    component: CadastroEmbalagemPage,
-    exact: true,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
@@ -696,11 +692,27 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.EMBALAGEM
     }`,
-    component: CadastroLaboratorioPage,
+    component: CadastroEmbalagemPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGENS_CADASTRADAS
+    }`,
+    component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGEM
+    }/${constants.EDITAR}`,
+    component: EditarCadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
   {
     path: `/configuracoes/cadastros`,
@@ -1427,7 +1439,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
     component: ConferenciaInconsistenciasPage,
     exact: true,
-    tipoUsuario: usuarioEhLogistica()
+    tipoUsuario: usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
@@ -1515,7 +1527,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,

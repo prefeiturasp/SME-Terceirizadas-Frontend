@@ -85,7 +85,15 @@ export default ({ values, disabled, uuidEdicao }) => {
             <Modal.Title>Registro de conferência</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Deseja realizar o registro de sua conferência?</p>
+            <p>
+              Você está finalizando o registro de conferência da Guia{" "}
+              {values.numero_guia}
+              <br />
+              Estes apontamentos não poderão ser editados ou alterados.
+            </p>
+
+            <p>Deseja prosseguir com o registro?</p>
+
             <strong>
               <i>
                 Data de conferência: {moment(new Date()).format("DD/MM/YYYY")}

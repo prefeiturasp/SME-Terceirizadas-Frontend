@@ -2,7 +2,7 @@ export const STATUS_SOLICITACOES = [
   { nome: "Autorizadas", uuid: "AUTORIZADOS" },
   { nome: "Canceladas", uuid: "CANCELADOS" },
   { nome: "Negadas", uuid: "NEGADOS" },
-  { nome: "Recebidas", uuid: "EM_ANDAMENTO" }
+  { nome: "Recebidas", uuid: "RECEBIDAS" }
 ];
 
 export const TIPOS_SOLICITACAO = [

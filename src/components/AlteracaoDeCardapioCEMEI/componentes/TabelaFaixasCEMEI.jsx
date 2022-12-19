@@ -4,9 +4,10 @@ import { OnChange } from "react-final-form-listeners";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import InputText from "components/Shareable/Input/InputText";
 import { maxValue, naoPodeSerZero, required } from "helpers/fieldValidators";
-import { composeValidators } from "helpers/utilities";
+import { agregarDefault, composeValidators } from "helpers/utilities";
 import { formatarParaMultiselect } from "helpers/utilities";
 import { totalMatriculados, totalSolicitacao } from "../helpers";
+import Select from "components/Shareable/Select";
 
 export const TabelaFaixasCEMEI = ({
   values,
@@ -17,7 +18,8 @@ export const TabelaFaixasCEMEI = ({
   alimentosCEI,
   alimentosEMEI,
   substitutosCEI,
-  substitutosEMEI
+  substitutosEMEI,
+  ehMotivoRPL
 }) => {
   const periodoCEI = vinculos.find(
     vinculo =>
@@ -101,20 +103,36 @@ export const TabelaFaixasCEMEI = ({
                 <div className=" alunos-label">Alunos CEI</div>
               </div>
               <div className="col-4">
-                <Field
-                  label="Alterar alimentação de:"
-                  component={MultiSelect}
-                  disableSearch
-                  name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
-                  multiple
-                  options={formatarParaMultiselect(
-                    alimentosCEI.find(
-                      v => v.periodo_escolar.nome === periodo.nome
-                    ).tipos_alimentacao
-                  )}
-                  nomeDoItemNoPlural="Alimentos"
-                  validate={totalFrequenciaCEI > 0 && required}
-                />
+                {ehMotivoRPL(values) && (
+                  <Field
+                    label="Alterar alimentação de:"
+                    component={Select}
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
+                    options={agregarDefault(
+                      alimentosCEI.find(
+                        v => v.periodo_escolar.nome === periodo.nome
+                      ).tipos_alimentacao
+                    )}
+                    naoDesabilitarPrimeiraOpcao
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
+                {!ehMotivoRPL(values) && (
+                  <Field
+                    label="Alterar alimentação de:"
+                    component={MultiSelect}
+                    disableSearch
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
+                    multiple
+                    options={formatarParaMultiselect(
+                      alimentosCEI.find(
+                        v => v.periodo_escolar.nome === periodo.nome
+                      ).tipos_alimentacao
+                    )}
+                    nomeDoItemNoPlural="Alimentos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
                 <OnChange
                   name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_de]`}
                 >
@@ -124,22 +142,40 @@ export const TabelaFaixasCEMEI = ({
                 </OnChange>
               </div>
               <div className="col-4">
-                <Field
-                  label="Para alimentação:"
-                  component={MultiSelect}
-                  disableSearch
-                  name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
-                  multiple
-                  options={formatarParaMultiselect(
-                    substitutosCEI
-                      .find(v => v.periodo_escolar.nome === periodo.nome)
-                      .tipos_alimentacao.filter(
-                        ta => !alimentoSelecionadoCEI.includes(ta.uuid)
-                      )
-                  )}
-                  nomeDoItemNoPlural="Substitutos"
-                  validate={totalFrequenciaCEI > 0 && required}
-                />
+                {!ehMotivoRPL(values) && (
+                  <Field
+                    label="Para alimentação:"
+                    component={MultiSelect}
+                    disableSearch
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
+                    multiple
+                    options={formatarParaMultiselect(
+                      substitutosCEI
+                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .tipos_alimentacao.filter(
+                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                        )
+                    )}
+                    nomeDoItemNoPlural="Substitutos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
+                {ehMotivoRPL(values) && (
+                  <Field
+                    label="Para alimentação:"
+                    component={Select}
+                    options={agregarDefault(
+                      substitutosCEI
+                        .find(v => v.periodo_escolar.nome === periodo.nome)
+                        .tipos_alimentacao.filter(
+                          ta => !alimentoSelecionadoCEI.includes(ta.uuid)
+                        )
+                    )}
+                    name={`substituicoes[${periodoIndice}][cei][tipos_alimentacao_para]`}
+                    nomeDoItemNoPlural="Substitutos"
+                    validate={totalFrequenciaCEI > 0 && required}
+                  />
+                )}
               </div>
             </div>
             <div className="row mt-2">
@@ -155,54 +191,56 @@ export const TabelaFaixasCEMEI = ({
                   <tbody>
                     {periodo.CEI.map((faixa, faixaIndice) => {
                       return (
-                        <tr key={faixaIndice}>
-                          <td className="col-7">{faixa.faixa}</td>
-                          <td className="col-3 text-center">
-                            {faixa.quantidade_alunos}
-                          </td>
-                          <td className="col-2 text-center">
-                            <Field
-                              component={InputText}
-                              type="number"
-                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
-                              validate={composeValidators(
-                                naoPodeSerZero,
-                                maxValue(parseInt(faixa.quantidade_alunos))
-                              )}
-                              max={parseInt(faixa.quantidade_alunos)}
-                              min={0}
-                              step="1"
-                              className="input-quantidades"
-                            />
-                            <OnChange
-                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
-                            >
-                              {async () => {
-                                form.change(
-                                  `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`,
-                                  faixa.uuid
-                                );
-                                form.change(
-                                  `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
-                                  parseInt(faixa.quantidade_alunos)
-                                );
-                                setTotalFrequenciaCEI(
-                                  totalSolicitacao(values, periodoCEI)
-                                );
-                              }}
-                            </OnChange>
-                            <Field
-                              component={"input"}
-                              type="hidden"
-                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`}
-                            />
-                            <Field
-                              component={"input"}
-                              type="hidden"
-                              name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`}
-                            />
-                          </td>
-                        </tr>
+                        faixa.inicio > 11 && (
+                          <tr key={faixaIndice}>
+                            <td className="col-7">{faixa.faixa}</td>
+                            <td className="col-3 text-center">
+                              {faixa.quantidade_alunos}
+                            </td>
+                            <td className="col-2 text-center">
+                              <Field
+                                component={InputText}
+                                type="number"
+                                name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
+                                validate={composeValidators(
+                                  naoPodeSerZero,
+                                  maxValue(parseInt(faixa.quantidade_alunos))
+                                )}
+                                max={parseInt(faixa.quantidade_alunos)}
+                                min={0}
+                                step="1"
+                                className="input-quantidades"
+                              />
+                              <OnChange
+                                name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][quantidade_alunos]`}
+                              >
+                                {async () => {
+                                  form.change(
+                                    `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`,
+                                    faixa.uuid
+                                  );
+                                  form.change(
+                                    `substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`,
+                                    parseInt(faixa.quantidade_alunos)
+                                  );
+                                  setTotalFrequenciaCEI(
+                                    totalSolicitacao(values, periodoCEI)
+                                  );
+                                }}
+                              </OnChange>
+                              <Field
+                                component={"input"}
+                                type="hidden"
+                                name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][faixa_uuid]`}
+                              />
+                              <Field
+                                component={"input"}
+                                type="hidden"
+                                name={`substituicoes[${periodoIndice}][cei][faixas_etarias][${faixaIndice}][matriculados_quando_criado]`}
+                              />
+                            </td>
+                          </tr>
+                        )
                       );
                     })}
                     <tr className="total-faixas-cei">

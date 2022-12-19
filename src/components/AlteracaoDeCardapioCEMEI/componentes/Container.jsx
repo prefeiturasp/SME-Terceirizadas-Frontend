@@ -49,9 +49,8 @@ export const Container = () => {
 
   const getMotivosAlteracaoCardapioAsync = async () => {
     const response = await getMotivosAlteracaoCardapio();
-    // response nao retorna status
-    if (response) {
-      setMotivos(response.results);
+    if (response.status === HTTP_STATUS.OK) {
+      setMotivos(response.data.results);
     } else {
       setErro(true);
     }

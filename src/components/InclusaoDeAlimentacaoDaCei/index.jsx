@@ -19,7 +19,8 @@ import {
   agregarDefault,
   deepCopy,
   getError,
-  checaSeDataEstaEntre2e5DiasUteis
+  checaSeDataEstaEntre2e5DiasUteis,
+  fimDoCalendario
 } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
@@ -292,9 +293,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                       required
                       validate={required}
                       minDate={proximosDoisDiasUteis}
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                     />
                     <OnChange name="data">
                       {async value => {

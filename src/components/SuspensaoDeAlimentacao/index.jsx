@@ -1,5 +1,4 @@
 import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
 import React, { Component } from "react";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { connect } from "react-redux";
@@ -16,7 +15,8 @@ import {
   geradorUUID,
   getError,
   deepCopy,
-  escolaEhCEMEI
+  escolaEhCEMEI,
+  fimDoCalendario
 } from "../../helpers/utilities";
 import { validateSubmit } from "./validacao";
 import { Field, reduxForm, formValueSelector, FormSection } from "redux-form";
@@ -637,9 +637,7 @@ class FoodSuspensionEditor extends Component {
                             component={InputComData}
                             name={`data${key}`}
                             minDate={proximos_dois_dias_uteis}
-                            maxDate={moment()
-                              .endOf("year")
-                              .toDate()}
+                            maxDate={fimDoCalendario()}
                             onChange={value =>
                               this.handleField(`data${key}`, value, key)
                             }

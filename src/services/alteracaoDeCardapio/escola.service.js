@@ -28,28 +28,16 @@ export const escolaIniciarSolicitacaoDeAlteracaoDeCardapio = (
     });
 };
 
-export const escolaCriarSolicitacaoDeAlteracaoCardapio = (
+export const escolaCriarSolicitacaoDeAlteracaoCardapio = async (
   payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "POST",
-    body: JSON.stringify(payload),
-    headers: AUTH_TOKEN
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const escolaAlterarSolicitacaoDeAlteracaoCardapio = (
@@ -94,24 +82,13 @@ export const escolaExcluirSolicitacaoDeAlteracaoCardapio = (
   return axios.delete(`${ENDPOINT.ALTERACOES_CARDAPIO}/${uuid}/`);
 };
 
-export const escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio = tipoSolicitacao => {
+export const getRascunhosAlteracaoTipoAlimentacao = async tipoSolicitacao => {
   const url = `${getPath(tipoSolicitacao)}/${ENDPOINT.MINHAS_SOLICITACOES}/`;
-
-  if (tipoSolicitacao) {
-    return axios.get(url);
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
@@ -188,11 +165,14 @@ export const getAlunosPorFaixaEtariaNumaData = async (
   periodoUUID,
   dataReferencia
 ) => {
-  return await axios.get(
-    `/${
-      ENDPOINT.PERIODOS_ESCOLARES
-    }/${periodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`
-  );
+  const url = `/${
+    ENDPOINT.PERIODOS_ESCOLARES
+  }/${periodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getEscolaPeriodoEscolares = async () => {

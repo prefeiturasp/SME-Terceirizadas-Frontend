@@ -3,14 +3,14 @@ import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import Select from "components/Shareable/Select";
-import { maxLength, required, textAreaRequired } from "helpers/fieldValidators";
+import { maxLength, required } from "helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
   composeValidators,
   deepCopy,
+  fimDoCalendario,
   getError
 } from "helpers/utilities";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
@@ -251,9 +251,7 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                       label="Data do passeio"
                       name="data"
                       minDate={proximosDoisDiasUteis}
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                       required
                       validate={required}
                     />
@@ -374,8 +372,6 @@ export const SolicitacaoKitLancheCEMEI = ({ ...props }) => {
                   component={CKEditorField}
                   label="Observações"
                   name="observacao"
-                  required
-                  validate={textAreaRequired}
                   className="form-control"
                 />
                 <hr />
