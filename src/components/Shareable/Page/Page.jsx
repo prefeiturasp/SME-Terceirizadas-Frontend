@@ -23,7 +23,7 @@ export const Page = ({ ...props }) => {
   } = props;
 
   const [nome, setNome] = useState(null);
-  const [escola, setEscola] = useState(null);
+  const [nomeEscola, setNomeEscola] = useState(null);
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
@@ -44,8 +44,12 @@ export const Page = ({ ...props }) => {
             JSON.stringify(meusDados.registro_funcional)
           );
         }
-        if (meusDados.tipo_usuario === "escola" && meusDados.vinculo_atual) {
-          setEscola(meusDados.vinculo_atual.instituicao.nome);
+        if (
+          meusDados.tipo_usuario === "escola" &&
+          meusDados.vinculo_atual &&
+          meusDados.vinculo_atual.instituicao
+        ) {
+          setNomeEscola(meusDados.vinculo_atual.instituicao.nome);
         }
         setNome(meusDados.nome);
       });
@@ -68,7 +72,7 @@ export const Page = ({ ...props }) => {
       <Header toggled={toggled} />
       <Sidebar
         nome={nome}
-        escola={escola}
+        nomeEscola={nomeEscola}
         toggle={() => setToggled(!toggled)}
         toggled={toggled}
       />

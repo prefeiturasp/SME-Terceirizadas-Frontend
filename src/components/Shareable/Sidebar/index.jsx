@@ -25,7 +25,7 @@ export class Sidebar extends Component {
 
   render() {
     const { API_VERSION } = this.state;
-    const { nome, escola, toggle, toggled } = this.props;
+    const { nome, nomeEscola, toggle, toggled } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -58,9 +58,9 @@ export class Sidebar extends Component {
                   <span className="d-none d-lg-inline">{nome}</span>
                 </div>
               )}
-              {escola && (
+              {nomeEscola && (
                 <div className="sidebar-brand-text text-center text-bold text-white small mt-3">
-                  <span>{escola}</span>
+                  <span>{nomeEscola}</span>
                 </div>
               )}
               <div className="profile mt-3">
