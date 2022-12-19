@@ -8,6 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { distribuidorConfirma } from "services/logistica.service";
 import { Spin } from "antd";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export default ({ solicitacao, updatePage }) => {
   const [show, setShow] = useState(false);
@@ -19,15 +20,18 @@ export default ({ solicitacao, updatePage }) => {
   const handleSim = () => {
     setLoading(true);
     distribuidorConfirma(solicitacao.uuid)
-      .then(() => {
-        updatePage();
-        setShow(false);
-        setLoading(false);
+      .then(response => {
+        if (response.status === 200) {
+          updatePage();
+          setShow(false);
+          setLoading(false);
+        }
       })
       .catch(() => {
         updatePage();
         setShow(false);
         setLoading(false);
+        toastError("Erro: não foi possível confirmar a requisição.");
       });
   };
 
@@ -42,7 +46,7 @@ export default ({ solicitacao, updatePage }) => {
         <i className="fas fa-check-circle confirmar" /> Confirmar
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} backdrop={"static"}>
         <Spin tip="Carregando..." spinning={loading}>
           <Modal.Header closeButton>
             <Modal.Title> Confirmar </Modal.Title>
