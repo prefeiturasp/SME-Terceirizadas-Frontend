@@ -23,6 +23,7 @@ export const Page = ({ ...props }) => {
   } = props;
 
   const [nome, setNome] = useState(null);
+  const [escola, setEscola] = useState(null);
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
@@ -42,6 +43,9 @@ export const Page = ({ ...props }) => {
             "registro_funcional",
             JSON.stringify(meusDados.registro_funcional)
           );
+        }
+        if (meusDados.tipo_usuario === "escola") {
+          setEscola(meusDados.vinculo_atual.instituicao.nome);
         }
         setNome(meusDados.nome);
       });
@@ -64,6 +68,7 @@ export const Page = ({ ...props }) => {
       <Header toggled={toggled} />
       <Sidebar
         nome={nome}
+        escola={escola}
         toggle={() => setToggled(!toggled)}
         toggled={toggled}
       />
