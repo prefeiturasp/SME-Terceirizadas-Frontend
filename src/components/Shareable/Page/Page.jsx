@@ -44,7 +44,7 @@ export const Page = ({ ...props }) => {
             JSON.stringify(meusDados.registro_funcional)
           );
         }
-        if (meusDados.tipo_usuario === "escola") {
+        if (meusDados.tipo_usuario === "escola" && meusDados.vinculo_atual) {
           setEscola(meusDados.vinculo_atual.instituicao.nome);
         }
         setNome(meusDados.nome);
