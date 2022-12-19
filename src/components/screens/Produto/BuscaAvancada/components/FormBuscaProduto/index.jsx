@@ -30,7 +30,6 @@ import {
   getTodasOpcoesStatusPorPerfil
 } from "./helpers";
 import "./style.scss";
-import { usuarioEhTerceirizada } from "helpers/utilities";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { required } from "helpers/fieldValidators";
 
@@ -156,21 +155,19 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
-          {usuarioEhTerceirizada() && (
-            <div className="row">
-              <div className="col-6">
-                <Field
-                  component={AutoCompleteField}
-                  dataSource={state.dados.editais}
-                  label="Edital"
-                  className="input-busca-produto"
-                  name="nome_edital"
-                  required
-                  validate={required}
-                />
-              </div>
+          <div className="row">
+            <div className="col-6">
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.dados.editais}
+                label="Edital"
+                className="input-busca-produto"
+                name="nome_edital"
+                required
+                validate={required}
+              />
             </div>
-          )}
+          </div>
           <div className="form-row">
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">
