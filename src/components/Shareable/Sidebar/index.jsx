@@ -25,7 +25,7 @@ export class Sidebar extends Component {
 
   render() {
     const { API_VERSION } = this.state;
-    const { nome, toggle, toggled } = this.props;
+    const { nome, nomeEscola, toggle, toggled } = this.props;
     return (
       <div>
         <div className="mb-5" />
@@ -56,6 +56,11 @@ export class Sidebar extends Component {
               {!toggled && nome && nome !== "" && (
                 <div className="sidebar-brand-text text-center text-bold text-white small border border-light rounded-pill p-1 mx-3">
                   <span className="d-none d-lg-inline">{nome}</span>
+                </div>
+              )}
+              {nomeEscola && (
+                <div className="sidebar-brand-text text-center text-bold text-white small mt-3">
+                  <span>{nomeEscola}</span>
                 </div>
               )}
               <div className="profile mt-3">

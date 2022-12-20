@@ -158,6 +158,7 @@ export const ajustarFormatoLog = (logs, card) => {
       case ALT_CARDAPIO_CEI:
         solicitacao = ALTERACAO_TIPO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CEI;
+        tamanhoString = 56;
         break;
 
       case KIT_LANCHE_AVULSA_CEI:

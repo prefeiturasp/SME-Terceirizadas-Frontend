@@ -3,7 +3,7 @@ import "./style.scss";
 
 let baseConfig = {
   position: "top-center",
-  autoClose: 3000,
+  autoClose: 6000,
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,

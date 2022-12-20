@@ -1,35 +1,33 @@
 import React, { useState, useEffect } from "react";
-import CardMatriculados from "components/Shareable/CardMatriculados";
-import HTTP_STATUS from "http-status-codes";
 import { Field, Form } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
+import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
+import CardMatriculados from "components/Shareable/CardMatriculados";
 import Select from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
 import CKEditorField from "components/Shareable/CKEditorField";
-import moment from "moment";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { STATUS_DRE_A_VALIDAR } from "configs/constants";
+import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import { TabelaFaixasCEMEI } from "./componentes/TabelaFaixasCEMEI";
+import { Rascunhos } from "./componentes/Rascunhos";
+import { ModalLancheEmergencial } from "./componentes/ModalLancheEmergencial";
 import {
   agregarDefault,
   deepCopy,
   getError,
   getDataObj,
-  composeValidators
+  fimDoCalendario,
+  checaSeDataEstaEntre2e5DiasUteis
 } from "helpers/utilities";
-import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
-import {
-  required,
-  textAreaRequired,
-  peloMenosUmCaractere
-} from "helpers/fieldValidators";
-import "./style.scss";
-import { TabelaFaixasCEMEI } from "./componentes/TabelaFaixasCEMEI";
-import { Rascunhos } from "./componentes/Rascunhos";
+import { formatarPayload, validarSubmit } from "./helpers";
+import { required } from "helpers/fieldValidators";
+import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import {
   createAlteracaoCardapioCEMEI,
   getAlteracaoCEMEIRascunhos,
@@ -37,7 +35,8 @@ import {
   updateAlteracaoCardapioCEMEI,
   iniciaFluxoAlteracaoAlimentacaoCEMEI
 } from "services/alteracaoDeCardapio/escola.service";
-import { formatarPayload, validarSubmit } from "./helpers";
+import "./style.scss";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 
 export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const {
@@ -59,6 +58,12 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   const [desabilitarAlterarDia, setDesabilitarAlterarDia] = useState(false);
   const [desabilitarDeAte, setDesabilitarDeAte] = useState(false);
   const [maximo5DiasUteis, setMaximo5DiasUteis] = useState(false);
+  const [showModalLancheEmergencial, setShowModalLancheEmergencial] = useState(
+    false
+  );
+  const [showModalDataPrioritaria, setShowModalDataPrioritaria] = useState(
+    false
+  );
   const [alimentosCEI, setAlimentosCEI] = useState(
     vinculos.filter(
       vinculo => vinculo.tipo_unidade_escolar.iniciais === "CEI DIRET"
@@ -84,6 +89,30 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     } else {
       toastError(getError(response.data));
     }
+  };
+
+  const onDataChanged = value => {
+    if (
+      value &&
+      checaSeDataEstaEntre2e5DiasUteis(
+        value,
+        proximosDoisDiasUteis,
+        proximosCincoDiasUteis
+      )
+    ) {
+      setShowModalDataPrioritaria(true);
+    }
+  };
+
+  const ehMotivoRPL = values => {
+    return (
+      motivos.find(
+        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+      ) &&
+      motivos.find(
+        motivo => motivo.nome.toUpperCase() === "RPL - REFEIÇÃO POR LANCHE"
+      ).uuid === values.motivo
+    );
   };
 
   const onSubmit = async (values, form) => {
@@ -346,10 +375,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
   };
 
   const carregarRascunho = async (form, alteracao) => {
-    await form.change("uuid", alteracao.uuid);
-    await form.change("id_externo", alteracao.id_externo);
     const alteracao_ = deepCopy(alteracao);
     await carregarRascunhoNormal(form, alteracao_);
+    await form.change("id_externo", alteracao.id_externo);
     setUuid(alteracao.uuid);
   };
 
@@ -396,6 +424,24 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
       }
     }
     form.change("substituicoes", []);
+    form.change("observacao", undefined);
+  };
+
+  const checarLancheCampoTipoAlteracao = async (values, motivo) => {
+    values.alunos_cei_e_ou_emei &&
+      values.alunos_cei_e_ou_emei !== "EMEI" &&
+      motivo &&
+      motivo.nome === "Lanche Emergencial" &&
+      setShowModalLancheEmergencial(true);
+  };
+
+  const checarLancheCampoAlunos = async (values, value) => {
+    value &&
+      value !== "EMEI" &&
+      values.motivo &&
+      motivos.find(m => m.uuid === values.motivo).nome ===
+        "Lanche Emergencial" &&
+      setShowModalLancheEmergencial(true);
   };
 
   return (
@@ -439,7 +485,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
               </div>
             )}
             <div className="mt-2 page-title">
-              {values.uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
+              {values.uuid
+                ? `Solicitação # ${values.id_externo}`
+                : "Nova Solicitação"}
             </div>
             <div className="card solicitation mt-2">
               <div className="card-body">
@@ -461,6 +509,9 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       validate={required}
                       required
                     />
+                    <OnChange name="alunos_cei_e_ou_emei">
+                      {async value => checarLancheCampoAlunos(values, value)}
+                    </OnChange>
                   </div>
                   <div className="col-8">
                     <Field
@@ -477,6 +528,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                         let motivo = motivos.find(m => m.uuid === value);
                         modificarOpcoesAlimentos(motivo);
                         limparCampos(motivo, form);
+                        checarLancheCampoTipoAlteracao(values, motivo);
                       }}
                     </OnChange>
                   </div>
@@ -488,16 +540,23 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       name="alterar_dia"
                       minDate={
                         values.motivo &&
-                        values.motivo.nome === "Lanche Emergencial"
+                        motivos.find(m => m.uuid === values.motivo) &&
+                        motivos.find(m => m.uuid === values.motivo).nome ===
+                          "Lanche Emergencial"
                           ? moment().toDate()
                           : proximosDoisDiasUteis
                       }
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
                     />
+                    <OnChange name="alterar_dia">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-1 text-center date-options">
                     <span>ou</span>
@@ -516,11 +575,16 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={
                         maximo5DiasUteis
                           ? proximosCincoDiasUteis
-                          : moment()
-                              .endOf("year")
-                              .toDate()
+                          : fimDoCalendario()
                       }
                     />
+                    <OnChange name="data_inicial">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   <div className="col-3">
                     <Field
@@ -539,11 +603,16 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={
                         maximo5DiasUteis
                           ? proximosCincoDiasUteis
-                          : moment()
-                              .endOf("year")
-                              .toDate()
+                          : fimDoCalendario()
                       }
                     />
+                    <OnChange name="data_final">
+                      {value => {
+                        if (value) {
+                          onDataChanged(value);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                 </div>
                 {periodos.map((periodo, periodoIndice) => {
@@ -559,6 +628,7 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       alimentosEMEI={alimentosEMEI}
                       substitutosCEI={substitutosCEI}
                       substitutosEMEI={substitutosEMEI}
+                      ehMotivoRPL={ehMotivoRPL}
                     />
                   );
                 })}
@@ -568,11 +638,6 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       component={CKEditorField}
                       label="Motivo/Justificativa"
                       name="observacao"
-                      required
-                      validate={composeValidators(
-                        textAreaRequired,
-                        peloMenosUmCaractere
-                      )}
                     />
                   </div>
                 </div>
@@ -607,6 +672,16 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                 </div>
               </div>
             </div>
+            <ModalLancheEmergencial
+              closeModal={() => setShowModalLancheEmergencial(false)}
+              showModal={showModalLancheEmergencial}
+              form={form}
+              resetForm={() => resetForm(form)}
+            />
+            <ModalDataPrioritaria
+              showModal={showModalDataPrioritaria}
+              closeModal={() => setShowModalDataPrioritaria(false)}
+            />
           </form>
         )}
       </Form>

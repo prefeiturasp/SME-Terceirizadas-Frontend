@@ -37,6 +37,7 @@ export const Container = () => {
       uuid: "daqui_a_30_dias"
     }
   ]);
+
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
   const [lotes, setLotes] = useState(null);
   const [erro, setErro] = useState("");

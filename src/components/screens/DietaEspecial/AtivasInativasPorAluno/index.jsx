@@ -20,6 +20,7 @@ import {
   reset
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { TIPO_PERFIL } from "constants/shared";
 
 const AtivasInativasPorAluno = ({
   dadosResultados,
@@ -51,6 +52,17 @@ const AtivasInativasPorAluno = ({
   const fetchData = async filtros => {
     setLoading(true);
     setExibirResultados(false);
+    const escolas = filtros.escolas;
+    if (filtros.escola) {
+      let escola_ = filtros.escola;
+      if (localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
+        escola_ = escola_[0];
+      }
+      filtros.escola = escolas.find(
+        escola => escola.label === escola_.split("- ")[1]
+      ).value;
+    }
+    delete filtros.escolas;
     try {
       const response = await getDietasAtivasInativasPorAluno({ ...filtros });
       setDadosResultados(response.data.results);

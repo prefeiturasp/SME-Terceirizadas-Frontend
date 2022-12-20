@@ -8,22 +8,33 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
-import { toastInfo } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
 import {
   corDaMensagem,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem
 } from "helpers/utilities";
-import React from "react";
+import React, { useState } from "react";
+import { getRelatorioAlteracaoTipoAlimentacao } from "services/relatorios";
 
 export const CorpoRelatorio = ({ ...props }) => {
-  const { dadosTabela, matriculados, solicitacao } = props;
+  let totalMatriculados = 0;
+  let totalQuantidadeAlunos = 0;
+  const [imprimindo, setImprimindo] = useState(false);
+  const { dadosTabela, solicitacao } = props;
 
-  const totalAlunosPorPeriodoCEI = (faixas, keyName) => {
-    let totalAlunos = 0;
-    return faixas.reduce(function(total, faixa) {
-      return total + faixa[keyName];
-    }, totalAlunos);
+  const imprimirRelatorio = async () => {
+    setImprimindo(true);
+    try {
+      await getRelatorioAlteracaoTipoAlimentacao(
+        solicitacao.uuid,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+      );
+    } catch (e) {
+      toastError("Houve um erro ao imprimir o relatório");
+    }
+    setImprimindo(false);
   };
 
   return (
@@ -36,10 +47,11 @@ export const CorpoRelatorio = ({ ...props }) => {
         {prazoDoPedidoMensagem(solicitacao.prioridade)}
         <Botao
           type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon={BUTTON_ICON.PRINT}
+          style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+          icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+          disabled={imprimindo}
           className="float-right"
-          onClick={() => toastInfo("Ainda não implementado")}
+          onClick={imprimirRelatorio}
         />
       </p>
       <div className="row mt-3">
@@ -136,17 +148,6 @@ export const CorpoRelatorio = ({ ...props }) => {
         </div>
       </div>
       {dadosTabela.map((periodo, index) => {
-        let qtdMatriculadosNoPeriodo = matriculados.find(
-          p => p.nome === periodo.nome
-        );
-        const uuids = periodo.substituicoesCEI
-          ? periodo.substituicoesCEI.faixas_etarias
-              .map(s => s.faixa_etaria)
-              .map(f => f.uuid)
-          : [];
-        const faixasCEI = qtdMatriculadosNoPeriodo.CEI.filter(f =>
-          uuids.includes(f.uuid)
-        );
         return (
           <div className="row" key={index}>
             <div className="col-12">
@@ -201,47 +202,62 @@ export const CorpoRelatorio = ({ ...props }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {periodo.substituicoesCEI.faixas_etarias.map(
-                            (faixa, idxFaixa) => {
-                              let qtdMatriculadosNaFaixa = matriculados.find(
-                                p => p.nome === periodo.nome
-                              );
-                              qtdMatriculadosNaFaixa = qtdMatriculadosNaFaixa.CEI.find(
-                                f => f.uuid === faixa.faixa_etaria.uuid
-                              );
-                              qtdMatriculadosNaFaixa = qtdMatriculadosNaFaixa
-                                ? qtdMatriculadosNaFaixa.quantidade_alunos
-                                : "teste";
-                              return (
-                                <tr key={idxFaixa}>
-                                  <td className="col-7">
-                                    {faixa.faixa_etaria.__str__}
-                                  </td>
-                                  <td className="col-3 text-center">
-                                    {qtdMatriculadosNaFaixa}
-                                  </td>
-                                  <td className="col-2 text-center">
-                                    {faixa.quantidade}
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          )}
+                          {solicitacao.substituicoes_cemei_cei_periodo_escolar
+                            .filter(
+                              q => q.periodo_escolar.nome === periodo.nome
+                            )
+                            .map((faixa, key) =>
+                              faixa.faixas_etarias.map(f => {
+                                return (
+                                  <tr key={key}>
+                                    <td className="col-7">
+                                      {f.faixa_etaria.__str__}
+                                    </td>
+                                    <td className="col-3 text-center">
+                                      {f.matriculados_quando_criado
+                                        ? f.matriculados_quando_criado
+                                        : "teste"}
+                                    </td>
+                                    <td className="col-2 text-center">
+                                      {f.quantidade}
+                                    </td>
+                                  </tr>
+                                );
+                              })
+                            )}
                         </tbody>
                         <thead>
                           <tr>
                             <th className="col-7">Total</th>
                             <th className="col-3 text-center">
-                              {totalAlunosPorPeriodoCEI(
-                                faixasCEI,
-                                "quantidade_alunos"
-                              )}
+                              {solicitacao.substituicoes_cemei_cei_periodo_escolar
+                                .filter(
+                                  q => q.periodo_escolar.nome === periodo.nome
+                                )
+                                .map(faixa =>
+                                  faixa.faixas_etarias.reduce(function(
+                                    total,
+                                    f
+                                  ) {
+                                    return total + f.matriculados_quando_criado;
+                                  },
+                                  totalMatriculados)
+                                )}
                             </th>
                             <th className="col-2 text-center">
-                              {totalAlunosPorPeriodoCEI(
-                                periodo.substituicoesCEI.faixas_etarias,
-                                "quantidade"
-                              )}
+                              {solicitacao.substituicoes_cemei_cei_periodo_escolar
+                                .filter(
+                                  q => q.periodo_escolar.nome === periodo.nome
+                                )
+                                .map(faixa =>
+                                  faixa.faixas_etarias.reduce(function(
+                                    total,
+                                    f
+                                  ) {
+                                    return total + f.quantidade;
+                                  },
+                                  totalQuantidadeAlunos)
+                                )}
                             </th>
                           </tr>
                         </thead>
@@ -280,9 +296,8 @@ export const CorpoRelatorio = ({ ...props }) => {
                               <span className="ml-5">Alunos matriculados</span>
                               <b className="ml-5">
                                 {
-                                  matriculados.find(
-                                    p => p.nome === periodo.nome
-                                  ).EMEI
+                                  periodo.substituicoesEMEI
+                                    .matriculados_quando_criado
                                 }
                               </b>
                             </th>
@@ -303,19 +318,21 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         );
       })}
-      <div className="row mt-3">
-        <div className="col-12">
-          <div className="container-fluid">
-            <p>Observações:</p>
-            <p
-              className="observacao-alteracao-cardapio-cemei"
-              dangerouslySetInnerHTML={{
-                __html: solicitacao.observacao
-              }}
-            />
+      {solicitacao && solicitacao.observacao && (
+        <div className="row mt-3">
+          <div className="col-12">
+            <div className="container-fluid">
+              <p>Observações:</p>
+              <p
+                className="observacao-alteracao-cardapio-cemei"
+                dangerouslySetInnerHTML={{
+                  __html: solicitacao.observacao
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <hr />
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">

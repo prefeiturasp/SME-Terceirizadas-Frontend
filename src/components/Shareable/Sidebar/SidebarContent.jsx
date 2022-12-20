@@ -141,7 +141,8 @@ export const SidebarContent = () => {
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
-  const exibirMenuPreRecebimento = usuarioEhPreRecebimento();
+  const exibirMenuPreRecebimento =
+    usuarioEhPreRecebimento() || usuarioEhFornecedor();
 
   const _props = {
     activeMenu,

@@ -19,6 +19,7 @@ import {
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  fimDoCalendario,
   formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
@@ -28,7 +29,7 @@ import {
   escolaCriarSolicitacaoDeAlteracaoCardapio,
   escolaExcluirSolicitacaoDeAlteracaoCardapio,
   escolaIniciarSolicitacaoDeAlteracaoDeCardapio,
-  escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio,
+  getRascunhosAlteracaoTipoAlimentacao,
   getAlteracoesComLancheDoMesCorrente
 } from "../../services/alteracaoDeCardapio";
 import { getVinculosTipoAlimentacaoPorEscola } from "../../services/cadastroTipoAlimentacao.service";
@@ -84,9 +85,7 @@ class AlteracaoCardapio extends Component {
         NOITE: [],
         INTEGRAL: []
       },
-      limiteDataFinal: moment()
-        .endOf("year")
-        .toDate()
+      limiteDataFinal: fimDoCalendario()
     };
     this.showModal = this.showModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -401,9 +400,7 @@ class AlteracaoCardapio extends Component {
 
   refresh() {
     let alteracaoCardapioList = this.state.alteracaoCardapioList;
-    escolaListarRascunhosDeSolicitacaoDeAlteracaoCardapio(
-      TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-    )
+    getRascunhosAlteracaoTipoAlimentacao(TIPO_SOLICITACAO.SOLICITACAO_NORMAL)
       .then(response => {
         alteracaoCardapioList =
           response.data.results.length > 0 ? response.data.results : [];
@@ -1011,9 +1008,7 @@ class AlteracaoCardapio extends Component {
                         ? moment().toDate()
                         : proximos_dois_dias_uteis
                     }
-                    maxDate={moment()
-                      .endOf("year")
-                      .toDate()}
+                    maxDate={fimDoCalendario()}
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
                   />
@@ -1028,9 +1023,7 @@ class AlteracaoCardapio extends Component {
                           ? moment().toDate()
                           : proximos_dois_dias_uteis
                       }
-                      maxDate={moment()
-                        .endOf("year")
-                        .toDate()}
+                      maxDate={fimDoCalendario()}
                       disabled={
                         this.props.alterar_dia ||
                         (motivo && this.DisabledDataInicial(motivo))

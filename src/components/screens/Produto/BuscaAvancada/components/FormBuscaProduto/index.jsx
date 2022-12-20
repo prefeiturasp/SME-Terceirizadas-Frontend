@@ -20,7 +20,8 @@ import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
   getNomesUnicosFabricantes,
-  getNomesTerceirizadas
+  getNomesTerceirizadas,
+  getNomesUnicosEditais
 } from "services/produto.service";
 
 import {
@@ -29,6 +30,8 @@ import {
   getTodasOpcoesStatusPorPerfil
 } from "./helpers";
 import "./style.scss";
+import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import { required } from "helpers/fieldValidators";
 
 const initialState = {
   dados: {},
@@ -37,7 +40,8 @@ const initialState = {
   marcas: [],
   fabricantes: [],
   dataMinima: null,
-  dataMaxima: null
+  dataMaxima: null,
+  editais: []
 };
 
 const FORM_NAME = "buscaAvancadaProduto";
@@ -67,8 +71,9 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
         getNomesUnicosProdutos(),
         getNomesUnicosMarcas(),
         getNomesUnicosFabricantes(),
-        getNomesTerceirizadas()
-      ]).then(([produtos, marcas, fabricantes, terceirizadas]) =>
+        getNomesTerceirizadas(),
+        getNomesUnicosEditais()
+      ]).then(([produtos, marcas, fabricantes, terceirizadas, editais]) =>
         dispatch({
           type: "popularDados",
           payload: {
@@ -77,7 +82,8 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
             fabricantes: fabricantes.data.results,
             terceirizadas: terceirizadas.data.results.map(
               el => el.nome_fantasia
-            )
+            ),
+            editais: editais.data.results
           }
         })
       );
@@ -149,6 +155,19 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
       render={({ form, handleSubmit, submitting, values }) => (
         <form onSubmit={handleSubmit} className="busca-produtos">
           <FinalFormToRedux form={FORM_NAME} />
+          <div className="row">
+            <div className="col-6">
+              <Field
+                component={AutoCompleteField}
+                dataSource={state.dados.editais}
+                label="Edital"
+                className="input-busca-produto"
+                name="nome_edital"
+                required
+                validate={required}
+              />
+            </div>
+          </div>
           <div className="form-row">
             <div className="col-12 col-md-4 col-xl-4">
               <div className="row">

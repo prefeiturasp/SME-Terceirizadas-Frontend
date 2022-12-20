@@ -4,8 +4,10 @@ export class Rascunhos extends Component {
   render() {
     const {
       alteracaoCardapioList,
-      OnDeleteButtonClicked,
-      OnEditButtonClicked
+      removerRascunho,
+      carregarRascunho,
+      form,
+      values
     } = this.props;
     const cardsRascunhos = alteracaoCardapioList.map(
       (alteracaoDeCardapio, key) => {
@@ -27,14 +29,12 @@ export class Rascunhos extends Component {
             </div>
             <div className="icon-draft-card float-right">
               Salvo em: {alteracaoDeCardapio.criado_em}
-              <span onClick={() => OnDeleteButtonClicked(id_externo, uuid)}>
+              <span onClick={() => removerRascunho(id_externo, uuid, form)}>
                 <i className="fas fa-trash" />
               </span>
               <span
                 onClick={() =>
-                  OnEditButtonClicked({
-                    alteracaoDeCardapio
-                  })
+                  carregarRascunho(alteracaoDeCardapio, form, values)
                 }
               >
                 <i className="fas fa-edit" />

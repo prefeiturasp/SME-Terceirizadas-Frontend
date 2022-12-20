@@ -2,6 +2,7 @@ import moment from "moment";
 import { format, getYear } from "date-fns";
 import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
+import { TIPO_PERFIL } from "constants/shared";
 
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
@@ -13,6 +14,17 @@ export const requiredOptionSearchSelect = escolas => value =>
   escolas.find(escola => escola.label === value)
     ? undefined
     : "Selecione uma opção válida";
+
+export const requiredSearchSelectUnidEducDietas = escolas => value => {
+  let value_ = value;
+  if (value && localStorage.getItem("tipo_perfil") === TIPO_PERFIL.ESCOLA) {
+    return undefined;
+  }
+  return value_ === undefined ||
+    escolas.find(escola => escola.label === value_.split("- ")[1])
+    ? undefined
+    : "Selecione uma opção válida";
+};
 
 export const dataDuplicada = listaDatas => value => {
   return value &&
@@ -129,76 +141,6 @@ export const maxValue = max => value =>
 export const maxValueFrequenciaAlimentacao = (max, inputName) => value => {
   return value && value > max && inputName.includes("frequencia")
     ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos matriculados."
-    : undefined;
-};
-
-export const maxValueFrequenciaDietas = (max, inputName) => value => {
-  return value && value > max && inputName.includes("frequencia")
-    ? "A quantidade de alunos frequentes não pode ser maior do que a quantidade de alunos com dietas autorizadas."
-    : undefined;
-};
-
-export const maxValueFrequenciaDietasMaisAlimentacao = (
-  max,
-  inputName,
-  dia,
-  values,
-  idCategoriaAlimentacao
-) => value => {
-  return value &&
-    Number(value) +
-      Number(
-        values[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
-      ) >
-      max &&
-    inputName.includes("frequencia")
-    ? "O apontamento informado ultrapassou o número de frequentes informados no dia. É preciso subtrair o aluno com Dieta Especial Autorizada do lançamento na planilha de Alimentação."
-    : undefined;
-};
-
-export const maxValueLanche4h5hDietas = (max, inputName) => value => {
-  return value &&
-    value > max &&
-    (inputName.includes("lanche_4h") ||
-      inputName.includes("lanche_5h") ||
-      inputName.includes("refeicao"))
-    ? "A quantidade não pode ser maior do que a quantidade inserida em Frequência."
-    : undefined;
-};
-
-export const maxValueRefeicaoDietasMaisAlimentacao = (
-  max,
-  inputName,
-  dia,
-  values,
-  idCategoriaAlimentacao
-) => value => {
-  return value &&
-    Number(value) +
-      Number(
-        values[`refeicao__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
-      ) >
-      max &&
-    inputName.includes("refeicao")
-    ? "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Refeição na planilha de Alimentação."
-    : undefined;
-};
-
-export const maxValueLanchesDietasMaisAlimentacao = (
-  max,
-  inputName,
-  dia,
-  values,
-  idCategoriaAlimentacao
-) => value => {
-  return value &&
-    Number(value) +
-      Number(
-        values[`lanche__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
-      ) >
-      max &&
-    (inputName.includes("lanche_4h") || inputName.includes("lanche_5h"))
-    ? "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Lanche na planilha de Alimentação."
     : undefined;
 };
 

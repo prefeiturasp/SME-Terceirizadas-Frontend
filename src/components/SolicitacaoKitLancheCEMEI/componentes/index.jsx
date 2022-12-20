@@ -266,34 +266,38 @@ export const TabelaFaixasEtariasCEI = ({ faixasEtariasCEI, values }) => {
       <tbody>
         {faixasEtariasCEI.map((faixa, key) => {
           return (
-            <tr key={key} className="row">
-              <td className="col-8">{faixa.faixa_etaria.__str__}</td>
-              <td className="col-2 text-center">{faixa.count}</td>
-              <td className="col-2 text-center">
-                <Field
-                  component={InputText}
-                  type="number"
-                  name={`solicitacao_cei.faixas_quantidades.${
-                    faixa.faixa_etaria.uuid
-                  }`}
-                  validate={composeValidators(
-                    naoPodeSerZero,
-                    maxValue(faixa.count)
-                  )}
-                  max={parseInt(faixa.count)}
-                  min={0}
-                  step="1"
-                />
-              </td>
-            </tr>
+            faixa.faixa_etaria.inicio > 11 && (
+              <tr key={key} className="row">
+                <td className="col-8">{faixa.faixa_etaria.__str__}</td>
+                <td className="col-2 text-center">{faixa.count}</td>
+                <td className="col-2 text-center">
+                  <Field
+                    component={InputText}
+                    type="number"
+                    name={`solicitacao_cei.faixas_quantidades.${
+                      faixa.faixa_etaria.uuid
+                    }`}
+                    validate={composeValidators(
+                      naoPodeSerZero,
+                      maxValue(faixa.count)
+                    )}
+                    max={parseInt(faixa.count)}
+                    min={0}
+                    step="1"
+                  />
+                </td>
+              </tr>
+            )
           );
         })}
         <tr className="row">
           <td className="col-8 font-weight-bold">Total</td>
           <td className="col-2 text-center">
-            {faixasEtariasCEI.reduce(function(total, faixa) {
-              return total + faixa.count;
-            }, totalMatriculados)}
+            {faixasEtariasCEI
+              .filter(faixa => faixa.faixa_etaria.inicio > 11)
+              .reduce(function(total, faixa) {
+                return total + faixa.count;
+              }, totalMatriculados)}
           </td>
           <td className="col-2 text-center">
             {Object.values(values.solicitacao_cei.faixas_quantidades).reduce(

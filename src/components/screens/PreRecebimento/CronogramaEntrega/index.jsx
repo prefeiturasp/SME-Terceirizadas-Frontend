@@ -8,10 +8,14 @@ import {
 import { NavLink } from "react-router-dom";
 import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 import Filtros from "./components/Filtros";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import {
+  gerarParametrosConsulta,
+  usuarioEhFornecedor
+} from "helpers/utilities";
 import { getListagemCronogramas } from "../../../../services/cronograma.service.js";
 import ListagemCronogramas from "./components/ListagemCronogramas";
 import MeusDadosContext from "context/MeusDadosContext";
+import { getArmazens } from "services/terceirizada.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -21,6 +25,7 @@ export default () => {
   const [page, setPage] = useState();
   const [ativos, setAtivos] = useState([]);
   const [buscaPorParametro, setBuscaPorParametro] = useState(false);
+  const [armazens, setArmazens] = useState([{}]);
 
   const { meusDados } = useContext(MeusDadosContext);
   const inicioResultado = useRef();
@@ -45,10 +50,23 @@ export default () => {
     }
   };
 
+  const buscaArmazens = async () => {
+    const response = await getArmazens();
+    setArmazens(
+      response.data.results.map(armazem => ({
+        label: armazem.nome_fantasia,
+        value: armazem.uuid
+      }))
+    );
+  };
+
   useEffect(() => {
     if (filtros) {
       buscarCronogramas(1);
       setPage(1);
+    }
+    if (usuarioEhFornecedor()) {
+      buscaArmazens();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
@@ -87,6 +105,7 @@ export default () => {
             cronogramas={cronogramas}
             page={page}
             inicioResultado={inicioResultado}
+            armazens={armazens}
           />
           {meusDados && podeCadastrar(meusDados.vinculo_atual.perfil.nome) && (
             <NavLink to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}`}>

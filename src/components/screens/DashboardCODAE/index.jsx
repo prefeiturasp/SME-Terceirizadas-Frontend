@@ -176,14 +176,26 @@ class DashboardCODAE extends Component {
       setTimeout(async () => {
         this.getSolicitacoesAsync({
           busca: values.titulo,
-          ...PARAMS
+          ...this.prepararParametros(values)
         });
       }, 500);
     } else {
       setTimeout(async () => {
-        this.getSolicitacoesAsync(PARAMS);
+        this.getSolicitacoesAsync(this.prepararParametros(values));
       }, 500);
     }
+  }
+
+  prepararParametros(values) {
+    const params = PARAMS;
+    params["tipo_solicitacao"] = values.tipo_solicitacao;
+    params["data_evento"] =
+      values.data_evento &&
+      values.data_evento
+        .split("/")
+        .reverse()
+        .join("-");
+    return params;
   }
 
   render() {
@@ -290,6 +302,7 @@ class DashboardCODAE extends Component {
             </div>
           </div>
           <CardBody
+            exibirFiltrosDataEventoETipoSolicitacao={true}
             titulo={"Acompanhamento solicitações"}
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}

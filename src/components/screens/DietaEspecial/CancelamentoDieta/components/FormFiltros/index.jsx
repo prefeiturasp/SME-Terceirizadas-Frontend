@@ -191,7 +191,7 @@ export default ({ setLoading, setFiltros }) => {
                 }}
               </OnChange>
             </div>
-            <div className="col-9 pt-2">
+            <div className="col-9 auto-complete-field">
               <Field
                 label="Nome Completo do Aluno"
                 component={AutoCompleteField}

@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { useLocation } from "react-router-dom";
-import { Field, Form } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
 import {
@@ -32,20 +32,17 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
-import { composeValidators, deepCopy } from "helpers/utilities";
+import { deepCopy } from "helpers/utilities";
+import {
+  botaoAdicionarObrigatorio,
+  validacoesTabelaAlimentacao,
+  validacoesTabelasDietas,
+  validarFormulario
+} from "./validacoes";
 import {
   deveExistirObservacao,
   formatarPayloadPeriodoLancamento
 } from "./helper";
-import {
-  maxValueFrequenciaAlimentacao,
-  maxValueFrequenciaDietas,
-  maxValueFrequenciaDietasMaisAlimentacao,
-  maxValueLanche4h5hDietas,
-  maxValueLancheRefeicaoSobremesa1Oferta,
-  maxValueLanchesDietasMaisAlimentacao,
-  maxValueRefeicaoDietasMaisAlimentacao
-} from "helpers/fieldValidators";
 import {
   getCategoriasDeMedicao,
   getDiasCalendario,
@@ -58,9 +55,8 @@ import {
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
-import "./styles.scss";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
-import { botaoAdicionarObrigatorio, validarFormulario } from "./validacoes";
+import "./styles.scss";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -108,6 +104,7 @@ export default () => {
     setCategoriaObservacaoDiaria
   ] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [formValuesAtualizados, setFormValuesAtualizados] = useState(null);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -767,83 +764,34 @@ export default () => {
     }
   };
 
-  const fieldValidationsTabelaAlimentacao = (
-    rowName,
-    dia,
-    categoria,
-    values
+  const fieldValidationsTabelaAlimentacao = (rowName, dia, categoria) => (
+    value,
+    allValues
   ) => {
-    return composeValidators(
-      maxValueFrequenciaAlimentacao(
-        Number(values[`matriculados__dia_${dia}__categoria_${categoria}`]),
-        `${rowName}__dia_${dia}__categoria_${categoria}`
-      ),
-      maxValueLancheRefeicaoSobremesa1Oferta(
-        Number(values[`frequencia__dia_${dia}__categoria_${categoria}`]),
-        `${rowName}__dia_${dia}__categoria_${categoria}`,
-        solicitacoesAutorizadas,
-        mesAnoConsiderado,
-        dia
-      )
+    return validacoesTabelaAlimentacao(
+      mesAnoConsiderado,
+      solicitacoesAutorizadas,
+      rowName,
+      dia,
+      categoria,
+      value,
+      allValues
     );
   };
 
-  const fieldValidationsTabelasDietas = (rowName, dia, categoria, values) => {
-    const idCategoriaAlimentacao = categoriasDeMedicao.find(categoria =>
-      categoria.nome.includes("ALIMENTAÇÃO")
-    ).id;
-
-    return composeValidators(
-      maxValueFrequenciaDietas(
-        Number(
-          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-        ),
-        `${rowName}__dia_${dia}__categoria_${categoria}`
-      ),
-      maxValueFrequenciaDietasMaisAlimentacao(
-        Number(
-          values[
-            `matriculados__dia_${dia}__categoria_${idCategoriaAlimentacao}`
-          ]
-        ),
-        `${rowName}__dia_${dia}__categoria_${categoria}`,
-        dia,
-        values,
-        idCategoriaAlimentacao
-      ),
-      maxValueLanche4h5hDietas(
-        Number(values[`frequencia__dia_${dia}__categoria_${categoria}`]) || 0,
-        `${rowName}__dia_${dia}__categoria_${categoria}`
-      ),
-      maxValueRefeicaoDietasMaisAlimentacao(
-        Number(
-          values[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
-        ),
-        `${rowName}__dia_${dia}__categoria_${categoria}`,
-        dia,
-        values,
-        idCategoriaAlimentacao
-      ),
-      maxValueLanchesDietasMaisAlimentacao(
-        Number(
-          values[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
-        ),
-        `${rowName}__dia_${dia}__categoria_${categoria}`,
-        dia,
-        values,
-        idCategoriaAlimentacao
-      )
+  const fieldValidationsTabelasDietas = (rowName, dia, categoria) => (
+    value,
+    allValues
+  ) => {
+    return validacoesTabelasDietas(
+      categoriasDeMedicao,
+      rowName,
+      dia,
+      categoria,
+      value,
+      allValues
     );
   };
-
-  // const textoTooltipBotaoObservacao = (dia) => {
-  //   const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(mesAnoConsiderado)}`
-  //   const existeSolicGAAutorizada = solicitacoesAutorizadas.filter(
-  //     solicitacao => solicitacao.data_evento === data).length > 0
-  //   return existeSolicGAAutorizada ?
-  //     "Obrigatório confirmar a quantidade de lançamentos neste dia nas observação." :
-  //     "Obrigatório adicionar observação para lançamentos neste dia."
-  // }
 
   return (
     <Spin tip="Carregando..." spinning={loading}>
@@ -853,8 +801,12 @@ export default () => {
           ...arrayMutators
         }}
         initialValues={dadosIniciais}
-        render={({ handleSubmit, values, form, errors }) => (
+        render={({ handleSubmit, form, errors }) => (
           <form onSubmit={handleSubmit}>
+            <FormSpy
+              subscription={{ values: true, active: true }}
+              onChange={changes => setFormValuesAtualizados(changes.values)}
+            />
             <div className="card mt-3">
               <div className="card-body">
                 <div className="row pb-2">
@@ -884,7 +836,7 @@ export default () => {
                 </div>
                 <div className="weeks-tabs mb-2">
                   <Tabs
-                    onChange={key => onChangeSemana(values, key)}
+                    onChange={key => onChangeSemana(formValuesAtualizados, key)}
                     type="card"
                   >
                     {Array.apply(null, {
@@ -959,7 +911,7 @@ export default () => {
                                               !validacaoSemana(column.dia) && (
                                                 <Botao
                                                   texto={textoBotaoObservacao(
-                                                    values[
+                                                    formValuesAtualizados[
                                                       `${row.name}__dia_${
                                                         column.dia
                                                       }__categoria_${
@@ -970,7 +922,7 @@ export default () => {
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
                                                     botaoAdicionarObrigatorio(
-                                                      values,
+                                                      formValuesAtualizados,
                                                       column.dia,
                                                       categoria,
                                                       diasSobremesaDoce,
@@ -1006,7 +958,7 @@ export default () => {
                                                     column.dia,
                                                     row.name,
                                                     categoria.id,
-                                                    values
+                                                    formValuesAtualizados
                                                   )}
                                                   dia={column.dia}
                                                   defaultValue={defaultValue(
@@ -1016,8 +968,7 @@ export default () => {
                                                   validate={fieldValidationsTabelasDietas(
                                                     row.name,
                                                     column.dia,
-                                                    categoria.id,
-                                                    values
+                                                    categoria.id
                                                   )}
                                                 />
                                                 <OnChange
@@ -1029,7 +980,7 @@ export default () => {
                                                     onChangeInput(
                                                       value,
                                                       errors,
-                                                      values,
+                                                      formValuesAtualizados,
                                                       column.dia,
                                                       categoria.id
                                                     );
@@ -1068,7 +1019,7 @@ export default () => {
                                               !validacaoSemana(column.dia) && (
                                                 <Botao
                                                   texto={textoBotaoObservacao(
-                                                    values[
+                                                    formValuesAtualizados[
                                                       `${row.name}__dia_${
                                                         column.dia
                                                       }__categoria_${
@@ -1079,7 +1030,7 @@ export default () => {
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
                                                     botaoAdicionarObrigatorio(
-                                                      values,
+                                                      formValuesAtualizados,
                                                       column.dia,
                                                       categoria,
                                                       diasSobremesaDoce,
@@ -1115,7 +1066,7 @@ export default () => {
                                                     column.dia,
                                                     row.name,
                                                     categoria.id,
-                                                    values
+                                                    formValuesAtualizados
                                                   )}
                                                   exibeTooltipDiaSobremesaDoce={
                                                     row.name ===
@@ -1142,8 +1093,7 @@ export default () => {
                                                   validate={fieldValidationsTabelaAlimentacao(
                                                     row.name,
                                                     column.dia,
-                                                    categoria.id,
-                                                    values
+                                                    categoria.id
                                                   )}
                                                 />
                                                 <OnChange
@@ -1155,7 +1105,7 @@ export default () => {
                                                     onChangeInput(
                                                       value,
                                                       errors,
-                                                      values,
+                                                      formValuesAtualizados,
                                                       column.dia,
                                                       categoria.id
                                                     );
@@ -1182,10 +1132,11 @@ export default () => {
                     mesAnoConsiderado={mesAnoConsiderado}
                     calendarioMesConsiderado={calendarioMesConsiderado}
                     form={form}
-                    values={values}
+                    values={formValuesAtualizados}
                     rowName={"observacoes"}
                     valoresPeriodosLancamentos={valoresPeriodosLancamentos}
-                    onSubmit={() => onSubmit(values, true)}
+                    onSubmit={() => onSubmit(formValuesAtualizados, true)}
+                    dadosIniciais={dadosIniciais}
                   />
                 )}
                 <Botao
@@ -1199,7 +1150,7 @@ export default () => {
                 <ModalSalvarLancamento
                   closeModal={() => setShowModalSalvarLancamento(false)}
                   showModal={showModalSalvarLancamento}
-                  onSubmit={() => onSubmit(values)}
+                  onSubmit={() => onSubmit(formValuesAtualizados)}
                 />
               </div>
             </div>

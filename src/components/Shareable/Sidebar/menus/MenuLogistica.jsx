@@ -19,7 +19,8 @@ import {
   usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhCodaeDilog
 } from "helpers/utilities";
 
 const MenuLogistica = () => {
@@ -58,7 +59,7 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {usuarioEhLogistica() && (
+      {usuarioEhCodaeDilog() && (
         <LeafItem to={`/${LOGISTICA}/${CONFERENCIA_INCONSISTENCIAS}`}>
           Conferência de Inconsistência
         </LeafItem>
