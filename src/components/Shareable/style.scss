@@ -548,26 +548,38 @@ div.caption-choices {
 table.table-report {
   width: 100%;
   font-size: 14px;
+
   tr {
     &:nth-of-type(odd) {
       border-bottom: 1px solid $blackSubtle;
     }
+
     &:first-child {
       color: white;
       background-color: $blackSubtle;
     }
+
     &:last-child {
       border-bottom: 2px solid $blackSubtle;
     }
+
     th,
     td {
       padding: 15px 30px;
     }
+
     td {
       color: $blackInput;
     }
+
     td.faixas-etarias {
       padding: 0;
+    }
+  }
+
+  &.inclusoes {
+    tr.cancelado {
+      background-color: $redBackgroundToastError;
     }
   }
 }
