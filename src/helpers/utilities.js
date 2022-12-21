@@ -501,6 +501,12 @@ export const usuarioEhFornecedor = () => {
   );
 };
 
+export const usuarioEhAdministradorRepresentanteCodae = () => {
+  return [PERFIL.ADMINISTRADOR_REPRESENTANTE_CODAE].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")

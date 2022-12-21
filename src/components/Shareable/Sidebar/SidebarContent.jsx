@@ -26,7 +26,8 @@ import {
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhOutrosDilog,
   usuarioEhPreRecebimentoSemLogistica,
-  usuarioEhFornecedor
+  usuarioEhFornecedor,
+  usuarioEhAdministradorRepresentanteCodae
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -122,7 +123,8 @@ export const SidebarContent = () => {
     !usuarioEhFornecedor() &&
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
-    !usuarioEhPreRecebimento();
+    !usuarioEhPreRecebimento() &&
+    !usuarioEhAdministradorRepresentanteCodae();
 
   const exibirConfiguracoes =
     !usuarioEhAdmEscolaTerceirizada() &&
