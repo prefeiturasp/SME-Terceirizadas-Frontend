@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Field, reduxForm } from "redux-form";
+import { Field, reduxForm, change } from "redux-form";
 import {
   required,
   peloMenosUmCaractere,
@@ -14,6 +14,7 @@ import {
   dateDelta,
   escolaEhCEMEI,
   fimDoCalendario,
+  formatarParaMultiselect,
   getError
 } from "../../helpers/utilities";
 import { loadInversaoDeDiaDeCardapio } from "../../reducers/inversaoDeDiaDeCardapio.reducer";
@@ -33,8 +34,13 @@ import { STATUS_DRE_A_VALIDAR } from "../../configs/constants";
 import { InputComData } from "../Shareable/DatePicker";
 import CKEditorField from "components/Shareable/CKEditorField";
 import Botao from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE,
+  BUTTON_ICON
+} from "../Shareable/Botao/constants";
 import { JS_DATE_NOVEMBRO } from "constants/shared";
+import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -46,7 +52,10 @@ export class InversaoDeDiaDeCardapio extends Component {
       salvarAtualizarLbl: "Salvar Rascunho",
       segundoDiaUtil: "",
       showModal: false,
-      loading: true
+      loading: true,
+      adicionarOutroDia: false,
+      tiposAlimentacao: [],
+      tiposAlimentacaoSelecionados: []
     };
     this.carregarRascunho = this.carregarRascunho.bind(this);
     this.removerRascunho = this.removerRascunho.bind(this);
@@ -93,7 +102,32 @@ export class InversaoDeDiaDeCardapio extends Component {
       title: `Inversão de dia de Cardápio # ${
         inversaoDeDiaDeCardapio.id_externo
       }`,
-      salvarAtualizarLbl: "Atualizar"
+      salvarAtualizarLbl: "Atualizar",
+      adicionarOutroDia: inversaoDeDiaDeCardapio.data_de_inversao_2
+        ? true
+        : false,
+      tiposAlimentacaoSelecionados: formatarParaMultiselect(
+        inversaoDeDiaDeCardapio.tipos_alimentacao
+      )
+    });
+  }
+
+  retornaTiposAlimentacaoSemRepeticao(vinculos) {
+    let tiposAlimentacao = [];
+    for (let periodo in vinculos) {
+      let listaTiposAlimentacao = vinculos[periodo].tipos_alimentacao;
+      for (let tipoAlimentacao in listaTiposAlimentacao) {
+        if (
+          !tiposAlimentacao.filter(
+            t => t.nome === listaTiposAlimentacao[tipoAlimentacao].nome
+          ).length > 0
+        ) {
+          tiposAlimentacao.push(listaTiposAlimentacao[tipoAlimentacao]);
+        }
+      }
+    }
+    this.setState({
+      tiposAlimentacao: formatarParaMultiselect(tiposAlimentacao)
     });
   }
 
@@ -101,7 +135,7 @@ export class InversaoDeDiaDeCardapio extends Component {
     this.refresh();
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate() {
     const { meusDados, proximos_dois_dias_uteis } = this.props;
     const { loading } = this.state;
     const dadosDaAPItotalmenteCarregados =
@@ -110,6 +144,13 @@ export class InversaoDeDiaDeCardapio extends Component {
       this.setState({
         loading: false
       });
+      const escola_uuid = meusDados.vinculo_atual.instituicao.uuid;
+      const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
+      if (response.status === HTTP_STATUS.OK) {
+        this.retornaTiposAlimentacaoSemRepeticao(response.data.results);
+      } else {
+        console.log("Erro ao carregar vínculos de tipo de alimentação.");
+      }
     }
   }
 
@@ -141,6 +182,19 @@ export class InversaoDeDiaDeCardapio extends Component {
     }
   };
 
+  removerDiaAdicional() {
+    this.props.dispatch(
+      change("inversaoDeDiaDeCardapioForm", "data_de_2", null)
+    );
+    this.props.dispatch(
+      change("inversaoDeDiaDeCardapioForm", "data_para_2", null)
+    );
+    this.props.dispatch(
+      change("inversaoDeDiaDeCardapioForm", "alunos_da_cemei_2", "")
+    );
+    this.setState({ ...this.state, adicionarOutroDia: false });
+  }
+
   iniciarPedido(uuid) {
     inicioPedido(uuid).then(
       res => {
@@ -161,69 +215,168 @@ export class InversaoDeDiaDeCardapio extends Component {
     );
   }
 
-  onSubmit(values) {
-    if (values["alunos_da_cemei"]) {
-      if (values["alunos_da_cemei"].length === 2) {
-        values["alunos_da_cemei"] = "Todos";
-      } else if (values["alunos_da_cemei"].includes("CEI")) {
-        values["alunos_da_cemei"] = "CEI";
+  prepararAlunosCemei(alunos_da_cemei) {
+    if (alunos_da_cemei) {
+      if (alunos_da_cemei.length === 2) {
+        return "Todos";
+      } else if (alunos_da_cemei.includes("CEI")) {
+        return "CEI";
       } else {
-        values["alunos_da_cemei"] = "EMEI";
+        return "EMEI";
       }
     }
-    return new Promise(() => {
-      values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
-      if (!values.uuid) {
-        criarInversaoDeDiaDeCardapio(values).then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(response.data.uuid);
-            } else {
-              toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
-              this.resetForm();
-            }
+    return "";
+  }
+
+  onSubmit(values) {
+    values["alunos_da_cemei"] = this.prepararAlunosCemei(
+      values["alunos_da_cemei"]
+    );
+    values["alunos_da_cemei_2"] = this.prepararAlunosCemei(
+      values["alunos_da_cemei_2"]
+    );
+    values.escola = this.props.meusDados.vinculo_atual.instituicao.uuid;
+    if (!values.uuid) {
+      criarInversaoDeDiaDeCardapio(values).then(response => {
+        if (response.status === HTTP_STATUS.CREATED) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
           } else {
+            toastSuccess("Inversão de dia de Cardápio salvo com sucesso!");
+            this.resetForm();
+          }
+        } else {
+          toastError(
+            `Erro ao enviar Inversão de dia de Cardápio: ${getError(
+              response.data
+            )}`
+          );
+        }
+      });
+    } else {
+      atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
+        if (response.status === HTTP_STATUS.OK) {
+          if (values.status === STATUS_DRE_A_VALIDAR) {
+            this.iniciarPedido(response.data.uuid);
+          } else {
+            toastSuccess("Inversão de dia de Cardápio atualizado com sucesso!");
+            this.resetForm();
+          }
+        } else {
+          let keys = Object.keys(response.data);
+          keys.forEach(function() {
             toastError(
               `Erro ao enviar Inversão de dia de Cardápio: ${getError(
                 response.data
               )}`
             );
-          }
-        });
-      } else {
-        atualizarInversaoDeDiaDeCardapio(values.uuid, values).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            if (values.status === STATUS_DRE_A_VALIDAR) {
-              this.iniciarPedido(response.data.uuid);
-            } else {
-              toastSuccess(
-                "Inversão de dia de Cardápio atualizado com sucesso!"
-              );
-              this.resetForm();
-            }
-          } else {
-            let keys = Object.keys(response.data);
-            keys.forEach(function() {
-              toastError(
-                `Erro ao enviar Inversão de dia de Cardápio: ${getError(
-                  response.data
-                )}`
-              );
-            });
-          }
-        });
-      }
-    });
+          });
+        }
+      });
+    }
   }
-
   render() {
-    const { showModal, loading, rascunhosInversoes } = this.state;
+    const {
+      showModal,
+      loading,
+      rascunhosInversoes,
+      adicionarOutroDia,
+      tiposAlimentacao
+    } = this.state;
     const {
       handleSubmit,
       pristine,
       proximos_dois_dias_uteis,
       meusDados
     } = this.props;
+    const linha_adicionar_dia = (
+      data_de,
+      data_para,
+      alunos,
+      pode_remover = false
+    ) => (
+      <div className="row w-100 pt-3">
+        <div
+          className={`inversao-datepicker col-md-12 col-lg-${
+            escolaEhCEMEI() ? "3" : "4"
+          }`}
+        >
+          <Field
+            component={InputComData}
+            name={data_de}
+            label="Referência"
+            placeholder="Cardápio dia"
+            required
+            validate={required}
+            onBlur={event => this.validaDiasUteis(event.target.value)}
+            onChange={value => this.validaDiasUteis(value)}
+            minDate={proximos_dois_dias_uteis}
+            maxDate={
+              new Date().getMonth() === JS_DATE_NOVEMBRO
+                ? fimDoCalendario()
+                : dateDelta(60)
+            }
+          />
+        </div>
+        <div className={`col-md-12 col-lg-1 for-span`}>
+          <i className="fas fa-arrow-left" />
+          <span className="pl-1 pr-1">para</span>
+          <i className="fas fa-arrow-right" />
+        </div>
+        <div
+          className={`inversao-datepicker col-md-12 col-lg-${
+            escolaEhCEMEI() ? "3" : "4"
+          }`}
+        >
+          <Field
+            component={InputComData}
+            name={data_para}
+            label="Aplicar em"
+            placeholder="Cardápio dia"
+            required
+            validate={required}
+            onBlur={event => this.validaDiasUteis(event.target.value)}
+            onChange={value => this.validaDiasUteis(value)}
+            minDate={proximos_dois_dias_uteis}
+            maxDate={
+              new Date().getMonth() === JS_DATE_NOVEMBRO
+                ? fimDoCalendario()
+                : dateDelta(60)
+            }
+          />
+        </div>
+        {escolaEhCEMEI() && (
+          <div className="inversao-datepicker col-md-12 col-lg-2">
+            <Field
+              component={MultiSelect}
+              disableSearch
+              label="Alunos"
+              name={alunos}
+              multiple
+              options={[
+                { value: "CEI", label: "CEI" },
+                { value: "EMEI", label: "EMEI" }
+              ]}
+              nomeDoItemNoPlural="Alunos"
+              validate={required}
+            />
+          </div>
+        )}
+        {pode_remover && (
+          <div className="col-md-12 col-lg-3">
+            <Botao
+              texto="Remover dia"
+              titulo="remover_dia"
+              icon={BUTTON_ICON.TRASH}
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.BLUE_OUTLINE}
+              className="w-100 py-0 btn-remover"
+              onClick={() => this.removerDiaAdicional()}
+            />
+          </div>
+        )}
+      </div>
+    );
     return (
       <div>
         {loading && !meusDados ? (
@@ -254,74 +407,48 @@ export class InversaoDeDiaDeCardapio extends Component {
                 <label className="card-title font-weight-bold">
                   Descrição da Inversão
                 </label>
-                <div className="row w-100 pt-3">
-                  <div
-                    className={`inversao-datepicker col-md-12 col-lg-${
-                      escolaEhCEMEI() ? "3" : "5"
-                    }`}
-                  >
+                <div className="row">
+                  <div className="col-8">
                     <Field
-                      component={InputComData}
-                      name="data_de"
-                      label="Referência"
-                      placeholder="Cardápio dia"
+                      component={MultiSelect}
+                      disableSearch
+                      label="Tipo de Alimentação"
+                      name="tipos_alimentacao"
                       required
+                      multiple
+                      options={tiposAlimentacao}
+                      nomeDoItemNoPlural="Tipos de Alimentação"
                       validate={required}
-                      onBlur={event => this.validaDiasUteis(event.target.value)}
-                      onChange={value => this.validaDiasUteis(value)}
-                      minDate={proximos_dois_dias_uteis}
-                      maxDate={
-                        new Date().getMonth() === JS_DATE_NOVEMBRO
-                          ? fimDoCalendario()
-                          : dateDelta(60)
-                      }
                     />
                   </div>
-                  <div className={`col-md-12 col-lg-1 for-span`}>
-                    <i className="fas fa-arrow-left" />
-                    <span className="pl-3 pr-3">para</span>
-                    <i className="fas fa-arrow-right" />
-                  </div>
-                  <div
-                    className={`inversao-datepicker col-md-12 col-lg-${
-                      escolaEhCEMEI() ? "3" : "5"
-                    }`}
-                  >
-                    <Field
-                      component={InputComData}
-                      name="data_para"
-                      label="Aplicar em"
-                      placeholder="Cardápio dia"
-                      required
-                      validate={required}
-                      onBlur={event => this.validaDiasUteis(event.target.value)}
-                      onChange={value => this.validaDiasUteis(value)}
-                      minDate={proximos_dois_dias_uteis}
-                      maxDate={
-                        new Date().getMonth() === JS_DATE_NOVEMBRO
-                          ? fimDoCalendario()
-                          : dateDelta(60)
-                      }
-                    />
-                  </div>
-                  {escolaEhCEMEI() && (
-                    <div className="inversao-datepicker col-md-12 col-lg-5">
-                      <Field
-                        component={MultiSelect}
-                        disableSearch
-                        label="Alunos"
-                        name="alunos_da_cemei"
-                        multiple
-                        options={[
-                          { value: "CEI", label: "CEI" },
-                          { value: "EMEI", label: "EMEI" }
-                        ]}
-                        nomeDoItemNoPlural="Alunos"
-                        validate={required}
+                </div>
+                {linha_adicionar_dia("data_de", "data_para", "alunos_da_cemei")}
+                {adicionarOutroDia ? (
+                  linha_adicionar_dia(
+                    "data_de_2",
+                    "data_para_2",
+                    "alunos_da_cemei_2",
+                    true
+                  )
+                ) : (
+                  <div className="row">
+                    <div className="col-5">
+                      <Botao
+                        texto="Adicionar Dia"
+                        titulo="adicionar_dia"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="mt-3 mb-3"
+                        onClick={() =>
+                          this.setState({
+                            ...this.state,
+                            adicionarOutroDia: true
+                          })
+                        }
                       />
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-12">
                     <Field

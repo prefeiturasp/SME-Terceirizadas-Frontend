@@ -2,7 +2,8 @@ import React from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -110,6 +111,19 @@ export const CorpoRelatorio = props => {
         </div>
       )}
       <hr />
+      {inversaoDiaCardapio.tipos_alimentacao.length > 0 && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Tipos de Alimentação</p>
+            <p>
+              {stringSeparadaPorVirgulas(
+                inversaoDiaCardapio.tipos_alimentacao,
+                "nome"
+              )}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="row">
         <div className="col-12 report-label-value">
           <p>Motivo</p>
@@ -138,6 +152,14 @@ export const CorpoRelatorio = props => {
               : inversaoDiaCardapio.data_para_inversao}
           </td>
         </tr>
+        {inversaoDiaCardapio.data_de_inversao_2 && (
+          <tr>
+            <td className="text-right pr-5">
+              {inversaoDiaCardapio.data_de_inversao_2}
+            </td>
+            <td>{inversaoDiaCardapio.data_para_inversao_2}</td>
+          </tr>
+        )}
       </table>
       <div className="row">
         <div className="col-12 report-label-value">
