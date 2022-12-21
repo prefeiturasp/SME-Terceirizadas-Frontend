@@ -22,7 +22,8 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
   usuarioEhLogistica,
-  usuarioEhEmpresa
+  usuarioEhEmpresa,
+  usuarioEhAdministradorRepresentanteCodae
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -44,7 +45,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorGpCODAE();
 
   const exibirGestaoUsuario =
-    usuarioEhLogistica() || usuarioEhCoordenadorCODAE();
+    usuarioEhLogistica() ||
+    usuarioEhCoordenadorCODAE() ||
+    usuarioEhAdministradorRepresentanteCodae();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>

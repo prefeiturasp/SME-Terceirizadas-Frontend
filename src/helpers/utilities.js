@@ -501,6 +501,12 @@ export const usuarioEhFornecedor = () => {
   );
 };
 
+export const usuarioEhAdministradorRepresentanteCodae = () => {
+  return [PERFIL.ADMINISTRADOR_REPRESENTANTE_CODAE].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const escolaEhCei = () => {
   return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
     localStorage.getItem("nome_instituicao")
@@ -556,7 +562,10 @@ export const usuarioEhAdministradorCODAE = () => {
 };
 
 export const usuarioEhCODAEDietaEspecial = () => {
-  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
+  return (
+    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL &&
+    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_REPRESENTANTE_CODAE
+  );
 };
 
 export const usuarioEhNutricionistaSupervisao = () => {

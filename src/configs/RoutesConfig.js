@@ -123,7 +123,8 @@ import {
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhEmpresa,
   usuarioEhCodaeDilog,
-  usuarioEhFornecedor
+  usuarioEhFornecedor,
+  usuarioEhAdministradorRepresentanteCodae
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -749,7 +750,10 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhLogistica()
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhLogistica() ||
+      usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -769,7 +773,10 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhLogistica()
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhLogistica() ||
+      usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/configuracoes`,
