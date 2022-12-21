@@ -59,6 +59,27 @@ export class Rascunhos extends Component {
                       ? inversaoDeDiaDeCardapio.cardapio_para.data
                       : inversaoDeDiaDeCardapio.data_para_inversao}
                   </b>
+                  {inversaoDeDiaDeCardapio.data_para_inversao_2 && (
+                    <p>
+                      Substituição do dia:{" "}
+                      <b>
+                        {inversaoDeDiaDeCardapio.cardapio_de
+                          ? inversaoDeDiaDeCardapio.cardapio_de.data
+                          : inversaoDeDiaDeCardapio.data_de_inversao_2}
+                      </b>{" "}
+                      <i
+                        className={"fa fa-arrow-right ml-2 mr-2"}
+                        style={{ color: "#2881BB" }}
+                      />{" "}
+                      para o dia:
+                      <b>
+                        {" "}
+                        {inversaoDeDiaDeCardapio.cardapio_para
+                          ? inversaoDeDiaDeCardapio.cardapio_para.data
+                          : inversaoDeDiaDeCardapio.data_para_inversao_2}
+                      </b>
+                    </p>
+                  )}
                 </p>
               </div>
             </div>
