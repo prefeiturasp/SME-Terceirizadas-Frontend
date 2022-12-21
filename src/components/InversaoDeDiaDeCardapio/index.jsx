@@ -149,7 +149,7 @@ export class InversaoDeDiaDeCardapio extends Component {
       if (response.status === HTTP_STATUS.OK) {
         this.retornaTiposAlimentacaoSemRepeticao(response.data.results);
       } else {
-        console.log("Erro ao carregar vínculos de tipo de alimentação.");
+        toastError("Erro ao carregar vínculos de tipo de alimentação.");
       }
     }
   }
