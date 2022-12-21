@@ -562,10 +562,7 @@ export const usuarioEhAdministradorCODAE = () => {
 };
 
 export const usuarioEhCODAEDietaEspecial = () => {
-  return (
-    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_REPRESENTANTE_CODAE
-  );
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.DIETA_ESPECIAL;
 };
 
 export const usuarioEhNutricionistaSupervisao = () => {
