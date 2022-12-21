@@ -19,3 +19,8 @@ export const getListagemCronogramas = async params => {
   const url = `/cronogramas/`;
   return await axios.get(url, { params });
 };
+
+export const fornecedorConfirma = async uuid => {
+  const url = `/cronogramas/${uuid}/fornecedor-confirma-cronograma/`;
+  return await axios.patch(url);
+};
