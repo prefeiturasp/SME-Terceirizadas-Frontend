@@ -1,5 +1,10 @@
 @import "../../styles/variables.scss";
 
+.btn-remover {
+  margin-top: 30px !important;
+  height: 35px !important;
+}
+
 .card.inversao-dia-cardapio {
   .card-title {
     color: $blackInput;
@@ -29,8 +34,8 @@
   }
 
   .for-span {
-    font-size: 14px;
+    font-size: 13px;
     color: $blackInput;
-    margin-top: 45px;
+    margin-top: 40px;
   }
 }

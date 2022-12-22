@@ -57,35 +57,33 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                 </div>
 
                 <div className={`${bordas}`}>
-                  {!usuarioEhFornecedor() && (
-                    <>
-                      {cronograma.status !== "Rascunho" ? (
-                        <>
+                  <>
+                    {cronograma.status !== "Rascunho" ? (
+                      <>
+                        <NavLink
+                          className="float-left"
+                          to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+                            cronograma.uuid
+                          }`}
+                        >
+                          <span className="link-acoes green">Detalhar</span>
+                        </NavLink>
+                      </>
+                    ) : (
+                      <>
+                        {usuarioEhCronogramaCriacaoEdicao() && (
                           <NavLink
                             className="float-left"
-                            to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+                            to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
                               cronograma.uuid
                             }`}
                           >
-                            <span className="link-acoes green">Detalhar</span>
+                            <span className="link-acoes green">Editar</span>
                           </NavLink>
-                        </>
-                      ) : (
-                        <>
-                          {usuarioEhCronogramaCriacaoEdicao() && (
-                            <NavLink
-                              className="float-left"
-                              to={`/${PRE_RECEBIMENTO}/${CADASTRO_CRONOGRAMA}/${EDITAR}?uuid=${
-                                cronograma.uuid
-                              }`}
-                            >
-                              <span className="link-acoes green">Editar</span>
-                            </NavLink>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
+                        )}
+                      </>
+                    )}
+                  </>
                 </div>
               </div>
             </div>
