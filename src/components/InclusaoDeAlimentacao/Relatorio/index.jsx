@@ -225,6 +225,7 @@ class Relatorio extends Component {
     const renderModalCancelamentoContinuo = inclusao => {
       return (
         inclusao &&
+        inclusao.motivo &&
         !inclusao.motivo.nome.includes("ETEC") &&
         tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
       );
