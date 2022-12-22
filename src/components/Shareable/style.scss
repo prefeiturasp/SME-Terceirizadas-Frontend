@@ -579,7 +579,23 @@ table.table-report {
 
   &.inclusoes {
     tr.cancelado {
-      background-color: $redBackgroundToastError;
+      td {
+        p:not(.justificativa-cancelamento) {
+          color: $grayDisabled;
+          text-decoration: line-through;
+        }
+      }
+
+      td.weekly {
+        .week-circle {
+          text-decoration: line-through;
+        }
+
+        .week-circle-clicked.green {
+          background-color: $gray;
+          text-decoration: line-through;
+        }
+      }
     }
   }
 }

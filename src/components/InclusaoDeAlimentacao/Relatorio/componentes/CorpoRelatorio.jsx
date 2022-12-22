@@ -263,16 +263,22 @@ export class CorpoRelatorio extends Component {
                             </td>
                           )}
                         <td>
-                          {quantidade_por_periodo.periodo_escolar &&
-                            quantidade_por_periodo.periodo_escolar.nome}
+                          <p>
+                            {quantidade_por_periodo.periodo_escolar &&
+                              quantidade_por_periodo.periodo_escolar.nome}
+                          </p>
                         </td>
                         <td>
-                          {stringSeparadaPorVirgulas(
-                            quantidade_por_periodo.tipos_alimentacao,
-                            "nome"
-                          )}
+                          <p>
+                            {stringSeparadaPorVirgulas(
+                              quantidade_por_periodo.tipos_alimentacao,
+                              "nome"
+                            )}
+                          </p>
                         </td>
-                        <td>{quantidade_por_periodo.numero_alunos}</td>
+                        <td>
+                          <p>{quantidade_por_periodo.numero_alunos}</p>
+                        </td>
                       </tr>,
                       ehInclusaoContinua(tipoSolicitacao) && (
                         <tr
@@ -283,25 +289,28 @@ export class CorpoRelatorio extends Component {
                         >
                           <td colSpan="4">
                             <p>
-                              <strong>Observações:</strong>
+                              <strong>Observações: </strong>
+                              {!["<p></p>", "", null].includes(
+                                quantidade_por_periodo.observacao
+                              ) ? (
+                                <p
+                                  className="value"
+                                  dangerouslySetInnerHTML={{
+                                    __html: quantidade_por_periodo.observacao
+                                  }}
+                                />
+                              ) : (
+                                "sem observações por parte da escola"
+                              )}
                             </p>
-                            {quantidade_por_periodo.observacao !== "<p></p>" ? (
-                              <p
-                                className="value"
-                                dangerouslySetInnerHTML={{
-                                  __html: quantidade_por_periodo.observacao
-                                }}
-                              />
-                            ) : (
-                              "-"
-                            )}
+
                             {quantidade_por_periodo.cancelado && (
-                              <div>
+                              <p className="justificativa-cancelamento">
                                 <span className="font-weight-bold">
                                   PERÍODO CANCELADO - JUSTIFICATIVA:{" "}
                                 </span>
                                 {quantidade_por_periodo.cancelado_justificativa}
-                              </div>
+                              </p>
                             )}
                           </td>
                         </tr>
