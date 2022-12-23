@@ -11,7 +11,9 @@ import {
   filtrarSolicitacoesAlimentacaoCODAE,
   filtrarSolicitacoesAlimentacaoDRE,
   gerarExcelRelatorioSolicitacoesAlimentacaoCODAE,
-  gerarExcelRelatorioSolicitacoesAlimentacaoDRE
+  gerarExcelRelatorioSolicitacoesAlimentacaoDRE,
+  gerarPDFRelatorioSolicitacoesAlimentacaoDRE,
+  gerarPDFRelatorioSolicitacoesAlimentacaoCODAE
 } from "services/relatorios.service";
 
 const atual = {
@@ -50,6 +52,16 @@ const endpointGerarExcel = () => {
   }
 };
 
+const endpointGerarPDF = () => {
+  if (usuarioEhDRE()) {
+    return gerarPDFRelatorioSolicitacoesAlimentacaoDRE;
+  } else if (usuarioEhCODAEGestaoAlimentacao()) {
+    return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
+  } else {
+    return "PERFIL_INVALIDO";
+  }
+};
+
 export default props => (
   <Page
     titulo="Relatório de Solicitações de Alimentação"
@@ -60,6 +72,7 @@ export default props => (
     <RelatorioSolicitacoesAlimentacao
       endpoint={endpointPorPerfil()}
       endpointGerarExcel={endpointGerarExcel()}
+      endpointGerarPDF={endpointGerarPDF()}
       {...props}
     />
   </Page>
