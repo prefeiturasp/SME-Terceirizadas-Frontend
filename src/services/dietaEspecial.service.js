@@ -10,6 +10,7 @@ import { API_URL } from "../constants/config";
 import { ENDPOINT } from "../constants/shared";
 import authService from "./auth";
 import { SOLICITACOES_DIETA } from "./constants";
+import { ErrorHandlerFunction } from "./service-helpers";
 import axios from "./_base";
 
 const authToken = {
@@ -374,4 +375,22 @@ export const gerarPdfRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-pdf/`;
   const { data } = await axios.get(url, { params, responseType: "blob" });
   saveAs(data, "relatorio_dieta_especial.pdf");
+};
+
+export const createDietaEmEdicaoAberta = async payload => {
+  const url = `dietas-em-edicao-abertas/`;
+  const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const deleteDietaEmEdicaoAberta = async id => {
+  const url = `dietas-em-edicao-abertas/${id}/`;
+  const response = await axios.delete(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

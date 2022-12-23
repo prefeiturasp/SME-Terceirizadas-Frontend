@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   getDietaEspecial,
   escolaCancelaSolicitacao,
-  getDietasEspeciaisVigentesDeUmAluno
+  getDietasEspeciaisVigentesDeUmAluno,
+  deleteDietaEmEdicaoAberta,
+  createDietaEmEdicaoAberta
 } from "services/dietaEspecial.service";
 import {
   getProtocoloDietaEspecial,
@@ -33,6 +35,7 @@ import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { Spin } from "antd";
 import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
+import { Websocket } from "services/websocket";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
@@ -46,13 +49,47 @@ const Relatorio = ({ visao }) => {
   const [mostrarHistorico, setMostrarHistorico] = useState(false);
   const [historico, setHistorico] = useState([]);
   const [card, setCard] = useState(null);
+  const [uuidDieta, setUuidDieta] = useState(null);
   const [solicitacaoVigenteAtiva, setSolicitacaoVigenteAtiva] = useState(null);
+  const [dietasAbertas, setDietasAbertas] = useState([]);
+  const [dadosDietaAberta, setDadosDietaAberta] = useState(null);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
-  const tipoUsuario = localStorage.getItem("tipo_perfil");
+  const tipoPerfil = localStorage.getItem("tipo_perfil");
 
-  const fetchData = uuid => {
-    loadSolicitacao(uuid);
+  const fetchData = async uuid => {
+    const payload = {
+      uuid_solicitacao_dieta_especial: uuid
+    };
+    const response = await createDietaEmEdicaoAberta(payload);
+    if (response.status === HTTP_STATUS.CREATED) {
+      setDadosDietaAberta(response.data);
+    }
+  };
+
+  const initSocket = uuid => {
+    return new Websocket(
+      "dietas-em-edicao-abertas/",
+      ({ data }) => {
+        getDietasEspeciaisAbertas(JSON.parse(data));
+      },
+      () => {
+        if (dadosDietaAberta) {
+          deleteDietaEmEdicaoAberta(dadosDietaAberta.id);
+        }
+        initSocket(uuid);
+      },
+      () => {
+        if (uuid) {
+          fetchData(uuid);
+          setUuidDieta(uuid);
+        }
+      }
+    );
+  };
+
+  const getDietasEspeciaisAbertas = content => {
+    content && setDietasAbertas(content.message);
   };
 
   const loadSolicitacao = async uuid => {
@@ -89,9 +126,10 @@ const Relatorio = ({ visao }) => {
     if (card) {
       setCard(card);
     }
-    if (uuid) {
-      fetchData(uuid);
-    }
+    loadSolicitacao(uuid);
+    tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
+      card === "pendentes-aut" &&
+      initSocket(uuid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -193,6 +231,29 @@ const Relatorio = ({ visao }) => {
     setMostrarHistorico(false);
   };
 
+  const dietasFiltradas = () => {
+    return dietasAbertas.filter(dieta =>
+      dieta.uuid_solicitacao_dieta_especial.includes(uuidDieta)
+    );
+  };
+
+  window.onbeforeunload = event => {
+    event.preventDefault();
+    return dadosDietaAberta && deleteDietaEmEdicaoAberta(dadosDietaAberta.id);
+  };
+
+  useEffect(() => {
+    return () => {
+      dadosDietaAberta && deleteDietaEmEdicaoAberta(dadosDietaAberta.id);
+    };
+  }, [dadosDietaAberta]);
+
+  const exibirUsuariosSimultaneos = () => {
+    return (
+      tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL && card === "pendentes-aut"
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       {dietaEspecial && status && (
@@ -203,7 +264,34 @@ const Relatorio = ({ visao }) => {
       <div className="card mt-3">
         <div className="card-body">
           <div className="row">
-            <div className="col-12 mb-3" style={{ alignItems: "flex-end" }}>
+            {exibirUsuariosSimultaneos() && (
+              <div className="col-9 mb-3">
+                {dietasFiltradas().length > 0 && (
+                  <>
+                    <div className="col-5 usuarios-simultaneos-title">
+                      Usuários visualizando simultaneamente:{" "}
+                      {dietasFiltradas().length < 10
+                        ? "0" + String(dietasFiltradas().length)
+                        : dietasFiltradas().length}
+                    </div>
+                    <ul className="col-11 usuarios-simultaneos-dietas">
+                      {dietasFiltradas().map((dieta, index) => (
+                        <li key={index}>
+                          {`${dieta.usuario_com_dieta_aberta.nome} - RF: ${
+                            dieta.usuario_com_dieta_aberta.registro_funcional
+                          } - ${dieta.usuario_com_dieta_aberta.email}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            )}
+            <div
+              className={`${
+                exibirUsuariosSimultaneos() ? "col-3" : "col-12"
+              } col-3 mb-3`}
+            >
               {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
               {dietaEspecial && historico && (
                 <Botao
@@ -211,7 +299,9 @@ const Relatorio = ({ visao }) => {
                   texto="Histórico"
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={showModalHistorico}
-                  className="mr-2 float-left"
+                  className={`mr-2 ${
+                    exibirUsuariosSimultaneos() ? "float-right" : "float-left"
+                  }`}
                 />
               )}
             </div>
@@ -243,7 +333,7 @@ const Relatorio = ({ visao }) => {
                   TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
                   TIPO_PERFIL.NUTRICAO_MANIFESTACAO,
                   TIPO_PERFIL.MEDICAO
-                ].includes(tipoUsuario) && (
+                ].includes(tipoPerfil) && (
                   <EscolaCancelaDietaEspecial
                     uuid={dietaEspecial.uuid}
                     onCancelar={() => loadSolicitacao(dietaEspecial.uuid)}
