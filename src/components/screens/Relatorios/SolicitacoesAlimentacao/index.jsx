@@ -19,7 +19,7 @@ import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownl
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
-  const { endpoint, endpointGerarExcel } = props;
+  const { endpoint, endpointGerarExcel, endpointGerarPDF } = props;
   const { meusDados } = useContext(MeusDadosContext);
 
   const [erroAPI, setErroAPI] = useState("");
@@ -72,6 +72,17 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
       );
     }
     setCarregando(false);
+  };
+
+  const exportarPDF = async () => {
+    setSubmitting(true);
+    const response = await endpointGerarPDF(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+    setSubmitting(false);
   };
 
   const exportarXLSX = async () => {
@@ -140,12 +151,21 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
               <div className="row">
                 <div className="col-12 text-right">
                   <Botao
+                    texto="Baixar PDF"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    icon={BUTTON_ICON.FILE_PDF}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={submitting}
+                    onClick={() => exportarPDF()}
+                  />
+                  <Botao
                     texto="Baixar Excel"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.FILE_EXCEL}
                     type={BUTTON_TYPE.BUTTON}
                     disabled={submitting}
                     onClick={() => exportarXLSX()}
+                    className="ml-3"
                   />
                   {exibirModalCentralDownloads && (
                     <ModalSolicitacaoDownload
