@@ -1,4 +1,5 @@
 import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
 import React, { Component } from "react";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { connect } from "react-redux";
@@ -41,6 +42,7 @@ import {
 } from "../Shareable/Botao/constants";
 import { JS_DATE_NOVEMBRO } from "constants/shared";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { getDiasUteis } from "services/diasUteis.service";
 
 export class InversaoDeDiaDeCardapio extends Component {
   constructor(props) {
@@ -55,6 +57,8 @@ export class InversaoDeDiaDeCardapio extends Component {
       loading: true,
       adicionarOutroDia: false,
       tiposAlimentacao: [],
+      dataInicial: null,
+      dataInicial_2: null,
       tiposAlimentacaoSelecionados: []
     };
     this.carregarRascunho = this.carregarRascunho.bind(this);
@@ -275,6 +279,24 @@ export class InversaoDeDiaDeCardapio extends Component {
       });
     }
   }
+
+  obtemDataInicial = (field, value) => {
+    let dataInicial = this.state.dataInicial;
+    dataInicial = moment(value, "DD/MM/YYYY").add(1, "days")["_d"];
+    this.setState({ [field]: dataInicial });
+    const dataDe = {
+      data: value
+    };
+    getDiasUteis(dataDe).then(response => {
+      const limiteDataFinal = moment(
+        response.data.data_apos_quatro_dias_uteis,
+        "YYYY-MM-DD"
+      )._d;
+      this.setState({ limiteDataFinal });
+      console.log(this.state);
+    });
+  };
+
   render() {
     const {
       showModal,
@@ -293,7 +315,8 @@ export class InversaoDeDiaDeCardapio extends Component {
       data_de,
       data_para,
       alunos,
-      pode_remover = false
+      pode_remover = false,
+      fieldDataInicial = "dataInicial"
     ) => (
       <div className="row w-100 pt-3">
         <div
@@ -309,7 +332,13 @@ export class InversaoDeDiaDeCardapio extends Component {
             required
             validate={required}
             onBlur={event => this.validaDiasUteis(event.target.value)}
-            onChange={value => this.validaDiasUteis(value)}
+            onChange={value => {
+              this.validaDiasUteis(value);
+              this.obtemDataInicial(fieldDataInicial, value);
+              this.props.dispatch(
+                change("inversaoDeDiaDeCardapioForm", data_para, null)
+              );
+            }}
             minDate={proximos_dois_dias_uteis}
             maxDate={
               new Date().getMonth() === JS_DATE_NOVEMBRO
@@ -331,13 +360,14 @@ export class InversaoDeDiaDeCardapio extends Component {
           <Field
             component={InputComData}
             name={data_para}
+            disabled={this.state[fieldDataInicial] === null}
             label="Aplicar em"
             placeholder="Cardápio dia"
             required
             validate={required}
             onBlur={event => this.validaDiasUteis(event.target.value)}
             onChange={value => this.validaDiasUteis(value)}
-            minDate={proximos_dois_dias_uteis}
+            minDate={this.state[fieldDataInicial]}
             maxDate={
               new Date().getMonth() === JS_DATE_NOVEMBRO
                 ? fimDoCalendario()
@@ -346,7 +376,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           />
         </div>
         {escolaEhCEMEI() && (
-          <div className="inversao-datepicker col-md-12 col-lg-2">
+          <div className="inversao-datepicker col-md-12 col-lg-3">
             <Field
               component={MultiSelect}
               disableSearch
@@ -363,7 +393,7 @@ export class InversaoDeDiaDeCardapio extends Component {
           </div>
         )}
         {pode_remover && (
-          <div className="col-md-12 col-lg-3">
+          <div className="col-md-12 col-lg-2">
             <Botao
               texto="Remover dia"
               titulo="remover_dia"
@@ -428,7 +458,8 @@ export class InversaoDeDiaDeCardapio extends Component {
                     "data_de_2",
                     "data_para_2",
                     "alunos_da_cemei_2",
-                    true
+                    true,
+                    "dataInicial_2"
                   )
                 ) : (
                   <div className="row">
