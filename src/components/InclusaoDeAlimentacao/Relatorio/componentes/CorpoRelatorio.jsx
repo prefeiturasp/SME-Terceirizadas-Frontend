@@ -121,7 +121,8 @@ export class CorpoRelatorio extends Component {
         inclusoes,
         data,
         motivo,
-        outro_motivo
+        outro_motivo,
+        status
       }
     } = this.props;
 
@@ -235,7 +236,10 @@ export class CorpoRelatorio extends Component {
                     return [
                       <tr
                         className={
-                          quantidade_por_periodo.cancelado ? "cancelado" : ""
+                          quantidade_por_periodo.cancelado ||
+                          status === "ESCOLA_CANCELOU"
+                            ? "cancelado"
+                            : ""
                         }
                         key={key}
                       >
@@ -284,7 +288,10 @@ export class CorpoRelatorio extends Component {
                         <tr
                           key={key}
                           className={
-                            quantidade_por_periodo.cancelado ? "cancelado" : ""
+                            quantidade_por_periodo.cancelado ||
+                            status === "ESCOLA_CANCELOU"
+                              ? "cancelado"
+                              : ""
                           }
                         >
                           <td colSpan="4">
@@ -304,12 +311,18 @@ export class CorpoRelatorio extends Component {
                               )}
                             </p>
 
-                            {quantidade_por_periodo.cancelado && (
+                            {(quantidade_por_periodo.cancelado ||
+                              status === "ESCOLA_CANCELOU") && (
                               <p className="justificativa-cancelamento">
                                 <span className="font-weight-bold">
                                   PERÍODO CANCELADO - JUSTIFICATIVA:{" "}
                                 </span>
-                                {quantidade_por_periodo.cancelado_justificativa}
+                                {quantidade_por_periodo.cancelado_justificativa ||
+                                  logs.find(
+                                    log =>
+                                      log.status_evento_explicacao ===
+                                      "Escola cancelou"
+                                  ).justificativa}
                               </p>
                             )}
                           </td>
