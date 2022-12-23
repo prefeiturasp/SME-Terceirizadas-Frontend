@@ -221,7 +221,7 @@ export class CorpoRelatorio extends Component {
           />
         ) : (
           <>
-            <table className="table-report mt-3">
+            <table className="table-report inclusoes mt-3">
               <tbody>
                 <tr>
                   {ehInclusaoContinua(tipoSolicitacao) &&
@@ -233,7 +233,12 @@ export class CorpoRelatorio extends Component {
                 {!ehInclusaoCei(tipoSolicitacao) ? (
                   quantidades_periodo.map((quantidade_por_periodo, key) => {
                     return [
-                      <tr key={key}>
+                      <tr
+                        className={
+                          quantidade_por_periodo.cancelado ? "cancelado" : ""
+                        }
+                        key={key}
+                      >
                         {ehInclusaoContinua(tipoSolicitacao) &&
                           motivo.nome !== "ETEC" && (
                             <td className="weekly">
@@ -258,32 +263,54 @@ export class CorpoRelatorio extends Component {
                             </td>
                           )}
                         <td>
-                          {quantidade_por_periodo.periodo_escolar &&
-                            quantidade_por_periodo.periodo_escolar.nome}
+                          <p>
+                            {quantidade_por_periodo.periodo_escolar &&
+                              quantidade_por_periodo.periodo_escolar.nome}
+                          </p>
                         </td>
                         <td>
-                          {stringSeparadaPorVirgulas(
-                            quantidade_por_periodo.tipos_alimentacao,
-                            "nome"
-                          )}
+                          <p>
+                            {stringSeparadaPorVirgulas(
+                              quantidade_por_periodo.tipos_alimentacao,
+                              "nome"
+                            )}
+                          </p>
                         </td>
-                        <td>{quantidade_por_periodo.numero_alunos}</td>
+                        <td>
+                          <p>{quantidade_por_periodo.numero_alunos}</p>
+                        </td>
                       </tr>,
                       ehInclusaoContinua(tipoSolicitacao) && (
-                        <tr key={key}>
+                        <tr
+                          key={key}
+                          className={
+                            quantidade_por_periodo.cancelado ? "cancelado" : ""
+                          }
+                        >
                           <td colSpan="4">
                             <p>
-                              <strong>Observações:</strong>
+                              <strong>Observações: </strong>
+                              {!["<p></p>", "", null].includes(
+                                quantidade_por_periodo.observacao
+                              ) ? (
+                                <p
+                                  className="value"
+                                  dangerouslySetInnerHTML={{
+                                    __html: quantidade_por_periodo.observacao
+                                  }}
+                                />
+                              ) : (
+                                "sem observações por parte da escola"
+                              )}
                             </p>
-                            {quantidade_por_periodo.observacao !== "<p></p>" ? (
-                              <p
-                                className="value"
-                                dangerouslySetInnerHTML={{
-                                  __html: quantidade_por_periodo.observacao
-                                }}
-                              />
-                            ) : (
-                              "-"
+
+                            {quantidade_por_periodo.cancelado && (
+                              <p className="justificativa-cancelamento">
+                                <span className="font-weight-bold">
+                                  PERÍODO CANCELADO - JUSTIFICATIVA:{" "}
+                                </span>
+                                {quantidade_por_periodo.cancelado_justificativa}
+                              </p>
                             )}
                           </td>
                         </tr>
