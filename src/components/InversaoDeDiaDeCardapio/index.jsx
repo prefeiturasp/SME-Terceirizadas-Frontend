@@ -293,7 +293,6 @@ export class InversaoDeDiaDeCardapio extends Component {
         "YYYY-MM-DD"
       )._d;
       this.setState({ limiteDataFinal });
-      console.log(this.state);
     });
   };
 
