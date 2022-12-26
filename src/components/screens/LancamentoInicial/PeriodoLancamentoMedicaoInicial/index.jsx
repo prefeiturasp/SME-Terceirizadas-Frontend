@@ -32,7 +32,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, deepEqual } from "helpers/utilities";
 import {
   botaoAdicionarObrigatorio,
   validacoesTabelaAlimentacao,
@@ -574,6 +574,7 @@ export default () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
+    setDadosIniciais(values);
     let dadosIniciaisClone = deepCopy(values);
     valuesClone.solicitacao_medicao_inicial = uuid;
     Object.entries(valuesClone).forEach(([key, value]) => {
@@ -746,7 +747,9 @@ export default () => {
   let valuesInputArray = [];
 
   const onChangeInput = (value, previous, errors, values, dia, categoria) => {
-    if ((value || previous) && value !== previous) {
+    if (deepEqual(values, dadosIniciais)) {
+      setDisableBotaoSalvarLancamentos(true);
+    } else if ((value || previous) && value !== previous) {
       setDisableBotaoSalvarLancamentos(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
