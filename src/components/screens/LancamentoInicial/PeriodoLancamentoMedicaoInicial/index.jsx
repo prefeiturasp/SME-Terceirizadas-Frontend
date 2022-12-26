@@ -745,8 +745,10 @@ export default () => {
 
   let valuesInputArray = [];
 
-  const onChangeInput = (value, errors, values, dia, categoria) => {
-    if (typeof value === "string") {
+  const onChangeInput = (value, previous, errors, values, dia, categoria) => {
+    if ((value || previous) && value !== previous) {
+      setDisableBotaoSalvarLancamentos(false);
+    } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
       if (value === null) {
         valuesInputArray.length = 0;
@@ -976,9 +978,10 @@ export default () => {
                                                     column.dia
                                                   }__categoria_${categoria.id}`}
                                                 >
-                                                  {value => {
+                                                  {(value, previous) => {
                                                     onChangeInput(
                                                       value,
+                                                      previous,
                                                       errors,
                                                       formValuesAtualizados,
                                                       column.dia,
@@ -1101,9 +1104,10 @@ export default () => {
                                                     column.dia
                                                   }__categoria_${categoria.id}`}
                                                 >
-                                                  {value => {
+                                                  {(value, previous) => {
                                                     onChangeInput(
                                                       value,
+                                                      previous,
                                                       errors,
                                                       formValuesAtualizados,
                                                       column.dia,
