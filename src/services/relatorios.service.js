@@ -322,6 +322,28 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
   }
 };
 
+export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async params => {
+  const url = `/diretoria-regional-solicitacoes/exportar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async params => {
+  const url = `/codae-solicitacoes/exportar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getSolicitacoesDetalhadas = async params => {
   const response = await axios
     .get(`${API_URL}/solicitacoes-genericas/solicitacoes-detalhadas/`, {
