@@ -108,7 +108,6 @@ export default () => {
 
     for (let i = 0; i < guia.alimentos.length; i++) {
       let x = {};
-      //if (edicao) x.uuid_conferencia = values.uuid_conferencia;
       x.uuid_conferencia = values.uuid_conferencia;
       x.data_entrega = values.data_entrega;
       x.arquivo = values.arquivo[i];
