@@ -19,7 +19,7 @@
 }
 
 .conferido {
-  color: #198459;
+  color: $green;
   font-family: Roboto !important;
   font-style: normal;
   font-weight: 900;
@@ -28,4 +28,24 @@
   align-items: center;
   text-align: center;
   padding: 10.75px;
+}
+
+.usuarios-simultaneos-title {
+  background-color: $green;
+  color: $white;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 2px 0;
+  z-index: 100;
+}
+
+.usuarios-simultaneos-dietas {
+  background-color: $grayBorder;
+  color: $blackSubtle;
+  font-size: 12px;
+  border-radius: 5px;
+  padding: 17px 0 10px 25px !important;
+  margin-top: -10px;
+  margin-left: 5px;
 }
