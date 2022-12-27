@@ -78,7 +78,7 @@ export default () => {
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00"
+        hora_recebimento: "00:00:00"
       });
       setCarregando(false);
     } catch (e) {
@@ -167,10 +167,7 @@ export default () => {
     values.nome_motorista = conferencia.nome_motorista;
     values.hora_recebimento = conferencia.hora_recebimento;
     values.placa_veiculo = conferencia.placa_veiculo;
-    values.data_entrega_real = moment(
-      conferencia.data_recebimento,
-      "DD/MM/YYYY"
-    );
+    values.data_entrega_real = conferencia.data_recebimento;
 
     values.uuid_conferencia = conferencia.uuid;
 
@@ -194,11 +191,11 @@ export default () => {
 
   const escolherHora = hora => {
     if (hora) {
-      const horario = moment(hora).format("HH:mm");
+      const horario = moment(hora).format("HH:mm:ss");
       setHoraRecebimento(horario);
       setHoraRecebimentoAlterada(true);
     } else {
-      setHoraRecebimento("00:00");
+      setHoraRecebimento("00:00:00");
       setHoraRecebimentoAlterada(false);
     }
   };
@@ -434,11 +431,12 @@ export default () => {
 
     setArquivoAtual(arquivos);
 
+    values.numero_guia = guiaConf.numero_guia;
     values.data_entrega = ultimoItem.data_entrega;
     values.nome_motorista = ultimoItem.nome_motorista;
     values.hora_recebimento = ultimoItem.hora_recebimento;
     values.placa_veiculo = ultimoItem.placa_veiculo;
-    values.data_entrega_real = moment(ultimoItem.data_entrega_real);
+    values.data_entrega_real = ultimoItem.data_entrega_real;
 
     setHoraRecebimento(ultimoItem.hora_recebimento);
     setHoraRecebimentoAlterada(true);
