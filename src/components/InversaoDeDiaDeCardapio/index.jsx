@@ -205,6 +205,7 @@ export class InversaoDeDiaDeCardapio extends Component {
         if (res.status === HTTP_STATUS.OK) {
           toastSuccess("Inversão de dia de Cardápio enviada com sucesso!");
           this.resetForm();
+          this.removerDiaAdicional();
         } else if (res.status === HTTP_STATUS.BAD_REQUEST) {
           toastError(
             `Houve um erro ao enviar a Inversão de dia de Cardápio: ${getError(
