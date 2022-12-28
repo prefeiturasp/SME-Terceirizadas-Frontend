@@ -281,11 +281,7 @@ export const Filtros = ({ ...props }) => {
                         component={InputComData}
                         placeholder="De"
                         minDate={null}
-                        maxDate={
-                          values.ate
-                            ? moment(values.ate, "DD/MM/YYYY")._d
-                            : moment()._d
-                        }
+                        maxDate={null}
                         name="de"
                         disabled={!values.status}
                       />
@@ -295,7 +291,7 @@ export const Filtros = ({ ...props }) => {
                         component={InputComData}
                         placeholder="Até"
                         minDate={moment(values.de, "DD/MM/YYYY")._d}
-                        maxDate={moment()._d}
+                        maxDate={null}
                         name="ate"
                         disabled={!values.status}
                       />
