@@ -80,7 +80,7 @@ export default () => {
       setInitialValues({
         numero_guia: response.data.numero_guia,
         data_entrega: response.data.data_entrega,
-        hora_recebimento: "00:00"
+        hora_recebimento: "00:00:00"
       });
       setCarregando(false);
     } catch (e) {
@@ -91,7 +91,7 @@ export default () => {
 
   const escolherHora = hora => {
     if (hora) {
-      const horario = moment(hora).format("HH:mm");
+      const horario = moment(hora).format("HH:mm:ss");
       setHoraRecebimento(horario);
       setHoraRecebimentoAlterada(true);
     } else {
@@ -108,11 +108,11 @@ export default () => {
 
     for (let i = 0; i < guia.alimentos.length; i++) {
       let x = {};
-      if (edicao) x.uuid_conferencia = values.uuid_conferencia;
+      x.uuid_conferencia = values.uuid_conferencia;
       x.data_entrega = values.data_entrega;
       x.arquivo = values.arquivo[i];
       x.data_entrega_real = values.data_entrega_real;
-      x.hora_recebimento = values.hora_recebimento;
+      x.hora_recebimento = HoraRecebimento;
       x.nome_motorista = values.nome_motorista;
       x.placa_veiculo = values.placa_veiculo;
       x.ocorrencias = values[`ocorrencias_${i}`];
@@ -123,7 +123,6 @@ export default () => {
 
       valoresForm[i] = x;
     }
-
     localStorage.setItem("valoresConferencia", JSON.stringify(valoresForm));
     localStorage.setItem("guiaConferencia", JSON.stringify(guia));
     history.push(
@@ -339,11 +338,12 @@ export default () => {
 
     setArquivoAtual(arquivos);
 
+    values.numero_guia = guiaConf.numero_guia;
     values.data_entrega = ultimoItem.data_entrega;
     values.nome_motorista = ultimoItem.nome_motorista;
     values.hora_recebimento = ultimoItem.hora_recebimento;
     values.placa_veiculo = ultimoItem.placa_veiculo;
-    values.data_entrega_real = moment(ultimoItem.data_entrega_real);
+    values.data_entrega_real = ultimoItem.data_entrega_real;
     values.uuid_conferencia = ultimoItem.uuid_conferencia;
 
     setHoraRecebimento(ultimoItem.hora_recebimento);
