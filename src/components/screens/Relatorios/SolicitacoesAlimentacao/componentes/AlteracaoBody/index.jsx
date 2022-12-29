@@ -17,10 +17,9 @@ export const AlteracaoBody = ({ ...props }) => {
       )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
+        {solicitacao.data_final
+          ? `${solicitacao.data_inicial} - ${solicitacao.data_final}`
+          : solicitacao.alterar_dia}
       </td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}

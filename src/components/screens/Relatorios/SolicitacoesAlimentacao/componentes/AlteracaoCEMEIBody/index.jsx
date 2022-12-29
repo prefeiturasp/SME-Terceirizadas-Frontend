@@ -25,10 +25,9 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
       )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
+        {solicitacao.data_final
+          ? `${solicitacao.data_inicial} - ${solicitacao.data_final}`
+          : solicitacao.alterar_dia}
       </td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
@@ -121,7 +120,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                           </div>
                           <div className="col-12">
                             <p>
-                              Alteração do tipo de Alimentação de:
+                              Alteração do tipo de Alimentação para:{" "}
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_para
                                   .map(ta => ta.nome)
