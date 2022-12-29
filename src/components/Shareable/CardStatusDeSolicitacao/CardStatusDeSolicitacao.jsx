@@ -7,6 +7,7 @@ import {
   ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
   TIPO_PERFIL
 } from "constants/shared";
+import { ENVIRONMENT } from "constants/config";
 import { Websocket } from "services/websocket";
 import { Tooltip } from "antd";
 
@@ -70,6 +71,7 @@ export const CardStatusDeSolicitacao = props => {
   useEffect(() => {
     cardTitle.toString() === "Recebidas" &&
       tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
+      ENVIRONMENT !== "production" &&
       initSocket();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
