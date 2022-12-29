@@ -3,11 +3,9 @@ import HTTP_STATUS from "http-status-codes";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export const InclusaoCEIBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
+  const { solicitacao, item, index, filtros, labelData } = props;
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(undefined);
-  const logAutorizacao = solicitacao.logs.find(
-    log => log.status_evento_explicacao === "CODAE autorizou"
-  );
+  const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
   const unique = arr => [...new Set(arr)];
@@ -84,9 +82,9 @@ export const InclusaoCEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
                 <p>
-                  <b>{logAutorizacao && logAutorizacao.criado_em}</b>
+                  <b>{log && log.criado_em.split(" ")[0]}</b>
                 </p>
               </div>
             </div>
