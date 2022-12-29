@@ -458,9 +458,8 @@ export default () => {
     else return "green";
   };
 
-  const toggleBtnAlimentos = (uuid, index) => {
-    if (arquivoAtual[index])
-      inputFile.current[index].setState({ files: arquivoAtual[index] });
+  const toggleBtnAlimentos = uuid => {
+    if (arquivoAtual) inputFile.current.setState({ files: arquivoAtual });
     setCollapseAlimentos({
       [uuid]: !collapseAlimentos[uuid]
     });
@@ -625,7 +624,7 @@ export default () => {
                             <div className="col-1 align-self-center">
                               <button
                                 onClick={() =>
-                                  toggleBtnAlimentos(alimento.uuid, index)
+                                  toggleBtnAlimentos(alimento.uuid)
                                 }
                                 className="btn btn-link btn-block text-left px-0"
                                 type="button"
