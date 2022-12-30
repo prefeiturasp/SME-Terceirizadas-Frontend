@@ -66,7 +66,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                     <div className="col-4">
                       {idxSuspensao === 0 && (
                         <p>
-                          <b>{solicitacao.criado_em}</b>
+                          <b>{solicitacao.criado_em.split(" ")[0]}</b>
                         </p>
                       )}
                     </div>

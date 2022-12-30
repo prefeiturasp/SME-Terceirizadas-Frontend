@@ -18,7 +18,9 @@ export const AlteracaoBody = ({ ...props }) => {
       <td>{item.desc_doc}</td>
       <td className="text-center">
         {solicitacao.data_final
-          ? `${solicitacao.data_inicial} - ${solicitacao.data_final}`
+          ? solicitacao.data_inicial === solicitacao.data_final
+            ? solicitacao.data_inicial
+            : `${solicitacao.data_inicial} - ${solicitacao.data_final}`
           : solicitacao.alterar_dia}
       </td>
       <td className="text-center">
