@@ -76,7 +76,7 @@ export default ({
                   name="visao"
                   options={visoes}
                   defaultValue={
-                    diretor_escola ? "ESCOLA" : empresa ? "EMPRESA" : ""
+                    diretor_escola ? "ESCOLA" : empresa ? "EMPRESA" : undefined
                   }
                   disabled={diretor_escola || empresa ? true : false}
                 />
