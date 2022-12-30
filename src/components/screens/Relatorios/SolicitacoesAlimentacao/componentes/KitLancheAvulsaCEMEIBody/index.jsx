@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
 export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
-  const logAutorizacao = solicitacao.logs.find(
-    log => log.status_evento_explicacao === "CODAE autorizou"
-  );
+  const { solicitacao, item, index, filtros, labelData } = props;
+  const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
   const total_CEI = solicitacao.solicitacao_cei
@@ -82,9 +80,9 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
                 <p>
-                  <b>{logAutorizacao && logAutorizacao.criado_em}</b>
+                  <b>{log && log.criado_em.split(" ")[0]}</b>
                 </p>
               </div>
             </div>

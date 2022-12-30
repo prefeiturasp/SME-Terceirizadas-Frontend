@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export const SuspensaoAlimentacaoBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
+  const { solicitacao, item, index, filtros, labelData } = props;
   const [showDetail, setShowDetail] = useState(false);
   const ehEscolaComum = solicitacao.escola.nome.includes("CEMEI")
     ? false
@@ -46,7 +46,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                 <p>Dia(s) de suspensão:</p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
               </div>
             </div>
             {solicitacao.suspensoes_alimentacao.map(

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  stringSeparadaPorVirgulas
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -16,6 +17,7 @@ import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import { statusEnum } from "constants/shared";
 
 export const CorpoRelatorio = props => {
+  const [imprimindo, setimprimindo] = useState(false);
   const {
     inversaoDiaCardapio,
     prazoDoPedidoMensagem,
@@ -25,6 +27,13 @@ export const CorpoRelatorio = props => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     inversaoDiaCardapio.logs
   );
+
+  const btnImprimirRelatorio = async () => {
+    setimprimindo(true);
+    await getDetalheInversaoCardapio(inversaoDiaCardapio.uuid);
+    setimprimindo(false);
+  };
+
   return (
     <div>
       <div className="row">
@@ -37,10 +46,11 @@ export const CorpoRelatorio = props => {
           <Botao
             type={BUTTON_TYPE.BUTTON}
             titulo="imprimir"
-            style={BUTTON_STYLE.GREEN}
-            icon={BUTTON_ICON.PRINT}
+            style={imprimindo ? BUTTON_STYLE.GREEN_OUTLINE : BUTTON_STYLE.GREEN}
+            icon={imprimindo ? BUTTON_ICON.LOADING : BUTTON_ICON.PRINT}
+            disabled={imprimindo}
             className="float-right"
-            onClick={() => getDetalheInversaoCardapio(inversaoDiaCardapio.uuid)}
+            onClick={() => btnImprimirRelatorio()}
           />
         </p>
         <div className="col-2">
@@ -110,24 +120,28 @@ export const CorpoRelatorio = props => {
         </div>
       )}
       <hr />
-      <div className="row">
-        <div className="col-12 report-label-value">
-          <p>Motivo</p>
-          <p
-            className="value"
-            dangerouslySetInnerHTML={{
-              __html: inversaoDiaCardapio.motivo
-            }}
-          />
+      {inversaoDiaCardapio.tipos_alimentacao.length > 0 && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Tipos de Alimentação para inversão:</p>
+            <p className="font-weight-bold">
+              {stringSeparadaPorVirgulas(
+                inversaoDiaCardapio.tipos_alimentacao,
+                "nome"
+              )}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       <table className="table-report mt-4">
         <tr>
-          <th className="text-right">Substituição de:</th>
-          <th>Substituição para:</th>
+          <th className="col-3">Data de Inversão</th>
+          <th className="col-3">Referência:</th>
+          <th className="col-3">Aplicar em:</th>
         </tr>
         <tr>
-          <td className="text-right pr-5">
+          <td />
+          <td className="pr-5">
             {inversaoDiaCardapio.cardapio_de
               ? inversaoDiaCardapio.cardapio_de.data
               : inversaoDiaCardapio.data_de_inversao}
@@ -138,18 +152,38 @@ export const CorpoRelatorio = props => {
               : inversaoDiaCardapio.data_para_inversao}
           </td>
         </tr>
+        {inversaoDiaCardapio.data_de_inversao_2 && (
+          <tr>
+            <td />
+            <td className="pr-5">{inversaoDiaCardapio.data_de_inversao_2}</td>
+            <td>{inversaoDiaCardapio.data_para_inversao_2}</td>
+          </tr>
+        )}
       </table>
       <div className="row">
         <div className="col-12 report-label-value">
-          <p>Observações</p>
+          <p>Motivo</p>
           <p
-            className="value"
+            className="value font-weight-bold"
             dangerouslySetInnerHTML={{
-              __html: inversaoDiaCardapio.observacao
+              __html: inversaoDiaCardapio.motivo
             }}
           />
         </div>
       </div>
+      {inversaoDiaCardapio.observacao && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Observações</p>
+            <p
+              className="font-weight-bold value"
+              dangerouslySetInnerHTML={{
+                __html: inversaoDiaCardapio.observacao
+              }}
+            />
+          </div>
+        </div>
+      )}
       {inversaoDiaCardapio.logs &&
         !inversaoDiaCardapio.prioridade !== "REGULAR" &&
         inversaoDiaCardapio.status === statusEnum.CODAE_AUTORIZADO && (

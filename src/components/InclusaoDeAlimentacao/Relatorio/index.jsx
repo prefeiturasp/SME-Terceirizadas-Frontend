@@ -18,6 +18,7 @@ import { meusDados } from "services/perfil.service";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { ModalCancelarInclusaoContinua } from "./componentes/ModalCancelarInclusaoContinua";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -221,10 +222,25 @@ class Relatorio extends Component {
       );
     };
 
+    const renderModalCancelamentoContinuo = inclusao => {
+      return (
+        inclusao &&
+        inclusao.motivo &&
+        !inclusao.motivo.nome.includes("ETEC") &&
+        tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+      );
+    };
+
+    const ComponenteModalNaoAprova = renderModalCancelamentoContinuo(
+      inclusaoDeAlimentacao
+    )
+      ? ModalCancelarInclusaoContinua
+      : ModalNaoAprova;
+
     return (
       <div className="report">
         {ModalNaoAprova && (
-          <ModalNaoAprova
+          <ComponenteModalNaoAprova
             showModal={showNaoAprovaModal}
             closeModal={this.closeNaoAprovaModal}
             endpoint={endpointNaoAprovaSolicitacao}

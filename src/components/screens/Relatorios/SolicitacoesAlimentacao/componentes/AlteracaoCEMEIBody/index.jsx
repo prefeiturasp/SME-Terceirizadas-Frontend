@@ -1,10 +1,8 @@
 import React, { Fragment, useState } from "react";
 
 export const AlteracaoCEMEIBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
-  const logAutorizacao = solicitacao.logs.find(
-    log => log.status_evento_explicacao === "CODAE autorizou"
-  );
+  const { solicitacao, item, index, filtros, labelData } = props;
+  const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
   const unique = arr => [...new Set(arr)];
@@ -27,10 +25,9 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
       )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
+        {solicitacao.data_final
+          ? `${solicitacao.data_inicial} - ${solicitacao.data_final}`
+          : solicitacao.alterar_dia}
       </td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
@@ -66,9 +63,9 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                 </p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
                 <p>
-                  <b>{logAutorizacao && logAutorizacao.criado_em}</b>
+                  <b>{log && log.criado_em.split(" ")[0]}</b>
                 </p>
               </div>
             </div>
@@ -123,7 +120,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                           </div>
                           <div className="col-12">
                             <p>
-                              Alteração do tipo de Alimentação de:
+                              Alteração do tipo de Alimentação para:{" "}
                               <b>
                                 {substituicaoCEI.tipos_alimentacao_para
                                   .map(ta => ta.nome)

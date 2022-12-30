@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, NavLink } from "react-router-dom";
 import "./style.scss";
 import { conferidaClass } from "helpers/terceirizadas";
@@ -7,6 +7,9 @@ import {
   ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
   TIPO_PERFIL
 } from "constants/shared";
+import { ENVIRONMENT } from "constants/config";
+import { Websocket } from "services/websocket";
+import { Tooltip } from "antd";
 
 export const CARD_TYPE_ENUM = {
   CANCELADO: "card-cancelled",
@@ -43,11 +46,35 @@ export const CardStatusDeSolicitacao = props => {
     hrefCard
   } = props;
 
+  const [dietasAbertas, setDietasAbertas] = useState([]);
+
   const nomeUsuario = localStorage.getItem("nome");
   const tipoPerfil = localStorage.getItem("tipo_perfil");
 
   let history = useHistory();
   let filteredSolicitations = [];
+
+  const initSocket = () => {
+    return new Websocket(
+      "solicitacoes-abertas/",
+      ({ data }) => {
+        getDietasEspeciaisAbertas(JSON.parse(data));
+      },
+      () => initSocket()
+    );
+  };
+
+  const getDietasEspeciaisAbertas = content => {
+    content && setDietasAbertas(content.message);
+  };
+
+  useEffect(() => {
+    cardTitle.toString() === "Recebidas" &&
+      tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
+      ENVIRONMENT !== "production" &&
+      initSocket();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {
     if (tipoPerfil === `"${TERCEIRIZADA}"`) {
@@ -72,6 +99,16 @@ export const CardStatusDeSolicitacao = props => {
     }
   }
 
+  const dietasFiltradas = solicitation => {
+    return dietasAbertas.filter(dieta =>
+      solicitation.link.includes(dieta.uuid_solicitacao)
+    );
+  };
+
+  const qtdDietasAbertas = solicitacao => {
+    return dietasFiltradas(solicitacao).length;
+  };
+
   const renderSolicitations = solicitations => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
       let conferida = conferidaClass(solicitation, cardTitle);
@@ -84,6 +121,27 @@ export const CardStatusDeSolicitacao = props => {
           <p className={`data ${conferida}`}>
             {solicitation.text}
             <span className="float-right">{solicitation.date}</span>
+            {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
+              qtdDietasAbertas(solicitation) > 0 && (
+                <Tooltip
+                  color="#686868"
+                  overlayStyle={{
+                    maxWidth: "140px",
+                    fontSize: "12px",
+                    fontWeight: "700"
+                  }}
+                  title="Usuários visualizando simultaneamente"
+                >
+                  <span
+                    className={`mr-3 dietas-abertas float-right ${qtdDietasAbertas(
+                      solicitation
+                    ) > 9 && "qtd-dois-digitos"}`}
+                  >
+                    {cardTitle.toString() === "Recebidas" &&
+                      `${qtdDietasAbertas(solicitation)}`}
+                  </span>
+                </Tooltip>
+              )}
           </p>
         </NavLink>
       );
