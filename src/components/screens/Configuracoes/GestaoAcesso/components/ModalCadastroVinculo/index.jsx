@@ -369,8 +369,8 @@ const ModalCadastroVinculo = ({
                             required
                             options={listaVisao}
                             validate={required}
-                            defaultValue={empresa ? "EMPRESA" : ""}
-                            disabled={empresa || vinculo}
+                            defaultValue="EMPRESA"
+                            disabled={true}
                           />
                         </div>
                         <div className="col-6">
