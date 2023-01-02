@@ -33,7 +33,7 @@ export const KitLancheAvulsaCEMEIBody = ({ ...props }) => {
       ? solicitacao.solicitacao_emei.kits.length
       : 0;
   const numero_total_kits =
-    (numeroKitsCEI + numeroKitsEMEI) * (total_CEI + total_EMEI);
+    numeroKitsCEI * total_CEI + numeroKitsEMEI * total_EMEI;
 
   return [
     <tr className="table-body-items" key={index}>
