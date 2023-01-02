@@ -1,3 +1,5 @@
+import { ErrorHandlerFunction } from "./service-helpers";
+
 import axios from "./_base";
 
 export const getVinculosAtivos = async params =>
@@ -7,7 +9,9 @@ export const getSubdivisoesCodae = async params =>
   (await axios.get("/codae/", { params })).data;
 
 export const cadastrarVinculo = async payload =>
-  await axios.post("/cadastro-com-coresso/", payload);
+  await axios
+    .post("/cadastro-com-coresso/", payload)
+    .catch(ErrorHandlerFunction);
 
 export const editarVinculo = async payload =>
   await axios.patch(

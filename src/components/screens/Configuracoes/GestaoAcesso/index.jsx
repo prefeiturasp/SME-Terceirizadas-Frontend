@@ -88,13 +88,14 @@ export default ({ diretor_escola, empresa }) => {
     }
 
     let response = await cadastrarVinculo(payload);
-
     if (response.status === 201) {
       toastSuccess("Acesso adicionado com sucesso!");
       setShowCadastro(false);
       buscarVinculos(page);
     } else {
-      toastError("Erro ao adicionar acesso!");
+      toastError(
+        "Erro ao adicionar acesso ao usuário, procure o administrador do SIGPAE na sua Unidade!"
+      );
     }
   };
 

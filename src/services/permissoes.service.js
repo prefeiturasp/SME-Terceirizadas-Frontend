@@ -1,5 +1,6 @@
 import { API_URL } from "../constants/config";
 import authService from "./auth";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 import axios from "./_base";
 
@@ -68,7 +69,9 @@ export const getDadosUsuarioEOL = async registroFuncional =>
   axios.get(`/dados-usuario-eol/${registroFuncional}/`);
 
 export const getDadosUsuarioEOLCompleto = async registroFuncional =>
-  axios.get(`/dados-usuario-eol-completo/${registroFuncional}/`);
+  axios
+    .get(`/dados-usuario-eol-completo/${registroFuncional}/`)
+    .catch(ErrorHandlerFunction);
 
 export const criarEquipeAdministradoraEscola = (uuid, registro_funcional) =>
   fetchPost(

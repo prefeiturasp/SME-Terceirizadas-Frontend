@@ -79,26 +79,34 @@ const ModalCadastroVinculo = ({
   };
 
   const buscaEOL = async values => {
-    const response = await getDadosUsuarioEOLCompleto(
-      values.registro_funcional
-    );
-    const usuarioEOL = response.data;
-    if (diretor_escola) {
-      const codigo_eol_unidade = meusDados.vinculo_atual.instituicao.codigo_eol;
-      if (codigo_eol_unidade !== usuarioEOL.codigo_eol_unidade) {
-        return toastError("RF não pertence a sua unidade!");
+    let response = await getDadosUsuarioEOLCompleto(values.registro_funcional);
+
+    if (response.status === 200) {
+      const usuarioEOL = response.data;
+      if (diretor_escola) {
+        const codigo_eol_unidade =
+          meusDados.vinculo_atual.instituicao.codigo_eol;
+        if (codigo_eol_unidade !== usuarioEOL.codigo_eol_unidade) {
+          return toastError("RF não pertence a sua unidade!");
+        }
+      }
+      values.nome_servidor = usuarioEOL.nome;
+      values.cargo_servidor = usuarioEOL.cargo;
+      values.email_servidor = usuarioEOL.email;
+      values.cpf = usuarioEOL.cpf;
+      values.cpf_servidor = formataCPFCensurado(usuarioEOL.cpf);
+      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+      values.cargo_servidor = usuarioEOL.cargo;
+
+      let t = document.getElementById("inputRF");
+      t.focus();
+    } else {
+      if (values.registro_funcional) {
+        toastError(
+          `API do EOL não retornou nada para o RF ${values.registro_funcional}`
+        );
       }
     }
-    values.nome_servidor = usuarioEOL.nome;
-    values.cargo_servidor = usuarioEOL.cargo;
-    values.email_servidor = usuarioEOL.email;
-    values.cpf = usuarioEOL.cpf;
-    values.cpf_servidor = formataCPFCensurado(usuarioEOL.cpf);
-    values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
-    values.cargo_servidor = usuarioEOL.cargo;
-
-    let t = document.getElementById("inputRF");
-    t.focus();
   };
 
   const abreDeletar = () => {
