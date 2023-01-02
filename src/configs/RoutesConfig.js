@@ -1533,7 +1533,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
   },
   {
     /*

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
+  const { solicitacao, item, index, filtros, labelData } = props;
   const [showDetail, setShowDetail] = useState(false);
 
   return [
@@ -41,7 +41,7 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
                 <p>Dia(s) de suspensão:</p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
               </div>
             </div>
             <div className="row mt-3">
@@ -57,7 +57,7 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
               </div>
               <div className="col-4">
                 <p>
-                  <b>{solicitacao.criado_em}</b>
+                  <b>{solicitacao.criado_em.split(" ")[0]}</b>
                 </p>
               </div>
             </div>

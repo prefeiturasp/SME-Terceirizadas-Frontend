@@ -3,12 +3,10 @@ import HTTP_STATUS from "http-status-codes";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export const InclusaoCEMEIBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
+  const { solicitacao, item, index, filtros, labelData } = props;
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(undefined);
   const [showDetail, setShowDetail] = useState(false);
-  const logAutorizacao = solicitacao.logs.find(
-    log => log.status_evento_explicacao === "CODAE autorizou"
-  );
+  const log = solicitacao.logs[solicitacao.logs.length - 1];
 
   const unique = arr => [...new Set(arr)];
 
@@ -42,12 +40,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
         <td>{item.escola_nome}</td>
       )}
       <td>{item.desc_doc}</td>
-      <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
-      </td>
+      <td className="text-center">{solicitacao.datas}</td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
       </td>
@@ -70,7 +63,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                 <p>Dia(s) de Inclusão:</p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
               </div>
             </div>
             {solicitacao.dias_motivos_da_inclusao_cemei.map((inclusao, idx) => {
@@ -89,7 +82,7 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                   {idx === 0 ? (
                     <div className="col-4">
                       <p>
-                        <b>{logAutorizacao && logAutorizacao.criado_em}</b>
+                        <b>{log && log.criado_em.split(" ")[0]}</b>
                       </p>
                     </div>
                   ) : (

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export const SuspensaoAlimentacaoBody = ({ ...props }) => {
-  const { solicitacao, item, index, filtros } = props;
+  const { solicitacao, item, index, filtros, labelData } = props;
   const [showDetail, setShowDetail] = useState(false);
   const ehEscolaComum = solicitacao.escola.nome.includes("CEMEI")
     ? false
@@ -19,10 +19,20 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
       )}
       <td>{item.desc_doc}</td>
       <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
+        {solicitacao.suspensoes_alimentacao.length > 1 ? (
+          solicitacao.suspensoes_alimentacao.map(suspensao => (
+            <>
+              {suspensao.data} <br />
+            </>
+          ))
+        ) : (
+          <>
+            {item.data_evento}{" "}
+            {item.data_evento_fim && item.data_evento !== item.data_evento_fim
+              ? `- ${item.data_evento_fim}`
+              : ""}
+          </>
+        )}
       </td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
@@ -46,7 +56,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                 <p>Dia(s) de suspensão:</p>
               </div>
               <div className="col-4">
-                <p>Data da Autorização:</p>
+                <p>{labelData}</p>
               </div>
             </div>
             {solicitacao.suspensoes_alimentacao.map(
@@ -66,7 +76,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                     <div className="col-4">
                       {idxSuspensao === 0 && (
                         <p>
-                          <b>{solicitacao.criado_em}</b>
+                          <b>{solicitacao.criado_em.split(" ")[0]}</b>
                         </p>
                       )}
                     </div>

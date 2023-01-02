@@ -15,10 +15,8 @@ import {
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
-    if (usuarioEhFornecedor()) {
-      if (status === "Enviado ao Fornecedor") {
-        return "Recebido";
-      }
+    if (status === "Enviado ao Fornecedor" && usuarioEhFornecedor()) {
+      return "Recebido";
     } else {
       return status;
     }
@@ -41,23 +39,24 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
             ativos && ativos.includes(cronograma.uuid) ? "desativar-borda" : "";
           return (
             <div key={`${cronograma.numero}_${index}`}>
-              <div className="grid-table body-table">
-                <div className={`${bordas}`}>{cronograma.numero}</div>
-                <div className={`${bordas}`}>{cronograma.nome_produto}</div>
-                <div className={`${bordas}`}>
-                  {cronograma.qtd_total_programada}
-                </div>
-                <div className={`${bordas}`}>
-                  {cronograma.armazem
-                    ? cronograma.armazem.nome_fantasia
-                    : undefined}
-                </div>
-                <div className={`${bordas}`}>
-                  {statusValue(cronograma.status)}
-                </div>
+              {((usuarioEhFornecedor() && cronograma.status !== "Rascunho") ||
+                !usuarioEhFornecedor()) && (
+                <div className="grid-table body-table">
+                  <div className={`${bordas}`}>{cronograma.numero}</div>
+                  <div className={`${bordas}`}>{cronograma.nome_produto}</div>
+                  <div className={`${bordas}`}>
+                    {cronograma.qtd_total_programada}
+                  </div>
+                  <div className={`${bordas}`}>
+                    {cronograma.armazem
+                      ? cronograma.armazem.nome_fantasia
+                      : undefined}
+                  </div>
+                  <div className={`${bordas}`}>
+                    {statusValue(cronograma.status)}
+                  </div>
 
-                <div className={`${bordas}`}>
-                  {!usuarioEhFornecedor() && (
+                  <div className={`${bordas}`}>
                     <>
                       {cronograma.status !== "Rascunho" ? (
                         <>
@@ -85,9 +84,9 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                         </>
                       )}
                     </>
-                  )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           );
         })}

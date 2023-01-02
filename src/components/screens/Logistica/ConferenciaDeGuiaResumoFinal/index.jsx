@@ -136,7 +136,7 @@ export default ({ reposicao }) => {
     history.push(
       `/${LOGISTICA}/${
         reposicao ? REPOSICAO_GUIA : CONFERENCIA_GUIA_COM_OCORRENCIA
-      }/?uuid=${uuid}&autofill=true&editar=true`
+      }/?uuid=${uuid}&autofill=true`
     );
   };
 

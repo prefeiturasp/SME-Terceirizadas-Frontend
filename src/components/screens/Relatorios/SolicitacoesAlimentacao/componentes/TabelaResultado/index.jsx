@@ -16,6 +16,12 @@ import { SuspensaoAlimentacaoCEIBody } from "../SuspensaoAlimentacaoCEIBody";
 
 export const TabelaResultado = ({ ...props }) => {
   const { solicitacoes, filtros, resultadoPaginado } = props;
+  const LABEL_DATA = {
+    AUTORIZADOS: "Data de Autorização",
+    CANCELADOS: "Data de Cancelamento",
+    NEGADOS: "Data de Negação",
+    RECEBIDAS: "Data de Autorização"
+  };
 
   const mapComponentePorSolicitacao = (solicitacao, item, index) => {
     switch (item.tipo_doc) {
@@ -27,6 +33,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "INC_ALIMENTA_CONTINUA":
@@ -37,6 +44,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "INC_ALIMENTA_CEI":
@@ -47,6 +55,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "INC_ALIMENTA_CEMEI":
@@ -57,6 +66,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "ALT_CARDAPIO":
@@ -67,6 +77,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "ALT_CARDAPIO_CEI":
@@ -77,6 +88,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "ALT_CARDAPIO_CEMEI":
@@ -87,6 +99,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "KIT_LANCHE_AVULSA":
@@ -97,6 +110,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "KIT_LANCHE_AVULSA_CEI":
@@ -107,6 +121,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "KIT_LANCHE_CEMEI":
@@ -117,6 +132,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "KIT_LANCHE_UNIFICADA":
@@ -127,6 +143,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "INV_CARDAPIO":
@@ -137,6 +154,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData={LABEL_DATA[filtros.status]}
           />
         );
       case "SUSP_ALIMENTACAO":
@@ -147,6 +165,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData="Data de Suspensão"
           />
         );
       case "SUSP_ALIMENTACAO_CEI":
@@ -157,6 +176,7 @@ export const TabelaResultado = ({ ...props }) => {
             index={index}
             filtros={filtros}
             key={index}
+            labelData="Data de Suspensão"
           />
         );
       default:
