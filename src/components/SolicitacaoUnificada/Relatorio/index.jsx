@@ -197,6 +197,7 @@ class Relatorio extends Component {
         />
       );
     };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -250,12 +251,12 @@ class Relatorio extends Component {
             <span className="page-title">{`Solicitação Unificada - Solicitação # ${
               solicitacaoUnificada.id_externo
             }`}</span>
-            <Link to={`/`}>
+            <Link to={`/painel-gestao-alimentacao`}>
               <Botao
-                texto="voltar"
+                texto="Voltar"
                 titulo="voltar"
                 type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 icon={BUTTON_ICON.ARROW_LEFT}
                 className="float-right"
               />
