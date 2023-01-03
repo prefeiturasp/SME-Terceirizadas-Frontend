@@ -54,8 +54,10 @@ export default ({ values, disabled, uuidEdicao }) => {
           setLoading(false);
           goToConferir();
         })
-        .catch(e => {
-          toastError(e.response.data.detail);
+        .catch(() => {
+          toastError(
+            "Erro ao registrar Guia de Remessa, procure o administrador do SIGPAE na sua Unidade!"
+          );
           setShow(false);
           setLoading(false);
         });
