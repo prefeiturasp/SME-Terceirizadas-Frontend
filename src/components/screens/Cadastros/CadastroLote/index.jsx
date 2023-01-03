@@ -331,7 +331,7 @@ class CadastroLote extends Component {
                     >
                       <Botao
                         texto="Consulta de lotes cadastrados"
-                        style={BUTTON_STYLE.BLUE_OUTLINE}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
                       />
                     </Link>
                   </div>

@@ -54,6 +54,6 @@ export default () => {
       kits={kits}
     />
   ) : (
-    <p>Loading...</p>
+    <p>Carregando...</p>
   );
 };
