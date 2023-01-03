@@ -199,15 +199,20 @@ export const CorpoRelatorio = props => {
                 }{" "}
                 - Informações da CODAE
               </div>
-              <p
-                className="value"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    inversaoDiaCardapio.logs[
-                      inversaoDiaCardapio.logs.length - 1
-                    ].justificativa
-                }}
-              />
+              {inversaoDiaCardapio.logs[inversaoDiaCardapio.logs.length - 1]
+                .justificativa !== "" ? (
+                <p
+                  className="value"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      inversaoDiaCardapio.logs[
+                        inversaoDiaCardapio.logs.length - 1
+                      ].justificativa
+                  }}
+                />
+              ) : (
+                <p>Sem observações por parte da CODAE</p>
+              )}
             </div>
           </div>
         )}
