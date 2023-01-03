@@ -3,7 +3,7 @@ import HTTP_STATUS from "http-status-codes";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import { Rascunhos } from "./Rascunhos";
 import { InputComData } from "../Shareable/DatePicker";
-import { required } from "../../helpers/fieldValidators";
+import { maxValue, required } from "../../helpers/fieldValidators";
 import {
   solicitacoesUnificadasSalvas,
   criarSolicitacaoUnificada,
@@ -24,6 +24,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  composeValidators,
   fimDoCalendario,
   getError
 } from "../../helpers/utilities";
@@ -114,6 +115,12 @@ const SolicitacaoUnificada = ({
     return options.filter(({ label }) => label && label.match(re));
   };
 
+  const resetStates = () => {
+    setUnidadesEscolaresSelecionadas([]);
+    setTotalKits(0);
+    setSubmeteu(false);
+  };
+
   const onSubmit = async (formValues, form) => {
     if (unidadesEscolaresSelecionadas.length === 0) {
       toastError("Selecione ao menos uma unidade escolar");
@@ -129,15 +136,13 @@ const SolicitacaoUnificada = ({
                 iniciarPedido(res.data.uuid);
                 setTimeout(() => {
                   form.restart();
-                  setUnidadesEscolaresSelecionadas([]);
-                  setTotalKits(0);
+                  resetStates();
                 });
               } else {
                 toastSuccess("Solicitação Unificada salva com sucesso!");
                 setTimeout(() => {
                   form.restart();
-                  setUnidadesEscolaresSelecionadas([]);
-                  setTotalKits(0);
+                  resetStates();
                 });
                 fetchData();
               }
@@ -147,6 +152,7 @@ const SolicitacaoUnificada = ({
                   res.data
                 )}`
               );
+              setSubmeteu(false);
             }
           },
           function() {
@@ -164,16 +170,14 @@ const SolicitacaoUnificada = ({
                 iniciarPedido(res.data.uuid);
                 setTimeout(() => {
                   form.restart();
-                  setUnidadesEscolaresSelecionadas([]);
-                  setTotalKits(0);
+                  resetStates();
                 });
                 fetchData();
               } else {
                 toastSuccess("Solicitação Unificada atualizada com sucesso!");
                 setTimeout(() => {
                   form.restart();
-                  setUnidadesEscolaresSelecionadas([]);
-                  setTotalKits(0);
+                  resetStates();
                 });
                 fetchData();
               }
@@ -183,6 +187,7 @@ const SolicitacaoUnificada = ({
                   res.data
                 )}`
               );
+              setSubmeteu(false);
             }
           },
           function() {
@@ -284,6 +289,14 @@ const SolicitacaoUnificada = ({
       )
     ) {
       setShowModal(true);
+    }
+  };
+
+  const validaNdeAlunos = ue => {
+    if (ue.nome.includes("CEU GESTAO")) {
+      return required;
+    } else {
+      return composeValidators(required, maxValue(ue.quantidade_alunos));
     }
   };
 
@@ -497,10 +510,15 @@ const SolicitacaoUnificada = ({
                                         Nº de alunos por Unidade Educacional
                                       </label>
                                       <Field
-                                        component="input"
+                                        component={InputText}
                                         type="number"
                                         min={0}
-                                        max={ue.quantidade_alunos}
+                                        max={
+                                          ue.nome.includes("CEU GESTAO")
+                                            ? 32767
+                                            : ue.quantidade_alunos
+                                        }
+                                        step="1"
                                         placeholder="Quantidade de alunos"
                                         name={`unidades_escolares[${idx}].nmr_alunos`}
                                         className="form-control"
@@ -553,7 +571,7 @@ const SolicitacaoUnificada = ({
                                           setTotalKits(total);
                                         }}
                                         required
-                                        validate={required}
+                                        validate={validaNdeAlunos(ue)}
                                       />
                                     </div>
                                     <div className="col-8" />
