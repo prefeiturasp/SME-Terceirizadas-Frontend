@@ -81,6 +81,7 @@ export const retornArrayTerceirizadas = response => {
       uuid: resp.uuid,
       codigo_empresa: resp.id_externo,
       nome: resp.razao_social,
+      nome_fantasia: resp.nome_fantasia,
       cnpj: resp.cnpj,
       status: resp.ativo ? "Ativa" : "Inativa",
       ativo: false,
@@ -93,6 +94,7 @@ export const retornArrayTerceirizadas = response => {
           email: contato.email
         };
       }),
+      contratos: resp.contratos,
       eh_distribuidor: resp.eh_distribuidor,
       telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
       email: resp.contatos.length === 0 ? null : resp.contatos[0].email,

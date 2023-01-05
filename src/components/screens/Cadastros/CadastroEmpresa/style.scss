@@ -10,3 +10,29 @@
     }
   }
 }
+
+header.titulo-secao {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 20px 0px 10px 0px;
+
+  span {
+    color: #198459;
+    display: block;
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      margin-left: 10px;
+      border-top: 1px solid #ccc;
+    }
+  }
+}
+
+.botao-editar {
+  color: #198459;
+}
