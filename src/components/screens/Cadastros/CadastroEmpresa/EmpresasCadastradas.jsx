@@ -168,7 +168,9 @@ class EmpresasCadastradas extends Component {
                             <div className="mt-4">
                               <span className="descricao">Criado em:</span>
                               <span className="valor-desc">
-                                {empresa.criado_em.split(" ")[0]}
+                                {moment(empresa.criado_em, "DD/MM/YYYY").format(
+                                  "DD/MM/YYYY"
+                                )}
                               </span>
                             </div>
                           </div>
