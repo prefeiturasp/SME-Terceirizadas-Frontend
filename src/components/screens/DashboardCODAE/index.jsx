@@ -173,12 +173,16 @@ class DashboardCODAE extends Component {
 
   onPesquisaChanged(values) {
     if (values.titulo && values.titulo.length > 2) {
-      this.getSolicitacoesAsync({
-        busca: values.titulo,
-        ...this.prepararParametros(values)
-      });
+      setTimeout(async () => {
+        this.getSolicitacoesAsync({
+          busca: values.titulo,
+          ...this.prepararParametros(values)
+        });
+      }, 500);
     } else {
-      this.getSolicitacoesAsync(this.prepararParametros(values));
+      setTimeout(async () => {
+        this.getSolicitacoesAsync(this.prepararParametros(values));
+      }, 500);
     }
   }
 
