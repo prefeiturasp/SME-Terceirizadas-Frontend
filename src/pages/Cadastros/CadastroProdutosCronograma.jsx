@@ -12,6 +12,6 @@ const atual = {
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={`/`}>
     <Breadcrumb home={"/"} atual={atual} />
-    <CadastroProdutosEdital cronograma={true} />
+    <CadastroProdutosEdital />
   </Page>
 );
