@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
 import "antd/dist/antd.css";
@@ -33,6 +33,12 @@ import MeusDadosContext from "context/MeusDadosContext";
 import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
+import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
+
+const campoObrigatorio = {
+  touched: true,
+  error: "Campo Obrigatório"
+};
 
 const ModalCadastroVinculo = ({
   show,
@@ -49,12 +55,12 @@ const ModalCadastroVinculo = ({
   const [subdivisoes, setSubdivisoes] = useState();
   const [showExclusao, setShowExclusao] = useState(false);
   const [valoresEdicao, setValoresEdicao] = useState();
+  const [rfBuscado, setRfBuscado] = useState(false);
 
   const { meusDados } = useContext(MeusDadosContext);
 
-  let buscarRF = useRef();
-
   const handleClose = () => {
+    setRfBuscado(false);
     toggleShow(false, null);
   };
 
@@ -90,16 +96,18 @@ const ModalCadastroVinculo = ({
           return toastError("RF não pertence a sua unidade!");
         }
       }
-      values.nome_servidor = usuarioEOL.nome;
-      values.cargo_servidor = usuarioEOL.cargo;
-      values.email_servidor = usuarioEOL.email;
+      values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
+      values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
+      values.email_servidor = usuarioEOL.email ? usuarioEOL.email : undefined;
       values.cpf = usuarioEOL.cpf;
-      values.cpf_servidor = formataCPFCensurado(usuarioEOL.cpf);
+      values.cpf_servidor = usuarioEOL.cpf
+        ? formataCPFCensurado(usuarioEOL.cpf)
+        : undefined;
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
-      values.cargo_servidor = usuarioEOL.cargo;
 
       let t = document.getElementById("inputRF");
       t.focus();
+      setRfBuscado(true);
     } else {
       if (values.registro_funcional) {
         toastError(
@@ -159,6 +167,7 @@ const ModalCadastroVinculo = ({
       <Modal
         show={show}
         onHide={handleClose}
+        backdrop="static"
         dialogClassName="modal-cadastro-vinculo"
       >
         <Modal.Header closeButton>
@@ -202,7 +211,6 @@ const ModalCadastroVinculo = ({
                             name="registro_funcional"
                             placeholder="Digite o RF do Servidor"
                             className="input-busca-produto"
-                            ref={buscarRF}
                             validate={required}
                           />
                         </div>
@@ -226,7 +234,11 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             disabled={true}
                             validate={required}
+                            required
                           />
+                          {rfBuscado && !values.nome_servidor && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
                         </div>
                         <div className="col-5">
                           <Field
@@ -236,7 +248,11 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             disabled={true}
                             validate={required}
+                            required
                           />
+                          {rfBuscado && !values.cargo_servidor && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
                         </div>
                       </div>
                       <div className="row">
@@ -248,7 +264,11 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             disabled={true}
                             validate={required}
+                            required
                           />
+                          {rfBuscado && !values.email_servidor && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
                         </div>
                         <div className="col-5">
                           <Field
@@ -258,7 +278,11 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             disabled={true}
                             validate={required}
+                            required
                           />
+                          {rfBuscado && !values.cpf_servidor && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
                         </div>
                       </div>
                       <div className="row">
@@ -410,6 +434,14 @@ const ModalCadastroVinculo = ({
                       icon="fas fa-trash"
                       className="float-left"
                     />
+                  )}
+                  {tipoUsuario === "SERVIDOR" && (
+                    <div className="float-left texto-rodape">
+                      Para adicionar o acesso do usuário, é necessário que todas
+                      as informações acima estejam preenchidas. Caso faltem
+                      informações, entre em contato com o administrador da sua
+                      Unidade.
+                    </div>
                   )}
 
                   <Botao
