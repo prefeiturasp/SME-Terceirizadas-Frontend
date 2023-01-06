@@ -1,5 +1,3 @@
-export const MOTIVOS = ["Reposição de aula", "Dia da família", "Outro"];
-
 export const formataMotivosDias = inclusoes => {
   const motivosDias = {};
   inclusoes.forEach(inclusao => {
