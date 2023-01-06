@@ -190,6 +190,7 @@ import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastrados
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
+import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 
 const routesConfig = [
   {
@@ -706,6 +707,15 @@ const routesConfig = [
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.PRODUTOS
+    }`,
+    component: CadastroProdutosCronograma,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
+  },
+
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.EMBALAGEM
