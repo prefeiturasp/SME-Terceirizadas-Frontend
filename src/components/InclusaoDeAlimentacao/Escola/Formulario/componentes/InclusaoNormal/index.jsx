@@ -35,7 +35,8 @@ export const DataInclusaoNormal = ({ ...props }) => {
     proximosDoisDiasUteis,
     name,
     values,
-    onDataChanged
+    onDataChanged,
+    nameFieldArray
   } = props;
 
   return (
@@ -52,7 +53,7 @@ export const DataInclusaoNormal = ({ ...props }) => {
               required
               validate={composeValidators(
                 required,
-                dataDuplicada(values.inclusoes)
+                dataDuplicada(values[nameFieldArray || "inclusoes"])
               )}
             />
             <OnChange name={`${name}.data`}>
@@ -70,8 +71,10 @@ export const DataInclusaoNormal = ({ ...props }) => {
                 type={BUTTON_TYPE.BUTTON}
                 onClick={() =>
                   form.change(
-                    "inclusoes",
-                    values.inclusoes.filter((_, i) => i !== index)
+                    nameFieldArray || "inclusoes",
+                    values[nameFieldArray || "inclusoes"].filter(
+                      (_, i) => i !== index
+                    )
                   )
                 }
                 style={BUTTON_STYLE.BLUE_OUTLINE}
@@ -86,12 +89,12 @@ export const DataInclusaoNormal = ({ ...props }) => {
   );
 };
 
-export const AdicionarDia = ({ push }) => {
+export const AdicionarDia = ({ push, nameFieldArray }) => {
   return (
     <Botao
       className="col-3 mb-3"
       texto="Adicionar dia"
-      onClick={() => push("inclusoes")}
+      onClick={() => push(nameFieldArray || "inclusoes")}
       style={BUTTON_STYLE.GREEN_OUTLINE}
       type={BUTTON_TYPE.BUTTON}
     />
