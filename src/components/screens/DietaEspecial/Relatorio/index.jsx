@@ -4,7 +4,8 @@ import {
   escolaCancelaSolicitacao,
   getDietasEspeciaisVigentesDeUmAluno,
   deleteSolicitacaoAberta,
-  createSolicitacaoAberta
+  createSolicitacaoAberta,
+  updateSolicitacaoAberta
 } from "services/dietaEspecial.service";
 import {
   getProtocoloDietaEspecial,
@@ -134,6 +135,15 @@ const Relatorio = ({ visao }) => {
       initSocket(uuid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const intervalCall = setInterval(() => {
+      dadosDietaAberta && updateSolicitacaoAberta(dadosDietaAberta.id);
+    }, 5000);
+    return () => {
+      clearInterval(intervalCall);
+    };
+  }, [dadosDietaAberta]);
 
   const gerarProtocolo = async (uuid, eh_importado) => {
     if (eh_importado === true) {
