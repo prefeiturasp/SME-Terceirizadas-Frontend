@@ -386,6 +386,15 @@ export const createSolicitacaoAberta = async payload => {
   }
 };
 
+export const updateSolicitacaoAberta = async id => {
+  const url = `solicitacoes-abertas/${id}/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const deleteSolicitacaoAberta = async id => {
   const url = `solicitacoes-abertas/${id}/`;
   const response = await axios.delete(url).catch(ErrorHandlerFunction);
