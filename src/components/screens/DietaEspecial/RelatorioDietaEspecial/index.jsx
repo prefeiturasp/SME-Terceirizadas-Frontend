@@ -24,6 +24,7 @@ const RelatorioDietaEspecial = () => {
   );
   const [filtragemRealizada, setFiltragemRealizada] = useState(false);
   const [terceirizadaUuid, setTerceirizadaUuid] = useState(null);
+  const [nutriSupervisao, setNutriSupervisao] = useState(false);
   const [dataInicial, setDataInicial] = useState(null);
   const [dataFinal, setDataFinal] = useState(null);
   const [lotesSelecionados, setLotesSelecionados] = useState([]);
@@ -97,6 +98,8 @@ const RelatorioDietaEspecial = () => {
               setProtocolosSelecionados={setProtocolosSelecionados}
               terceirizadaUuid={terceirizadaUuid}
               setTerceirizadaUuid={setTerceirizadaUuid}
+              nutriSupervisao={nutriSupervisao}
+              setNutriSupervisao={setNutriSupervisao}
               dataInicial={dataInicial}
               setDataInicial={setDataInicial}
               dataFinal={dataFinal}
@@ -113,6 +116,7 @@ const RelatorioDietaEspecial = () => {
                   </div>
                 </div>
                 <ListagemDietas
+                  ehNutriSupervisao={nutriSupervisao}
                   dietasFiltradas={dietasFiltradas}
                   status={status}
                 />

@@ -14,9 +14,11 @@ import {
 } from "constants/shared";
 import {
   formataClassificacoes,
+  formataDiagnosticos,
   formataLotes,
   formataProtocolos
 } from "helpers/terceirizadas";
+import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, reduxForm } from "redux-form";
@@ -38,6 +40,8 @@ const BuscaDietasForm = ({
   setProtocolosSelecionados,
   terceirizadaUuid,
   setTerceirizadaUuid,
+  nutriSupervisao,
+  setNutriSupervisao,
   dataInicial,
   setDataInicial,
   dataFinal,
@@ -56,6 +60,7 @@ const BuscaDietasForm = ({
   const [lotesNoFiltro, setLotesNoFiltro] = useState([]);
   const [protocolosInicio, setProtocolosInicio] = useState([]);
   const [protocolosNoFiltro, setProtocolosNoFiltro] = useState([]);
+  const [diagnosticoNoFiltro, setDiagnosticoNoFiltro] = useState([]);
   const [classificacoesInicio, setClassificacoesInicio] = useState([]);
   const [classificacoesNoFiltro, setClassificacoesNoFiltro] = useState([]);
 
@@ -67,6 +72,12 @@ const BuscaDietasForm = ({
       response.tipo_usuario.toString() === TIPO_USUARIO.TERCEIRIZADA
     ) {
       setTerceirizadaUuid(response.vinculo_atual.instituicao.uuid);
+      setCarregando(false);
+    } else if (
+      response.tipo_usuario &&
+      response.tipo_usuario.toString() === TIPO_USUARIO.NUTRICIONISTA_SUPERVISAO
+    ) {
+      setNutriSupervisao(true);
       setCarregando(false);
     }
   };
@@ -129,6 +140,24 @@ const BuscaDietasForm = ({
     setProtocolosNoFiltro(protocolosFormatados);
   };
 
+  const diagnosticosRelacionadosADietas = dietas => {
+    let diagnosticosRelacionados = [];
+    dietas.forEach(dieta => {
+      if (dieta.alergias_intolerancias.length > 0) {
+        dieta.alergias_intolerancias.map(
+          alergia_intolerancia =>
+            !(
+              diagnosticosRelacionados.filter(
+                alergia_intolerancia_2 =>
+                  alergia_intolerancia_2.id === alergia_intolerancia.id
+              ).length > 0
+            ) && diagnosticosRelacionados.push(alergia_intolerancia)
+        );
+      }
+    });
+    setDiagnosticoNoFiltro(formataDiagnosticos(diagnosticosRelacionados));
+  };
+
   const onChangeStatus = async value => {
     const data = { terceirizada_uuid: terceirizadaUuid };
     setCarregandoFiltros(true);
@@ -144,11 +173,16 @@ const BuscaDietasForm = ({
     setStatus(value.toUpperCase());
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
-      const response = await getSolicitacoesRelatorioDietasEspeciais(data);
+      let response = [];
+      if (nutriSupervisao) {
+        delete data["terceirizada_uuid"];
+      }
+      response = await getSolicitacoesRelatorioDietasEspeciais(data);
       const dietasAutorizadas = response.data;
       lotesRelacionadosADietas(dietasAutorizadas);
       classificacoesRelacionadasADietas(dietasAutorizadas);
       protocolosRelacionadosADietas(dietasAutorizadas);
+      diagnosticosRelacionadosADietas(dietasAutorizadas);
       setDietasEspeciais(response.data);
       setMostrarFiltrosAutorizadas(true);
       setMostrarFiltrosCanceladas(false);
@@ -544,34 +578,65 @@ const BuscaDietasForm = ({
                     </div>
                   )}
                 </div>
-                <div className="col-4">
-                  <label className="label font-weight-normal pb-2 pt-2">
-                    Protocolo padrão:
-                  </label>
-                  {protocolosNoFiltro.length ? (
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="protocolo_padrao"
-                      options={protocolosNoFiltro}
-                      valueRenderer={renderizarLabelProtocolo}
-                      selected={protocolosSelecionados}
-                      onSelectedChanged={value =>
-                        onChangeProtocolosSelecionados(value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                  ) : (
-                    <div className="font-weight-normal pt-2">
-                      Carregando protocolos..
-                    </div>
-                  )}
-                </div>
+                {!usuarioEhNutricionistaSupervisao() ? (
+                  <div className="col-4">
+                    <label className="label font-weight-normal pb-2 pt-2">
+                      Protocolo padrão:
+                    </label>
+                    {protocolosNoFiltro.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="protocolo_padrao"
+                        options={protocolosNoFiltro}
+                        valueRenderer={renderizarLabelProtocolo}
+                        selected={protocolosSelecionados}
+                        onSelectedChanged={value =>
+                          onChangeProtocolosSelecionados(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="font-weight-normal pt-2">
+                        Carregando protocolos..
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="col-4">
+                    <label className="label font-weight-normal pb-2 pt-2">
+                      Relação por Diagnóstico:
+                    </label>
+                    {diagnosticoNoFiltro.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="diagnostico"
+                        options={diagnosticoNoFiltro}
+                        valueRenderer={renderizarLabelProtocolo}
+                        selected={protocolosSelecionados}
+                        onSelectedChanged={value =>
+                          onChangeProtocolosSelecionados(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="font-weight-normal pt-2">
+                        Carregando protocolos..
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div

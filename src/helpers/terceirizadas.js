@@ -106,3 +106,18 @@ export const formataProtocolos = (protocolos, lista = [], obj = {}) => {
   }
   return lista;
 };
+
+export const formataDiagnosticos = (diagnosticos, lista = [], obj = {}) => {
+  try {
+    diagnosticos.forEach(diagnostico => {
+      obj.uuid = diagnostico["descricao"] || diagnostico;
+      obj.label = diagnostico["descricao"] || diagnostico;
+      obj.value = diagnostico["descricao"] || diagnostico;
+      lista.push(obj);
+      obj = {};
+    });
+  } catch (err) {
+    return lista;
+  }
+  return lista;
+};
