@@ -85,21 +85,18 @@ export const getSolicitacoesComQuestionamentoCodae = async params => {
 
 export const getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias = async (
   filtroAplicado,
-  tipoVisao
+  tipoVisao,
+  params
 ) => {
   const url = `${TODAS_SOLICITACOES_CODAE_URL}/${
     SOLICITACOES.PENDENTES
   }/${filtroAplicado}/${tipoVisao}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const json = await result.json();
-    return json.results;
-  } catch (error) {
-    console.log(error);
+
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 

@@ -1,3 +1,4 @@
+import axios from "services/_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { FLUXO, PEDIDOS } from "./constants";
@@ -138,21 +139,15 @@ export const getSolicitacaoUnificada = uuid => {
     });
 };
 
-export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
+export const getCODAEPedidosSolicitacoesUnificadas = async (
+  filtroAplicado,
+  paramsFromPrevPage
+) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${
     PEDIDOS.CODAE
   }/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  return response.data;
 };
 
 export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {

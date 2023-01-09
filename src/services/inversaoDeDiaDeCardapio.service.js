@@ -254,19 +254,13 @@ export const getDREPedidosDeInversoes = filtroAplicado => {
     });
 };
 
-export const getCODAEPedidosDeInversoes = filtroAplicado => {
+export const getCODAEPedidosDeInversoes = async (
+  filtroAplicado,
+  paramsFromPrevPage
+) => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-codae/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  return response.data;
 };
 
 export const getTerceirizadaPedidosDeInversoes = filtroAplicado => {
