@@ -7,15 +7,21 @@ import {
   CODAE,
   SOLICITACAO_KIT_LANCHE_UNIFICADA
 } from "../../../configs/constants";
+import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
   titulo: "Solicitação Unificada - Pendente Autorização"
 };
 
-export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
-    <Breadcrumb home={HOME} atual={atual} />
-    <Container />
-  </Page>
-);
+export default () => {
+  const location = useLocation();
+  const filtros = location.state && location.state.filtros;
+
+  return (
+    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+      <Breadcrumb home={HOME} atual={atual} />
+      <Container filtros={filtros} />
+    </Page>
+  );
+};

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { TIPOS_SOLICITACAO_LISTA } from "constants/shared";
-import { formatarLotesParaVisao } from "helpers/utilities";
+import { formatarOpcoesLote, formatarOpcoesDRE } from "helpers/utilities";
 import DashboardCODAE from ".";
 import { getLotesSimples } from "services/lote.service";
 import { Spin } from "antd";
@@ -49,7 +49,7 @@ export const Container = () => {
   const getLotesAsync = async () => {
     const response = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
-      setLotes(formatarLotesParaVisao(response.data.results));
+      setLotes(formatarOpcoesLote(response.data.results));
     } else {
       setErro("Erro ao carregar lotes");
     }
@@ -58,7 +58,7 @@ export const Container = () => {
   const getDiretoriasRegionaisAsync = async () => {
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
-      setDiretoriasRegionais(formatarLotesParaVisao(response.data.results));
+      setDiretoriasRegionais(formatarOpcoesDRE(response.data.results));
     } else {
       setErro("Erro ao carregar DREs");
     }
