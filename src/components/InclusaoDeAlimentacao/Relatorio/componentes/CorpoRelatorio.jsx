@@ -53,14 +53,22 @@ export class CorpoRelatorio extends Component {
                         <td
                           key={key}
                           className={`col-2 ${
-                            getDia(dia).cancelado ? `cancelado` : ""
+                            getDia(dia).cancelado ||
+                            inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU"
+                              ? `cancelado`
+                              : ""
                           }`}
                         >
                           <span>{dia}</span>
-                          {getDia(dia).cancelado && (
+                          {(getDia(dia).cancelado ||
+                            inclusaoDeAlimentacao.status ===
+                              "ESCOLA_CANCELOU") && (
                             <div className="cancelado-justificativa">
                               <strong>justificativa:</strong>{" "}
-                              {getDia(dia).cancelado_justificativa}
+                              {getDia(dia).cancelado_justificativa ||
+                                inclusaoDeAlimentacao.logs[
+                                  inclusaoDeAlimentacao.logs.length - 1
+                                ].justificativa}
                             </div>
                           )}
                         </td>
