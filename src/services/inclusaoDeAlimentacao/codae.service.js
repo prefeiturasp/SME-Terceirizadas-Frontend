@@ -13,12 +13,13 @@ const authToken = {
 
 export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
   filtroAplicado,
-  tipoSolicitacao
+  tipoSolicitacao,
+  paramsFromPrevPage
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
 
   if (tipoSolicitacao === SOLICITACAO_CEI) {
-    const response = await axios.get(url);
+    const response = await axios.get(url, { params: paramsFromPrevPage });
     const results = response.data.results;
     return {
       results: results.map(el => ({
@@ -27,19 +28,11 @@ export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
       })),
       status: response.status
     };
-  }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
+  } else {
+    const response = await axios.get(url, { params: paramsFromPrevPage });
+    const results = response.data.results;
+    const status = response.status;
+    return { results: results, status };
   }
 };
 
