@@ -24,7 +24,9 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
 
   const dias_motivos =
     solicitacao &&
-    (solicitacao.inclusoes || solicitacao.dias_motivos_da_inclusao_cemei);
+    (solicitacao.inclusoes ||
+      solicitacao.dias_motivos_da_inclusao_cemei ||
+      solicitacao.dias_motivos_da_inclusao_cei);
 
   const onSubmit = async values => {
     if (
@@ -87,6 +89,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
               </div>
               {[
                 TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+                TIPO_SOLICITACAO.SOLICITACAO_CEI,
                 TIPO_SOLICITACAO.SOLICITACAO_CEMEI
               ].includes(tipoSolicitacao) && (
                 <>
