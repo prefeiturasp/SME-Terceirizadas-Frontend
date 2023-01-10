@@ -21,6 +21,7 @@ import "./style.scss";
 import { getLotesSimples } from "../../../../services/lote.service";
 import {
   createTerceirizada,
+  getCNPJsEmpresas,
   getTerceirizadaUUID,
   updateTerceirizada
 } from "../../../../services/terceirizada.service";
@@ -37,6 +38,7 @@ import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
 import { getEnderecoPorCEP } from "../../../../services/cep.service";
 import ModalTransferirLote from "components/Shareable/ModalTransferirLote";
+import { InputComData } from "components/Shareable/DatePicker";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -73,7 +75,14 @@ class CadastroEmpresa extends Component {
           email: ""
         }
       ],
-
+      contratos: [
+        {
+          numero_processo: null,
+          numero_contrato: null,
+          vigencia_de: null,
+          vigencia_ate: null
+        }
+      ],
       uuid: null,
       redirect: false,
 
@@ -98,7 +107,8 @@ class CadastroEmpresa extends Component {
         cidade: null,
         estado: null,
         desabilitado: true
-      }
+      },
+      listaCNPJ: []
     };
     this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
     this.setaContatosPessoaEmpresa = this.setaContatosPessoaEmpresa.bind(this);
@@ -125,6 +135,12 @@ class CadastroEmpresa extends Component {
       redirect: true
     });
   }
+
+  validaCNPJ = value => {
+    if (this.state.listaCNPJ && this.state.listaCNPJ.includes(value))
+      return "CNPJ já cadastrado";
+    else return undefined;
+  };
 
   renderRedirect = () => {
     if (this.state.redirect) {
@@ -235,6 +251,28 @@ class CadastroEmpresa extends Component {
           email: ""
         }
       ])
+    });
+  }
+
+  adicionaContrato() {
+    this.setState({
+      contratos: [
+        ...this.state.contratos,
+        {
+          numero_processo: null,
+          numero_contrato: null,
+          vigencia_de: null,
+          vigencia_ate: null
+        }
+      ]
+    });
+  }
+
+  removeContrato(index) {
+    let newContratos = [...this.state.contratos];
+    newContratos.splice(index, 1);
+    this.setState({
+      contratos: newContratos
     });
   }
 
@@ -483,6 +521,11 @@ class CadastroEmpresa extends Component {
       this.setState({
         lotes: transformaObjetos(response.data),
         lotesRaw: response.data.results
+      });
+    });
+    getCNPJsEmpresas().then(response => {
+      this.setState({
+        listaCNPJ: response.data.results
       });
     });
   }
@@ -752,7 +795,8 @@ class CadastroEmpresa extends Component {
       qtdField,
       atualizarLotes,
       exibirModalTransferenciaLote,
-      loteAdicionado
+      loteAdicionado,
+      contratos
     } = this.state;
     return (
       <Spin tip="Carregando..." spinning={carregando}>
@@ -831,7 +875,7 @@ class CadastroEmpresa extends Component {
                         label="CNPJ"
                         name="cnpj"
                         required
-                        validate={[required, tamanhoCnpj]}
+                        validate={[required, tamanhoCnpj, this.validaCNPJ]}
                       />
                     </div>
                   </div>
@@ -846,7 +890,6 @@ class CadastroEmpresa extends Component {
                           validate={required}
                           required
                           naoDesabilitarPrimeiraOpcao
-                          //TODO: Verificar choices e name com kelwy
                           options={[
                             {
                               nome: "Selecione...",
@@ -854,7 +897,7 @@ class CadastroEmpresa extends Component {
                             },
                             {
                               nome: "Distribuidor (Armazém)",
-                              uuid: "ARMAZEM/DISTRIBUIDOR"
+                              uuid: "DISTRIBUIDOR_ARMAZEM"
                             },
                             {
                               nome: "Fornecedor",
@@ -862,7 +905,7 @@ class CadastroEmpresa extends Component {
                             },
                             {
                               nome: "Fornecedor e Distribuidor",
-                              uuid: "FORNECEDOR/DISTRIBUIDOR"
+                              uuid: "FORNECEDOR_E_DISTRIBUIDOR"
                             }
                           ]}
                         />
@@ -875,7 +918,6 @@ class CadastroEmpresa extends Component {
                           validate={required}
                           required
                           naoDesabilitarPrimeiraOpcao
-                          //TODO: Verificar choices e name com kelwy
                           options={[
                             {
                               nome: "Selecione...",
@@ -883,11 +925,11 @@ class CadastroEmpresa extends Component {
                             },
                             {
                               nome: "Convencional",
-                              uuid: "convencional"
+                              uuid: "CONVENCIONAL"
                             },
                             {
                               nome: "Agricultura Familiar",
-                              uuid: "agricultura_familiar"
+                              uuid: "AGRICULTURA_FAMILIAR"
                             }
                           ]}
                         />
@@ -1025,67 +1067,69 @@ class CadastroEmpresa extends Component {
                         />
                       </div>
                     </div>
-                    <div className="container-fields row">
-                      <div className="col-11">
-                        {contatosEmpresaForm.map(
-                          (contatoEmpresa, indiceEmpresa) => {
-                            return (
-                              <FormSection
-                                nomeForm={`contatoEmpresa_${indiceEmpresa}`}
-                                name={contatoEmpresa}
-                                key={indiceEmpresa}
-                              >
-                                <div className="fields-set">
-                                  <div>
-                                    <Field
-                                      name={`telefone_empresa_${indiceEmpresa}`}
-                                      component={TelefoneOuCelular}
-                                      label="Telefone"
-                                      id={`telefone_empresa_${indiceEmpresa}`}
-                                      setaContatosEmpresa={
-                                        this.setaContatosEmpresa
-                                      }
-                                      indice={indiceEmpresa}
-                                      cenario="contatoEmpresa"
-                                      validate={required}
-                                      required
-                                      maxlength="140"
-                                    />
+                    {!ehDistribuidor && (
+                      <div className="container-fields row">
+                        <div className="col-11">
+                          {contatosEmpresaForm.map(
+                            (contatoEmpresa, indiceEmpresa) => {
+                              return (
+                                <FormSection
+                                  nomeForm={`contatoEmpresa_${indiceEmpresa}`}
+                                  name={contatoEmpresa}
+                                  key={indiceEmpresa}
+                                >
+                                  <div className="fields-set">
+                                    <div>
+                                      <Field
+                                        name={`telefone_empresa_${indiceEmpresa}`}
+                                        component={TelefoneOuCelular}
+                                        label="Telefone"
+                                        id={`telefone_empresa_${indiceEmpresa}`}
+                                        setaContatosEmpresa={
+                                          this.setaContatosEmpresa
+                                        }
+                                        indice={indiceEmpresa}
+                                        cenario="contatoEmpresa"
+                                        validate={required}
+                                        required
+                                        maxlength="140"
+                                      />
+                                    </div>
+                                    <div>
+                                      <Field
+                                        name={`email_empresa_${indiceEmpresa}`}
+                                        component={InputText}
+                                        label="E-mail"
+                                        validate={email}
+                                        onChange={event =>
+                                          this.setaContatosEmpresa(
+                                            "email",
+                                            event.target.value,
+                                            indiceEmpresa
+                                          )
+                                        }
+                                        maxlength="140"
+                                      />
+                                    </div>
                                   </div>
-                                  <div>
-                                    <Field
-                                      name={`email_empresa_${indiceEmpresa}`}
-                                      component={InputText}
-                                      label="E-mail"
-                                      validate={email}
-                                      onChange={event =>
-                                        this.setaContatosEmpresa(
-                                          "email",
-                                          event.target.value,
-                                          indiceEmpresa
-                                        )
-                                      }
-                                      maxlength="140"
-                                    />
-                                  </div>
-                                </div>
-                              </FormSection>
-                            );
-                          }
-                        )}
+                                </FormSection>
+                              );
+                            }
+                          )}
+                        </div>
+                        <div className={`col-1 mt-auto mb-1`}>
+                          <Botao
+                            texto="+"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => {
+                              this.nomeFormContatoEmpresa();
+                              this.adicionaContatoEmpresa();
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className={`col-1 mt-auto mb-1`}>
-                        <Botao
-                          texto="+"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          onClick={() => {
-                            this.nomeFormContatoEmpresa();
-                            this.adicionaContatoEmpresa();
-                          }}
-                        />
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 
@@ -1351,6 +1395,80 @@ class CadastroEmpresa extends Component {
                             />
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <hr className="linha-form" />
+                    <div>
+                      <div className="card-body">
+                        <div className="card-title green">Contratos</div>
+                        {contratos.map((contrato, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <div className="row">
+                                <div className="col-6">
+                                  <Field
+                                    name={`numero_processo_${index}`}
+                                    component={InputText}
+                                    label="Nº do Processo Administrativo do Contrato"
+                                    required
+                                    validate={required}
+                                    apenasNumeros
+                                  />
+                                </div>
+                                <div className="col-6">
+                                  <Field
+                                    name={`numero_contrato_${index}`}
+                                    component={InputText}
+                                    label="Nº do Contrato"
+                                    required
+                                    validate={required}
+                                  />
+                                </div>
+                                <div className="col-3">
+                                  <Field
+                                    component={InputComData}
+                                    label="Vigência do Contrato"
+                                    name={`vigencia_de_${index}`}
+                                    placeholder="De"
+                                    writable={false}
+                                  />
+                                </div>
+                                <div className="col-3">
+                                  <Field
+                                    component={InputComData}
+                                    label="&nbsp;"
+                                    name={`vigencia_ate_${index}`}
+                                    placeholder="Até"
+                                    writable={false}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex-center my-3">
+                                <Botao
+                                  texto="+ Adicionar"
+                                  className="mr-4"
+                                  type={BUTTON_TYPE.BUTTON}
+                                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                                  onClick={() => {
+                                    this.adicionaContrato();
+                                  }}
+                                />
+
+                                {index > 0 && (
+                                  <Botao
+                                    texto="Remover Contrato"
+                                    icon="fas fa-trash"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.RED_OUTLINE}
+                                    onClick={() => {
+                                      this.removeContrato(index);
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            </Fragment>
+                          );
+                        })}
                       </div>
                     </div>
                     <hr className="linha-form" />
