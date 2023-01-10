@@ -101,6 +101,8 @@ export class CardPendenteAcao extends Component {
                 {pedidosFiltrados.map((pedido, key) => {
                   const dataMaisProxima = pedido.inclusoes
                     ? pedido.inclusoes[0].data
+                    : pedido.dias_motivos_da_inclusao_cei
+                    ? pedido.dias_motivos_da_inclusao_cei[0].data
                     : pedido.dias_motivos_da_inclusao_cemei
                     ? pedido.dias_motivos_da_inclusao_cemei[0].data
                     : pedido.data;
