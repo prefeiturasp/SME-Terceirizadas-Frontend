@@ -37,7 +37,7 @@ import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
 
 const campoObrigatorio = {
   touched: true,
-  error: "Campo Obrigatório"
+  error: "Informação não localizada"
 };
 
 const ModalCadastroVinculo = ({
