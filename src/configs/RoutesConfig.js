@@ -624,7 +624,10 @@ const routesConfig = [
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: usuarioEhQualquerCODAE() || usuarioEhLogistica()
+    tipoUsuario:
+      usuarioEhQualquerCODAE() ||
+      usuarioEhLogistica() ||
+      usuarioEhDilogQualidadeOuCronograma()
   },
   {
     path: `/configuracoes/cadastros/empresa`,

@@ -33,7 +33,8 @@ class EmpresasCadastradas extends Component {
         });
       } else if (
         tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
-        tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+        tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
+        tipoPerfil === PERFIL.DILOG_CRONOGRAMA
       ) {
         this.setState({ ...this.state, ehDistribuidor: true });
         resp.forEach(empresa => {
@@ -63,7 +64,7 @@ class EmpresasCadastradas extends Component {
   onPesquisaChanged(values) {
     if (values.length >= 3 && !this.state.loading) {
       setTimeout(() => {
-        this.buscaTerceirizadas(`empresa=${values}`);
+        this.buscaTerceirizadas(`busca=${values}`);
       }, 500);
     } else if (values.length < 3 && !this.state.loading) {
       this.setState({
@@ -72,7 +73,6 @@ class EmpresasCadastradas extends Component {
     }
     this.setState({ pesquisar: values });
   }
-
   render() {
     const { empresasFiltradas, pesquisar, loading } = this.state;
 
@@ -108,12 +108,12 @@ class EmpresasCadastradas extends Component {
                     key={key}
                     className={empresa.ativo ? "detalhe-empresa" : ""}
                   >
-                    {!empresa.eh_distribuidor && (
+                    {empresa.tipo_servico.toLowerCase() === "terceirizada" && (
                       <td>{empresa.codigo_empresa}</td>
                     )}
                     <td className="nome-empresa">{empresa.nome}</td>
                     <td className="text-center">{empresa.cnpj}</td>
-                    <td className="text-center">{empresa.tipo}</td>
+                    <td className="text-center">{empresa.tipo_servico}</td>
                     <td className="text-center">{empresa.status}</td>
 
                     <td className="btn-action botao-direita">
@@ -199,7 +199,7 @@ class EmpresasCadastradas extends Component {
                                   {empresa.bairro}
                                 </span>
                               </div>
-                              <div>
+                              <div className="mt-4">
                                 <span className="descricao">Cidade:</span>
                                 <span className="valor-desc">
                                   {empresa.cidade}
@@ -211,7 +211,7 @@ class EmpresasCadastradas extends Component {
                                   {empresa.cep}
                                 </span>
                               </div>
-                              <div>
+                              <div className="mt-4">
                                 <span className="descricao">Estado:</span>
                                 <span className="valor-desc">
                                   {empresa.estado}
@@ -336,11 +336,15 @@ class EmpresasCadastradas extends Component {
                                       </div>
                                       <div className="mt-4">
                                         <span className="descricao">
-                                          Vigência do Contrato
+                                          Vigência do Contrato:
                                         </span>
-                                        <br />
                                         <span className="valor-desc">
-                                          {/* TODO */}
+                                          {contrato.vigencias.map(
+                                            vigencia =>
+                                              `${vigencia.data_inicial} até ${
+                                                vigencia.data_final
+                                              }`
+                                          )}
                                         </span>
                                       </div>
                                     </section>
