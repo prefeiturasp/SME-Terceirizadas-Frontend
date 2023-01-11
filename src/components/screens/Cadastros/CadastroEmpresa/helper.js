@@ -81,6 +81,7 @@ export const retornArrayTerceirizadas = response => {
       uuid: resp.uuid,
       codigo_empresa: resp.id_externo,
       nome: resp.razao_social,
+      nome_fantasia: resp.nome_fantasia,
       cnpj: resp.cnpj,
       status: resp.ativo ? "Ativa" : "Inativa",
       ativo: false,
@@ -93,7 +94,8 @@ export const retornArrayTerceirizadas = response => {
           email: contato.email
         };
       }),
-      eh_distribuidor: resp.eh_distribuidor,
+      contratos: resp.contratos,
+      eh_distribuidor: resp.tipo_servico !== "TERCEIRIZADA",
       telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
       email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
       representante: resp.representante_legal,
@@ -115,6 +117,7 @@ export const retornArrayTerceirizadas = response => {
       responsavel_cargo: resp.responsavel_cargo,
       tipo_alimento: resp.tipo_alimento_display,
       tipo_empresa: resp.tipo_empresa_display,
+      tipo_servico: resp.tipo_servico_display,
       numero_contrato: resp.numero_contrato,
       criado_em: resp.criado_em
     };
