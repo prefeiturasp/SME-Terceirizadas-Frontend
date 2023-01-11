@@ -42,12 +42,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
         <td>{item.escola_nome}</td>
       )}
       <td>{item.desc_doc}</td>
-      <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
-      </td>
+      <td className="text-center">{solicitacao.datas}</td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
       </td>
