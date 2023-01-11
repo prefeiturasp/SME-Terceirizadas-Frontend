@@ -32,6 +32,7 @@ const RelatorioDietaEspecial = () => {
     []
   );
   const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
+  const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
   const [imprimindoPdf, setImprimindoPdf] = useState(false);
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
 
@@ -42,6 +43,7 @@ const RelatorioDietaEspecial = () => {
       classificacoes: classificacoesSelecionadas.join(),
       protocolos: protocolosSelecionados.join(),
       terceirizada_uuid: terceirizadaUuid,
+      alergias_intolerancias: diagnosticosSelecionados.join(),
       data_inicial: dataInicial,
       data_final: dataFinal
     };
@@ -62,6 +64,7 @@ const RelatorioDietaEspecial = () => {
       lotes: lotesSelecionados.join(),
       classificacoes: classificacoesSelecionadas.join(),
       protocolos: protocolosSelecionados.join(),
+      alergias_intolerancias: diagnosticosSelecionados.join(),
       terceirizada_uuid: terceirizadaUuid,
       data_inicial: dataInicial,
       data_final: dataFinal
@@ -96,6 +99,8 @@ const RelatorioDietaEspecial = () => {
               setClassificacoesSelecionadas={setClassificacoesSelecionadas}
               protocolosSelecionados={protocolosSelecionados}
               setProtocolosSelecionados={setProtocolosSelecionados}
+              diagnosticosSelecionados={diagnosticosSelecionados}
+              setDiagnosticosSelecionados={setDiagnosticosSelecionados}
               terceirizadaUuid={terceirizadaUuid}
               setTerceirizadaUuid={setTerceirizadaUuid}
               nutriSupervisao={nutriSupervisao}
