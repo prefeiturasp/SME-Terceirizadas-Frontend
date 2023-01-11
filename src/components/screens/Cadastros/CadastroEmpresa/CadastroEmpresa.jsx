@@ -874,6 +874,7 @@ class CadastroEmpresa extends Component {
                         component={InputText}
                         label="CNPJ"
                         name="cnpj"
+                        placeholder="Digite o CNPJ da Empresa"
                         required
                         validate={[required, tamanhoCnpj, this.validaCNPJ]}
                       />
