@@ -615,6 +615,26 @@ export const formatarLotesParaVisao = lotes => {
   return lotes;
 };
 
+export const formatarOpcoesLote = lista => {
+  const listaFormatada = lista.map(obj => {
+    return {
+      label: `${obj.diretoria_regional.iniciais} - ${obj.nome}`,
+      value: obj.uuid
+    };
+  });
+  return listaFormatada;
+};
+
+export const formatarOpcoesDRE = lista => {
+  const listaFormatada = lista.map(obj => {
+    return {
+      label: obj.nome,
+      value: obj.uuid
+    };
+  });
+  return listaFormatada;
+};
+
 export const ehInclusaoContinua = tipoSolicitacao => {
   return tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
 };

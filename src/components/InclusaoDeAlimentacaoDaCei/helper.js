@@ -119,11 +119,6 @@ export const backgroundLabelPeriodo = periodos => {
 export const formataPayload = values => {
   let payload = {};
   payload["escola"] = values.escola;
-  payload["data"] = values.data;
-  payload["motivo"] = values.motivo;
-  if (values.outro_motivo) {
-    payload["outro_motivo"] = values.outro_motivo;
-  }
   if (values.uuid) {
     payload["uuid"] = values.uuid;
   }
@@ -143,6 +138,7 @@ export const formataPayload = values => {
         });
     });
   payload["quantidade_alunos_por_faixas_etarias"] = faixas;
+  payload["dias_motivos_da_inclusao_cei"] = values.dias_motivos_da_inclusao_cei;
   return payload;
 };
 

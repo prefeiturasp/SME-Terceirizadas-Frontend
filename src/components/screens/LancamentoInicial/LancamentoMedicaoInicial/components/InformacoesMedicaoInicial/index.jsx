@@ -80,6 +80,13 @@ export default ({
     setResponsaveis(responsaveis);
   };
 
+  const verificarInput = (event, responsavel) => {
+    if (!/[0-9]/.test(event.key)) {
+      event.preventDefault();
+    }
+    setaResponsavel("rf", event.target.value, responsavel);
+  };
+
   const renderDadosResponsaveis = () => {
     let component = [];
     for (let responsavel = 0; responsavel <= 2; responsavel++) {
@@ -98,12 +105,12 @@ export default ({
           </div>
           <div className="col-4 pr-0">
             <Input
+              maxLength={7}
               className="mt-2"
               name={`responsavel_rf_${responsavel}`}
+              onKeyPress={event => verificarInput(event, responsavel)}
+              onChange={event => verificarInput(event, responsavel)}
               defaultValue={responsaveis[responsavel]["rf"]}
-              onChange={event =>
-                setaResponsavel("rf", event.target.value, responsavel)
-              }
               disabled={!emEdicao}
             />
           </div>
@@ -127,30 +134,80 @@ export default ({
 
   const handleClickSalvar = async () => {
     if (!responsaveis.some(resp => resp.nome !== "" && resp.rf !== "")) {
-      toastError("Preencha no mínimo 1 responsável");
+      toastError("Pelo menos um responsável deve ser cadastrado");
+      return;
+    }
+    if (
+      responsaveis.some(
+        resp =>
+          (resp.nome !== "" && resp.rf === "") ||
+          (resp.nome === "" && resp.rf !== "")
+      )
+    ) {
+      toastError("Responsável com dados incompletos");
       return;
     }
     const responsaveisPayload = responsaveis.filter(
       resp => resp.nome !== "" && resp.rf !== ""
     );
-    const payload = {
-      escola: escolaInstituicao.uuid,
-      tipo_contagem_alimentacoes: tipoDeContagemSelecionada,
-      responsaveis: responsaveisPayload,
-      mes: format(new Date(periodoSelecionado), "MM").toString(),
-      ano: getYear(new Date(periodoSelecionado)).toString()
-    };
+    if (responsaveisPayload.some(resp => resp.rf.length !== 7)) {
+      toastError("O campo de RF deve conter 7 números");
+      return;
+    }
     if (solicitacaoMedicaoInicial) {
+      let data = new FormData();
+      data.append("escola", String(escolaInstituicao.uuid));
+      data.append(
+        "tipo_contagem_alimentacoes",
+        String(tipoDeContagemSelecionada)
+      );
+      data.append("responsaveis", JSON.stringify(responsaveisPayload));
       const response = await updateSolicitacaoMedicaoInicial(
         solicitacaoMedicaoInicial.uuid,
-        payload
+        data
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Solicitação de Medição Inicial atualizada com sucesso!");
+        if (
+          responsaveisPayload.length ===
+          solicitacaoMedicaoInicial.responsaveis.length
+        ) {
+          let toast = false;
+          for (let i = 0; i < responsaveisPayload.length; i++) {
+            if (
+              JSON.stringify(responsaveisPayload[i]) !==
+                JSON.stringify(solicitacaoMedicaoInicial.responsaveis[i]) &&
+              !toast
+            ) {
+              toastSuccess("Responsável atualizado com sucesso");
+              toast = true;
+            }
+          }
+          !toast &&
+            toastSuccess(
+              "Método de Contagem / Responsável atualizado com sucesso"
+            );
+        } else if (
+          responsaveisPayload.length >
+          solicitacaoMedicaoInicial.responsaveis.length
+        ) {
+          toastSuccess("Responsável adicionado com sucesso");
+        } else if (
+          responsaveisPayload.length <
+          solicitacaoMedicaoInicial.responsaveis.length
+        ) {
+          toastSuccess("Responsável excluído com sucesso");
+        }
       } else {
         toastError("Não foi possível salvar as alterações!");
       }
     } else {
+      const payload = {
+        escola: escolaInstituicao.uuid,
+        tipo_contagem_alimentacoes: tipoDeContagemSelecionada,
+        responsaveis: responsaveisPayload,
+        mes: format(new Date(periodoSelecionado), "MM").toString(),
+        ano: getYear(new Date(periodoSelecionado)).toString()
+      };
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Solicitação de Medição Inicial criada com sucesso!");

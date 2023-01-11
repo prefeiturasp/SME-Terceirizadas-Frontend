@@ -139,16 +139,23 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         eh_nutricionista: true
       }
     ];
-    const contatosEmpresa = [
-      ...valoresState.contatosEmpresa,
-      ...valoresState.contatosPessoaEmpresa
-    ].map(item => {
+    const contatosEmpresa = valoresState.contatosPessoaEmpresa.map(item => {
       return {
         nome: item.nome,
         telefone: item.telefone,
         email: item.email
       };
     });
+    const contratos = valoresState.contratos.map((contrato, index) => ({
+      numero: valoresForm[`numero_contrato_${index}`],
+      processo: valoresForm[`numero_processo_${index}`],
+      vigencias: [
+        {
+          data_inicial: valoresForm[`vigencia_de_${index}`],
+          data_final: valoresForm[`vigencia_ate_${index}`]
+        }
+      ]
+    }));
     const contatos = [...contatosEmpresa, ...contatosNutri];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
@@ -160,10 +167,12 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatos,
+      contratos: contratos,
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
+      eh_distribuidor_ou_fornecedor:
+        valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,

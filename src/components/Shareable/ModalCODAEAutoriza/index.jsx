@@ -75,7 +75,6 @@ export class ModalCODAEAutoriza extends Component {
                       component={CKEditorField}
                       label="Informações da CODAE"
                       name="justificativa_autorizacao"
-                      required
                       validate={composeValidators(
                         textAreaRequiredAndAtLeastOneCharacter,
                         maxLength1500
@@ -107,7 +106,6 @@ export class ModalCODAEAutoriza extends Component {
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
-                      disabled={this.state.desabilitarSubmit}
                     />
                   </div>
                 </div>

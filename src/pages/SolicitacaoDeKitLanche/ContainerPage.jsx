@@ -16,6 +16,7 @@ import {
   TERCEIRIZADA
 } from "../../configs/constants";
 import { escolaEhCEMEI } from "helpers/utilities";
+import { useLocation } from "react-router-dom";
 
 export class PainelPedidosBase extends React.Component {
   constructor(props) {
@@ -64,7 +65,9 @@ export class PainelPedidosBase extends React.Component {
           <ContainerCEMEI meusDados={meusDados} />
         )}
         {this.props.VISAO === DRE && <PainelPedidosKitLancheDRE />}
-        {this.props.VISAO === CODAE && <PainelPedidosKitLancheCODAE />}
+        {this.props.VISAO === CODAE && (
+          <PainelPedidosKitLancheCODAE filtros={this.props.filtros} />
+        )}
         {this.props.VISAO === TERCEIRIZADA && (
           <PainelPedidosKitLancheTerceirizada />
         )}
@@ -78,7 +81,11 @@ export const PainelPedidosEscola = () => <PainelPedidosBase VISAO={ESCOLA} />;
 // DRE
 export const PainelPedidosDRE = () => <PainelPedidosBase VISAO={DRE} />;
 // CODAE
-export const PainelPedidosCODAE = () => <PainelPedidosBase VISAO={CODAE} />;
+export const PainelPedidosCODAE = () => {
+  const location = useLocation();
+  const filtros = location.state && location.state.filtros;
+  return <PainelPedidosBase VISAO={CODAE} filtros={filtros} />;
+};
 
 //TERCEIRIZADA
 export const PainelPedidosTerceirizada = () => (
