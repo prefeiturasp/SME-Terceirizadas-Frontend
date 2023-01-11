@@ -1,5 +1,19 @@
 @import "../../../../styles/variables.scss";
 
+.cadastro-empresa {
+  .card-title {
+    &.green {
+      color: $green !important;
+    }
+    font-weight: bold;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .form-section-terceirizada {
   label.container-radio {
     color: $gray;

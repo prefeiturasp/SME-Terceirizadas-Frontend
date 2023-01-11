@@ -34,7 +34,7 @@ const MenuCadastros = () => {
           Horários de Alimentações
         </LeafItem>
       )}
-      {usuarioEhLogistica() && (
+      {(usuarioEhLogistica() || usuarioEhCronograma()) && (
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`}>
           Empresas
         </LeafItem>

@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component, Fragment } from "react";
 import moment from "moment";
-import { Spin } from "antd";
+import { Spin, Tooltip } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { Field, reduxForm, FormSection } from "redux-form";
 import { PERFIL } from "../../../../constants/shared";
@@ -21,6 +21,7 @@ import "./style.scss";
 import { getLotesSimples } from "../../../../services/lote.service";
 import {
   createTerceirizada,
+  getCNPJsEmpresas,
   getTerceirizadaUUID,
   updateTerceirizada
 } from "../../../../services/terceirizada.service";
@@ -37,6 +38,7 @@ import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
 import { getEnderecoPorCEP } from "../../../../services/cep.service";
 import ModalTransferirLote from "components/Shareable/ModalTransferirLote";
+import { InputComData } from "components/Shareable/DatePicker";
 
 const ENTER = 13;
 class CadastroEmpresa extends Component {
@@ -73,7 +75,14 @@ class CadastroEmpresa extends Component {
           email: ""
         }
       ],
-
+      contratos: [
+        {
+          numero_processo: null,
+          numero_contrato: null,
+          vigencia_de: null,
+          vigencia_ate: null
+        }
+      ],
       uuid: null,
       redirect: false,
 
@@ -98,7 +107,8 @@ class CadastroEmpresa extends Component {
         cidade: null,
         estado: null,
         desabilitado: true
-      }
+      },
+      listaCNPJ: []
     };
     this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
     this.setaContatosPessoaEmpresa = this.setaContatosPessoaEmpresa.bind(this);
@@ -125,6 +135,12 @@ class CadastroEmpresa extends Component {
       redirect: true
     });
   }
+
+  validaCNPJ = value => {
+    if (this.state.listaCNPJ && this.state.listaCNPJ.includes(value))
+      return "CNPJ já cadastrado";
+    else return undefined;
+  };
 
   renderRedirect = () => {
     if (this.state.redirect) {
@@ -235,6 +251,28 @@ class CadastroEmpresa extends Component {
           email: ""
         }
       ])
+    });
+  }
+
+  adicionaContrato() {
+    this.setState({
+      contratos: [
+        ...this.state.contratos,
+        {
+          numero_processo: null,
+          numero_contrato: null,
+          vigencia_de: null,
+          vigencia_ate: null
+        }
+      ]
+    });
+  }
+
+  removeContrato(index) {
+    let newContratos = [...this.state.contratos];
+    newContratos.splice(index, 1);
+    this.setState({
+      contratos: newContratos
     });
   }
 
@@ -485,6 +523,11 @@ class CadastroEmpresa extends Component {
         lotesRaw: response.data.results
       });
     });
+    getCNPJsEmpresas().then(response => {
+      this.setState({
+        listaCNPJ: response.data.results
+      });
+    });
   }
 
   inciaFormEndereco = () => {
@@ -511,7 +554,8 @@ class CadastroEmpresa extends Component {
       validate = false;
     } else if (
       tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
-      tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+      tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
+      tipoPerfil === PERFIL.DILOG_CRONOGRAMA
     ) {
       validate = true;
     } else {
@@ -751,11 +795,12 @@ class CadastroEmpresa extends Component {
       qtdField,
       atualizarLotes,
       exibirModalTransferenciaLote,
-      loteAdicionado
+      loteAdicionado,
+      contratos
     } = this.state;
     return (
       <Spin tip="Carregando..." spinning={carregando}>
-        <div className="cadastro pt-3">
+        <div className="cadastro cadastro-empresa pt-3">
           {this.renderRedirect()}
           {exibirModalTransferenciaLote && (
             <ModalTransferirLote
@@ -778,31 +823,18 @@ class CadastroEmpresa extends Component {
             <div className="card">
               <div>
                 <div className="card-body">
-                  <div className="card-title font-weight-bold">
-                    Dados da Empresa
-                  </div>
+                  <div className="card-title green">Dados da Empresa</div>
                   <div className="row pt-3">
-                    <div className="col-12">
+                    <div className="col-12 text-right">
                       <Link to="/configuracoes/cadastros/empresas-cadastradas">
                         <Botao
-                          texto="Consulta de empresas cadastradas"
+                          texto="Empresas Cadastradas"
                           style={BUTTON_STYLE.GREEN_OUTLINE}
                         />
                       </Link>
                     </div>
                   </div>
-                  {ehDistribuidor && (
-                    <div className="row pt-3">
-                      <div className="col-3">
-                        <Field
-                          component={InputText}
-                          label="Data de Cadastro"
-                          name="data_cadastro"
-                          disabled
-                        />
-                      </div>
-                    </div>
-                  )}
+
                   <div className="row pt-3">
                     <div className="col-9">
                       <Field
@@ -814,19 +846,19 @@ class CadastroEmpresa extends Component {
                         maxlength="150"
                       />
                     </div>
-                    <div className="col-3">
-                      <Field
-                        {...fieldCnpj}
-                        component={InputText}
-                        label="CNPJ"
-                        name="cnpj"
-                        required
-                        validate={[required, tamanhoCnpj]}
-                      />
-                    </div>
+                    {ehDistribuidor && (
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          label="Data de Cadastro"
+                          name="data_cadastro"
+                          disabled
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="row pt-3">
-                    <div className="col-9">
+                    <div className="col-8">
                       <Field
                         component={InputText}
                         label="Nome Fantasia"
@@ -836,19 +868,50 @@ class CadastroEmpresa extends Component {
                         maxlength="150"
                       />
                     </div>
+                    <div className="col-4">
+                      <Field
+                        {...fieldCnpj}
+                        component={InputText}
+                        label="CNPJ"
+                        name="cnpj"
+                        placeholder="Digite o CNPJ da Empresa"
+                        required
+                        validate={[required, tamanhoCnpj, this.validaCNPJ]}
+                      />
+                    </div>
                   </div>
+
                   {ehDistribuidor && (
                     <div className="row pt-3">
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
-                          component={InputText}
-                          label="Número de Contrato"
-                          name="numero_contrato"
+                          component={Select}
+                          label="Tipo de Serviço"
+                          name="tipo_servico"
                           validate={required}
                           required
+                          naoDesabilitarPrimeiraOpcao
+                          options={[
+                            {
+                              nome: "Selecione...",
+                              uuid: ""
+                            },
+                            {
+                              nome: "Distribuidor (Armazém)",
+                              uuid: "DISTRIBUIDOR_ARMAZEM"
+                            },
+                            {
+                              nome: "Fornecedor",
+                              uuid: "FORNECEDOR"
+                            },
+                            {
+                              nome: "Fornecedor e Distribuidor",
+                              uuid: "FORNECEDOR_E_DISTRIBUIDOR"
+                            }
+                          ]}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
                         <Field
                           component={Select}
                           label="Tipo de Empresa"
@@ -862,17 +925,17 @@ class CadastroEmpresa extends Component {
                               uuid: ""
                             },
                             {
-                              nome: "Armazém/Distribuidor",
-                              uuid: "ARMAZEM/DISTRIBUIDOR"
+                              nome: "Convencional",
+                              uuid: "CONVENCIONAL"
                             },
                             {
-                              nome: "Fornecedor/Distribuidor",
-                              uuid: "FORNECEDOR/DISTRIBUIDOR"
+                              nome: "Agricultura Familiar",
+                              uuid: "AGRICULTURA_FAMILIAR"
                             }
                           ]}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
                         <Field
                           component={Select}
                           label="Tipo de Alimento"
@@ -907,146 +970,167 @@ class CadastroEmpresa extends Component {
                     </div>
                   )}
 
-                  <div className="row pt-3">
-                    <div className="col-3">
-                      <Field
-                        label="CEP"
-                        name={`cep`}
-                        component={InputText}
-                        required
-                        maxlength={qtdField}
-                        onChange={event => {
-                          this.buscaCep(event.target.value);
-                        }}
-                        validate={qtdField === 8 ? required : [required, cep]}
-                      />
+                  {ehDistribuidor && (
+                    <div className="row pt-3">
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          label="Número de Contrato"
+                          name="numero_contrato"
+                          validate={required}
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="col-6">
-                      <Field
-                        component={InputText}
-                        label="Endereço"
-                        name="endereco"
-                        validate={required}
-                        required
-                        disabled={dadosEndereco.desabilitado}
-                        maxlength="150"
-                      />
+                  )}
+                </div>
+                <hr className="linha-form" />
+                <div>
+                  <div className="card-body">
+                    <div className="card-title green">Endereço da Empresa</div>
+                    <div className="row pt-3">
+                      <div className="col-3">
+                        <Field
+                          label="CEP"
+                          name={`cep`}
+                          component={InputText}
+                          required
+                          maxlength={qtdField}
+                          onChange={event => {
+                            this.buscaCep(event.target.value);
+                          }}
+                          validate={qtdField === 8 ? required : [required, cep]}
+                        />
+                      </div>
+                      <div className="col-9">
+                        <Field
+                          component={InputText}
+                          label="Endereço"
+                          name="endereco"
+                          validate={required}
+                          required
+                          disabled={dadosEndereco.desabilitado}
+                          maxlength="150"
+                        />
+                      </div>
                     </div>
 
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        label="Complemento"
-                        name="complemento"
-                        maxlength="45"
-                      />
+                    <div className="row pt-3">
+                      <div className="col-3">
+                        <Field
+                          component={InputText}
+                          label="Número"
+                          name="numero"
+                          maxlength="5"
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          label="Complemento"
+                          name="complemento"
+                          maxlength="45"
+                        />
+                      </div>
+                      <div className="col-5">
+                        <Field
+                          component={InputText}
+                          label="Bairro"
+                          name="bairro"
+                          required
+                          validate={required}
+                          disabled={dadosEndereco.desabilitado}
+                          maxlength="140"
+                        />
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="row pt-3">
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        label="Bairro"
-                        name="bairro"
-                        required
-                        validate={required}
-                        disabled={dadosEndereco.desabilitado}
-                        maxlength="140"
-                      />
+                    <div className="row pt-3">
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          label="Cidade"
+                          name="cidade"
+                          validate={required}
+                          required
+                          disabled={dadosEndereco.desabilitado}
+                          maxlength="140"
+                        />
+                      </div>
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          label="Estado"
+                          name="estado"
+                          validate={required}
+                          required
+                          disabled={dadosEndereco.desabilitado}
+                          maxlength="140"
+                        />
+                      </div>
                     </div>
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        label="Cidade"
-                        name="cidade"
-                        validate={required}
-                        required
-                        disabled={dadosEndereco.desabilitado}
-                        maxlength="140"
-                      />
-                    </div>
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        label="Estado"
-                        name="estado"
-                        validate={required}
-                        required
-                        disabled={dadosEndereco.desabilitado}
-                        maxlength="140"
-                      />
-                    </div>
-                    <div className="col-3">
-                      <Field
-                        component={InputText}
-                        label="Número"
-                        name="numero"
-                        maxlength="5"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="container-fields row">
-                    <div className="col-11">
-                      {contatosEmpresaForm.map(
-                        (contatoEmpresa, indiceEmpresa) => {
-                          return (
-                            <FormSection
-                              nomeForm={`contatoEmpresa_${indiceEmpresa}`}
-                              name={contatoEmpresa}
-                              key={indiceEmpresa}
-                            >
-                              <div className="fields-set">
-                                <div>
-                                  <Field
-                                    name={`telefone_empresa_${indiceEmpresa}`}
-                                    component={TelefoneOuCelular}
-                                    label="Telefone"
-                                    id={`telefone_empresa_${indiceEmpresa}`}
-                                    setaContatosEmpresa={
-                                      this.setaContatosEmpresa
-                                    }
-                                    indice={indiceEmpresa}
-                                    cenario="contatoEmpresa"
-                                    validate={required}
-                                    required
-                                    maxlength="140"
-                                  />
-                                </div>
-                                <div>
-                                  <Field
-                                    name={`email_empresa_${indiceEmpresa}`}
-                                    component={InputText}
-                                    label="E-mail"
-                                    validate={email}
-                                    onChange={event =>
-                                      this.setaContatosEmpresa(
-                                        "email",
-                                        event.target.value,
-                                        indiceEmpresa
-                                      )
-                                    }
-                                    maxlength="140"
-                                  />
-                                </div>
-                              </div>
-                            </FormSection>
-                          );
-                        }
-                      )}
-                    </div>
-                    <div className={`col-1 mt-auto mb-1`}>
-                      <Botao
-                        texto="+"
-                        type={BUTTON_TYPE.BUTTON}
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        onClick={() => {
-                          this.nomeFormContatoEmpresa();
-                          this.adicionaContatoEmpresa();
-                        }}
-                      />
-                    </div>
+                    {!ehDistribuidor && (
+                      <div className="container-fields row">
+                        <div className="col-11">
+                          {contatosEmpresaForm.map(
+                            (contatoEmpresa, indiceEmpresa) => {
+                              return (
+                                <FormSection
+                                  nomeForm={`contatoEmpresa_${indiceEmpresa}`}
+                                  name={contatoEmpresa}
+                                  key={indiceEmpresa}
+                                >
+                                  <div className="fields-set">
+                                    <div>
+                                      <Field
+                                        name={`telefone_empresa_${indiceEmpresa}`}
+                                        component={TelefoneOuCelular}
+                                        label="Telefone"
+                                        id={`telefone_empresa_${indiceEmpresa}`}
+                                        setaContatosEmpresa={
+                                          this.setaContatosEmpresa
+                                        }
+                                        indice={indiceEmpresa}
+                                        cenario="contatoEmpresa"
+                                        validate={required}
+                                        required
+                                        maxlength="140"
+                                      />
+                                    </div>
+                                    <div>
+                                      <Field
+                                        name={`email_empresa_${indiceEmpresa}`}
+                                        component={InputText}
+                                        label="E-mail"
+                                        validate={email}
+                                        onChange={event =>
+                                          this.setaContatosEmpresa(
+                                            "email",
+                                            event.target.value,
+                                            indiceEmpresa
+                                          )
+                                        }
+                                        maxlength="140"
+                                      />
+                                    </div>
+                                  </div>
+                                </FormSection>
+                              );
+                            }
+                          )}
+                        </div>
+                        <div className={`col-1 mt-auto mb-1`}>
+                          <Botao
+                            texto="+"
+                            type={BUTTON_TYPE.BUTTON}
+                            style={BUTTON_STYLE.GREEN_OUTLINE}
+                            onClick={() => {
+                              this.nomeFormContatoEmpresa();
+                              this.adicionaContatoEmpresa();
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1125,11 +1209,11 @@ class CadastroEmpresa extends Component {
                   <div className="card-body">
                     {ehDistribuidor ? (
                       <Fragment>
-                        <div className="card-title font-weight-bold">
+                        <div className="card-title green">
                           Cadastro do Usuário Responsável pelo acesso ao Sistema
                         </div>
                         <div className="row">
-                          <div className="col-7">
+                          <div className="col-4">
                             <Field
                               component={InputText}
                               label="Nome"
@@ -1139,19 +1223,6 @@ class CadastroEmpresa extends Component {
                               maxlength="150"
                             />
                           </div>
-                          <div className="col-5">
-                            <Field
-                              component={InputText}
-                              label="Email"
-                              name="responsavel_email"
-                              type="email"
-                              required
-                              validate={[required, email]}
-                              maxlength="150"
-                            />
-                          </div>
-                        </div>
-                        <div className="row pt-3">
                           <div className="col-4">
                             <Field
                               {...cpfMask}
@@ -1172,6 +1243,8 @@ class CadastroEmpresa extends Component {
                               maxlength="40"
                             />
                           </div>
+                        </div>
+                        <div className="row pt-3">
                           <div className="col-4">
                             <Field
                               component={TelefoneOuCelular}
@@ -1180,6 +1253,17 @@ class CadastroEmpresa extends Component {
                               cenario="distribuidor"
                               required
                               validate={required}
+                            />
+                          </div>
+                          <div className="col-8">
+                            <Field
+                              component={InputText}
+                              label="Email"
+                              name="responsavel_email"
+                              type="email"
+                              required
+                              validate={[required, email]}
+                              maxlength="150"
                             />
                           </div>
                         </div>
@@ -1232,9 +1316,7 @@ class CadastroEmpresa extends Component {
                   <Fragment>
                     <div>
                       <div className="card-body">
-                        <div className="card-title font-weight-bold">
-                          Contatos
-                        </div>
+                        <div className="card-title green">Contatos</div>
 
                         <div className="container-fields row">
                           <div className="col-11">
@@ -1314,6 +1396,84 @@ class CadastroEmpresa extends Component {
                             />
                           </div>
                         </div>
+                      </div>
+                    </div>
+                    <hr className="linha-form" />
+                    <div>
+                      <div className="card-body">
+                        <div className="card-title green">Contratos</div>
+                        {contratos.map((contrato, index) => {
+                          return (
+                            <Fragment key={index}>
+                              <div className="row">
+                                <div className="col-6">
+                                  <Field
+                                    name={`numero_processo_${index}`}
+                                    component={InputText}
+                                    label="Nº do Processo Administrativo do Contrato"
+                                    required
+                                    validate={required}
+                                    apenasNumeros
+                                  />
+                                </div>
+                                <div className="col-6">
+                                  <Field
+                                    name={`numero_contrato_${index}`}
+                                    component={InputText}
+                                    label="Nº do Contrato"
+                                    required
+                                    validate={required}
+                                  />
+                                </div>
+                                <div className="col-3">
+                                  <Field
+                                    component={InputComData}
+                                    label="Vigência do Contrato"
+                                    name={`vigencia_de_${index}`}
+                                    placeholder="De"
+                                    writable={false}
+                                  />
+                                </div>
+                                <div className="col-3">
+                                  <Field
+                                    component={InputComData}
+                                    label="&nbsp;"
+                                    name={`vigencia_ate_${index}`}
+                                    placeholder="Até"
+                                    writable={false}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex-center my-3">
+                                <Botao
+                                  texto="+ Adicionar"
+                                  className="mr-4"
+                                  type={BUTTON_TYPE.BUTTON}
+                                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                                  onClick={() => {
+                                    this.adicionaContrato();
+                                  }}
+                                />
+
+                                {index > 0 && (
+                                  <Tooltip title="Remover Contrato">
+                                    <span>
+                                      <Botao
+                                        texto="Remover Contrato"
+                                        icon="fas fa-trash"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        onClick={() => {
+                                          this.removeContrato(index);
+                                        }}
+                                      />
+                                    </span>
+                                  </Tooltip>
+                                )}
+                              </div>
+                            </Fragment>
+                          );
+                        })}
                       </div>
                     </div>
                     <hr className="linha-form" />
