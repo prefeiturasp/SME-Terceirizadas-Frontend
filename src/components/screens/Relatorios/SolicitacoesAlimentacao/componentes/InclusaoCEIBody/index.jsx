@@ -42,12 +42,7 @@ export const InclusaoCEIBody = ({ ...props }) => {
         <td>{item.escola_nome}</td>
       )}
       <td>{item.desc_doc}</td>
-      <td className="text-center">
-        {item.data_evento}{" "}
-        {item.data_evento_fim && item.data_evento !== item.data_evento_fim
-          ? `- ${item.data_evento_fim}`
-          : ""}
-      </td>
+      <td className="text-center">{solicitacao.datas}</td>
       <td className="text-center">
         {item.numero_alunos !== 0 ? item.numero_alunos : "-"}
       </td>
@@ -65,29 +60,41 @@ export const InclusaoCEIBody = ({ ...props }) => {
             <div className="row mt-3">
               <div className="col-4">
                 <p>Motivo:</p>
-                <p>
-                  <b>{solicitacao.motivo.nome}</b>
-                </p>
               </div>
               <div className="col-4">
                 <p>Dia(s) de Inclusão:</p>
-                <p>
-                  <b>
-                    {item.data_evento}{" "}
-                    {item.data_evento_fim &&
-                    item.data_evento !== item.data_evento_fim
-                      ? `- ${item.data_evento_fim}`
-                      : ""}
-                  </b>
-                </p>
               </div>
               <div className="col-4">
                 <p>{labelData}</p>
-                <p>
-                  <b>{log && log.criado_em.split(" ")[0]}</b>
-                </p>
               </div>
             </div>
+            {solicitacao.dias_motivos_da_inclusao_cei.map(
+              (dia_motivo_inclusao, idx) => {
+                return (
+                  <div className="row mt-3" key={idx}>
+                    <div className="col-4">
+                      <p>
+                        <b>{dia_motivo_inclusao.motivo.nome}</b>
+                      </p>
+                    </div>
+                    <div className="col-4">
+                      <p>
+                        <b>{dia_motivo_inclusao.data}</b>
+                      </p>
+                    </div>
+                    {idx === 0 ? (
+                      <div className="col-4">
+                        <p>
+                          <b>{log && log.criado_em.split(" ")[0]}</b>
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="col-4" />
+                    )}
+                  </div>
+                );
+              }
+            )}
             <div className="row">
               <div className="col-12">
                 <label className="label-periodo-cei-cemei">INTEGRAL</label>
