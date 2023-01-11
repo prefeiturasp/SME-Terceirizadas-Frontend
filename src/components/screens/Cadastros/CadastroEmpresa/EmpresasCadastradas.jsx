@@ -108,9 +108,10 @@ class EmpresasCadastradas extends Component {
                     key={key}
                     className={empresa.ativo ? "detalhe-empresa" : ""}
                   >
-                    {empresa.tipo_servico.toLowerCase() === "terceirizada" && (
-                      <td>{empresa.codigo_empresa}</td>
-                    )}
+                    {empresa.tipo_servico &&
+                      empresa.tipo_servico.toLowerCase() === "terceirizada" && (
+                        <td>{empresa.codigo_empresa}</td>
+                      )}
                     <td className="nome-empresa">{empresa.nome}</td>
                     <td className="text-center">{empresa.cnpj}</td>
                     <td className="text-center">{empresa.tipo_servico}</td>

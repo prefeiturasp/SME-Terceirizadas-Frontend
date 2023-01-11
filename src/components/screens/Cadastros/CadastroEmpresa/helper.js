@@ -62,10 +62,13 @@ const retornaLotes = lotes => {
 };
 
 const retornaEditalDeContrato = contrato => {
-  return {
-    edital: contrato.edital.numero,
-    contrato: contrato.numero
-  };
+  if (contrato.edital) {
+    return {
+      edital: contrato.edital.numero,
+      contrato: contrato.numero
+    };
+  }
+  return null;
 };
 
 const retornaEditais = contratos => {
