@@ -161,6 +161,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       nome_fantasia: valoresForm.nome_fantasia,
       tipo_alimento: valoresForm.tipo_alimento,
       tipo_empresa: valoresForm.tipo_empresa,
+      tipo_servico: valoresForm.tipo_servico,
       numero_contrato: valoresForm.numero_contrato,
       razao_social: valoresForm.razao_social,
       cnpj: valoresForm.cnpj,
