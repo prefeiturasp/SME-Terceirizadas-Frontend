@@ -12,8 +12,11 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getTerceirizada = () => {
-  const url = `${API_URL}/terceirizadas/`;
+export const getTerceirizada = (filtros = null) => {
+  let url = `${API_URL}/terceirizadas/`;
+  if (filtros) {
+    url += `?${filtros}`;
+  }
   let status = 0;
   return fetch(url, {
     headers: authToken,
