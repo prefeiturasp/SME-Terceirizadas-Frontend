@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component, Fragment } from "react";
 import moment from "moment";
-import { Spin } from "antd";
+import { Spin, Tooltip } from "antd";
 import { Link, Redirect } from "react-router-dom";
 import { Field, reduxForm, FormSection } from "redux-form";
 import { PERFIL } from "../../../../constants/shared";
@@ -1456,15 +1456,19 @@ class CadastroEmpresa extends Component {
                                 />
 
                                 {index > 0 && (
-                                  <Botao
-                                    texto="Remover Contrato"
-                                    icon="fas fa-trash"
-                                    type={BUTTON_TYPE.BUTTON}
-                                    style={BUTTON_STYLE.RED_OUTLINE}
-                                    onClick={() => {
-                                      this.removeContrato(index);
-                                    }}
-                                  />
+                                  <Tooltip title="Remover Contrato">
+                                    <span>
+                                      <Botao
+                                        texto="Remover Contrato"
+                                        icon="fas fa-trash"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        onClick={() => {
+                                          this.removeContrato(index);
+                                        }}
+                                      />
+                                    </span>
+                                  </Tooltip>
                                 )}
                               </div>
                             </Fragment>
