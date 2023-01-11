@@ -96,8 +96,8 @@ export const DashboardCODAE = ({
     setSolicitacoesFiltradas({
       pendentes: pendentesAutorizacaoListSolicitacao,
       questionadas: canceladasListSolicitacao,
-      autorizadas: negadasListSolicitacao,
-      negadas: autorizadasListSolicitacao,
+      autorizadas: autorizadasListSolicitacao,
+      negadas: negadasListSolicitacao,
       canceladas: questionamentosListSolicitacao
     });
   };
