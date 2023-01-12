@@ -1339,7 +1339,7 @@ const routesConfig = [
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
     component: RelatorioDietaEspecial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${

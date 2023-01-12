@@ -39,7 +39,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
-  const exibeRelatorioDietasEspeciais = usuarioEhTerceirizada();
+  const exibeRelatorioDietasEspeciais =
+    usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>

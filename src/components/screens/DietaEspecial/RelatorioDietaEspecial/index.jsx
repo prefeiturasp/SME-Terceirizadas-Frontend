@@ -24,6 +24,7 @@ const RelatorioDietaEspecial = () => {
   );
   const [filtragemRealizada, setFiltragemRealizada] = useState(false);
   const [terceirizadaUuid, setTerceirizadaUuid] = useState(null);
+  const [nutriSupervisao, setNutriSupervisao] = useState(false);
   const [dataInicial, setDataInicial] = useState(null);
   const [dataFinal, setDataFinal] = useState(null);
   const [lotesSelecionados, setLotesSelecionados] = useState([]);
@@ -31,6 +32,7 @@ const RelatorioDietaEspecial = () => {
     []
   );
   const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
+  const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
   const [imprimindoPdf, setImprimindoPdf] = useState(false);
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
 
@@ -41,6 +43,7 @@ const RelatorioDietaEspecial = () => {
       classificacoes: classificacoesSelecionadas.join(),
       protocolos: protocolosSelecionados.join(),
       terceirizada_uuid: terceirizadaUuid,
+      alergias_intolerancias: diagnosticosSelecionados.join(),
       data_inicial: dataInicial,
       data_final: dataFinal
     };
@@ -61,6 +64,7 @@ const RelatorioDietaEspecial = () => {
       lotes: lotesSelecionados.join(),
       classificacoes: classificacoesSelecionadas.join(),
       protocolos: protocolosSelecionados.join(),
+      alergias_intolerancias: diagnosticosSelecionados.join(),
       terceirizada_uuid: terceirizadaUuid,
       data_inicial: dataInicial,
       data_final: dataFinal
@@ -95,8 +99,12 @@ const RelatorioDietaEspecial = () => {
               setClassificacoesSelecionadas={setClassificacoesSelecionadas}
               protocolosSelecionados={protocolosSelecionados}
               setProtocolosSelecionados={setProtocolosSelecionados}
+              diagnosticosSelecionados={diagnosticosSelecionados}
+              setDiagnosticosSelecionados={setDiagnosticosSelecionados}
               terceirizadaUuid={terceirizadaUuid}
               setTerceirizadaUuid={setTerceirizadaUuid}
+              nutriSupervisao={nutriSupervisao}
+              setNutriSupervisao={setNutriSupervisao}
               dataInicial={dataInicial}
               setDataInicial={setDataInicial}
               dataFinal={dataFinal}
@@ -113,6 +121,7 @@ const RelatorioDietaEspecial = () => {
                   </div>
                 </div>
                 <ListagemDietas
+                  ehNutriSupervisao={nutriSupervisao}
                   dietasFiltradas={dietasFiltradas}
                   status={status}
                 />
