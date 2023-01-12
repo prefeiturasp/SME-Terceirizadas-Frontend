@@ -3,8 +3,9 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
 import { STATUS_DIETAS } from "constants/shared";
+import { formataAlergias } from "components/screens/DietaEspecial/Relatorio/componentes/FormAutorizaDietaEspecial/helper";
 
-const ListagemDietas = ({ dietasFiltradas, status }) => {
+const ListagemDietas = ({ dietasFiltradas, ehNutriSupervisao, status }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [dietasFiltradasCopy, setDietasFiltradasCopy] = useState([]);
 
@@ -44,7 +45,9 @@ const ListagemDietas = ({ dietasFiltradas, status }) => {
           <div>Nome do aluno</div>
           <div>Nome da Escola</div>
           <div>Classificação da dieta</div>
-          <div>Protocolo padrão</div>
+          <div>
+            {ehNutriSupervisao ? "Relação por Diagnóstico" : "Protocolo padrão"}
+          </div>
           {ehStatusCanceladas() && <div>Data de cancelamento</div>}
         </div>
         {dietasFiltradasCopy.map((dietaEspecial, index) => {
@@ -64,9 +67,13 @@ const ListagemDietas = ({ dietasFiltradas, status }) => {
                     : "--"}
                 </div>
                 <div>
-                  {(dietaEspecial.protocolo_padrao &&
-                    dietaEspecial.protocolo_padrao.nome) ||
-                    dietaEspecial.nome_protocolo}
+                  {ehNutriSupervisao
+                    ? formataAlergias(dietaEspecial)
+                        .map(a => a.nome)
+                        .join("; ")
+                    : (dietaEspecial.protocolo_padrao &&
+                        dietaEspecial.protocolo_padrao.nome) ||
+                      dietaEspecial.nome_protocolo}
                 </div>
                 {ehStatusCanceladas() && (
                   <div>{dietaEspecial.data_ultimo_log}</div>
