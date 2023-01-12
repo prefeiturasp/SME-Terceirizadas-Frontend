@@ -201,7 +201,6 @@ export const CODAENegaKitLancheUnificadoEscola = async (
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
-    console.log(data, "data 555");
     return data;
   }
 };
