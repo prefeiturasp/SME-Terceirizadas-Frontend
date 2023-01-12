@@ -2,6 +2,7 @@ import axios from "services/_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { FLUXO, PEDIDOS } from "./constants";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -195,19 +196,12 @@ export const CODAENegaKitLancheUnificadoEscola = async (
   justificativa
 ) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios
+    .patch(url, justificativa)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
