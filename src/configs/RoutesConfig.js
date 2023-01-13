@@ -191,6 +191,7 @@ import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
+import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 
 const routesConfig = [
   {
@@ -631,6 +632,15 @@ const routesConfig = [
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
+    exact: false,
+    tipoUsuario:
+      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDITAR_EMPRESA
+    }`,
+    component: EditarEmpresaPage,
     exact: false,
     tipoUsuario:
       usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()

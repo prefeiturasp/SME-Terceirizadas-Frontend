@@ -6,6 +6,7 @@ import { Link, NavLink } from "react-router-dom";
 import { retornArrayTerceirizadas } from "./helper.js";
 import { PERFIL } from "../../../../constants/shared";
 import "../style.scss";
+import { Tooltip } from "antd";
 
 class EmpresasCadastradas extends Component {
   constructor(props) {
@@ -124,14 +125,18 @@ class EmpresasCadastradas extends Component {
                         ativo={empresa.ativo}
                       />
                       <div className="ml-4">
-                        <NavLink
-                          className="float-left botao-editar"
-                          to={`/configuracoes/cadastros/empresa?uuid=${
-                            empresa.uuid
-                          }`}
-                        >
-                          <i className="fas fa-edit" />
-                        </NavLink>
+                        <Tooltip title="Editar">
+                          <span>
+                            <NavLink
+                              className="float-left botao-editar"
+                              to={`/configuracoes/cadastros/editar-empresa?uuid=${
+                                empresa.uuid
+                              }`}
+                            >
+                              <i className="fas fa-edit" />
+                            </NavLink>
+                          </span>
+                        </Tooltip>
                       </div>
                     </td>
                   </tr>,
