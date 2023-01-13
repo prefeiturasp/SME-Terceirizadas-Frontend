@@ -966,11 +966,9 @@ class AlteracaoCardapio extends Component {
                 <span className="page-title">Rascunhos</span>
                 <Rascunhos
                   alteracaoCardapioList={alteracaoCardapioList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                  removerRascunho={this.OnDeleteButtonClicked}
                   resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
+                  carregarRascunho={params => this.OnEditButtonClicked(params)}
                 />
               </section>
             )}
