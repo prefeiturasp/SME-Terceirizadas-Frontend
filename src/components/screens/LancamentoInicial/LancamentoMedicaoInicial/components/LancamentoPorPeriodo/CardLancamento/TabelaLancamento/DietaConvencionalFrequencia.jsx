@@ -134,7 +134,7 @@ export default ({
         <div>
           <Field
             component={BorderlessInput}
-            name="convencional.lanche_5h"
+            name="convencional.lanche"
             validate={numericInteger}
             disabled={desabilitarLanche}
           />

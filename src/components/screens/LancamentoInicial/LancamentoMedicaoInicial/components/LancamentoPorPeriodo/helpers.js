@@ -8,7 +8,7 @@ const grupos = {
 
 const camposMetadeFrequencia = {
   lanche_4h: "Lanche 4h",
-  lanche_5h: "Lanche 5h",
+  lanche: "Lanche",
   ref_enteral: "Refeição enteral",
   "refeicoes.0.ref_oferta": "Refeição 1ª oferta",
   "refeicoes.1.ref_oferta": "Refeição 2ª oferta",
@@ -167,7 +167,7 @@ export const mockPeriodos = [
       total: 102,
       refeicoes: 50,
       sobremesas: 30,
-      lanches_5h: 20
+      lanche: 20
     }
   },
   {
@@ -177,7 +177,7 @@ export const mockPeriodos = [
       refeicoes: 100,
       sobremesas: 100,
       lanches_4h: 70,
-      lanches_5h: 80
+      lanche: 80
     }
   },
   {
@@ -187,7 +187,7 @@ export const mockPeriodos = [
       refeicoes: 80,
       sobremesas: 80,
       lanches: 100,
-      lanches_5h: 20
+      lanche: 20
     }
   },
   {
@@ -197,7 +197,7 @@ export const mockPeriodos = [
       refeicoes: 20,
       sobremesas: 20,
       lanches_4h: 40,
-      lanches_5h: 40
+      lanche: 40
     }
   },
   {

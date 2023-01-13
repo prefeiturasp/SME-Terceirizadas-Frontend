@@ -263,7 +263,7 @@ export default () => {
       if (indexLanche !== -1) {
         rowsDietas.push({
           nome: "Lanche",
-          name: "Lanche 5h"
+          name: "Lanche"
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
