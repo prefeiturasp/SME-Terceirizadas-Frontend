@@ -12,7 +12,7 @@ export default () => {
     { uuid: "etec", nome: "ETEC" }
   ];
   const periodos = [
-    { uuid: "lanche5h", nome: "Lanche 5h" },
+    { uuid: "lanche", nome: "Lanche" },
     { uuid: "lanche4h", nome: "Lanche 4h" },
     { uuid: "refeicao", nome: "Refeição/sobremesa" },
     { uuid: "refeicaoeja", nome: "Refeição EJA/sobremesa" }
@@ -26,7 +26,7 @@ export default () => {
       </div>
       <div className="cabecalho-tabela">
         <div>Programas/projetos*</div>
-        <div>Lanche 5 h</div>
+        <div>Lanche</div>
         <div>Lanche 4 h</div>
         <div>Refeição/sobremesa</div>
         <div>Refeição EJA/sobremesa</div>
