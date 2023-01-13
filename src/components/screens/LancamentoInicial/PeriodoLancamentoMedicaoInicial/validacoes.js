@@ -202,7 +202,7 @@ export const validacoesTabelasDietas = (
     value &&
     Number(value) > maxFrequencia &&
     (inputName.includes("lanche_4h") ||
-      inputName.includes("lanche_5h") ||
+      inputName.includes("lanche") ||
       inputName.includes("refeicao"))
   ) {
     return "A quantidade não pode ser maior do que a quantidade inserida em Frequência.";
@@ -223,7 +223,7 @@ export const validacoesTabelasDietas = (
         allValues[`lanche__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
       ) >
       maxFrequenciaAlimentacao &&
-    (inputName.includes("lanche_4h") || inputName.includes("lanche_5h"))
+    (inputName.includes("lanche_4h") || inputName.includes("lanche"))
   ) {
     return "O número máximo de alimentações foi excedido. É preciso subtrair o aluno com Dieta Especial Autorizada do apontamento de Lanche na planilha de Alimentação.";
   } else if (
@@ -231,7 +231,7 @@ export const validacoesTabelasDietas = (
     !["Mês anterior", "Mês posterior"].includes(value) &&
     [NaN, 0].includes(maxFrequencia) &&
     (inputName.includes("lanche_4h") ||
-      inputName.includes("lanche_5h") ||
+      inputName.includes("lanche") ||
       inputName.includes("refeicao"))
   ) {
     return "Frequência acima inválida ou não preenchida.";

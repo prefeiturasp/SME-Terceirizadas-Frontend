@@ -257,28 +257,13 @@ export default () => {
         });
       }
 
-      const indexLanche5h = cloneTiposAlimentacao.findIndex(ali =>
-        ali.nome.includes("5h")
-      );
-      if (indexLanche5h !== -1) {
-        rowsDietas.push({
-          nome: "Lanche 5h",
-          name: "Lanche 5h"
-            .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "")
-            .toLowerCase()
-            .replaceAll(/ /g, "_"),
-          uuid: cloneTiposAlimentacao[indexLanche5h].uuid
-        });
-      }
-
       const indexLanche = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Lanche"
       );
       if (indexLanche !== -1) {
         rowsDietas.push({
-          nome: "Lanche 5h",
-          name: "Lanche 5h"
+          nome: "Lanche",
+          name: "Lanche"
             .normalize("NFD")
             .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
