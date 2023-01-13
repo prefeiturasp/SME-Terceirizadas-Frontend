@@ -157,7 +157,8 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
           data_inicial: valoresForm[`vigencia_de_${index}`],
           data_final: valoresForm[`vigencia_ate_${index}`]
         }
-      ]
+      ],
+      encerrado: contrato.encerrado ? true : false
     }));
     const contatos = [...contatosEmpresa, ...contatosNutri];
     return {

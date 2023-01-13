@@ -114,6 +114,9 @@ export const updateTerceirizada = (uuid, payload) => {
     });
 };
 
+export const encerraContratoTerceirizada = async uuid =>
+  await axios.patch(`/contratos/${uuid}/encerrar-contrato/`);
+
 export const getRelatorioQuantitativo = async params => {
   if (params) {
     return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });

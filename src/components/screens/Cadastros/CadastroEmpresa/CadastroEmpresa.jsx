@@ -21,6 +21,7 @@ import "./style.scss";
 import { getLotesSimples } from "../../../../services/lote.service";
 import {
   createTerceirizada,
+  encerraContratoTerceirizada,
   getCNPJsEmpresas,
   getTerceirizadaUUID,
   updateTerceirizada
@@ -35,6 +36,7 @@ import { InputText } from "../../../Shareable/Input/InputText";
 import Select from "../../../Shareable/Select";
 import { loadEmpresa } from "../../../../reducers/empresa.reducer";
 import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
+import { ModalRemoveContrato } from "./components/ModalRemoveContrato";
 import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
 import { getEnderecoPorCEP } from "../../../../services/cep.service";
 import ModalTransferirLote from "components/Shareable/ModalTransferirLote";
@@ -50,6 +52,7 @@ class CadastroEmpresa extends Component {
       lotesRaw: null,
       atualizarLotes: false,
       exibirModal: false,
+      exibirModalRemoverContrato: false,
       exibirModalTransferenciaLote: false,
       loteAdicionado: undefined,
       tituloModal: "Confirma cadastro de Empresa?",
@@ -108,7 +111,8 @@ class CadastroEmpresa extends Component {
         estado: null,
         desabilitado: true
       },
-      listaCNPJ: []
+      listaCNPJ: [],
+      contratoARemover: {}
     };
     this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
     this.setaContatosPessoaEmpresa = this.setaContatosPessoaEmpresa.bind(this);
@@ -117,6 +121,26 @@ class CadastroEmpresa extends Component {
     this.exibirModal = this.exibirModal.bind(this);
     this.fecharModal = this.fecharModal.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.exibirModalRemoverContrato = this.exibirModalRemoverContrato.bind(
+      this
+    );
+    this.fecharModalRemoverContrato = this.fecharModalRemoverContrato.bind(
+      this
+    );
+    this.encerraContrato = this.encerraContrato.bind(this);
+  }
+
+  exibirModalRemoverContrato(index) {
+    this.setState({
+      exibirModalRemoverContrato: true,
+      contratoARemover: this.state.contratos[index]
+    });
+  }
+
+  fecharModalRemoverContrato() {
+    this.setState({
+      exibirModalRemoverContrato: false
+    });
   }
 
   exibirModal(values) {
@@ -137,7 +161,11 @@ class CadastroEmpresa extends Component {
   }
 
   validaCNPJ = value => {
-    if (this.state.listaCNPJ && this.state.listaCNPJ.includes(value))
+    if (
+      !this.state.terceirizada &&
+      this.state.listaCNPJ &&
+      this.state.listaCNPJ.includes(value)
+    )
       return "CNPJ já cadastrado";
     else return undefined;
   };
@@ -332,6 +360,38 @@ class CadastroEmpresa extends Component {
       });
   }
 
+  atribuiContratosForm(contratos) {
+    this.setState({ contratos });
+    contratos.forEach((contato, indice) => {
+      this.props.change(`numero_contrato_${indice}`, contato.numero);
+      this.props.change(`numero_processo_${indice}`, contato.processo);
+      this.props.change(
+        `vigencia_de_${indice}`,
+        contato.vigencias[0].data_inicial
+      );
+      this.props.change(
+        `vigencia_ate_${indice}`,
+        contato.vigencias[0].data_final
+      );
+    });
+  }
+
+  async encerraContrato() {
+    let uuid = this.state.contratoARemover.uuid;
+    let response = await encerraContratoTerceirizada(uuid);
+    if (response && response.status === 200) {
+      let contratosNew = [...this.state.contratos];
+      let index = contratosNew.findIndex(c => c.uuid === uuid);
+      contratosNew[index].data_hora_encerramento =
+        response.data.data_hora_encerramento;
+      contratosNew[index].encerrado = true;
+      this.setState({ contratos: contratosNew });
+      this.fecharModalRemoverContrato();
+    } else {
+      toastError("Erro ao encerrar contrato");
+    }
+  }
+
   atribuiContatosPessoaEmpresaForm(contatos) {
     contatos
       .filter(contato => contato.nome)
@@ -350,7 +410,7 @@ class CadastroEmpresa extends Component {
         }
         this.setState({ contatosPessoaEmpresaForm });
 
-        contatosPessoaEmpresa[indice]["nome"] = contato.email;
+        contatosPessoaEmpresa[indice]["nome"] = contato.nome;
         contatosPessoaEmpresa[indice]["email"] = contato.email;
         contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
 
@@ -358,7 +418,7 @@ class CadastroEmpresa extends Component {
 
         this.props.change(
           `contatoPessoaEmpresa_${indice}.nome_contato_${indice}`,
-          contato.email
+          contato.nome
         );
         this.props.change(
           `contatoPessoaEmpresa_${indice}.telefone_contato_${indice}`,
@@ -492,11 +552,12 @@ class CadastroEmpresa extends Component {
     this.props.change("numero", data.numero);
     this.props.change("complemento", data.complemento);
     this.props.change("eh_distribuidor", data.eh_distribuidor);
-    if (data.eh_distribuidor) {
+    if (data.tipo_servico !== "TERCEIRIZADA") {
       this.setState({ ehDistribuidor: true });
-      this.props.change("numero_contrato", data.numero_contrato);
+      this.props.change("numero_contrato", data.numero);
       this.props.change("tipo_alimento", data.tipo_alimento);
       this.props.change("tipo_empresa", data.tipo_empresa);
+      this.props.change("tipo_servico", data.tipo_servico);
       this.props.change("situacao", data.ativo);
       this.props.change(
         "data_cadastro",
@@ -511,6 +572,7 @@ class CadastroEmpresa extends Component {
     this.atribuiContatosEmpresaForm(data.contatos);
     this.atribuiContatosPessoaEmpresaForm(data.contatos);
     this.atribuiNutricionistaEmpresaForm(data.contatos, data.nutricionistas);
+    this.atribuiContratosForm(data.contratos);
   }
 
   componentDidMount() {
@@ -582,7 +644,11 @@ class CadastroEmpresa extends Component {
               lotesSelecionados
             });
           }
-          this.setState({ terceirizada: response.data, carregando: false });
+          this.setState({
+            terceirizada: response.data,
+            carregando: false,
+            ehDistribuidor: validate
+          });
           this.setaValoresForm(response.data);
         });
       } else {
@@ -796,7 +862,9 @@ class CadastroEmpresa extends Component {
       atualizarLotes,
       exibirModalTransferenciaLote,
       loteAdicionado,
-      contratos
+      contratos,
+      exibirModalRemoverContrato,
+      contratoARemover
     } = this.state;
     return (
       <Spin tip="Carregando..." spinning={carregando}>
@@ -819,6 +887,14 @@ class CadastroEmpresa extends Component {
             closeModal={this.fecharModal}
             showModal={exibirModal}
           />
+          <ModalRemoveContrato
+            numeroContrato={contratoARemover.numero}
+            values={valoresForm}
+            onSubmit={this.encerraContrato}
+            closeModal={this.fecharModalRemoverContrato}
+            showModal={exibirModalRemoverContrato}
+          />
+
           <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
             <div className="card">
               <div>
@@ -1414,6 +1490,7 @@ class CadastroEmpresa extends Component {
                                     required
                                     validate={required}
                                     apenasNumeros
+                                    disabled={contrato.encerrado}
                                   />
                                 </div>
                                 <div className="col-6">
@@ -1423,6 +1500,7 @@ class CadastroEmpresa extends Component {
                                     label="Nº do Contrato"
                                     required
                                     validate={required}
+                                    disabled={contrato.encerrado}
                                   />
                                 </div>
                                 <div className="col-3">
@@ -1432,6 +1510,7 @@ class CadastroEmpresa extends Component {
                                     name={`vigencia_de_${index}`}
                                     placeholder="De"
                                     writable={false}
+                                    disabled={contrato.encerrado}
                                   />
                                 </div>
                                 <div className="col-3">
@@ -1441,8 +1520,33 @@ class CadastroEmpresa extends Component {
                                     name={`vigencia_ate_${index}`}
                                     placeholder="Até"
                                     writable={false}
+                                    disabled={contrato.encerrado}
                                   />
                                 </div>
+                                {this.state.terceirizada &&
+                                  (contrato.encerrado ? (
+                                    <div className="col-6">
+                                      <div className="aviso-encerramento">
+                                        <strong>Aviso:</strong> Contrato
+                                        encerrado em{" "}
+                                        {contrato.data_hora_encerramento}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="col-3">
+                                      <Botao
+                                        className="btn-encerrar-contrato"
+                                        texto="Encerrar Contrato"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        onClick={() => {
+                                          this.exibirModalRemoverContrato(
+                                            index
+                                          );
+                                        }}
+                                      />
+                                    </div>
+                                  ))}
                               </div>
                               <div className="flex-center my-3">
                                 <Botao

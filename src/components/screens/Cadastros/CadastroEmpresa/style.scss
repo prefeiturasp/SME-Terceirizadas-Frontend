@@ -12,6 +12,21 @@
     display: flex;
     justify-content: center;
   }
+
+  .btn-encerrar-contrato {
+    margin-top: 30px;
+  }
+
+  .aviso-encerramento {
+    margin-top: 30px;
+    color: #b40c02;
+    border: 1px solid #c00000;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    height: 38px;
+    width: 100%;
+  }
 }
 
 .form-section-terceirizada {
