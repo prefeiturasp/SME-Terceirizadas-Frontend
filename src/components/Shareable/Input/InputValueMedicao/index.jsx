@@ -26,7 +26,11 @@ export const InputText = props => {
     icone,
     toUppercaseActive,
     apenasNumeros,
-    exibeTooltipDiaSobremesaDoce
+    exibeTooltipDiaSobremesaDoce,
+    exibeTooltipAlimentacoesAutorizadas,
+    numeroDeInclusoesAutorizadas,
+    exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
+    exibeTooltipFrequenciaDiaNaoLetivo
   } = props;
 
   let msgTooltip = "";
@@ -57,6 +61,17 @@ export const InputText = props => {
     return false;
   };
 
+  const exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo = () => {
+    return (
+      exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo &&
+      Number(input.value) > Number(numeroDeInclusoesAutorizadas)
+    );
+  };
+
+  const exibirTooltipFrequenciaDiaNaoLetivo = () => {
+    return exibeTooltipFrequenciaDiaNaoLetivo;
+  };
+
   return (
     <div className={`input ${icone && "icon"}`}>
       {label && [
@@ -82,6 +97,32 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-success" />
         </Tooltip>
       )}
+      {exibeTooltipAlimentacoesAutorizadas &&
+        !["Mês anterior", "Mês posterior"].includes(input.value) && (
+          <Tooltip
+            title={`Foi autorizada a inclusão de ${numeroDeInclusoesAutorizadas} alimentações neste dia`}
+          >
+            <i className="fas fa-info icone-info-success" />
+          </Tooltip>
+        )}
+      {exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() && (
+        <Tooltip
+          title={
+            "Número apontado de alimentações maior do que o autorizado. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibirTooltipFrequenciaDiaNaoLetivo() && (
+        <Tooltip
+          title={
+            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {(validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()) && (
         <Tooltip title={msgTooltip}>
           <i className="fas fa-info icone-info-error" />
@@ -90,9 +131,16 @@ export const InputText = props => {
 
       <input
         {...input}
-        className={`form-control ${className} ${(validacaoFrequencia() ||
-          validacaoLancheRefeicaoSobremesa1Oferta()) &&
-          "invalid-field"}`}
+        className={`form-control ${className} ${
+          validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()
+            ? "invalid-field"
+            : ""
+        } ${
+          exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
+          exibirTooltipFrequenciaDiaNaoLetivo()
+            ? "border-warning"
+            : ""
+        }`}
         disabled={disabled}
         min={min}
         max={max}

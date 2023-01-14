@@ -21,6 +21,58 @@ export const repeticaoSobremesaDoceComValorESemObservacao = (
   );
 };
 
+export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
+  values,
+  dia,
+  categoria,
+  rowName,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo
+) => {
+  if (
+    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
+    )
+  ) {
+    if (
+      Number(values[`frequencia__dia_${dia}__categoria_${categoria.id}`]) ===
+        0 &&
+      !validacaoDiaLetivo(dia)
+    ) {
+      return true;
+    }
+  }
+};
+
+export const botaoAdicionarObrigatorioTabelaAlimentacao = (
+  values,
+  dia,
+  categoria,
+  diasSobremesaDoce,
+  location,
+  rowName,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo
+) => {
+  return (
+    botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
+      values,
+      dia,
+      categoria,
+      rowName,
+      dadosValoresInclusoesAutorizadasState,
+      validacaoDiaLetivo
+    ) ||
+    repeticaoSobremesaDoceComValorESemObservacao(
+      values,
+      dia,
+      categoria,
+      diasSobremesaDoce,
+      location
+    )
+  );
+};
+
 export const botaoAdicionarObrigatorio = (
   values,
   dia,
@@ -41,7 +93,8 @@ export const validarFormulario = (
   values,
   diasSobremesaDoce,
   location,
-  categoriasDeMedicao
+  categoriasDeMedicao,
+  dadosValoresInclusoesAutorizadasState
 ) => {
   let erro = false;
 
@@ -63,6 +116,41 @@ export const validarFormulario = (
     });
   });
 
+  let arrayDiasInclusoesAutorizadasEmValues = [];
+  let keysFromValues = Object.keys(values);
+
+  for (const key in Object.fromEntries(
+    Object.entries(dadosValoresInclusoesAutorizadasState)
+  )) {
+    if (keysFromValues.includes(key)) {
+      const keySplitted = key.split("__");
+      const dia = keySplitted[1].match(/\d/g).join("");
+      arrayDiasInclusoesAutorizadasEmValues.push(dia);
+    }
+  }
+
+  arrayDiasInclusoesAutorizadasEmValues = [
+    ...new Set(arrayDiasInclusoesAutorizadasEmValues)
+  ];
+
+  const categoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+    categoria.nome.includes("ALIMENTAÇÃO")
+  );
+
+  let diasComFrequenciaVaziasEInclusoesAutorizadas = [];
+  arrayDiasInclusoesAutorizadasEmValues.forEach(dia => {
+    if (
+      !values[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
+    ) {
+      diasComFrequenciaVaziasEInclusoesAutorizadas.push(dia);
+    }
+  });
+
+  if (diasComFrequenciaVaziasEInclusoesAutorizadas.length) {
+    erro = `Realizar preenchimento da(s) frequência(s) para o(s) dia(s): ${diasComFrequenciaVaziasEInclusoesAutorizadas.join(
+      ", "
+    )}.`;
+  }
   return erro;
 };
 
@@ -73,7 +161,9 @@ export const validacoesTabelaAlimentacao = (
   dia,
   categoria,
   value,
-  allValues
+  allValues,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo
 ) => {
   const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(
     mesAnoConsiderado
@@ -101,8 +191,19 @@ export const validacoesTabelaAlimentacao = (
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
-  if (value && Number(value) === 0) {
+  if (value && Number(value) === 0 && validacaoDiaLetivo(dia)) {
     return "Campo não pode ser 0";
+  } else if (
+    `${rowName}__dia_${dia}__categoria_${categoria}` ===
+      `frequencia__dia_${dia}__categoria_${categoria}` &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+    ) &&
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
+  ) {
+    if (!(Number(value) === 0 && !validacaoDiaLetivo(dia))) {
+      return "Foi autorizada inclusão de alimentação nesta data. Informe a frequência de alunos.";
+    }
   } else if (
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
@@ -111,9 +212,27 @@ export const validacoesTabelaAlimentacao = (
       inputName.includes("sobremesa") ||
       inputName.includes("lanche")) &&
     !inputName.includes("repeticao") &&
-    !inputName.includes("emergencial")
+    !inputName.includes("emergencial") &&
+    !(inputName in dadosValoresInclusoesAutorizadasState)
   ) {
     return "Frequência acima inválida ou não preenchida.";
+  } else if (inputName in dadosValoresInclusoesAutorizadasState) {
+    if (
+      validacaoDiaLetivo(dia) &&
+      allValues[inputName] >
+        maxFrequencia + Number(dadosValoresInclusoesAutorizadasState[inputName])
+    ) {
+      let msg = `Número máximo de alimentações foi excedido. Foi autorizada a inclusão de `;
+      msg += `${
+        dadosValoresInclusoesAutorizadasState[inputName]
+      } alimentações neste dia. `;
+      msg += `O lançamento deve considerar as alimentações do dia (até o limite dos frequentes) + as alimentações autorizadas.`;
+      return msg;
+    }
+    if (!validacaoDiaLetivo(dia) && allValues[inputName] > maxFrequencia) {
+      return `Número apontado de alimentação é maior que número de alunos frequentes. Ajuste o apontamento. `;
+    }
+    return undefined;
   } else if (
     value &&
     existeAlteracaoCardapioRPL &&
