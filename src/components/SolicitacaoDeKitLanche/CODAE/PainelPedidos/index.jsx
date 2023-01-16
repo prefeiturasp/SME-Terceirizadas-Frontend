@@ -22,9 +22,10 @@ import {
 } from "helpers/utilities";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import HTTP_STATUS from "http-status-codes";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class PainelPedidos extends Component {
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
-      filtros: this.props.filtros || { lotes: [], diretorias_regionais: [] },
+      filtros: this.props.filtros || { lote: [], diretoria_regional: [] },
       lotes: [],
       diretoriasRegionais: []
     };
@@ -92,8 +93,8 @@ class PainelPedidos extends Component {
     this.getLotesAsync();
     this.getDiretoriasRegionaisAsync();
     const paramsFromPrevPage = this.props.filtros || {
-      lotes: [],
-      diretorias_regionais: []
+      lote: [],
+      diretoria_regional: []
     };
     this.filtrar(FiltroEnum.SEM_FILTRO, paramsFromPrevPage);
   }
@@ -101,8 +102,12 @@ class PainelPedidos extends Component {
   async getLotesAsync() {
     const response = await getLotesSimples();
     if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+        return <Option key={lote.value}>{lote.label}</Option>;
+      });
       this.setState({
-        lotes: formatarOpcoesLote(response.data.results)
+        lotes: lotes_
       });
     }
   }
@@ -110,8 +115,12 @@ class PainelPedidos extends Component {
   async getDiretoriasRegionaisAsync() {
     const response = await getDiretoriaregionalSimplissima();
     if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+        return <Option key={dre.value}>{dre.label}</Option>;
+      });
       this.setState({
-        diretoriasRegionais: formatarOpcoesDRE(response.data.results)
+        diretoriasRegionais: dres
       });
     }
   }
@@ -160,48 +169,51 @@ class PainelPedidos extends Component {
                     <>
                       <div className="offset-3 col-3">
                         <Field
-                          component={StatefulMultiSelect}
-                          name="diretorias_regionais"
-                          selected={filtros.diretorias_regionais || []}
-                          options={diretoriasRegionais}
-                          onSelectedChanged={values_ => {
+                          component={ASelect}
+                          showSearch
+                          onChange={value => {
                             const filtros_ = {
-                              diretorias_regionais: values_,
-                              lotes: filtros.lotes
+                              diretoria_regional: value,
+                              lote: filtros.lote
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          hasSelectAll
-                          overrideStrings={{
-                            selectSomeItems: "Filtrar por DRE",
-                            allItemsAreSelected: "Todos as DREs",
-                            selectAll: "Todas"
-                          }}
-                        />
+                          placeholder="Filtrar por DRE"
+                          name="diretoria_regional"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                        >
+                          {diretoriasRegionais}
+                        </Field>
                       </div>
                       <div className="col-3">
                         <Field
-                          component={StatefulMultiSelect}
-                          name="lotes"
-                          selected={filtros.lotes || []}
-                          options={lotes}
-                          onSelectedChanged={values_ => {
+                          component={ASelect}
+                          showSearch
+                          onChange={value => {
                             const filtros_ = {
-                              diretorias_regionais:
-                                filtros.diretorias_regionais,
-                              lotes: values_
+                              diretoria_regional: filtros.diretoria_regional,
+                              lote: value
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          hasSelectAll
-                          overrideStrings={{
-                            selectSomeItems: "Filtrar por Lote",
-                            allItemsAreSelected: "Todos os lotes",
-                            selectAll: "Todos"
-                          }}
-                        />
+                          placeholder="Filtrar por Lote"
+                          name="lote"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                        >
+                          {lotes}
+                        </Field>
                       </div>
                     </>
                   ) : (
