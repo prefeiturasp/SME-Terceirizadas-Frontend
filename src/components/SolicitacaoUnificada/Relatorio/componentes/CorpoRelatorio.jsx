@@ -71,11 +71,13 @@ export const CorpoRelatorio = props => {
         </div>
 
         <hr />
-        <FluxoDeStatus
-          fluxo={fluxoPartindoDRE}
-          listaDeStatus={solicitacaoUnificada.logs}
-          eh_gestao_alimentacao={true}
-        />
+        <div className="row">
+          <FluxoDeStatus
+            fluxo={fluxoPartindoDRE}
+            listaDeStatus={solicitacaoUnificada.logs}
+            eh_gestao_alimentacao={true}
+          />
+        </div>
         <hr />
 
         <div className="descricao-evento row mt-3 mb-3">
