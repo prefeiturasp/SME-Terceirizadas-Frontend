@@ -34,7 +34,9 @@ import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
 import { deepCopy, deepEqual } from "helpers/utilities";
 import {
+  botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
+  botaoAdicionarObrigatorioTabelaAlimentacao,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario
@@ -50,7 +52,8 @@ import {
   getLogDietasAutorizadasPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
-  updateValoresPeriodosLancamentos
+  updateValoresPeriodosLancamentos,
+  getSolicitacoesInclusoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -79,6 +82,11 @@ export default () => {
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [solicitacoesAutorizadas, setSolicitacoesAutorizadas] = useState([]);
+  const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [
+    dadosValoresInclusoesAutorizadasState,
+    setDadosValoresInclusoesAutorizadasState
+  ] = useState(null);
   const [valoresPeriodosLancamentos, setValoresPeriodosLancamentos] = useState(
     []
   );
@@ -122,6 +130,29 @@ export default () => {
       setDiasSobremesaDoce(response.data);
     } else {
       toastError("Erro ao carregar dias de sobremesa doce");
+    }
+  };
+
+  const getSolicitacoesInclusaoAutorizadasAsync = async (
+    escolaUuuid,
+    mes,
+    ano,
+    nome_periodo_escolar
+  ) => {
+    const params = {};
+    params["escola_uuid"] = escolaUuuid;
+    params["tipo_solicitacao"] = "Inclusão de";
+    params["mes"] = mes;
+    params["ano"] = ano;
+    params["nome_periodo_escolar"] = nome_periodo_escolar;
+    const responseAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
+      params
+    );
+    if (responseAutorizadas.status === HTTP_STATUS.OK) {
+      return responseAutorizadas.data.results;
+    } else {
+      toastError("Erro ao carregar Inclusões Autorizadas");
+      return [];
     }
   };
 
@@ -342,6 +373,14 @@ export default () => {
       );
       setSolicitacoesAutorizadas(solicitacoesAutorizadasEscola.data.results);
 
+      const response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+        escola.uuid,
+        mes,
+        ano,
+        periodo.periodo_escolar.nome
+      );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
       await formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
@@ -349,7 +388,9 @@ export default () => {
         tiposAlimentacaoFormatadas,
         response_matriculados.data,
         rowsDietas,
-        response_log_dietas_autorizadas.data
+        response_log_dietas_autorizadas.data,
+        response_inclusoes_autorizadas,
+        mesAnoSelecionado
       );
       setLoading(false);
     };
@@ -365,7 +406,9 @@ export default () => {
     tiposAlimentacaoFormatadas,
     matriculados,
     rowsDietas,
-    logQtdDietasAutorizadas
+    logQtdDietasAutorizadas,
+    solInclusaoAutorizadas,
+    mesAno
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculados = {};
@@ -375,6 +418,7 @@ export default () => {
       mes_lancamento: mesAnoFormatado,
       periodo_escolar: location.state ? location.state.periodo : "MANHA"
     };
+    let dadosValoresInclusoesAutorizadas = {};
 
     categoriasMedicao &&
       categoriasMedicao.forEach(categoria => {
@@ -419,32 +463,111 @@ export default () => {
               ] = `${log.quantidade}`);
           });
 
-        [tiposAlimentacaoFormatadas, rowsDietas].forEach(
-          each =>
-            each &&
-            each.forEach(tipo => {
+        tiposAlimentacaoFormatadas &&
+          tiposAlimentacaoFormatadas.forEach(alimentacao => {
+            if (
+              categoria.nome.includes("ALIMENTAÇÃO") &&
+              solInclusaoAutorizadas
+            ) {
+              const inclusoesFiltradas = solInclusaoAutorizadas.filter(
+                inclusao => inclusao.alimentacoes.includes(alimentacao.name)
+              );
               for (let i = 1; i <= 31; i++) {
                 const dia =
                   String(i).length === 1 ? "0" + String(i) : String(i);
-                let result = null;
-                if (Number(semanaSelecionada) === 1 && Number(dia) > 20) {
-                  result = "Mês anterior";
-                  dadosValoresForaDoMes[
-                    `${tipo.name}__dia_${dia}__categoria_${categoria.id}`
-                  ] = result;
-                }
+                const incFiltradasPorDia = inclusoesFiltradas.filter(
+                  each => each.dia === dia
+                );
                 if (
-                  [4, 5, 6].includes(Number(semanaSelecionada)) &&
-                  Number(dia) < 10
+                  incFiltradasPorDia.length &&
+                  !valoresMedicao[
+                    `${alimentacao.name}__dia_${dia}__categoria_${categoria.id}`
+                  ]
                 ) {
-                  result = "Mês posterior";
-                  dadosValoresForaDoMes[
-                    `${tipo.name}__dia_${dia}__categoria_${categoria.id}`
-                  ] = result;
+                  dadosValoresInclusoesAutorizadas[
+                    `${alimentacao.name}__dia_${dia}__categoria_${categoria.id}`
+                  ] = `${incFiltradasPorDia.reduce(
+                    (total, obj) => obj.numero_alunos + total,
+                    0
+                  )}`;
                 }
               }
-            })
+            }
+          });
+
+        setDadosValoresInclusoesAutorizadasState(
+          dadosValoresInclusoesAutorizadas
         );
+
+        let diasSemana = [];
+        let diaDaSemanaNumerico = getDay(startOfMonth(mesAno)); // 0 representa Domingo
+
+        if (diaDaSemanaNumerico === 0) {
+          diaDaSemanaNumerico = 7;
+        }
+        if (Number(semanaSelecionada) === 1) {
+          diasSemana.unshift(format(startOfMonth(mesAno), "dd"));
+          for (let i = 1; i < diaDaSemanaNumerico; i++) {
+            diasSemana.unshift(format(subDays(startOfMonth(mesAno), i), "dd"));
+          }
+          for (let i = diaDaSemanaNumerico; i < 7; i++) {
+            diasSemana.push(
+              format(
+                addDays(startOfMonth(mesAno), i + 1 - diaDaSemanaNumerico),
+                "dd"
+              )
+            );
+          }
+        }
+        if (Number(semanaSelecionada) !== 1) {
+          let dia = addDays(
+            startOfMonth(mesAno),
+            7 * (Number(semanaSelecionada) - 1)
+          );
+          diasSemana.unshift(format(dia, "dd"));
+          for (let i = 1; i < diaDaSemanaNumerico; i++) {
+            diasSemana.unshift(format(subDays(dia, i), "dd"));
+          }
+          for (let i = diaDaSemanaNumerico; i < 7; i++) {
+            diasSemana.push(
+              format(addDays(dia, i + 1 - diaDaSemanaNumerico), "dd")
+            );
+          }
+        }
+
+        tiposAlimentacaoFormatadas &&
+          rowsDietas &&
+          [tiposAlimentacaoFormatadas, rowsDietas].forEach(
+            each =>
+              each &&
+              each.forEach(tipo => {
+                for (let i = 1; i <= 31; i++) {
+                  const dia =
+                    String(i).length === 1 ? "0" + String(i) : String(i);
+                  let result = null;
+                  if (
+                    Number(semanaSelecionada) === 1 &&
+                    Number(dia) > 20 &&
+                    diasSemana.includes(dia)
+                  ) {
+                    result = "Mês anterior";
+                    dadosValoresForaDoMes[
+                      `${tipo.name}__dia_${dia}__categoria_${categoria.id}`
+                    ] = result;
+                  }
+                  if (
+                    [4, 5, 6].includes(Number(semanaSelecionada)) &&
+                    Number(dia) < 10 &&
+                    diasSemana.includes(dia)
+                  ) {
+                    result = "Mês posterior";
+                    dadosValoresForaDoMes[
+                      `${tipo.name}__dia_${dia}__categoria_${categoria.id}`
+                    ] = result;
+                  }
+                }
+              })
+          );
 
         valoresMedicao &&
           valoresMedicao.forEach(valor_medicao => {
@@ -458,6 +581,7 @@ export default () => {
 
     setDadosIniciais({
       ...dadosMesPeriodo,
+      ...dadosValoresInclusoesAutorizadas,
       ...dadosValoresMedicoes,
       ...dadosValoresMatriculados,
       ...dadosValoresDietasAutorizadas,
@@ -468,6 +592,7 @@ export default () => {
   useEffect(() => {
     let diasSemana = [];
     let diaDaSemanaNumerico = getDay(startOfMonth(mesAnoConsiderado)); // 0 representa Domingo
+    let week = [];
 
     if (diaDaSemanaNumerico === 0) {
       diaDaSemanaNumerico = 7;
@@ -490,12 +615,11 @@ export default () => {
           )
         );
       }
+      week = weekColumns.map(column => {
+        return { ...column, dia: diasSemana[column["position"]] };
+      });
 
-      setWeekColumns(
-        weekColumns.map(column => {
-          return { ...column, dia: diasSemana[column["position"]] };
-        })
-      );
+      setWeekColumns(week);
     }
     if (mesAnoConsiderado && Number(semanaSelecionada) !== 1) {
       let dia = addDays(
@@ -512,11 +636,10 @@ export default () => {
         );
       }
 
-      setWeekColumns(
-        weekColumns.map(column => {
-          return { ...column, dia: diasSemana[column["position"]] };
-        })
-      );
+      week = weekColumns.map(column => {
+        return { ...column, dia: diasSemana[column["position"]] };
+      });
+      setWeekColumns(week);
     }
 
     const formatar = async () => {
@@ -527,7 +650,9 @@ export default () => {
         tabelaAlimentacaoRows,
         valoresMatriculados,
         tabelaDietaRows,
-        logQtdDietasAutorizadas
+        logQtdDietasAutorizadas,
+        inclusoesAutorizadas,
+        mesAnoConsiderado
       );
     };
     semanaSelecionada && formatar();
@@ -545,12 +670,120 @@ export default () => {
     valoresPeriodosLancamentos
   ]);
 
-  const onSubmit = async (values, ehObservacao) => {
+  const onSubmitObservacao = async (values, dia, categoria) => {
+    let valoresMedicao = [];
+    const valuesMesmoDiaDaObservacao = Object.fromEntries(
+      Object.entries(values).filter(([key]) => key.includes(dia))
+    );
+    Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
+      return (
+        (["Mês anterior", "Mês posterior", null].includes(value) ||
+          key.includes("matriculados") ||
+          key.includes("dietas_autorizadas") ||
+          key.includes("repeticao") ||
+          key.includes("emergencial")) &&
+        delete valuesMesmoDiaDaObservacao[key]
+      );
+    });
+    let qtdCamposComErro = 0;
+    Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
+      if (
+        !(key.includes("observacoes") || key.includes("frequencia")) &&
+        Number(value) >
+          Number(
+            valuesMesmoDiaDaObservacao[
+              `frequencia__dia_${dia}__categoria_${categoria}`
+            ]
+          )
+      ) {
+        qtdCamposComErro++;
+      }
+    });
+    if (qtdCamposComErro) {
+      return toastError(
+        `Existe(m) ${qtdCamposComErro} campo(s) com valor maior que a frequência. Necessário corrigir.`
+      );
+    }
+    Object.entries(valuesMesmoDiaDaObservacao).map(v => {
+      const keySplitted = v[0].split("__");
+      const categoria = keySplitted.pop();
+      const idCategoria = categoria.match(/\d/g).join("");
+      const dia = keySplitted[1].match(/\d/g).join("");
+      const nome_campo = keySplitted[0];
+      let tipoAlimentacao = tabelaAlimentacaoRows.find(
+        alimentacao => alimentacao.name === nome_campo
+      );
+      if (!tipoAlimentacao) {
+        tipoAlimentacao = tabelaDietaEnteralRows.find(
+          row => row.name === nome_campo
+        );
+      }
+
+      return valoresMedicao.push({
+        dia: dia,
+        valor: ["<p></p>\n", ""].includes(v[1]) ? 0 : v[1],
+        nome_campo: nome_campo,
+        categoria_medicao: idCategoria,
+        tipo_alimentacao: tipoAlimentacao.uuid || ""
+      });
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    const solicitacao_medicao_inicial = uuid;
+    const payload = {
+      solicitacao_medicao_inicial: solicitacao_medicao_inicial,
+      periodo_escolar: values["periodo_escolar"],
+      valores_medicao: valoresMedicao,
+      eh_observacao: true
+    };
+    let valores_medicao_response = [];
+    if (valoresPeriodosLancamentos.length) {
+      setLoading(true);
+      const response = await updateValoresPeriodosLancamentos(
+        valoresPeriodosLancamentos[0].medicao_uuid,
+        payload
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Observação salva com sucesso");
+        valores_medicao_response = response.data.valores_medicao;
+      } else {
+        return toastError("Erro ao salvar observação.");
+      }
+    } else {
+      setLoading(true);
+      const response = await setPeriodoLancamento(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Observação salva com sucesso");
+        valores_medicao_response = response.data.valores_medicao;
+      } else {
+        return toastError("Erro ao salvar observação.");
+      }
+    }
+    setValoresPeriodosLancamentos(valores_medicao_response);
+    await formatarDadosValoresMedicao(
+      mesAnoFormatadoState,
+      valores_medicao_response,
+      categoriasDeMedicao,
+      tabelaAlimentacaoRows,
+      valoresMatriculados,
+      tabelaDietaRows,
+      logQtdDietasAutorizadas,
+      inclusoesAutorizadas,
+      mesAnoConsiderado
+    );
+    setLoading(false);
+    setDisableBotaoSalvarLancamentos(true);
+  };
+
+  const onSubmit = async (values, dadosValoresInclusoesAutorizadasState) => {
     const erro = validarFormulario(
       values,
       diasSobremesaDoce,
       location,
-      categoriasDeMedicao
+      categoriasDeMedicao,
+      dadosValoresInclusoesAutorizadasState
     );
     if (erro) {
       toastError(erro);
@@ -604,29 +837,19 @@ export default () => {
         payload
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess(
-          ehObservacao
-            ? "Observação salva com sucesso"
-            : "Lançamentos salvos com sucesso"
-        );
+        toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
-        const errorMessage = Object.values(response.data).join("; ");
-        toastError(`Erro: ${errorMessage}`);
+        return toastError("Erro ao salvar lançamentos.");
       }
     } else {
       setLoading(true);
       const response = await setPeriodoLancamento(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess(
-          ehObservacao
-            ? "Observação salva com sucesso"
-            : "Lançamentos salvos com sucesso"
-        );
+        toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
-        const errorMessage = Object.values(response.data).join("; ");
-        toastError(`Erro: ${errorMessage}`);
+        return toastError("Erro ao salvar lançamentos.");
       }
     }
     setValoresPeriodosLancamentos(valores_medicao_response);
@@ -637,7 +860,9 @@ export default () => {
       tabelaAlimentacaoRows,
       valoresMatriculados,
       tabelaDietaRows,
-      logQtdDietasAutorizadas
+      logQtdDietasAutorizadas,
+      inclusoesAutorizadas,
+      mesAnoConsiderado
     );
     setLoading(false);
   };
@@ -694,18 +919,42 @@ export default () => {
       locale: ptBR
     }).toString();
 
-    return (
-      !validacaoDiaLetivo(dia) ||
-      validacaoSemana(dia) ||
-      rowName === "matriculados" ||
-      rowName === "dietas_autorizadas" ||
-      !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
-      Number(
-        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-      ) === 0 ||
-      (mesConsiderado === mesAtual &&
-        Number(dia) >= format(mesAnoDefault, "dd"))
-    );
+    if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
+      return true;
+    }
+    if (
+      `${rowName}__dia_${dia}__categoria_${categoria}` in
+        dadosValoresInclusoesAutorizadasState &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      )
+    ) {
+      return false;
+    } else if (
+      `${rowName}__dia_${dia}__categoria_${categoria}` ===
+        `frequencia__dia_${dia}__categoria_${categoria}` &&
+      Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+        String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+      ) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+      )
+    ) {
+      return false;
+    } else {
+      return (
+        !validacaoDiaLetivo(dia) ||
+        validacaoSemana(dia) ||
+        rowName === "matriculados" ||
+        rowName === "dietas_autorizadas" ||
+        !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+        Number(
+          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+        ) === 0 ||
+        (mesConsiderado === mesAtual &&
+          Number(dia) >= format(mesAnoDefault, "dd"))
+      );
+    }
   };
 
   const openModalObservacaoDiaria = (dia, categoria) => {
@@ -731,7 +980,15 @@ export default () => {
 
   let valuesInputArray = [];
 
-  const onChangeInput = (value, previous, errors, values, dia, categoria) => {
+  const onChangeInput = (
+    value,
+    previous,
+    errors,
+    values,
+    dia,
+    categoria,
+    rowName
+  ) => {
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
     } else if ((value || previous) && value !== previous) {
@@ -746,10 +1003,48 @@ export default () => {
         : setDisableBotaoSalvarLancamentos(true);
     }
 
-    if (Object.keys(errors).length > 0) {
-      return setDisableBotaoSalvarLancamentos(true);
+    if (
+      categoria.nome.includes("ALIMENTAÇÃO") &&
+      botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
+        values,
+        dia,
+        categoria,
+        rowName,
+        dadosValoresInclusoesAutorizadasState,
+        validacaoDiaLetivo
+      )
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
     }
-    if (deveExistirObservacao(categoria, values, calendarioMesConsiderado)) {
+    if (Object.keys(errors).length > 0) {
+      setDisableBotaoSalvarLancamentos(true);
+    }
+
+    const valuesFrequencia = Object.fromEntries(
+      Object.entries(values).filter(([key]) => key.includes("frequencia"))
+    );
+    let arrayDiasComFrequenciaZero = [];
+    for (const key in valuesFrequencia) {
+      if (Number(valuesFrequencia[key]) === 0) {
+        const keySplitted = key.split("__");
+        const dia = keySplitted[1].match(/\d/g).join("");
+        arrayDiasComFrequenciaZero.push(dia);
+      }
+    }
+    arrayDiasComFrequenciaZero.forEach(dia => {
+      if (
+        categoria.nome.includes("ALIMENTAÇÃO") &&
+        Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+          String(key).includes(dia)
+        ) &&
+        !validacaoDiaLetivo(Number(dia)) &&
+        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+      ) {
+        setDisableBotaoSalvarLancamentos(true);
+      }
+    });
+
+    if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
   };
@@ -765,7 +1060,9 @@ export default () => {
       dia,
       categoria,
       value,
-      allValues
+      allValues,
+      dadosValoresInclusoesAutorizadasState,
+      validacaoDiaLetivo
     );
   };
 
@@ -781,6 +1078,32 @@ export default () => {
       value,
       allValues
     );
+  };
+
+  const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
+    if (
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` ===
+        `frequencia__dia_${column.dia}__categoria_${categoria.id}` &&
+      Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+        String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+      )
+    ) {
+      return "";
+    }
+    if (
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+      dadosValoresInclusoesAutorizadasState
+    ) {
+      return "";
+    }
+    return `${
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+      dadosValoresInclusoesAutorizadasState
+        ? ""
+        : !validacaoDiaLetivo(column.dia)
+        ? "nao-eh-dia-letivo"
+        : ""
+    }`;
   };
 
   return (
@@ -841,6 +1164,7 @@ export default () => {
                   </Tabs>
                 </div>
                 {categoriasDeMedicao.length > 0 &&
+                  !loading &&
                   categoriasDeMedicao.map(categoria => (
                     <div key={categoria.uuid}>
                       <b className="pb-2 section-title">{categoria.nome}</b>
@@ -973,7 +1297,8 @@ export default () => {
                                                       errors,
                                                       formValuesAtualizados,
                                                       column.dia,
-                                                      categoria.id
+                                                      categoria,
+                                                      row.name
                                                     );
                                                   }}
                                                 </OnChange>
@@ -1020,12 +1345,15 @@ export default () => {
                                                   )}
                                                   type={BUTTON_TYPE.BUTTON}
                                                   style={
-                                                    botaoAdicionarObrigatorio(
+                                                    botaoAdicionarObrigatorioTabelaAlimentacao(
                                                       formValuesAtualizados,
                                                       column.dia,
                                                       categoria,
                                                       diasSobremesaDoce,
-                                                      location
+                                                      location,
+                                                      row.name,
+                                                      dadosValoresInclusoesAutorizadasState,
+                                                      validacaoDiaLetivo
                                                     )
                                                       ? BUTTON_STYLE.RED_OUTLINE
                                                       : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -1041,13 +1369,11 @@ export default () => {
                                             ) : (
                                               <div className="field-values-input">
                                                 <Field
-                                                  className={`m-2 ${
-                                                    !validacaoDiaLetivo(
-                                                      column.dia
-                                                    )
-                                                      ? "nao-eh-dia-letivo"
-                                                      : ""
-                                                  }`}
+                                                  className={`m-2 ${classNameFieldTabelaAlimentacao(
+                                                    row,
+                                                    column,
+                                                    categoria
+                                                  )}`}
                                                   component={InputValueMedicao}
                                                   apenasNumeros
                                                   name={`${row.name}__dia_${
@@ -1076,7 +1402,60 @@ export default () => {
                                                       }`
                                                     )
                                                   }
-                                                  dia={column.dia}
+                                                  exibeTooltipAlimentacoesAutorizadas={
+                                                    `${row.name}__dia_${
+                                                      column.dia
+                                                    }__categoria_${
+                                                      categoria.id
+                                                    }` in
+                                                    dadosValoresInclusoesAutorizadasState
+                                                  }
+                                                  exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
+                                                    `${row.name}__dia_${
+                                                      column.dia
+                                                    }__categoria_${
+                                                      categoria.id
+                                                    }` in
+                                                      dadosValoresInclusoesAutorizadasState &&
+                                                    !validacaoDiaLetivo(
+                                                      column.dia
+                                                    )
+                                                  }
+                                                  exibeTooltipFrequenciaDiaNaoLetivo={
+                                                    !validacaoDiaLetivo(
+                                                      column.dia
+                                                    ) &&
+                                                    row.name === "frequencia" &&
+                                                    Object.keys(
+                                                      dadosValoresInclusoesAutorizadasState
+                                                    ).some(key =>
+                                                      String(key).includes(
+                                                        `__dia_${
+                                                          column.dia
+                                                        }__categoria_${
+                                                          categoria.id
+                                                        }`
+                                                      )
+                                                    ) &&
+                                                    Number(
+                                                      formValuesAtualizados[
+                                                        `frequencia__dia_${
+                                                          column.dia
+                                                        }__categoria_${
+                                                          categoria.id
+                                                        }`
+                                                      ]
+                                                    ) === 0
+                                                  }
+                                                  numeroDeInclusoesAutorizadas={
+                                                    dadosValoresInclusoesAutorizadasState[
+                                                      `${row.name}__dia_${
+                                                        column.dia
+                                                      }__categoria_${
+                                                        categoria.id
+                                                      }`
+                                                    ]
+                                                  }
                                                   defaultValue={defaultValue(
                                                     column,
                                                     row
@@ -1099,7 +1478,8 @@ export default () => {
                                                       errors,
                                                       formValuesAtualizados,
                                                       column.dia,
-                                                      categoria.id
+                                                      categoria,
+                                                      row.name
                                                     );
                                                   }}
                                                 </OnChange>
@@ -1127,7 +1507,13 @@ export default () => {
                     values={formValuesAtualizados}
                     rowName={"observacoes"}
                     valoresPeriodosLancamentos={valoresPeriodosLancamentos}
-                    onSubmit={() => onSubmit(formValuesAtualizados, true)}
+                    onSubmit={() =>
+                      onSubmitObservacao(
+                        formValuesAtualizados,
+                        showDiaObservacaoDiaria,
+                        showCategoriaObservacaoDiaria
+                      )
+                    }
                     dadosIniciais={dadosIniciais}
                   />
                 )}
@@ -1142,7 +1528,12 @@ export default () => {
                 <ModalSalvarLancamento
                   closeModal={() => setShowModalSalvarLancamento(false)}
                   showModal={showModalSalvarLancamento}
-                  onSubmit={() => onSubmit(formValuesAtualizados)}
+                  onSubmit={() =>
+                    onSubmit(
+                      formValuesAtualizados,
+                      dadosValoresInclusoesAutorizadasState
+                    )
+                  }
                 />
               </div>
             </div>
