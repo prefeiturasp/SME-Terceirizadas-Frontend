@@ -26,7 +26,7 @@ export default ({
     if (res.status === 201) {
       setShow(false);
       handleCloseAll();
-      toastSuccess("Solicitação enviada para análise da CODAE.");
+      toastSuccess("Sua solicitação foi enviada e será analisada pela CODAE");
       updatePage();
     } else {
       toastError("Houve um erro ao solicitar a alteração de requisição.");
@@ -44,24 +44,24 @@ export default ({
       />
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title> Confirmar Envio</Modal.Title>
+          <Modal.Title> Confirmar Solicitação</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Deseja confirmar o envio da solicitação de alteração?
+          Deseja confirmar o envio da solicitação de alteração para a CODAE?
         </Modal.Body>
         <Modal.Footer>
-          <Botao
-            texto="Sim"
-            type={BUTTON_TYPE.SUBMIT}
-            style={BUTTON_STYLE.BLUE}
-            onClick={enviarSolicitacao}
-            className="ml-3"
-          />
           <Botao
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={handleClose}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="ml-3"
+          />
+          <Botao
+            texto="Sim"
+            type={BUTTON_TYPE.SUBMIT}
+            style={BUTTON_STYLE.GREEN}
+            onClick={enviarSolicitacao}
             className="ml-3"
           />
         </Modal.Footer>
