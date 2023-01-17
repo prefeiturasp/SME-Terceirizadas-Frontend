@@ -23,7 +23,7 @@ const ListagemPlanilhas = ({
   };
 
   const downloadArquivo = url => {
-    saveAs(url);
+    saveAs(url.replace("http://", "https://"));
   };
 
   return (
