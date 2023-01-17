@@ -472,11 +472,7 @@ export const escolaEhCei = () => {
 };
 
 export const escolaEhCEMEI = () => {
-  return (
-    localStorage.getItem("nome_instituicao") &&
-    (localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`) ||
-      localStorage.getItem("nome_instituicao").startsWith(`"CEU CEMEI`))
-  );
+  return localStorage.getItem("eh_cemei");
 };
 
 export const nomeInstituicao = () => {
