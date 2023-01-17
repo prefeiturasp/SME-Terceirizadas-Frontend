@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Link } from "react-router-dom";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
@@ -34,6 +33,8 @@ import {
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
 import { toastError } from "../../Shareable/Toast/dialogs";
 import { dataAtual } from "../../../helpers/utilities";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 import "./style.scss";
 
 export const DashboardCODAE = ({
@@ -46,6 +47,39 @@ export const DashboardCODAE = ({
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
   const visao = FILTRO_VISAO.POR_TIPO_SOLICITACAO;
+  const { Option } = SelectAntd;
+
+  const opcoesDRE = diretoriasRegionais
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por DRE
+        </Option>
+      ].concat(
+        diretoriasRegionais.map(dre => {
+          return (
+            <Option key={dre.value} value={dre.value}>
+              {dre.label}
+            </Option>
+          );
+        })
+      )
+    : [];
+
+  const opcoesLote = lotes
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por Lote
+        </Option>
+      ].concat(
+        lotes.map(lote => {
+          return (
+            <Option value={lote.value} key={lote.value}>
+              {lote.label}
+            </Option>
+          );
+        })
+      )
+    : [];
 
   const [collapsed, setCollapsed] = useState(true);
   const [filtros, setFiltros] = useState({});
@@ -159,8 +193,8 @@ export const DashboardCODAE = ({
         .split("/")
         .reverse()
         .join("-");
-    params["diretorias_regionais"] = values.diretorias_regionais;
-    params["lotes"] = values.lotes;
+    params["diretoria_regional"] = values.diretoria_regional;
+    params["lote"] = values.lote;
     return params;
   };
 
@@ -195,39 +229,41 @@ export const DashboardCODAE = ({
                     <div className="col-3 mt-3 color-black">Pendências</div>
                     <div className="offset-3 col-3 my-auto">
                       <Field
-                        component={StatefulMultiSelect}
-                        name="diretorias_regionais"
-                        selected={values.diretorias_regionais || []}
-                        options={diretoriasRegionais}
-                        onSelectedChanged={values_ => {
-                          form.change(`diretorias_regionais`, values_);
+                        component={ASelect}
+                        showSearch
+                        onChange={value => {
+                          form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                         }}
-                        hasSelectAll
-                        overrideStrings={{
-                          selectSomeItems: "Filtrar por DRE",
-                          allItemsAreSelected: "Todos as DREs",
-                          selectAll: "Todas"
-                        }}
-                      />
+                        name="diretoria_regional"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                      >
+                        {opcoesDRE}
+                      </Field>
                     </div>
                     <div className="col-3 my-auto">
                       <Field
-                        component={StatefulMultiSelect}
-                        name="lotes"
-                        selected={values.lotes || []}
-                        options={lotes}
-                        onSelectedChanged={values_ => {
-                          form.change(`lotes`, values_);
+                        component={ASelect}
+                        showSearch
+                        onChange={value => {
+                          form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                         }}
-                        hasSelectAll
-                        overrideStrings={{
-                          selectSomeItems: "Filtrar por Lote",
-                          allItemsAreSelected: "Todos os lotes",
-                          selectAll: "Todos"
-                        }}
-                      />
+                        name="lote"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                      >
+                        {opcoesLote}
+                      </Field>
                     </div>
                   </div>
                 </div>
