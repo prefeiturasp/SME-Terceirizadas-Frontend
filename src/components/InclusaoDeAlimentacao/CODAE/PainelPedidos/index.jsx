@@ -128,8 +128,8 @@ class PainelPedidos extends Component {
     this.getLotesAsync();
     this.getDiretoriasRegionaisAsync();
     const paramsFromPrevPage = this.props.filtros || {
-      lote: [],
-      diretoria_regional: []
+      lote: undefined,
+      diretoria_regional: undefined
     };
     const filtro = FiltroEnum.SEM_FILTRO;
     this.atualizarDadosDasInclusoes(filtro, paramsFromPrevPage);
