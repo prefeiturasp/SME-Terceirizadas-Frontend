@@ -50,15 +50,35 @@ export const DashboardCODAE = ({
   const { Option } = SelectAntd;
 
   const opcoesDRE = diretoriasRegionais
-    ? diretoriasRegionais.map(dre => {
-        return <Option key={dre.value}>{dre.label}</Option>;
-      })
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por DRE
+        </Option>
+      ].concat(
+        diretoriasRegionais.map(dre => {
+          return (
+            <Option key={dre.value} value={dre.value}>
+              {dre.label}
+            </Option>
+          );
+        })
+      )
     : [];
 
   const opcoesLote = lotes
-    ? lotes.map(lote => {
-        return <Option key={lote.value}>{lote.label}</Option>;
-      })
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por Lote
+        </Option>
+      ].concat(
+        lotes.map(lote => {
+          return (
+            <Option value={lote.value} key={lote.value}>
+              {lote.label}
+            </Option>
+          );
+        })
+      )
     : [];
 
   const [collapsed, setCollapsed] = useState(true);
@@ -212,10 +232,9 @@ export const DashboardCODAE = ({
                         component={ASelect}
                         showSearch
                         onChange={value => {
-                          form.change(`diretoria_regional`, value);
+                          form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                         }}
-                        placeholder="Filtrar por DRE"
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
                           option.props.children
@@ -232,10 +251,9 @@ export const DashboardCODAE = ({
                         component={ASelect}
                         showSearch
                         onChange={value => {
-                          form.change(`lote`, value);
+                          form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
                         }}
-                        placeholder="Filtrar por Lote"
                         name="lote"
                         filterOption={(inputValue, option) =>
                           option.props.children
