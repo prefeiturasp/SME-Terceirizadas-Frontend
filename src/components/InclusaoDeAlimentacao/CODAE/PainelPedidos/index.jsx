@@ -8,10 +8,20 @@ import {
   filtraRegular,
   ordenarPedidosDataMaisRecente
 } from "../../../../helpers/painelPedidos";
+import {
+  formatarOpcoesLote,
+  formatarOpcoesDRE,
+  usuarioEhCODAEGestaoAlimentacao
+} from "helpers/utilities";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import { getLotesSimples } from "services/lote.service";
+import HTTP_STATUS from "http-status-codes";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { Select } from "../../../Shareable/Select";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import { codaeListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 
 class PainelPedidos extends Component {
   constructor(props) {
@@ -20,27 +30,38 @@ class PainelPedidos extends Component {
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
+      filtros: this.props.filtros || {
+        lote: undefined,
+        diretoria_regional: undefined
+      },
+      lotes: [],
+      diretoriasRegionais: [],
       loading: true
     };
+    this.setFiltros = this.setFiltros.bind(this);
   }
 
-  async atualizarDadosDasInclusoes(filtro) {
+  async atualizarDadosDasInclusoes(filtro, paramsFromPrevPage = {}) {
     const [avulsas, continuas, cei, cemei] = await Promise.all([
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
-        TIPO_SOLICITACAO.SOLICITACAO_NORMAL
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+        paramsFromPrevPage
       ),
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
-        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
+        TIPO_SOLICITACAO.SOLICITACAO_CONTINUA,
+        paramsFromPrevPage
       ),
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
-        TIPO_SOLICITACAO.SOLICITACAO_CEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEI,
+        paramsFromPrevPage
       ),
       codaeListarSolicitacoesDeInclusaoDeAlimentacao(
         filtro,
-        TIPO_SOLICITACAO.SOLICITACAO_CEMEI
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
+        paramsFromPrevPage
       )
     ]);
     const inclusoes = safeConcatOn("results", avulsas, continuas, cei, cemei);
@@ -61,13 +82,64 @@ class PainelPedidos extends Component {
     });
   }
 
-  filtrar(filtro) {
-    this.atualizarDadosDasInclusoes(filtro);
+  async getLotesAsync() {
+    const response = await getLotesSimples();
+    if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+        return <Option key={lote.value}>{lote.label}</Option>;
+      });
+      this.setState({
+        lotes: [
+          <Option value="" key={0}>
+            Filtrar por Lote
+          </Option>
+        ].concat(lotes_)
+      });
+    }
+  }
+
+  async getDiretoriasRegionaisAsync() {
+    const response = await getDiretoriaregionalSimplissima();
+    if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+        return <Option key={dre.value}>{dre.label}</Option>;
+      });
+      this.setState({
+        diretoriasRegionais: [
+          <Option value="" key={0}>
+            Filtrar por DRE
+          </Option>
+        ].concat(dres)
+      });
+    }
+  }
+
+  setFiltros(filtros) {
+    this.setState({ filtros: filtros });
+  }
+
+  async filtrar(filtro, filtros) {
+    await this.atualizarDadosDasInclusoes(filtro, filtros);
   }
 
   async componentDidMount() {
+    this.getLotesAsync();
+    this.getDiretoriasRegionaisAsync();
+    const paramsFromPrevPage = this.props.filtros || {
+      lote: undefined,
+      diretoria_regional: undefined
+    };
     const filtro = FiltroEnum.SEM_FILTRO;
-    this.atualizarDadosDasInclusoes(filtro);
+    this.atualizarDadosDasInclusoes(filtro, paramsFromPrevPage);
+    if (this.props.filtros) {
+      this.props.change(
+        "diretoria_regional",
+        this.props.filtros.diretoria_regional
+      );
+      this.props.change("lote", this.props.filtros.lote);
+    }
   }
 
   render() {
@@ -75,7 +147,10 @@ class PainelPedidos extends Component {
       loading,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
+      diretoriasRegionais,
+      lotes,
+      filtros
     } = this.state;
     const { visaoPorCombo, valorDoFiltro } = this.props;
     return (
@@ -90,16 +165,75 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
-                    <Field
-                      component={Select}
-                      name="visao_por"
-                      naoDesabilitarPrimeiraOpcao
-                      onChange={event => this.filtrar(event.target.value)}
-                      placeholder={"Filtro por"}
-                      options={visaoPorCombo}
-                    />
-                  </div>
+                  {usuarioEhCODAEGestaoAlimentacao() ? (
+                    <>
+                      <div className="offset-3 col-3">
+                        <Field
+                          component={ASelect}
+                          showSearch
+                          onChange={value => {
+                            const filtros_ = {
+                              diretoria_regional: value || undefined,
+                              lote: filtros.lote
+                            };
+                            this.setFiltros(filtros_);
+                            this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
+                          }}
+                          onBlur={e => {
+                            e.preventDefault();
+                          }}
+                          name="diretoria_regional"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                        >
+                          {diretoriasRegionais}
+                        </Field>
+                      </div>
+                      <div className="col-3">
+                        <Field
+                          component={ASelect}
+                          showSearch
+                          onChange={value => {
+                            const filtros_ = {
+                              diretoria_regional: filtros.diretoria_regional,
+                              lote: value || undefined
+                            };
+                            this.setFiltros(filtros_);
+                            this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
+                          }}
+                          onBlur={e => {
+                            e.preventDefault();
+                          }}
+                          name="lote"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                        >
+                          {lotes}
+                        </Field>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="offset-6 col-3 text-right">
+                      <Field
+                        component={Select}
+                        name="visao_por"
+                        naoDesabilitarPrimeiraOpcao
+                        onChange={event =>
+                          this.filtrar(event.target.value, filtros)
+                        }
+                        placeholder={"Filtro por"}
+                        options={visaoPorCombo}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="row pt-3">
                   <div className="col-12">

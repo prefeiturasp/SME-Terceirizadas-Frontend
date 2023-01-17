@@ -190,6 +190,8 @@ import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastrados
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
+import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
+import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 
 const routesConfig = [
   {
@@ -624,13 +626,24 @@ const routesConfig = [
     path: `/configuracoes/cadastros/empresas-cadastradas`,
     component: EmpresasCadastradas,
     exact: false,
-    tipoUsuario: usuarioEhQualquerCODAE() || usuarioEhLogistica()
+    tipoUsuario:
+      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
-    tipoUsuario: usuarioEhQualquerCODAE() || usuarioEhLogistica()
+    tipoUsuario:
+      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDITAR_EMPRESA
+    }`,
+    component: EditarEmpresaPage,
+    exact: false,
+    tipoUsuario:
+      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
@@ -706,6 +719,15 @@ const routesConfig = [
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.PRODUTOS
+    }`,
+    component: CadastroProdutosCronograma,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
+  },
+
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.EMBALAGEM
@@ -1327,7 +1349,7 @@ const routesConfig = [
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
     component: RelatorioDietaEspecial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${

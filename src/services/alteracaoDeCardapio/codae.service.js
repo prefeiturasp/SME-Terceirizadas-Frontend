@@ -3,22 +3,14 @@ import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import { ErrorHandlerFunction } from "services/service-helpers";
 import { getPath } from "./helper";
 
-export const codaeListarSolicitacoesDeAlteracaoDeCardapio = (
+export const codaeListarSolicitacoesDeAlteracaoDeCardapio = async (
   filtroAplicado,
-  tipoSolicitacao
+  tipoSolicitacao,
+  paramsFromPrevPage
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json(); //FIXME: map results as tipoSolicitacao
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  return response.data;
 };
 
 export const codaeListarSolicitacoesDeAlteracaoDeCardapioReprovadas = tipoSolicitacao => {

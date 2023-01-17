@@ -64,7 +64,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
                   <div>{lancamento && lancamento.lanche_4h}</div>
                 )}
                 {panorama.horas_atendimento !== 4 && (
-                  <div>{lancamento && lancamento.lanche_5h}</div>
+                  <div>{lancamento && lancamento.lanche}</div>
                 )}
                 <div>{get(lancamento, "refeicoes.0.ref_oferta")}</div>
                 <div>{get(lancamento, "refeicoes.0.ref_repet")}</div>
@@ -92,7 +92,7 @@ const Lancamentos = ({ lancamentos, panorama, totaisAbsolutos }) => {
             <div>{totaisAbsolutos && totaisAbsolutos.lanche_4h}</div>
           )}
           {panorama.horas_atendimento !== 4 && (
-            <div>{totaisAbsolutos && totaisAbsolutos.lanche_5h}</div>
+            <div>{totaisAbsolutos && totaisAbsolutos.lanche}</div>
           )}
           <div>{get(totaisAbsolutos, "refeicoes.0.ref_oferta")}</div>
           <div>{get(totaisAbsolutos, "refeicoes.0.ref_repet")}</div>
@@ -135,7 +135,7 @@ const camposPossiveis = [
   "merenda_seca",
   "kits_lanches",
   "lanche_4h",
-  "lanche_5h",
+  "lanche",
   "refeicoes.0.ref_oferta",
   "refeicoes.0.ref_repet",
   "refeicoes.0.sob_oferta",

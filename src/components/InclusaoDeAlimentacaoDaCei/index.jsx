@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from "react";
-import HTTP_STATUS from "http-status-codes";
-import moment from "moment";
-import {
-  getQuantidadeAlunosFaixaEtaria,
-  iniciarInclusoesDaCEI,
-  atualizarInclusoesDaCEI
-} from "services/inclusaoDeAlimentacao/cei.legacy.service";
-import {
-  criarInclusoesDaCEI,
-  excluirInclusoesDaCei,
-  meusRascunhosDeInclusaoDeAlimentacao
-} from "services/inclusaoDeAlimentacao/cei.legacy.service";
-import { Field, Form } from "react-final-form";
-import InputText from "components/Shareable/Input/InputText";
-import arrayMutators from "final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
-import {
-  agregarDefault,
-  deepCopy,
-  getError,
-  checaSeDataEstaEntre2e5DiasUteis,
-  fimDoCalendario
-} from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { InputComData } from "components/Shareable/DatePicker";
+import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
 import { Select } from "components/Shareable/Select";
-import { required } from "helpers/fieldValidators";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
-import TabelaFaixasCEI from "./TabelaFaixasCEI";
+import arrayMutators from "final-form-arrays";
+import { required } from "helpers/fieldValidators";
+import {
+  agregarDefault,
+  checaSeDataEstaEntre2e5DiasUteis,
+  deepCopy,
+  getError
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Field, Form } from "react-final-form";
+import {
+  atualizarInclusoesDaCEI,
+  criarInclusoesDaCEI,
+  excluirInclusoesDaCei,
+  getQuantidadeAlunosFaixaEtaria,
+  iniciarInclusoesDaCEI,
+  meusRascunhosDeInclusaoDeAlimentacao
+} from "services/inclusaoDeAlimentacao/cei.legacy.service";
 import { formataPayload, validarForm } from "./helper";
 import { Rascunhos } from "./Rascunhos";
-import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
-import ModalDataPrioritaria from "components/Shareable/ModalDataPrioritaria";
+import TabelaFaixasCEI from "./TabelaFaixasCEI";
 
-import "./style.scss";
+import {
+  AdicionarDia,
+  DataInclusaoNormal,
+  OutroMotivo
+} from "components/InclusaoDeAlimentacao/Escola/Formulario/componentes/InclusaoNormal";
 import CardMatriculados from "components/Shareable/CardMatriculados";
+import { FieldArray } from "react-final-form-arrays";
+import "./style.scss";
 
 export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
   const {
@@ -53,7 +53,6 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   const [faixasEtarias, setFaixasEtarias] = useState(null);
   const [alunosMatriculados, setAlunosMatriculados] = useState(null);
-  const [motivoSelecionado, setMotivoSelecionado] = useState(null);
   const [rascunhos, setRascunhos] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -61,6 +60,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   const valoresIniciais = {
     escola: meusDados.vinculo_atual.instituicao.uuid,
+    dias_motivos_da_inclusao_cei: [{ motivo: undefined }],
     inclusoes: periodos.map(periodo => {
       return {
         periodo_uuid: periodo.uuid,
@@ -74,6 +74,8 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   useEffect(() => {
     getRascunhos();
+    getFaixasEtariasPorPeriodoAsync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const refresh = form => {
@@ -96,9 +98,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     };
     form.change("escola", values.escola);
     form.change("inclusoes", values.inclusoes);
-    form.change("data", undefined);
-    form.change("motivo", undefined);
-    form.change("outro_motivo", undefined);
+    form.change("dias_motivos_da_inclusao_cei", [{ motivo: undefined }]);
     form.change("uuid", undefined);
   };
 
@@ -124,11 +124,16 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
       faixa.quantidade_alunos = element.quantidade_alunos;
     });
     form.change("inclusoes", _values.inclusoes);
-    form.change("data", inclusao.data);
-    form.change("motivo", inclusao.motivo.uuid);
-    form.change("outro_motivo", inclusao.outro_motivo);
     form.change("uuid", inclusao.uuid);
     form.change("escola", inclusao.escola.uuid);
+    form.change(
+      "dias_motivos_da_inclusao_cei",
+      inclusao.dias_motivos_da_inclusao_cei.map(dia_motivo => ({
+        motivo: dia_motivo.motivo.uuid,
+        outro_motivo: dia_motivo.outro_motivo,
+        data: dia_motivo.data
+      }))
+    );
   };
 
   const removerRascunho = async (id_externo, uuid, form) => {
@@ -223,6 +228,34 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
+  const outroMotivoSelecionado = (values, index) => {
+    return (
+      values.dias_motivos_da_inclusao_cei &&
+      values.dias_motivos_da_inclusao_cei[index] &&
+      values.dias_motivos_da_inclusao_cei[index].motivo &&
+      motivos.find(
+        motivo =>
+          motivo.uuid === values.dias_motivos_da_inclusao_cei[index].motivo
+      ) &&
+      motivos
+        .find(
+          motivo =>
+            motivo.uuid === values.dias_motivos_da_inclusao_cei[index].motivo
+        )
+        .nome.includes("Outro")
+    );
+  };
+
+  const motivoSelecionado = values => {
+    return (
+      values.dias_motivos_da_inclusao_cei &&
+      values.dias_motivos_da_inclusao_cei[0].motivo &&
+      motivos.find(
+        motivo => motivo.uuid === values.dias_motivos_da_inclusao_cei[0].motivo
+      )
+    );
+  };
+
   return (
     <div>
       <Form
@@ -233,7 +266,15 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
         initialValues={valoresIniciais}
         onSubmit={onSubmit}
       >
-        {({ handleSubmit, submitting, form, values }) => (
+        {({
+          handleSubmit,
+          submitting,
+          form,
+          form: {
+            mutators: { push }
+          },
+          values
+        }) => (
           <form onSubmit={handleSubmit}>
             <Field component={"input"} type="hidden" name="uuid" />
             <CardMatriculados
@@ -262,126 +303,112 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
                 <div className="card-title font-weight-bold">
                   Descrição da Inclusão de Alimentação
                 </div>
-                <div className="row">
-                  <div className="col-8">
-                    <Field
-                      component={Select}
-                      name="motivo"
-                      label="Motivo"
-                      options={agregarDefault(motivos)}
-                      naoDesabilitarPrimeiraOpcao
-                      validate={required}
-                      required
+                <FieldArray name="dias_motivos_da_inclusao_cei">
+                  {({ fields }) =>
+                    fields.map((name, index) => (
+                      <div key={name}>
+                        <div className="row">
+                          <div className="col-6">
+                            <Field
+                              component={Select}
+                              name={`${name}.motivo`}
+                              label="Motivo"
+                              options={agregarDefault(motivos)}
+                              required
+                              validate={required}
+                              naoDesabilitarPrimeiraOpcao
+                            />
+                          </div>
+                          <DataInclusaoNormal
+                            name={name}
+                            nameFieldArray="dias_motivos_da_inclusao_cei"
+                            onDataChanged={onDataChanged}
+                            values={values}
+                            index={index}
+                            proximosDoisDiasUteis={proximosDoisDiasUteis}
+                            form={form}
+                          />
+                        </div>
+                        {outroMotivoSelecionado(values, index) && (
+                          <div className="mt-3">
+                            <OutroMotivo name={name} />
+                          </div>
+                        )}
+                        <hr />
+                      </div>
+                    ))
+                  }
+                </FieldArray>
+                {motivoSelecionado(values) && (
+                  <div className="mt-3">
+                    <AdicionarDia
+                      push={push}
+                      nameFieldArray="dias_motivos_da_inclusao_cei"
                     />
-                    <OnChange name="motivo">
-                      {async value => {
-                        const obj = motivos.find(m => m.uuid === value);
-                        if (obj) {
-                          setMotivoSelecionado(obj.nome);
-                        } else {
-                          setMotivoSelecionado(null);
-                        }
-                      }}
-                    </OnChange>
-                  </div>
-                  <div className="col-4">
-                    <Field
-                      className="input-data"
-                      component={InputComData}
-                      label="Dia"
-                      name="data"
-                      required
-                      validate={required}
-                      minDate={proximosDoisDiasUteis}
-                      maxDate={fimDoCalendario()}
-                    />
-                    <OnChange name="data">
-                      {async value => {
-                        onDataChanged(value);
-                        getFaixasEtariasPorPeriodoAsync(value);
-                      }}
-                    </OnChange>
-                  </div>
-                </div>
-                {motivoSelecionado && motivoSelecionado === "Outro" && (
-                  <div className="row mt-2">
-                    <div className="col-12">
-                      <Field
-                        component={InputText}
-                        label="Qual o motivo?"
-                        name="outro_motivo"
-                        required
-                        validate={required}
-                      />
-                    </div>
                   </div>
                 )}
-                {values.data && (
-                  <>
-                    <div className="row my-2">
-                      <div className="col-12">
-                        <p>Períodos</p>
-                      </div>
-                      <div className="col-12">
-                        <label
-                          style={{
-                            background: "#D4FFE0",
-                            border: `1px solid #DADADA`,
-                            borderRadius: "5px",
-                            marginBottom: "1%",
-                            width: "100%",
-                            padding: "8px 15px",
-                            height: "40px"
-                          }}
-                        >
-                          <Field
-                            component={"input"}
-                            type="checkbox"
-                            checked
-                            name="periodo_cei"
-                          />
-                          <span
-                            className="checkbox-custom"
-                            data-cy={`checkbox-INTEGRAL`}
-                          />
-                          INTEGRAL
-                        </label>
+                <div className="row my-2">
+                  <div className="col-12">
+                    <p>Períodos</p>
+                  </div>
+                  <div className="col-12">
+                    <label
+                      style={{
+                        background: "#D4FFE0",
+                        border: `1px solid #DADADA`,
+                        borderRadius: "5px",
+                        marginBottom: "1%",
+                        width: "100%",
+                        padding: "8px 15px",
+                        height: "40px"
+                      }}
+                    >
+                      <Field
+                        component={"input"}
+                        type="checkbox"
+                        checked
+                        name="periodo_cei"
+                      />
+                      <span
+                        className="checkbox-custom"
+                        data-cy={`checkbox-INTEGRAL`}
+                      />
+                      INTEGRAL
+                    </label>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="container-fluid">
+                      Selecione o período da Inclusão da Alimentação
+                    </div>
+                  </div>
+                </div>
+                {erro ? (
+                  <div className="row">
+                    <div className="col-12">
+                      <div className="container-fluid">
+                        Erro ao carregar faixas etárias. Tente novamente mais
+                        tarde.
                       </div>
                     </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-fluid">
-                          Selecione o período da Inclusão da Alimentação
-                        </div>
-                      </div>
-                    </div>
-                    {erro ? (
-                      <div className="row">
-                        <div className="col-12">
-                          <div className="container-fluid">
-                            Erro ao carregar faixas etárias. Tente novamente
-                            mais tarde.
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      periodos.map((periodo, periodoIndice) => {
-                        return (
-                          <TabelaFaixasCEI
-                            key={periodoIndice}
-                            values={values}
-                            form={form}
-                            periodoIndice={periodoIndice}
-                            periodo={periodo}
-                            faixasEtarias={faixasEtarias}
-                            alunosMatriculados={alunosMatriculados}
-                            todasFaixas={todasFaixas}
-                            vinculosAlimentacao={vinculosAlimentacao}
-                          />
-                        );
-                      })
-                    )}
-                  </>
+                  </div>
+                ) : (
+                  periodos.map((periodo, periodoIndice) => {
+                    return (
+                      <TabelaFaixasCEI
+                        key={periodoIndice}
+                        values={values}
+                        form={form}
+                        periodoIndice={periodoIndice}
+                        periodo={periodo}
+                        faixasEtarias={faixasEtarias}
+                        alunosMatriculados={alunosMatriculados}
+                        todasFaixas={todasFaixas}
+                        vinculosAlimentacao={vinculosAlimentacao}
+                      />
+                    );
+                  })
                 )}
                 <div className="row float-right mt-4">
                   <div className="col-12">

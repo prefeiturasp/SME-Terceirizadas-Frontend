@@ -276,7 +276,7 @@ table.cadastro-empresa {
     }
   }
   .detalhe-empresa {
-    background-color: #f2fbfe;
+    background-color: #fff;
     font-weight: bold;
 
     td {
@@ -286,7 +286,7 @@ table.cadastro-empresa {
   }
   tr {
     td.container-detalhe {
-      background: #f2fbfe;
+      background: #fff;
       padding: 0px 20px 15px 20px;
 
       .secao-empresa {
@@ -294,16 +294,21 @@ table.cadastro-empresa {
 
         .endereco-empresa {
           display: grid;
-          grid-template-columns: 25% 25% 25% 25%;
+          grid-template-columns: 50% 50%;
         }
         .endereco-empresa-top {
           display: grid;
-          grid-template-columns: 25% 50% 25%;
+          grid-template-columns: 50% 50%;
         }
         .contato-empresa {
           margin-top: 2%;
           display: grid;
           grid-template-columns: 33% 33% 33%;
+        }
+        .contrato-empresa {
+          margin-top: 2%;
+          display: grid;
+          grid-template-columns: 50% 50%;
         }
       }
 

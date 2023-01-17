@@ -14,9 +14,11 @@ import {
 } from "constants/shared";
 import {
   formataClassificacoes,
+  formataDiagnosticos,
   formataLotes,
   formataProtocolos
 } from "helpers/terceirizadas";
+import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, reduxForm } from "redux-form";
@@ -36,8 +38,12 @@ const BuscaDietasForm = ({
   setClassificacoesSelecionadas,
   protocolosSelecionados,
   setProtocolosSelecionados,
+  diagnosticosSelecionados,
+  setDiagnosticosSelecionados,
   terceirizadaUuid,
   setTerceirizadaUuid,
+  nutriSupervisao,
+  setNutriSupervisao,
   dataInicial,
   setDataInicial,
   dataFinal,
@@ -56,6 +62,8 @@ const BuscaDietasForm = ({
   const [lotesNoFiltro, setLotesNoFiltro] = useState([]);
   const [protocolosInicio, setProtocolosInicio] = useState([]);
   const [protocolosNoFiltro, setProtocolosNoFiltro] = useState([]);
+  const [diagnosticosInicio, setdiagnosticosInicio] = useState([]);
+  const [diagnosticoNoFiltro, setDiagnosticoNoFiltro] = useState([]);
   const [classificacoesInicio, setClassificacoesInicio] = useState([]);
   const [classificacoesNoFiltro, setClassificacoesNoFiltro] = useState([]);
 
@@ -67,6 +75,12 @@ const BuscaDietasForm = ({
       response.tipo_usuario.toString() === TIPO_USUARIO.TERCEIRIZADA
     ) {
       setTerceirizadaUuid(response.vinculo_atual.instituicao.uuid);
+      setCarregando(false);
+    } else if (
+      response.tipo_usuario &&
+      response.tipo_usuario.toString() === TIPO_USUARIO.NUTRICIONISTA_SUPERVISAO
+    ) {
+      setNutriSupervisao(true);
       setCarregando(false);
     }
   };
@@ -129,6 +143,28 @@ const BuscaDietasForm = ({
     setProtocolosNoFiltro(protocolosFormatados);
   };
 
+  const diagnosticosRelacionadosADietas = dietas => {
+    let diagnosticosRelacionados = [];
+    dietas.forEach(dieta => {
+      if (dieta.alergias_intolerancias.length > 0) {
+        dieta.alergias_intolerancias.map(
+          alergia_intolerancia =>
+            !(
+              diagnosticosRelacionados.filter(
+                alergia_intolerancia_2 =>
+                  alergia_intolerancia_2.id === alergia_intolerancia.id
+              ).length > 0
+            ) && diagnosticosRelacionados.push(alergia_intolerancia)
+        );
+      }
+    });
+    const diagnosticosFormatados = formataDiagnosticos(
+      diagnosticosRelacionados
+    );
+    setdiagnosticosInicio(diagnosticosFormatados);
+    setDiagnosticoNoFiltro(diagnosticosFormatados);
+  };
+
   const onChangeStatus = async value => {
     const data = { terceirizada_uuid: terceirizadaUuid };
     setCarregandoFiltros(true);
@@ -137,18 +173,25 @@ const BuscaDietasForm = ({
     setClassificacoesNoFiltro([]);
     setClassificacoesSelecionadas([]);
     setProtocolosNoFiltro([]);
+    setDiagnosticoNoFiltro([]);
     setProtocolosSelecionados([]);
+    setDiagnosticosSelecionados([]);
     setStatusSelecionado(true);
     setDietasFiltradas([]);
     setFiltragemRealizada(false);
     setStatus(value.toUpperCase());
     if (value.toUpperCase() === STATUS_DIETAS.AUTORIZADAS.toUpperCase()) {
       data["status"] = value;
-      const response = await getSolicitacoesRelatorioDietasEspeciais(data);
+      let response = [];
+      if (nutriSupervisao) {
+        delete data["terceirizada_uuid"];
+      }
+      response = await getSolicitacoesRelatorioDietasEspeciais(data);
       const dietasAutorizadas = response.data;
       lotesRelacionadosADietas(dietasAutorizadas);
       classificacoesRelacionadasADietas(dietasAutorizadas);
       protocolosRelacionadosADietas(dietasAutorizadas);
+      diagnosticosRelacionadosADietas(dietasAutorizadas);
       setDietasEspeciais(response.data);
       setMostrarFiltrosAutorizadas(true);
       setMostrarFiltrosCanceladas(false);
@@ -161,6 +204,7 @@ const BuscaDietasForm = ({
       lotesRelacionadosADietas(dietasCanceladas);
       classificacoesRelacionadasADietas(dietasCanceladas);
       protocolosRelacionadosADietas(dietasCanceladas);
+      diagnosticosRelacionadosADietas(dietasCanceladas);
       setDietasEspeciais(response.data);
       setMostrarFiltrosCanceladas(true);
       setMostrarFiltrosAutorizadas(false);
@@ -185,6 +229,7 @@ const BuscaDietasForm = ({
     setLotesSelecionados(values);
     let classificacoesFiltradasPorProtocolos = [];
     let protocolosFiltradosPorClassificacoes = [];
+    let diagnosticosFiltradosPorClassificacoes = [];
 
     values.forEach(value => {
       classificacoesFiltradasPorProtocolos.push(
@@ -200,6 +245,16 @@ const BuscaDietasForm = ({
         .forEach(protocolo => {
           protocolosFiltradosPorClassificacoes.push(protocolo);
         });
+      dietasEspeciais
+        .filter(dieta => dieta.rastro_lote.uuid === value)
+        .map(dieta => dieta.alergias_intolerancias)
+        .map(alergias_intolerancias => {
+          return alergias_intolerancias.map(alergia_intolerancia =>
+            diagnosticosFiltradosPorClassificacoes.push(
+              alergia_intolerancia.descricao
+            )
+          );
+        });
     });
 
     classificacoesFiltradasPorProtocolos = [
@@ -208,10 +263,14 @@ const BuscaDietasForm = ({
     protocolosFiltradosPorClassificacoes = [
       ...new Set(protocolosFiltradosPorClassificacoes)
     ];
+    diagnosticosFiltradosPorClassificacoes = [
+      ...new Set(diagnosticosFiltradosPorClassificacoes)
+    ];
 
     if (values.length === 0) {
       setClassificacoesNoFiltro(classificacoesInicio);
       setProtocolosNoFiltro(protocolosInicio);
+      setDiagnosticoNoFiltro(diagnosticosInicio);
       return;
     }
 
@@ -230,6 +289,14 @@ const BuscaDietasForm = ({
       );
     });
 
+    const diagnosticosFiltrados = diagnosticosInicio.filter(diagnostico => {
+      return (
+        diagnosticosFiltradosPorClassificacoes.includes(diagnostico.value) &&
+        diagnostico
+      );
+    });
+
+    setDiagnosticoNoFiltro(diagnosticosFiltrados);
     setClassificacoesNoFiltro(classificacoesFiltradas);
     setProtocolosNoFiltro(protocolosFiltrados);
   };
@@ -251,6 +318,7 @@ const BuscaDietasForm = ({
     setClassificacoesSelecionadas(values);
     let protocolosFiltradosPorClassificacoes = [];
     let lotesFiltradosPorProtocolos = [];
+    let diagnosticosFiltradosPorClassificacoes = [];
 
     values.forEach(value => {
       dietasEspeciais
@@ -269,16 +337,33 @@ const BuscaDietasForm = ({
         .forEach(lote => {
           lotesFiltradosPorProtocolos.push(lote);
         });
+
+      dietasEspeciais
+        .filter(
+          dieta => dieta.classificacao && dieta.classificacao.id === value
+        )
+        .map(dieta => dieta.alergias_intolerancias)
+        .map(alergias_intolerancias => {
+          return alergias_intolerancias.map(alergia_intolerancia =>
+            diagnosticosFiltradosPorClassificacoes.push(
+              alergia_intolerancia.descricao
+            )
+          );
+        });
     });
 
     protocolosFiltradosPorClassificacoes = [
       ...new Set(protocolosFiltradosPorClassificacoes)
     ];
     lotesFiltradosPorProtocolos = [...new Set(lotesFiltradosPorProtocolos)];
+    diagnosticosFiltradosPorClassificacoes = [
+      ...new Set(diagnosticosFiltradosPorClassificacoes)
+    ];
 
     if (values.length === 0) {
       setProtocolosNoFiltro(protocolosInicio);
       setLotesNoFiltro(lotesInicio);
+      setDiagnosticoNoFiltro(diagnosticosInicio);
       return;
     }
 
@@ -291,9 +376,16 @@ const BuscaDietasForm = ({
     const lotesFiltrados = lotesInicio.filter(lote => {
       return lotesFiltradosPorProtocolos.includes(lote.label) && lote;
     });
+    const diagnosticosFiltrados = diagnosticosInicio.filter(diagnostico => {
+      return (
+        diagnosticosFiltradosPorClassificacoes.includes(diagnostico.value) &&
+        diagnostico
+      );
+    });
 
     setProtocolosNoFiltro(protocolosFiltrados);
     setLotesNoFiltro(lotesFiltrados);
+    setDiagnosticoNoFiltro(diagnosticosFiltrados);
   };
 
   const renderizarLabelProtocolo = (selected, options) => {
@@ -307,6 +399,73 @@ const BuscaDietasForm = ({
       return `${selected.length} protocolo selecionado`;
     }
     return `${selected.length} protocolos selecionados`;
+  };
+
+  const renderizarLabelDiagnostico = (selected, options) => {
+    if (selected.length === 0) {
+      return "Selecione";
+    }
+    if (selected.length === options.length) {
+      return "Todos os diagnósticos selecionados";
+    }
+    if (selected.length === 1) {
+      return `${selected.length} diagnóstico selecionado`;
+    }
+    return `${selected.length} diagnósticos selecionados`;
+  };
+
+  const onChangeDiagnosticosSelecionados = values => {
+    setDiagnosticosSelecionados(values);
+    let classificacoesFiltradasPorDiagnostico = [];
+    let lotesFiltradosPorDiagnosticos = [];
+
+    values.forEach(value => {
+      classificacoesFiltradasPorDiagnostico.push(
+        dietasEspeciais
+          .filter(dieta => {
+            return dieta.alergias_intolerancias.some(
+              alergia_intolerancia => alergia_intolerancia.descricao === value
+            );
+          })
+          .map(dieta => dieta.classificacao.id)[0]
+      );
+      dietasEspeciais
+        .filter(dieta => {
+          return dieta.alergias_intolerancias.some(
+            alergia_intolerancia => alergia_intolerancia.descricao === value
+          );
+        })
+        .map(dieta => dieta.rastro_lote.nome)
+        .forEach(lote => {
+          lotesFiltradosPorDiagnosticos.push(lote);
+        });
+    });
+    classificacoesFiltradasPorDiagnostico = [
+      ...new Set(classificacoesFiltradasPorDiagnostico)
+    ];
+    lotesFiltradosPorDiagnosticos = [...new Set(lotesFiltradosPorDiagnosticos)];
+
+    if (values.length === 0) {
+      setClassificacoesNoFiltro(classificacoesInicio);
+      setLotesNoFiltro(lotesInicio);
+      setDiagnosticoNoFiltro(diagnosticosInicio);
+      return;
+    }
+
+    const classificacoesFiltradas = classificacoesInicio.filter(
+      classificacao => {
+        return (
+          classificacoesFiltradasPorDiagnostico.includes(classificacao.value) &&
+          classificacao
+        );
+      }
+    );
+    const lotesFiltrados = lotesInicio.filter(lote => {
+      return lotesFiltradosPorDiagnosticos.includes(lote.label) && lote;
+    });
+
+    setClassificacoesNoFiltro(classificacoesFiltradas);
+    setLotesNoFiltro(lotesFiltrados);
   };
 
   const onChangeProtocolosSelecionados = values => {
@@ -362,6 +521,7 @@ const BuscaDietasForm = ({
     setLotesSelecionados([]);
     setClassificacoesSelecionadas([]);
     setProtocolosSelecionados([]);
+    setDiagnosticosSelecionados([]);
     setMostrarFiltrosAutorizadas(false);
     setMostrarFiltrosCanceladas(false);
     setDietasFiltradas([]);
@@ -390,6 +550,13 @@ const BuscaDietasForm = ({
       dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
         protocolosSelecionados.includes(dieta.nome_protocolo)
       );
+    }
+    if (diagnosticosSelecionados.length) {
+      dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta => {
+        return dieta.alergias_intolerancias.some(alergia_intolerancia =>
+          diagnosticosSelecionados.includes(alergia_intolerancia.descricao)
+        );
+      });
     }
     setDietasFiltradas(dietasEspeciaisCopy);
     if (dataInicial && dataFinal) {
@@ -544,34 +711,65 @@ const BuscaDietasForm = ({
                     </div>
                   )}
                 </div>
-                <div className="col-4">
-                  <label className="label font-weight-normal pb-2 pt-2">
-                    Protocolo padrão:
-                  </label>
-                  {protocolosNoFiltro.length ? (
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="protocolo_padrao"
-                      options={protocolosNoFiltro}
-                      valueRenderer={renderizarLabelProtocolo}
-                      selected={protocolosSelecionados}
-                      onSelectedChanged={value =>
-                        onChangeProtocolosSelecionados(value)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                    />
-                  ) : (
-                    <div className="font-weight-normal pt-2">
-                      Carregando protocolos..
-                    </div>
-                  )}
-                </div>
+                {!usuarioEhNutricionistaSupervisao() ? (
+                  <div className="col-4">
+                    <label className="label font-weight-normal pb-2 pt-2">
+                      Protocolo padrão:
+                    </label>
+                    {protocolosNoFiltro.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="protocolo_padrao"
+                        options={protocolosNoFiltro}
+                        valueRenderer={renderizarLabelProtocolo}
+                        selected={protocolosSelecionados}
+                        onSelectedChanged={value =>
+                          onChangeProtocolosSelecionados(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="font-weight-normal pt-2">
+                        Carregando protocolos..
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="col-4">
+                    <label className="label font-weight-normal pb-2 pt-2">
+                      Relação por Diagnóstico:
+                    </label>
+                    {diagnosticoNoFiltro.length ? (
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="diagnostico"
+                        options={diagnosticoNoFiltro}
+                        valueRenderer={renderizarLabelDiagnostico}
+                        selected={diagnosticosSelecionados}
+                        onSelectedChanged={value =>
+                          onChangeDiagnosticosSelecionados(value)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                      />
+                    ) : (
+                      <div className="font-weight-normal pt-2">
+                        Carregando diagnosticos..
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               <div

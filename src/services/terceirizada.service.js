@@ -12,8 +12,11 @@ const authToken = {
   "Content-Type": "application/json"
 };
 
-export const getTerceirizada = () => {
-  const url = `${API_URL}/terceirizadas/`;
+export const getTerceirizada = (filtros = null) => {
+  let url = `${API_URL}/terceirizadas/`;
+  if (filtros) {
+    url += `?${filtros}`;
+  }
   let status = 0;
   return fetch(url, {
     headers: authToken,
@@ -111,6 +114,9 @@ export const updateTerceirizada = (uuid, payload) => {
     });
 };
 
+export const encerraContratoTerceirizada = async uuid =>
+  await axios.patch(`/contratos/${uuid}/encerrar-contrato/`);
+
 export const getRelatorioQuantitativo = async params => {
   if (params) {
     return await axios.get(ENDPOINT_RELATORIO_QUANTITATIVO, { params });
@@ -131,6 +137,9 @@ export const getPdfRelatorioQuantitativo = async params => {
 
 export const getArmazens = async () =>
   await axios.get("/terceirizadas/lista-armazens/");
+
+export const getCNPJsEmpresas = async () =>
+  await axios.get("/terceirizadas/lista-cnpjs/");
 
 export const getEmailsTerceirizadasPorModulo = async params => {
   const url = `/terceirizadas/emails-por-modulo/`;

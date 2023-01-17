@@ -141,6 +141,7 @@ export const CADASTROS = "cadastros";
 export const EDITAIS_CONTRATOS = "editais-contratos";
 export const EDITAIS_CADASTRADOS = "editais-cadastrados";
 export const EMPRESA = "empresa";
+export const EDITAR_EMPRESA = "editar-empresa";
 export const EMPRESAS_CADASTRADAS = "empresas-cadastradas";
 export const FAIXAS_ETARIAS = "faixas-etarias";
 export const SOBREMESA_DOCE = "sobremesa-doce";
@@ -191,6 +192,7 @@ export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
+export const PRODUTOS = "produtos";
 
 // Status dos pedidos
 

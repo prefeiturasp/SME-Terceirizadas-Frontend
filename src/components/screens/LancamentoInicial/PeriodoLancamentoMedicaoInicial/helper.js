@@ -1,6 +1,6 @@
 export const formatarPayloadPeriodoLancamento = (
   values,
-  tableAlimentacaoRows,
+  tabelaAlimentacaoRows,
   tabelaDietaEnteralRows,
   dadosIniciaisFiltered
 ) => {
@@ -25,7 +25,7 @@ export const formatarPayloadPeriodoLancamento = (
     const idCategoria = categoria.match(/\d/g).join("");
     const dia = keySplitted[1].match(/\d/g).join("");
     const nome_campo = keySplitted[0];
-    let tipoAlimentacao = tableAlimentacaoRows.find(
+    let tipoAlimentacao = tabelaAlimentacaoRows.find(
       alimentacao => alimentacao.name === nome_campo
     );
 
