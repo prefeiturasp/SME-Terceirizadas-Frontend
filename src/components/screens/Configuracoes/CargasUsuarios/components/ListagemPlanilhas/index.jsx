@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import { OPTIONS_STATUS } from "../../constants";
 import { Tooltip } from "antd";
+import { saveAs } from "file-saver";
 
 const ListagemPlanilhas = ({
   planilhas,
@@ -22,7 +23,7 @@ const ListagemPlanilhas = ({
   };
 
   const downloadArquivo = url => {
-    window.open(url, "_blank", "noreferrer");
+    saveAs(url);
   };
 
   return (
