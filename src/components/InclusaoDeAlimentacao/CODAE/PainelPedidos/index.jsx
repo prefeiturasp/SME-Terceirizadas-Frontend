@@ -205,7 +205,9 @@ class PainelPedidos extends Component {
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          placeholder="Filtrar por Lote"
+                          onBlur={e => {
+                            e.preventDefault();
+                          }}
                           name="lote"
                           filterOption={(inputValue, option) =>
                             option.props.children

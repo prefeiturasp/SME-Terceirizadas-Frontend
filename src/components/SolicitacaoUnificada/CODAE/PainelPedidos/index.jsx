@@ -27,7 +27,10 @@ class PainelPedidos extends Component {
       pedidosNoPrazoLimite: [],
       pedidosNoPrazoRegular: [],
       pedidosCarregados: false,
-      filtros: this.props.filtros || { lote: [], diretoria_regional: [] },
+      filtros: this.props.filtros || {
+        lote: undefined,
+        diretoria_regional: undefined
+      },
       lotes: [],
       diretoriasRegionais: []
     };
@@ -64,7 +67,11 @@ class PainelPedidos extends Component {
         return <Option key={lote.value}>{lote.label}</Option>;
       });
       this.setState({
-        lotes: lotes_
+        lotes: [
+          <Option value="" key={0}>
+            Filtrar por Lote
+          </Option>
+        ].concat(lotes_)
       });
     }
   }
@@ -77,7 +84,11 @@ class PainelPedidos extends Component {
         return <Option key={dre.value}>{dre.label}</Option>;
       });
       this.setState({
-        diretoriasRegionais: dres
+        diretoriasRegionais: [
+          <Option value="" key={0}>
+            Filtrar por DRE
+          </Option>
+        ].concat(dres)
       });
     }
   }
@@ -94,6 +105,13 @@ class PainelPedidos extends Component {
       diretoria_regional: []
     };
     this.filtrar(FiltroEnum.SEM_FILTRO, paramsFromPrevPage);
+    if (this.props.filtros) {
+      this.props.change(
+        "diretoria_regional",
+        this.props.filtros.diretoria_regional
+      );
+      this.props.change("lote", this.props.filtros.lote);
+    }
   }
 
   onFiltroSelected(value) {
@@ -139,13 +157,15 @@ class PainelPedidos extends Component {
                           showSearch
                           onChange={value => {
                             const filtros_ = {
-                              diretoria_regional: value,
+                              diretoria_regional: value || undefined,
                               lote: filtros.lote
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          placeholder="Filtrar por DRE"
+                          onBlur={e => {
+                            e.preventDefault();
+                          }}
                           name="diretoria_regional"
                           filterOption={(inputValue, option) =>
                             option.props.children
@@ -164,12 +184,14 @@ class PainelPedidos extends Component {
                           onChange={value => {
                             const filtros_ = {
                               diretoria_regional: filtros.diretoria_regional,
-                              lote: value
+                              lote: value || undefined
                             };
                             this.setFiltros(filtros_);
                             this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
                           }}
-                          placeholder="Filtrar por Lote"
+                          onBlur={e => {
+                            e.preventDefault();
+                          }}
                           name="lote"
                           filterOption={(inputValue, option) =>
                             option.props.children
