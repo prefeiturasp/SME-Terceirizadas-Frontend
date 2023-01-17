@@ -25,7 +25,6 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
-import { ENVIRONMENT } from "constants/config";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
 import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
@@ -131,7 +130,6 @@ const Relatorio = ({ visao }) => {
     loadSolicitacao(uuid);
     tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       card === "pendentes-aut" &&
-      ENVIRONMENT !== "production" &&
       initSocket(uuid);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
