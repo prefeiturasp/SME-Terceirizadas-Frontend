@@ -242,6 +242,7 @@ export const FormBuscaProduto = ({
                 >
                   {usuarioEhDRE() ? (
                     <>
+                      <span className="required-asterisk">*</span>
                       <label className="mb-1 mt-2">Edital</label>
                       <Field
                         component={ASelect}
@@ -260,6 +261,7 @@ export const FormBuscaProduto = ({
                     </>
                   ) : (
                     <>
+                      <span className="required-asterisk">*</span>
                       <label className="mb-1 mt-2">Edital</label>
                       <Field
                         component={AutoCompleteField}
