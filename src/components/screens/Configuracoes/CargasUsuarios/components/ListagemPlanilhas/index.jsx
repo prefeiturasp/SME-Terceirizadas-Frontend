@@ -22,7 +22,7 @@ const ListagemPlanilhas = ({
   };
 
   const downloadArquivo = url => {
-    window.open(url);
+    window.open(url, "_blank", "noreferrer");
   };
 
   return (
