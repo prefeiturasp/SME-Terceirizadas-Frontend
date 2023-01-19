@@ -53,6 +53,10 @@ const login = async (login, password) => {
               JSON.stringify(result_.vinculo_atual.perfil.nome)
             );
             localStorage.setItem(
+              "visao_perfil",
+              JSON.stringify(result_.vinculo_atual.perfil.visao)
+            );
+            localStorage.setItem(
               "tipo_gestao",
               JSON.stringify(result_.vinculo_atual.instituicao.tipo_gestao)
             );

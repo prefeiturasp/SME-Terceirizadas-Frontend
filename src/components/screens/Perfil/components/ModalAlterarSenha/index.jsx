@@ -6,6 +6,7 @@ import {
   BUTTON_STYLE
 } from "./../../../../Shareable/Botao/constants";
 import Botao from "../../../../Shareable/Botao";
+import { InfoSenhaServidorMunicipal } from "../../../../Shareable/InfoSenhaServidorMunicipal";
 import RequisitosSenha from "../../../../Shareable/RequisitosSenha";
 import InputText from "../../../../Shareable/Input/InputText";
 import { required } from "../../../../../helpers/fieldValidators";
@@ -32,6 +33,7 @@ export class ModalAlterarSenha extends Component {
 
   render() {
     const { letra, numero, tamanho } = this.state;
+    const visao_perfil = localStorage.getItem("visao_perfil");
     const { showModal, closeModal, onSubmit } = this.props;
     return (
       <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
@@ -73,6 +75,7 @@ export class ModalAlterarSenha extends Component {
                     validate={required}
                   />
                 </div>
+                {visao_perfil !== `"EMPRESA"` && <InfoSenhaServidorMunicipal />}
               </div>
             </div>
             <div className="col-4 custom-margin">
