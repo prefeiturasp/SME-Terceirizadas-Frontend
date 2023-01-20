@@ -13,7 +13,9 @@ export default ({
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
   onClickInfoBasicas,
-  periodoSelecionado
+  periodoSelecionado,
+  mes,
+  ano
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
@@ -29,8 +31,8 @@ export default ({
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
-      mes: periodoSelecionado.getMonth() + 1,
-      ano: periodoSelecionado.getFullYear()
+      mes,
+      ano
     });
     if (response.status === HTTP_STATUS.OK) {
       setPeriodosInclusaoContinua(response.data.periodos);
@@ -42,7 +44,7 @@ export default ({
   };
 
   useEffect(() => {
-    periodoSelecionado && getPeriodosInclusaoContinuaAsync();
+    getPeriodosInclusaoContinuaAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodoSelecionado]);
 
