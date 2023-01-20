@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
@@ -7,14 +7,33 @@ import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
+import { ASelect } from "./MakeField";
+import { getNomesUnicosEditais } from "services/produto.service";
 
 const CardBody = props => {
+  const [editais, setEditais] = useState([]);
   const ehTerceirizada = usuarioEhTerceirizada();
   const ehEscola = usuarioEhEscola();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
   const loadingDietas = props.loadingDietas || false;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const listaEditais = await getNomesUnicosEditais();
+        let listaRsultados = listaEditais.data.results;
+        let listaFormatada = listaRsultados.map(element => {
+          return { value: element, label: element };
+        });
+        setEditais(listaFormatada);
+      } catch (erro) {
+        throw erro;
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="card mt-3">
@@ -32,7 +51,7 @@ const CardBody = props => {
                         props.listaStatus &&
                         props.listaLotes) ||
                       ehDashboardGestaoProduto
-                        ? "col-3"
+                        ? "col-12 text-right"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
                         : "col-6"
@@ -43,6 +62,44 @@ const CardBody = props => {
                       Data: <span>{props.dataAtual}</span>
                     </p>
                   </div>
+
+                  {ehDashboardGestaoProduto && (
+                    <div className="col-4 produtos-edital">
+                      {loadingDietas && (
+                        <div>
+                          <Spin
+                            className="carregando-filtro"
+                            tip="Carregando Filtro..."
+                          />
+                        </div>
+                      )}
+                      <Field
+                        className={
+                          exibirFiltrosDataEventoETipoSolicitacao
+                            ? "input-com-filtros-adicionais"
+                            : ""
+                        }
+                        component={ASelect}
+                        showSearch
+                        name="edital"
+                        placeholder={loadingDietas ? "" : "Número do Edital"}
+                        disabled={loadingDietas || filtrosDesabilitados}
+                        options={
+                          editais
+                            ? [{ label: "Número do Edital", value: "" }].concat(
+                                editais
+                              )
+                            : []
+                        }
+                      />
+                      <OnChange name="edital">
+                        {() => {
+                          props.onChange(values);
+                        }}
+                      </OnChange>
+                    </div>
+                  )}
+
                   {!ehEscola && (
                     <div
                       className={`${
@@ -50,6 +107,8 @@ const CardBody = props => {
                           ? "offset-3 col-6"
                           : exibirFiltrosDataEventoETipoSolicitacao
                           ? "col-3"
+                          : ehDashboardGestaoProduto
+                          ? "col-4"
                           : "offset-3 col-3"
                       }`}
                     >
@@ -102,7 +161,7 @@ const CardBody = props => {
                           props.onChange(values);
                         }}
                       </OnChange>
-                      <div className="col-3 pl-0">
+                      <div className="col-3 pl-0 KK">
                         <Field
                           name="data_evento"
                           minDate={null}
@@ -118,7 +177,11 @@ const CardBody = props => {
                     </>
                   )}
                   {ehDashboardGestaoProduto && (
-                    <div className="col-3">
+                    <div
+                      className={`${
+                        ehDashboardGestaoProduto ? "col-4 LL" : "col-3 LL"
+                      }`}
+                    >
                       <Field
                         component={InputText}
                         name="marca"

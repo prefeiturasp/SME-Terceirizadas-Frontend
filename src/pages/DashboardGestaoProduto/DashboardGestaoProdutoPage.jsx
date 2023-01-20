@@ -5,7 +5,7 @@ import Page from "../../components/Shareable/Page/Page";
 
 const DashboardGestaoProdutoPage = props => {
   return (
-    <Page>
+    <Page titulo="Acompanhamento de produtos cadastrados">
       <Breadcrumb home={"/"} />
       <DashboardGestaoProduto {...props} />
     </Page>
