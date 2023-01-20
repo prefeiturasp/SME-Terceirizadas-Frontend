@@ -161,7 +161,7 @@ const CardBody = props => {
                           props.onChange(values);
                         }}
                       </OnChange>
-                      <div className="col-3 pl-0 KK">
+                      <div className="col-3 pl-0">
                         <Field
                           name="data_evento"
                           minDate={null}
@@ -179,7 +179,7 @@ const CardBody = props => {
                   {ehDashboardGestaoProduto && (
                     <div
                       className={`${
-                        ehDashboardGestaoProduto ? "col-4 LL" : "col-3 LL"
+                        ehDashboardGestaoProduto ? "col-4" : "col-3"
                       }`}
                     >
                       <Field
