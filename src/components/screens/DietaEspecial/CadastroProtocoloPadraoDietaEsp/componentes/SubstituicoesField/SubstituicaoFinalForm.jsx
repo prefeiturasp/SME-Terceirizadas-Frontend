@@ -12,6 +12,7 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
+import { Tooltip } from "antd";
 
 import "./style.scss";
 
@@ -59,6 +60,7 @@ const SubstituicoesField = ({
   const [opcoesProdutos, setOpcoesProdutos] = useState(
     formatarOpcoesProdutos(produtos)
   );
+  const [valoresSelecionados, setValoresSelecionados] = useState([]);
 
   return (
     <>
@@ -103,14 +105,32 @@ const SubstituicoesField = ({
           />
         </div>
         <div className="col-4">
-          <Field
-            component={MultiSelect}
-            type="select-multi"
-            name={`${name}.substitutos`}
-            alimentoSelecionado={valorSelecionado}
-            options={opcoesProdutos}
-            validate={required}
-          />
+          <Tooltip
+            title={valoresSelecionados.length > 0 && valoresSelecionados}
+          >
+            <span>
+              <Field
+                component={MultiSelect}
+                type="select-multi"
+                name={`${name}.substitutos`}
+                alimentoSelecionado={valorSelecionado}
+                options={opcoesProdutos}
+                validate={required}
+              />
+              <OnChange name={`${name}.substitutos`}>
+                {values => {
+                  let listaSelecionados = [];
+                  values.forEach(value => {
+                    const produtoSelecionado = produtos.find(
+                      al => String(al.uuid) === value
+                    );
+                    listaSelecionados.push(`${produtoSelecionado.nome}, `);
+                    setValoresSelecionados(listaSelecionados);
+                  });
+                }}
+              </OnChange>
+            </span>
+          </Tooltip>
         </div>
         {deveHabilitarApagar && chave > 0 && (
           <div className="col-1">
