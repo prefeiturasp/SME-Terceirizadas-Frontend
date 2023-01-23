@@ -15,7 +15,7 @@ import {
 import { getListagemCronogramas } from "../../../../services/cronograma.service.js";
 import ListagemCronogramas from "./components/ListagemCronogramas";
 import MeusDadosContext from "context/MeusDadosContext";
-import { getArmazens } from "services/terceirizada.service";
+import { getNomesDistribuidores } from "services/logistica.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -51,7 +51,7 @@ export default () => {
   };
 
   const buscaArmazens = async () => {
-    const response = await getArmazens();
+    const response = await getNomesDistribuidores();
     setArmazens(
       response.data.results.map(armazem => ({
         label: armazem.nome_fantasia,
