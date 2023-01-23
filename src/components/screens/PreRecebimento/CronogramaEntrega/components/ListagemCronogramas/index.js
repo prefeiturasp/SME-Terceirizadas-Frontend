@@ -6,7 +6,8 @@ import {
   CADASTRO_CRONOGRAMA,
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
-  EDITAR
+  EDITAR,
+  ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
@@ -73,7 +74,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                               <span className="ml-1">|</span>
                               <NavLink
                                 className="float-left ml-1"
-                                to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+                                to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${
                                   cronograma.uuid
                                 }`}
                               >
