@@ -10,14 +10,9 @@ import {
 } from "components/Shareable/Botao/constants";
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
-import {
-  getContratoSAFI,
-  getListaTermosContratoSAFI
-} from "services/safi.service";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import createDecorator from "final-form-calculate";
 import { InputComData } from "components/Shareable/DatePicker";
-import { getArmazens } from "services/terceirizada.service";
+import { getNomesDistribuidores } from "services/logistica.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   cadastraCronograma,
@@ -35,21 +30,26 @@ import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
-import TreeSelectForm from "components/Shareable/TreeSelectForm";
+import { getFornecedoresSimples } from "services/terceirizada.service";
+import {
+  getCadastroProdutosEdital,
+  getUnidadesDeMedidaProduto
+} from "services/produto.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [contratoAtual, setContratoAtual] = useState();
-  const [contratos, setContratos] = useState([]);
-  const [contratosOptions, setContratosOptions] = useState([]);
   const [collapse, setCollapse] = useState([]);
-  const [produtosOptions, setProdutosOptions] = useState([]);
-  const [empenhoOptions, setEmpenhoOptions] = useState([]);
+  const [produtosOptions, setProdutosOptions] = useState([{}]);
+  const [unidadesMedidaOptions, setUnidadesMedidaOptions] = useState([{}]);
+  const [empresaSelecionada, setEmpresaSelecionada] = useState(undefined);
+  const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
+  const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [etapas, setEtapas] = useState([{}]);
   const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
+  const [fornecedores, setFornecedores] = useState([{}]);
   const history = useHistory();
   const [listaRascunhos, setListaRascunhos] = useState(null);
   const [duplicados, setDuplicados] = useState([]);
@@ -73,16 +73,17 @@ export default () => {
       toastError("Ocorreu um erro ao tentar carregar a lista de rascunhos.");
     }
   };
+
   const onSubmit = () => {
     setShowModal(true);
   };
 
-  const getContratosFiltrado = termoContrato => {
-    if (termoContrato) {
-      const reg = new RegExp(termoContrato, "iu");
-      return contratosOptions.filter(a => reg.test(a.value));
+  const getEmpresaFiltrado = empresa => {
+    if (empresa) {
+      const reg = new RegExp(empresa, "iu");
+      return fornecedores.filter(a => reg.test(a.value));
     }
-    return contratosOptions;
+    return fornecedores;
   };
 
   const getEtapasFiltrado = etapa => {
@@ -91,103 +92,6 @@ export default () => {
       return etapasOptions.filter(a => reg.test(a.value));
     }
     return etapasOptions;
-  };
-
-  const buscaContrato = async values => {
-    const termo_contrato = values.termo_contrato
-      ? values.termo_contrato
-      : values.contrato;
-
-    if (termo_contrato) {
-      let contrato_find = contratos.find(
-        c => c.termo_contrato === termo_contrato
-      );
-
-      if (!contrato_find) {
-        toastError("Termo de Contrato Inválido");
-
-        values.termo_contrato = undefined;
-        values.contrato_uuid = undefined;
-        values.empresa = undefined;
-        values.empresa_uuid = undefined;
-        values.numero_processo = undefined;
-
-        document.getElementById("autocomplete-contrato").focus();
-        document.activeElement.blur();
-
-        return;
-      }
-      let contrato_uuid = contrato_find.uuid;
-      try {
-        let response = await getContratoSAFI(contrato_uuid);
-
-        let contrato = response.data;
-        setContratoAtual(contrato);
-        values.contrato_uuid = contrato_uuid;
-        values.empresa = contrato.empresa_contratada
-          ? contrato.empresa_contratada.nome
-          : undefined;
-        values.empresa_uuid = contrato.empresa_contratada
-          ? contrato.empresa_contratada.uuid
-          : undefined;
-        values.numero_processo = contrato.processo;
-
-        if (contrato.ata) {
-          setProdutosOptions(
-            contrato.ata.produtos.map(produto => ({
-              ...produto,
-              nome: produto.nome_produto
-            }))
-          );
-        }
-
-        if (contrato.dotacoes) {
-          let treeData = contrato.dotacoes.map(dotacao => ({
-            title: dotacao.numero_dotacao,
-            value: dotacao.uuid,
-            selectable: false,
-            children: dotacao.empenhos.map(empenho => ({
-              title: empenho.numero,
-              value: empenho.uuid
-            }))
-          }));
-
-          setEmpenhoOptions(treeData);
-        }
-        if (!edicao) {
-          etapas.forEach((_, i) => {
-            onChangeEmpenho(undefined, i, values);
-            values[`etapa_${i}`] = undefined;
-            values[`parte_${i}`] = undefined;
-            values[`data_programada_${i}`] = undefined;
-            values[`quantidade_${i}`] = undefined;
-            values[`total_embalagens_${i}`] = undefined;
-          });
-          values.produto = undefined;
-          values.quantidade_total = undefined;
-          values.unidade_medida = undefined;
-          values.armazem = undefined;
-          values.tipo_embalagem = undefined;
-          setEtapas([{}]);
-          document.getElementById("autocomplete-contrato").focus();
-          document.activeElement.blur();
-        }
-      } catch (error) {
-        toastError("Erro ao conectar com o SAFI. Tente novamente mais tarde.");
-      }
-    }
-  };
-
-  const selecionaProduto = (uuid, values) => {
-    let produto = produtosOptions.find(prod => prod.uuid === uuid);
-    if (produto) {
-      values.quantidade_total = produto.quantidade_total;
-      values.unidade_medida = produto.unidade_medida;
-    }
-  };
-
-  const onChangeEmpenho = (empenho, index, values) => {
-    values[`empenho_${index}`] = empenho;
   };
 
   const adicionaEtapa = () => {
@@ -209,14 +113,6 @@ export default () => {
     recebimentosNovo.splice(index, 1);
     setRecebimentos(recebimentosNovo);
   };
-
-  const calculator = createDecorator({
-    field: "produto",
-    updates: {
-      dummy: (minimumValue, allValues) =>
-        selecionaProduto(minimumValue, allValues)
-    }
-  });
 
   const toggleCollapse = index => {
     setCollapse({
@@ -242,7 +138,7 @@ export default () => {
           &nbsp;
           {qtdFaltante}
           &nbsp;
-          {values.unidade_medida}
+          {unidadeSelecionada.nome}
           &nbsp;
         </span>
         para programar
@@ -280,39 +176,19 @@ export default () => {
     return agregarDefault(options);
   };
 
-  const buscaEmpenho = uuid => {
-    if (!uuid) return;
-    let nome;
-    contratoAtual.dotacoes.forEach(d => {
-      let emp = d.empenhos.find(e => e.uuid === uuid);
-      if (emp) {
-        nome = emp.numero;
-        return;
-      }
-    });
-    return nome;
-  };
-
   const formataPayload = (values, rascunho) => {
     let payload = {};
     payload.cadastro_finalizado = !rascunho;
-    payload.contrato = values.termo_contrato;
-    payload.contrato_uuid = values.contrato_uuid;
-    payload.empresa_uuid = values.empresa_uuid;
-    payload.nome_empresa = values.empresa;
-    payload.processo_sei = values.numero_processo;
-    payload.nome_produto = values.produto
-      ? produtosOptions.find(x => x.uuid === values.produto).nome
-      : undefined;
-    payload.produto_uuid = values.produto;
+    payload.contrato = values.contrato;
+    payload.empresa = empresaSelecionada.uuid;
+    payload.produto = values.produto;
     payload.qtd_total_programada = values.quantidade_total;
     payload.unidade_medida = values.unidade_medida;
     payload.armazem = values.armazem;
     payload.tipo_embalagem = values.tipo_embalagem;
 
     payload.etapas = etapas.map((etapa, index) => ({
-      empenho_uuid: values[`empenho_${index}`],
-      numero_empenho: buscaEmpenho(values[`empenho_${index}`]),
+      numero_empenho: values[`empenho_${index}`],
       etapa: values[`etapa_${index}`],
       parte: values[`parte_${index}`],
       data_programada: values[`data_programada_${index}`]
@@ -363,7 +239,7 @@ export default () => {
   };
 
   const validaRascunho = values => {
-    return !values.contrato_uuid;
+    return !values.contrato;
   };
   const lengthOrUnderfined = value => {
     let valor = value ? value.toString() : undefined;
@@ -377,28 +253,27 @@ export default () => {
         const programacoes_de_recebimento = responseCronograma.data.programacoes_de_recebimento.reverse();
         setEtapas(responseCronograma.data.etapas);
         setRecebimentos(programacoes_de_recebimento);
-        buscaContrato(responseCronograma.data);
 
         const cronogramaValues = {};
         const crono = responseCronograma.data;
-        cronogramaValues["termo_contrato"] = lengthOrUnderfined(crono.contrato);
-        cronogramaValues["contrato_uuid"] = lengthOrUnderfined(
-          crono.contrato_uuid
+        setEmpresaSelecionada(crono.empresa);
+        cronogramaValues["empresa"] = lengthOrUnderfined(
+          crono.empresa.nome_fantasia
         );
-        cronogramaValues["empresa"] = lengthOrUnderfined(crono.nome_empresa);
-        cronogramaValues["empresa_uuid"] = lengthOrUnderfined(
-          crono.empresa_uuid
-        );
+        setContratoSelecionado(crono.contrato);
+        cronogramaValues["contrato"] = lengthOrUnderfined(crono.contrato.uuid);
         cronogramaValues["numero_processo"] = lengthOrUnderfined(
-          crono.processo_sei
+          crono.contrato.processo
         );
         cronogramaValues["quantidade_total"] = lengthOrUnderfined(
           crono.qtd_total_programada
         );
         cronogramaValues["unidade_medida"] = lengthOrUnderfined(
-          crono.unidade_medida
+          crono.unidade_medida ? crono.unidade_medida.uuid : undefined
         );
-        cronogramaValues["produto"] = lengthOrUnderfined(crono.produto_uuid);
+        cronogramaValues["produto"] = lengthOrUnderfined(
+          crono.produto ? crono.produto.uuid : undefined
+        );
         cronogramaValues["armazem"] = lengthOrUnderfined(
           crono.armazem ? crono.armazem.uuid : undefined
         );
@@ -410,7 +285,9 @@ export default () => {
 
         const etapaValues = {};
         responseCronograma.data.etapas.forEach((etapa, i) => {
-          etapaValues[`empenho_${i}`] = lengthOrUnderfined(etapa.empenho_uuid);
+          etapaValues[`empenho_${i}`] = lengthOrUnderfined(
+            etapa.numero_empenho
+          );
           etapaValues[`etapa_${i}`] = lengthOrUnderfined(etapa.etapa);
           etapaValues[`parte_${i}`] = lengthOrUnderfined(etapa.parte);
           etapaValues[`data_programada_${i}`] = lengthOrUnderfined(
@@ -436,7 +313,41 @@ export default () => {
         setCarregando(false);
       }
     } catch (e) {
+      console.log(e);
       toastError("Ocorreu um erro ao carregar o Cronograma");
+    }
+  };
+
+  const getOpcoesContrato = () => {
+    if (!empresaSelecionada) return [];
+    return empresaSelecionada.contratos.map(contrato => ({
+      nome: contrato.numero,
+      uuid: contrato.uuid
+    }));
+  };
+
+  const selecionaEmpresa = uuid_empresa => {
+    if (!empresaSelecionada || empresaSelecionada.uuid !== uuid_empresa) {
+      let fornecedor = fornecedores.find(f => f.value === uuid_empresa);
+      setEmpresaSelecionada(fornecedor);
+    }
+  };
+
+  const selecionaContrato = values => {
+    let uuid_contrato = values.contrato;
+    if (!contratoSelecionado || contratoSelecionado.uuid !== uuid_contrato) {
+      let contrato = empresaSelecionada.contratos.find(
+        c => c.uuid === uuid_contrato
+      );
+      values.numero_processo = contrato.processo;
+      setContratoSelecionado(contrato);
+    }
+  };
+
+  const selecionaUnidade = uuid_unidade => {
+    if (!unidadeSelecionada || unidadeSelecionada.uuid !== uuid_unidade) {
+      let unidade = unidadesMedidaOptions.find(u => u.uuid === uuid_unidade);
+      setUnidadeSelecionada(unidade);
     }
   };
 
@@ -452,29 +363,23 @@ export default () => {
       setCarregando(false);
     }
 
-    const buscaListaContratos = async () => {
-      try {
-        const response = await getListaTermosContratoSAFI();
-        setContratos(response.data);
-        setContratosOptions(
-          response.data.map(contrato => ({
-            value: contrato.termo_contrato,
-            uuid: contrato.uuid
-          }))
-        );
-      } catch (error) {
-        toastError(
-          "Houve um erro na conexão com o SAFI. A lista de contratos pode estar indisponível."
-        );
-      }
-    };
-
     const buscaArmazens = async () => {
-      const response = await getArmazens();
+      const response = await getNomesDistribuidores();
       setArmazens(
         response.data.results.map(armazem => ({
           nome: armazem.nome_fantasia,
           uuid: armazem.uuid
+        }))
+      );
+    };
+
+    const buscaFornecedores = async () => {
+      const response = await getFornecedoresSimples();
+      setFornecedores(
+        response.data.results.map(forn => ({
+          uuid: forn.uuid,
+          value: forn.nome_fantasia,
+          contratos: forn.contratos
         }))
       );
     };
@@ -484,19 +389,34 @@ export default () => {
       setEtapasOptions(response.data);
     };
 
-    buscaListaContratos();
+    const buscaProdutos = async () => {
+      const response = await getCadastroProdutosEdital();
+      setProdutosOptions(response.data.results);
+    };
+
+    const buscaUnidadesMedida = async () => {
+      const response = await getUnidadesDeMedidaProduto();
+      setUnidadesMedidaOptions(response.data.results);
+    };
+
     buscaArmazens();
     buscaEtapas();
+    buscaFornecedores();
+    buscaProdutos();
+    buscaUnidadesMedida();
     getRascunhosAsync();
   }, [valoresIniciais]);
 
-  //apenas puxa dados de cronograma se ja tiver baixado a lista de contratos
-  if (valoresIniciais && edicao && contratos.length > 0) {
+  if (valoresIniciais && edicao) {
     getDadosCronograma();
     setValoresIniciais(false);
   }
 
   const onChangeFormSpy = async changes => {
+    if (changes.values.empresa) selecionaEmpresa(changes.values.empresa);
+    if (changes.values.contrato) selecionaContrato(changes.values);
+    if (changes.values.unidade_medida)
+      selecionaUnidade(changes.values.unidade_medida);
     let restante = changes.values.quantidade_total;
     etapas.forEach((e, index) => {
       if (changes.values[`quantidade_${index}`])
@@ -536,7 +456,6 @@ export default () => {
               ...etapasValues,
               ...recebimentosValues
             }}
-            decorators={[calculator]}
             validate={() => {}}
             render={({ form, handleSubmit, submitting, values }) => (
               <form onSubmit={handleSubmit}>
@@ -548,25 +467,13 @@ export default () => {
                   <div className="col-5">
                     <Field
                       component={AutoCompleteField}
-                      id="autocomplete-contrato"
-                      options={getContratosFiltrado(values.termo_contrato)}
-                      label="Pesquisar Contrato"
-                      name="termo_contrato"
-                      className="input-busca-produto"
-                      validate={required}
+                      options={getEmpresaFiltrado(values.empresa)}
+                      label="Pesquisar Empresa"
+                      name="empresa"
                       required
+                      validate={required}
+                      placeholder={"Selecione uma Empresa Cadastrada"}
                       esconderIcone
-                    />
-                  </div>
-                  <div className="col-1 pl-0">
-                    <Botao
-                      texto=""
-                      icon="fas fa-search"
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN}
-                      className="botao-pesquisar"
-                      onClick={() => buscaContrato(values)}
-                      disabled={submitting}
                     />
                   </div>
                   {edicao && (
@@ -583,12 +490,14 @@ export default () => {
                 <div className="row">
                   <div className="col-8">
                     <Field
-                      component={InputText}
-                      label="Empresa"
-                      name="empresa"
-                      className="input-busca-produto"
+                      component={SelectSelecione}
+                      naoDesabilitarPrimeiraOpcao
+                      options={getOpcoesContrato()}
+                      label="Nº do Contrato"
+                      name="contrato"
+                      required
                       validate={required}
-                      disabled={true}
+                      placeholder={"Selecione um Contrato"}
                     />
                   </div>
                   <div className="col-4">
@@ -603,7 +512,7 @@ export default () => {
                   </div>
                 </div>
 
-                {values.empresa && (
+                {values.empresa && values.contrato && (
                   <div className="accordion mt-1" id="accordionCronograma">
                     <div className="card mt-3">
                       <div className={`card-header card-tipo`} id={`heading_1`}>
@@ -660,18 +569,21 @@ export default () => {
                                 label="Quantidade Total Programada"
                                 name="quantidade_total"
                                 className="input-busca-produto"
-                                disabled={true}
+                                disabled={false}
+                                apenasNumeros
                                 required
                               />
                             </div>
                             <div className="col-3">
                               <Field
-                                component={InputText}
+                                component={SelectSelecione}
+                                naoDesabilitarPrimeiraOpcao
+                                options={unidadesMedidaOptions}
                                 label="Unidade de Medida"
                                 name="unidade_medida"
-                                className="input-busca-produto"
-                                disabled={true}
                                 required
+                                validate={required}
+                                placeholder={"Selecione a Unidade"}
                               />
                             </div>
                           </div>
@@ -742,23 +654,14 @@ export default () => {
                                 )}
                                 <div className="row">
                                   <div className="col-4">
-                                    <span className="required-asterisk">*</span>
-                                    <label className="col-form-label">
-                                      Nº do Empenho
-                                    </label>
                                     <Field
-                                      component={TreeSelectForm}
-                                      treeData={empenhoOptions}
+                                      component={InputText}
+                                      label="Nº do Empenho"
                                       name={`empenho_${index}`}
+                                      placeholder="Informe o Nº do Empenho"
                                       required
                                       validate={required}
-                                      allowClear
-                                      defaultValue={values[`empenho_${index}`]}
-                                      onChange={e =>
-                                        onChangeEmpenho(e, index, values)
-                                      }
-                                      placeholder="Selecione o Empenho"
-                                      style={{ width: "100%" }}
+                                      proibeLetras
                                     />
                                   </div>
                                   <div className="col-4">
