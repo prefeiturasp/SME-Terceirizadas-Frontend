@@ -74,11 +74,6 @@ const CardBody = props => {
                         </div>
                       )}
                       <Field
-                        className={
-                          exibirFiltrosDataEventoETipoSolicitacao
-                            ? "input-com-filtros-adicionais"
-                            : ""
-                        }
                         component={ASelect}
                         showSearch
                         name="edital"
