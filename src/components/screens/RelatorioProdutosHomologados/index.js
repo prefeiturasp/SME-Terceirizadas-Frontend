@@ -30,6 +30,7 @@ import { meusDados } from "services/perfil.service";
 const RelatorioProdutosHomologados = () => {
   const [dadosProdutos, setDadosProdutos] = useState(null);
   const [quantidadeHomologados, setQuantidadeHomologados] = useState(null);
+  const [quantidadeMarcas, setQuantidadeMarcas] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [valoresIniciais, setValoresIniciais] = useState(null);
   const [carregando, setCarregando] = useState(false);
@@ -64,7 +65,13 @@ const RelatorioProdutosHomologados = () => {
         response = await getProdutosPorTerceirizada(filtros);
         setDadosProdutos(response.data);
       }
-      setQuantidadeHomologados(response.data.length);
+      const produtos = response.data;
+      setQuantidadeHomologados(produtos.length);
+      const contagemMarcas = produtos.reduce((acc, produtos) => {
+        acc[produtos.marca] = (acc[produtos.marca] || 0) + 1;
+        return acc;
+      }, {});
+      setQuantidadeMarcas(Object.keys(contagemMarcas).length);
       setCarregando(false);
     }
     fetchData();
@@ -101,6 +108,9 @@ const RelatorioProdutosHomologados = () => {
               <div className="col-12 mt-1">
                 <p className="totalHomologadosValor">
                   Total de produtos homologados: <b>{quantidadeHomologados}</b>
+                  <span className="ml-5">
+                    Total de marcas homologadas: <b>{quantidadeMarcas}</b>{" "}
+                  </span>
                 </p>
               </div>
             </div>
