@@ -313,7 +313,6 @@ export default () => {
         setCarregando(false);
       }
     } catch (e) {
-      console.log(e);
       toastError("Ocorreu um erro ao carregar o Cronograma");
     }
   };
