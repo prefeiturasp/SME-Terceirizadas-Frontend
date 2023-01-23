@@ -1132,7 +1132,7 @@ export default () => {
           ...arrayMutators
         }}
         initialValues={dadosIniciais}
-        render={({ handleSubmit, form, errors, values }) => (
+        render={({ handleSubmit, form, errors }) => (
           <form onSubmit={handleSubmit}>
             <FormSpy
               subscription={{ values: true, active: true }}
