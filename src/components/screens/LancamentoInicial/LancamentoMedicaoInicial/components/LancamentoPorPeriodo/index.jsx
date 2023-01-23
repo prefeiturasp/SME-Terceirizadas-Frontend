@@ -121,7 +121,8 @@ export default ({
               return (
                 <CardLancamento
                   key={index}
-                  textoCabecalho={`Programas e projetos - ${periodo}`}
+                  grupo="Programas e Projetos"
+                  textoCabecalho={periodo}
                   cor={CORES[4]}
                   totalAlimentacoes={0}
                   tipos_alimentacao={

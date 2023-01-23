@@ -145,6 +145,14 @@ export default () => {
     params["mes"] = mes;
     params["ano"] = ano;
     params["nome_periodo_escolar"] = nome_periodo_escolar;
+    if (
+      location.state.grupo &&
+      location.state.grupo.includes("Programas e Projetos")
+    ) {
+      params["tipo_doc"] = "INC_ALIMENTA_CONTINUA";
+    } else {
+      params["excluir_inclusoes_continuas"] = true;
+    }
     const responseAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
       params
     );
@@ -327,7 +335,8 @@ export default () => {
 
       const params = {
         nome_periodo_escolar: periodo.periodo_escolar.nome,
-        uuid_solicitacao_medicao: uuid
+        uuid_solicitacao_medicao: uuid,
+        nome_grupo: location.state.grupo
       };
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
@@ -416,7 +425,11 @@ export default () => {
     let dadosValoresForaDoMes = {};
     const dadosMesPeriodo = {
       mes_lancamento: mesAnoFormatado,
-      periodo_escolar: location.state ? location.state.periodo : "MANHA"
+      periodo_escolar: location.state
+        ? `${location.state.grupo ? `${location.state.grupo} - ` : ""}${
+            location.state.periodo
+          }`
+        : "MANHA"
     };
     let dadosValoresInclusoesAutorizadas = {};
 
@@ -578,7 +591,6 @@ export default () => {
             ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
           });
       });
-
     setDadosIniciais({
       ...dadosMesPeriodo,
       ...dadosValoresInclusoesAutorizadas,
@@ -734,10 +746,15 @@ export default () => {
     const solicitacao_medicao_inicial = uuid;
     const payload = {
       solicitacao_medicao_inicial: solicitacao_medicao_inicial,
-      periodo_escolar: values["periodo_escolar"],
       valores_medicao: valoresMedicao,
       eh_observacao: true
     };
+    if (values["periodo_escolar"].includes(" - ")) {
+      payload["grupo"] = values["periodo_escolar"].split(" - ")[0];
+      payload["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
+    } else {
+      payload["periodo_escolar"] = values["periodo_escolar"];
+    }
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       setLoading(true);
@@ -783,7 +800,8 @@ export default () => {
       diasSobremesaDoce,
       location,
       categoriasDeMedicao,
-      dadosValoresInclusoesAutorizadasState
+      dadosValoresInclusoesAutorizadasState,
+      weekColumns
     );
     if (erro) {
       toastError(erro);
@@ -1114,7 +1132,7 @@ export default () => {
           ...arrayMutators
         }}
         initialValues={dadosIniciais}
-        render={({ handleSubmit, form, errors }) => (
+        render={({ handleSubmit, form, errors, values }) => (
           <form onSubmit={handleSubmit}>
             <FormSpy
               subscription={{ values: true, active: true }}

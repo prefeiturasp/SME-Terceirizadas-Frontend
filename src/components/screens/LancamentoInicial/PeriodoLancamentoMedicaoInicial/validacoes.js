@@ -1,5 +1,6 @@
 import { format, getYear } from "date-fns";
 import { ALT_CARDAPIO } from "components/screens/helper";
+import { deepCopy } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -94,15 +95,23 @@ export const validarFormulario = (
   diasSobremesaDoce,
   location,
   categoriasDeMedicao,
-  dadosValoresInclusoesAutorizadasState
+  dadosValoresInclusoesAutorizadasState,
+  weekColumns
 ) => {
   let erro = false;
+
+  const values_ = deepCopy(values);
+  Object.keys(values_).forEach(value => {
+    if (!weekColumns.map(wc => wc.dia).includes(value)) {
+      delete values_[value];
+    }
+  });
 
   categoriasDeMedicao.forEach(categoria => {
     diasSobremesaDoce.forEach(dia => {
       if (
         repeticaoSobremesaDoceComValorESemObservacao(
-          values,
+          values_,
           dia.split("-")[2],
           categoria,
           diasSobremesaDoce,
@@ -117,7 +126,7 @@ export const validarFormulario = (
   });
 
   let arrayDiasInclusoesAutorizadasEmValues = [];
-  let keysFromValues = Object.keys(values);
+  let keysFromValues = Object.keys(values_);
 
   for (const key in Object.fromEntries(
     Object.entries(dadosValoresInclusoesAutorizadasState)
@@ -140,7 +149,7 @@ export const validarFormulario = (
   let diasComFrequenciaVaziasEInclusoesAutorizadas = [];
   arrayDiasInclusoesAutorizadasEmValues.forEach(dia => {
     if (
-      !values[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
+      !values_[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
     ) {
       diasComFrequenciaVaziasEInclusoesAutorizadas.push(dia);
     }

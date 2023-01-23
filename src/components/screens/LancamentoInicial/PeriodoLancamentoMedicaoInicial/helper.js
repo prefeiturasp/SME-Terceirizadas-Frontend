@@ -4,6 +4,10 @@ export const formatarPayloadPeriodoLancamento = (
   tabelaDietaEnteralRows,
   dadosIniciaisFiltered
 ) => {
+  if (values["periodo_escolar"].includes(" - ")) {
+    values["grupo"] = values["periodo_escolar"].split(" - ")[0];
+    values["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
+  }
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValues = valuesAsArray.filter(([key]) =>
     key.includes("categoria")
