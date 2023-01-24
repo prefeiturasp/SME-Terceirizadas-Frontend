@@ -163,6 +163,31 @@ export const validarFormulario = (
   return erro;
 };
 
+export const validacoesTabelaProgramasProjetos = (
+  mesAnoConsiderado,
+  solicitacoesAutorizadas,
+  rowName,
+  dia,
+  categoria,
+  value,
+  allValues,
+  dadosValoresInclusoesAutorizadasState
+) => {
+  if (
+    `${rowName}__dia_${dia}__categoria_${categoria}` ===
+      `frequencia__dia_${dia}__categoria_${categoria}` &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+    ) &&
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
+  ) {
+    if (!(Number(value) === 0)) {
+      return `Há solicitação de alimentação contínua autorizada para esta data. Insira o número de frequentes e alimentações`;
+    }
+  }
+  return undefined;
+};
+
 export const validacoesTabelaAlimentacao = (
   mesAnoConsiderado,
   solicitacoesAutorizadas,
@@ -172,8 +197,22 @@ export const validacoesTabelaAlimentacao = (
   value,
   allValues,
   dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  validacaoDiaLetivo,
+  location
 ) => {
+  if (location.state && location.state.grupo === "Programas e Projetos") {
+    validacoesTabelaProgramasProjetos(
+      mesAnoConsiderado,
+      solicitacoesAutorizadas,
+      rowName,
+      dia,
+      categoria,
+      value,
+      allValues,
+      dadosValoresInclusoesAutorizadasState
+    );
+  }
+
   const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(
     mesAnoConsiderado
   )}`;
@@ -200,9 +239,7 @@ export const validacoesTabelaAlimentacao = (
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
-  if (value && Number(value) === 0 && validacaoDiaLetivo(dia)) {
-    return "Campo não pode ser 0";
-  } else if (
+  if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
@@ -211,7 +248,9 @@ export const validacoesTabelaAlimentacao = (
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
   ) {
     if (!(Number(value) === 0 && !validacaoDiaLetivo(dia))) {
-      return "Foi autorizada inclusão de alimentação nesta data. Informe a frequência de alunos.";
+      return `Foi autorizada inclusão de alimentação ${
+        location.state && location.state.grupo ? "contínua" : ""
+      } nesta data. Informe a frequência de alunos.`;
     }
   } else if (
     value &&
@@ -308,9 +347,7 @@ export const validacoesTabelasDietas = (
     allValues[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
-  if (value && Number(value) === 0) {
-    return "Campo não pode ser 0";
-  } else if (
+  if (
     value &&
     Number(value) > maxDietasAutorizadas &&
     inputName.includes("frequencia")

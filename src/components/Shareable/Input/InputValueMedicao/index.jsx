@@ -28,6 +28,8 @@ export const InputText = props => {
     apenasNumeros,
     exibeTooltipDiaSobremesaDoce,
     exibeTooltipAlimentacoesAutorizadas,
+    exibeTooltipErroQtdMaiorQueAutorizado,
+    exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
     exibeTooltipFrequenciaDiaNaoLetivo
@@ -114,6 +116,15 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
+        <Tooltip
+          title={
+            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {exibirTooltipFrequenciaDiaNaoLetivo() && (
         <Tooltip
           title={
@@ -128,16 +139,27 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-error" />
         </Tooltip>
       )}
+      {exibeTooltipErroQtdMaiorQueAutorizado &&
+        !["Mês anterior", "Mês posterior"].includes(input.value) && (
+          <Tooltip
+            title={`Número apontado de alimentação é maior que número autorizado (${numeroDeInclusoesAutorizadas}). Ajuste o apontamento.`}
+          >
+            <i className="fas fa-info icone-info-error" />
+          </Tooltip>
+        )}
 
       <input
         {...input}
         className={`form-control ${className} ${
-          validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()
+          validacaoFrequencia() ||
+          validacaoLancheRefeicaoSobremesa1Oferta() ||
+          exibeTooltipErroQtdMaiorQueAutorizado
             ? "invalid-field"
             : ""
         } ${
           exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-          exibirTooltipFrequenciaDiaNaoLetivo()
+          exibirTooltipFrequenciaDiaNaoLetivo() ||
+          exibeTooltipSemAlimentacaoPreAutorizadaInformada
             ? "border-warning"
             : ""
         }`}

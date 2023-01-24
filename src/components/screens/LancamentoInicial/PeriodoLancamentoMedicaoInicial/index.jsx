@@ -1082,7 +1082,8 @@ export default () => {
       value,
       allValues,
       dadosValoresInclusoesAutorizadasState,
-      validacaoDiaLetivo
+      validacaoDiaLetivo,
+      location
     );
   };
 
@@ -1453,6 +1454,23 @@ export default () => {
                                                       }` in
                                                       dadosValoresInclusoesAutorizadasState
                                                     }
+                                                    exibeTooltipSemAlimentacaoPreAutorizadaInformada={
+                                                      `${row.name}__dia_${
+                                                        column.dia
+                                                      }__categoria_${
+                                                        categoria.id
+                                                      }` in
+                                                        dadosValoresInclusoesAutorizadasState &&
+                                                      Number(
+                                                        formValuesAtualizados[
+                                                          `${row.name}__dia_${
+                                                            column.dia
+                                                          }__categoria_${
+                                                            categoria.id
+                                                          }`
+                                                        ]
+                                                      ) === 0
+                                                    }
                                                     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                       `${row.name}__dia_${
                                                         column.dia
@@ -1490,6 +1508,32 @@ export default () => {
                                                           }`
                                                         ]
                                                       ) === 0
+                                                    }
+                                                    exibeTooltipErroQtdMaiorQueAutorizado={
+                                                      `${row.name}__dia_${
+                                                        column.dia
+                                                      }__categoria_${
+                                                        categoria.id
+                                                      }` in
+                                                        dadosValoresInclusoesAutorizadasState &&
+                                                      Number(
+                                                        formValuesAtualizados[
+                                                          `${row.name}__dia_${
+                                                            column.dia
+                                                          }__categoria_${
+                                                            categoria.id
+                                                          }`
+                                                        ]
+                                                      ) >
+                                                        Number(
+                                                          dadosValoresInclusoesAutorizadasState[
+                                                            `${row.name}__dia_${
+                                                              column.dia
+                                                            }__categoria_${
+                                                              categoria.id
+                                                            }`
+                                                          ]
+                                                        )
                                                     }
                                                     numeroDeInclusoesAutorizadas={
                                                       dadosValoresInclusoesAutorizadasState[
