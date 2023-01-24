@@ -82,7 +82,8 @@ export const TIPO_USUARIO = {
   GESTAO_ALIMENTACAO_TERCEIRIZADA: `gestao_alimentacao_terceirizada`,
   DIETA_ESPECIAL: `dieta_especial`,
   GESTAO_PRODUTO: `gestao_produto`,
-  TERCEIRIZADA: `terceirizada`
+  TERCEIRIZADA: `terceirizada`,
+  NUTRICIONISTA_SUPERVISAO: "supervisao_nutricao"
 };
 
 export const TIPO_GESTAO = {

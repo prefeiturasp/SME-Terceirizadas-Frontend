@@ -19,7 +19,6 @@ import {
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import ConfirmaTodos from "./components/ConfirmarTodos";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
 
@@ -33,7 +32,6 @@ export default () => {
   const [filtros, setFiltros] = useState();
   const [ativos, setAtivos] = useState([]);
   const [total, setTotal] = useState();
-  const [numEnviadas, setNumEnviadas] = useState();
   const [numConfirmadas, setNumConfirmadas] = useState();
   const [page, setPage] = useState();
   const [initialValues, setInitialValues] = useState({});
@@ -51,7 +49,6 @@ export default () => {
       if (response.data.count) {
         setSolicitacoes(response.data.results);
         setTotal(response.data.count);
-        setNumEnviadas(response.data.num_enviadas);
         setNumConfirmadas(response.data.num_confirmadas);
         inicioResultado.current.scrollIntoView();
       } else {
@@ -219,10 +216,6 @@ export default () => {
                       onClick={solicitaExcelGuias}
                     />
                   </Spin>
-                  <ConfirmaTodos
-                    updatePage={updatePage}
-                    numEnviadas={numEnviadas}
-                  />
                 </div>
               </div>
             </>

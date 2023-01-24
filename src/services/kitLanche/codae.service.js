@@ -72,19 +72,14 @@ export const getCODAEPedidosKitLanchePendentes = (
     });
 };
 
-export const getCodaePedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
+export const getCodaePedidosDeKitLanche = async (
+  filtroAplicado,
+  tipoSolicitacao,
+  paramsFromPrevPage
+) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.CODAE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  return response.data;
 };
 
 export const CODAENegaKitLancheCEMEI = async (uuid, payload) => {

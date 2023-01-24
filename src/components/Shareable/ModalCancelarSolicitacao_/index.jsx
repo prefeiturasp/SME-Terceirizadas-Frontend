@@ -54,13 +54,15 @@ export class ModalCancelarSolicitacao extends Component {
             <div className="row">
               <div className="col-12">
                 <p className="label--red">
-                  {solicitacao && mensagemCancelamento(solicitacao.status)}
+                  {solicitacao &&
+                    mensagemCancelamento(solicitacao.status, solicitacao.tipo)}
                   Deseja seguir em frente com o cancelamento?
                 </p>
               </div>
             </div>
             <div className="form-group col-12">
               <Field
+                required
                 component={TextArea}
                 placeholder="Obrigatório"
                 label="Justificativa"
@@ -75,7 +77,7 @@ export class ModalCancelarSolicitacao extends Component {
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
             className="ml-3"
           />
           <Botao
@@ -84,7 +86,7 @@ export class ModalCancelarSolicitacao extends Component {
             onClick={() => {
               this.cancelarSolicitacaoDaEscola(uuid);
             }}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             disabled={justificativa === "" || justificativa === undefined}
             className="ml-3"
           />

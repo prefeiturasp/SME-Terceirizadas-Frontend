@@ -24,6 +24,13 @@ textarea {
 
 .card-body {
   padding: 1.25rem !important;
+  .produtos-edital {
+    .ant-select-selector {
+      border-radius: 0.35rem !important;
+      margin-top: 0 !important;
+      height: 35px !important;
+    }
+  }
 }
 
 .dash-terc {
@@ -602,24 +609,39 @@ table.table-report {
 
 table.table-reasons {
   width: 100%;
+
   tr {
     padding: 5px 0;
     color: $gray;
     font-size: 14px;
+
     &:nth-child(even):not(:last-child) {
       border-bottom: 1px solid #c0c0c0;
     }
+
     th {
       font-weight: normal;
+
       &:not(:first-child) {
         padding-left: 40px;
       }
     }
+
     td {
       font-weight: bold;
       color: $blackInput;
+
       &:not(:first-child) {
         padding-left: 40px;
+      }
+
+      &.cancelado span {
+        color: $grayLight;
+        text-decoration: line-through;
+      }
+
+      &.cancelado div {
+        font-weight: normal;
       }
     }
   }

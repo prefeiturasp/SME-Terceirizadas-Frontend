@@ -62,7 +62,7 @@ export default ({ formValues, prefix, panorama }) => (
         <div>
           <Field
             component={BorderlessInput}
-            name={`${prefix}.lanche_5h`}
+            name={`${prefix}.lanche`}
             validate={numericInteger}
           />
         </div>

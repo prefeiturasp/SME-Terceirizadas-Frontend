@@ -1,6 +1,8 @@
+import axios from "services/_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { FLUXO, PEDIDOS } from "./constants";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -138,21 +140,15 @@ export const getSolicitacaoUnificada = uuid => {
     });
 };
 
-export const getCODAEPedidosSolicitacoesUnificadas = filtroAplicado => {
+export const getCODAEPedidosSolicitacoesUnificadas = async (
+  filtroAplicado,
+  paramsFromPrevPage
+) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${
     PEDIDOS.CODAE
   }/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  return response.data;
 };
 
 export const getTerceirizadaPedidosSolicitacoesUnificadas = filtroAplicado => {
@@ -200,19 +196,12 @@ export const CODAENegaKitLancheUnificadoEscola = async (
   justificativa
 ) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.CODAE_NEGA}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "PATCH",
-    body: JSON.stringify({ justificativa })
-  };
-  let status = 0;
-  try {
-    const res = await fetch(url, OBJ_REQUEST);
-    const data = await res.json();
-    status = res.status;
-    return { ...data, status: status };
-  } catch (error) {
-    return error.json();
+  const response = await axios
+    .patch(url, justificativa)
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
 };
 
@@ -283,6 +272,24 @@ export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
 
 export const cancelaKitLancheUnificadoDre = async (uuid, justificativa) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.DRE_CANCELA}/`;
+  const OBJ_REQUEST = {
+    headers: authToken,
+    method: "PATCH",
+    body: JSON.stringify({ justificativa })
+  };
+  let status = 0;
+  try {
+    const res = await fetch(url, OBJ_REQUEST);
+    const data = await res.json();
+    status = res.status;
+    return { ...data, status: status };
+  } catch (error) {
+    return error.json();
+  }
+};
+
+export const cancelaKitLancheUnificadoEscola = async (uuid, justificativa) => {
+  const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",

@@ -86,7 +86,7 @@ export default () => {
         data_entrega: conferencia.guia.data_entrega,
         hora_recebimento: conferencia.hora_recebimento,
         placa_veiculo: conferencia.placa_veiculo,
-        data_entrega_real: moment(conferencia.data_recebimento, "DD/MM/YYYY"),
+        data_entrega_real: conferencia.data_recebimento,
         nome_motorista: conferencia.nome_motorista
       });
       setHoraRecebimento(conferencia.hora_recebimento);
@@ -113,9 +113,7 @@ export default () => {
 
   const onSubmit = async values => {
     values.hora_recebimento = HoraRecebimento;
-    values.data_recebimento = moment(values.data_entrega_real).format(
-      "DD/MM/YYYY"
-    );
+    values.data_recebimento = values.data_entrega_real;
     values.guia = uuid;
   };
 

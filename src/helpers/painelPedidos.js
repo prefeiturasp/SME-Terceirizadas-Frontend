@@ -43,6 +43,8 @@ export const ordenarPedidosDataMaisRecente = pedidos => {
       ? obj.inclusoes[0].data
       : obj.dias_motivos_da_inclusao_cemei
       ? obj.dias_motivos_da_inclusao_cemei[0].data
+      : obj.dias_motivos_da_inclusao_cei
+      ? obj.dias_motivos_da_inclusao_cei[0].data
       : obj.solicitacao_kit_lanche
       ? obj.solicitacao_kit_lanche.data
       : obj.data;

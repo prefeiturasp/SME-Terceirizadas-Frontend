@@ -325,11 +325,9 @@ class AlteracaoCardapio extends Component {
   OnEditButtonClicked(param) {
     if (
       this.state.uuidRascunhoEmEdicao &&
-      this.state.uuidRascunhoEmEdicao === param.alteracaoDeCardapio.uuid
+      this.state.uuidRascunhoEmEdicao === param.uuid
     ) {
-      toastWarn(
-        `Rascunho # ${param.alteracaoDeCardapio.id_externo} já está em edição`
-      );
+      toastWarn(`Rascunho # ${param.id_externo} já está em edição`);
       return;
     }
     this.props.reset("alteracaoCardapio");
@@ -339,21 +337,17 @@ class AlteracaoCardapio extends Component {
       periodos,
       ehAlteracaoComLancheRepetida
     } = this.state;
-    ehAlteracaoComLancheRepetida =
-      param["alteracaoDeCardapio"].eh_alteracao_com_lanche_repetida;
-    dataInicial = param["alteracaoDeCardapio"].data_inicial;
-    this.props.loadAlteracaoCardapio(param.alteracaoDeCardapio);
-    this.retornaOpcoesAlteracao(undefined, param.alteracaoDeCardapio);
-    param.alteracaoDeCardapio.substituicoes.forEach((substituicao, index) => {
+    ehAlteracaoComLancheRepetida = param["eh_alteracao_com_lanche_repetida"];
+    dataInicial = param["data_inicial"];
+    this.props.loadAlteracaoCardapio(param);
+    this.retornaOpcoesAlteracao(undefined, param);
+    param.substituicoes.forEach((substituicao, index) => {
       substituicoesAlimentacao[index].substituicoes =
         substituicao.tipos_alimentacao_para;
     });
-    this.atualizaEverificaSeEhAlteracaoRepetida(
-      param.alteracaoDeCardapio.substituicoes
-    );
+    this.atualizaEverificaSeEhAlteracaoRepetida(param.substituicoes);
     periodos.forEach((periodo, indice) => {
-      periodo.checked =
-        param.alteracaoDeCardapio[`substituicoes_${periodo.nome}`];
+      periodo.checked = param[`substituicoes_${periodo.nome}`];
       periodo.checked &&
         periodo.checked.tipos_alimentacao_de.forEach(tipo => {
           this.removerOpcoesSubstitutos(tipo, periodo, indice);
@@ -364,33 +358,30 @@ class AlteracaoCardapio extends Component {
     });
     let optionsAlimentacaoDe = {
       MANHA:
-        param.alteracaoDeCardapio.substituicoes_MANHA !== undefined
-          ? param.alteracaoDeCardapio.substituicoes_MANHA.tipos_alimentacao_de
+        param.substituicoes_MANHA !== undefined
+          ? param.substituicoes_MANHA.tipos_alimentacao_de
           : [],
       TARDE:
-        param.alteracaoDeCardapio.substituicoes_TARDE !== undefined
-          ? param.alteracaoDeCardapio.substituicoes_TARDE.tipos_alimentacao_de
+        param.substituicoes_TARDE !== undefined
+          ? param.substituicoes_TARDE.tipos_alimentacao_de
           : [],
       NOITE:
-        param.alteracaoDeCardapio.substituicoes_NOITE !== undefined
-          ? param.alteracaoDeCardapio.substituicoes_NOITE.tipos_alimentacao_de
+        param.substituicoes_NOITE !== undefined
+          ? param.substituicoes_NOITE.tipos_alimentacao_de
           : [],
       INTEGRAL:
-        param.alteracaoDeCardapio.substituicoes_INTEGRAL !== undefined
-          ? param.alteracaoDeCardapio.substituicoes_INTEGRAL
-              .tipos_alimentacao_de
+        param.substituicoes_INTEGRAL !== undefined
+          ? param.substituicoes_INTEGRAL.tipos_alimentacao_de
           : []
     };
 
     this.setState({
       dataInicial,
-      status: param.alteracaoDeCardapio.status,
-      title: `Alteração do Tipo de Alimentação # ${
-        param.alteracaoDeCardapio.id_externo
-      }`,
-      uuidRascunhoEmEdicao: param.alteracaoDeCardapio.uuid,
+      status: param.status,
+      title: `Alteração do Tipo de Alimentação # ${param.id_externo}`,
+      uuidRascunhoEmEdicao: param.uuid,
       salvarAtualizarLbl: "Atualizar",
-      id: param.alteracaoDeCardapio.id_externo,
+      id: param.id_externo,
       substituicoesAlimentacao,
       periodos,
       ehAlteracaoComLancheRepetida,
@@ -966,11 +957,9 @@ class AlteracaoCardapio extends Component {
                 <span className="page-title">Rascunhos</span>
                 <Rascunhos
                   alteracaoCardapioList={alteracaoCardapioList}
-                  OnDeleteButtonClicked={this.OnDeleteButtonClicked}
+                  removerRascunho={this.OnDeleteButtonClicked}
                   resetForm={event => this.resetForm(event)}
-                  OnEditButtonClicked={params =>
-                    this.OnEditButtonClicked(params)
-                  }
+                  carregarRascunho={params => this.OnEditButtonClicked(params)}
                 />
               </section>
             )}

@@ -23,6 +23,17 @@ import InclusoesCEI from "./InclusoesCEI";
 export class CorpoRelatorio extends Component {
   renderParteAvulsa(inclusoes) {
     const diasMotivosFormatados = formataMotivosDias(inclusoes);
+
+    const getDia = dia => {
+      return inclusaoDeAlimentacao[
+        !ehInclusaoCei(tipoSolicitacao)
+          ? "inclusoes"
+          : "dias_motivos_da_inclusao_cei"
+      ].find(i => i.data === dia);
+    };
+
+    const { inclusaoDeAlimentacao, tipoSolicitacao } = this.props;
+
     return (
       <>
         <table className="table-reasons">
@@ -37,47 +48,38 @@ export class CorpoRelatorio extends Component {
                   </tr>
                   <tr className="row">
                     <td className="col-2">{motivo}</td>
-                    {!ehInclusaoCei(this.props.tipoSolicitacao) ? (
-                      datas.map((dia, key) => {
-                        return (
-                          <td
-                            key={key}
-                            className={`col-2 ${
-                              this.props.inclusaoDeAlimentacao.inclusoes.find(
-                                i => i.data === dia
-                              ).cancelado
-                                ? `red`
-                                : ""
-                            }`}
-                          >
-                            {dia}
-                          </td>
-                        );
-                      })
-                    ) : (
-                      <td className="col-2">
-                        {this.props.inclusaoDeAlimentacao.data}
-                      </td>
-                    )}
+                    {datas.map((dia, key) => {
+                      return (
+                        <td
+                          key={key}
+                          className={`col-2 ${
+                            getDia(dia).cancelado ||
+                            inclusaoDeAlimentacao.status === "ESCOLA_CANCELOU"
+                              ? `cancelado`
+                              : ""
+                          }`}
+                        >
+                          <span>{dia}</span>
+                          {(getDia(dia).cancelado ||
+                            inclusaoDeAlimentacao.status ===
+                              "ESCOLA_CANCELOU") && (
+                            <div className="cancelado-justificativa">
+                              <strong>justificativa:</strong>{" "}
+                              {getDia(dia).cancelado_justificativa ||
+                                inclusaoDeAlimentacao.logs[
+                                  inclusaoDeAlimentacao.logs.length - 1
+                                ].justificativa}
+                            </div>
+                          )}
+                        </td>
+                      );
+                    })}
                   </tr>
                 </Fragment>
               );
             })}
           </tbody>
         </table>
-        {this.props.inclusaoDeAlimentacao.inclusoes &&
-          this.props.inclusaoDeAlimentacao.inclusoes.find(i => i).cancelado && (
-            <>
-              <div className="mt-auto">
-                <span className="dot mr-3" />
-                Solicitação ativa
-              </div>
-              <div>
-                <span className="dot red mr-3" />
-                Solicitação cancelada
-              </div>
-            </>
-          )}
       </>
     );
   }
@@ -118,6 +120,7 @@ export class CorpoRelatorio extends Component {
         logs,
         quantidades_periodo,
         quantidade_alunos_por_faixas_etarias,
+        dias_motivos_da_inclusao_cei,
         inclusoes,
         data,
         motivo,
@@ -208,13 +211,14 @@ export class CorpoRelatorio extends Component {
         {ehInclusaoContinua(tipoSolicitacao)
           ? this.renderParteContinua()
           : this.renderParteAvulsa(
-              inclusoes || [
-                {
-                  data,
-                  motivo,
-                  outro_motivo
-                }
-              ]
+              inclusoes ||
+                dias_motivos_da_inclusao_cei || [
+                  {
+                    data,
+                    motivo,
+                    outro_motivo
+                  }
+                ]
             )}
         {exibirNovoComponeneteCEI ? (
           <InclusoesCEI

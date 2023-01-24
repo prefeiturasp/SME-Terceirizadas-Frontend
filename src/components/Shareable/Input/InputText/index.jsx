@@ -31,7 +31,8 @@ export const InputText = props => {
     contador,
     toUppercaseActive,
     apenasNumeros,
-    id
+    id,
+    proibeLetras
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -75,6 +76,9 @@ export const InputText = props => {
             : e.target.value;
           e.target.value = apenasNumeros
             ? e.target.value.replace(/\D/g, "")
+            : e.target.value;
+          e.target.value = proibeLetras
+            ? e.target.value.replace(/[A-Za-z]/, "")
             : e.target.value;
         }}
       />

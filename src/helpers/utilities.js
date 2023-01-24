@@ -4,6 +4,7 @@ import "moment/locale/pt-br";
 import {
   JS_DATE_DEZEMBRO,
   statusEnum,
+  TIPOS_SOLICITACAO_LABEL,
   TIPO_SOLICITACAO
 } from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
@@ -157,7 +158,7 @@ export const pontuarValor = valor => {
   return parseFloat(valor).toLocaleString();
 };
 
-export const mensagemCancelamento = status => {
+export const mensagemCancelamento = (status, tipoDoc) => {
   switch (status) {
     case statusEnum.DRE_A_VALIDAR:
       return "Esta solicitação está aguardando validação pela DRE. ";
@@ -167,7 +168,9 @@ export const mensagemCancelamento = status => {
       return "Esta solicitação está aguardando autorização da CODAE. ";
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
-      return "Esta solicitação já foi autorizada pela CODAE. ";
+      return tipoDoc === TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA
+        ? "Esta solicitação está autorizada pela CODAE. "
+        : "Esta solicitação já foi autorizada pela CODAE. ";
     case statusEnum.INFORMADO:
       return "A solicitação da suspensão de alimentação está autorizada automaticamente. ";
     default:
@@ -277,6 +280,9 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
         TIPO_PERFIL.DIETA_ESPECIAL
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
+      return [TIPO_PERFIL.ESCOLA, TIPO_PERFIL.DIRETORIA_REGIONAL].includes(
+        tipoPerfil
+      );
     case statusEnum.CODAE_QUESTIONADO:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     case statusEnum.ESCOLA_CANCELOU:
@@ -655,6 +661,26 @@ export const formatarLotesParaVisao = lotes => {
     lote["link"] = lote["uuid"];
   });
   return lotes;
+};
+
+export const formatarOpcoesLote = lista => {
+  const listaFormatada = lista.map(obj => {
+    return {
+      label: `${obj.diretoria_regional.iniciais} - ${obj.nome}`,
+      value: obj.uuid
+    };
+  });
+  return listaFormatada;
+};
+
+export const formatarOpcoesDRE = lista => {
+  const listaFormatada = lista.map(obj => {
+    return {
+      label: obj.nome,
+      value: obj.uuid
+    };
+  });
+  return listaFormatada;
 };
 
 export const ehInclusaoContinua = tipoSolicitacao => {

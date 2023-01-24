@@ -57,7 +57,7 @@ export const SuspensaoAlimentacaoCEIBody = ({ ...props }) => {
               </div>
               <div className="col-4">
                 <p>
-                  <b>{solicitacao.criado_em}</b>
+                  <b>{solicitacao.criado_em.split(" ")[0]}</b>
                 </p>
               </div>
             </div>

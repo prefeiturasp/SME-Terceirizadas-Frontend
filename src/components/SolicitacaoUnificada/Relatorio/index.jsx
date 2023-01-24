@@ -18,7 +18,7 @@ import { TIPO_PERFIL } from "../../../constants/shared";
 import { statusEnum } from "../../../constants/shared";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
+import { CODAE, ESCOLA, TERCEIRIZADA } from "../../../configs/constants";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
@@ -139,12 +139,19 @@ class Relatorio extends Component {
       ModalQuestionamento
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
-    const EXIBIR_BOTAO_NAO_APROVAR =
+    const nomeEscola = localStorage.getItem("nome_instituicao");
+    let EXIBIR_BOTAO_NAO_APROVAR =
       tipoPerfil !== TIPO_PERFIL.TERCEIRIZADA ||
       (solicitacaoUnificada &&
         solicitacaoUnificada.prioridade !== "REGULAR" &&
         solicitacaoUnificada.status === statusEnum.CODAE_QUESTIONADO &&
         textoBotaoNaoAprova);
+    if (solicitacaoUnificada && visao === ESCOLA) {
+      const escolaQuantidade = solicitacaoUnificada.escolas_quantidades.filter(
+        eq => `"${eq.escola.nome}"` === nomeEscola
+      )[0];
+      EXIBIR_BOTAO_NAO_APROVAR = !escolaQuantidade.cancelado;
+    }
     const EXIBIR_BOTAO_APROVAR =
       (![
         TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
@@ -197,6 +204,7 @@ class Relatorio extends Component {
         />
       );
     };
+
     return (
       <div className="report">
         {ModalNaoAprova && (
@@ -250,12 +258,12 @@ class Relatorio extends Component {
             <span className="page-title">{`Solicitação Unificada - Solicitação # ${
               solicitacaoUnificada.id_externo
             }`}</span>
-            <Link to={`/`}>
+            <Link to={`/painel-gestao-alimentacao`}>
               <Botao
-                texto="voltar"
+                texto="Voltar"
                 titulo="voltar"
                 type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
+                style={BUTTON_STYLE.GREEN}
                 icon={BUTTON_ICON.ARROW_LEFT}
                 className="float-right"
               />
@@ -265,9 +273,12 @@ class Relatorio extends Component {
                 <CorpoRelatorio
                   solicitacaoUnificada={solicitacaoUnificada}
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
+                  visao={visao}
                 />
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={solicitacaoUnificada}
+                  visao={visao}
+                  nomeEscola={nomeEscola}
                 />
                 <RelatorioHistoricoQuestionamento
                   solicitacao={solicitacaoUnificada}
@@ -279,7 +290,7 @@ class Relatorio extends Component {
                     {EXIBIR_BOTAO_NAO_APROVAR && (
                       <Botao
                         texto={textoBotaoNaoAprova}
-                        className="ml-3"
+                        className="ml-3 mr-3 mt-4"
                         onClick={() => this.showNaoAprovaModal("Não")}
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.GREEN_OUTLINE}
@@ -303,7 +314,7 @@ class Relatorio extends Component {
                                 : this.handleSubmit()
                             }
                             style={BUTTON_STYLE.GREEN}
-                            className="ml-3"
+                            className="ml-3 mr-3 mt-4"
                           />
                         )))}
                     {EXIBIR_BOTAO_QUESTIONAMENTO && (
@@ -317,7 +328,7 @@ class Relatorio extends Component {
                         type={BUTTON_TYPE.SUBMIT}
                         onClick={() => this.showQuestionamentoModal("Sim")}
                         style={BUTTON_STYLE.GREEN}
-                        className="ml-3"
+                        className="ml-3 mr-3 mt-4"
                       />
                     )}
                     {EXIBIR_BOTAO_MARCAR_CONFERENCIA && (

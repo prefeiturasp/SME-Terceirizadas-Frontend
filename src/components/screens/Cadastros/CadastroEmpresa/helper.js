@@ -62,10 +62,13 @@ const retornaLotes = lotes => {
 };
 
 const retornaEditalDeContrato = contrato => {
-  return {
-    edital: contrato.edital.numero,
-    contrato: contrato.numero
-  };
+  if (contrato.edital) {
+    return {
+      edital: contrato.edital.numero,
+      contrato: contrato.numero
+    };
+  }
+  return null;
 };
 
 const retornaEditais = contratos => {
@@ -81,6 +84,7 @@ export const retornArrayTerceirizadas = response => {
       uuid: resp.uuid,
       codigo_empresa: resp.id_externo,
       nome: resp.razao_social,
+      nome_fantasia: resp.nome_fantasia,
       cnpj: resp.cnpj,
       status: resp.ativo ? "Ativa" : "Inativa",
       ativo: false,
@@ -93,7 +97,8 @@ export const retornArrayTerceirizadas = response => {
           email: contato.email
         };
       }),
-      eh_distribuidor: resp.eh_distribuidor,
+      contratos: resp.contratos,
+      eh_distribuidor: resp.tipo_servico !== "TERCEIRIZADA",
       telefone: resp.contatos.length === 0 ? null : resp.contatos[0].telefone,
       email: resp.contatos.length === 0 ? null : resp.contatos[0].email,
       representante: resp.representante_legal,
@@ -115,6 +120,7 @@ export const retornArrayTerceirizadas = response => {
       responsavel_cargo: resp.responsavel_cargo,
       tipo_alimento: resp.tipo_alimento_display,
       tipo_empresa: resp.tipo_empresa_display,
+      tipo_servico: resp.tipo_servico_display,
       numero_contrato: resp.numero_contrato,
       criado_em: resp.criado_em
     };
@@ -136,31 +142,42 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         eh_nutricionista: true
       }
     ];
-    const contatosEmpresa = [
-      ...valoresState.contatosEmpresa,
-      ...valoresState.contatosPessoaEmpresa
-    ].map(item => {
+    const contatosEmpresa = valoresState.contatosPessoaEmpresa.map(item => {
       return {
         nome: item.nome,
         telefone: item.telefone,
         email: item.email
       };
     });
+    const contratos = valoresState.contratos.map((contrato, index) => ({
+      numero: valoresForm[`numero_contrato_${index}`],
+      processo: valoresForm[`numero_processo_${index}`],
+      vigencias: [
+        {
+          data_inicial: valoresForm[`vigencia_de_${index}`],
+          data_final: valoresForm[`vigencia_ate_${index}`]
+        }
+      ],
+      encerrado: contrato.encerrado ? true : false
+    }));
     const contatos = [...contatosEmpresa, ...contatosNutri];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       tipo_alimento: valoresForm.tipo_alimento,
       tipo_empresa: valoresForm.tipo_empresa,
+      tipo_servico: valoresForm.tipo_servico,
       numero_contrato: valoresForm.numero_contrato,
       razao_social: valoresForm.razao_social,
       cnpj: valoresForm.cnpj,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatos,
+      contratos: contratos,
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
+      eh_distribuidor_ou_fornecedor:
+        valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,

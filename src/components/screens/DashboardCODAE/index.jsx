@@ -1,6 +1,18 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
-import { Field, reduxForm } from "redux-form";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
+import CardStatusDeSolicitacao, {
+  ICON_CARD_TYPE_ENUM,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  FILTRO_VISAO,
+  PAGINACAO_DASHBOARD_DEFAULT
+} from "../../../constants/shared";
+import { FILTRO } from "../const";
 import {
   CODAE,
   SOLICITACOES_AUTORIZADAS,
@@ -9,22 +21,7 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_COM_QUESTIONAMENTO
 } from "../../../configs/constants";
-import {
-  FILTRO_VISAO,
-  PAGINACAO_DASHBOARD_DEFAULT
-} from "../../../constants/shared";
-import { dataAtual } from "../../../helpers/utilities";
-import CardBody from "../../Shareable/CardBody";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao, {
-  ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { ajustarFormatoLog, slugify } from "../helper";
-import Select from "../../Shareable/Select";
-import { FILTRO } from "../const";
-import "./style.scss";
+import { ajustarFormatoLog } from "../helper";
 import {
   getSolicitacoesCanceladasCodae,
   getSolicitacoesNegadasCodae,
@@ -33,160 +30,161 @@ import {
   getSolicitacoesComQuestionamentoCodae,
   getSolicitacoesPendentesAutorizacaoCodaeSemFiltro
 } from "../../../services/painelCODAE.service";
-import { toastError } from "../../Shareable/Toast/dialogs";
 import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
+import { toastError } from "../../Shareable/Toast/dialogs";
+import { dataAtual } from "../../../helpers/utilities";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
+import "./style.scss";
 
-const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
-class DashboardCODAE extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: this.props.cards,
-      pendentesAutorizacaoListFiltered: [],
-      questionamentosListFiltered: [],
-      canceladasListFiltered: [],
-      negadasListFiltered: [],
-      autorizadasListFiltered: [],
+export const DashboardCODAE = ({
+  cards,
+  lotes,
+  diretoriasRegionais,
+  handleSubmit,
+  meusDados
+}) => {
+  const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
+  const filtroPorVencimento = FILTRO.SEM_FILTRO;
+  const visao = FILTRO_VISAO.POR_TIPO_SOLICITACAO;
+  const { Option } = SelectAntd;
 
-      lotes: [],
-      resumo: [],
+  const opcoesDRE = diretoriasRegionais
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por DRE
+        </Option>
+      ].concat(
+        diretoriasRegionais.map(dre => {
+          return (
+            <Option key={dre.value} value={dre.value}>
+              {dre.label}
+            </Option>
+          );
+        })
+      )
+    : [];
 
-      collapsed: true,
-      pendentesAutorizacaoListSolicitacao: [],
-      questionamentosListSolicitacao: [],
-      canceladasListSolicitacao: [],
-      loadingPainelSolicitacoes: true,
+  const opcoesLote = lotes
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por Lote
+        </Option>
+      ].concat(
+        lotes.map(lote => {
+          return (
+            <Option value={lote.value} key={lote.value}>
+              {lote.label}
+            </Option>
+          );
+        })
+      )
+    : [];
 
-      visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO,
-      filtroPorVencimento: FILTRO.SEM_FILTRO
-    };
-    this.alterarCollapse = this.alterarCollapse.bind(this);
-    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
-  }
+  const [collapsed, setCollapsed] = useState(true);
+  const [filtros, setFiltros] = useState({});
+  const [resumo, setResumo] = useState([]);
+  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
+    false
+  );
 
-  alterarCollapse() {
-    this.setState({ collapsed: !this.state.collapsed });
-  }
+  const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
+    pendentes: [],
+    questionadas: [],
+    autorizadas: [],
+    negadas: [],
+    canceladas: []
+  });
 
-  filtrarNome(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(value.toLowerCase());
-      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
-    });
-    return listaFiltro;
-  }
+  const getSolicitacoesAsync = async (params = null) => {
+    let pendentesAutorizacaoListSolicitacao = [];
+    let canceladasListSolicitacao = [];
+    let negadasListSolicitacao = [];
+    let autorizadasListSolicitacao = [];
+    let questionamentosListSolicitacao = [];
 
-  setfiltroPorVencimento(filtroPorVencimento) {
-    this.setState({ filtroPorVencimento }, () => {
-      this.carregaResumoPendencias();
-    });
-  }
-
-  setVisao(visao) {
-    const { tiposSolicitacao, lotes, diretoriasRegionais } = this.props;
-    this.setState(
-      {
-        visao,
-        cards:
-          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
-            ? tiposSolicitacao
-            : visao === FILTRO_VISAO.DRE
-            ? diretoriasRegionais
-            : lotes
-      },
-      () => {
-        this.carregaResumoPendencias();
+    await getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(
+      response => {
+        pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
+          response.data.results
+        );
       }
     );
-  }
 
-  async carregaResumoPendencias() {
-    const { visao, filtroPorVencimento } = this.state;
-    this.setState({ loadingPainelSolicitacoes: true });
-    const resumo = await getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias(
+    await getSolicitacoesCanceladasCodae(params).then(response => {
+      canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    await getSolicitacoesNegadasCodae(params).then(response => {
+      negadasListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    await getSolicitacoesAutorizadasCodae(params).then(response => {
+      autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    await getSolicitacoesComQuestionamentoCodae(params).then(response => {
+      questionamentosListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    setSolicitacoesFiltradas({
+      pendentes: pendentesAutorizacaoListSolicitacao,
+      questionadas: questionamentosListSolicitacao,
+      autorizadas: autorizadasListSolicitacao,
+      negadas: negadasListSolicitacao,
+      canceladas: canceladasListSolicitacao
+    });
+  };
+
+  const carregaResumoPendencias = async (values = {}) => {
+    setLoadingPainelSolicitacoes(true);
+    await getSolicitacoesPendentesAutorizacaoCODAESecaoPendencias(
       filtroPorVencimento,
-      visao
-    );
-
-    // TODO melhorar essas duas linhas abaixo
-    resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
-    delete resumo["Kit Lanche Passeio Unificado"];
-
-    const correcaoOk = corrigeResumo(resumo);
-    if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
-    this.setState({
-      resumo,
-      loadingPainelSolicitacoes: false
+      visao,
+      prepararParametros(values)
+    ).then(response => {
+      const resumo = response.data.results;
+      // // TODO melhorar essas duas linhas abaixo
+      resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
+      delete resumo["Kit Lanche Passeio Unificado"];
+      const correcaoOk = corrigeResumo(resumo);
+      if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
+      setResumo(resumo);
     });
-  }
+    setLoadingPainelSolicitacoes(false);
+  };
 
-  async getSolicitacoesAsync(params = null) {
-    getSolicitacoesPendentesAutorizacaoCodaeSemFiltro(params).then(response => {
-      let pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
-        response.data.results
-      );
-      this.setState({
-        pendentesAutorizacaoListSolicitacao,
-        pendentesAutorizacaoListFiltered: pendentesAutorizacaoListSolicitacao
-      });
-    });
-
-    getSolicitacoesCanceladasCodae(params).then(response => {
-      let canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        canceladasListSolicitacao,
-        canceladasListFiltered: canceladasListSolicitacao
-      });
-    });
-
-    getSolicitacoesNegadasCodae(params).then(response => {
-      let negadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        negadasListSolicitacao,
-        negadasListFiltered: negadasListSolicitacao
-      });
-    });
-
-    getSolicitacoesAutorizadasCodae(params).then(response => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-      this.setState({
-        autorizadasListSolicitacao: autorizadasListSolicitacao,
-        autorizadasListFiltered: autorizadasListSolicitacao
-      });
-    });
-
-    getSolicitacoesComQuestionamentoCodae(params).then(response => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(
-        response.data.results
-      );
-      this.setState({
-        questionamentosListSolicitacao: questionamentosListSolicitacao,
-        questionamentosListFiltered: questionamentosListSolicitacao
-      });
-    });
-  }
-
-  async componentDidMount() {
-    this.carregaResumoPendencias();
-    this.getSolicitacoesAsync(PARAMS);
-  }
-
-  onPesquisaChanged(values) {
+  const onPesquisaChanged = values => {
+    carregaResumoPendencias(values);
     if (values.titulo && values.titulo.length > 2) {
       setTimeout(async () => {
-        this.getSolicitacoesAsync({
+        getSolicitacoesAsync({
           busca: values.titulo,
-          ...this.prepararParametros(values)
+          ...prepararParametros(values)
         });
       }, 500);
     } else {
       setTimeout(async () => {
-        this.getSolicitacoesAsync(this.prepararParametros(values));
+        getSolicitacoesAsync(prepararParametros(values));
       }, 500);
     }
-  }
+  };
 
-  prepararParametros(values) {
+  const linkTo = link => {
+    let url =
+      visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${CODAE}/${link}` : "/";
+
+    return {
+      pathname: url,
+      state: {
+        prevPath: window.location.pathname,
+        filtros: filtros
+      }
+    };
+  };
+
+  const prepararParametros = values => {
+    setFiltros(values);
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
@@ -195,179 +193,180 @@ class DashboardCODAE extends Component {
         .split("/")
         .reverse()
         .join("-");
+    params["diretoria_regional"] = values.diretoria_regional;
+    params["lote"] = values.lote;
     return params;
-  }
+  };
 
-  render() {
-    const { handleSubmit, visaoPor, filtroPor, meusDados } = this.props;
-    const {
-      cards,
-      collapsed,
-      visao,
-      questionamentosListFiltered,
-      pendentesAutorizacaoListFiltered,
-      canceladasListFiltered,
-      negadasListFiltered,
-      autorizadasListFiltered,
-      resumo,
-      loadingPainelSolicitacoes
-    } = this.state;
+  useEffect(() => {
+    carregaResumoPendencias();
+    getSolicitacoesAsync(PARAMS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return (
-      <div>
-        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
-          <Field component={"input"} type="hidden" name="uuid" />
-          <CardMatriculados
-            collapsed={collapsed}
-            alterarCollapse={this.alterarCollapse}
-            meusDados={meusDados}
-            numeroAlunos={
-              (meusDados &&
-                meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
-              0
-            }
-          />
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                <div className="row">
-                  <div className="col-3 mt-3 color-black">Pendências</div>
-                  <div className="offset-3 col-3 text-right my-auto">
-                    <Select
-                      naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.setfiltroPorVencimento(event.target.value)
-                      }
-                      placeholder={"Filtro por"}
-                      options={filtroPor}
-                    />
-                  </div>
-                  <div className="col-3 text-right my-auto">
-                    <Select
-                      naoDesabilitarPrimeiraOpcao
-                      disabled={resumo.length === 0}
-                      onChange={event => this.setVisao(event.target.value)}
-                      placeholder={"Visão por"}
-                      options={visaoPor}
-                    />
+  return (
+    <div>
+      <Form
+        onSubmit={() => handleSubmit}
+        initialValues={{}}
+        render={({ handleSubmit, values, form }) => (
+          <form onSubmit={handleSubmit}>
+            <Field component={"input"} type="hidden" name="uuid" />
+            <CardMatriculados
+              collapsed={collapsed}
+              alterarCollapse={() => setCollapsed(!collapsed)}
+              meusDados={meusDados}
+              numeroAlunos={
+                (meusDados &&
+                  meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
+                0
+              }
+            />
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="card-title font-weight-bold dashboard-card-title">
+                  <div className="row">
+                    <div className="col-3 mt-3 color-black">Pendências</div>
+                    <div className="offset-3 col-3 my-auto">
+                      <Field
+                        component={ASelect}
+                        showSearch
+                        onChange={value => {
+                          form.change(`diretoria_regional`, value || undefined);
+                          onPesquisaChanged(form.getState().values);
+                        }}
+                        name="diretoria_regional"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                      >
+                        {opcoesDRE}
+                      </Field>
+                    </div>
+                    <div className="col-3 my-auto">
+                      <Field
+                        component={ASelect}
+                        showSearch
+                        onChange={value => {
+                          form.change(`lote`, value || undefined);
+                          onPesquisaChanged(form.getState().values);
+                        }}
+                        name="lote"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                      >
+                        {opcoesLote}
+                      </Field>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="pt-3" />
-              <div className="row pt-3">
-                {cards.map((card, key) => {
-                  return resumo[card.titulo] ? (
-                    <div key={key} className="col-6 pb-3">
-                      <Link
-                        to={
-                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
-                            ? `/${CODAE}/${card.link}`
-                            : "/"
-                        }
-                      >
-                        <CardPendencia
-                          cardTitle={card.titulo}
-                          totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
-                          priorityOrders={
-                            resumo[card.titulo]["PRIORITARIO"] || 0
-                          }
-                          onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
-                          regularOrders={resumo[card.titulo]["REGULAR"] || 0}
-                          loading={loadingPainelSolicitacoes}
-                        />
-                      </Link>
-                    </div>
-                  ) : (
-                    <div key={key} className="col-6 pb-3">
-                      <Link
-                        to={
-                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
-                            ? `/${CODAE}/${card.link}`
-                            : "/"
-                        }
-                      >
-                        <CardPendencia
-                          cardTitle={card.titulo}
-                          totalOfOrders={0}
-                          priorityOrders={0}
-                          onLimitOrders={0}
-                          regularOrders={0}
-                          loading={loadingPainelSolicitacoes}
-                        />
-                      </Link>
-                    </div>
-                  );
-                })}
+                <div className="pt-3" />
+                <div className="row pt-3">
+                  {cards.map((card, key) => {
+                    return resumo[card.titulo] ? (
+                      <div key={key} className="col-6 pb-3">
+                        <Link to={linkTo(card.link)}>
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
+                            priorityOrders={
+                              resumo[card.titulo]["PRIORITARIO"] || 0
+                            }
+                            onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
+                            regularOrders={resumo[card.titulo]["REGULAR"] || 0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6 pb-3">
+                        <Link to={linkTo(card.link)}>
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={0}
+                            priorityOrders={0}
+                            onLimitOrders={0}
+                            regularOrders={0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-          <CardBody
-            exibirFiltrosDataEventoETipoSolicitacao={true}
-            titulo={"Acompanhamento solicitações"}
-            dataAtual={dataAtual()}
-            onChange={this.onPesquisaChanged}
-          >
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Autorização"}
-                  cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={pendentesAutorizacaoListFiltered}
-                  icon={"fa-exclamation-triangle"}
-                  href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
-                />
+            <CardBodySemRedux
+              exibirFiltrosDataEventoETipoSolicitacao={false}
+              titulo={"Acompanhamento solicitações"}
+              dataAtual={dataAtual()}
+              onChange={() => onPesquisaChanged(values)}
+              values={values}
+            >
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Autorização"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesFiltradas.pendentes}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${CODAE}/${SOLICITACOES_PENDENTES}`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Resposta da Empresa"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesFiltradas.questionadas}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${CODAE}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
+                  />
+                </div>
               </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Resposta da Empresa"}
-                  cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={questionamentosListFiltered}
-                  icon={"fa-exclamation-triangle"}
-                  href={`/${CODAE}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
-                />
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={solicitacoesFiltradas.autorizadas}
+                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                    href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesFiltradas.negadas}
+                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                    href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Autorizadas"}
-                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                  solicitations={autorizadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                  href={`/${CODAE}/${SOLICITACOES_AUTORIZADAS}`}
-                />
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={solicitacoesFiltradas.canceladas}
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
+                  />
+                </div>
               </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Negadas"}
-                  cardType={CARD_TYPE_ENUM.NEGADO}
-                  solicitations={negadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                  href={`/${CODAE}/${SOLICITACOES_NEGADAS}`}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Canceladas"}
-                  cardType={CARD_TYPE_ENUM.CANCELADO}
-                  solicitations={canceladasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                  href={`/${CODAE}/${SOLICITACOES_CANCELADAS}`}
-                />
-              </div>
-            </div>
-          </CardBody>
-        </form>
-      </div>
-    );
-  }
-}
+            </CardBodySemRedux>
+          </form>
+        )}
+      />
+    </div>
+  );
+};
 
-const DashboardCODAEForm = reduxForm({
-  form: "DashboardCODAE",
-  enableReinitialize: true
-})(DashboardCODAE);
-
-export default DashboardCODAEForm;
+export default DashboardCODAE;

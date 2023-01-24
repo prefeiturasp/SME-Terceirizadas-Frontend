@@ -1,5 +1,34 @@
 @import "../../../../styles/variables.scss";
 
+.cadastro-empresa {
+  .card-title {
+    &.green {
+      color: $green !important;
+    }
+    font-weight: bold;
+  }
+
+  .flex-center {
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-encerrar-contrato {
+    margin-top: 30px;
+  }
+
+  .aviso-encerramento {
+    margin-top: 30px;
+    color: #b40c02;
+    border: 1px solid #c00000;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    height: 38px;
+    width: 100%;
+  }
+}
+
 .form-section-terceirizada {
   label.container-radio {
     color: $gray;
@@ -9,4 +38,30 @@
       }
     }
   }
+}
+
+header.titulo-secao {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  margin: 20px 0px 10px 0px;
+
+  span {
+    color: #198459;
+    display: block;
+    position: relative;
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      margin-left: 10px;
+      border-top: 1px solid #ccc;
+    }
+  }
+}
+
+.botao-editar {
+  color: #198459;
 }

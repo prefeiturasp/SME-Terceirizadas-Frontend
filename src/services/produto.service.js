@@ -467,7 +467,7 @@ export const getDashboardGestaoProdutos = async () => {
 
 export const getHomologacoesPorTituloMarca = async parametros => {
   return await axios.post(
-    `/painel-gerencial-homologacoes-produtos/filtro-homologacoes-por-titulo-marca/`,
+    `/painel-gerencial-homologacoes-produtos/filtro-homologacoes-por-titulo-marca-edital/`,
     parametros
   );
 };
