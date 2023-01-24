@@ -23,7 +23,7 @@ class StatusSolicitacoesBase extends React.Component {
     };
 
     return (
-      <Page>
+      <Page botaoVoltar>
         <Breadcrumb home={HOME} atual={atual} />
         <StatusSolicitacoes
           formatarDadosSolicitacao={formataCards}
