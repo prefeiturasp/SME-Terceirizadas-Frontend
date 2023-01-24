@@ -35,7 +35,8 @@
 
 .botao-remover-escola {
   border-radius: 50% !important;
-  width: 100%;
+  width: 45px !important;
+  height: 45px !important;
 }
 
 .wrapper-solicitacao {
@@ -230,7 +231,6 @@
   }
   .observacoes-solicitacao {
     margin-top: 15px;
-    display: grid;
     grid-template-rows: 80px 80px;
     grid-row-gap: 10px;
     .div-topo {
