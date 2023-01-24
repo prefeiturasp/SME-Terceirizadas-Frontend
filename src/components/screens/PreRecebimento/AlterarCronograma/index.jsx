@@ -18,6 +18,15 @@ const opcoesMotivos = [
   { value: "outros", label: "Outros" }
 ];
 
+const manterDataEQuantidade = (values, values_) => {
+  return (
+    values.motivos &&
+    values.motivos.includes("outros") &&
+    (values_.includes("quantidade_programada") ||
+      values_.includes("data_entrega"))
+  );
+};
+
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
@@ -35,6 +44,29 @@ export default () => {
   useEffect(() => {
     getDetalhes();
   }, []);
+
+  const alterarCronograma = values => {
+    console.log(values);
+    alert();
+  };
+
+  const prepararPayload = values => {
+    let a = [];
+    if (values.motivos) {
+      a = cronograma.etapas.map(etapa => {
+        return {
+          uuid: etapa.uuid,
+          nova_data_programada: values.motivos.includes("data_entrega")
+            ? values[`data_programada_${etapa.uuid}`]
+            : null,
+          quantidade_total: values.motivos.includes("quantidade_programada")
+            ? values[`quantidade_total_${etapa.uuid}`]
+            : null
+        };
+      });
+    }
+  };
+
   return (
     <div className="card mt-3">
       <div className="card-body">
@@ -45,7 +77,9 @@ export default () => {
               esconderInformacoesAdicionais={true}
             />
             <Form
-              onSubmit={() => {}}
+              onSubmit={values => {
+                prepararPayload(values);
+              }}
               initialValues={{}}
               render={({ handleSubmit, form, values }) => (
                 <form onSubmit={handleSubmit}>
@@ -61,12 +95,7 @@ export default () => {
                       options={opcoesMotivos}
                       selected={values.motivos || []}
                       onSelectedChanged={values_ => {
-                        if (
-                          values.motivos &&
-                          values.motivos.includes("outros") &&
-                          (values_.includes("quantidade_programada") ||
-                            values_.includes("data_entrega"))
-                        ) {
+                        if (manterDataEQuantidade(values, values_)) {
                           values_ = values_.filter(
                             value_ => value_ !== "outros"
                           );
@@ -102,7 +131,7 @@ export default () => {
                     </label>
                     <Field
                       component={TextArea}
-                      name="quantidade_total"
+                      name="justificativa"
                       placeholder="Escreva as alterações necessárias..."
                       className="input-busca-produto"
                       required
@@ -110,7 +139,10 @@ export default () => {
                   </div>
                   {usuarioEhFornecedor() && (
                     <div className="mt-4 mb-4">
-                      <AcoesAlterar cronograma={cronograma} />
+                      <AcoesAlterar
+                        cronograma={cronograma}
+                        handleSubmit={handleSubmit}
+                      />
                     </div>
                   )}
                 </form>

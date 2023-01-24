@@ -14,13 +14,17 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
           <p>
             <b>Nº do Contrato:</b>
           </p>
-          <p className="head-green">{cronograma.contrato}</p>
+          {cronograma.contrato && (
+            <p className="head-green">{cronograma.contrato.numero}</p>
+          )}
         </div>
         <div className="col-4">
           <p>
             <b>Nº do Processo SEI - Contratos:</b>
           </p>
-          <p className="head-green">{cronograma.processo_sei}</p>
+          {cronograma.contrato && (
+            <p className="head-green">{cronograma.contrato.processo}</p>
+          )}
         </div>
       </div>
       <hr />
@@ -29,17 +33,18 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
           <div>
             <p>Empresa:</p>
             <p>
-              <b>{cronograma.nome_empresa}</b>
+              {cronograma.empresa && <b>{cronograma.empresa.nome_fantasia}</b>}
             </p>
           </div>
           <hr />
           <p className="head-green">Dados do produto e datas das entregas</p>
           <br />
+
           <div className="row">
             <div className="col-4">
               <p>Produto:</p>
               <p className="mb-3">
-                <b>{cronograma.nome_produto}</b>
+                {cronograma.produto && <b>{cronograma.produto.nome}</b>}
               </p>
             </div>
             <div className="col-4">
@@ -51,7 +56,9 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
             <div className="col-4">
               <p>Unidade de Medida:</p>
               <p>
-                <b>{cronograma.unidade_medida}</b>
+                {cronograma.unidade_medida && (
+                  <b>{cronograma.unidade_medida.nome}</b>
+                )}
               </p>
             </div>
             <br />
@@ -89,9 +96,7 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
                     <td className="borda-crono">{etapa.etapa}</td>
                     <td className="borda-crono">{etapa.parte}</td>
                     <td className="borda-crono">{etapa.data_programada}</td>
-                    <td className="borda-crono">
-                      {etapa.quantidade} {cronograma.unidade_medida}
-                    </td>
+                    <td className="borda-crono">{etapa.quantidade}</td>
                     <td className="borda-crono">{etapa.total_embalagens}</td>
                   </tr>
                 );

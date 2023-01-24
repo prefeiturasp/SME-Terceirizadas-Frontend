@@ -35,51 +35,52 @@ export default ({ cronograma, motivos }) => {
             </>
           )}
         </div>
-        <div className="grid-cronograma-body">
-          <div>
-            <div>22/08/2022</div>
-          </div>
-          <div>
-            <div>1</div>
-          </div>
-          <div>
-            <div>1</div>
-          </div>
-
-          {motivos.includes("data_entrega") && (
+        {cronograma.etapas.map(etapa => (
+          <div className="grid-cronograma-body" key={etapa.uuid}>
             <div>
-              <div>
-                <Field
-                  component={InputComData}
-                  name="data_geracao"
-                  placeholder="Selecionar Data"
-                  minDate={null}
-                  maxDate={null}
-                  writable
-                />
-              </div>
+              <div>{etapa.data_programada}</div>
             </div>
-          )}
-
-          {motivos.includes("quantidade_programada") && (
-            <>
-              <div>
-                <div>4000.0kg</div>
-              </div>
+            <div>
+              <div>{etapa.etapa}</div>
+            </div>
+            <div>
+              <div>{etapa.parte}</div>
+            </div>
+            {motivos.includes("data_entrega") && (
               <div>
                 <div>
                   <Field
-                    component={InputText}
-                    name="quantidade_total"
-                    placeholder="Quantidade"
-                    className="input-busca-produto"
-                    required
+                    component={InputComData}
+                    name={`data_programada_${etapa.uuid}`}
+                    placeholder="Selecionar Data"
+                    minDate={null}
+                    maxDate={null}
+                    writable
                   />
                 </div>
               </div>
-            </>
-          )}
-        </div>
+            )}
+
+            {motivos.includes("quantidade_programada") && (
+              <>
+                <div>
+                  <div>4000.0kg</div>
+                </div>
+                <div>
+                  <div>
+                    <Field
+                      component={InputText}
+                      name={`quantidade_total_${etapa.uuid}`}
+                      placeholder="Quantidade"
+                      className="input-busca-produto"
+                      required
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
       </div>
     )
   );

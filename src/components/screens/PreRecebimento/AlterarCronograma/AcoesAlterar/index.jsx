@@ -11,7 +11,7 @@ import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 
-export default ({ cronograma }) => {
+export default ({ cronograma, handleSubmit }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -21,22 +21,7 @@ export default ({ cronograma }) => {
   const handleShow = () => setShow(true);
 
   const handleSim = () => {
-    setLoading(true);
-    fornecedorConfirma(cronograma.uuid)
-      .then(response => {
-        if (response.status === 200) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          setShow(false);
-          setLoading(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
-          toastSuccess("Cronograma confirmado com sucesso!");
-        }
-      })
-      .catch(() => {
-        setShow(false);
-        setLoading(false);
-        toastError("Erro: Não foi possível confirmar o cronograma.");
-      });
+    handleSubmit();
   };
 
   const handleBack = () => {
