@@ -8,7 +8,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { distribuidorConfirma } from "services/logistica.service";
 import { Spin } from "antd";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({ solicitacao, updatePage }) => {
   const [show, setShow] = useState(false);
@@ -25,6 +25,7 @@ export default ({ solicitacao, updatePage }) => {
           updatePage();
           setShow(false);
           setLoading(false);
+          toastSuccess("A Confirmação foi realizada com sucesso!");
         }
       })
       .catch(() => {

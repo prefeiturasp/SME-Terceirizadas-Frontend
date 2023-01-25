@@ -24,6 +24,13 @@ textarea {
 
 .card-body {
   padding: 1.25rem !important;
+  .produtos-edital {
+    .ant-select-selector {
+      border-radius: 0.35rem !important;
+      margin-top: 0 !important;
+      height: 35px !important;
+    }
+  }
 }
 
 .dash-terc {

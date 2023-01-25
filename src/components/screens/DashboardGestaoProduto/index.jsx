@@ -82,11 +82,18 @@ export default class DashboardGestaoProduto extends Component {
     this.typingTimeout = setTimeout(async () => {
       const data = {};
       if (
-        (!values.titulo && !values.marca) ||
-        (!values.titulo && values.marca && values.marca.length < 3) ||
-        (!values.marca && values.titulo && values.titulo.length < 3) ||
+        (!values.titulo && !values.marca && !values.edital) ||
+        (!values.titulo &&
+          !values.edital &&
+          values.marca &&
+          values.marca.length < 3) ||
+        (!values.marca &&
+          !values.edital &&
+          values.titulo &&
+          values.titulo.length < 3) ||
         (values.marca &&
           values.titulo &&
+          !values.edital &&
           values.titulo.length < 3 &&
           values.marca.length < 3)
       ) {
@@ -102,6 +109,9 @@ export default class DashboardGestaoProduto extends Component {
       }
       if (values.marca && values.marca.length > 2) {
         data["marca_produto"] = values.marca;
+      }
+      if (values.edital) {
+        data["edital_produto"] = values.edital;
       }
       this.setState({ loading: true });
       const response = await getHomologacoesPorTituloMarca(data);
@@ -156,7 +166,6 @@ export default class DashboardGestaoProduto extends Component {
         {!erro && !cardsFiltered && <div>Carregando dashboard...</div>}
         {!erro && cardsFiltered && (
           <CardBody
-            titulo="Acompanhamento de produtos cadastrados"
             dataAtual={dataAtual()}
             onChange={this.onPesquisaChanged}
             ehDashboardGestaoProduto={true}

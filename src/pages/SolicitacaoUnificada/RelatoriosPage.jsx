@@ -3,19 +3,15 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Relatorio from "../../components/SolicitacaoUnificada/Relatorio";
 import Page from "../../components/Shareable/Page/Page";
 import { HOME } from "../../constants/config";
-import {
-  SOLICITACAO_KIT_LANCHE_UNIFICADA,
-  DRE,
-  CODAE,
-  TERCEIRIZADA
-} from "../../configs/constants";
+import { DRE, CODAE, TERCEIRIZADA, ESCOLA } from "../../configs/constants";
 import {
   cancelaKitLancheUnificadoDre,
   TerceirizadaTomaCienciaSolicitacoUnificada,
   CODAENegaKitLancheUnificadoEscola,
   CODAEAutorizaPedidoKitLancheUnificado,
   terceirizadaRespondeQuestionamentoSolitacaoUnificada,
-  CODAEquestionaSolicitacaoUnificada
+  CODAEquestionaSolicitacaoUnificada,
+  cancelaKitLancheUnificadoEscola
 } from "../../services/solicitacaoUnificada.service";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -30,7 +26,7 @@ class RelatorioBase extends React.Component {
     };
     const anteriores = [
       {
-        href: `/${this.props.VISAO}/${SOLICITACAO_KIT_LANCHE_UNIFICADA}`,
+        href: "/painel-gestao-alimentacao",
         titulo: "Solicitação Unificada"
       }
     ];
@@ -51,6 +47,17 @@ export const RelatorioDRE = () => (
     ModalNaoAprova={ModalCancelarSolicitacao}
     toastNaoAprovaMensagem={"Solicitação Unificada cancelada com sucesso!"}
     endpointNaoAprovaSolicitacao={cancelaKitLancheUnificadoDre}
+    textoBotaoNaoAprova="Cancelar"
+  />
+);
+
+// ESCOLA
+export const RelatorioEscola = () => (
+  <RelatorioBase
+    visao={ESCOLA}
+    ModalNaoAprova={ModalCancelarSolicitacao}
+    toastNaoAprovaMensagem={"Solicitação Unificada cancelada com sucesso!"}
+    endpointNaoAprovaSolicitacao={cancelaKitLancheUnificadoEscola}
     textoBotaoNaoAprova="Cancelar"
   />
 );
