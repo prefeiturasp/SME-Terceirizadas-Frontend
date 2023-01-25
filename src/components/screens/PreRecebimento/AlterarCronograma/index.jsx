@@ -1,29 +1,36 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { getCronograma } from "services/cronograma.service";
+import {
+  cadastraSolicitacaoAlteracaoCronograma,
+  getCronograma
+} from "services/cronograma.service";
 import "./styles.scss";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import DadosCronograma from "../CronogramaEntrega/components/DadosCronograma";
 import TabelaEditarCronograma from "./TabelaEditarCronograma";
-import TextArea from "antd/lib/input/TextArea";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 import "./styles.scss";
 import { usuarioEhFornecedor } from "helpers/utilities";
 import AcoesAlterar from "./AcoesAlterar";
+import { prepararPayloadCronograma } from "components/screens/helper";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import { useHistory } from "react-router-dom";
 
 const opcoesMotivos = [
-  { value: "data_entrega", label: "Data de Entrega" },
-  { value: "quantidade_programada", label: "Quantidade Programada" },
-  { value: "outros", label: "Outros" }
+  { value: "ALTERAR_DATA_ENTREGA", label: "Data de Entrega" },
+  { value: "ALTERAR_QTD_ALIMENTO", label: "Quantidade Programada" },
+  { value: "OUTROS", label: "Outros" }
 ];
 
 const manterDataEQuantidade = (values, values_) => {
   return (
     values.motivos &&
-    values.motivos.includes("outros") &&
-    (values_.includes("quantidade_programada") ||
-      values_.includes("data_entrega"))
+    values.motivos.includes("OUTROS") &&
+    (values_.includes("ALTERAR_QTD_ALIMENTO") ||
+      values_.includes("ALTERAR_DATA_ENTREGA"))
   );
 };
 
@@ -31,6 +38,8 @@ export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   const [cronograma, setCronograma] = useState(null);
+  const [podeSubmeter, setpodeSubmeter] = useState(false);
+  const history = useHistory();
 
   const getDetalhes = async () => {
     if (uuid) {
@@ -45,28 +54,6 @@ export default () => {
     getDetalhes();
   }, []);
 
-  const alterarCronograma = values => {
-    console.log(values);
-    alert();
-  };
-
-  const prepararPayload = values => {
-    let a = [];
-    if (values.motivos) {
-      a = cronograma.etapas.map(etapa => {
-        return {
-          uuid: etapa.uuid,
-          nova_data_programada: values.motivos.includes("data_entrega")
-            ? values[`data_programada_${etapa.uuid}`]
-            : null,
-          quantidade_total: values.motivos.includes("quantidade_programada")
-            ? values[`quantidade_total_${etapa.uuid}`]
-            : null
-        };
-      });
-    }
-  };
-
   return (
     <div className="card mt-3">
       <div className="card-body">
@@ -77,8 +64,16 @@ export default () => {
               esconderInformacoesAdicionais={true}
             />
             <Form
-              onSubmit={values => {
-                prepararPayload(values);
+              onSubmit={async values => {
+                const payload = prepararPayloadCronograma(cronograma, values);
+                await cadastraSolicitacaoAlteracaoCronograma(payload)
+                  .then(() => {
+                    toastSuccess("Solicitação de alteração salva com sucesso!");
+                    history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+                  })
+                  .catch(() => {
+                    toastError("Ocorreu um erro ao salvar o Cronograma");
+                  });
               }}
               initialValues={{}}
               render={({ handleSubmit, form, values }) => (
@@ -95,13 +90,18 @@ export default () => {
                       options={opcoesMotivos}
                       selected={values.motivos || []}
                       onSelectedChanged={values_ => {
+                        if (values_.length === 0) {
+                          setpodeSubmeter(false);
+                        } else {
+                          setpodeSubmeter(true);
+                        }
                         if (manterDataEQuantidade(values, values_)) {
                           values_ = values_.filter(
-                            value_ => value_ !== "outros"
+                            value_ => value_ !== "OUTROS"
                           );
                         }
-                        if (values_.includes("outros")) {
-                          form.change("motivos", ["outros"]);
+                        if (values_.includes("OUTROS")) {
+                          form.change("motivos", ["OUTROS"]);
                           return;
                         }
                         form.change("motivos", values_);
@@ -113,11 +113,12 @@ export default () => {
                           "Todos os itens estão selecionados",
                         selectAll: "Todos"
                       }}
+                      required
                     />
                   </div>
                   {values.motivos &&
-                  (values.motivos.includes("data_entrega") ||
-                    values.motivos.includes("quantidade_programada")) ? (
+                  (values.motivos.includes("ALTERAR_DATA_ENTREGA") ||
+                    values.motivos.includes("ALTERAR_QTD_ALIMENTO")) ? (
                     <div>
                       <TabelaEditarCronograma
                         cronograma={cronograma}
@@ -134,7 +135,6 @@ export default () => {
                       name="justificativa"
                       placeholder="Escreva as alterações necessárias..."
                       className="input-busca-produto"
-                      required
                     />
                   </div>
                   {usuarioEhFornecedor() && (
@@ -142,6 +142,7 @@ export default () => {
                       <AcoesAlterar
                         cronograma={cronograma}
                         handleSubmit={handleSubmit}
+                        podeSubmeter={podeSubmeter}
                       />
                     </div>
                   )}

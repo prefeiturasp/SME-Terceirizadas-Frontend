@@ -18,13 +18,13 @@ export default ({ cronograma, motivos }) => {
           <div>
             <div>Parte</div>
           </div>
-          {motivos.includes("data_entrega") && (
+          {motivos.includes("ALTERAR_DATA_ENTREGA") && (
             <div className="crono-header-green">
               <div>Informar nova data</div>
             </div>
           )}
 
-          {motivos.includes("quantidade_programada") && (
+          {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
             <>
               <div>
                 <div>Quantidade</div>
@@ -46,7 +46,7 @@ export default ({ cronograma, motivos }) => {
             <div>
               <div>{etapa.parte}</div>
             </div>
-            {motivos.includes("data_entrega") && (
+            {motivos.includes("ALTERAR_DATA_ENTREGA") && (
               <div>
                 <div>
                   <Field
@@ -61,7 +61,7 @@ export default ({ cronograma, motivos }) => {
               </div>
             )}
 
-            {motivos.includes("quantidade_programada") && (
+            {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
               <>
                 <div>
                   <div>4000.0kg</div>
@@ -73,7 +73,6 @@ export default ({ cronograma, motivos }) => {
                       name={`quantidade_total_${etapa.uuid}`}
                       placeholder="Quantidade"
                       className="input-busca-produto"
-                      required
                     />
                   </div>
                 </div>

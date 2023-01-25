@@ -6,12 +6,11 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { fornecedorConfirma } from "services/cronograma.service";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 
-export default ({ cronograma, handleSubmit }) => {
+export default ({ cronograma, handleSubmit, podeSubmeter }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +19,7 @@ export default ({ cronograma, handleSubmit }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSim = () => {
+  const handleSim = async () => {
     handleSubmit();
   };
 
@@ -36,7 +35,13 @@ export default ({ cronograma, handleSubmit }) => {
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN}
         className="float-right ml-3"
-        onClick={() => handleShow()}
+        onClick={() => {
+          if (!podeSubmeter) {
+            toastError("Selecione os campos obrigatórios");
+            return;
+          }
+          handleShow();
+        }}
       />
       <Botao
         texto="Cancelar"
