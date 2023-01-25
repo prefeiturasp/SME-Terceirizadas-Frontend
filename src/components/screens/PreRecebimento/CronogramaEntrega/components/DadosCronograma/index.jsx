@@ -28,7 +28,7 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
         </div>
       </div>
       <hr />
-      {!esconderInformacoesAdicionais && (
+      {!esconderInformacoesAdicionais ? (
         <>
           <div>
             <p>Empresa:</p>
@@ -75,35 +75,73 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
               </p>
             </div>
           </div>
+
+          <table className="table mt-4 mb-3">
+            <thead className="head-crono">
+              <th className="borda-crono">N° do Empenho</th>
+              <th className="borda-crono">Etapa</th>
+              <th className="borda-crono">Parte</th>
+              <th className="borda-crono">Data Programada</th>
+              <th className="borda-crono">Quantidade</th>
+              <th className="borda-crono">Total de Embalagens</th>
+            </thead>
+            <tbody>
+              {cronograma.etapas.length > 0 &&
+                cronograma.etapas.map((etapa, key) => {
+                  return (
+                    <tr key={key}>
+                      <td className="borda-crono">{etapa.numero_empenho}</td>
+                      <td className="borda-crono">{etapa.etapa}</td>
+                      <td className="borda-crono">{etapa.parte}</td>
+                      <td className="borda-crono">{etapa.data_programada}</td>
+                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">{etapa.total_embalagens}</td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </>
+      ) : (
+        <>
+          <table className="table mt-4 mb-3">
+            <thead className="head-crono">
+              <th className="borda-crono">Fornecedor</th>
+              <th className="borda-crono">Produto</th>
+              <th className="borda-crono">Data</th>
+              <th className="borda-crono">Etapa</th>
+              <th className="borda-crono">Parte</th>
+              <th className="borda-crono">Quantidade</th>
+              <th className="borda-crono">Armazém</th>
+              <th className="borda-crono">Status</th>
+            </thead>
+            <tbody>
+              {cronograma.etapas.length > 0 &&
+                cronograma.etapas.map((etapa, key) => {
+                  return (
+                    <tr key={key}>
+                      <td className="borda-crono">
+                        {cronograma.empresa && cronograma.empresa.nome_fantasia}
+                      </td>
+                      <td className="borda-crono">
+                        {cronograma.produto && cronograma.produto.nome}
+                      </td>
+                      <td className="borda-crono">{etapa.data_programada}</td>
+                      <td className="borda-crono">{etapa.etapa}</td>
+                      <td className="borda-crono">{etapa.parte}</td>
+                      <td className="borda-crono">{etapa.quantidade}</td>
+                      <td className="borda-crono">
+                        {cronograma.armazem && cronograma.armazem.nome_fantasia}
+                      </td>
+                      <td className="borda-crono">{cronograma.status}</td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </>
       )}
-      <div>
-        <table className="table mt-4 mb-3">
-          <thead className="head-crono">
-            <th className="borda-crono">N° do Empenho</th>
-            <th className="borda-crono">Etapa</th>
-            <th className="borda-crono">Parte</th>
-            <th className="borda-crono">Data Programada</th>
-            <th className="borda-crono">Quantidade</th>
-            <th className="borda-crono">Total de Embalagens</th>
-          </thead>
-          <tbody>
-            {cronograma.etapas.length > 0 &&
-              cronograma.etapas.map((etapa, key) => {
-                return (
-                  <tr key={key}>
-                    <td className="borda-crono">{etapa.numero_empenho}</td>
-                    <td className="borda-crono">{etapa.etapa}</td>
-                    <td className="borda-crono">{etapa.parte}</td>
-                    <td className="borda-crono">{etapa.data_programada}</td>
-                    <td className="borda-crono">{etapa.quantidade}</td>
-                    <td className="borda-crono">{etapa.total_embalagens}</td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+      <div />
     </>
   );
 };
