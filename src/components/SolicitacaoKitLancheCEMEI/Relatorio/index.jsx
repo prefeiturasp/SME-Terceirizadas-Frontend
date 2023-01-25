@@ -12,11 +12,13 @@ import {
 import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import "./style.scss";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
+import { deepCopy } from "helpers/utilities";
 
 export const Relatorio = ({ ...props }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState(false);
+  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState([]);
 
   const solicitacaoAlimentacaoContext = useContext(
     SolicitacaoAlimentacaoContext
@@ -31,6 +33,12 @@ export const Relatorio = ({ ...props }) => {
         solicitacaoAlimentacaoContext.updateSolicitacaoAlimentacao(
           response.data
         );
+        let _response = deepCopy(response.data);
+        let solicitacoes_similares = _response.solicitacoes_similares.map(s => {
+          s["collapsed"] = true;
+          return s;
+        });
+        setSolicitacoesSimilares(solicitacoes_similares);
       } else {
         setErro(true);
       }
@@ -75,6 +83,8 @@ export const Relatorio = ({ ...props }) => {
               {solicitacao && (
                 <CorpoRelatorio
                   solicitacaoKitLancheCEMEI={solicitacao}
+                  solicitacoesSimilares={solicitacoesSimilares}
+                  setSolicitacoesSimilares={setSolicitacoesSimilares}
                   fetchData={fetchData}
                   {...props}
                 />
