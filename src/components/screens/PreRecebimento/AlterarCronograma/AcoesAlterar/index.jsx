@@ -7,8 +7,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { Spin } from "antd";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export default ({ cronograma, handleSubmit, podeSubmeter }) => {
   const [show, setShow] = useState(false);
@@ -20,7 +19,9 @@ export default ({ cronograma, handleSubmit, podeSubmeter }) => {
   const handleShow = () => setShow(true);
 
   const handleSim = async () => {
+    setLoading(true);
     handleSubmit();
+    setLoading(false);
   };
 
   const handleBack = () => {
