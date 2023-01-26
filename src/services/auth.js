@@ -65,6 +65,18 @@ const login = async (login, password) => {
               JSON.stringify(result_.vinculo_atual.instituicao.nome)
             );
             localStorage.setItem(
+              "modulo_gestao",
+              JSON.stringify(result_.vinculo_atual.instituicao.modulo_gestao)
+            );
+            localStorage.setItem(
+              "eh_cei",
+              JSON.stringify(result_.vinculo_atual.instituicao.eh_cei)
+            );
+            localStorage.setItem(
+              "eh_cemei",
+              JSON.stringify(result_.vinculo_atual.instituicao.eh_cemei)
+            );
+            localStorage.setItem(
               "dre_nome",
               result_.vinculo_atual.instituicao.diretoria_regional &&
                 result_.vinculo_atual.instituicao.diretoria_regional.nome
