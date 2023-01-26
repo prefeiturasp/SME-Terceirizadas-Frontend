@@ -663,7 +663,7 @@ export const ehEscolaTipoCEI = escola => {
 
 export const ehEscolaTipoCEMEI = escola => {
   const nome = (escola && escola.nome) || "";
-  return nome.startsWith("CEMEI");
+  return nome.startsWith("CEMEI") || nome.startsWith("CEU CEMEI");
 };
 
 export const tipoSolicitacaoComoQuery = obj => {
