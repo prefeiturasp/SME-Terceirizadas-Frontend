@@ -55,11 +55,16 @@ export default ({ cronograma, handleSubmit, podeSubmeter }) => {
       <Modal show={show} onHide={handleClose} backdrop={"static"}>
         <Spin tip="Carregando..." spinning={loading}>
           <Modal.Header closeButton>
-            <Modal.Title> Confirmar Cronograma </Modal.Title>
+            <Modal.Title> Solicitar alteração no cronograma </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Você confirma a entrega dos alimentos nas datas e quantidades
-            descritas no cronograma de entrega: {cronograma.numero}?
+            <p>
+              A sua solicitação de alteração de cronograma será enviada
+              para a CODAE e após avaliação, você será notificado.
+            </p>
+            <p>
+              Você confirma o envio da solicitação de alteração de cronograma?
+            </p>
           </Modal.Body>
           <Modal.Footer>
             <Botao
