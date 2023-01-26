@@ -32,7 +32,7 @@ import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
 import { getFornecedoresSimples } from "services/terceirizada.service";
 import {
-  getCadastroProdutosEdital,
+  getListaProdutosEdital,
   getUnidadesDeMedidaProduto
 } from "services/produto.service";
 
@@ -389,7 +389,7 @@ export default () => {
     };
 
     const buscaProdutos = async () => {
-      const response = await getCadastroProdutosEdital();
+      const response = await getListaProdutosEdital();
       setProdutosOptions(response.data.results);
     };
 
@@ -571,6 +571,7 @@ export default () => {
                                 disabled={false}
                                 apenasNumeros
                                 required
+                                placeholder="Informe a Quantidade Total"
                               />
                             </div>
                             <div className="col-3">
@@ -934,8 +935,8 @@ export default () => {
                     <Modal.Title>Salvar e Enviar</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    Deseja salvar o Cadastro do Cronograma e enviar para
-                    aprovação?
+                    Deseja salvar o cadastro do cronograma e enviar ao
+                    Fornecedor?
                   </Modal.Body>
                   <Modal.Footer>
                     <Botao
