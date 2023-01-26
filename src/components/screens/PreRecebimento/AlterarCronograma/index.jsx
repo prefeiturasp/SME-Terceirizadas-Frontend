@@ -14,7 +14,7 @@ import { TextArea } from "components/Shareable/TextArea/TextArea";
 import "./styles.scss";
 import { usuarioEhFornecedor } from "helpers/utilities";
 import AcoesAlterar from "./AcoesAlterar";
-import { prepararPayloadCronograma } from "components/screens/helper";
+import { prepararPayloadCronograma } from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import { useHistory } from "react-router-dom";
