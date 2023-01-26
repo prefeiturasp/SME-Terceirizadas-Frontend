@@ -211,6 +211,10 @@ export class CardPendenteAcao extends Component {
                                       className="gatilho-style"
                                       key={idxSolicitacaoSimilar}
                                     >
+                                      <i
+                                        className="fa fa-info-circle mr-1"
+                                        aria-hidden="true"
+                                      />
                                       <b>
                                         {`#${s.id_externo}`}
                                         <ToggleExpandir

@@ -44,9 +44,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                 <div className="grid-table body-table">
                   <div className={`${bordas}`}>{cronograma.numero}</div>
                   <div className={`${bordas}`}>
-                    {cronograma.produto && (
-                      cronograma.produto.nome
-                    )}
+                    {cronograma.produto && cronograma.produto.nome}
                   </div>
                   <div className={`${bordas}`}>
                     {cronograma.qtd_total_programada}
