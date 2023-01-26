@@ -108,7 +108,7 @@ export default () => {
                       }}
                       overrideStrings={{
                         search: "Busca",
-                        selectSomeItems: "Selecione",
+                        selectSomeItems: "Selecione o(s) Motivo(s)",
                         allItemsAreSelected:
                           "Todos os itens estão selecionados",
                         selectAll: "Todos"
@@ -133,7 +133,7 @@ export default () => {
                     <Field
                       component={TextArea}
                       name="justificativa"
-                      placeholder="Escreva as alterações necessárias..."
+                      placeholder="Escreva o motivo da solicitação de alteração"
                       className="input-busca-produto"
                     />
                   </div>
