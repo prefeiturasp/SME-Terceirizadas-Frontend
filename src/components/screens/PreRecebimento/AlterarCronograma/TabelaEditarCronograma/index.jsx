@@ -20,7 +20,7 @@ export default ({ cronograma, motivos }) => {
           </div>
           {motivos.includes("ALTERAR_DATA_ENTREGA") && (
             <div className="crono-header-green">
-              <div>Informar nova data</div>
+              <div>Informar Nova Data</div>
             </div>
           )}
 
@@ -30,7 +30,7 @@ export default ({ cronograma, motivos }) => {
                 <div>Quantidade</div>
               </div>
               <div className="crono-header-green">
-                <div>Informar nova quantidade</div>
+                <div>Informar Nova Quantidade</div>
               </div>
             </>
           )}
