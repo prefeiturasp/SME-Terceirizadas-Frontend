@@ -6,7 +6,8 @@ import {
   CADASTRO_CRONOGRAMA,
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
-  EDITAR
+  EDITAR,
+  ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
@@ -70,6 +71,21 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
+                          {cronograma.status === "Entrega Confirmada" && (
+                            <>
+                              <span className="ml-1">|</span>
+                              <NavLink
+                                className="float-left ml-1"
+                                to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${
+                                  cronograma.uuid
+                                }`}
+                              >
+                                <span className="link-acoes green">
+                                  Solicitar Alteração
+                                </span>
+                              </NavLink>
+                            </>
+                          )}
                         </>
                       ) : (
                         <>

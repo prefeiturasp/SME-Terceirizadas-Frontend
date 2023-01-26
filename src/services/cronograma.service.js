@@ -24,3 +24,7 @@ export const fornecedorConfirma = async uuid => {
   const url = `/cronogramas/${uuid}/fornecedor-confirma-cronograma/`;
   return await axios.patch(url);
 };
+
+export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
+  return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
+};
