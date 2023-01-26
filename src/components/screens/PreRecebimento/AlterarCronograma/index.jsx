@@ -18,6 +18,7 @@ import { prepararPayloadCronograma } from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import { useHistory } from "react-router-dom";
+import { OnChange } from "react-final-form-listeners";
 
 const opcoesMotivos = [
   { value: "ALTERAR_DATA_ENTREGA", label: "Data de Entrega" },
@@ -80,7 +81,7 @@ export default () => {
                 <form onSubmit={handleSubmit}>
                   <div>
                     <label className="label font-weight-normal">
-                      <span>* </span>Motivo da solicitação de alteração
+                      <span>* </span>Motivo da Solicitação de Alteração
                     </label>
                     <Field
                       component={StatefulMultiSelect}
@@ -90,10 +91,10 @@ export default () => {
                       options={opcoesMotivos}
                       selected={values.motivos || []}
                       onSelectedChanged={values_ => {
-                        if (values_.length === 0) {
-                          setpodeSubmeter(false);
-                        } else {
+                        if (values_.length !== 0 && values.justificativa) {
                           setpodeSubmeter(true);
+                        } else {
+                          setpodeSubmeter(false);
                         }
                         if (manterDataEQuantidade(values, values_)) {
                           values_ = values_.filter(
@@ -136,6 +137,15 @@ export default () => {
                       placeholder="Escreva o motivo da solicitação de alteração"
                       className="input-busca-produto"
                     />
+                    <OnChange name="justificativa">
+                      {value => {
+                        if (value && values.motivos) {
+                          setpodeSubmeter(true);
+                        } else {
+                          setpodeSubmeter(false);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                   {usuarioEhFornecedor() && (
                     <div className="mt-4 mb-4">

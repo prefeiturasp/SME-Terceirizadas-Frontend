@@ -34,6 +34,7 @@ export default ({ handleSubmit, podeSubmeter }) => {
       <Botao
         texto="Enviar Solicitação"
         type={BUTTON_TYPE.BUTTON}
+        disabled={!podeSubmeter}
         style={BUTTON_STYLE.GREEN}
         className="float-right ml-3"
         onClick={() => {
