@@ -3,6 +3,7 @@ import { Collapse } from "react-collapse";
 import HTTP_STATUS from "http-status-codes";
 import {
   corDaMensagem,
+  deepCopy,
   justificativaAoNegarSolicitacao,
   visualizaBotoesDoFluxo
 } from "helpers/utilities";
@@ -31,9 +32,12 @@ import { getSolicitacaoKitLancheCEMEI } from "services/kitLanche";
 import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import "../../style.scss";
 import { getRelatorioKitLancheCEMEI } from "services/relatorios";
+import { SolicitacoesSimilaresKitLanche } from "components/Shareable/SolicitacoesSimilaresKitLanche";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
+    solicitacoesSimilares,
+    setSolicitacoesSimilares,
     solicitacaoKitLancheCEMEI,
     ModalNaoAprova,
     endpointNaoAprovaSolicitacao,
@@ -128,6 +132,14 @@ export const CorpoRelatorio = ({ ...props }) => {
     }
   };
 
+  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+    let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
+    _solicitacoesSimilares[idxSolicitacaoSimilar][
+      "collapsed"
+    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    setSolicitacoesSimilares(_solicitacoesSimilares);
+  };
+
   const kitsSelecionados = kits => {
     let nomeKits = [];
     kits.forEach(kit => nomeKits.push(kit.nome));
@@ -217,6 +229,42 @@ export const CorpoRelatorio = ({ ...props }) => {
           eh_gestao_alimentacao={true}
         />
       </div>
+      <hr />
+      <div className="row mt-3">
+        <div className="col-2">
+          <p>Solicitação Similar:</p>
+        </div>
+        <div className="col-10">
+          {solicitacoesSimilares &&
+            solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
+              return (
+                <p className="gatilho-style" key={idxSolicitacaoSimilar}>
+                  <b>
+                    {`#${solicitacao.id_externo}`}
+                    <ToggleExpandir
+                      onClick={() =>
+                        collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
+                      }
+                      ativo={!solicitacao.collapsed}
+                      className="icon-padding"
+                    />
+                  </b>
+                </p>
+              );
+            })}
+        </div>
+      </div>
+      {solicitacoesSimilares &&
+        solicitacoesSimilares.length > 0 &&
+        solicitacoesSimilares.map((s, idxSolicitacaoSimilar) => {
+          return (
+            <SolicitacoesSimilaresKitLanche
+              key={idxSolicitacaoSimilar}
+              solicitacao={s}
+              index={idxSolicitacaoSimilar}
+            />
+          );
+        })}
       <hr />
       <div className="row">
         <div className="col">
