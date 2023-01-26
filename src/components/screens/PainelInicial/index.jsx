@@ -8,7 +8,6 @@ import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
 import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
 import {
-  usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
@@ -17,11 +16,12 @@ import {
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
-  usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira,
   usuarioEhEscolaAbastecimento,
   exibirGA,
-  exibirLancamentoMedicaoInicial
+  exibirLancamentoMedicaoInicial,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaAbastecimentoDiretor
 } from "helpers/utilities";
 
 const PainelInicial = ({ history }) => {
@@ -36,9 +36,8 @@ const PainelInicial = ({ history }) => {
           usuarioEhDRE() ||
           usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
-          (usuarioEhEscola() &&
-            !usuarioEscolaEhGestaoMistaParceira() &&
-            !usuarioEscolaEhGestaoDireta())) && (
+          usuarioEhEscolaTerceirizadaDiretor() ||
+          usuarioEhEscolaTerceirizada()) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
@@ -55,7 +54,8 @@ const PainelInicial = ({ history }) => {
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhTerceirizada() ||
         usuarioEhDRE() ||
-        usuarioEhEscola()) && (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
@@ -70,9 +70,8 @@ const PainelInicial = ({ history }) => {
         usuarioEhTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
-        (usuarioEhEscola() &&
-          !usuarioEscolaEhGestaoMistaParceira() &&
-          !usuarioEscolaEhGestaoDireta())) && (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
@@ -104,7 +103,8 @@ const PainelInicial = ({ history }) => {
           </CardLogo>
         </Col>
       )}
-      {usuarioEhEscolaAbastecimento() && (
+      {(usuarioEhEscolaAbastecimento() ||
+        usuarioEhEscolaAbastecimentoDiretor()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}

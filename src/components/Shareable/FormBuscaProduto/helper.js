@@ -1,7 +1,11 @@
-import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhTerceirizada
+} from "helpers/utilities";
 
 export const getInitalState = editais => {
-  if (usuarioEhEscola()) {
+  if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
     return {
       agrupado_por_nome_e_marca: false,
       nome_edital: editais[0]

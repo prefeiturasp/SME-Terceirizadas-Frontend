@@ -32,9 +32,10 @@ import "./style.scss";
 import { meusDados } from "services/perfil.service";
 import {
   usuarioEhNutricionistaSupervisao,
-  usuarioEhEscola,
   usuarioEhCODAEDietaEspecial,
-  deepCopy
+  deepCopy,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
 } from "helpers/utilities";
 import { TIPO_PERFIL } from "constants/shared";
 export default class ModalReclamacaoProduto extends Component {
@@ -77,7 +78,10 @@ export default class ModalReclamacaoProduto extends Component {
         reclamante_nome: meusDados.nome,
         reclamante_cargo: meusDados.cargo ? meusDados.cargo : undefined
       };
-      if (usuarioEhEscola()) {
+      if (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()
+      ) {
         dadosIniciais.escola = meusDados.vinculo_atual.instituicao.uuid;
       }
       return dadosIniciais;
@@ -172,24 +176,26 @@ export default class ModalReclamacaoProduto extends Component {
                     />
                   </div>
                 </div>
-                {usuarioEhEscola() && escola && (
-                  <div className="form-row">
-                    <div className="col-6">
-                      <label htmlFor="escola" className="col-form-label">
-                        Escola
-                      </label>
-                      <div>{escola.nome}</div>
-                    </div>
-                    {escola.codigo_eol && (
+                {(usuarioEhEscolaTerceirizadaDiretor() ||
+                  usuarioEhEscolaTerceirizada()) &&
+                  escola && (
+                    <div className="form-row">
                       <div className="col-6">
-                        <label htmlFor="vinculo" className="col-form-label">
-                          Código EOL
+                        <label htmlFor="escola" className="col-form-label">
+                          Escola
                         </label>
-                        <div>{escola.codigo_eol}</div>
+                        <div>{escola.nome}</div>
                       </div>
-                    )}
-                  </div>
-                )}
+                      {escola.codigo_eol && (
+                        <div className="col-6">
+                          <label htmlFor="vinculo" className="col-form-label">
+                            Código EOL
+                          </label>
+                          <div>{escola.codigo_eol}</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 {deveEscolherUmaEscola && (
                   <div className="form-row">
                     <div className="col-12">

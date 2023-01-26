@@ -17,7 +17,6 @@ import {
   usuarioEhTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDRE,
-  usuarioEhCoordenadorEscola,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
@@ -32,7 +31,6 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorGpCODAE() ||
     usuarioEhCoordenadorCODAE() ||
     usuarioEhDRE() ||
-    usuarioEhCoordenadorEscola() ||
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhTerceirizada();
   const exibirConfigEmail =

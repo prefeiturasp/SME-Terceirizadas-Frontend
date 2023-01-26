@@ -7,10 +7,9 @@ import {
   usuarioEhCODAENutriManifestacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada,
-  usuarioEhEscola,
-  usuarioEhDRE,
-  usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhDRE
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -19,9 +18,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
     usuarioEhCODAENutriManifestacao() ||
@@ -35,9 +33,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial();
 
   const exibirProdutosSuspensos =
@@ -45,9 +42,8 @@ const MenuRelatorios = () => {
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhTerceirizada() ||
     usuarioEhDRE() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao();
 
@@ -55,7 +51,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhDRE() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>

@@ -5,7 +5,8 @@ import "./style.scss";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
   usuarioEhNutricionistaSupervisao,
   usuarioEhTerceirizada
 } from "helpers/utilities";
@@ -18,7 +19,8 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   };
 
   const exibirNomeTerceirizada =
-    !usuarioEhEscola() &&
+    !usuarioEhEscolaTerceirizadaDiretor() &&
+    !usuarioEhEscolaTerceirizada() &&
     !usuarioEhTerceirizada() &&
     !usuarioEhCODAEGestaoAlimentacao() &&
     !usuarioEhNutricionistaSupervisao() &&

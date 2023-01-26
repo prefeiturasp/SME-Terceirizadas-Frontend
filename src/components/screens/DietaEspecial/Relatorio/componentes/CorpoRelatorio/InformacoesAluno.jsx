@@ -10,7 +10,11 @@ import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { getError, usuarioEhEscola } from "helpers/utilities";
+import {
+  getError,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
+} from "helpers/utilities";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
@@ -158,7 +162,8 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
               disabled={true}
             />
           </div>
-          {usuarioEhEscola() &&
+          {(usuarioEhEscolaTerceirizadaDiretor() ||
+            usuarioEhEscolaTerceirizada()) &&
             solicitacaoEhDoCardAutorizadas(status_solicitacao) && (
               <div className="row pl-4 mt-2">
                 <span className="input-file">
