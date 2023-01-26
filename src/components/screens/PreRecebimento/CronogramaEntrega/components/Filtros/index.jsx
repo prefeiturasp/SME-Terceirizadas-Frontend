@@ -44,7 +44,11 @@ export default ({
           value: "VALIDADO_FORNECEDOR",
           label: "Validado Fornecedor"
         },
-        { value: "ENTREGA_CONFIRMADA", label: "Entrega Confirmada" }
+        { value: "ENTREGA_CONFIRMADA", label: "Entrega Confirmada" },
+        {
+          value: "SOLICITADO_ALTERACAO",
+          label: "Solicitado Alteração"
+        }
       ]
     : [
         {
