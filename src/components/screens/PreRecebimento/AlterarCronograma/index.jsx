@@ -80,7 +80,7 @@ export default () => {
                 <form onSubmit={handleSubmit}>
                   <div>
                     <label className="label font-weight-normal">
-                      <span>* </span>Motivo da solicitação de alteração
+                      <span>* </span>Motivo da Solicitação de Alteração
                     </label>
                     <Field
                       component={StatefulMultiSelect}
