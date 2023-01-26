@@ -104,6 +104,9 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
         </>
       ) : (
         <>
+          <p className="head-green">
+            <strong>Dados do produto e datas das entregas</strong>
+          </p>
           <table className="table mt-4 mb-3">
             <thead className="head-crono">
               <th className="borda-crono">Fornecedor</th>
