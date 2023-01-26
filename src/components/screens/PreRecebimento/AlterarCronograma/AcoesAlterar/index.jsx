@@ -9,7 +9,7 @@ import {
 import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
-export default ({ cronograma, handleSubmit, podeSubmeter }) => {
+export default ({ handleSubmit, podeSubmeter }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,8 +59,8 @@ export default ({ cronograma, handleSubmit, podeSubmeter }) => {
           </Modal.Header>
           <Modal.Body>
             <p>
-              A sua solicitação de alteração de cronograma será enviada
-              para a CODAE e após avaliação, você será notificado.
+              A sua solicitação de alteração de cronograma será enviada para a
+              CODAE e após avaliação, você será notificado.
             </p>
             <p>
               Você confirma o envio da solicitação de alteração de cronograma?
