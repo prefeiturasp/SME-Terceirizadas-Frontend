@@ -7,7 +7,12 @@ import {
   TIPOS_SOLICITACAO_LABEL,
   TIPO_SOLICITACAO
 } from "constants/shared";
-import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
+import {
+  MODULO_GESTAO,
+  PERFIL,
+  TIPO_PERFIL,
+  TIPO_GESTAO
+} from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -298,7 +303,11 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioEhEscola() || usuarioEhCODAEDietaEspecial();
+      return (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhCODAEDietaEspecial()
+      );
     case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
       return usuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
@@ -335,10 +344,6 @@ export const formatarTelefone = value => {
   return cep.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
 };
 
-export const usuarioEhCoordenadorEscola = () => {
-  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
-};
-
 export const usuarioEhCoordenadorGpCODAE = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_GESTAO_PRODUTO;
 };
@@ -373,24 +378,22 @@ export const usuarioEhCodaeDilog = () => {
   );
 };
 
-export const usuarioEhEscola = () => {
-  return [
-    PERFIL.ADMINISTRADOR_ESCOLA,
-    PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI
-  ].includes(localStorage.getItem("perfil"));
+export const usuarioEhEscolaTerceirizadaDiretor = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.TERCEIRIZADA
+  );
 };
 
-export const usuarioEhAdmEscolaTerceirizada = () => {
-  return [PERFIL.ADMINISTRADOR_ESCOLA].includes(localStorage.getItem("perfil"));
+export const usuarioEhEscolaTerceirizada = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.TERCEIRIZADA
+  );
 };
 
 export const usuarioEhDiretorEscola = () => {
-  return [
-    PERFIL.DIRETOR_ABASTECIMENTO,
-    PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI
-  ].includes(localStorage.getItem("perfil"));
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhEmpresa = () => {
@@ -420,13 +423,18 @@ export const usuarioEscolaEhGestaoDireta = () => {
   return [TIPO_GESTAO.DIRETA].includes(localStorage.getItem("tipo_gestao"));
 };
 
+export const usuarioEhEscolaAbastecimentoDiretor = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.ABASTECIMENTO
+  );
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
-  return [
-    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
-    PERFIL.ADMINISTRADOR_UE_DIRETA,
-    PERFIL.ADMINISTRADOR_UE_MISTA,
-    PERFIL.ADMINISTRADOR_UE_PARCEIRA
-  ].includes(localStorage.getItem("perfil"));
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.ABASTECIMENTO
+  );
 };
 
 export const usuarioComAcessoTelaEntregasDilog = () => {
@@ -514,17 +522,11 @@ export const usuarioEhAdministradorRepresentanteCodae = () => {
 };
 
 export const escolaEhCei = () => {
-  return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
-    localStorage.getItem("nome_instituicao")
-  );
+  return localStorage.getItem("eh_cei") === "true";
 };
 
 export const escolaEhCEMEI = () => {
-  return (
-    localStorage.getItem("nome_instituicao") &&
-    (localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`) ||
-      localStorage.getItem("nome_instituicao").startsWith(`"CEU CEMEI`))
-  );
+  return localStorage.getItem("eh_cemei") === "true";
 };
 
 export const nomeInstituicao = () => {
@@ -705,7 +707,7 @@ export const ehEscolaTipoCEI = escola => {
 
 export const ehEscolaTipoCEMEI = escola => {
   const nome = (escola && escola.nome) || "";
-  return nome.startsWith("CEMEI");
+  return nome.startsWith("CEMEI") || nome.startsWith("CEU CEMEI");
 };
 
 export const tipoSolicitacaoComoQuery = obj => {
@@ -854,9 +856,9 @@ export const exibirGA = () => {
 
 export const exibirLancamentoMedicaoInicial = () => {
   return (
-    usuarioEhEscola() &&
-    !usuarioEscolaEhGestaoDireta() &&
-    !["treinamento", "production"].includes(ENVIRONMENT)
+    usuarioEhEscolaTerceirizada() ||
+    (usuarioEhEscolaTerceirizadaDiretor() &&
+      !["treinamento", "production"].includes(ENVIRONMENT))
   );
 };
 

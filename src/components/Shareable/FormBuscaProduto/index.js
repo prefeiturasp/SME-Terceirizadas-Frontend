@@ -7,11 +7,12 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
 import {
   usuarioEhTerceirizada,
-  usuarioEhEscola,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
 } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -56,7 +57,8 @@ const initialState = {
 };
 
 const exibirFiltroNomeTerceirizada =
-  !usuarioEhEscola() &&
+  !usuarioEhEscolaTerceirizadaDiretor() &&
+  !usuarioEhEscolaTerceirizada() &&
   !usuarioEhTerceirizada() &&
   !usuarioEhCODAEGestaoAlimentacao() &&
   !usuarioEhNutricionistaSupervisao() &&
@@ -176,7 +178,9 @@ export const FormBuscaProduto = ({
                       }
                     />
                   )}
-                  {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                  {(usuarioEhEscolaTerceirizadaDiretor() ||
+                    usuarioEhEscolaTerceirizada() ||
+                    usuarioEhTerceirizada()) && (
                     <div className="row">
                       <div className="col-6">
                         <Field
@@ -188,7 +192,10 @@ export const FormBuscaProduto = ({
                           name="nome_edital"
                           required
                           validate={required}
-                          disabled={usuarioEhEscola()}
+                          disabled={
+                            usuarioEhEscolaTerceirizadaDiretor() ||
+                            usuarioEhEscolaTerceirizada()
+                          }
                         />
                       </div>
                       {state.tipos.length > 0 && (
@@ -233,76 +240,89 @@ export const FormBuscaProduto = ({
             </>
           )}
           <div className="row">
-            {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
-              <>
-                <div
-                  className={`col-${
-                    !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
-                  }`}
-                >
-                  {usuarioEhDRE() ? (
-                    <>
-                      <span className="required-asterisk">*</span>
-                      <label className="mb-1 mt-2">Edital</label>
+            {!usuarioEhEscolaTerceirizadaDiretor() &&
+              !usuarioEhEscolaTerceirizada() &&
+              !usuarioEhTerceirizada() && (
+                <>
+                  <div
+                    className={`col-${
+                      !usuarioEhEscolaTerceirizadaDiretor() &&
+                      !usuarioEhEscolaTerceirizada() &&
+                      !usuarioEhTerceirizada()
+                        ? "6"
+                        : "4"
+                    }`}
+                  >
+                    {usuarioEhDRE() ? (
+                      <>
+                        <span className="required-asterisk">*</span>
+                        <label className="mb-1 mt-2">Edital</label>
+                        <Field
+                          component={ASelect}
+                          className="input-busca-tipo-item"
+                          name="nome_edital"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                          required
+                          validate={required}
+                          options={editaisDRE}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <span className="required-asterisk">*</span>
+                        <label className="mb-1 mt-2">Edital</label>
+                        <Field
+                          component={AutoCompleteField}
+                          dataSource={state.editais}
+                          className="input-busca-produto mt-1"
+                          onSearch={v => onSearch("editais", v)}
+                          name="nome_edital"
+                          required
+                          validate={required}
+                          disabled={
+                            usuarioEhEscolaTerceirizadaDiretor() ||
+                            usuarioEhEscolaTerceirizada()
+                          }
+                        />
+                      </>
+                    )}
+                  </div>
+
+                  {state.tipos.length > 0 && (
+                    <div
+                      className={`col-${
+                        !usuarioEhEscolaTerceirizadaDiretor() &&
+                        !usuarioEhEscolaTerceirizada() &&
+                        !usuarioEhTerceirizada()
+                          ? "6"
+                          : "4"
+                      }`}
+                    >
+                      <label className="label-aselect mt-2">Tipo</label>
                       <Field
                         component={ASelect}
                         className="input-busca-tipo-item"
-                        name="nome_edital"
+                        placeholder="Selecione um tipo"
+                        suffixIcon={<CaretDownOutlined />}
+                        name="tipo"
                         filterOption={(inputValue, option) =>
                           option.props.children
                             .toString()
                             .toLowerCase()
                             .includes(inputValue.toLowerCase())
                         }
-                        required
-                        validate={required}
-                        options={editaisDRE}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <span className="required-asterisk">*</span>
-                      <label className="mb-1 mt-2">Edital</label>
-                      <Field
-                        component={AutoCompleteField}
-                        dataSource={state.editais}
-                        className="input-busca-produto mt-1"
-                        onSearch={v => onSearch("editais", v)}
-                        name="nome_edital"
-                        required
-                        validate={required}
-                        disabled={usuarioEhEscola()}
-                      />
-                    </>
+                      >
+                        {state.tipos}
+                      </Field>
+                    </div>
                   )}
-                </div>
-
-                {state.tipos.length > 0 && (
-                  <div
-                    className={`col-${
-                      !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
-                    }`}
-                  >
-                    <label className="label-aselect mt-2">Tipo</label>
-                    <Field
-                      component={ASelect}
-                      className="input-busca-tipo-item"
-                      placeholder="Selecione um tipo"
-                      suffixIcon={<CaretDownOutlined />}
-                      name="tipo"
-                      filterOption={(inputValue, option) =>
-                        option.props.children
-                          .toString()
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      }
-                    >
-                      {state.tipos}
-                    </Field>
-                  </div>
-                )}
-              </>
-            )}
+                </>
+              )}
           </div>
           <div className="row">
             <div className={`col-4`}>

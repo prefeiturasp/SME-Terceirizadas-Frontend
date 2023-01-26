@@ -1,11 +1,12 @@
 import {
   truncarString,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhEscola,
   usuarioEhTerceirizada,
   usuarioEhCODAEGestaoProduto,
   parseDataHoraBrToMoment,
-  comparaObjetosMoment
+  comparaObjetosMoment,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -80,7 +81,9 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   } else if (
-    (usuarioEhEscola() || usuarioEhTerceirizada()) &&
+    (usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhTerceirizada()) &&
     item.status.toLowerCase() === CODAE_QUESTIONOU_UE &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
@@ -89,7 +92,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     }`;
   } else if (
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
-    usuarioEhEscola()
+    (usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada())
   ) {
     return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${
       item.nome_produto

@@ -10,7 +10,8 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
 import {
   dataAtual,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhTerceirizada
 } from "../../../helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
@@ -165,7 +166,11 @@ class DashBoardDietaEspecial extends Component {
         });
       });
 
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhTerceirizada()
+    ) {
       await this.props
         .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
         .then(response => {
@@ -264,7 +269,11 @@ class DashBoardDietaEspecial extends Component {
     );
 
     let aguardandoVigenciaListFiltered = null;
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhTerceirizada()
+    ) {
       aguardandoVigenciaListFiltered = this.filtrarLote(
         aguardandoVigenciaList,
         values.lote
@@ -307,7 +316,11 @@ class DashBoardDietaEspecial extends Component {
       values.titulo
     );
 
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhTerceirizada()
+    ) {
       aguardandoVigenciaListFiltered = this.filtrarNome(
         aguardandoVigenciaListFiltered,
         values.titulo
@@ -348,7 +361,8 @@ class DashBoardDietaEspecial extends Component {
       dadosMeus
     } = this.state;
 
-    const podeIncluirDietaEspecial = usuarioEhEscola();
+    const podeIncluirDietaEspecial =
+      usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
     return (
       <div>
         <CardMatriculados
@@ -455,7 +469,9 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
-                {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                {(usuarioEhEscolaTerceirizadaDiretor() ||
+                  usuarioEhEscolaTerceirizada() ||
+                  usuarioEhTerceirizada()) && (
                   <div className="col-6">
                     <CardStatusDeSolicitacao
                       cardTitle={"Aguardando início da vigência"}

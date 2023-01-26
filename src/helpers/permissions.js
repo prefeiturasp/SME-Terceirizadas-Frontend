@@ -2,12 +2,13 @@ import {
   usuarioEhCODAEDietaEspecial,
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
-  usuarioEhEscola,
-  usuarioEscolaEhGestaoDireta
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
 } from "./utilities";
 
 export const podeAcessarRelatorioQuantSolicDietaEsp =
   usuarioEhCODAEDietaEspecial() ||
   usuarioEhNutricionistaSupervisao() ||
   usuarioEhDRE() ||
-  (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
+  usuarioEhEscolaTerceirizada() ||
+  usuarioEhEscolaTerceirizadaDiretor();

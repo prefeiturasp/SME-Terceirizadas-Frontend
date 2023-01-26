@@ -13,9 +13,12 @@ import {
   SUSPENSAO_ALIMENTACAO,
   SUSPENSAO_ALIMENTACAO_CEI
 } from "../../configs/constants";
-import { truncarString } from "../../helpers/utilities";
+import {
+  truncarString,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
+} from "../../helpers/utilities";
 import { TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
-import { usuarioEhEscola } from "../../helpers/utilities";
 import { STATUS_ALIMENTO } from "./const";
 
 export const ALT_CARDAPIO = "ALT_CARDAPIO";
@@ -70,10 +73,18 @@ export const ajustaFormatoLogPainelDietaEspecial = (logs, card) => {
       conferido: log.conferido,
       lote_uuid: log.lote_uuid,
       text: truncarString(
-        `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
+        `${textoDieta}${
+          usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()
+            ? " - " + serie
+            : ""
+        }`,
         41
       ),
-      texto_inteiro: `${textoDieta}${usuarioEhEscola() ? " - " + serie : ""}`,
+      texto_inteiro: `${textoDieta}${
+        usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()
+          ? " - " + serie
+          : ""
+      }`,
       date: log.data_log,
       link: `/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
         log.uuid
@@ -140,7 +151,9 @@ export const ajustarFormatoLog = (logs, card) => {
         solicitacao = INCLUSAO_ALIMENTACAO;
         tipo = TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
         descricao =
-          usuarioEhEscola() && log.motivo === "ETEC"
+          (usuarioEhEscolaTerceirizadaDiretor() ||
+            usuarioEhEscolaTerceirizada()) &&
+          log.motivo === "ETEC"
             ? descricao.replace("Contínua", "- ETEC")
             : descricao;
         break;
@@ -192,10 +205,11 @@ export const ajustarFormatoLog = (logs, card) => {
     };
 
     return {
-      text: usuarioEhEscola()
-        ? truncarString(descricao, tamanhoString) +
-          (log.serie ? " - " + log.serie : "")
-        : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
+      text:
+        usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()
+          ? truncarString(descricao, tamanhoString) +
+            (log.serie ? " - " + log.serie : "")
+          : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
       conferido: log.conferido || log.terceirizada_conferiu_gestao,
       lote_uuid: log.lote_uuid,
       date: getDate(),
