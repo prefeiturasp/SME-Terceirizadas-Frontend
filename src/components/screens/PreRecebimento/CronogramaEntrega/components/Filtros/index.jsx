@@ -11,7 +11,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { usuarioEhFornecedor } from "helpers/utilities";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 
 const FORM_NAME = "buscaCronogramaDeEntrega";
 
@@ -30,7 +30,7 @@ export default ({
     setFiltros({ ...filtros });
   };
 
-  const options_status = usuarioEhFornecedor()
+  const options_status = usuarioEhEmpresaFornecedor()
     ? [
         {
           value: "ENVIADO_AO_FORNECEDOR",
@@ -85,7 +85,7 @@ export default ({
                   className="input-busca-cronograma"
                 />
               </div>
-              {usuarioEhFornecedor() ? (
+              {usuarioEhEmpresaFornecedor() ? (
                 <div className="col-6">
                   <Field
                     label="Armazém"
@@ -111,7 +111,7 @@ export default ({
               )}
             </div>
             <div className="row mt-3">
-              {!usuarioEhFornecedor() && (
+              {!usuarioEhEmpresaFornecedor() && (
                 <div className="col-3">
                   <Field
                     component={InputText}
@@ -122,7 +122,9 @@ export default ({
                   />
                 </div>
               )}
-              <div className={`col-${usuarioEhFornecedor() ? "6" : "3"}`}>
+              <div
+                className={`col-${usuarioEhEmpresaFornecedor() ? "6" : "3"}`}
+              >
                 <Field
                   label="Status"
                   component={MultiSelect}

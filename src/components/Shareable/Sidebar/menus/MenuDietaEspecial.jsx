@@ -7,7 +7,7 @@ import {
   RELATORIO_DIETA_ESPECIAL
 } from "configs/constants";
 import {
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
   usuarioEhMedicao,
@@ -28,21 +28,21 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhMedicao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao();
   const exibeNovaSolicitacao =
     usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaTerceirizada();
   usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
-    usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao();
+    usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>

@@ -102,14 +102,14 @@ import {
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioEhPreRecebimento,
   usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
@@ -121,11 +121,11 @@ import {
   usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
-  usuarioEhEmpresa,
   usuarioEhCodaeDilog,
-  usuarioEhFornecedor,
+  usuarioEhEmpresaFornecedor,
   usuarioEhAdministradorRepresentanteCodae,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhAdmQualquerEmpresa
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -226,7 +226,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhMedicao()
   },
   {
@@ -501,13 +501,13 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -515,25 +515,25 @@ const routesConfig = [
     }`,
     component: StatusQuestionamentosCodae,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesNegadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.DRE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
@@ -545,13 +545,13 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosTerceirizada,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -559,7 +559,7 @@ const routesConfig = [
     }`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
@@ -577,7 +577,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
@@ -775,7 +775,7 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
     component: GestaoAcessoEmpresaPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresa()
+    tipoUsuario: usuarioEhAdmQualquerEmpresa()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
@@ -866,7 +866,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/painel-dieta-especial`,
@@ -880,7 +880,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhMedicao()
   },
   {
@@ -897,7 +897,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -913,7 +913,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -929,7 +929,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -981,13 +981,13 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
     component: CadastroProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.EDITAR}`,
     component: AtualizacaoProdutoFormPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
@@ -1010,7 +1010,7 @@ const routesConfig = [
     }`,
     component: BuscaProdutoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1018,7 +1018,7 @@ const routesConfig = [
     }`,
     component: BuscaAvancadaProdutoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
@@ -1026,7 +1026,7 @@ const routesConfig = [
     }`,
     component: RelatorioAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
@@ -1052,7 +1052,7 @@ const routesConfig = [
     component: RelatorioReclamacaoProduto,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -1087,7 +1087,7 @@ const routesConfig = [
     component: HomologacaoProdutoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
@@ -1104,7 +1104,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
@@ -1119,7 +1119,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
@@ -1135,7 +1135,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1145,7 +1145,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
@@ -1159,7 +1159,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ResponderQuestionamentoDaCodae,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor()
@@ -1171,7 +1171,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1180,7 +1180,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1189,7 +1189,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.Homologados,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
@@ -1207,7 +1207,7 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.NaoHomologados,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
@@ -1227,7 +1227,7 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE()
@@ -1251,7 +1251,7 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao()
@@ -1278,7 +1278,7 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhQualquerCODAE() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhNutricionistaSupervisao() ||
@@ -1289,19 +1289,19 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
     component: ConsultaResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
     component: ResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/cadastro-geral`,
     component: CadastroGeralPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
@@ -1329,7 +1329,7 @@ const routesConfig = [
     }`,
     component: AvaliarSolicitacaoCadastroProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1367,7 +1367,8 @@ const routesConfig = [
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
     component: RelatorioDietaEspecial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
@@ -1456,7 +1457,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
     component: GestaoRequisicaoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
@@ -1468,13 +1469,13 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
     component: ConsultaSolicitacaoAlteracaoPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.INSUCESSO_ENTREGA}`,
     component: InsucessoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
@@ -1500,7 +1501,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.REGISTRAR_INSUCESSO}`,
     component: RegistrarInsucessoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${
@@ -1551,7 +1552,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,
     component: EntregasDistribuidorPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DRE}`,
@@ -1575,13 +1576,13 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
     /*

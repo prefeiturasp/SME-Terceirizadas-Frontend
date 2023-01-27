@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Spin } from "antd";
 import { getCronograma } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
-import { usuarioEhFornecedor } from "helpers/utilities";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 
@@ -171,7 +171,7 @@ export default () => {
                     );
                   })}
               <br />
-              {usuarioEhFornecedor() && (
+              {usuarioEhEmpresaFornecedor() && (
                 <div className="mt-4 mb-4">
                   <AcoesDetalhar cronograma={cronograma} />
                 </div>

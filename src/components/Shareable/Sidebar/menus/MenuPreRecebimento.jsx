@@ -2,14 +2,14 @@ import React from "react";
 import { Menu, LeafItem } from "./shared";
 import { PRE_RECEBIMENTO, CRONOGRAMA_ENTREGA } from "configs/constants";
 import {
-  usuarioEhFornecedor,
+  usuarioEhEmpresaFornecedor,
   usuarioEhPreRecebimento
 } from "helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
-      {(usuarioEhPreRecebimento() || usuarioEhFornecedor()) && (
+      {(usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()) && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
           Cronograma de Entrega
         </LeafItem>

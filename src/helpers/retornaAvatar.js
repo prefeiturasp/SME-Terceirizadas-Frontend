@@ -5,19 +5,19 @@ import { AvatarEscola } from "components/Shareable/Avatar/AvatarEscola";
 import { AvatarTerceirizada } from "components/Shareable/Avatar/AvatarTerceirizada";
 import React from "react";
 import {
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaAbastecimento,
   usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "./utilities";
 
 export default () => {
-  if (usuarioEhDistribuidora()) {
+  if (usuarioEhEmpresaDistribuidora()) {
     return <AvatarDistribuidor />;
-  } else if (usuarioEhTerceirizada()) {
+  } else if (usuarioEhEmpresaTerceirizada()) {
     return <AvatarTerceirizada />;
   } else if (usuarioEhDRE()) {
     return <AvatarDRE />;
