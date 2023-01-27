@@ -681,6 +681,9 @@ export const getNomesProtudosEdital = async () =>
 export const getCadastroProdutosEdital = async params =>
   axios.get(`/cadastro-produtos-edital/`, { params });
 
+export const getListaProdutosEdital = async params =>
+  axios.get(`/cadastro-produtos-edital/lista-completa/`, { params });
+
 export const cadastrarProdutoEdital = async payload =>
   await axios.post(`/cadastro-produtos-edital/`, payload);
 

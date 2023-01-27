@@ -5,7 +5,8 @@ import { calcularNumeroDeEscolasUnicas } from "./helper";
 import {
   talvezPluralizar,
   ehEscolaTipoCEI,
-  ehEscolaTipoCEMEI
+  ehEscolaTipoCEMEI,
+  deepCopy
 } from "../../../../helpers/utilities";
 import {
   SOLICITACAO_KIT_LANCHE,
@@ -13,6 +14,8 @@ import {
 } from "../../../../configs/constants";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
 import { TIPO_SOLICITACAO } from "constants/shared";
+import { SolicitacoesSimilaresKitLanche } from "components/Shareable/SolicitacoesSimilaresKitLanche";
+
 const {
   SOLICITACAO_CEI,
   SOLICITACAO_NORMAL,
@@ -24,15 +27,39 @@ export class CardPendenteAcao extends Component {
     super(props);
     this.state = {
       collapsed: true,
-      pedidosFiltrados: this.props.pedidos
+      pedidosFiltrados: this.props.pedidos.map(solicitacao => {
+        solicitacao[
+          "solicitacoes_similares"
+        ] = solicitacao.solicitacoes_similares.map(sol_similar => {
+          sol_similar["collapsed"] = true;
+          return sol_similar;
+        });
+        return solicitacao;
+      })
     };
     this.filtrarPedidos = this.filtrarPedidos.bind(this);
+    this.collapseSolicitacaoSimilar = this.collapseSolicitacaoSimilar.bind(
+      this
+    );
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.pedidos.length !== prevProps.pedidos.length) {
       this.setState({ pedidosFiltrados: this.props.pedidos });
     }
+  }
+
+  collapseSolicitacaoSimilar(idxSolicitacao, idxSolicitacaoSimilar) {
+    const { pedidosFiltrados } = this.state;
+    let _pedidosFiltrados = deepCopy(pedidosFiltrados);
+    let estadoAtual =
+      _pedidosFiltrados[idxSolicitacao].solicitacoes_similares[
+        idxSolicitacaoSimilar
+      ].collapsed;
+    _pedidosFiltrados[idxSolicitacao].solicitacoes_similares[
+      idxSolicitacaoSimilar
+    ].collapsed = !estadoAtual;
+    this.setState({ pedidosFiltrados: _pedidosFiltrados });
   }
 
   filtrarPedidos(event) {
@@ -108,10 +135,11 @@ export class CardPendenteAcao extends Component {
             <table className="orders-table mt-4 ml-3 mr-3">
               <thead>
                 <tr className="row">
-                  <th className="col-3">Código do Pedido</th>
-                  <th className="col-3">Código EOL</th>
+                  <th className="col-2">Código do Pedido</th>
+                  <th className="col-2">Código EOL</th>
                   <th className="col-3">Nome da Escola</th>
                   <th className="col-3">{ultimaColunaLabel || "Data"}</th>
+                  <th className="col-2">Solic. Similares</th>
                 </tr>
               </thead>
               <tbody>
@@ -126,23 +154,102 @@ export class CardPendenteAcao extends Component {
                       ? SOLICITACAO_KIT_LANCHE_CEMEI
                       : SOLICITACAO_KIT_LANCHE;
                     return (
-                      <Link
-                        key={key}
-                        to={`/${solicitacaoUrl}/relatorio?uuid=${
-                          pedido.uuid
-                        }&tipoSolicitacao=${tipoSolicitacao}`}
-                      >
+                      <>
                         <tr className="row">
-                          <td className="col-3">{pedido.id_externo}</td>
-                          <td className="col-3">{pedido.escola.codigo_eol}</td>
-                          <td className="col-3">{pedido.escola.nome}</td>
+                          <td className="col-2">
+                            <Link
+                              className="text-dark"
+                              key={key}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${
+                                pedido.uuid
+                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                            >
+                              {pedido.id_externo}
+                            </Link>
+                          </td>
+                          <td className="col-2">
+                            <Link
+                              className="text-dark"
+                              key={key}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${
+                                pedido.uuid
+                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                            >
+                              {pedido.escola.codigo_eol}
+                            </Link>
+                          </td>
                           <td className="col-3">
-                            {pedido.solicitacao_kit_lanche
-                              ? pedido.solicitacao_kit_lanche.data
-                              : pedido.data}
+                            <Link
+                              className="text-dark"
+                              key={key}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${
+                                pedido.uuid
+                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                            >
+                              {pedido.escola.nome}
+                            </Link>
+                          </td>
+                          <td className="col-3">
+                            <Link
+                              className="text-dark"
+                              key={key}
+                              to={`/${solicitacaoUrl}/relatorio?uuid=${
+                                pedido.uuid
+                              }&tipoSolicitacao=${tipoSolicitacao}`}
+                            >
+                              {pedido.solicitacao_kit_lanche
+                                ? pedido.solicitacao_kit_lanche.data
+                                : pedido.data}
+                            </Link>
+                          </td>
+                          <td className="col-2 solicitacao-consolidada-collapse">
+                            {pedido.solicitacoes_similares.length ? (
+                              pedido.solicitacoes_similares.map(
+                                (s, idxSolicitacaoSimilar) => {
+                                  return (
+                                    <p
+                                      className="gatilho-style"
+                                      key={idxSolicitacaoSimilar}
+                                    >
+                                      <i
+                                        className="fa fa-info-circle mr-1"
+                                        aria-hidden="true"
+                                      />
+                                      <b>
+                                        {`#${s.id_externo}`}
+                                        <ToggleExpandir
+                                          onClick={() =>
+                                            this.collapseSolicitacaoSimilar(
+                                              key,
+                                              idxSolicitacaoSimilar
+                                            )
+                                          }
+                                          ativo={!s.collapsed}
+                                          className="icon-padding"
+                                        />
+                                      </b>
+                                    </p>
+                                  );
+                                }
+                              )
+                            ) : (
+                              <p />
+                            )}
                           </td>
                         </tr>
-                      </Link>
+                        {pedido.solicitacoes_similares.length > 0 &&
+                          pedido.solicitacoes_similares.map(
+                            (s, idxSolicitacaoSimilar) => {
+                              return (
+                                <SolicitacoesSimilaresKitLanche
+                                  key={idxSolicitacaoSimilar}
+                                  solicitacao={s}
+                                  index={idxSolicitacaoSimilar}
+                                />
+                              );
+                            }
+                          )}
+                      </>
                     );
                   })}
               </tbody>

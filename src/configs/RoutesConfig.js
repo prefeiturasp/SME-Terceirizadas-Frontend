@@ -192,6 +192,7 @@ import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
+import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 
 const routesConfig = [
   {
@@ -1554,6 +1555,12 @@ const routesConfig = [
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
+    component: AlterarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
   },
