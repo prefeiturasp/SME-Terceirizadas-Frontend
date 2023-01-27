@@ -5,6 +5,7 @@ import {
   JS_DATE_DEZEMBRO,
   statusEnum,
   TIPOS_SOLICITACAO_LABEL,
+  TIPO_SERVICO,
   TIPO_SOLICITACAO
 } from "constants/shared";
 import {
@@ -312,7 +313,7 @@ export const vizualizaBotoesDietaEspecial = solicitacao => {
       return usuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
-      return usuarioEhTerceirizada();
+      return usuarioEhEmpresaTerceirizada();
     default:
       return false;
   }
@@ -396,12 +397,10 @@ export const usuarioEhDiretorEscola = () => {
   return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhEmpresa = () => {
-  return [
-    PERFIL.ADMINISTRADOR_TERCEIRIZADA,
-    PERFIL.ADMINISTRADOR_DISTRIBUIDORA,
-    PERFIL.ADMINISTRADOR_FORNECEDOR
-  ].includes(localStorage.getItem("perfil"));
+export const usuarioEhAdmQualquerEmpresa = () => {
+  return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEscolaEhGestaoMistaParceira = () => {
@@ -503,15 +502,22 @@ export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDistribuidora = () => {
-  return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
-    localStorage.getItem("perfil")
+export const usuarioEhEmpresaDistribuidora = () => {
+  return (
+    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [
+      TIPO_SERVICO.DISTRIBUIDOR_ARMAZEM,
+      TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR
+    ].includes(localStorage.getItem("tipo_servico"))
   );
 };
 
-export const usuarioEhFornecedor = () => {
-  return [PERFIL.ADMINISTRADOR_FORNECEDOR].includes(
-    localStorage.getItem("perfil")
+export const usuarioEhEmpresaFornecedor = () => {
+  return (
+    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [TIPO_SERVICO.FORNECEDOR, TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR].includes(
+      localStorage.getItem("tipo_servico")
+    )
   );
 };
 
@@ -591,11 +597,10 @@ export const usuarioEhQualquerCODAE = () => {
   );
 };
 
-export const usuarioEhTerceirizada = () => {
+export const usuarioEhEmpresaTerceirizada = () => {
   return (
-    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_FORNECEDOR
+    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [TIPO_SERVICO.TERCEIRIZADA].includes(localStorage.getItem("tipo_servico"))
   );
 };
 
