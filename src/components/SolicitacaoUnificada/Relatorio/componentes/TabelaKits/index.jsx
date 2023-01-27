@@ -1,11 +1,22 @@
 import React from "react";
 import { stringSeparadaPorVirgulas } from "../../../../../helpers/utilities";
+import { CODAE, DRE } from "configs/constants";
+import { statusEnum } from "constants/shared";
+import "./style.scss";
 
 export const TabelaKits = props => {
-  const { escola_quantidade, solicitacaoUnificada } = props;
+  const { escola_quantidade, solicitacaoUnificada, visao } = props;
+
+  const ehCancelado = () => {
+    return (
+      (visao === DRE || visao === CODAE) &&
+      solicitacaoUnificada.status !== statusEnum.DRE_CANCELOU &&
+      escola_quantidade.cancelado
+    );
+  };
 
   return (
-    <div className="tabela-escolas">
+    <div className={`tabela-escolas${ehCancelado() ? " cancelado" : ""}`}>
       <div>{escola_quantidade.escola.codigo_eol}</div>
       <div>{escola_quantidade.escola.nome}</div>
       <div>{escola_quantidade.quantidade_alunos} alunos</div>
