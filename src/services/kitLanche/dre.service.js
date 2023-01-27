@@ -3,19 +3,16 @@ import { FLUXO, PEDIDOS, AUTH_TOKEN } from "services/constants";
 import { ErrorHandlerFunction } from "services/service-helpers";
 import { getPath } from "./helper";
 
-export const getDREPedidosDeKitLanche = (filtroAplicado, tipoSolicitacao) => {
+export const getDREPedidosDeKitLanche = async (
+  filtroAplicado,
+  tipoSolicitacao,
+  paramsFromPrevPage
+) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  const results = response.data.results;
+  const status = response.status;
+  return { results: results, status };
 };
 
 export const getDREPedidosDeKitLancheReprovados = tipoSolicitacao => {
