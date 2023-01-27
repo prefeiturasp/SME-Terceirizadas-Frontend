@@ -14,15 +14,15 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDiretorEscola,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDRE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
   usuarioEhLogistica,
-  usuarioEhEmpresa,
-  usuarioEhAdministradorRepresentanteCodae
+  usuarioEhAdministradorRepresentanteCodae,
+  usuarioEhAdmQualquerEmpresa
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -32,11 +32,11 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCoordenadorCODAE() ||
     usuarioEhDRE() ||
     usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioEhTerceirizada();
+    usuarioEhEmpresaTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhTerceirizada();
+    usuarioEhEmpresaTerceirizada();
   const exibirGerenciamentoEmails =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -96,7 +96,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </SubMenu>
       )}
 
-      {usuarioEhEmpresa() && (
+      {usuarioEhAdmQualquerEmpresa() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}

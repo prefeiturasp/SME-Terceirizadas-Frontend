@@ -14,7 +14,7 @@ import {
   ENTREGAS_DISTRIBUIDOR
 } from "configs/constants";
 import {
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioEhLogistica,
   usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
@@ -36,19 +36,19 @@ const MenuLogistica = () => {
         </LeafItem>
       )}
 
-      {usuarioEhDistribuidora() && (
+      {usuarioEhEmpresaDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${GESTAO_REQUISICAO_ENTREGA}`}>
           Requisição de Entrega
         </LeafItem>
       )}
 
-      {usuarioEhDistribuidora() && (
+      {usuarioEhEmpresaDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${INSUCESSO_ENTREGA}`}>
           Insucesso de Entrega
         </LeafItem>
       )}
 
-      {usuarioEhDistribuidora() && (
+      {usuarioEhEmpresaDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${CONSULTA_SOLICITACAO_ALTERACAO}`}>
           Solicitação de Alteração
         </LeafItem>
@@ -75,7 +75,7 @@ const MenuLogistica = () => {
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DRE}`}>Entregas</LeafItem>
       )}
 
-      {usuarioEhDistribuidora() && (
+      {usuarioEhEmpresaDistribuidora() && (
         <LeafItem to={`/${LOGISTICA}/${ENTREGAS_DISTRIBUIDOR}`}>
           Entregas
         </LeafItem>

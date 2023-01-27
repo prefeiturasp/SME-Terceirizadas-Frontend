@@ -1,7 +1,7 @@
 import {
   truncarString,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
@@ -47,12 +47,12 @@ export const incluirDados = (statuses, arr) => {
 const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
-    usuarioEhTerceirizada()
+    usuarioEhEmpresaTerceirizada()
   ) {
     return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
   } else if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_SENSORIAL &&
-    usuarioEhTerceirizada()
+    usuarioEhEmpresaTerceirizada()
   ) {
     return `/${PESQUISA_DESENVOLVIMENTO}/relatorio-analise-sensorial?uuid=${
       item.uuid
@@ -69,7 +69,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   ) {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
-    usuarioEhTerceirizada() &&
+    usuarioEhEmpresaTerceirizada() &&
     [
       CODAE_HOMOLOGADO,
       CODAE_SUSPENDEU,
@@ -83,7 +83,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   } else if (
     (usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhTerceirizada()) &&
+      usuarioEhEmpresaTerceirizada()) &&
     item.status.toLowerCase() === CODAE_QUESTIONOU_UE &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
@@ -124,7 +124,7 @@ const getText = item => {
   let appendix = "";
 
   if (
-    usuarioEhTerceirizada() &&
+    usuarioEhEmpresaTerceirizada() &&
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO
   ) {
     appendix = ` (${item.qtde_questionamentos})`;

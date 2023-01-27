@@ -8,7 +8,7 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 
 const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
@@ -21,7 +21,7 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
   const exibirNomeTerceirizada =
     !usuarioEhEscolaTerceirizadaDiretor() &&
     !usuarioEhEscolaTerceirizada() &&
-    !usuarioEhTerceirizada() &&
+    !usuarioEhEmpresaTerceirizada() &&
     !usuarioEhCODAEGestaoAlimentacao() &&
     !usuarioEhNutricionistaSupervisao() &&
     !usuarioEhCODAENutriManifestacao();

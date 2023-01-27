@@ -17,7 +17,7 @@ import Respostas from "./components/Respostas/index";
 import { AnaliseSensorial } from "./components/AnaliseSensorial";
 import {
   usuarioEhCODAEGestaoProduto,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 import "./style.scss";
 
@@ -106,7 +106,7 @@ export const Homologacao = ({
                     />
                   </>
                 )}
-              {usuarioEhTerceirizada() &&
+              {usuarioEhEmpresaTerceirizada() &&
                 homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                   <BotoesTerceirizada
                     homologacao={homologacao}

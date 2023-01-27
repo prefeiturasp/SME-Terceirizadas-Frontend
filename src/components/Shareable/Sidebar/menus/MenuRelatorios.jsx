@@ -6,7 +6,7 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhDRE
@@ -21,18 +21,18 @@ const MenuRelatorios = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhDRE();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
-    usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto();
+    usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto();
 
   const exibirMenuTodosPerfis =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial();
@@ -40,7 +40,7 @@ const MenuRelatorios = () => {
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhDRE() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||

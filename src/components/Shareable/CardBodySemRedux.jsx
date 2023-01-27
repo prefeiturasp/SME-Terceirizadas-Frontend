@@ -6,7 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
@@ -15,7 +15,7 @@ import { InputComData } from "./DatePicker";
 // Para usar este componente é necessário remover o redux-form do dashboard
 
 const CardBodySemRedux = props => {
-  const ehTerceirizada = usuarioEhTerceirizada();
+  const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const ehEscola =
     usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;

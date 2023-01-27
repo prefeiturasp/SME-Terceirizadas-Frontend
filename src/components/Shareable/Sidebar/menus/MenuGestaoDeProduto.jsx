@@ -12,7 +12,7 @@ import { listarCardsPermitidos, CADASTROS } from "helpers/gestaoDeProdutos";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
@@ -21,7 +21,7 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const cadastroItems = CADASTROS;
   const exibirBusca = true;
-  const exibirCadastro = usuarioEhTerceirizada();
+  const exibirCadastro = usuarioEhEmpresaTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
   const exibirReclamacao =
     usuarioEhNutricionistaSupervisao() ||
@@ -31,9 +31,9 @@ const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
-  const exibirResponderReclamacao = usuarioEhTerceirizada();
+  const exibirResponderReclamacao = usuarioEhEmpresaTerceirizada();
   const usuarioEhTerceirizadaOuGP =
-    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
+    usuarioEhCODAEGestaoProduto() || usuarioEhEmpresaTerceirizada();
 
   return (
     <Menu

@@ -6,7 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
@@ -16,7 +16,7 @@ import { getNomesUnicosEditais } from "services/produto.service";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
-  const ehTerceirizada = usuarioEhTerceirizada();
+  const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const ehEscola =
     usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;

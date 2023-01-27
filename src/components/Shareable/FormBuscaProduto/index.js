@@ -6,7 +6,7 @@ import { ASelect } from "components/Shareable/MakeField";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
 import {
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAENutriManifestacao,
@@ -59,7 +59,7 @@ const initialState = {
 const exibirFiltroNomeTerceirizada =
   !usuarioEhEscolaTerceirizadaDiretor() &&
   !usuarioEhEscolaTerceirizada() &&
-  !usuarioEhTerceirizada() &&
+  !usuarioEhEmpresaTerceirizada() &&
   !usuarioEhCODAEGestaoAlimentacao() &&
   !usuarioEhNutricionistaSupervisao() &&
   !usuarioEhCODAENutriManifestacao();
@@ -174,13 +174,13 @@ export const FormBuscaProduto = ({
                       name="nome_terceirizada"
                       disabled={
                         values.agrupado_por_nome_e_marca ||
-                        usuarioEhTerceirizada()
+                        usuarioEhEmpresaTerceirizada()
                       }
                     />
                   )}
                   {(usuarioEhEscolaTerceirizadaDiretor() ||
                     usuarioEhEscolaTerceirizada() ||
-                    usuarioEhTerceirizada()) && (
+                    usuarioEhEmpresaTerceirizada()) && (
                     <div className="row">
                       <div className="col-6">
                         <Field
@@ -242,13 +242,13 @@ export const FormBuscaProduto = ({
           <div className="row">
             {!usuarioEhEscolaTerceirizadaDiretor() &&
               !usuarioEhEscolaTerceirizada() &&
-              !usuarioEhTerceirizada() && (
+              !usuarioEhEmpresaTerceirizada() && (
                 <>
                   <div
                     className={`col-${
                       !usuarioEhEscolaTerceirizadaDiretor() &&
                       !usuarioEhEscolaTerceirizada() &&
-                      !usuarioEhTerceirizada()
+                      !usuarioEhEmpresaTerceirizada()
                         ? "6"
                         : "4"
                     }`}
@@ -298,7 +298,7 @@ export const FormBuscaProduto = ({
                       className={`col-${
                         !usuarioEhEscolaTerceirizadaDiretor() &&
                         !usuarioEhEscolaTerceirizada() &&
-                        !usuarioEhTerceirizada()
+                        !usuarioEhEmpresaTerceirizada()
                           ? "6"
                           : "4"
                       }`}

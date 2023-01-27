@@ -13,7 +13,7 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "../../../helpers/utilities";
 
 class Cadastros extends Component {
@@ -38,7 +38,8 @@ class Cadastros extends Component {
     } = this.state;
     const USUARIO_CODAE =
       usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();
-    const USUARIO_SEM_PERMISSAO = usuarioEhDRE() || usuarioEhTerceirizada();
+    const USUARIO_SEM_PERMISSAO =
+      usuarioEhDRE() || usuarioEhEmpresaTerceirizada();
     return (
       <div>
         {USUARIO_SEM_PERMISSAO && (

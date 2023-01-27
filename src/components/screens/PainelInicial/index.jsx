@@ -8,7 +8,7 @@ import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
 import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
 import {
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -32,7 +32,7 @@ const PainelInicial = ({ history }) => {
       {exibeMenuValidandoAmbiente &&
         (usuarioEhCODAEGestaoAlimentacao() ||
           usuarioEhCODAENutriManifestacao() ||
-          usuarioEhTerceirizada() ||
+          usuarioEhEmpresaTerceirizada() ||
           usuarioEhDRE() ||
           usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
@@ -52,7 +52,7 @@ const PainelInicial = ({ history }) => {
         usuarioEhCODAEDietaEspecial() ||
         usuarioEhMedicao() ||
         usuarioEhNutricionistaSupervisao() ||
-        usuarioEhTerceirizada() ||
+        usuarioEhEmpresaTerceirizada() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||
         usuarioEhEscolaTerceirizada()) && (
@@ -67,7 +67,7 @@ const PainelInicial = ({ history }) => {
       )}
       {(usuarioEhQualquerCODAE() ||
         usuarioEhCODAENutriManifestacao() ||
-        usuarioEhTerceirizada() ||
+        usuarioEhEmpresaTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
         usuarioEhEscolaTerceirizadaDiretor() ||

@@ -12,7 +12,7 @@ import {
   dataAtual,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "../../../helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
 
@@ -62,7 +62,7 @@ class DashBoardDietaEspecial extends Component {
       });
     });
     this.loadDietas();
-    if (usuarioEhTerceirizada()) {
+    if (usuarioEhEmpresaTerceirizada()) {
       await getMeusLotes().then(response => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
@@ -169,7 +169,7 @@ class DashBoardDietaEspecial extends Component {
     if (
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
     ) {
       await this.props
         .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
@@ -272,7 +272,7 @@ class DashBoardDietaEspecial extends Component {
     if (
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
     ) {
       aguardandoVigenciaListFiltered = this.filtrarLote(
         aguardandoVigenciaList,
@@ -319,7 +319,7 @@ class DashBoardDietaEspecial extends Component {
     if (
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
     ) {
       aguardandoVigenciaListFiltered = this.filtrarNome(
         aguardandoVigenciaListFiltered,
@@ -471,7 +471,7 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 {(usuarioEhEscolaTerceirizadaDiretor() ||
                   usuarioEhEscolaTerceirizada() ||
-                  usuarioEhTerceirizada()) && (
+                  usuarioEhEmpresaTerceirizada()) && (
                   <div className="col-6">
                     <CardStatusDeSolicitacao
                       cardTitle={"Aguardando início da vigência"}

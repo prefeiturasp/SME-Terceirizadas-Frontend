@@ -9,15 +9,15 @@ import {
   DRE,
   CODAE
 } from "configs/constants";
-import { usuarioEhDRE, usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhDRE, usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 let voltarPara = "/painel-gestao-alimentacao";
 
-if (usuarioEhTerceirizada())
+if (usuarioEhEmpresaTerceirizada())
   voltarPara = `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`;
 
 let visao = ESCOLA;
-if (usuarioEhTerceirizada()) {
+if (usuarioEhEmpresaTerceirizada()) {
   visao = TERCEIRIZADA;
 } else if (usuarioEhDRE()) {
   visao = DRE;
