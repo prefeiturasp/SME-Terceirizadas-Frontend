@@ -1,0 +1,6 @@
+@import "styles/variables.scss";
+
+.cancelado {
+  color: $grayLight !important;
+  text-decoration: line-through;
+}
