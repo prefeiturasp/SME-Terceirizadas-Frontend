@@ -504,7 +504,9 @@ export const usuarioEhCronograma = () => {
 
 export const usuarioEhEmpresaDistribuidora = () => {
   return (
-    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
     [
       TIPO_SERVICO.DISTRIBUIDOR_ARMAZEM,
       TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR
@@ -514,7 +516,9 @@ export const usuarioEhEmpresaDistribuidora = () => {
 
 export const usuarioEhEmpresaFornecedor = () => {
   return (
-    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
     [TIPO_SERVICO.FORNECEDOR, TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR].includes(
       localStorage.getItem("tipo_servico")
     )
@@ -599,7 +603,9 @@ export const usuarioEhQualquerCODAE = () => {
 
 export const usuarioEhEmpresaTerceirizada = () => {
   return (
-    [PERFIL.ADMINISTRADOR_EMPRESA].includes(localStorage.getItem("perfil")) &&
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
     [TIPO_SERVICO.TERCEIRIZADA].includes(localStorage.getItem("tipo_servico"))
   );
 };
