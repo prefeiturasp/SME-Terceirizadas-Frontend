@@ -165,7 +165,7 @@ export const mensagemCancelamento = (status, tipoDoc) => {
     case statusEnum.DRE_VALIDADO:
       return "Esta solicitação já foi validada pela DRE. ";
     case statusEnum.CODAE_A_AUTORIZAR:
-      return "Esta solicitação está aguardando autorização da CODAE. ";
+      return "Esta solicitação está aguardando validação da CODAE. ";
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
       return tipoDoc === TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA
