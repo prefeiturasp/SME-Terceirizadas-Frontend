@@ -269,6 +269,7 @@ export default ({ uuid }) => {
                           alimentos={alimentos}
                           produtos={produtos}
                           form={form}
+                          values={values}
                         />
                       )}
                     </>
