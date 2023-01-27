@@ -65,6 +65,10 @@ const login = async (login, password) => {
               JSON.stringify(result_.vinculo_atual.instituicao.nome)
             );
             localStorage.setItem(
+              "tipo_servico",
+              JSON.stringify(result_.vinculo_atual.instituicao.tipo_servico)
+            );
+            localStorage.setItem(
               "modulo_gestao",
               JSON.stringify(result_.vinculo_atual.instituicao.modulo_gestao)
             );
@@ -106,6 +110,7 @@ const logout = () => {
   localStorage.removeItem("tipo_perfil");
   localStorage.removeItem("perfil");
   localStorage.removeItem("tipo_gestao");
+  localStorage.removeItem("tipo_servico");
   localStorage.removeItem("nome_instituicao");
   localStorage.removeItem("modulo_gestao");
   localStorage.removeItem("eh_cei");
