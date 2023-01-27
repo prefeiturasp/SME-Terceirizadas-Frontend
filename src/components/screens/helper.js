@@ -184,7 +184,9 @@ export const ajustarFormatoLog = (logs, card) => {
         log.tipo_doc === KIT_LANCHE_UNIFICADA &&
         log.escolas_quantidades &&
         log.escolas_quantidades[0].cancelado &&
-        log.escolas_quantidades[0].cancelado_por.tipo_usuario === "escola"
+        ["escola", "diretoriaregional"].includes(
+          log.escolas_quantidades[0].cancelado_por.tipo_usuario
+        )
       ) {
         date = log.escolas_quantidades[0].cancelado_em;
       }

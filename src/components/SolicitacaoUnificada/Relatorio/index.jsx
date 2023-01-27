@@ -74,6 +74,13 @@ class Relatorio extends Component {
     this.setState({ showNaoAprovaModal: false });
   }
 
+  componentDidUpdate() {
+    if (!this.state.showNaoAprovaModal) {
+      this.props.change("justificativa", "");
+      this.props.change("escolas", []);
+    }
+  }
+
   showAutorizarModal() {
     this.setState({ showAutorizarModal: true });
   }
@@ -217,6 +224,7 @@ class Relatorio extends Component {
             justificativa={justificativa}
             resposta_sim_nao={resposta_sim_nao}
             uuid={uuid}
+            visao={visao}
           />
         )}
         {ModalQuestionamento && (
@@ -367,6 +375,7 @@ const selector = formValueSelector(formName);
 const mapStateToProps = state => {
   return {
     justificativa: selector(state, "justificativa"),
+    escolas: selector(state, "escolas"),
     motivo_cancelamento: selector(state, "motivo_cancelamento")
   };
 };
