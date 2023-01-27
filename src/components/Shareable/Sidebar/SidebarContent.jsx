@@ -26,7 +26,8 @@ import {
   usuarioEhAdministradorRepresentanteCodae,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhQualquerUsuarioEmpresa
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -135,7 +136,8 @@ export const SidebarContent = () => {
     !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhOutrosDilog() &&
-    !usuarioEhPreRecebimentoSemLogistica();
+    !usuarioEhPreRecebimentoSemLogistica() &&
+    !usuarioEhQualquerUsuarioEmpresa();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
