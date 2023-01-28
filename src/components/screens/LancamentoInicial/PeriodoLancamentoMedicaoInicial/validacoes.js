@@ -45,6 +45,29 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   }
 };
 
+export const campoComInclusaoContinuaValor0ESemObservacao = (
+  dia,
+  categoria,
+  dadosValoresInclusoesAutorizadasState,
+  values
+) => {
+  const alimentacoes = ["lanche", "refeicao", "sobremesa"];
+  let erro = false;
+  alimentacoes.forEach(alimentacao => {
+    if (
+      `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState &&
+      Number(
+        values[`${alimentacao}__dia_${dia}__categoria_${categoria.id}`]
+      ) === 0 &&
+      !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+    ) {
+      erro = true;
+    }
+  });
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   values,
   dia,
@@ -70,6 +93,12 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       categoria,
       diasSobremesaDoce,
       location
+    ) ||
+    campoComInclusaoContinuaValor0ESemObservacao(
+      dia,
+      categoria,
+      dadosValoresInclusoesAutorizadasState,
+      values
     )
   );
 };
@@ -121,6 +150,21 @@ export const validarFormulario = (
         erro = `Dia ${
           dia.split("-")[2]
         } é de sobremesa doce. Justifique o lançamento de repetição nas observações`;
+      }
+    });
+
+    Object.keys(dadosValoresInclusoesAutorizadasState).forEach(inclusao => {
+      if (
+        campoComInclusaoContinuaValor0ESemObservacao(
+          inclusao.split("__dia_")[1].split("__categoria")[0],
+          categoria,
+          dadosValoresInclusoesAutorizadasState,
+          values
+        )
+      ) {
+        erro = `Dia ${
+          inclusao.split("__dia_")[1].split("__categoria")[0]
+        } está com valor 0 em uma alimentação. Justifique nas observações`;
       }
     });
   });

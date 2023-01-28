@@ -714,9 +714,10 @@ export default () => {
       }
     });
     if (qtdCamposComErro) {
-      return toastError(
+      toastError(
         `Existe(m) ${qtdCamposComErro} campo(s) com valor maior que a frequência. Necessário corrigir.`
       );
+      return;
     }
     Object.entries(valuesMesmoDiaDaObservacao).map(v => {
       const keySplitted = v[0].split("__");
@@ -1272,7 +1273,10 @@ export default () => {
                                                         column.dia,
                                                         categoria,
                                                         diasSobremesaDoce,
-                                                        location
+                                                        location,
+                                                        row,
+                                                        column,
+                                                        dadosValoresInclusoesAutorizadasState
                                                       )
                                                         ? BUTTON_STYLE.RED_OUTLINE
                                                         : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -1469,7 +1473,14 @@ export default () => {
                                                             categoria.id
                                                           }`
                                                         ]
-                                                      ) === 0
+                                                      ) === 0 &&
+                                                      !formValuesAtualizados[
+                                                        `observacoes__dia_${
+                                                          column.dia
+                                                        }__categoria_${
+                                                          categoria.id
+                                                        }`
+                                                      ]
                                                     }
                                                     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                       `${row.name}__dia_${

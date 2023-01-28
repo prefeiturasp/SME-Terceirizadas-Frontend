@@ -119,7 +119,7 @@ export const InputText = props => {
       {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
         <Tooltip
           title={
-            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+            "Nenhuma alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
