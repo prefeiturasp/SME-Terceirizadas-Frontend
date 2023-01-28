@@ -10,7 +10,7 @@ import {
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getDetalheKitLancheAvulsa } from "../../../services/kitLanche";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
+import { deepCopy, visualizaBotoesDoFluxo } from "../../../helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
@@ -60,8 +60,14 @@ class Relatorio extends Component {
     });
     if (uuid) {
       getDetalheKitLancheAvulsa(uuid, tipoSolicitacao).then(response => {
+        let _response = deepCopy(response);
+        let solicitacoes_similares = _response.solicitacoes_similares.map(s => {
+          s["collapsed"] = true;
+          return s;
+        });
+        _response["solicitacoes_similares"] = solicitacoes_similares;
         this.setState({
-          solicitacaoKitLanche: response,
+          solicitacaoKitLanche: _response,
           uuid,
           tipoSolicitacao,
           prazoDoPedidoMensagem: prazoDoPedidoMensagem(response.prioridade)
@@ -298,6 +304,9 @@ class Relatorio extends Component {
               <div className="card-body">
                 <CorpoRelatorio
                   solicitacaoKitLanche={solicitacaoKitLanche}
+                  solicitacoesSimilares={
+                    solicitacaoKitLanche.solicitacoes_similares
+                  }
                   prazoDoPedidoMensagem={prazoDoPedidoMensagem}
                   tipoSolicitacao={this.state.tipoSolicitacao}
                   meusDados={meusDados}

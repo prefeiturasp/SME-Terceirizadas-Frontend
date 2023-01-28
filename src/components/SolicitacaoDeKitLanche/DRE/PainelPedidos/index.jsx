@@ -8,7 +8,12 @@ import {
 } from "../../../../constants/shared";
 import { dataAtualDDMMYYYY, safeConcatOn } from "../../../../helpers/utilities";
 import { getDREPedidosDeKitLanche } from "services/kitLanche";
-import Select from "../../../Shareable/Select";
+import { getLotesSimples } from "services/lote.service";
+import HTTP_STATUS from "http-status-codes";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
+import { formatarOpcoesLote } from "helpers/utilities";
+import { meusDados } from "services/perfil.service";
 import { CardPendenteAcao } from "../../components/CardPendenteAcao";
 import {
   filtraNoLimite,
@@ -21,23 +26,40 @@ class PainelPedidos extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      meusDados: null,
       pedidosCarregados: 0,
       pedidosPrioritarios: [],
       pedidosNoPrazoLimite: [],
-      pedidosNoPrazoRegular: []
+      pedidosNoPrazoRegular: [],
+      filtros: this.props.filtros || {
+        lote: undefined
+      },
+      lotes: []
     };
   }
 
-  filtrar(filtro) {
+  filtrar(filtro, filtros) {
     let pedidosPrioritarios = [];
     let pedidosNoPrazoLimite = [];
     let pedidosNoPrazoRegular = [];
     this.setState({ pedidosCarregados: 0 });
 
     Promise.all([
-      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_NORMAL),
-      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEI),
-      getDREPedidosDeKitLanche(filtro, TIPO_SOLICITACAO.SOLICITACAO_CEMEI)
+      getDREPedidosDeKitLanche(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+        filtros
+      ),
+      getDREPedidosDeKitLanche(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEI,
+        filtros
+      ),
+      getDREPedidosDeKitLanche(
+        filtro,
+        TIPO_SOLICITACAO.SOLICITACAO_CEMEI,
+        filtros
+      )
     ]).then(([response, responseCei, responseCEMEI]) => {
       const results = safeConcatOn(
         "results",
@@ -64,18 +86,40 @@ class PainelPedidos extends Component {
   }
 
   componentDidMount() {
-    this.filtrar(FiltroEnum.SEM_FILTRO);
+    meusDados().then(response => {
+      if (response) {
+        this.setState({ meusDados: response });
+        this.getLotesAsync(response.vinculo_atual.instituicao.uuid);
+      }
+    });
+    const paramsFromPrevPage = this.props.filtros || {
+      lote: undefined
+    };
+    this.filtrar(FiltroEnum.SEM_FILTRO, paramsFromPrevPage);
+    if (this.props.filtros) {
+      this.props.change("lote", this.props.filtros.lote);
+    }
   }
 
-  onFiltroSelected(value) {
-    switch (value) {
-      case FiltroEnum.HOJE:
-        this.filtrarHoje();
-        break;
-      default:
-        this.filtrar(value);
-        break;
+  async getLotesAsync(uuid) {
+    const response = await getLotesSimples({ diretoria_regional__uuid: uuid });
+    if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const lotes_ = formatarOpcoesLote(response.data.results).map(lote => {
+        return <Option key={lote.value}>{lote.label}</Option>;
+      });
+      this.setState({
+        lotes: [
+          <Option value="" key={0}>
+            Filtrar por Lote
+          </Option>
+        ].concat(lotes_)
+      });
     }
+  }
+
+  setFiltros(filtros) {
+    this.setState({ filtros: filtros });
   }
 
   render() {
@@ -83,9 +127,10 @@ class PainelPedidos extends Component {
       pedidosCarregados,
       pedidosPrioritarios,
       pedidosNoPrazoLimite,
-      pedidosNoPrazoRegular
+      pedidosNoPrazoRegular,
+      lotes
     } = this.state;
-    const { visaoPorCombo, valorDoFiltro } = this.props;
+    const { valorDoFiltro } = this.props;
     const todosOsPedidosForamCarregados = pedidosCarregados;
     return (
       <div>
@@ -99,17 +144,30 @@ class PainelPedidos extends Component {
                   <div className="col-3 font-10 my-auto">
                     Data: {dataAtualDDMMYYYY()}
                   </div>
-                  <div className="offset-6 col-3 text-right">
+                  <div className="offset-6 col-3">
                     <Field
-                      component={Select}
-                      name="visao_por"
-                      naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.onFiltroSelected(event.target.value)
+                      component={ASelect}
+                      showSearch
+                      onChange={value => {
+                        const filtros_ = {
+                          lote: value || undefined
+                        };
+                        this.setFiltros(filtros_);
+                        this.filtrar(FiltroEnum.SEM_FILTRO, filtros_);
+                      }}
+                      onBlur={e => {
+                        e.preventDefault();
+                      }}
+                      name="lote"
+                      filterOption={(inputValue, option) =>
+                        option.props.children
+                          .toString()
+                          .toLowerCase()
+                          .includes(inputValue.toLowerCase())
                       }
-                      placeholder={"Filtro por"}
-                      options={visaoPorCombo}
-                    />
+                    >
+                      {lotes}
+                    </Field>
                   </div>
                 </div>
                 <div className="row pt-3">

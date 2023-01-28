@@ -14,7 +14,7 @@ import {
   SUSPENSAO_ALIMENTACAO_CEI
 } from "../../configs/constants";
 import { truncarString } from "../../helpers/utilities";
-import { TIPO_SOLICITACAO } from "constants/shared";
+import { TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import { usuarioEhEscola } from "../../helpers/utilities";
 import { STATUS_ALIMENTO } from "./const";
 
@@ -175,6 +175,24 @@ export const ajustarFormatoLog = (logs, card) => {
         solicitacao = "NAO_ENCONTRADO";
         break;
     }
+
+    const getDate = () => {
+      let date = log.data_log;
+      const tipoPerfil = localStorage.getItem("tipo_perfil");
+      if (
+        tipoPerfil === TIPO_PERFIL.ESCOLA &&
+        log.tipo_doc === KIT_LANCHE_UNIFICADA &&
+        log.escolas_quantidades &&
+        log.escolas_quantidades[0].cancelado &&
+        ["escola", "diretoriaregional"].includes(
+          log.escolas_quantidades[0].cancelado_por.tipo_usuario
+        )
+      ) {
+        date = log.escolas_quantidades[0].cancelado_em;
+      }
+      return date;
+    };
+
     return {
       text: usuarioEhEscola()
         ? truncarString(descricao, tamanhoString) +
@@ -182,7 +200,7 @@ export const ajustarFormatoLog = (logs, card) => {
         : truncarString(descricao, tamanhoString) + " / " + log.escola_nome,
       conferido: log.conferido || log.terceirizada_conferiu_gestao,
       lote_uuid: log.lote_uuid,
-      date: log.data_log,
+      date: getDate(),
       link: `/${solicitacao}/${RELATORIO}?uuid=${
         log.uuid
       }&ehInclusaoContinua=${log.tipo_doc ===

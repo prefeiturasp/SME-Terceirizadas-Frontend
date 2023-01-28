@@ -9,16 +9,50 @@ import Botao from "../../../Shareable/Botao";
 import { TabelaKits } from "./TabelaKits";
 import {
   corDaMensagem,
+  deepCopy,
   justificativaAoNegarSolicitacao
 } from "../../../../helpers/utilities";
 import { getRelatorioKitLancheUnificado } from "../../../../services/relatorios";
 import { fluxoPartindoDRE } from "../../../Shareable/FluxoDeStatus/helper";
+import { ESCOLA } from "configs/constants";
 
 export const CorpoRelatorio = props => {
-  const { solicitacaoUnificada, prazoDoPedidoMensagem } = props;
+  const { solicitacaoUnificada, prazoDoPedidoMensagem, visao } = props;
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoUnificada.logs
   );
+
+  let escolasQuantidades = solicitacaoUnificada.escolas_quantidades;
+  let logs = solicitacaoUnificada.logs;
+  let copyLogs = deepCopy(logs);
+
+  if (visao === ESCOLA) {
+    if (copyLogs.slice(-1)[0].usuario.tipo_usuario === "escola") {
+      copyLogs.splice(-1);
+    }
+    if (copyLogs.slice(-1)[0].usuario.tipo_usuario === "diretoriaregional") {
+      copyLogs.splice(-1);
+    }
+    const nomeEscola = localStorage.getItem("nome_instituicao");
+    escolasQuantidades = escolasQuantidades.filter(
+      eq => `"${eq.escola.nome}"` === nomeEscola
+    );
+    if (escolasQuantidades[0].cancelado) {
+      copyLogs.push({
+        criado_em: escolasQuantidades[0].cancelado_em_com_hora,
+        descricao: "",
+        justificativa: escolasQuantidades[0].cancelado_justificativa,
+        resposta_sim_nao: false,
+        status_evento_explicacao: `${
+          escolasQuantidades[0].cancelado_por.tipo_usuario ===
+          "diretoriaregional"
+            ? "DRE"
+            : "Escola"
+        } cancelou`,
+        usuario: escolasQuantidades[0].cancelado_por
+      });
+    }
+  }
 
   return (
     <div>
@@ -74,8 +108,9 @@ export const CorpoRelatorio = props => {
         <div className="row">
           <FluxoDeStatus
             fluxo={fluxoPartindoDRE}
-            listaDeStatus={solicitacaoUnificada.logs}
+            listaDeStatus={copyLogs}
             eh_gestao_alimentacao={true}
+            solicitacaoUnificada={solicitacaoUnificada}
           />
         </div>
         <hr />
@@ -103,17 +138,16 @@ export const CorpoRelatorio = props => {
         </div>
 
         <div>
-          {solicitacaoUnificada.escolas_quantidades.map(
-            (escola_quantidade, key) => {
-              return (
-                <TabelaKits
-                  key={key}
-                  escola_quantidade={escola_quantidade}
-                  solicitacaoUnificada={solicitacaoUnificada}
-                />
-              );
-            }
-          )}
+          {escolasQuantidades.map((escola_quantidade, key) => {
+            return (
+              <TabelaKits
+                key={key}
+                escola_quantidade={escola_quantidade}
+                solicitacaoUnificada={solicitacaoUnificada}
+                visao={visao}
+              />
+            );
+          })}
         </div>
 
         <div className="observacoes-solicitacao">
@@ -123,27 +157,41 @@ export const CorpoRelatorio = props => {
                 N° total de Unidade Escolares beneficiadas
               </div>
               <div className="descricao-texto">{`${
-                solicitacaoUnificada.escolas_quantidades.length
-              } Unidades Escolares`}</div>
+                escolasQuantidades.length
+              } Unidade${escolasQuantidades.length > 1 ? "s" : ""} Escolar${
+                escolasQuantidades.length > 1 ? "es" : ""
+              }`}</div>
             </div>
             <div className="kits">
               <div>
                 <div className="descricao-titulo">N° total de Kits</div>
                 <div className="descricao-texto">
-                  {solicitacaoUnificada.total_kit_lanche} Kits
+                  {visao === ESCOLA
+                    ? escolasQuantidades.reduce(
+                        (acc, curr) =>
+                          acc + curr.kits.length * curr.quantidade_alunos,
+                        0
+                      )
+                    : solicitacaoUnificada.total_kit_lanche}{" "}
+                  Kits
                 </div>
               </div>
             </div>
           </div>
-          <div>
-            <div className="descricao-titulo">Observações</div>
-            <div
-              className="descricao-texto"
-              dangerouslySetInnerHTML={{
-                __html: solicitacaoUnificada.solicitacao_kit_lanche.descricao
-              }}
-            />
-          </div>
+          {solicitacaoUnificada.solicitacao_kit_lanche.descricao &&
+            solicitacaoUnificada.solicitacao_kit_lanche.descricao !==
+              "<p></p>" && (
+              <div>
+                <div className="descricao-titulo">Observações</div>
+                <div
+                  className="descricao-texto"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      solicitacaoUnificada.solicitacao_kit_lanche.descricao
+                  }}
+                />
+              </div>
+            )}
           {justificativaNegacao && (
             <div>
               <div className="descricao-titulo">Justificativa da negação</div>

@@ -239,19 +239,15 @@ export const terceirizadaTomaCiencia = uuid => {
     });
 };
 
-export const getDREPedidosDeInversoes = filtroAplicado => {
+export const getDREPedidosDeInversoes = async (
+  filtroAplicado,
+  paramsFromPrevPage
+) => {
   const url = `${API_URL}/inversoes-dia-cardapio/pedidos-diretoria-regional/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  const results = response.data.results;
+  const status = response.status;
+  return { results: results, status };
 };
 
 export const getCODAEPedidosDeInversoes = async (

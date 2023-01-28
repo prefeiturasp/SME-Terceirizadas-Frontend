@@ -4,15 +4,21 @@ import Page from "../../../components/Shareable/Page/Page";
 import Container from "../../../components/InversaoDeDiaDeCardapio/DRE/PainelPedidos/Container";
 import { HOME } from "../constants";
 import { INVERSAO_CARDAPIO, DRE } from "../../../configs/constants";
+import { useLocation } from "react-router-dom";
 
-const atual = {
-  href: `/${DRE}/${INVERSAO_CARDAPIO}`,
-  titulo: "Inversão de dia de Cardápio"
+export default () => {
+  const atual = {
+    href: `/${DRE}/${INVERSAO_CARDAPIO}`,
+    titulo: "Inversão de dia de Cardápio"
+  };
+
+  const location = useLocation();
+  const filtros = location.state && location.state.filtros;
+
+  return (
+    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+      <Breadcrumb home={HOME} atual={atual} />
+      <Container filtros={filtros} />
+    </Page>
+  );
 };
-
-export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
-    <Breadcrumb home={HOME} atual={atual} />
-    <Container />
-  </Page>
-);

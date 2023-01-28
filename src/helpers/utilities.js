@@ -4,6 +4,7 @@ import "moment/locale/pt-br";
 import {
   JS_DATE_DEZEMBRO,
   statusEnum,
+  TIPOS_SOLICITACAO_LABEL,
   TIPO_SOLICITACAO
 } from "constants/shared";
 import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
@@ -157,17 +158,19 @@ export const pontuarValor = valor => {
   return parseFloat(valor).toLocaleString();
 };
 
-export const mensagemCancelamento = status => {
+export const mensagemCancelamento = (status, tipoDoc) => {
   switch (status) {
     case statusEnum.DRE_A_VALIDAR:
       return "Esta solicitação está aguardando validação pela DRE. ";
     case statusEnum.DRE_VALIDADO:
       return "Esta solicitação já foi validada pela DRE. ";
     case statusEnum.CODAE_A_AUTORIZAR:
-      return "Esta solicitação está aguardando autorização da CODAE. ";
+      return "Esta solicitação está aguardando validação da CODAE. ";
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
-      return "Esta solicitação já foi autorizada pela CODAE. ";
+      return tipoDoc === TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA
+        ? "Esta solicitação está autorizada pela CODAE. "
+        : "Esta solicitação já foi autorizada pela CODAE. ";
     case statusEnum.INFORMADO:
       return "A solicitação da suspensão de alimentação está autorizada automaticamente. ";
     default:
@@ -277,6 +280,9 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
         TIPO_PERFIL.DIETA_ESPECIAL
       ].includes(tipoPerfil);
     case statusEnum.CODAE_AUTORIZADO:
+      return [TIPO_PERFIL.ESCOLA, TIPO_PERFIL.DIRETORIA_REGIONAL].includes(
+        tipoPerfil
+      );
     case statusEnum.CODAE_QUESTIONADO:
       return [TIPO_PERFIL.TERCEIRIZADA].includes(tipoPerfil);
     case statusEnum.ESCOLA_CANCELOU:
@@ -653,7 +659,7 @@ export const ehEscolaTipoCEI = escola => {
 
 export const ehEscolaTipoCEMEI = escola => {
   const nome = (escola && escola.nome) || "";
-  return nome.startsWith("CEMEI");
+  return nome.startsWith("CEMEI") || nome.startsWith("CEU CEMEI");
 };
 
 export const tipoSolicitacaoComoQuery = obj => {
