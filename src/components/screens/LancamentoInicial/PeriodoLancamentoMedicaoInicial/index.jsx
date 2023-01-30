@@ -1491,7 +1491,14 @@ export default () => {
                                                         dadosValoresInclusoesAutorizadasState &&
                                                       !validacaoDiaLetivo(
                                                         column.dia
-                                                      )
+                                                      ) &&
+                                                      !formValuesAtualizados[
+                                                        `observacoes__dia_${
+                                                          column.dia
+                                                        }__categoria_${
+                                                          categoria.id
+                                                        }`
+                                                      ]
                                                     }
                                                     exibeTooltipFrequenciaDiaNaoLetivo={
                                                       !validacaoDiaLetivo(
@@ -1544,7 +1551,14 @@ export default () => {
                                                               categoria.id
                                                             }`
                                                           ]
-                                                        )
+                                                        ) &&
+                                                      !formValuesAtualizados[
+                                                        `observacoes__dia_${
+                                                          column.dia
+                                                        }__categoria_${
+                                                          categoria.id
+                                                        }`
+                                                      ]
                                                     }
                                                     numeroDeInclusoesAutorizadas={
                                                       dadosValoresInclusoesAutorizadasState[

@@ -68,6 +68,32 @@ export const campoComInclusaoContinuaValor0ESemObservacao = (
   return erro;
 };
 
+export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
+  dia,
+  categoria,
+  dadosValoresInclusoesAutorizadasState,
+  values
+) => {
+  const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
+  let erro = false;
+  alimentacoes.forEach(alimentacao => {
+    if (
+      `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState &&
+      Number(values[`${alimentacao}__dia_${dia}__categoria_${categoria.id}`]) >
+        Number(
+          dadosValoresInclusoesAutorizadasState[
+            `${alimentacao}__dia_${dia}__categoria_${categoria.id}`
+          ]
+        ) &&
+      !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+    ) {
+      erro = true;
+    }
+  });
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   values,
   dia,
@@ -95,6 +121,12 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       location
     ) ||
     campoComInclusaoContinuaValor0ESemObservacao(
+      dia,
+      categoria,
+      dadosValoresInclusoesAutorizadasState,
+      values
+    ) ||
+    campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
       dia,
       categoria,
       dadosValoresInclusoesAutorizadasState,
@@ -131,7 +163,14 @@ export const validarFormulario = (
 
   const values_ = deepCopy(values);
   Object.keys(values_).forEach(value => {
-    if (!weekColumns.map(wc => wc.dia).includes(value)) {
+    if (
+      !weekColumns
+        .map(wc => wc.dia)
+        .includes(
+          value.includes("__dia_") &&
+            value.split("__dia_")[1].split("__categoria")[0]
+        )
+    ) {
       delete values_[value];
     }
   });
@@ -165,6 +204,18 @@ export const validarFormulario = (
         erro = `Dia ${
           inclusao.split("__dia_")[1].split("__categoria")[0]
         } está com valor 0 em uma alimentação. Justifique nas observações`;
+      }
+      if (
+        campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
+          inclusao.split("__dia_")[1].split("__categoria")[0],
+          categoria,
+          dadosValoresInclusoesAutorizadasState,
+          values_
+        )
+      ) {
+        erro = `Dia ${
+          inclusao.split("__dia_")[1].split("__categoria")[0]
+        } está com valor maior que o autorizado. Justifique nas observações`;
       }
     });
   });

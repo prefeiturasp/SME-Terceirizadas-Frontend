@@ -139,27 +139,27 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-error" />
         </Tooltip>
       )}
-      {exibeTooltipErroQtdMaiorQueAutorizado &&
+      {!meta.error &&
+        exibeTooltipErroQtdMaiorQueAutorizado &&
         !["Mês anterior", "Mês posterior"].includes(input.value) && (
           <Tooltip
-            title={`Número apontado de alimentação é maior que número autorizado (${numeroDeInclusoesAutorizadas}). Ajuste o apontamento.`}
+            title={`Número apontado de alimentação é maior que número autorizado (${numeroDeInclusoesAutorizadas}). Justifique na Observação.`}
           >
-            <i className="fas fa-info icone-info-error" />
+            <i className="fas fa-info icone-info-warning" />
           </Tooltip>
         )}
 
       <input
         {...input}
         className={`form-control ${className} ${
-          validacaoFrequencia() ||
-          validacaoLancheRefeicaoSobremesa1Oferta() ||
-          exibeTooltipErroQtdMaiorQueAutorizado
+          validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()
             ? "invalid-field"
             : ""
         } ${
           exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
           exibirTooltipFrequenciaDiaNaoLetivo() ||
-          exibeTooltipSemAlimentacaoPreAutorizadaInformada
+          exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
+          exibeTooltipErroQtdMaiorQueAutorizado
             ? "border-warning"
             : ""
         }`}
