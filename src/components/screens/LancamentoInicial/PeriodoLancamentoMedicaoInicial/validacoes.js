@@ -159,7 +159,7 @@ export const validarFormulario = (
           inclusao.split("__dia_")[1].split("__categoria")[0],
           categoria,
           dadosValoresInclusoesAutorizadasState,
-          values
+          values_
         )
       ) {
         erro = `Dia ${
