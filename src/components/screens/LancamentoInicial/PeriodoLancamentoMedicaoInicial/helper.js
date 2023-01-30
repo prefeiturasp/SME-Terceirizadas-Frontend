@@ -19,7 +19,7 @@ export const formatarPayloadPeriodoLancamento = (
       arrayCategoriesValues.filter(([key]) => key.includes(keyDado)).length ===
       0
     ) {
-      arrayCategoriesValues.push([keyDado, 0]);
+      arrayCategoriesValues.push([keyDado, -1]);
     }
   });
 
