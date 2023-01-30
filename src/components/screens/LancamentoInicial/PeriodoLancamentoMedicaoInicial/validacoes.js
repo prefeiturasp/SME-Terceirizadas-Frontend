@@ -51,7 +51,7 @@ export const campoComInclusaoContinuaValor0ESemObservacao = (
   dadosValoresInclusoesAutorizadasState,
   values
 ) => {
-  const alimentacoes = ["lanche", "refeicao", "sobremesa"];
+  const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
   let erro = false;
   alimentacoes.forEach(alimentacao => {
     if (
