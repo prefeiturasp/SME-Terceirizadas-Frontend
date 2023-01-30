@@ -198,7 +198,8 @@ export default ({
           </div>
         </Modal.Body>
         <Modal.Footer className="botoes-modal-footer">
-          {!["<p></p>\n", null, ""].includes(
+          {values &&
+          !["<p></p>\n", null, ""].includes(
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           ) &&
           valoresPeriodosLancamentos.length > 0 &&

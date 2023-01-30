@@ -14,6 +14,7 @@ import {
 
 export default ({
   textoCabecalho,
+  grupo,
   cor,
   totalAlimentacoes,
   tipos_alimentacao,
@@ -55,6 +56,7 @@ export default ({
       search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
       state: {
         periodo: textoCabecalho,
+        grupo,
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao
       }
@@ -71,6 +73,7 @@ export default ({
         >
           <div className="row">
             <div className="col-10 pl-0 mb-2 periodo-cabecalho">
+              {grupo && `${grupo} - `}
               {textoCabecalho}
             </div>
           </div>
