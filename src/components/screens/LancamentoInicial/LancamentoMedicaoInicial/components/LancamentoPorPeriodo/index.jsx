@@ -7,6 +7,7 @@ import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import CardLancamento from "./CardLancamento";
 import { CORES } from "./helpers";
 import { getPeriodosInclusaoContinua } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { PERFIL } from "constants/shared";
 
 export default ({
   escolaInstituicao,
@@ -143,6 +144,11 @@ export default ({
                   texto="Finalizar"
                   style={BUTTON_STYLE.GREEN}
                   className="float-right"
+                  disabled={
+                    ![PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
+                      localStorage.getItem("perfil")
+                    )
+                  }
                   onClick={() => setShowModalFinalizarMedicao(true)}
                 />
               ) : (
