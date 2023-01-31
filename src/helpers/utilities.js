@@ -755,7 +755,8 @@ export const exibirGA = () => {
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
-    "SAO MATEUS"
+    "SAO MATEUS",
+    "SAO MIGUEL"
   ];
 
   if (["production"].includes(ENVIRONMENT)) {
