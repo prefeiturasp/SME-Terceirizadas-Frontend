@@ -697,3 +697,14 @@ export const imprimeFichaIdentificacaoProduto = async uuid => {
   });
   saveAs(data, "ficha_identificacao_produto.pdf");
 };
+
+export const gerarExcelRelatorioProdutosHomologados = async params => {
+  const url = `/produtos/exportar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
