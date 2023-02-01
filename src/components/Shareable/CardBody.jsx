@@ -47,10 +47,9 @@ const CardBody = props => {
                 <div className="row">
                   <div
                     className={`${
-                      (ehTerceirizada &&
-                        props.listaStatus &&
-                        props.listaLotes) ||
-                      ehDashboardGestaoProduto
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
                         ? "col-12 text-right"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
