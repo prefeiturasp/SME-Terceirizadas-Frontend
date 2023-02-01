@@ -1,4 +1,7 @@
 import { createTextMask } from "redux-form-input-masks";
+import { getEnderecoPorCEP } from "services/cep.service";
+import HTTP_STATUS from "http-status-codes";
+import { removeCaracteresEspeciais } from "helpers/utilities";
 
 export function transformaObjetos(objetos, lista = [], obj = {}) {
   try {
@@ -145,7 +148,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     const contatosEmpresa = valoresState.contatosPessoaEmpresa.map(item => {
       return {
         nome: item.nome,
-        telefone: item.telefone,
+        telefone: removeCaracteresEspeciais(item.telefone),
         email: item.email
       };
     });
@@ -168,7 +171,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       tipo_servico: valoresForm.tipo_servico,
       numero_contrato: valoresForm.numero_contrato,
       razao_social: valoresForm.razao_social,
-      cnpj: valoresForm.cnpj,
+      cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatos,
@@ -181,9 +184,11 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
-      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_cpf: removeCaracteresEspeciais(valoresForm.responsavel_cpf),
       responsavel_nome: valoresForm.responsavel_nome,
-      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_telefone: removeCaracteresEspeciais(
+        valoresForm.responsavel_telefone
+      ),
       responsavel_email: valoresForm.responsavel_email,
       lotes: [],
       ativo: valoresForm.situacao,
@@ -222,7 +227,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,
-      cnpj: valoresForm.cnpj,
+      cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       representante_legal: valoresForm.representante_legal,
       representante_telefone: valoresForm.telefone_representante,
       representante_email: valoresForm.email_representante_legal,
@@ -236,7 +241,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
-      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_cpf: removeCaracteresEspeciais(valoresForm.responsavel_cpf),
       responsavel_nome: valoresForm.responsavel_nome,
       responsavel_telefone: valoresForm.responsavel_telefone,
       responsavel_email: valoresForm.responsavel_email,
@@ -244,4 +249,29 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       super_admin: super_admin
     };
   }
+};
+
+export const buscaCep = async value => {
+  const dadosEndereco = {
+    desabilitado: true,
+    bairro: null,
+    cidade: null,
+    endereco: null,
+    estado: null
+  };
+  const response = await getEnderecoPorCEP(value);
+  if (value.length === 8) {
+    if (response.status === HTTP_STATUS.OK && !response.data.erro) {
+      const { data } = response;
+      dadosEndereco.desabilitado = true;
+      dadosEndereco.bairro = data.bairro;
+      dadosEndereco.cidade = data.localidade;
+      dadosEndereco.endereco = data.logradouro;
+      dadosEndereco.estado = data.uf;
+      dadosEndereco.request = true;
+    } else {
+      dadosEndereco.desabilitado = false;
+    }
+  }
+  return dadosEndereco;
 };
