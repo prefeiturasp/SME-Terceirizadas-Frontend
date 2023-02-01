@@ -25,11 +25,6 @@ export const EnderecoEmpresa = ({
   );
   const [qtdFieldCep, setQtdFieldCep] = useState(8);
   const form = useForm();
-  const composeValidators = (...validators) => value =>
-    validators.reduce(
-      (error, validator) => error || validator(value),
-      undefined
-    );
 
   const temTracos = value => {
     const valid = value.indexOf("-") > -1;

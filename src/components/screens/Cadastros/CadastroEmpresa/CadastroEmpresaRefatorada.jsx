@@ -72,9 +72,6 @@ export const CadastroEmpresaRefatorada = () => {
       vigencia_ate: null
     }
   ]);
-  const [editaisContratosForm, setEditaisContratosForm] = useState([
-    "editalContrato_0"
-  ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
   const [contatosPessoaEmpresa, setContatosPessoaEmpresa] = useState([
@@ -101,7 +98,8 @@ export const CadastroEmpresaRefatorada = () => {
     };
     const data = formataJsonParaEnvio(values, dados);
     if (uuid !== null) {
-      console.log(uuid);
+      setTerceirizada(uuid);
+      setUuid(uuid);
     } else {
       createTerceirizada(data).then(response => {
         if (response.status === HTTP_STATUS.CREATED) {
@@ -138,7 +136,7 @@ export const CadastroEmpresaRefatorada = () => {
                   data_cadastro: moment().format("DD/MM/YYYY")
                 }}
                 onSubmit={onSubmit}
-                render={({ handleSubmit, form, values, submitting }) => (
+                render={({ handleSubmit, form, values }) => (
                   <form onSubmit={handleSubmit}>
                     <DadosEmpresa ehDistribuidor={ehDistribuidor} />
                     <EnderecoEmpresa
