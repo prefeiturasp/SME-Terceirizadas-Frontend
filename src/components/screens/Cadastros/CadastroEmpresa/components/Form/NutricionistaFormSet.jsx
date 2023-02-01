@@ -48,7 +48,7 @@ export const NutricionistaFormSet = ({
       contatosNutricionista.indexOf(indice) !== -1 &&
       contatosNutricionista[indice].vinculo_atual
     ) {
-      console.log("vinculo");
+      setContatosNutricionista([]);
     } else {
       let newContatosNutricionista = [...contatosNutricionista];
       newContatosNutricionista.splice(indice, 1);
