@@ -20,6 +20,8 @@ import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitaca
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export default () => {
+  const [ano, setAno] = useState(null);
+  const [mes, setMes] = useState(null);
   const [panoramaGeral, setPanoramaGeral] = useState();
   const [nomeTerceirizada, setNomeTerceirizada] = useState();
   const [objectoPeriodos, setObjectoPeriodos] = useState([]);
@@ -72,9 +74,11 @@ export default () => {
         });
       }
 
-      const params = new URLSearchParams(location.search);
+      const params = new URLSearchParams(window.location.search);
       let mes = params.get("mes");
       let ano = params.get("ano");
+      setMes(mes);
+      setAno(ano);
       if (location.search) {
         if (mes <= 0 || mes > 12) {
           mes = format(new Date(), "MM");
@@ -149,10 +153,14 @@ export default () => {
     : [];
 
   const handleChangeSelectPeriodo = async value => {
+    setMes(null);
+    setAno(null);
     setLoadingSolicitacaoMedicaoInicial(true);
     setPeriodoSelecionado(value);
     await getSolicitacaoMedInicial(value, escolaInstituicao.uuid);
     setLoadingSolicitacaoMedicaoInicial(false);
+    setMes(format(new Date(value), "MM").toString());
+    setAno(getYear(new Date(value)).toString());
     history.replace({
       pathname: location.pathname,
       search: `?mes=${format(new Date(value), "MM").toString()}&ano=${getYear(
@@ -225,16 +233,21 @@ export default () => {
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         />
         <hr className="linha-form mt-4 mb-4" />
-        {periodosEscolaSimples && !loadingSolicitacaoMedInicial && (
-          <LancamentoPorPeriodo
-            panoramaGeral={panoramaGeral}
-            periodoSelecionado={periodoSelecionado}
-            escolaInstituicao={escolaInstituicao}
-            periodosEscolaSimples={periodosEscolaSimples}
-            solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-            onClickInfoBasicas={onClickInfoBasicas}
-          />
-        )}
+        {mes &&
+          ano &&
+          periodosEscolaSimples &&
+          !loadingSolicitacaoMedInicial && (
+            <LancamentoPorPeriodo
+              panoramaGeral={panoramaGeral}
+              mes={mes}
+              ano={ano}
+              periodoSelecionado={periodoSelecionado}
+              escolaInstituicao={escolaInstituicao}
+              periodosEscolaSimples={periodosEscolaSimples}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              onClickInfoBasicas={onClickInfoBasicas}
+            />
+          )}
       </div>
     </div>
   );

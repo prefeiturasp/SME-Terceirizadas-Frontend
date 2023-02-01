@@ -1,7 +1,13 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
-import { corDaMensagem, ehInclusaoCei } from "../../../../helpers/utilities";
+import {
+  corDaMensagem,
+  deepCopy,
+  ehInclusaoCei
+} from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
+import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
+import { SolicitacoesSimilaresKitLanche } from "components/Shareable/SolicitacoesSimilaresKitLanche";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
@@ -23,9 +29,21 @@ export const CorpoRelatorio = props => {
     prazoDoPedidoMensagem
   } = props;
 
+  const [solicitacoesSimilares, setSolicitacoesSimilares] = useState(
+    props.solicitacoesSimilares
+  );
+
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLanche.logs
   );
+
+  const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
+    let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
+    _solicitacoesSimilares[idxSolicitacaoSimilar][
+      "collapsed"
+    ] = !_solicitacoesSimilares[idxSolicitacaoSimilar]["collapsed"];
+    setSolicitacoesSimilares(_solicitacoesSimilares);
+  };
 
   return (
     <div>
@@ -111,6 +129,42 @@ export const CorpoRelatorio = props => {
           eh_gestao_alimentacao={true}
         />
       </div>
+      <hr />
+      <div className="row mt-3">
+        <div className="col-2">
+          <p>Solicitação Similar:</p>
+        </div>
+        <div className="col-10">
+          {solicitacoesSimilares &&
+            solicitacoesSimilares.map((solicitacao, idxSolicitacaoSimilar) => {
+              return (
+                <p className="gatilho-style" key={idxSolicitacaoSimilar}>
+                  <b>
+                    {`#${solicitacao.id_externo}`}
+                    <ToggleExpandir
+                      onClick={() =>
+                        collapseSolicitacaoSimilar(idxSolicitacaoSimilar)
+                      }
+                      ativo={!solicitacao.collapsed}
+                      className="icon-padding"
+                    />
+                  </b>
+                </p>
+              );
+            })}
+        </div>
+      </div>
+      {solicitacoesSimilares &&
+        solicitacoesSimilares.length > 0 &&
+        solicitacoesSimilares.map((s, idxSolicitacaoSimilar) => {
+          return (
+            <SolicitacoesSimilaresKitLanche
+              key={idxSolicitacaoSimilar}
+              solicitacao={s}
+              index={idxSolicitacaoSimilar}
+            />
+          );
+        })}
       <hr />
       <div className="row">
         <div className="col-4 report-label-value">

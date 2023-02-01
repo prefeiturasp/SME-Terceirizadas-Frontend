@@ -1,5 +1,6 @@
 import { format, getYear } from "date-fns";
 import { ALT_CARDAPIO } from "components/screens/helper";
+import { deepCopy } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -44,6 +45,55 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   }
 };
 
+export const campoComInclusaoContinuaValor0ESemObservacao = (
+  dia,
+  categoria,
+  dadosValoresInclusoesAutorizadasState,
+  values
+) => {
+  const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
+  let erro = false;
+  alimentacoes.forEach(alimentacao => {
+    if (
+      `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState &&
+      Number(
+        values[`${alimentacao}__dia_${dia}__categoria_${categoria.id}`]
+      ) === 0 &&
+      !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+    ) {
+      erro = true;
+    }
+  });
+  return erro;
+};
+
+export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
+  dia,
+  categoria,
+  dadosValoresInclusoesAutorizadasState,
+  values
+) => {
+  const alimentacoes = ["lanche_4h", "lanche", "refeicao", "sobremesa"];
+  let erro = false;
+  alimentacoes.forEach(alimentacao => {
+    if (
+      `${alimentacao}__dia_${dia}__categoria_${categoria.id}` in
+        dadosValoresInclusoesAutorizadasState &&
+      Number(values[`${alimentacao}__dia_${dia}__categoria_${categoria.id}`]) >
+        Number(
+          dadosValoresInclusoesAutorizadasState[
+            `${alimentacao}__dia_${dia}__categoria_${categoria.id}`
+          ]
+        ) &&
+      !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+    ) {
+      erro = true;
+    }
+  });
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   values,
   dia,
@@ -69,6 +119,18 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       categoria,
       diasSobremesaDoce,
       location
+    ) ||
+    campoComInclusaoContinuaValor0ESemObservacao(
+      dia,
+      categoria,
+      dadosValoresInclusoesAutorizadasState,
+      values
+    ) ||
+    campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
+      dia,
+      categoria,
+      dadosValoresInclusoesAutorizadasState,
+      values
     )
   );
 };
@@ -94,15 +156,30 @@ export const validarFormulario = (
   diasSobremesaDoce,
   location,
   categoriasDeMedicao,
-  dadosValoresInclusoesAutorizadasState
+  dadosValoresInclusoesAutorizadasState,
+  weekColumns
 ) => {
   let erro = false;
+
+  const values_ = deepCopy(values);
+  Object.keys(values_).forEach(value => {
+    if (
+      !weekColumns
+        .map(wc => wc.dia)
+        .includes(
+          value.includes("__dia_") &&
+            value.split("__dia_")[1].split("__categoria")[0]
+        )
+    ) {
+      delete values_[value];
+    }
+  });
 
   categoriasDeMedicao.forEach(categoria => {
     diasSobremesaDoce.forEach(dia => {
       if (
         repeticaoSobremesaDoceComValorESemObservacao(
-          values,
+          values_,
           dia.split("-")[2],
           categoria,
           diasSobremesaDoce,
@@ -114,10 +191,37 @@ export const validarFormulario = (
         } é de sobremesa doce. Justifique o lançamento de repetição nas observações`;
       }
     });
+
+    Object.keys(dadosValoresInclusoesAutorizadasState).forEach(inclusao => {
+      if (
+        campoComInclusaoContinuaValor0ESemObservacao(
+          inclusao.split("__dia_")[1].split("__categoria")[0],
+          categoria,
+          dadosValoresInclusoesAutorizadasState,
+          values_
+        )
+      ) {
+        erro = `Dia ${
+          inclusao.split("__dia_")[1].split("__categoria")[0]
+        } está com valor 0 em uma alimentação. Justifique nas observações`;
+      }
+      if (
+        campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
+          inclusao.split("__dia_")[1].split("__categoria")[0],
+          categoria,
+          dadosValoresInclusoesAutorizadasState,
+          values_
+        )
+      ) {
+        erro = `Dia ${
+          inclusao.split("__dia_")[1].split("__categoria")[0]
+        } está com valor maior que o autorizado. Justifique nas observações`;
+      }
+    });
   });
 
   let arrayDiasInclusoesAutorizadasEmValues = [];
-  let keysFromValues = Object.keys(values);
+  let keysFromValues = Object.keys(values_);
 
   for (const key in Object.fromEntries(
     Object.entries(dadosValoresInclusoesAutorizadasState)
@@ -140,7 +244,7 @@ export const validarFormulario = (
   let diasComFrequenciaVaziasEInclusoesAutorizadas = [];
   arrayDiasInclusoesAutorizadasEmValues.forEach(dia => {
     if (
-      !values[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
+      !values_[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
     ) {
       diasComFrequenciaVaziasEInclusoesAutorizadas.push(dia);
     }
@@ -163,8 +267,35 @@ export const validacoesTabelaAlimentacao = (
   value,
   allValues,
   dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  validacaoDiaLetivo,
+  location
 ) => {
+  const maxFrequencia = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
+  );
+  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+
+  if (location.state && location.state.grupo === "Programas e Projetos") {
+    if (
+      !inputName.includes("matriculados") &&
+      Number(allValues[inputName]) > Number(maxFrequencia)
+    ) {
+      return `Número apontado de alimentação é maior que número de alunos frequentes. Ajuste o apontamento. `;
+    }
+    if (
+      `${rowName}__dia_${dia}__categoria_${categoria}` ===
+        `frequencia__dia_${dia}__categoria_${categoria}` &&
+      Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+        String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+      ) &&
+      !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
+    ) {
+      if (!(Number(value) === 0)) {
+        return `Há solicitação de alimentação contínua autorizada para esta data. Insira o número de frequentes e alimentações`;
+      }
+    }
+  }
+
   const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(
     mesAnoConsiderado
   )}`;
@@ -183,17 +314,11 @@ export const validacoesTabelaAlimentacao = (
         solicitacao.motivo === "LPR - Lanche por Refeição"
     ).length > 0;
 
-  const maxFrequencia = Number(
-    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
-  );
   const maxMatriculados = Number(
     allValues[`matriculados__dia_${dia}__categoria_${categoria}`]
   );
-  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
-  if (value && Number(value) === 0 && validacaoDiaLetivo(dia)) {
-    return "Campo não pode ser 0";
-  } else if (
+  if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
@@ -202,7 +327,9 @@ export const validacoesTabelaAlimentacao = (
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
   ) {
     if (!(Number(value) === 0 && !validacaoDiaLetivo(dia))) {
-      return "Foi autorizada inclusão de alimentação nesta data. Informe a frequência de alunos.";
+      return `Foi autorizada inclusão de alimentação ${
+        location.state && location.state.grupo ? "contínua" : ""
+      } nesta data. Informe a frequência de alunos.`;
     }
   } else if (
     value &&
@@ -299,9 +426,7 @@ export const validacoesTabelasDietas = (
     allValues[`frequencia__dia_${dia}__categoria_${idCategoriaAlimentacao}`]
   );
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
-  if (value && Number(value) === 0) {
-    return "Campo não pode ser 0";
-  } else if (
+  if (
     value &&
     Number(value) > maxDietasAutorizadas &&
     inputName.includes("frequencia")

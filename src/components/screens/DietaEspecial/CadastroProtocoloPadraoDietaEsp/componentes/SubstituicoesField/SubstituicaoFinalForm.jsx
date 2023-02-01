@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import MultiSelect from "./MultiSelect";
 import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { required } from "helpers/fieldValidators";
@@ -12,8 +11,10 @@ import {
   BUTTON_STYLE,
   BUTTON_ICON
 } from "../../../../../Shareable/Botao/constants";
+import { Tooltip } from "antd";
 
 import "./style.scss";
+import StatefulMultiSelect from "@khanacademy/react-multi-select";
 
 const { Option } = SelectAntd;
 
@@ -43,22 +44,23 @@ const SubstituicoesField = ({
   produtos,
   removeOption,
   input: { name },
+  form,
+  values,
   deveHabilitarApagar
 }) => {
-  const formatarOpcoesProdutos = produtos => {
-    const opcoes = produtos.map(a => {
-      return {
-        value: a.uuid,
-        label: a.nome
-      };
-    });
-    return opcoes;
-  };
+  const [valoresSelecionados, setValoresSelecionados] = useState([]);
 
-  const [valorSelecionado, setValorSelecionado] = useState(undefined);
-  const [opcoesProdutos, setOpcoesProdutos] = useState(
-    formatarOpcoesProdutos(produtos)
-  );
+  const produtosSelcionados = values => {
+    let listaSelecionados = [];
+    values &&
+      values.forEach(value => {
+        const produtoSelecionado = produtos.find(
+          al => String(al.uuid) === value
+        );
+        listaSelecionados.push(`${produtoSelecionado.nome}, `);
+        setValoresSelecionados(listaSelecionados);
+      });
+  };
 
   return (
     <>
@@ -80,16 +82,6 @@ const SubstituicoesField = ({
               return <Option key={a.id.toString()}>{a.nome}</Option>;
             })}
           </Field>
-          <OnChange name={`${name}.alimento`}>
-            {value => {
-              const opcaoSelecionada = alimentos.find(
-                al => String(al.id) === value
-              );
-              setValorSelecionado(opcaoSelecionada);
-              const opcoes = produtos.filter(p => String(p.id) !== value);
-              setOpcoesProdutos(formatarOpcoesProdutos(opcoes));
-            }}
-          </OnChange>
         </div>
         <div className="col-3">
           <Field
@@ -103,14 +95,50 @@ const SubstituicoesField = ({
           />
         </div>
         <div className="col-4">
-          <Field
-            component={MultiSelect}
-            type="select-multi"
-            name={`${name}.substitutos`}
-            alimentoSelecionado={valorSelecionado}
-            options={opcoesProdutos}
-            validate={required}
-          />
+          <Tooltip
+            title={
+              valoresSelecionados && valoresSelecionados.length > 0
+                ? valoresSelecionados
+                : values.substituicoes &&
+                  produtosSelcionados(values.substituicoes[chave].substitutos)
+            }
+          >
+            <span>
+              <Field
+                component={StatefulMultiSelect}
+                name={`${name}.substitutos`}
+                selected={
+                  (values.substituicoes &&
+                    values.substituicoes[chave].substitutos) ||
+                  []
+                }
+                options={produtos.map(produto => ({
+                  value: produto.uuid,
+                  label: produto.nome
+                }))}
+                onSelectedChanged={values_ =>
+                  form.change(
+                    `substituicoes[
+                  ${chave}].substitutos`,
+                    values_
+                  )
+                }
+                validate={required}
+                disableSearch={false}
+                overrideStrings={{
+                  selectSomeItems: "Selecione",
+                  allItemsAreSelected: "Todos os itens estão selecionados",
+                  selectAll: "Todos",
+                  Search: "Buscar"
+                }}
+              />
+              <OnChange name={`${name}.substitutos`}>
+                {values => {
+                  produtosSelcionados(values);
+                }}
+              </OnChange>
+            </span>
+          </Tooltip>
         </div>
         {deveHabilitarApagar && chave > 0 && (
           <div className="col-1">

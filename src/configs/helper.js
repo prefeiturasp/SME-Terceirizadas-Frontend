@@ -209,6 +209,8 @@ export const relatoriosSolicitacaoUnificada = () => {
       return RelatoriosSolicitacaoUnificada.RelatorioCODAE;
     case TIPO_PERFIL.TERCEIRIZADA:
       return RelatoriosSolicitacaoUnificada.RelatorioTerceirizada;
+    case TIPO_PERFIL.ESCOLA:
+      return RelatoriosSolicitacaoUnificada.RelatorioEscola;
     default:
       return RelatoriosSolicitacaoUnificada.RelatorioDRE;
   }

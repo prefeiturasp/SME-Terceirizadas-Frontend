@@ -64,7 +64,9 @@ export class PainelPedidosBase extends React.Component {
         {this.props.VISAO === ESCOLA && escolaEhCEMEI() && meusDados && (
           <ContainerCEMEI meusDados={meusDados} />
         )}
-        {this.props.VISAO === DRE && <PainelPedidosKitLancheDRE />}
+        {this.props.VISAO === DRE && (
+          <PainelPedidosKitLancheDRE filtros={this.props.filtros} />
+        )}
         {this.props.VISAO === CODAE && (
           <PainelPedidosKitLancheCODAE filtros={this.props.filtros} />
         )}
@@ -79,7 +81,11 @@ export class PainelPedidosBase extends React.Component {
 // Escola
 export const PainelPedidosEscola = () => <PainelPedidosBase VISAO={ESCOLA} />;
 // DRE
-export const PainelPedidosDRE = () => <PainelPedidosBase VISAO={DRE} />;
+export const PainelPedidosDRE = () => {
+  const location = useLocation();
+  const filtros = location.state && location.state.filtros;
+  return <PainelPedidosBase VISAO={DRE} filtros={filtros} />;
+};
 // CODAE
 export const PainelPedidosCODAE = () => {
   const location = useLocation();

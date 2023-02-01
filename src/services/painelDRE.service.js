@@ -5,7 +5,7 @@ import {
   filtraRegular
 } from "../helpers/painelPedidos";
 import { dreListarSolicitacoesDeAlteracaoDeCardapio } from "services/alteracaoDeCardapio";
-import { AUTH_TOKEN, SOLICITACOES } from "./constants";
+import { SOLICITACOES } from "./constants";
 import { dreListarSolicitacoesDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { getDREPedidosDeKitLanche } from "services/kitLanche";
 import { getCODAEPedidosSolicitacoesUnificadas } from "services/solicitacaoUnificada.service";
@@ -266,30 +266,20 @@ export const getResumoPendenciasDRESolicitacoesUnificadas = async (
   return resposta;
 };
 
-// TODO: colocar essa função num arquivo separado, está sendo copiada/colada
-const retornoBase = async url => {
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getSolicitacoesPendentesValidacaoDRE = async (
   filtroAplicado,
-  tipoVisao
+  tipoVisao,
+  params
 ) => {
   const url = `${SOLICITACOES_DRE}/${
     SOLICITACOES.PENDENTES_VALIDACAO_DRE
   }/${filtroAplicado}/${tipoVisao}/`;
-  return retornoBase(url);
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getSolicitacoesPendentesDRE = async params => {

@@ -1,7 +1,18 @@
-import React, { Component } from "react";
-import { Collapse } from "react-collapse";
+import React, { useEffect, useState } from "react";
+import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
-import { Field, reduxForm } from "redux-form";
+import CardMatriculados from "../../Shareable/CardMatriculados";
+import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
+import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
+import CardStatusDeSolicitacao, {
+  ICON_CARD_TYPE_ENUM,
+  CARD_TYPE_ENUM
+} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import {
+  FILTRO_VISAO,
+  PAGINACAO_DASHBOARD_DEFAULT
+} from "../../../constants/shared";
+import { FILTRO } from "../const";
 import {
   DRE,
   SOLICITACOES_AUTORIZADAS,
@@ -10,21 +21,7 @@ import {
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_AGUARDADAS
 } from "../../../configs/constants";
-import { FILTRO_VISAO, PAGINACAO_DEFAULT } from "../../../constants/shared";
-import { dataAtual } from "../../../helpers/utilities";
-import CardBody from "../../Shareable/CardBody";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardStatusDeSolicitacao, {
-  ICON_CARD_TYPE_ENUM,
-  CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import TabelaHistoricoLotes from "../../Shareable/TabelaHistoricoLotes";
-import { ajustarFormatoLog, slugify } from "../helper";
-import Select from "../../Shareable/Select";
-import { toastError } from "../../Shareable/Toast/dialogs";
-import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
-import { FILTRO } from "../const";
+import { ajustarFormatoLog } from "../helper";
 import {
   getSolicitacoesPendentesValidacaoDRE,
   getSolicitacoesNegadasDRE,
@@ -33,147 +30,139 @@ import {
   getSolicitacoesAutorizadasDRE,
   getSolicitacoesAguardandoCODAE
 } from "../../../services/painelDRE.service";
+import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
+import { toastError } from "../../Shareable/Toast/dialogs";
+import { dataAtual } from "../../../helpers/utilities";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
 import "./style.scss";
 
-const PARAMS = { limit: PAGINACAO_DEFAULT, offset: 0 };
-class DashboardDRE extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: this.props.cards,
-      questionamentosListFiltered: [],
-      canceladasListFiltered: [],
-      negadasListFiltered: [],
-      autorizadasListFiltered: [],
-      aguardandoCODAEListFiltered: [],
+export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
+  const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
+  const filtroPorVencimento = FILTRO.SEM_FILTRO;
+  const visao = FILTRO_VISAO.POR_TIPO_SOLICITACAO;
+  const { Option } = SelectAntd;
 
-      lotes: [],
-      resumo: [],
+  const opcoesLote = lotes
+    ? [
+        <Option key={0} value={""}>
+          Filtrar por Lote
+        </Option>
+      ].concat(
+        lotes.map(lote => {
+          return (
+            <Option value={lote.value} key={lote.value}>
+              {lote.label}
+            </Option>
+          );
+        })
+      )
+    : [];
 
-      collapsed: true,
-      questionamentosListSolicitacao: [],
-      canceladasListSolicitacao: [],
-      loadingPainelSolicitacoes: true,
+  const [collapsed, setCollapsed] = useState(true);
+  const [filtros, setFiltros] = useState({});
+  const [resumo, setResumo] = useState([]);
+  const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
+    false
+  );
 
-      visao: FILTRO_VISAO.POR_TIPO_SOLICITACAO,
-      filtroPorVencimento: FILTRO.SEM_FILTRO
-    };
-    this.alterarCollapse = this.alterarCollapse.bind(this);
-    this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
-    this.prepararParametros = this.prepararParametros.bind(this);
-  }
+  const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
+    pendentes: [],
+    questionadas: [],
+    autorizadas: [],
+    negadas: [],
+    canceladas: []
+  });
 
-  alterarCollapse() {
-    this.setState({ collapsed: !this.state.collapsed });
-  }
+  const getSolicitacoesAsync = async (params = null) => {
+    let pendentesAutorizacaoListSolicitacao = [];
+    let canceladasListSolicitacao = [];
+    let negadasListSolicitacao = [];
+    let autorizadasListSolicitacao = [];
+    let aguardandoCodaeListSolicitacao = [];
 
-  filtrarNome(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(function(item) {
-      const wordToFilter = slugify(value.toLowerCase());
-      return slugify(item.text.toLowerCase()).search(wordToFilter) !== -1;
+    await getSolicitacoesPendentesDRE(params).then(response => {
+      pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
+        response.data.results
+      );
     });
-    return listaFiltro;
-  }
 
-  setfiltroPorVencimento(filtroPorVencimento) {
-    this.setState({ filtroPorVencimento }, () => {
-      this.carregaResumoPendencias();
+    await getSolicitacoesCanceladasDRE(params).then(response => {
+      canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
     });
-  }
 
-  setVisao(visao) {
-    const { tiposSolicitacao, lotes } = this.props;
-    this.setState(
-      {
-        visao,
-        cards:
-          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? tiposSolicitacao : lotes
-      },
-      () => {
-        this.carregaResumoPendencias();
-      }
-    );
-  }
+    await getSolicitacoesNegadasDRE(params).then(response => {
+      negadasListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
 
-  async carregaResumoPendencias() {
-    const { visao, filtroPorVencimento } = this.state;
-    this.setState({ loadingPainelSolicitacoes: true });
-    const resumo = await getSolicitacoesPendentesValidacaoDRE(
+    await getSolicitacoesAutorizadasDRE(params).then(response => {
+      autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    await getSolicitacoesAguardandoCODAE(params).then(response => {
+      aguardandoCodaeListSolicitacao = ajustarFormatoLog(response.data.results);
+    });
+
+    setSolicitacoesFiltradas({
+      pendentes: pendentesAutorizacaoListSolicitacao,
+      aguardandoCodae: aguardandoCodaeListSolicitacao,
+      autorizadas: autorizadasListSolicitacao,
+      negadas: negadasListSolicitacao,
+      canceladas: canceladasListSolicitacao
+    });
+  };
+
+  const carregaResumoPendencias = async (values = {}) => {
+    setLoadingPainelSolicitacoes(true);
+    await getSolicitacoesPendentesValidacaoDRE(
       filtroPorVencimento,
-      visao
-    );
-    const correcaoOk = corrigeResumo(resumo.results);
-    if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
-    this.setState({
-      resumo: resumo.results,
-      loadingPainelSolicitacoes: false
+      visao,
+      prepararParametros(values)
+    ).then(response => {
+      const resumo = response.data.results;
+      // // TODO melhorar essas duas linhas abaixo
+      resumo["Kit Lanche Unificado"] = resumo["Kit Lanche Passeio Unificado"];
+      delete resumo["Kit Lanche Passeio Unificado"];
+      const correcaoOk = corrigeResumo(resumo);
+      if (!correcaoOk) toastError("Erro na inclusão de dados da CEI");
+      setResumo(resumo);
     });
-  }
+    setLoadingPainelSolicitacoes(false);
+  };
 
-  async componentDidMount() {
-    this.carregaResumoPendencias();
-    this.getSolicitacoesAsync(PARAMS);
-  }
-
-  async getSolicitacoesAsync(params = null) {
-    getSolicitacoesPendentesDRE(params).then(request => {
-      let questionamentosListSolicitacao = ajustarFormatoLog(
-        request.data.results
-      );
-      this.setState({
-        questionamentosListSolicitacao,
-        questionamentosListFiltered: questionamentosListSolicitacao
-      });
-    });
-
-    getSolicitacoesCanceladasDRE(params).then(request => {
-      let canceladasListSolicitacao = ajustarFormatoLog(request.data.results);
-      this.setState({
-        canceladasListSolicitacao,
-        canceladasListFiltered: canceladasListSolicitacao
-      });
-    });
-
-    getSolicitacoesNegadasDRE(params).then(request => {
-      let negadasListSolicitacao = ajustarFormatoLog(request.data.results);
-      this.setState({
-        negadasListSolicitacao,
-        negadasListFiltered: negadasListSolicitacao
-      });
-    });
-
-    getSolicitacoesAutorizadasDRE(params).then(request => {
-      let autorizadasListSolicitacao = ajustarFormatoLog(request.data.results);
-      this.setState({
-        autorizadasListSolicitacao: autorizadasListSolicitacao,
-        autorizadasListFiltered: autorizadasListSolicitacao
-      });
-    });
-
-    getSolicitacoesAguardandoCODAE(params).then(request => {
-      let aguardandoCODAEListSolicitacao = ajustarFormatoLog(
-        request.data.results
-      );
-      this.setState({
-        aguardandoCODAEListFiltered: aguardandoCODAEListSolicitacao
-      });
-    });
-  }
-
-  onPesquisaChanged(values) {
+  const onPesquisaChanged = values => {
+    carregaResumoPendencias(values);
     if (values.titulo && values.titulo.length > 2) {
-      this.getSolicitacoesAsync({
-        busca: values.titulo,
-        ...this.prepararParametros(values)
-      });
+      setTimeout(async () => {
+        getSolicitacoesAsync({
+          busca: values.titulo,
+          ...prepararParametros(values)
+        });
+      }, 500);
     } else {
-      this.getSolicitacoesAsync(this.prepararParametros(values));
+      setTimeout(async () => {
+        getSolicitacoesAsync(prepararParametros(values));
+      }, 500);
     }
-  }
+  };
 
-  prepararParametros(values) {
+  const linkTo = link => {
+    let url =
+      visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO ? `/${DRE}/${link}` : "/";
+
+    return {
+      pathname: url,
+      state: {
+        prevPath: window.location.pathname,
+        filtros: filtros
+      }
+    };
+  };
+
+  const prepararParametros = values => {
+    setFiltros(values);
     const params = PARAMS;
     params["tipo_solicitacao"] = values.tipo_solicitacao;
     params["data_evento"] =
@@ -182,203 +171,177 @@ class DashboardDRE extends Component {
         .split("/")
         .reverse()
         .join("-");
+    params["lote"] = values.lote;
     return params;
-  }
+  };
 
-  render() {
-    const { handleSubmit, visaoPor, filtroPor, meusDados } = this.props;
+  useEffect(() => {
+    carregaResumoPendencias();
+    getSolicitacoesAsync(PARAMS);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    const {
-      cards,
-      collapsed,
-      visao,
-      questionamentosListFiltered,
-      canceladasListFiltered,
-      negadasListFiltered,
-      autorizadasListFiltered,
-      aguardandoCODAEListFiltered,
-      resumo,
-      loadingPainelSolicitacoes
-    } = this.state;
-
-    return (
-      <div>
-        <form onSubmit={handleSubmit(this.props.handleSubmit)}>
-          <Field component={"input"} type="hidden" name="uuid" />
-          <CardMatriculados
-            collapsed={collapsed}
-            meusDados={meusDados}
-            alterarCollapse={this.alterarCollapse}
-            numeroAlunos={
-              (meusDados &&
-                meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
-              0
-            }
-          >
-            {meusDados && (
-              <Collapse isOpened={!collapsed}>
-                <TabelaHistoricoLotes
-                  lotes={meusDados.vinculo_atual.instituicao.lotes}
-                />
-              </Collapse>
-            )}
-          </CardMatriculados>
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold dashboard-card-title">
-                <div className="row">
-                  <div className="col-3 mt-3 color-black">Pendências</div>
-                  <div className="offset-3 col-3 text-right my-auto">
-                    <Select
-                      naoDesabilitarPrimeiraOpcao
-                      onChange={event =>
-                        this.setfiltroPorVencimento(event.target.value)
-                      }
-                      placeholder={"Filtro por"}
-                      options={filtroPor}
-                    />
-                  </div>
-                  <div className="col-3 text-right my-auto">
-                    <Select
-                      naoDesabilitarPrimeiraOpcao
-                      disabled={resumo.length === 0}
-                      onChange={event => this.setVisao(event.target.value)}
-                      placeholder={"Visão por"}
-                      options={visaoPor}
-                    />
+  return (
+    <div>
+      <Form
+        onSubmit={() => handleSubmit}
+        initialValues={{}}
+        render={({ handleSubmit, values, form }) => (
+          <form onSubmit={handleSubmit}>
+            <Field component={"input"} type="hidden" name="uuid" />
+            <CardMatriculados
+              collapsed={collapsed}
+              alterarCollapse={() => setCollapsed(!collapsed)}
+              meusDados={meusDados}
+              numeroAlunos={
+                (meusDados &&
+                  meusDados.vinculo_atual.instituicao.quantidade_alunos) ||
+                0
+              }
+            />
+            <div className="card mt-3">
+              <div className="card-body">
+                <div className="card-title font-weight-bold dashboard-card-title">
+                  <div className="row">
+                    <div className="col-3 mt-3 color-black">Pendências</div>
+                    <div className="offset-6 col-3 my-auto">
+                      <Field
+                        component={ASelect}
+                        showSearch
+                        onChange={value => {
+                          form.change(`lote`, value || undefined);
+                          onPesquisaChanged(form.getState().values);
+                        }}
+                        name="lote"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                      >
+                        {opcoesLote}
+                      </Field>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="pt-3" />
-              <div className="row pt-3">
-                {cards.map((card, key) => {
-                  return resumo[card.titulo] ? (
-                    <div key={key} className="col-6 pb-3">
-                      <Link
-                        to={
-                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
-                            ? `/${DRE}/${card.link}`
-                            : "/"
-                        }
-                      >
-                        <CardPendencia
-                          cardTitle={card.titulo}
-                          totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
-                          priorityOrders={
-                            resumo[card.titulo]["PRIORITARIO"] || 0
-                          }
-                          onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
-                          regularOrders={resumo[card.titulo]["REGULAR"] || 0}
-                          loading={loadingPainelSolicitacoes}
-                        />
-                      </Link>
-                    </div>
-                  ) : (
-                    <div key={key} className="col-6 pb-3">
-                      <Link
-                        to={
-                          visao === FILTRO_VISAO.POR_TIPO_SOLICITACAO
-                            ? `/${DRE}/${card.link}`
-                            : "/"
-                        }
-                      >
-                        <CardPendencia
-                          cardTitle={card.titulo}
-                          totalOfOrders={0}
-                          priorityOrders={0}
-                          onLimitOrders={0}
-                          regularOrders={0}
-                          loading={loadingPainelSolicitacoes}
-                        />
-                      </Link>
-                    </div>
-                  );
-                })}
+                <div className="pt-3" />
+                <div className="row pt-3">
+                  {cards.map((card, key) => {
+                    return resumo[card.titulo] ? (
+                      <div key={key} className="col-6 pb-3">
+                        <Link to={linkTo(card.link)}>
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={resumo[card.titulo]["TOTAL"] || 0}
+                            priorityOrders={
+                              resumo[card.titulo]["PRIORITARIO"] || 0
+                            }
+                            onLimitOrders={resumo[card.titulo]["LIMITE"] || 0}
+                            regularOrders={resumo[card.titulo]["REGULAR"] || 0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    ) : (
+                      <div key={key} className="col-6 pb-3">
+                        <Link to={linkTo(card.link)}>
+                          <CardPendencia
+                            cardTitle={card.titulo}
+                            totalOfOrders={0}
+                            priorityOrders={0}
+                            onLimitOrders={0}
+                            regularOrders={0}
+                            loading={loadingPainelSolicitacoes}
+                          />
+                        </Link>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-          <CardBody
-            exibirFiltrosDataEventoETipoSolicitacao={true}
-            titulo={"Acompanhamento solicitações"}
-            dataAtual={dataAtual()}
-            onChange={this.onPesquisaChanged}
-          >
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Validação da DRE"}
-                  cardType={CARD_TYPE_ENUM.PENDENTE}
-                  solicitations={questionamentosListFiltered}
-                  icon={"fa-exclamation-triangle"}
-                  href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
-                />
+            <CardBodySemRedux
+              exibirFiltrosDataEventoETipoSolicitacao={false}
+              titulo={"Acompanhamento solicitações"}
+              dataAtual={dataAtual()}
+              onChange={() => onPesquisaChanged(values)}
+              values={values}
+            >
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Aguardando Validação da DRE"}
+                    cardType={CARD_TYPE_ENUM.PENDENTE}
+                    solicitations={solicitacoesFiltradas.pendentes}
+                    icon={"fa-exclamation-triangle"}
+                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
+                  />
+                </div>
+                <div className="col-6">
+                  {solicitacoesFiltradas.aguardandoCodae && (
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Aguardando Retorno de CODAE"}
+                      cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
+                      solicitations={solicitacoesFiltradas.aguardandoCodae}
+                      icon={"fa-history"}
+                      href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                    />
+                  )}
+                </div>
               </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Aguardando Retorno de CODAE"}
-                  cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
-                  solicitations={aguardandoCODAEListFiltered}
-                  icon={"fa-history"}
-                  href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
-                />
+              <div className="row pb-3">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Autorizadas"}
+                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                    solicitations={solicitacoesFiltradas.autorizadas}
+                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                  />
+                </div>
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Negadas"}
+                    cardType={CARD_TYPE_ENUM.NEGADO}
+                    solicitations={solicitacoesFiltradas.negadas}
+                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                    href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
+                  />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-6">
+                  <CardStatusDeSolicitacao
+                    cardTitle={"Canceladas"}
+                    cardType={CARD_TYPE_ENUM.CANCELADO}
+                    solicitations={solicitacoesFiltradas.canceladas}
+                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                  />
+                </div>
+              </div>
+            </CardBodySemRedux>
+            <div className="card card-shortcut-to-form mt-3">
+              <div className="card-body">
+                <div className="card-title font-weight-bold">
+                  Faça uma Solicitação Unificada
+                </div>
+                <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
+                <Link to="/dre/solicitacao-unificada">
+                  <Botao
+                    texto="Solicitação Unificada"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                  />
+                </Link>
               </div>
             </div>
-            <div className="row pb-3">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Autorizadas"}
-                  cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                  solicitations={autorizadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                  href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
-                />
-              </div>
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Negadas"}
-                  cardType={CARD_TYPE_ENUM.NEGADO}
-                  solicitations={negadasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                  href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-6">
-                <CardStatusDeSolicitacao
-                  cardTitle={"Canceladas"}
-                  cardType={CARD_TYPE_ENUM.CANCELADO}
-                  solicitations={canceladasListFiltered}
-                  icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                  href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-                />
-              </div>
-            </div>
-          </CardBody>
-          <div className="card card-shortcut-to-form mt-3">
-            <div className="card-body">
-              <div className="card-title font-weight-bold">
-                Faça uma Solicitação Unificada
-              </div>
-              <p>Acesse o formulário para fazer uma Solicitação Unificada</p>
-              <Link to="/dre/solicitacao-unificada">
-                <Botao
-                  texto="Solicitação Unificada"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.BLUE_OUTLINE}
-                />
-              </Link>
-            </div>
-          </div>
-        </form>
-      </div>
-    );
-  }
-}
+          </form>
+        )}
+      />
+    </div>
+  );
+};
 
-const DashboardDREForm = reduxForm({
-  form: "DashboardDRE",
-  enableReinitialize: true
-})(DashboardDRE);
-
-export default DashboardDREForm;
+export default DashboardDRE;

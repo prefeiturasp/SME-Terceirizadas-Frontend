@@ -28,6 +28,8 @@ export const InputText = props => {
     apenasNumeros,
     exibeTooltipDiaSobremesaDoce,
     exibeTooltipAlimentacoesAutorizadas,
+    exibeTooltipErroQtdMaiorQueAutorizado,
+    exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
     exibeTooltipFrequenciaDiaNaoLetivo
@@ -114,6 +116,15 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
+        <Tooltip
+          title={
+            "Nenhuma alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {exibirTooltipFrequenciaDiaNaoLetivo() && (
         <Tooltip
           title={
@@ -128,6 +139,15 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-error" />
         </Tooltip>
       )}
+      {!meta.error &&
+        exibeTooltipErroQtdMaiorQueAutorizado &&
+        !["Mês anterior", "Mês posterior"].includes(input.value) && (
+          <Tooltip
+            title={`Número apontado de alimentação é maior que número autorizado (${numeroDeInclusoesAutorizadas}). Justifique na Observação.`}
+          >
+            <i className="fas fa-info icone-info-warning" />
+          </Tooltip>
+        )}
 
       <input
         {...input}
@@ -137,7 +157,9 @@ export const InputText = props => {
             : ""
         } ${
           exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-          exibirTooltipFrequenciaDiaNaoLetivo()
+          exibirTooltipFrequenciaDiaNaoLetivo() ||
+          exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
+          exibeTooltipErroQtdMaiorQueAutorizado
             ? "border-warning"
             : ""
         }`}

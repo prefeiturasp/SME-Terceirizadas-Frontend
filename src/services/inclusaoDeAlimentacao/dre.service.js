@@ -5,21 +5,14 @@ import { getPath } from "./helper";
 
 export const dreListarSolicitacoesDeInclusaoDeAlimentacao = async (
   filtroAplicado,
-  tipoSolicitacao
+  tipoSolicitacao,
+  paramsFromPrevPage
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${PEDIDOS.DRE}/${filtroAplicado}/`;
-  const OBJ_REQUEST = {
-    headers: AUTH_TOKEN,
-    method: "GET"
-  };
-  try {
-    const result = await fetch(url, OBJ_REQUEST);
-    const status = result.status;
-    const json = await result.json();
-    return { results: json.results, status };
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await axios.get(url, { params: paramsFromPrevPage });
+  const results = response.data.results;
+  const status = response.status;
+  return { results: results, status };
 };
 
 export const dreListarSolicitacoesDeInclusaoDeAlimentacaoReprovados = tipoSolicitacao => {
