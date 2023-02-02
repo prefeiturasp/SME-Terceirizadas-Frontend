@@ -149,7 +149,7 @@ const RelatorioProdutosHomologados = () => {
               <div className="row">
                 <div className="col-12 text-right">
                   <Botao
-                    texto="Baixar Excel"
+                    texto="Exportar Excel"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.FILE_EXCEL}
                     type={BUTTON_TYPE.BUTTON}
