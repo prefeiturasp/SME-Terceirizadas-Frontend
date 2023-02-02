@@ -125,7 +125,9 @@ import {
   usuarioEhEmpresaFornecedor,
   usuarioEhAdministradorRepresentanteCodae,
   usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhAdmQualquerEmpresa
+  usuarioEhAdmQualquerEmpresa,
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCoordenadorGpCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -201,6 +203,7 @@ import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
+import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 
 const routesConfig = [
   {
@@ -776,6 +779,13 @@ const routesConfig = [
     component: GestaoAcessoEmpresaPage,
     exact: true,
     tipoUsuario: usuarioEhAdmQualquerEmpresa()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
+    component: GestaoAcessoGeralPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,

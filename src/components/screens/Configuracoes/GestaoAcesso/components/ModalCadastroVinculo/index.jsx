@@ -49,7 +49,8 @@ const ModalCadastroVinculo = ({
   onSubmit,
   vinculo,
   toggleExclusao,
-  empresa
+  empresa,
+  visaoUnica
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -58,7 +59,6 @@ const ModalCadastroVinculo = ({
   const [rfBuscado, setRfBuscado] = useState(false);
 
   const { meusDados } = useContext(MeusDadosContext);
-
   const handleClose = () => {
     setRfBuscado(false);
     toggleShow(false, null);
@@ -155,12 +155,12 @@ const ModalCadastroVinculo = ({
       toastError("Ocorreu um erro ao carregar este usuário.", error);
     }
 
-    if (diretor_escola) {
-      setTipoUsuario("SERVIDOR");
-    } else if (empresa) {
+    if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
+    } else if (diretor_escola || visaoUnica) {
+      setTipoUsuario("SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola, empresa, toggleShow]);
+  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica]);
   return (
     <>
       <ModalExclusaoVinculo show={showExclusao} setShow={setShowExclusao} />
@@ -296,7 +296,10 @@ const ModalCadastroVinculo = ({
                             required
                             options={listaVisao}
                             validate={required}
-                            disabled={diretor_escola ? true : false}
+                            defaultValue={visaoUnica}
+                            disabled={
+                              diretor_escola || visaoUnica ? true : false
+                            }
                           />
                         </div>
                         <div className="col-6">
@@ -308,8 +311,8 @@ const ModalCadastroVinculo = ({
                             className="input-busca-produto"
                             required
                             options={
-                              diretor_escola
-                                ? getPerfis("ESCOLA")
+                              visaoUnica
+                                ? listaPerfis
                                 : getPerfis(values.visao_servidor)
                             }
                             validate={required}
@@ -413,7 +416,7 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={getPerfis("EMPRESA")}
+                            options={listaPerfis}
                             validate={required}
                             disabled={valoresEdicao && !empresa}
                           />
