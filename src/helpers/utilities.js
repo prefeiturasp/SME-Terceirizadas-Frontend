@@ -787,8 +787,6 @@ export const exibirGA = () => {
 
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
-      case `"gestao_alimentacao_terceirizada"`:
-        return true;
       case `"diretoriaregional"`:
         return dresPermitidas.some(dre =>
           localStorage.getItem("nome_instituicao").includes(dre)
@@ -801,9 +799,10 @@ export const exibirGA = () => {
         return JSON.parse(localStorage.getItem("lotes")).find(lote =>
           dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
+      case `"gestao_alimentacao_terceirizada"`:
       case `"nutricao_manifestacao"`:
-        return true;
       case `"supervisao_nutricao"`:
+      case `"medicao"`:
         return true;
       default:
         return false;
