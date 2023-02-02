@@ -59,7 +59,7 @@ export const ContatoFormSet = ({
               {contatosPessoaEmpresaForm.map(
                 (contatoEmpresa, indiceEmpresa) => {
                   return (
-                    <>
+                    <div key={indiceEmpresa}>
                       <div className="fields-set-contatos" key={indiceEmpresa}>
                         <div>
                           <Field
@@ -124,7 +124,7 @@ export const ContatoFormSet = ({
                           </OnChange>
                         </div>
                       </div>
-                    </>
+                    </div>
                   );
                 }
               )}

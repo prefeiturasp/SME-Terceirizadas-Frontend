@@ -214,22 +214,28 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
           valoresState.contatosNutricionista.length === 1
             ? true
             : nutri.super_admin_terceirizadas,
-        telefone: nutri.telefone,
+        telefone: removeCaracteresEspeciais(nutri.telefone),
         email: nutri.email,
         eh_nutricionista: true
       });
     });
-    const contatosEmpresa = [...valoresState.contatosEmpresa, ...contatosNutri];
-    const super_admin = { ...valoresForm.super_admin };
+    const contatosEmpresaFormatado = valoresState.contatosEmpresa.map(item => {
+      return {
+        telefone: removeCaracteresEspeciais(item.telefone),
+        email: item.email
+      };
+    });
+    const contatosEmpresa = [...contatosEmpresaFormatado, ...contatosNutri];
+    const super_admin = { ...valoresState.super_admin };
     super_admin.contatos = [
-      { email: super_admin.email, telefone: super_admin.telefone }
+      { email: super_admin.email, telefone: removeCaracteresEspeciais(super_admin.telefone) }
     ];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,
       cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       representante_legal: valoresForm.representante_legal,
-      representante_telefone: valoresForm.telefone_representante,
+      representante_telefone: valoresForm.responsavel_telefone ? valoresForm.responsavel_telefone.replace(/[^a-z0-9]/gi, "") : '',
       representante_email: valoresForm.email_representante_legal,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
@@ -241,9 +247,9 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
-      responsavel_cpf: removeCaracteresEspeciais(valoresForm.responsavel_cpf),
+      responsavel_cpf: valoresForm.responsavel_cpf,
       responsavel_nome: valoresForm.responsavel_nome,
-      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_telefone: valoresForm.responsavel_telefone ? valoresForm.responsavel_telefone.replace(/[^a-z0-9]/gi, "") : '',
       responsavel_email: valoresForm.responsavel_email,
       lotes: valoresState.lotesSelecionados,
       super_admin: super_admin

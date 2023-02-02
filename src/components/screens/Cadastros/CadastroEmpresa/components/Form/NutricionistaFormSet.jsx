@@ -7,6 +7,9 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { OnChange } from "react-final-form-listeners";
+import MaskedInputText from "components/Shareable/Input/MaskedInputText";
+import { telefoneMask } from "constants/shared";
 
 export const NutricionistaFormSet = ({
   ehDistribuidor,
@@ -25,7 +28,7 @@ export const NutricionistaFormSet = ({
   };
   const adicionaContatoNutricionista = () => {
     const contatosNutricionistaArray = contatosNutricionista;
-    contatosNutricionistaArray.push([
+    contatosNutricionistaArray.push(
       {
         vinculo_atual: null,
         telefone: null,
@@ -33,7 +36,7 @@ export const NutricionistaFormSet = ({
         crn: null,
         email: null
       }
-    ]);
+    );
     setContatosNutricionista(contatosNutricionistaArray);
   };
 
@@ -58,6 +61,11 @@ export const NutricionistaFormSet = ({
       setContatosTerceirizadaForm(newContatosTerceirizadaForm);
     }
   };
+
+  const setaContatosNutricionista = (input, event, indice) => {
+    contatosNutricionista[indice][input] = event;
+    setContatosNutricionista(contatosNutricionista);
+  }
   return (
     <>
       {!ehDistribuidor && (
@@ -82,6 +90,14 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
+                              <OnChange name={`nutricionista_nome_${indiceTerceirizada}`}>
+                                {value => 
+                                  setaContatosNutricionista(
+                                    "responsavel",
+                                    value,
+                                    indiceTerceirizada
+                                  )}
+                              </OnChange>
                             </div>
                             <div>
                               <Field
@@ -92,6 +108,14 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
+                              <OnChange name={`nutricionista_crn_${indiceTerceirizada}`}>
+                                {value => 
+                                  setaContatosNutricionista(
+                                    "crn",
+                                    value,
+                                    indiceTerceirizada
+                                  )}
+                              </OnChange>
                             </div>
                             {contatosNutricionista.length > 1 && (
                               <div className="trash">
@@ -114,13 +138,22 @@ export const NutricionistaFormSet = ({
                             <div>
                               <Field
                                 name={`telefone_terceirizada_${indiceTerceirizada}`}
-                                component={InputText}
+                                component={MaskedInputText}
+                                mask={telefoneMask}
                                 label="Telefone/Celular Técnico"
                                 id={`telefone_terceirizada_${indiceTerceirizada}`}
                                 indice={indiceTerceirizada}
                                 required
                                 validate={required}
                               />
+                              <OnChange name={`telefone_terceirizada_${indiceTerceirizada}`}>
+                                {value => 
+                                  setaContatosNutricionista(
+                                    "telefone",
+                                    value,
+                                    indiceTerceirizada
+                                  )}
+                              </OnChange>
                             </div>
                             <div>
                               <Field
@@ -132,6 +165,14 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
+                              <OnChange name={`email_terceirizada_${indiceTerceirizada}`}>
+                                {value => 
+                                  setaContatosNutricionista(
+                                    "email",
+                                    value,
+                                    indiceTerceirizada
+                                  )}
+                              </OnChange>
                             </div>
                           </div>
                         </div>

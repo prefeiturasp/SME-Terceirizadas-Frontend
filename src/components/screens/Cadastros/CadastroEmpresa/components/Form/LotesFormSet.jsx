@@ -80,10 +80,12 @@ export const LotesFormSet = props => {
   };
 
   useEffect(() => {
-    getLotesSimples().then(response => {
-      setLotes(transformaObjetos(response.data));
-      setLotesRaw(response.data.results);
-    });
+    if(!ehDistribuidor) {
+      getLotesSimples().then(response => {
+        setLotes(transformaObjetos(response.data));
+        setLotesRaw(response.data.results);
+      });
+    }
   }, []);
 
   return (

@@ -9,6 +9,10 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { useState } from "react";
+import { encerraContratoTerceirizada } from "services/terceirizada.service";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { ModalRemoveContrato } from "../ModalRemoveContrato";
 
 const contratosEstadoInicial = {
   numero_processo: null,
@@ -21,8 +25,11 @@ export const ContratosFormSet = ({
   ehDistribuidor,
   contratos,
   setContratos,
-  terceirizada
+  terceirizada,
+  values
 }) => {
+  const [contratoARemover, setContratoARemover] = useState({});
+  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] = useState(false);
   const adicionaContrato = () => {
     contratos = contratos.concat([contratosEstadoInicial]);
     setContratos(contratos);
@@ -34,17 +41,51 @@ export const ContratosFormSet = ({
     setContratos(newContratos);
   };
 
+  const encerraContrato = async () => {
+    let uuid = contratoARemover.uuid;
+    let response = await encerraContratoTerceirizada(uuid);
+    if (response && response.status === 200) {
+      let contratosNew = [...contratos];
+      let index = contratosNew.findIndex(c => c.uuid === uuid);
+      contratosNew[index].data_hora_encerramento =
+        response.data.data_hora_encerramento;
+      contratosNew[index].encerrado = true;
+      setContratos(contratosNew);
+      fecharModalRemoverContrato();
+    } else {
+      toastError("Erro ao encerrar contrato");
+    }
+  }
+
+  const fecharModalRemoverContrato = () => {
+    setExibirModalRemoverContrato(false);
+  }
+
+  const abrirModalRemoverContrato = (index) => {
+    setExibirModalRemoverContrato(true);
+    setContratoARemover(contratos[index]);
+  }
+
+
   return (
     <>
       {ehDistribuidor && (
         <div>
+
+          <ModalRemoveContrato
+            numeroContrato={contratoARemover.numero}
+            values={values}
+            onSubmit={encerraContrato}
+            closeModal={fecharModalRemoverContrato}
+            showModal={exibirModalRemoverContrato}
+          />
           <hr className="linha-form my-3" />
           <div>
             <div className="card-body">
               <div className="card-title green">Contratos</div>
               {contratos.map((contrato, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <div className="row">
                       <div className="col-6">
                         <Field
@@ -96,6 +137,7 @@ export const ContratosFormSet = ({
                             <Botao
                               className="btn-encerrar-contrato"
                               texto="Encerrar Contrato"
+                              onClick={() => abrirModalRemoverContrato(index)}
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.RED_OUTLINE}
                             />
@@ -127,7 +169,7 @@ export const ContratosFormSet = ({
                         </Tooltip>
                       )}
                     </div>
-                  </>
+                  </div>
                 );
               })}
             </div>

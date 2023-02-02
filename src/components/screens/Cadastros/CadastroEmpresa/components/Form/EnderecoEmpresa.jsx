@@ -6,7 +6,7 @@ import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { useState } from "react";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
-import { cepMask } from "constants/shared";
+import { cepMask, telefoneMask } from "constants/shared";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -47,14 +47,19 @@ export const EnderecoEmpresa = ({
 
   const adicionaContatoEmpresa = () => {
     let contatosEmpresaArray = [...contatosEmpresa];
-    contatosEmpresaArray.push([
+    contatosEmpresaArray.push(
       {
         telefone: "",
         email: ""
       }
-    ]);
+    );
     setContatosEmpresa(contatosEmpresaArray);
   };
+
+  const setaContatosEmpresa = (input, event, indice) => {
+    contatosEmpresa[indice][input] = event ? event : "";
+    setContatosEmpresa(contatosEmpresa);
+  }
 
   return (
     <>
@@ -167,7 +172,8 @@ export const EnderecoEmpresa = ({
                     <div className="col-5">
                       <Field
                         name={`telefone_empresa_${indiceEmpresa}`}
-                        component={InputText}
+                        component={MaskedInputText}
+                        mask={telefoneMask}
                         label="Telefone"
                         id={`telefone_empresa_${indiceEmpresa}`}
                         indice={indiceEmpresa}
@@ -176,6 +182,13 @@ export const EnderecoEmpresa = ({
                         required
                         maxlength="140"
                       />
+                      <OnChange name={`telefone_empresa_${indiceEmpresa}`}>
+                        {value => setaContatosEmpresa(
+                          "telefone",
+                          value,
+                          indiceEmpresa
+                        )}
+                      </OnChange>
                     </div>
                     <div className="col-7">
                       <Field
@@ -184,6 +197,13 @@ export const EnderecoEmpresa = ({
                         label="E-mail"
                         maxlength="140"
                       />
+                      <OnChange name={`email_empresa_${indiceEmpresa}`}>
+                        {value => setaContatosEmpresa(
+                          "email",
+                          value,
+                          indiceEmpresa
+                        )}
+                      </OnChange>
                     </div>
                   </div>
                 </div>
