@@ -110,6 +110,13 @@ export const CardStatusDeSolicitacao = props => {
   const renderSolicitations = solicitations => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
       let conferida = conferidaClass(solicitation, cardTitle);
+      const text = (
+        <span>
+          Marca: {solicitation.marca},<br />
+          Editais: {solicitation.editais}
+        </span>
+      );
+
       return (
         <NavLink
           to={solicitation.link}
@@ -117,7 +124,24 @@ export const CardStatusDeSolicitacao = props => {
           data-cy={`${cardType}-${key}`}
         >
           <p className={`data ${conferida}`}>
-            {solicitation.text}
+            {[
+              GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
+              GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS
+            ].includes(cardTitle) ? (
+              <Tooltip
+                color="#42474a"
+                overlayStyle={{
+                  maxWidth: "320px",
+                  fontSize: "12px",
+                  fontWeight: "700"
+                }}
+                title={text}
+              >
+                <span style={{ fontWeight: "bold" }}>{solicitation.text}</span>
+              </Tooltip>
+            ) : (
+              solicitation.text
+            )}
             <span className="float-right">{solicitation.date}</span>
             {tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
               qtdDietasAbertas(solicitation) > 0 && (
