@@ -88,14 +88,9 @@ const RelatorioProdutosHomologados = () => {
     setFiltros(formValues);
   };
 
-  const exportarXLSX = async () => {
+  const exportarXLSX = async params => {
     setExportandoXLS(true);
-    const response = await gerarExcelRelatorioProdutosHomologados(filtros);
-    if (response.status === HTTP_STATUS.OK) {
-      setExibirModalCentralDownloads(true);
-    } else {
-      toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
-    }
+    gerarExcelRelatorioProdutosHomologados(params);
     setExportandoXLS(false);
   };
 
@@ -154,7 +149,9 @@ const RelatorioProdutosHomologados = () => {
                     icon={BUTTON_ICON.FILE_EXCEL}
                     type={BUTTON_TYPE.BUTTON}
                     disabled={exportandoXLS}
-                    onClick={() => exportarXLSX()}
+                    onClick={() => {
+                      gerarExcelRelatorioProdutosHomologados(filtros);
+                    }}
                     className="mr-3"
                   />
                   <Botao

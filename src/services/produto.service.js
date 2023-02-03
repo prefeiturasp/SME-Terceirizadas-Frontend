@@ -707,9 +707,8 @@ export const gerarExcelRelatorioProdutosHomologados = async params => {
     const data = { data: response.data, status: response.status };
     return data;
   }*/
-  const { data } = await axios.get(url, {
-    responseType: "blob",
-    params
+  const { data } = await axios.post(url, params, {
+    responseType: "blob"
   });
   saveAs(data, "relatorio.xlsx");
 };
