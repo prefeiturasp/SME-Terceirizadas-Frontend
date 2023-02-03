@@ -8,8 +8,12 @@ import {
 import { imprimeFichaIdentificacaoProduto } from "services/produto.service";
 import { useHistory } from "react-router-dom";
 
-export const BotoesRodape = ({ homologacao }) => {
+export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
   const history = useHistory();
+
+  const params = {
+    eh_card_suspensos: ehCardSuspensos
+  };
 
   return (
     <div className="row">
@@ -19,7 +23,9 @@ export const BotoesRodape = ({ homologacao }) => {
           style={BUTTON_STYLE.GREEN}
           texto="Imprimir"
           icon={BUTTON_ICON.PRINT}
-          onClick={() => imprimeFichaIdentificacaoProduto(homologacao.uuid)}
+          onClick={() =>
+            imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
+          }
           className="float-right"
         />
         <Botao
