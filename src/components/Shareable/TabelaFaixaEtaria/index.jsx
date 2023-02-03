@@ -9,7 +9,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
   }, 0);
 
   const total_matriculados = faixas.reduce(function(acc, v) {
-    return acc + (v.total_alunos_no_periodo || 0);
+    return acc + (v.matriculados_quando_criado || 0);
   }, 0);
 
   return (
@@ -26,7 +26,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
             faixa_etaria,
             quantidade,
             quantidade_alunos,
-            total_alunos_no_periodo
+            matriculados_quando_criado
           },
           indice
         ) => {
@@ -34,7 +34,7 @@ const TabelaFaixaEtaria = ({ faixas = [] }) => {
             <article key={indice}>
               <div className="faixa-etaria">{faixaToString(faixa_etaria)}</div>
               <div className="alunos-matriculados">
-                {total_alunos_no_periodo}
+                {matriculados_quando_criado}
               </div>
               <div>{quantidade || quantidade_alunos}</div>
             </article>
