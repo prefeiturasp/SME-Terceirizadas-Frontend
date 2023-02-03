@@ -29,7 +29,9 @@ export const ContratosFormSet = ({
   values
 }) => {
   const [contratoARemover, setContratoARemover] = useState({});
-  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] = useState(false);
+  const [exibirModalRemoverContrato, setExibirModalRemoverContrato] = useState(
+    false
+  );
   const adicionaContrato = () => {
     contratos = contratos.concat([contratosEstadoInicial]);
     setContratos(contratos);
@@ -55,23 +57,21 @@ export const ContratosFormSet = ({
     } else {
       toastError("Erro ao encerrar contrato");
     }
-  }
+  };
 
   const fecharModalRemoverContrato = () => {
     setExibirModalRemoverContrato(false);
-  }
+  };
 
-  const abrirModalRemoverContrato = (index) => {
+  const abrirModalRemoverContrato = index => {
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
-  }
-
+  };
 
   return (
     <>
       {ehDistribuidor && (
         <div>
-
           <ModalRemoveContrato
             numeroContrato={contratoARemover.numero}
             values={values}

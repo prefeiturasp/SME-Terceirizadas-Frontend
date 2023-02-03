@@ -6,7 +6,11 @@ import { OnChange } from "react-final-form-listeners";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { cpfMask, telefoneMask } from "constants/shared";
 
-export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSuperUser }) => {
+export const AdministradorSistemaFormSet = ({
+  ehDistribuidor,
+  superUser,
+  setSuperUser
+}) => {
   return (
     <>
       {!ehDistribuidor && (
@@ -28,7 +32,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSupe
                   maxlength="140"
                 />
                 <OnChange name="superuser_email">
-                  {value => setSuperUser({...superUser, email: value})}
+                  {value => setSuperUser({ ...superUser, email: value })}
                 </OnChange>
               </div>
               <div className="col">
@@ -41,7 +45,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSupe
                   maxlength="140"
                 />
                 <OnChange name="superuser_nome">
-                  {value => setSuperUser({...superUser, nome: value})}
+                  {value => setSuperUser({ ...superUser, nome: value })}
                 </OnChange>
               </div>
             </div>
@@ -57,7 +61,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSupe
                   validate={required}
                 />
                 <OnChange name="superuser_cpf">
-                  {value => setSuperUser({...superUser, cpf: value})}
+                  {value => setSuperUser({ ...superUser, cpf: value })}
                 </OnChange>
               </div>
               <div className="col">
@@ -70,7 +74,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSupe
                   required
                 />
                 <OnChange name="superuser_telefone">
-                  {value => setSuperUser({...superUser, telefone: value})}
+                  {value => setSuperUser({ ...superUser, telefone: value })}
                 </OnChange>
               </div>
             </div>
@@ -85,7 +89,7 @@ export const AdministradorSistemaFormSet = ({ ehDistribuidor, superUser, setSupe
                   maxlength="50"
                 />
                 <OnChange name="superuser_cargo">
-                  {value => setSuperUser({...superUser, cargo: value})}
+                  {value => setSuperUser({ ...superUser, cargo: value })}
                 </OnChange>
               </div>
             </div>

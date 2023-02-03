@@ -15,7 +15,11 @@ import { ContratosFormSet } from "./components/Form/ContratosFormSet";
 import { ContatoFormSet } from "./components/Form/ContatoFormSet";
 import { PERFIL } from "constants/shared";
 import { formataJsonParaEnvio } from "./helper";
-import { createTerceirizada, getTerceirizadaUUID, updateTerceirizada } from "services/terceirizada.service";
+import {
+  createTerceirizada,
+  getTerceirizadaUUID,
+  updateTerceirizada
+} from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { formatarCPFouCNPJ, getError } from "helpers/utilities";
 import { AdministradorSistemaFormSet } from "./components/Form/AdministradorSistemaFormSet";
@@ -47,7 +51,7 @@ export const CadastroEmpresaRefatorada = () => {
     representante_legal: undefined,
     email_representante_legal: undefined,
     telefone_representante: undefined,
-    bairro: undefined,
+    bairro: undefined
   });
   const [carregando, setCarregando] = useState(false);
   const [ehDistribuidor, setEhDistribuidor] = useState(true);
@@ -93,7 +97,9 @@ export const CadastroEmpresaRefatorada = () => {
   ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
-  const [tituloModal, setTituloModal] = useState("Confirma cadastro de Empresa?")
+  const [tituloModal, setTituloModal] = useState(
+    "Confirma cadastro de Empresa?"
+  );
   const [exibirModal, setExibirModal] = useState(false);
   const [contatosPessoaEmpresa, setContatosPessoaEmpresa] = useState([
     {
@@ -103,8 +109,8 @@ export const CadastroEmpresaRefatorada = () => {
     }
   ]);
 
-  const atribuiContatosEmpresaForm = (data) => {
-    const {contatos} = data;
+  const atribuiContatosEmpresaForm = data => {
+    const { contatos } = data;
     contatos
       .filter(contato => !contato.nome)
       .forEach((contato, indice) => {
@@ -122,15 +128,15 @@ export const CadastroEmpresaRefatorada = () => {
 
         setContatosEmpresa(contatosEmpresa);
 
-        data[`telefone_empresa_${indice}`] = contato.telefone 
-        data[`email_empresa_${indice}`] = contato.email 
+        data[`telefone_empresa_${indice}`] = contato.telefone;
+        data[`email_empresa_${indice}`] = contato.email;
       });
 
-      return data;
-  }
+    return data;
+  };
 
-  const atribuiContatosPessoaEmpresaForm = (data) => {
-    const {contatos} = data;
+  const atribuiContatosPessoaEmpresaForm = data => {
+    const { contatos } = data;
 
     contatos
       .filter(contato => contato.nome)
@@ -151,15 +157,15 @@ export const CadastroEmpresaRefatorada = () => {
         contatosPessoaEmpresa[indice]["email"] = contato.email;
         contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
         setContatosEmpresa(contatosPessoaEmpresa);
-        data[`nome_contato_${indice}`] = contato.nome
-        data[`telefone_contato_${indice}`] = contato.telefone
-        data[`email_contato_${indice}`] = contato.email
+        data[`nome_contato_${indice}`] = contato.nome;
+        data[`telefone_contato_${indice}`] = contato.telefone;
+        data[`email_contato_${indice}`] = contato.email;
       });
     return data;
-  }
+  };
 
-  const atribuiNutricionistaEmpresaForm = (data) => {
-    const {contatos, nutricionistas} = data;
+  const atribuiNutricionistaEmpresaForm = data => {
+    const { contatos, nutricionistas } = data;
     const antigosUsuariosNutri = nutricionistas;
     if (antigosUsuariosNutri.length) {
       antigosUsuariosNutri.forEach((nutri, indice) => {
@@ -186,10 +192,12 @@ export const CadastroEmpresaRefatorada = () => {
           nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
 
         setContatosNutricionista(contatosNutricionista);
-        data[`nutricionista_nome_${indice}`] = nutri.nome
-        data[`nutricionista_crn_${indice}`] = nutri.crn_numero
-        data[`telefone_terceirizada_${indice}`] = nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone
-        data[`email_terceirizada_${indice}`] = nutri.contatos.length === 0 ? null : nutri.contatos[0].email
+        data[`nutricionista_nome_${indice}`] = nutri.nome;
+        data[`nutricionista_crn_${indice}`] = nutri.crn_numero;
+        data[`telefone_terceirizada_${indice}`] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
+        data[`email_terceirizada_${indice}`] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
       });
     } else {
       contatos
@@ -214,22 +222,24 @@ export const CadastroEmpresaRefatorada = () => {
 
           setContatosNutricionista(contatosNutricionista);
 
-          data[`nutricionista_nome_${indice}`] = nutri.nome
-          data[`nutricionista_crn_${indice}`] = nutri.crn_numero
-          data[`telefone_terceirizada_${indice}`] = nutri.telefone
-          data[`email_terceirizada_${indice}`] = nutri.email
+          data[`nutricionista_nome_${indice}`] = nutri.nome;
+          data[`nutricionista_crn_${indice}`] = nutri.crn_numero;
+          data[`telefone_terceirizada_${indice}`] = nutri.telefone;
+          data[`email_terceirizada_${indice}`] = nutri.email;
         });
 
-        return data;
+      return data;
     }
-  }
+  };
 
-  const setaValoresForm = (data) => {
+  const setaValoresForm = data => {
     const super_admin = data.super_admin;
     data.cnpj = formatarCPFouCNPJ(data.cnpj);
-    data.numero_contrato = data.numero
-    data.situacao = data.ativo
-    data.data_cadastro = moment(data.criado_em, "DD/MM/YYYY").format("DD/MM/YYYY");
+    data.numero_contrato = data.numero;
+    data.situacao = data.ativo;
+    data.data_cadastro = moment(data.criado_em, "DD/MM/YYYY").format(
+      "DD/MM/YYYY"
+    );
     data = atribuiContatosPessoaEmpresaForm(data);
     data = atribuiContratosForm(data);
     data = atribuiContatosEmpresaForm(data);
@@ -237,24 +247,28 @@ export const CadastroEmpresaRefatorada = () => {
     if (super_admin) {
       const super_admin_contato = data.super_admin.contatos.pop();
 
-      data.superuser_nome = data.super_admin.nome ? data.super_admin.nome : undefined 
-      data.superuser_cpf = data.super_admin.cpf 
-      data.superuser_cargo = data.super_admin.cargo 
-      data.superuser_telefone = super_admin_contato ? super_admin_contato.telefone : undefined
-      data.superuser_email = data.super_admin.email
+      data.superuser_nome = data.super_admin.nome
+        ? data.super_admin.nome
+        : undefined;
+      data.superuser_cpf = data.super_admin.cpf;
+      data.superuser_cargo = data.super_admin.cargo;
+      data.superuser_telefone = super_admin_contato
+        ? super_admin_contato.telefone
+        : undefined;
+      data.superuser_email = data.super_admin.email;
       setSuperUser({
         nome: data.superuser_nome,
         cpf: data.superuser_cpf,
         cargo: data.superuser_cargo,
         telefone: data.superuser_telefone,
         email: data.superuser_email
-      })
+      });
     }
     setInitialValuesForm(data);
     setTerceirizada(data);
-  }
+  };
 
-  const atribuiContratosForm = (data) => {
+  const atribuiContratosForm = data => {
     setContratos(data.contratos);
     data.contratos.forEach((contato, indice) => {
       data[`numero_contrato_${indice}`] = contato.numero;
@@ -264,21 +278,21 @@ export const CadastroEmpresaRefatorada = () => {
     });
 
     return data;
-  }
+  };
 
   const abrirModal = () => {
     setExibirModal(true);
-  }
+  };
 
   const fecharModal = () => {
     setExibirModal(false);
-  }
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {
-      setUuid(uuid)
+      setUuid(uuid);
       setCarregando(true);
       setTituloModal("Confirma atualização de Empresa?");
       getTerceirizadaUUID(uuid).then(response => {
@@ -289,10 +303,10 @@ export const CadastroEmpresaRefatorada = () => {
             lotesNomesSelecionados.push(lote.nome);
             lotesSelecionados.push(lote.uuid);
           });
-          setLotesSelecionados(lotesSelecionados)
+          setLotesSelecionados(lotesSelecionados);
         }
-        setaValoresForm(response.data)
-        setCarregando(false)
+        setaValoresForm(response.data);
+        setCarregando(false);
       });
     }
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
@@ -369,7 +383,9 @@ export const CadastroEmpresaRefatorada = () => {
                         setContatosEmpresa={setContatosEmpresa}
                       />
                       <AdministradorSistemaFormSet
-                        ehDistribuidor={ehDistribuidor} superUser={superUser} setSuperUser={setSuperUser}
+                        ehDistribuidor={ehDistribuidor}
+                        superUser={superUser}
+                        setSuperUser={setSuperUser}
                       />
                       <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
                       <ContatoFormSet
@@ -384,7 +400,9 @@ export const CadastroEmpresaRefatorada = () => {
                       <NutricionistaFormSet
                         ehDistribuidor={ehDistribuidor}
                         contatosTerceirizadaForm={contatosTerceirizadaForm}
-                        setContatosTerceirizadaForm={setContatosTerceirizadaForm}
+                        setContatosTerceirizadaForm={
+                          setContatosTerceirizadaForm
+                        }
                         contatosNutricionista={contatosNutricionista}
                         setContatosNutricionista={setContatosNutricionista}
                       />
@@ -448,7 +466,7 @@ export const CadastroEmpresaRefatorada = () => {
                               <Botao
                                 texto={"Salvar"}
                                 className="ml-3"
-                                onClick={(e) => {
+                                onClick={e => {
                                   e.preventDefault();
                                   abrirModal();
                                 }}
@@ -466,7 +484,7 @@ export const CadastroEmpresaRefatorada = () => {
                               </Link>
                               <Botao
                                 texto={"Atualizar"}
-                                onClick={(e) => {
+                                onClick={e => {
                                   e.preventDefault();
                                   abrirModal();
                                 }}

@@ -28,15 +28,13 @@ export const NutricionistaFormSet = ({
   };
   const adicionaContatoNutricionista = () => {
     const contatosNutricionistaArray = contatosNutricionista;
-    contatosNutricionistaArray.push(
-      {
-        vinculo_atual: null,
-        telefone: null,
-        responsavel: null,
-        crn: null,
-        email: null
-      }
-    );
+    contatosNutricionistaArray.push({
+      vinculo_atual: null,
+      telefone: null,
+      responsavel: null,
+      crn: null,
+      email: null
+    });
     setContatosNutricionista(contatosNutricionistaArray);
   };
 
@@ -65,7 +63,7 @@ export const NutricionistaFormSet = ({
   const setaContatosNutricionista = (input, event, indice) => {
     contatosNutricionista[indice][input] = event;
     setContatosNutricionista(contatosNutricionista);
-  }
+  };
   return (
     <>
       {!ehDistribuidor && (
@@ -90,13 +88,16 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
-                              <OnChange name={`nutricionista_nome_${indiceTerceirizada}`}>
-                                {value => 
+                              <OnChange
+                                name={`nutricionista_nome_${indiceTerceirizada}`}
+                              >
+                                {value =>
                                   setaContatosNutricionista(
                                     "responsavel",
                                     value,
                                     indiceTerceirizada
-                                  )}
+                                  )
+                                }
                               </OnChange>
                             </div>
                             <div>
@@ -108,13 +109,16 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
-                              <OnChange name={`nutricionista_crn_${indiceTerceirizada}`}>
-                                {value => 
+                              <OnChange
+                                name={`nutricionista_crn_${indiceTerceirizada}`}
+                              >
+                                {value =>
                                   setaContatosNutricionista(
                                     "crn",
                                     value,
                                     indiceTerceirizada
-                                  )}
+                                  )
+                                }
                               </OnChange>
                             </div>
                             {contatosNutricionista.length > 1 && (
@@ -146,13 +150,16 @@ export const NutricionistaFormSet = ({
                                 required
                                 validate={required}
                               />
-                              <OnChange name={`telefone_terceirizada_${indiceTerceirizada}`}>
-                                {value => 
+                              <OnChange
+                                name={`telefone_terceirizada_${indiceTerceirizada}`}
+                              >
+                                {value =>
                                   setaContatosNutricionista(
                                     "telefone",
                                     value,
                                     indiceTerceirizada
-                                  )}
+                                  )
+                                }
                               </OnChange>
                             </div>
                             <div>
@@ -165,13 +172,16 @@ export const NutricionistaFormSet = ({
                                 validate={required}
                                 maxlength="140"
                               />
-                              <OnChange name={`email_terceirizada_${indiceTerceirizada}`}>
-                                {value => 
+                              <OnChange
+                                name={`email_terceirizada_${indiceTerceirizada}`}
+                              >
+                                {value =>
                                   setaContatosNutricionista(
                                     "email",
                                     value,
                                     indiceTerceirizada
-                                  )}
+                                  )
+                                }
                               </OnChange>
                             </div>
                           </div>

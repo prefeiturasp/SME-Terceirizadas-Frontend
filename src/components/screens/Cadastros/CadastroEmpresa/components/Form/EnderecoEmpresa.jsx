@@ -47,19 +47,17 @@ export const EnderecoEmpresa = ({
 
   const adicionaContatoEmpresa = () => {
     let contatosEmpresaArray = [...contatosEmpresa];
-    contatosEmpresaArray.push(
-      {
-        telefone: "",
-        email: ""
-      }
-    );
+    contatosEmpresaArray.push({
+      telefone: "",
+      email: ""
+    });
     setContatosEmpresa(contatosEmpresaArray);
   };
 
   const setaContatosEmpresa = (input, event, indice) => {
     contatosEmpresa[indice][input] = event ? event : "";
     setContatosEmpresa(contatosEmpresa);
-  }
+  };
 
   return (
     <>
@@ -183,11 +181,9 @@ export const EnderecoEmpresa = ({
                         maxlength="140"
                       />
                       <OnChange name={`telefone_empresa_${indiceEmpresa}`}>
-                        {value => setaContatosEmpresa(
-                          "telefone",
-                          value,
-                          indiceEmpresa
-                        )}
+                        {value =>
+                          setaContatosEmpresa("telefone", value, indiceEmpresa)
+                        }
                       </OnChange>
                     </div>
                     <div className="col-7">
@@ -198,11 +194,9 @@ export const EnderecoEmpresa = ({
                         maxlength="140"
                       />
                       <OnChange name={`email_empresa_${indiceEmpresa}`}>
-                        {value => setaContatosEmpresa(
-                          "email",
-                          value,
-                          indiceEmpresa
-                        )}
+                        {value =>
+                          setaContatosEmpresa("email", value, indiceEmpresa)
+                        }
                       </OnChange>
                     </div>
                   </div>
