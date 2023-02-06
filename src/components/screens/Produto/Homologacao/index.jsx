@@ -130,11 +130,7 @@ export const Homologacao = ({
         </Form>
         <BotoesRodape
           homologacao={homologacao}
-<<<<<<< HEAD
-          getHomologacaoProdutoAsync={() => getHomologacaoProdutoAsync()}
-=======
           ehCardSuspensos={ehCardSuspensos}
->>>>>>> 1f4c46274175b7d94c9a3a805aa3222524e9f197
         />
       </div>
     </div>

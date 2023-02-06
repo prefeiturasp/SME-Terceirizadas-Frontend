@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { truncarString } from "helpers/utilities";
 
 import "antd/dist/antd.css";
-import "./styles.scss";
 
 export default class ModalHistorico extends Component {
   constructor(props) {

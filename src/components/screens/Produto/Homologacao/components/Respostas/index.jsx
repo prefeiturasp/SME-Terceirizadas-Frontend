@@ -25,13 +25,12 @@ export const Respostas = ({ homologacao, logAnaliseSensorial }) => {
         "TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO" && (
         <MotivoCancelamento logs={homologacao.logs} />
       )}
-      {homologacao.protocolo_analise_sensorial &&
-        logAnaliseSensorial.length > 0 && (
-          <JustificativaAnalise
-            homologacao={homologacao}
-            logAnaliseSensorial={logAnaliseSensorial}
-          />
-        )}
+      {logAnaliseSensorial.length > 0 && (
+        <JustificativaAnalise
+          homologacao={homologacao}
+          logAnaliseSensorial={logAnaliseSensorial}
+        />
+      )}
     </>
   );
 };

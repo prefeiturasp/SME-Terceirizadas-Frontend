@@ -1,0 +1,11 @@
+@import "../../../styles/variables.scss";
+
+.informacoes-do-produto {
+  display: grid;
+  grid-template-columns: 50% 30%;
+  column-gap: 3%;
+
+  .input ::placeholder {
+    color: $blackSubtle;
+  }
+}
