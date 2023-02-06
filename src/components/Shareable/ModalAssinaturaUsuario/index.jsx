@@ -48,7 +48,7 @@ export const ModalAssinaturaUsuario = props => {
                             esconderAsterisco
                             label="Senha"
                             name="password"
-                            placeholder={"******"}
+                            placeholder={"Digite sua senha"}
                             required
                           />
                         </div>
