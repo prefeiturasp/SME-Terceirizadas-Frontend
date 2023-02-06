@@ -10,12 +10,16 @@ import {
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemVinculos from "./components/ListagemVinculos";
 import Filtros from "./components/Filtros";
-import { getPerfilListagem, getVisoesListagem } from "services/perfil.service";
+import {
+  getPerfilListagem,
+  getPerfisSubordinados,
+  getVisoesListagem
+} from "services/perfil.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 
-export default ({ diretor_escola, empresa }) => {
+export default ({ diretor_escola, empresa, geral }) => {
   const [carregando, setCarregando] = useState(false);
   const [vinculos, setVinculos] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -23,17 +27,21 @@ export default ({ diretor_escola, empresa }) => {
   const [perfis, setPerfis] = useState([]);
   const [listaPerfis, setListaPerfis] = useState([]);
   const [visoes, setVisoes] = useState([]);
+  const [visaoUnica, setVisaoUnica] = useState();
   const [showCadastro, setShowCadastro] = useState(false);
   const [showEdicao, setShowEdicao] = useState(false);
   const [showExclusao, setShowExclusao] = useState(false);
   const [page, setPage] = useState(1);
   const [vinculoModal, setVinculoModal] = useState();
+  const [perfisSubordinados, setPerfisSubordinados] = useState();
 
   const buscaFiltros = async () => {
+    setCarregando(true);
     const perfis = await getPerfilListagem();
     const visoes = await getVisoesListagem();
+    const lista_perfis = perfis.data.results;
 
-    let options_perfis = perfis.data.results.map(perfil => ({
+    let options_perfis = lista_perfis.map(perfil => ({
       uuid: perfil.nome,
       nome: perfil.nome
     }));
@@ -43,13 +51,48 @@ export default ({ diretor_escola, empresa }) => {
       nome: visao.nome
     }));
 
-    setPerfis(options_perfis);
+    if (diretor_escola) {
+      setPerfisVisao(lista_perfis, "ESCOLA");
+    } else if (empresa) {
+      setPerfisVisao(lista_perfis, "EMPRESA");
+    } else if (geral) {
+      const perfis_subordinados = await getPerfisSubordinados();
+      const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
+      setPerfis(
+        perfis_subordinados.data.map(perfil => ({
+          uuid: perfil,
+          nome: perfil
+        }))
+      );
+      setVisaoUnica(visao);
+      setFiltros({ perfil: perfis_subordinados.data });
+      setPerfisSubordinados(perfis_subordinados.data);
+    } else {
+      setPerfis(options_perfis);
+      setFiltros({});
+    }
+
     setVisoes(options_visoes);
-    setListaPerfis(perfis.data.results);
+    setListaPerfis(lista_perfis);
+  };
+
+  const setPerfisVisao = (lista_perfis, visao) => {
+    const perfis = lista_perfis
+      .filter(perfil => perfil.visao === visao)
+      .map(perfil => ({
+        uuid: perfil.nome,
+        nome: perfil.nome
+      }));
+    setVisaoUnica(visao);
+    setPerfis(perfis);
+    setFiltros({});
   };
 
   const buscarVinculos = async page => {
     setCarregando(true);
+    if (geral && !filtros.perfil) {
+      filtros.perfil = perfisSubordinados;
+    }
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getVinculosAtivos(payload);
 
@@ -136,9 +179,16 @@ export default ({ diretor_escola, empresa }) => {
   };
 
   useEffect(() => {
-    buscarVinculos(1);
-    setPage(1);
     buscaFiltros();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (filtros) {
+      buscarVinculos(1);
+      setPage(1);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
@@ -147,11 +197,12 @@ export default ({ diretor_escola, empresa }) => {
       <ModalCadastroVinculo
         show={showCadastro}
         toggleShow={setShowCadastro}
-        listaPerfis={listaPerfis}
+        listaPerfis={visaoUnica ? perfis : listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
         empresa={empresa}
         onSubmit={salvarAcesso}
+        visaoUnica={visaoUnica}
       />
       <ModalCadastroVinculo
         show={showEdicao}
@@ -159,7 +210,7 @@ export default ({ diretor_escola, empresa }) => {
         toggleExclusao={toggleExclusao}
         listaVisao={visoes}
         vinculo={vinculoModal}
-        listaPerfis={listaPerfis}
+        listaPerfis={perfis}
         onSubmit={editarAcesso}
       />
       <ModalExclusaoVinculo
@@ -173,11 +224,9 @@ export default ({ diretor_escola, empresa }) => {
           <Filtros
             setFiltros={setFiltros}
             perfis={perfis}
-            listaPerfis={listaPerfis}
             visoes={visoes}
             setShowCadastro={setShowCadastro}
-            diretor_escola={diretor_escola}
-            empresa={empresa}
+            visaoUnica={visaoUnica}
           />
           {vinculos && (
             <>

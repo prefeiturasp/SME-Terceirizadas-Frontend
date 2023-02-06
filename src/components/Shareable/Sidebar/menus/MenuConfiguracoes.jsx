@@ -8,7 +8,8 @@ import {
   GESTAO_ACESSO_CODAE_DILOG,
   GESTAO_ACESSO_DIRETOR_ESCOLA,
   CARGAS_USUARIOS,
-  GESTAO_ACESSO_EMPRESA
+  GESTAO_ACESSO_EMPRESA,
+  GESTAO_ACESSO_GERAL
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -46,6 +47,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhLogistica() ||
     usuarioEhCoordenadorCODAE() ||
     usuarioEhAdministradorRepresentanteCodae();
+
+  const exibirGestaoAcesso =
+    usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
@@ -104,6 +108,19 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           activeMenu={activeMenu}
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_EMPRESA}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {exibirGestaoAcesso && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_GERAL}/`}>
             Gestão de Acesso
           </LeafItem>
         </SubMenu>

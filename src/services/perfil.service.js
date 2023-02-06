@@ -202,3 +202,10 @@ export const getPerfilListagem = async params =>
 
 export const getVisoesListagem = async params =>
   await axios.get(`/perfis/visoes/`, { params });
+
+export const getPerfisSubordinados = async params => {
+  const perfil = localStorage.getItem("perfil").replace(/['"]+/g, "");
+  return await axios.get(`/perfis-vinculados/${perfil}/perfis-subordinados/`, {
+    params
+  });
+};

@@ -17,21 +17,13 @@ export default ({
   setShowCadastro,
   visoes,
   perfis,
-  listaPerfis,
-  diretor_escola,
-  empresa
+  visaoUnica
 }) => {
-  const initialValues = {};
-  const inicioResultado = useRef();
-
-  const getPerfis = visao => {
-    return listaPerfis
-      .filter(perfil => perfil.visao === visao)
-      .map(perfil => ({
-        uuid: perfil.nome,
-        nome: perfil.nome
-      }));
+  const initialValues = {
+    visao: visaoUnica ? visaoUnica : undefined,
+    perfil: null
   };
+  const inicioResultado = useRef();
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -75,10 +67,8 @@ export default ({
                   placeholder="Selecione a Visão"
                   name="visao"
                   options={visoes}
-                  defaultValue={
-                    diretor_escola ? "ESCOLA" : empresa ? "EMPRESA" : undefined
-                  }
-                  disabled={diretor_escola || empresa ? true : false}
+                  defaultValue={visaoUnica ? visaoUnica : undefined}
+                  disabled={visaoUnica ? true : false}
                 />
               </div>
               <div className="col-6">
@@ -87,13 +77,7 @@ export default ({
                   component={SelectSelecione}
                   placeholder="Selecione o perfil do Usuário"
                   name="perfil"
-                  options={
-                    diretor_escola
-                      ? getPerfis("ESCOLA")
-                      : empresa
-                      ? getPerfis("EMPRESA")
-                      : perfis
-                  }
+                  options={perfis}
                 />
               </div>
             </div>

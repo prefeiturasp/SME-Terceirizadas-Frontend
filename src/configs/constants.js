@@ -187,6 +187,7 @@ export const CENTRAL_DOWNLOADS = "central-downloads";
 export const GESTAO_ACESSO_CODAE_DILOG = "gestao-acesso-codae-dilog";
 export const GESTAO_ACESSO_DIRETOR_ESCOLA = "gestao-acesso-diretor-escola";
 export const GESTAO_ACESSO_EMPRESA = "gestao-acesso-empresa";
+export const GESTAO_ACESSO_GERAL = "gestao-acesso";
 export const CARGAS_USUARIOS = "cargas-usuarios";
 
 export const PRE_RECEBIMENTO = "pre-recebimento";
