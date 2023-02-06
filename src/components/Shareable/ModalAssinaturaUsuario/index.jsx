@@ -39,7 +39,7 @@ export const ModalAssinaturaUsuario = props => {
               <div>
                 <Form
                   onSubmit={() => {}}
-                  render={({ handleSubmit, form, values }) => (
+                  render={({ values }) => (
                     <form>
                       <div className="row">
                         <div className="col-8">
