@@ -87,7 +87,7 @@ export const TabelaFaixasCEI = ({
                           matriculados =>
                             matriculados.faixa_etaria.uuid === faixa.uuid
                         );
-                        return (
+                        return qtdMatriculados ? (
                           <tr key={faixaIndice}>
                             <td>{faixa["__str__"]}</td>
                             <td className="text-center">
@@ -133,6 +133,8 @@ export const TabelaFaixasCEI = ({
                               </OnChange>
                             </td>
                           </tr>
+                        ) : (
+                          <></>
                         );
                       })}
                     <tr>
