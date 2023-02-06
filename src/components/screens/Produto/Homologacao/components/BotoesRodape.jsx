@@ -11,7 +11,7 @@ import {
 } from "services/produto.service";
 import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
-import { ModalPadrao } from "components/Shareable/ModalPadrao";
+import ModalPadrao from "components/Shareable/ModalPadrao";
 
 export const BotoesRodape = ({ homologacao, getHomologacaoProdutoAsync }) => {
   const history = useHistory();
