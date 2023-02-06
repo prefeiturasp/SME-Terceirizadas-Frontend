@@ -11,6 +11,9 @@ import CKEditorField from "../CKEditorField";
 import { toastError, toastSuccess } from "../Toast/dialogs";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 import "./style.scss";
+import InputText from "../Input/InputText";
+import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
+import { Redirect } from "react-router-dom";
 
 export class ModalPadrao extends Component {
   propTypes = {
@@ -37,6 +40,9 @@ export class ModalPadrao extends Component {
       this.props.closeModal();
       this.props.loadSolicitacao(this.props.uuid);
       toastSuccess(toastSuccessMessage);
+      if (this.props.endpoint.name === "CODAECancelaAnaliseSensorialProduto") {
+        return <Redirect to={`/${PAINEL_GESTAO_PRODUTO}`} />;
+      }
     } else {
       toastError(resp.data.detail);
     }
@@ -75,6 +81,7 @@ export class ModalPadrao extends Component {
       status,
       terceirizada,
       tipoModal,
+      cancelaAnaliseSensorial,
       ...textAreaProps
     } = this.props;
     return (
@@ -96,6 +103,43 @@ export class ModalPadrao extends Component {
                     <div>Número Protocolo: {protocoloAnalise}</div>
                   </div>
                 )}
+                {this.props.cancelaAnaliseSensorial !== undefined &&
+                  this.props.cancelaAnaliseSensorial && (
+                    <div className="row">
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          label="Nome do Produto"
+                          name="nome_produto"
+                          defaultValue={cancelaAnaliseSensorial.produto.nome}
+                          disabled={true}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          label="Marca do Produto"
+                          name="marca_produto"
+                          defaultValue={
+                            cancelaAnaliseSensorial.produto.marca.nome
+                          }
+                          disabled={true}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          component={InputText}
+                          label="Fabricante do Produto"
+                          name="fabricante_produto"
+                          defaultValue={
+                            cancelaAnaliseSensorial.produto.fabricante.nome
+                          }
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  )}
+
                 {this.props.eAnalise !== undefined && this.props.eAnalise && (
                   <div className="row">
                     <div className="col-12">
