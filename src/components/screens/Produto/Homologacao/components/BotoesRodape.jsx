@@ -13,9 +13,14 @@ import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import ModalPadrao from "components/Shareable/ModalPadrao";
 
-export const BotoesRodape = ({ homologacao, getHomologacaoProdutoAsync }) => {
+export const BotoesRodape = ({ homologacao, ehCardSuspensos, getHomologacaoProdutoAsync }) => {
+
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
+
+  const params = {
+    eh_card_suspensos: ehCardSuspensos
+  };
 
   return (
     <div className="row">
@@ -36,7 +41,9 @@ export const BotoesRodape = ({ homologacao, getHomologacaoProdutoAsync }) => {
           style={BUTTON_STYLE.GREEN}
           texto="Imprimir"
           icon={BUTTON_ICON.PRINT}
-          onClick={() => imprimeFichaIdentificacaoProduto(homologacao.uuid)}
+          onClick={() =>
+            imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
+          }
           className="float-right"
         />
         {usuarioEhCODAEGestaoProduto() &&

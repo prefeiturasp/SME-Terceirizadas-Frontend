@@ -59,8 +59,12 @@ export const deveExibirEditais = logs => {
   return false;
 };
 
-export const formataEditais = vinculos => {
-  const editais = vinculos.map(vinculo => vinculo.edital.numero);
+export const formataEditais = (vinculos, card_suspensos) => {
+  let vinculosFiltrados = vinculos.filter(vinculo => !vinculo.suspenso);
+  if (card_suspensos) {
+    vinculosFiltrados = vinculos.filter(vinculo => vinculo.suspenso);
+  }
+  const editais = vinculosFiltrados.map(vinculo => vinculo.edital.numero);
   return editais.join(", ");
 };
 
