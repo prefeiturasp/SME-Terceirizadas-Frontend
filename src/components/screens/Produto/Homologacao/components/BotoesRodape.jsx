@@ -12,7 +12,6 @@ import {
 import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
-import ModalCodaeCancelaAnaliseSensorial from "components/Shareable/ModalCodaeCancelaAnaliseSensorial";
 
 export const BotoesRodape = ({ homologacao, getHomologacaoProdutoAsync }) => {
   const history = useHistory();
@@ -31,7 +30,6 @@ export const BotoesRodape = ({ homologacao, getHomologacaoProdutoAsync }) => {
         endpoint={CODAECancelaAnaliseSensorialProduto}
         loadSolicitacao={() => getHomologacaoProdutoAsync()}
       />
-      <ModalCodaeCancelaAnaliseSensorial />
       <div className="col-12">
         <Botao
           type={BUTTON_TYPE.BUTTON}
