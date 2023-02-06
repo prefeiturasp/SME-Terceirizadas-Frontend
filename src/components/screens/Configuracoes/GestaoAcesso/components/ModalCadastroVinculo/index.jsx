@@ -182,6 +182,7 @@ const ModalCadastroVinculo = ({
                 <form onSubmit={handleSubmit} className="">
                   {diretor_escola ||
                     empresa ||
+                    visaoUnica !== undefined ||
                     (!vinculo && (
                       <div className="row mx-0 my-1">
                         <span className="label-radio">
