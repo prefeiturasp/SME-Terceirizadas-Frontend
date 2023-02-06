@@ -13,8 +13,11 @@ import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import ModalPadrao from "components/Shareable/ModalPadrao";
 
-export const BotoesRodape = ({ homologacao, ehCardSuspensos, getHomologacaoProdutoAsync }) => {
-
+export const BotoesRodape = ({
+  homologacao,
+  ehCardSuspensos,
+  getHomologacaoProdutoAsync
+}) => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
 
