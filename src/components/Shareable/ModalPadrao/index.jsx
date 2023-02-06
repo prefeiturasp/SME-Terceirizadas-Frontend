@@ -13,7 +13,6 @@ import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldVa
 import "./style.scss";
 import InputText from "../Input/InputText";
 import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
-import { Redirect } from "react-router-dom";
 
 export class ModalPadrao extends Component {
   propTypes = {
@@ -41,7 +40,7 @@ export class ModalPadrao extends Component {
       this.props.loadSolicitacao(this.props.uuid);
       toastSuccess(toastSuccessMessage);
       if (this.props.endpoint.name === "CODAECancelaAnaliseSensorialProduto") {
-        return <Redirect to={`/${PAINEL_GESTAO_PRODUTO}`} />;
+        return window.location.assign(`/${PAINEL_GESTAO_PRODUTO}`);
       }
     } else {
       toastError(resp.data.detail);
