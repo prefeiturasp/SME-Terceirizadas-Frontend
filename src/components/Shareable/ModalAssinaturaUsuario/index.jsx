@@ -38,9 +38,9 @@ export const ModalAssinaturaUsuario = props => {
               </p>
               <div>
                 <Form
-                  onSubmit={() => {}}
-                  render={({ values }) => (
-                    <form>
+                  onSubmit={handleSim}
+                  render={({ handleSubmit, values }) => (
+                    <form onSubmit={handleSubmit}>
                       <div className="row">
                         <div className="col-8">
                           <Field
@@ -55,7 +55,7 @@ export const ModalAssinaturaUsuario = props => {
                         <div className="col-4">
                           <Botao
                             texto="Confirmar"
-                            type={BUTTON_TYPE.BUTTON}
+                            type={BUTTON_TYPE.SUBMIT}
                             style={BUTTON_STYLE.GREEN}
                             className="btn-assinar"
                             icon={BUTTON_ICON.CHECK_NORMAL}

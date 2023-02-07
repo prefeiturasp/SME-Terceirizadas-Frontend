@@ -34,10 +34,14 @@ export default ({ cronograma }) => {
           toastSuccess("Cronograma assinado com sucesso!");
         }
       })
-      .catch(() => {
+      .catch(e => {
+        if (e.response && e.response.status === 401) {
+          toastError("Senha inválida.");
+        } else {
+          toastError(e.response.data.detail);
+        }
         setShow(false);
         setLoading(false);
-        toastError("Senha inválida.");
       });
   };
 
