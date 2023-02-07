@@ -171,8 +171,8 @@ const RelatorioProdutosHomologados = () => {
                   )}
                   <Botao
                     type={BUTTON_TYPE.BUTTON}
-                    titulo="imprimir"
-                    texto="imprimir"
+                    titulo="Imprimir"
+                    texto="Imprimir"
                     style={BUTTON_STYLE.GREEN}
                     icon={BUTTON_ICON.PRINT}
                     onClick={async () => {
