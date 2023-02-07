@@ -1045,20 +1045,6 @@ class CadastroEmpresa extends Component {
                       </div>
                     </div>
                   )}
-
-                  {ehDistribuidor && (
-                    <div className="row pt-3">
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          label="Número de Contrato"
-                          name="numero_contrato"
-                          validate={required}
-                          required
-                        />
-                      </div>
-                    </div>
-                  )}
                 </div>
                 <hr className="linha-form" />
                 <div>
