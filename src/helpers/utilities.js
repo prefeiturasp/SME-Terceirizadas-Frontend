@@ -451,7 +451,7 @@ export const usuarioEhPreRecebimento = () => {
   */
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
-    usuarioEhLogistica()
+    usuarioEhCodaeDilog()
   );
 };
 
