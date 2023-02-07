@@ -12,12 +12,9 @@ import {
 import { useHistory } from "react-router-dom";
 import { usuarioEhCODAEGestaoProduto } from "helpers/utilities";
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
+import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
 
-export const BotoesRodape = ({
-  homologacao,
-  ehCardSuspensos,
-  getHomologacaoProdutoAsync
-}) => {
+export const BotoesRodape = ({ homologacao, ehCardSuspensos }) => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
 
@@ -36,7 +33,7 @@ export const BotoesRodape = ({
         uuid={homologacao.uuid}
         cancelaAnaliseSensorial={homologacao}
         endpoint={CODAECancelaAnaliseSensorialProduto}
-        loadSolicitacao={() => getHomologacaoProdutoAsync()}
+        loadSolicitacao={() => history.push(`/${PAINEL_GESTAO_PRODUTO}`)}
       />
       <div className="col-12">
         <Botao
