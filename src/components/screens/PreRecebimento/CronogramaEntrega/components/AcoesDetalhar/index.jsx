@@ -40,7 +40,6 @@ export default ({ cronograma }) => {
         } else {
           toastError(e.response.data.detail);
         }
-        setShow(false);
         setLoading(false);
       });
   };
@@ -72,8 +71,9 @@ export default ({ cronograma }) => {
 
       <ModalAssinaturaUsuario
         titulo="Assinar Cronograma"
-        texto={`Você confirma a entrega dos alimentos nas datas e quantidades
-        descritas no cronograma de entrega ${cronograma.numero}?`}
+        texto={`Você confirma a assinatura digital do cronograma de entrega ${
+          cronograma.numero
+        }?`}
         show={show}
         loading={loading}
         handleClose={handleClose}
