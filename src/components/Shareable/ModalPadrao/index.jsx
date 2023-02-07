@@ -11,8 +11,6 @@ import { toastError, toastSuccess } from "../Toast/dialogs";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 import "./style.scss";
 import InputText from "../Input/InputText";
-import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
-import { useHistory } from "react-router-dom";
 
 export const ModalPadrao = ({ ...props }) => {
   const {
@@ -35,8 +33,6 @@ export const ModalPadrao = ({ ...props }) => {
     ...textAreaProps
   } = props;
 
-  const history = useHistory();
-
   const enviarJustificativa = async formValues => {
     const { justificativa } = formValues;
     let resp = undefined;
@@ -52,9 +48,6 @@ export const ModalPadrao = ({ ...props }) => {
       closeModal();
       loadSolicitacao(uuid);
       toastSuccess(toastSuccessMessage);
-      if (endpoint.name === "CODAECancelaAnaliseSensorialProduto") {
-        history.push(`/${PAINEL_GESTAO_PRODUTO}`);
-      }
     } else {
       toastError(resp.data.detail);
     }

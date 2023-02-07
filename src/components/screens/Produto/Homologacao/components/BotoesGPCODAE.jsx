@@ -100,7 +100,9 @@ export const BotoesGPCODAE = ({
         endpoint={propsModal.endpoint}
         uuid={homologacao.uuid}
         protocoloAnalise={protocoloAnalise}
-        loadSolicitacao={() => getHomologacaoProdutoAsync()}
+        loadSolicitacao={() => {
+          getHomologacaoProdutoAsync();
+        }}
         justificativa={homologacao.justificativa}
         labelJustificativa={propsModal.labelJustificativa}
         helpText={propsModal.helpText}
