@@ -18,7 +18,14 @@ export const ModalAssinaturaUsuario = props => {
   const { show, handleClose, handleSim, titulo, texto, loading } = props;
 
   return (
-    <Modal show={show} onHide={handleClose} backdrop={"static"}>
+    <Modal
+      show={show}
+      onHide={() => {
+        handleClose();
+        setConcordaAssinar(false);
+      }}
+      backdrop={"static"}
+    >
       <Spin tip="Carregando..." spinning={loading}>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -28,7 +35,7 @@ export const ModalAssinaturaUsuario = props => {
         </Modal.Header>
         <Modal.Body>
           {!concordaAssinar ? (
-            <>{texto}</>
+            <b>{texto}</b>
           ) : (
             <div>
               <p>
@@ -76,7 +83,10 @@ export const ModalAssinaturaUsuario = props => {
               <Botao
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
-                onClick={() => handleClose()}
+                onClick={() => {
+                  handleClose();
+                  setConcordaAssinar(false);
+                }}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
