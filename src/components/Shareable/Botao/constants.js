@@ -19,6 +19,7 @@ export const BUTTON_ICON = {
   ATTACH: "fas fa-file-upload",
   CHART_LINE: "fas fa-chart-line",
   CHECK_CIRCLE: "fas fa-check-circle",
+  CHECK_NORMAL: "fas fa-check",
   FILE_EXCEL: "fas fa-file-excel",
   FILE_PDF: "far fa-file-pdf",
   FILE_ALT: "far fa-file-alt",
