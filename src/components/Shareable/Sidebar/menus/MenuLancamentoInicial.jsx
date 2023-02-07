@@ -1,22 +1,35 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
 import {
+  ACOMPANHAMENTO_DE_LANCAMENTOS,
   LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL
+  LANCAMENTO_MEDICAO_INICIAL,
+  MEDICAO_INICIAL
 } from "configs/constants";
-import { exibirLancamentoMedicaoInicial } from "helpers/utilities";
+import {
+  exibirModuloMedicaoInicial,
+  usuarioEhDRE,
+  usuarioEhEscola
+} from "helpers/utilities";
 
 export default () => {
   return (
-    exibirLancamentoMedicaoInicial() && (
+    exibirModuloMedicaoInicial() && (
       <Menu
         id="LancamentoInicial"
         icon="fas fa-pencil-alt"
         title={"Medição Inicial"}
       >
-        <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
-          Lançamento Medição Inicial
-        </LeafItem>
+        {usuarioEhEscola() && (
+          <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
+            Lançamento Medição Inicial
+          </LeafItem>
+        )}
+        {usuarioEhDRE() && (
+          <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
+            Acompanhamento de Lançamentos
+          </LeafItem>
+        )}
       </Menu>
     )
   );

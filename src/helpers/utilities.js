@@ -810,11 +810,12 @@ export const exibirGA = () => {
   }
 };
 
-export const exibirLancamentoMedicaoInicial = () => {
+export const exibirModuloMedicaoInicial = () => {
   return (
-    usuarioEhEscola() &&
-    !usuarioEscolaEhGestaoDireta() &&
-    !["treinamento", "production"].includes(ENVIRONMENT)
+    !["treinamento", "production"].includes(ENVIRONMENT) &&
+    (usuarioEhDRE() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhMedicao())
   );
 };
 
