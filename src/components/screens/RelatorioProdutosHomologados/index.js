@@ -31,6 +31,7 @@ import {
 import "./style.scss";
 import { meusDados } from "services/perfil.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 const RelatorioProdutosHomologados = () => {
   const [dadosProdutos, setDadosProdutos] = useState(null);
@@ -40,7 +41,10 @@ const RelatorioProdutosHomologados = () => {
   const [valoresIniciais, setValoresIniciais] = useState(null);
   const [carregando, setCarregando] = useState(false);
   const [exportandoXLS, setExportandoXLS] = useState(false);
-  const [setExibirModalCentralDownloads] = useState(false);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   useEffect(() => {
     setCarregando(true);
@@ -90,7 +94,12 @@ const RelatorioProdutosHomologados = () => {
 
   const exportarXLSX = async params => {
     setExportandoXLS(true);
-    gerarExcelRelatorioProdutosHomologados(params);
+    const response = await gerarExcelRelatorioProdutosHomologados(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
+    }
     setExportandoXLS(false);
   };
 
@@ -150,10 +159,16 @@ const RelatorioProdutosHomologados = () => {
                     type={BUTTON_TYPE.BUTTON}
                     disabled={exportandoXLS}
                     onClick={() => {
-                      gerarExcelRelatorioProdutosHomologados(filtros);
+                      exportarXLSX(filtros);
                     }}
                     className="mr-3"
                   />
+                  {exibirModalCentralDownloads && (
+                    <ModalSolicitacaoDownload
+                      show={exibirModalCentralDownloads}
+                      setShow={setExibirModalCentralDownloads}
+                    />
+                  )}
                   <Botao
                     type={BUTTON_TYPE.BUTTON}
                     titulo="imprimir"

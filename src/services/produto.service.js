@@ -702,15 +702,9 @@ export const imprimeFichaIdentificacaoProduto = async (uuid, params) => {
 
 export const gerarExcelRelatorioProdutosHomologados = async params => {
   const url = `/produtos/exportar-xlsx/`;
-  /*const response = await axios
-    .get(url, { params: params })
-    .catch(ErrorHandlerFunction);
+  const response = await axios.post(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
-  }*/
-  const { data } = await axios.post(url, params, {
-    responseType: "blob"
-  });
-  saveAs(data, "relatorio.xlsx");
+  }
 };
