@@ -61,7 +61,6 @@ export const ModalPadrao = ({ ...props }) => {
   };
 
   const getTerceirizadasFiltrado = t => {
-    const { terceirizadas } = this.props;
     if (t) {
       const reg = new RegExp(t, "i");
       return terceirizadas.map(t => t.nome_fantasia).filter(a => reg.test(a));
