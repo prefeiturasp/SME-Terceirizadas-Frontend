@@ -30,3 +30,10 @@ export const fornecedorAssinaCronograma = async (uuid, password) => {
 export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
   return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
 };
+
+export const cronogramaAssina = async (uuid, password) => {
+  const url = `/cronogramas/${uuid}/cronograma-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};

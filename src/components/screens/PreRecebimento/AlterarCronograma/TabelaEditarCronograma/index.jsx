@@ -64,7 +64,7 @@ export default ({ cronograma, motivos }) => {
             {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
               <>
                 <div>
-                  <div>4000.0kg</div>
+                  <div>{etapa.quantidade}</div>
                 </div>
                 <div>
                   <div>
