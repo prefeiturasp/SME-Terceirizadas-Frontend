@@ -17,11 +17,17 @@ import { PERFIL } from "constants/shared";
 import { formataJsonParaEnvio } from "./helper";
 import {
   createTerceirizada,
+  createNaoTerceirizada,
   getTerceirizadaUUID,
+  updateNaoTerceirizada,
   updateTerceirizada
 } from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { formatarCPFouCNPJ, getError } from "helpers/utilities";
+import {
+  formatarCPFouCNPJ,
+  getError,
+  usuarioEhTerceirizada
+} from "helpers/utilities";
 import { AdministradorSistemaFormSet } from "./components/Form/AdministradorSistemaFormSet";
 import { NutricionistaFormSet } from "./components/Form/NutricionistaFormSet";
 import { LotesFormSet } from "./components/Form/LotesFormSet";
@@ -29,7 +35,9 @@ import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
 
 const verificarUsuarioEhDistribuidor = () => {
   const tipoPerfil = localStorage.getItem("perfil");
-  if (
+  if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
+    return false;
+  } else if (
     tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
     tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
     tipoPerfil === PERFIL.DILOG_CRONOGRAMA
@@ -54,7 +62,7 @@ export const CadastroEmpresaRefatorada = () => {
     bairro: undefined
   });
   const [carregando, setCarregando] = useState(false);
-  const [ehDistribuidor, setEhDistribuidor] = useState(true);
+  const [ehDistribuidor, setEhDistribuidor] = useState(false);
   const [superUser, setSuperUser] = useState({
     email: null,
     nome: null,
@@ -108,7 +116,6 @@ export const CadastroEmpresaRefatorada = () => {
       email: ""
     }
   ]);
-
   const atribuiContatosEmpresaForm = data => {
     const { contatos } = data;
     contatos
@@ -323,29 +330,65 @@ export const CadastroEmpresaRefatorada = () => {
     };
     const data = formataJsonParaEnvio(values, dados);
     if (uuid !== null) {
-      updateTerceirizada(uuid, data).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Empresa atualizada com sucesso!");
-          history.push("/configuracoes/cadastros/empresas-cadastradas");
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            `Erro ao atualizar cadastro de empresa: ${getError(response.data)}.`
-          );
-        } else {
-          toastError(`Erro ao atualizar cadastro de empresa`);
-        }
-      });
+      if (usuarioEhTerceirizada) {
+        updateTerceirizada(uuid, data).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Empresa atualizada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao atualizar cadastro de empresa: ${getError(
+                response.data
+              )}.`
+            );
+          } else {
+            toastError(`Erro ao atualizar cadastro de empresa`);
+          }
+        });
+      } else {
+        updateNaoTerceirizada(uuid, data).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Empresa atualizada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao atualizar cadastro de empresa: ${getError(
+                response.data
+              )}.`
+            );
+          } else {
+            toastError(`Erro ao atualizar cadastro de empresa`);
+          }
+        });
+      }
     } else {
-      createTerceirizada(data).then(response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          toastSuccess("Empresa cadastrada com sucesso!");
-          history.push("/configuracoes/cadastros/empresas-cadastradas");
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
-        } else {
-          toastError(`Erro ao cadastrar empresa`);
-        }
-      });
+      if (usuarioEhTerceirizada) {
+        createTerceirizada(data).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Empresa cadastrada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao cadastrar empresa: ${getError(response.data)}.`
+            );
+          } else {
+            toastError(`Erro ao cadastrar empresa`);
+          }
+        });
+      } else {
+        createNaoTerceirizada(data).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Empresa cadastrada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao cadastrar empresa: ${getError(response.data)}.`
+            );
+          } else {
+            toastError(`Erro ao cadastrar empresa`);
+          }
+        });
+      }
     }
   };
 

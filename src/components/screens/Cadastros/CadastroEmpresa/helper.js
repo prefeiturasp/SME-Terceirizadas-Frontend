@@ -132,8 +132,6 @@ export const retornArrayTerceirizadas = response => {
 };
 
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
-  const { ehDistribuidor } = valoresState;
-
   if (valoresState.ehDistribuidor) {
     const contatosNutri = [
       {
@@ -179,8 +177,6 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor_ou_fornecedor:
-        valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
@@ -226,11 +222,14 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       };
     });
     const contatosEmpresa = [...contatosEmpresaFormatado, ...contatosNutri];
-    const super_admin = { ...valoresState.super_admin };
+    let super_admin = { ...valoresState.super_admin };
+    super_admin["cpf"] = removeCaracteresEspeciais(super_admin["cpf"]);
     super_admin.contatos = [
       {
         email: super_admin.email,
-        telefone: removeCaracteresEspeciais(super_admin.telefone)
+        telefone: super_admin.telefone
+          ? removeCaracteresEspeciais(super_admin.telefone)
+          : null
       }
     ];
     return {
@@ -248,7 +247,6 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
