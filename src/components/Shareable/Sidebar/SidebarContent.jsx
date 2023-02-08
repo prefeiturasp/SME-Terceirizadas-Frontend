@@ -24,7 +24,8 @@ import {
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhFornecedor,
-  exibirModuloMedicaoInicial
+  exibirModuloMedicaoInicial,
+  usuarioEhCodaeDilog
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -101,7 +102,7 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhTerceirizada();
   const exibirCadastros =
-    usuarioEhLogistica() ||
+    usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
     usuarioEhDilogQualidadeOuCronograma() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
