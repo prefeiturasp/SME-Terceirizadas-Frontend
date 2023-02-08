@@ -1,4 +1,63 @@
 @import "styles/variables.scss";
 
 div.acompanhamento-de-lancamentos {
+  div.card-medicao-por-status {
+    height: 124px;
+    width: 129px;
+    border: 1px solid black;
+    border-left: 7px solid black;
+    border-radius: 4px;
+
+    hr {
+      margin: 0;
+    }
+
+    div.titulo {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    div.total {
+      font-weight: 700;
+      font-size: 48px;
+    }
+
+    div.conferir-lista {
+      font-weight: 400;
+      font-size: 10px;
+      margin-top: -1.8em;
+      margin-left: 4.8em;
+      color: $blackInput;
+    }
+
+    &.azul-claro {
+      color: $blueMI;
+      border-color: $blueMI;
+    }
+
+    &.laranja {
+      color: $orange;
+      border-color: $orange;
+    }
+
+    &.azul-escuro {
+      color: $blue;
+      border-color: $blue;
+    }
+
+    &.verde-claro {
+      color: $green;
+      border-color: $green;
+    }
+
+    &.verde-escuro {
+      color: $greenDark;
+      border-color: $greenDark;
+    }
+
+    &.vermelho {
+      color: $redMI;
+      border-color: $redMI;
+    }
+  }
 }
