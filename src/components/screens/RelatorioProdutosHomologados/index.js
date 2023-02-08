@@ -94,7 +94,10 @@ const RelatorioProdutosHomologados = () => {
 
   const exportarXLSX = async params => {
     setExportandoXLS(true);
-    const response = await gerarExcelRelatorioProdutosHomologados(params);
+    const response = await gerarExcelRelatorioProdutosHomologados({
+      eh_xlsx: true,
+      ...params
+    });
     if (response.status === HTTP_STATUS.OK) {
       setExibirModalCentralDownloads(true);
     } else {
