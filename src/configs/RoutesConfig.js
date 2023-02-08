@@ -628,14 +628,14 @@ const routesConfig = [
     component: EmpresasCadastradas,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -644,7 +644,7 @@ const routesConfig = [
     component: EditarEmpresaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
