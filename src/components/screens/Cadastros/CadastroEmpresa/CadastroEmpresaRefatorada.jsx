@@ -23,11 +23,7 @@ import {
   updateTerceirizada
 } from "services/terceirizada.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import {
-  formatarCPFouCNPJ,
-  getError,
-  usuarioEhTerceirizada
-} from "helpers/utilities";
+import { formatarCPFouCNPJ, getError } from "helpers/utilities";
 import { AdministradorSistemaFormSet } from "./components/Form/AdministradorSistemaFormSet";
 import { NutricionistaFormSet } from "./components/Form/NutricionistaFormSet";
 import { LotesFormSet } from "./components/Form/LotesFormSet";
@@ -243,7 +239,9 @@ export const CadastroEmpresaRefatorada = () => {
     const super_admin = data.super_admin;
     data.cnpj = formatarCPFouCNPJ(data.cnpj);
     data.numero_contrato = data.numero;
-    data.situacao = data.ativo;
+    data.email_representante_legal = data.representante_email;
+    data.telefone_representante = data.representante_telefone;
+
     data.data_cadastro = moment(data.criado_em, "DD/MM/YYYY").format(
       "DD/MM/YYYY"
     );
@@ -330,7 +328,7 @@ export const CadastroEmpresaRefatorada = () => {
     };
     const data = formataJsonParaEnvio(values, dados);
     if (uuid !== null) {
-      if (usuarioEhTerceirizada) {
+      if (!ehDistribuidor) {
         updateTerceirizada(uuid, data).then(response => {
           if (response.status === HTTP_STATUS.OK) {
             toastSuccess("Empresa atualizada com sucesso!");
@@ -362,7 +360,7 @@ export const CadastroEmpresaRefatorada = () => {
         });
       }
     } else {
-      if (usuarioEhTerceirizada) {
+      if (!ehDistribuidor) {
         createTerceirizada(data).then(response => {
           if (response.status === HTTP_STATUS.CREATED) {
             toastSuccess("Empresa cadastrada com sucesso!");

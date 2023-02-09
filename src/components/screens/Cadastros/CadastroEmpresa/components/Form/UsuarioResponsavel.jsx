@@ -87,9 +87,9 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
             <div className="col-5">
               <Field
                 component={InputText}
-                name={`telefone_representante`}
+                name="telefone_representante"
                 label="Telefone"
-                id={`telefone_representante`}
+                id="telefone_representante"
                 cenario="contatoRepresentante"
               />
             </div>

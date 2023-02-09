@@ -237,10 +237,10 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       razao_social: valoresForm.razao_social,
       cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       representante_legal: valoresForm.representante_legal,
-      representante_telefone: valoresForm.responsavel_telefone
-        ? valoresForm.responsavel_telefone.replace(/[^a-z0-9]/gi, "")
+      representante_telefone: valoresForm.telefone_representante
+        ? valoresForm.telefone_representante.replace(/[^a-z0-9]/gi, "")
         : "",
-      representante_email: valoresForm.email_representante_legal,
+      representante_email: valoresForm.representante_email,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatosEmpresa,
