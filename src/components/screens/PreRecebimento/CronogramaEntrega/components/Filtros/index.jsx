@@ -72,8 +72,8 @@ export default ({
         },
         { value: "RASCUNHO", label: "Rascunho" },
         {
-          value: "VALIDADO_CRONOGRAMA",
-          label: "Aguardando DINUTRE"
+          value: "ASSINADO_CRONOGRAMA",
+          label: "Assinado Cronograma"
         }
       ]
     : [
