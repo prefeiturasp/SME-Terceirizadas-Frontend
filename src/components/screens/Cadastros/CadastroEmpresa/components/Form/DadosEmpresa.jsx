@@ -164,14 +164,6 @@ export const DadosEmpresa = ({ ehDistribuidor }) => {
                 options={optionsTiposAlimento}
               />
             </div>
-            <div className="col-6">
-              <Field
-                component={InputText}
-                label="Número de Contrato"
-                name="numero_contrato"
-                required
-              />
-            </div>
           </div>
         )}
       </div>
