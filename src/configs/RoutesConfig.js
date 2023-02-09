@@ -116,7 +116,6 @@ import {
   usuarioEscolaEhGestaoDireta,
   usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira,
-  exibirLancamentoMedicaoInicial,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
@@ -193,6 +192,7 @@ import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagem
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
+import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 
 const routesConfig = [
   {
@@ -1402,7 +1402,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: exibirLancamentoMedicaoInicial()
+    tipoUsuario: usuarioEhEscola()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1410,7 +1410,15 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: exibirLancamentoMedicaoInicial()
+    tipoUsuario: usuarioEhEscola()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.ACOMPANHAMENTO_DE_LANCAMENTOS
+    }`,
+    component: AcompanhamentoDeLancamentosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE()
   },
   {
     path: `/${constants.LOGISTICA}/${

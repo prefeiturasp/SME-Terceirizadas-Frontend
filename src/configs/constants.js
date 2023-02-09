@@ -23,6 +23,7 @@ export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const ATIVAS_ANATIVAS = "ativas-inativas";
 export const GESTAO_PRODUTO = "gestao-produto";
 export const LANCAMENTO_INICIAL = "lancamento-inicial";
+export const MEDICAO_INICIAL = "medicao-inicial";
 export const LOGISTICA = "logistica";
 
 export const CODAE = "codae";
@@ -180,6 +181,7 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
+export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

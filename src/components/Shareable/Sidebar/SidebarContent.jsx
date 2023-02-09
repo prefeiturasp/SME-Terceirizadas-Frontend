@@ -24,6 +24,7 @@ import {
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhFornecedor,
+  exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
@@ -100,10 +101,6 @@ export const SidebarContent = () => {
       !usuarioEscolaEhGestaoDireta()) ||
     usuarioEhDRE() ||
     usuarioEhTerceirizada();
-  const exibirLancamentoInicial =
-    exibeMenuValidandoAmbiente &&
-    ((usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao());
   const exibirCadastros =
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
@@ -162,7 +159,7 @@ export const SidebarContent = () => {
     exibirDietaEspecial && <MenuDietaEspecial key={2} {..._props} />,
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
-    exibirLancamentoInicial && <MenuLancamentoInicial key={6} />,
+    exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={9} />,
