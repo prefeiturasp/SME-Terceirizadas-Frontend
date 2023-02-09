@@ -282,7 +282,7 @@ export const CadastroEmpresa = () => {
       data[`numero_contrato_${indice}`] = contato.numero;
       data[`numero_processo_${indice}`] = contato.processo;
       data[`vigencia_de_${indice}`] = contato.vigencias[0].data_inicial;
-      data[`vigencia_ate_${indice}`] = contato.vigencias[0].data_inicial;
+      data[`vigencia_ate_${indice}`] = contato.vigencias[0].data_final;
     });
 
     return data;
