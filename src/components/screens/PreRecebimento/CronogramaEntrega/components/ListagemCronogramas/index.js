@@ -10,7 +10,6 @@ import {
   ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import {
-  usuarioEhCronograma,
   usuarioEhCronogramaCriacaoEdicao,
   usuarioEhFornecedor
 } from "helpers/utilities";
@@ -19,8 +18,6 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
     if (status === "Enviado ao Fornecedor" && usuarioEhFornecedor()) {
       return "Recebido";
-    } else if (status === "Assinado Cronograma" && usuarioEhCronograma()) {
-      return "Aguardando DINUTRE";
     } else {
       return status;
     }
