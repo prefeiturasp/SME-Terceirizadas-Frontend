@@ -93,6 +93,9 @@ export const atualizaDietaEspecial = async (uuid, params) =>
 export const CODAEAutorizaDietaEspecial = async (uuid, params) =>
   await axios.patch(`${ENDPOINT.AUTORIZAR_DIETA(uuid)}/`, params);
 
+export const CODAEAtualizaProtocoloDietaEspecial = async (uuid, params) =>
+  await axios.patch(`${ENDPOINT.ATUALIZA_PROTOCOLO_DIETA(uuid)}/`, params);
+
 export const CODAENegaDietaEspecial = async (uuid, payload) => {
   // TODO: Incluir identificação do nutricionista na negação da dieta
   const url = `${API_URL}/solicitacoes-dieta-especial/${uuid}/negar/`;
