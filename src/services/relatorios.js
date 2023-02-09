@@ -360,3 +360,10 @@ export const getRelatorioKitLancheCEMEI = async uuid => {
   });
   saveAs(data, "relatorio_kit_lanche_cemei.pdf");
 };
+
+export const medicaoInicialExportarOcorrenciasPDF = async url => {
+  const { data } = await axios.get(`${url}/`, {
+    responseType: "blob"
+  });
+  saveAs(data, "ocorrencias_medicao_inicial.pdf");
+};
