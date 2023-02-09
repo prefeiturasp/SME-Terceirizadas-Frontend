@@ -19,7 +19,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
     if (status === "Enviado ao Fornecedor" && usuarioEhFornecedor()) {
       return "Recebido";
-    } else if (status === "Validado Cronograma" && usuarioEhCronograma()) {
+    } else if (status === "Assinado Cronograma" && usuarioEhCronograma()) {
       return "Aguardando DINUTRE";
     } else {
       return status;
