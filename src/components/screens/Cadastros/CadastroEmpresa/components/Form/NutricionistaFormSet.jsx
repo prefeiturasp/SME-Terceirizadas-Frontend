@@ -68,8 +68,8 @@ export const NutricionistaFormSet = ({
     <>
       {!ehDistribuidor && (
         <div>
-          <div>
-            <hr className="linha-form my-3" />
+          <div className="card-body">
+            <hr className="linha-form" />
             <div className="container-fields">
               <div className="fields">
                 {contatosTerceirizadaForm.map(

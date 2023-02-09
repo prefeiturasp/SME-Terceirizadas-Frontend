@@ -5,6 +5,9 @@ import InputText from "components/Shareable/Input/InputText";
 import { required, tamanhoCnpj } from "helpers/fieldValidators";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { cnpjMask } from "constants/shared";
+import { Link } from "react-router-dom";
+import Botao from "components/Shareable/Botao";
+import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
 const optionsTiposServico = [
   {
@@ -71,94 +74,107 @@ export const DadosEmpresa = ({ ehDistribuidor }) => {
 
   return (
     <>
-      <div className="row pt-3">
-        <hr className="linha-form my-3" />
-        <div className="col-9">
-          <Field
-            component={InputText}
-            label="Razão social"
-            name="razao_social"
-            required
-            validate={required}
-            maxlength="150"
-          />
+      <div className="card-body">
+        <div className="card-title green">Dados da Empresa</div>
+        <div className="row pt-3">
+          <div className="col-12 text-right">
+            <Link to="/configuracoes/cadastros/empresas-cadastradas">
+              <Botao
+                texto="Empresas Cadastradas"
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+              />
+            </Link>
+          </div>
         </div>
-        {ehDistribuidor && (
-          <div className="col-3">
+
+        <div className="row pt-3">
+          <div className="col-9">
             <Field
               component={InputText}
-              label="Data de Cadastro"
-              name="data_cadastro"
-              disabled
+              label="Razão social"
+              name="razao_social"
+              required
+              validate={required}
+              maxlength="150"
             />
+          </div>
+          {ehDistribuidor && (
+            <div className="col-3">
+              <Field
+                component={InputText}
+                label="Data de Cadastro"
+                name="data_cadastro"
+                disabled
+              />
+            </div>
+          )}
+        </div>
+        <div className="row pt-3">
+          <div className="col-8">
+            <Field
+              component={InputText}
+              label="Nome Fantasia"
+              name="nome_fantasia"
+              required
+              validate={required}
+              maxlength="150"
+            />
+          </div>
+          <div className="col-4">
+            <Field
+              component={MaskedInputText}
+              mask={cnpjMask}
+              label="CNPJ"
+              name="cnpj"
+              placeholder="Digite o CNPJ da Empresa"
+              required
+              validate={composeValidators(required, tamanhoCnpj)}
+            />
+          </div>
+        </div>
+        {ehDistribuidor && (
+          <div className="row pt-3">
+            <div className="col-4">
+              <Field
+                component={Select}
+                label="Tipo de Serviço"
+                name="tipo_servico"
+                required
+                naoDesabilitarPrimeiraOpcao
+                options={optionsTiposServico}
+              />
+            </div>
+            <div className="col-4">
+              <Field
+                component={Select}
+                label="Tipo de Empresa"
+                name="tipo_empresa"
+                required
+                naoDesabilitarPrimeiraOpcao
+                options={optionsTiposEmpresas}
+              />
+            </div>
+            <div className="col-4">
+              <Field
+                component={Select}
+                label="Tipo de Alimento"
+                name="tipo_alimento"
+                required
+                naoDesabilitarPrimeiraOpcao
+                options={optionsTiposAlimento}
+              />
+            </div>
+            <div className="col-6">
+              <Field
+                component={InputText}
+                label="Número de Contrato"
+                name="numero_contrato"
+                required
+              />
+            </div>
           </div>
         )}
       </div>
-      <div className="row pt-3">
-        <div className="col-8">
-          <Field
-            component={InputText}
-            label="Nome Fantasia"
-            name="nome_fantasia"
-            required
-            validate={required}
-            maxlength="150"
-          />
-        </div>
-        <div className="col-4">
-          <Field
-            component={MaskedInputText}
-            mask={cnpjMask}
-            label="CNPJ"
-            name="cnpj"
-            placeholder="Digite o CNPJ da Empresa"
-            required
-            validate={composeValidators(required, tamanhoCnpj)}
-          />
-        </div>
-      </div>
-      {ehDistribuidor && (
-        <div className="row pt-3">
-          <div className="col-4">
-            <Field
-              component={Select}
-              label="Tipo de Serviço"
-              name="tipo_servico"
-              required
-              naoDesabilitarPrimeiraOpcao
-              options={optionsTiposServico}
-            />
-          </div>
-          <div className="col-4">
-            <Field
-              component={Select}
-              label="Tipo de Empresa"
-              name="tipo_empresa"
-              required
-              naoDesabilitarPrimeiraOpcao
-              options={optionsTiposEmpresas}
-            />
-          </div>
-          <div className="col-4">
-            <Field
-              component={Select}
-              label="Tipo de Alimento"
-              name="tipo_alimento"
-              required
-              naoDesabilitarPrimeiraOpcao
-              options={optionsTiposAlimento}
-            />
-          </div>
-          <div className="col-6">
-            <Field
-              component={InputText}
-              label="Número de Contrato"
-              name="numero_contrato"
-              required
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 };

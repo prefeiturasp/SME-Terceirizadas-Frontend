@@ -51,97 +51,104 @@ export const ContatoFormSet = ({
   return (
     <>
       {ehDistribuidor && (
-        <div className="card-body">
-          <hr className="linha-form my-3" />
-          <div className="card-title green">Contatos</div>
-          <div className="container-fields row">
-            <div className="col-11">
-              {contatosPessoaEmpresaForm.map(
-                (contatoEmpresa, indiceEmpresa) => {
-                  return (
-                    <div key={indiceEmpresa}>
-                      <div className="fields-set-contatos" key={indiceEmpresa}>
-                        <div>
-                          <Field
-                            id={`nome_contato_${indiceEmpresa}`}
-                            name={`nome_contato_${indiceEmpresa}`}
-                            component={InputText}
-                            label="Nome"
-                            validate={required}
-                            required
-                            maxlength="140"
-                          />
-                          <OnChange name={`nome_contato_${indiceEmpresa}`}>
-                            {value => {
-                              setaContatosPessoaEmpresa(
-                                "nome",
-                                value,
-                                indiceEmpresa,
-                                contatosPessoaEmpresa
-                              );
-                            }}
-                          </OnChange>
-                        </div>
-                        <div>
-                          <Field
-                            component={MaskedInputText}
-                            mask={telefoneMask}
-                            name={`telefone_contato_${indiceEmpresa}`}
-                            label="Telefone"
-                            id={`telefone_contato_${indiceEmpresa}`}
-                            indice={indiceEmpresa}
-                            cenario="contatoEmpresa"
-                            required
-                            maxlength="140"
-                          />
-                          <OnChange name={`telefone_contato_${indiceEmpresa}`}>
-                            {value => {
-                              setaContatosPessoaEmpresa(
-                                "telefone",
-                                value,
-                                indiceEmpresa,
-                                contatosPessoaEmpresa
-                              );
-                            }}
-                          </OnChange>
-                        </div>
-                        <div>
-                          <Field
-                            name={`email_contato_${indiceEmpresa}`}
-                            component={InputText}
-                            label="E-mail"
-                            maxlength="140"
-                          />
-                          <OnChange name={`email_contato_${indiceEmpresa}`}>
-                            {value => {
-                              setaContatosPessoaEmpresa(
-                                "email",
-                                value,
-                                indiceEmpresa,
-                                contatosPessoaEmpresa
-                              );
-                            }}
-                          </OnChange>
+        <>
+          <hr className="linha-form" />
+          <div className="card-body">
+            <div className="card-title green">Contatos</div>
+            <div className="container-fields row">
+              <div className="col-11">
+                {contatosPessoaEmpresaForm.map(
+                  (contatoEmpresa, indiceEmpresa) => {
+                    return (
+                      <div key={indiceEmpresa}>
+                        <div
+                          className="fields-set-contatos"
+                          key={indiceEmpresa}
+                        >
+                          <div>
+                            <Field
+                              id={`nome_contato_${indiceEmpresa}`}
+                              name={`nome_contato_${indiceEmpresa}`}
+                              component={InputText}
+                              label="Nome"
+                              validate={required}
+                              required
+                              maxlength="140"
+                            />
+                            <OnChange name={`nome_contato_${indiceEmpresa}`}>
+                              {value => {
+                                setaContatosPessoaEmpresa(
+                                  "nome",
+                                  value,
+                                  indiceEmpresa,
+                                  contatosPessoaEmpresa
+                                );
+                              }}
+                            </OnChange>
+                          </div>
+                          <div>
+                            <Field
+                              component={MaskedInputText}
+                              mask={telefoneMask}
+                              name={`telefone_contato_${indiceEmpresa}`}
+                              label="Telefone"
+                              id={`telefone_contato_${indiceEmpresa}`}
+                              indice={indiceEmpresa}
+                              cenario="contatoEmpresa"
+                              required
+                              maxlength="140"
+                            />
+                            <OnChange
+                              name={`telefone_contato_${indiceEmpresa}`}
+                            >
+                              {value => {
+                                setaContatosPessoaEmpresa(
+                                  "telefone",
+                                  value,
+                                  indiceEmpresa,
+                                  contatosPessoaEmpresa
+                                );
+                              }}
+                            </OnChange>
+                          </div>
+                          <div>
+                            <Field
+                              name={`email_contato_${indiceEmpresa}`}
+                              component={InputText}
+                              label="E-mail"
+                              maxlength="140"
+                            />
+                            <OnChange name={`email_contato_${indiceEmpresa}`}>
+                              {value => {
+                                setaContatosPessoaEmpresa(
+                                  "email",
+                                  value,
+                                  indiceEmpresa,
+                                  contatosPessoaEmpresa
+                                );
+                              }}
+                            </OnChange>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                }
-              )}
-            </div>
-            <div className={`col-1 mt-auto mb-1`}>
-              <Botao
-                texto="+"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  nomeFormContatoPessoaEmpresa();
-                  adicionaContatoPessoaEmpresa();
-                }}
-              />
+                    );
+                  }
+                )}
+              </div>
+              <div className={`col-1 mt-auto mb-1`}>
+                <Botao
+                  texto="+"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  onClick={() => {
+                    nomeFormContatoPessoaEmpresa();
+                    adicionaContatoPessoaEmpresa();
+                  }}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

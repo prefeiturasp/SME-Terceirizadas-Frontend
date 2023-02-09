@@ -2,7 +2,7 @@ import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Page from "../../components/Shareable/Page/Page";
 import { CADASTROS, CONFIGURACOES, EMPRESA } from "../../configs/constants";
-import { CadastroEmpresaRefatorada } from "components/screens/Cadastros/CadastroEmpresa/CadastroEmpresaRefatorada";
+import { CadastroEmpresa } from "components/screens/Cadastros/CadastroEmpresa/CadastroEmpresa";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EMPRESA}`,
@@ -23,6 +23,6 @@ export default () => (
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}`}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <CadastroEmpresaRefatorada />
+    <CadastroEmpresa />
   </Page>
 );

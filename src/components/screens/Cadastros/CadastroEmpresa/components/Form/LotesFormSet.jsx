@@ -92,7 +92,7 @@ export const LotesFormSet = props => {
     <>
       {!ehDistribuidor && (
         <>
-          <hr className="linha-form my-3" />
+          <hr className="linha-form" />
           {exibirModalTransferenciaLote && (
             <ModalTransferirLote
               lote={loteAdicionado}
@@ -102,7 +102,7 @@ export const LotesFormSet = props => {
             />
           )}
           <div>
-            <div>
+            <div className="card-body">
               <div className="row pt-3">
                 <div className="col-12">
                   <label className="label font-weight-normal pb-3">

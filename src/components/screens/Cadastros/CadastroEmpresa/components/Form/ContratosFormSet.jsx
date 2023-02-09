@@ -79,7 +79,7 @@ export const ContratosFormSet = ({
             closeModal={fecharModalRemoverContrato}
             showModal={exibirModalRemoverContrato}
           />
-          <hr className="linha-form my-3" />
+          <hr className="linha-form" />
           <div>
             <div className="card-body">
               <div className="card-title green">Contratos</div>
