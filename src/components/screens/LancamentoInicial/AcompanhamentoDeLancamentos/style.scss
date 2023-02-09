@@ -1,12 +1,16 @@
 @import "styles/variables.scss";
 
 div.acompanhamento-de-lancamentos {
+  font-size: 12px;
+  color: $blackInput;
+
   div.card-medicao-por-status {
     height: 124px;
     width: 129px;
     border: 1px solid black;
     border-left: 7px solid black;
     border-radius: 4px;
+    cursor: pointer;
 
     hr {
       margin: 0;
@@ -15,6 +19,7 @@ div.acompanhamento-de-lancamentos {
     div.titulo {
       font-weight: 700;
       font-size: 14px;
+      min-height: 3em;
     }
 
     div.total {
