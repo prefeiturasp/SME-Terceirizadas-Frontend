@@ -1,340 +1,124 @@
-import HTTP_STATUS from "http-status-codes";
-import React, { Component, Fragment } from "react";
+import React, { useEffect } from "react";
 import moment from "moment";
-import { Spin, Tooltip } from "antd";
-import { Link, Redirect } from "react-router-dom";
-import { Field, reduxForm, FormSection } from "redux-form";
-import { PERFIL } from "../../../../constants/shared";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { getError, cpfMask } from "helpers/utilities";
-import {
-  required,
-  tamanhoCnpj,
-  validaCPF,
-  email,
-  cep
-} from "../../../../helpers/fieldValidators";
-import "../style.scss";
-import "./style.scss";
-import { getLotesSimples } from "../../../../services/lote.service";
+import HTTP_STATUS from "http-status-codes";
+import { Spin } from "antd";
+import { useState } from "react";
+import { Field, Form } from "react-final-form";
+import Select from "components/Shareable/Select";
+import { Link, useHistory } from "react-router-dom";
+import { Botao } from "../../../Shareable/Botao";
+import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
+import { DadosEmpresa } from "./components/Form/DadosEmpresa";
+import { EnderecoEmpresa } from "./components/Form/EnderecoEmpresa";
+import { UsuarioResponsavel } from "./components/Form/UsuarioResponsavel";
+import { ContratosFormSet } from "./components/Form/ContratosFormSet";
+import { ContatoFormSet } from "./components/Form/ContatoFormSet";
+import { PERFIL } from "constants/shared";
+import { formataJsonParaEnvio } from "./helper";
 import {
   createTerceirizada,
-  encerraContratoTerceirizada,
-  getCNPJsEmpresas,
+  createNaoTerceirizada,
   getTerceirizadaUUID,
+  updateNaoTerceirizada,
   updateTerceirizada
-} from "../../../../services/terceirizada.service";
-import { transformaObjetos, fieldCnpj, formataJsonParaEnvio } from "./helper";
-import { toastSuccess, toastError } from "../../../Shareable/Toast/dialogs";
-import TelefoneOuCelular from "../../../Shareable/Input/InputTelefone";
-import InputPhoneNumber from "../../../Shareable/Input/InputPhoneNumber";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
-import { Botao } from "../../../Shareable/Botao";
-import { InputText } from "../../../Shareable/Input/InputText";
-import Select from "../../../Shareable/Select";
-import { loadEmpresa } from "../../../../reducers/empresa.reducer";
+} from "services/terceirizada.service";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { formatarCPFouCNPJ, getError } from "helpers/utilities";
+import { AdministradorSistemaFormSet } from "./components/Form/AdministradorSistemaFormSet";
+import { NutricionistaFormSet } from "./components/Form/NutricionistaFormSet";
+import { LotesFormSet } from "./components/Form/LotesFormSet";
 import { ModalCadastroEmpresa } from "./components/ModalCadastroEmpresa";
-import { ModalRemoveContrato } from "./components/ModalRemoveContrato";
-import { finalizarVinculoTerceirizadas } from "../../../../services/permissoes.service";
-import { getEnderecoPorCEP } from "../../../../services/cep.service";
-import ModalTransferirLote from "components/Shareable/ModalTransferirLote";
-import { InputComData } from "components/Shareable/DatePicker";
 
-const ENTER = 13;
-class CadastroEmpresa extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      terceirizada: undefined,
-      lotes: "",
-      lotesRaw: null,
-      atualizarLotes: false,
-      exibirModal: false,
-      exibirModalRemoverContrato: false,
-      exibirModalTransferenciaLote: false,
-      loteAdicionado: undefined,
-      tituloModal: "Confirma cadastro de Empresa?",
-      valoresForm: null,
-      lotesSelecionados: [],
-      lotesNomesSelecionados: [],
-      formValido: false,
-      contatosEmpresaForm: ["contatoEmpresa_0"],
-      contatosPessoaEmpresaForm: ["contatoPessoaEmpresa_0"],
-      contatosTerceirizadaForm: ["contatoTerceirizada_0"],
-      editaisContratosForm: ["editalContrato_0"],
-      ehDistribuidor: false,
-      contatosEmpresa: [
-        {
-          telefone: null,
-          email: ""
-        }
-      ],
-      contatosPessoaEmpresa: [
-        {
-          nome: "",
-          telefone: null,
-          email: ""
-        }
-      ],
-      contratos: [
-        {
-          numero_processo: null,
-          numero_contrato: null,
-          vigencia_de: null,
-          vigencia_ate: null
-        }
-      ],
-      uuid: null,
-      redirect: false,
+import "./style.scss";
 
-      contatosNutricionista: [
-        {
-          vinculo_atual: null,
-          telefone: null,
-          responsavel: null,
-          crn: null,
-          email: null,
-          super_admin_terceirizadas: false
-        }
-      ],
-
-      telefoneRepresentante: null,
-      qtdField: 8,
-      carregando: false,
-      dadosEndereco: {
-        request: null,
-        endereco: null,
-        bairro: null,
-        cidade: null,
-        estado: null,
-        desabilitado: true
-      },
-      listaCNPJ: [],
-      contratoARemover: {}
-    };
-    this.setaContatosEmpresa = this.setaContatosEmpresa.bind(this);
-    this.setaContatosPessoaEmpresa = this.setaContatosPessoaEmpresa.bind(this);
-    this.setaContatoRepresentante = this.setaContatoRepresentante.bind(this);
-    this.setaContatosNutricionista = this.setaContatosNutricionista.bind(this);
-    this.exibirModal = this.exibirModal.bind(this);
-    this.fecharModal = this.fecharModal.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.exibirModalRemoverContrato = this.exibirModalRemoverContrato.bind(
-      this
-    );
-    this.fecharModalRemoverContrato = this.fecharModalRemoverContrato.bind(
-      this
-    );
-    this.encerraContrato = this.encerraContrato.bind(this);
+const verificarUsuarioEhDistribuidor = () => {
+  const tipoPerfil = localStorage.getItem("perfil");
+  if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
+    return false;
+  } else if (
+    tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
+    tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
+    tipoPerfil === PERFIL.DILOG_CRONOGRAMA
+  ) {
+    return true;
   }
+  return false;
+};
 
-  exibirModalRemoverContrato(index) {
-    this.setState({
-      exibirModalRemoverContrato: true,
-      contratoARemover: this.state.contratos[index]
-    });
-  }
-
-  fecharModalRemoverContrato() {
-    this.setState({
-      exibirModalRemoverContrato: false
-    });
-  }
-
-  exibirModal(values) {
-    this.setState({
-      exibirModal: true,
-      valoresForm: values
-    });
-  }
-
-  fecharModal() {
-    this.setState({ exibirModal: false });
-  }
-
-  setRedirect() {
-    this.setState({
-      redirect: true
-    });
-  }
-
-  validaCNPJ = value => {
-    if (
-      !this.state.terceirizada &&
-      this.state.listaCNPJ &&
-      this.state.listaCNPJ.includes(value)
-    )
-      return "CNPJ já cadastrado";
-    else return undefined;
-  };
-
-  renderRedirect = () => {
-    if (this.state.redirect) {
-      return <Redirect to="/configuracoes/cadastros/empresas-cadastradas" />;
+export const CadastroEmpresa = () => {
+  const history = useHistory();
+  const [lotesSelecionados, setLotesSelecionados] = useState([]);
+  const [initialValuesForm, setInitialValuesForm] = useState({
+    data_cadastro: moment().format("DD/MM/YYYY"),
+    cep: undefined,
+    cnpj: undefined,
+    nome_fantasia: undefined,
+    razao_social: undefined,
+    representante_legal: undefined,
+    email_representante_legal: undefined,
+    telefone_representante: undefined,
+    bairro: undefined
+  });
+  const [carregando, setCarregando] = useState(false);
+  const [ehDistribuidor, setEhDistribuidor] = useState(false);
+  const [superUser, setSuperUser] = useState({
+    email: null,
+    nome: null,
+    cpf: null,
+    telefone: null,
+    cargo: null
+  });
+  const [contatosPessoaEmpresaForm, setContatosPessoaEmpresaForm] = useState([
+    "contatoPessoaEmpresa_0"
+  ]);
+  const [contatosEmpresaForm, setContatosEmpresaForm] = useState([
+    "contatoEmpresa_0"
+  ]);
+  const [contatosTerceirizadaForm, setContatosTerceirizadaForm] = useState([
+    "contatoTerceirizada_0"
+  ]);
+  const [contatosEmpresa, setContatosEmpresa] = useState([
+    {
+      telefone: null,
+      email: ""
     }
-  };
-
-  excluirNutricionista(indice) {
-    if (this.state.contatosNutricionista[indice].vinculo_atual) {
-      if (window.confirm("Deseja realmente desativar este nutricionista?")) {
-        const { uuid } = this.state;
-        finalizarVinculoTerceirizadas(
-          uuid,
-          this.state.contatosNutricionista[indice].vinculo_atual.uuid
-        ).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Vínculo finalizado com sucesso!");
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          } else {
-            toastError(response.data.detail);
-          }
-        });
-      }
-    } else {
-      let contatosNutricionista = this.state.contatosNutricionista;
-      let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
-      contatosNutricionista.splice(indice, 1);
-      contatosTerceirizadaForm.splice(indice, 1);
-      this.setState({ contatosNutricionista, contatosTerceirizadaForm });
+  ]);
+  const [contatosNutricionista, setContatosNutricionista] = useState([
+    {
+      vinculo_atual: null,
+      telefone: null,
+      responsavel: null,
+      crn: null,
+      email: null,
+      super_admin_terceirizadas: false
     }
-  }
-
-  nomeFormContatoEmpresa() {
-    const indiceDoFormAtual = `contatoEmpresa_${
-      this.state.contatosEmpresaForm.length
-    }`;
-    let contatosEmpresaForm = this.state.contatosEmpresaForm;
-    contatosEmpresaForm.push(indiceDoFormAtual);
-    this.setState({ contatosEmpresaForm });
-  }
-
-  nomeFormContatoPessoaEmpresa() {
-    const indiceDoFormAtual = `contatoPessoaEmpresa_${
-      this.state.contatosPessoaEmpresaForm.length
-    }`;
-    let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
-    contatosPessoaEmpresaForm.push(indiceDoFormAtual);
-    this.setState({ contatosPessoaEmpresaForm });
-  }
-
-  nomeFormContatoTerceirizada() {
-    const indiceDoFormAtual = `contatoTerceirizada_${
-      this.state.contatosTerceirizadaForm.length
-    }`;
-    let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
-    contatosTerceirizadaForm.push(indiceDoFormAtual);
-    this.setState({ contatosTerceirizadaForm });
-  }
-
-  nomeFormContatoEdital() {
-    const indiceDoFormAtual = `editalContrato_${
-      this.state.editaisContratosForm.length
-    }`;
-    let editaisContratosForm = this.state.editaisContratosForm;
-    editaisContratosForm.push(indiceDoFormAtual);
-    this.setState({ editaisContratosForm });
-  }
-
-  setaContatosEmpresa(input, event, indice) {
-    let contatosEmpresa = this.state.contatosEmpresa;
-    contatosEmpresa[indice][input] = event ? event : "";
-    this.setState({ contatosEmpresa });
-  }
-
-  setaContatosPessoaEmpresa(input, event, indice) {
-    let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
-    contatosPessoaEmpresa[indice][input] = event ? event : "";
-    this.setState({ contatosPessoaEmpresa });
-  }
-
-  setaContatosNutricionista(input, event, indice) {
-    let contatosNutricionista = this.state.contatosNutricionista;
-    contatosNutricionista[indice][input] = event;
-    this.setState({ contatosNutricionista });
-  }
-
-  setAdminNutricionista(indice) {
-    let contatosNutricionista = this.state.contatosNutricionista;
-    contatosNutricionista.forEach((contato, key) => {
-      contato.super_admin_terceirizadas = key === indice;
-    });
-    this.setState({ contatosNutricionista });
-  }
-
-  setaContatoRepresentante(event) {
-    let telefoneRepresentante = this.state.telefoneRepresentante;
-    telefoneRepresentante = event;
-    this.setState({ telefoneRepresentante });
-  }
-
-  adicionaContatoEmpresa() {
-    this.setState({
-      contatosEmpresa: this.state.contatosEmpresa.concat([
-        {
-          telefone: "",
-          email: ""
-        }
-      ])
-    });
-  }
-
-  adicionaContrato() {
-    this.setState({
-      contratos: [
-        ...this.state.contratos,
-        {
-          numero_processo: null,
-          numero_contrato: null,
-          vigencia_de: null,
-          vigencia_ate: null
-        }
-      ]
-    });
-  }
-
-  removeContrato(index) {
-    let newContratos = [...this.state.contratos];
-    newContratos.splice(index, 1);
-    this.setState({
-      contratos: newContratos
-    });
-  }
-
-  adicionaContatoPessoaEmpresa() {
-    this.setState({
-      contatosPessoaEmpresa: this.state.contatosPessoaEmpresa.concat([
-        {
-          telefone: "",
-          email: ""
-        }
-      ])
-    });
-  }
-
-  adicionaContatoNutricionista() {
-    this.setState({
-      contatosNutricionista: this.state.contatosNutricionista.concat([
-        {
-          vinculo_atual: null,
-          telefone: null,
-          responsavel: null,
-          crn: null,
-          email: null
-        }
-      ])
-    });
-  }
-
-  atribuiContatosEmpresaForm(contatos) {
+  ]);
+  const [contratos, setContratos] = useState([
+    {
+      numero_processo: null,
+      numero_contrato: null,
+      vigencia_de: null,
+      vigencia_ate: null
+    }
+  ]);
+  const [terceirizada, setTerceirizada] = useState(undefined);
+  const [uuid, setUuid] = useState(null);
+  const [tituloModal, setTituloModal] = useState(
+    "Confirma cadastro de Empresa?"
+  );
+  const [exibirModal, setExibirModal] = useState(false);
+  const [contatosPessoaEmpresa, setContatosPessoaEmpresa] = useState([
+    {
+      nome: "",
+      telefone: null,
+      email: ""
+    }
+  ]);
+  const atribuiContatosEmpresaForm = data => {
+    const { contatos } = data;
     contatos
       .filter(contato => !contato.nome)
       .forEach((contato, indice) => {
-        let contatosEmpresaForm = this.state.contatosEmpresaForm;
-        let contatosEmpresa = this.state.contatosEmpresa;
         if (indice !== 0 && contatos.length > contatosEmpresaForm.length) {
           contatosEmpresaForm.push(`contatoEmpresa_${indice}`);
           contatosEmpresa.push({
@@ -342,62 +126,26 @@ class CadastroEmpresa extends Component {
             email: null
           });
         }
-        this.setState({ contatosEmpresaForm });
+        setContatosEmpresaForm(contatosEmpresaForm);
 
         contatosEmpresa[indice]["email"] = contato.email;
         contatosEmpresa[indice]["telefone"] = contato.telefone;
 
-        this.setState({ contatosEmpresa });
+        setContatosEmpresa(contatosEmpresa);
 
-        this.props.change(
-          `contatoEmpresa_${indice}.telefone_empresa_${indice}`,
-          contato.telefone
-        );
-        this.props.change(
-          `contatoEmpresa_${indice}.email_empresa_${indice}`,
-          contato.email
-        );
+        data[`telefone_empresa_${indice}`] = contato.telefone;
+        data[`email_empresa_${indice}`] = contato.email;
       });
-  }
 
-  atribuiContratosForm(contratos) {
-    this.setState({ contratos });
-    contratos.forEach((contato, indice) => {
-      this.props.change(`numero_contrato_${indice}`, contato.numero);
-      this.props.change(`numero_processo_${indice}`, contato.processo);
-      this.props.change(
-        `vigencia_de_${indice}`,
-        contato.vigencias[0].data_inicial
-      );
-      this.props.change(
-        `vigencia_ate_${indice}`,
-        contato.vigencias[0].data_final
-      );
-    });
-  }
+    return data;
+  };
 
-  async encerraContrato() {
-    let uuid = this.state.contratoARemover.uuid;
-    let response = await encerraContratoTerceirizada(uuid);
-    if (response && response.status === 200) {
-      let contratosNew = [...this.state.contratos];
-      let index = contratosNew.findIndex(c => c.uuid === uuid);
-      contratosNew[index].data_hora_encerramento =
-        response.data.data_hora_encerramento;
-      contratosNew[index].encerrado = true;
-      this.setState({ contratos: contratosNew });
-      this.fecharModalRemoverContrato();
-    } else {
-      toastError("Erro ao encerrar contrato");
-    }
-  }
+  const atribuiContatosPessoaEmpresaForm = data => {
+    const { contatos } = data;
 
-  atribuiContatosPessoaEmpresaForm(contatos) {
     contatos
       .filter(contato => contato.nome)
       .forEach((contato, indice) => {
-        let contatosPessoaEmpresaForm = this.state.contatosPessoaEmpresaForm;
-        let contatosPessoaEmpresa = this.state.contatosPessoaEmpresa;
         if (
           indice !== 0 &&
           contatos.length > contatosPessoaEmpresaForm.length
@@ -408,34 +156,24 @@ class CadastroEmpresa extends Component {
             email: null
           });
         }
-        this.setState({ contatosPessoaEmpresaForm });
+        setContatosEmpresaForm(contatosPessoaEmpresaForm);
 
         contatosPessoaEmpresa[indice]["nome"] = contato.nome;
         contatosPessoaEmpresa[indice]["email"] = contato.email;
         contatosPessoaEmpresa[indice]["telefone"] = contato.telefone;
-
-        this.setState({ contatosPessoaEmpresa });
-
-        this.props.change(
-          `contatoPessoaEmpresa_${indice}.nome_contato_${indice}`,
-          contato.nome
-        );
-        this.props.change(
-          `contatoPessoaEmpresa_${indice}.telefone_contato_${indice}`,
-          contato.telefone
-        );
-        this.props.change(
-          `contatoPessoaEmpresa_${indice}.email_contato_${indice}`,
-          contato.email
-        );
+        setContatosEmpresa(contatosPessoaEmpresa);
+        data[`nome_contato_${indice}`] = contato.nome;
+        data[`telefone_contato_${indice}`] = contato.telefone;
+        data[`email_contato_${indice}`] = contato.email;
       });
-  }
+    return data;
+  };
 
-  atribuiNutricionistaEmpresaForm(contatos, antigosUsuariosNutri) {
+  const atribuiNutricionistaEmpresaForm = data => {
+    const { contatos, nutricionistas } = data;
+    const antigosUsuariosNutri = nutricionistas;
     if (antigosUsuariosNutri.length) {
       antigosUsuariosNutri.forEach((nutri, indice) => {
-        let contatosNutricionista = this.state.contatosNutricionista;
-        let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
         if (
           indice !== 0 &&
           antigosUsuariosNutri.length > contatosNutricionista.length
@@ -458,31 +196,18 @@ class CadastroEmpresa extends Component {
         contatosNutricionista[indice]["email"] =
           nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
 
-        this.setState({ contatosNutricionista });
-
-        this.props.change(
-          `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
-          nutri.nome
-        );
-        this.props.change(
-          `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
-          nutri.crn_numero
-        );
-        this.props.change(
-          `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
-          nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone
-        );
-        this.props.change(
-          `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
-          nutri.contatos.length === 0 ? null : nutri.contatos[0].email
-        );
+        setContatosNutricionista(contatosNutricionista);
+        data[`nutricionista_nome_${indice}`] = nutri.nome;
+        data[`nutricionista_crn_${indice}`] = nutri.crn_numero;
+        data[`telefone_terceirizada_${indice}`] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].telefone;
+        data[`email_terceirizada_${indice}`] =
+          nutri.contatos.length === 0 ? null : nutri.contatos[0].email;
       });
     } else {
       contatos
         .filter(contato => contato.eh_nutricionista)
         .forEach((nutri, indice) => {
-          let contatosNutricionista = this.state.contatosNutricionista;
-          let contatosTerceirizadaForm = this.state.contatosTerceirizadaForm;
           if (indice !== 0 && contatos.length > contatosNutricionista.length) {
             contatosTerceirizadaForm.push(`contatoTerceirizada_${indice}`);
             contatosNutricionista.push({
@@ -500,1382 +225,317 @@ class CadastroEmpresa extends Component {
             nutri.super_admin_terceirizadas;
           contatosNutricionista[indice]["email"] = nutri.email;
 
-          this.setState({ contatosNutricionista });
+          setContatosNutricionista(contatosNutricionista);
 
-          this.props.change(
-            `contatoTerceirizada_${indice}.nutricionista_nome_${indice}`,
-            nutri.nome
-          );
-          this.props.change(
-            `contatoTerceirizada_${indice}.nutricionista_crn_${indice}`,
-            nutri.crn_numero
-          );
-          this.props.change(
-            `contatoTerceirizada_${indice}.telefone_terceirizada_${indice}`,
-            nutri.telefone
-          );
-          this.props.change(
-            `contatoTerceirizada_${indice}.email_terceirizada_${indice}`,
-            nutri.email
-          );
+          data[`nutricionista_nome_${indice}`] = nutri.nome;
+          data[`nutricionista_crn_${indice}`] = nutri.crn_numero;
+          data[`telefone_terceirizada_${indice}`] = nutri.telefone;
+          data[`email_terceirizada_${indice}`] = nutri.email;
         });
-    }
-  }
 
-  setaValoresForm(data) {
+      return data;
+    }
+  };
+
+  const setaValoresForm = data => {
     const super_admin = data.super_admin;
-    this.props.change("cep", data.cep);
-    this.props.change("cnpj", data.cnpj);
-    this.props.change("nome_fantasia", data.nome_fantasia);
-    this.props.change("razao_social", data.razao_social);
-    this.props.change("endereco", data.endereco);
-    this.props.change("representante_legal", data.representante_legal);
-    this.props.change("email_representante_legal", data.representante_email);
-    this.props.change("telefone_representante", data.representante_telefone);
+    data.cnpj = formatarCPFouCNPJ(data.cnpj);
+    data.numero_contrato = data.numero;
+    data.email_representante_legal = data.representante_email;
+    data.telefone_representante = data.representante_telefone;
+    data.situacao = data.ativo;
+
+    data.data_cadastro = moment(data.criado_em, "DD/MM/YYYY").format(
+      "DD/MM/YYYY"
+    );
+    data = atribuiContatosPessoaEmpresaForm(data);
+    data = atribuiContratosForm(data);
+    data = atribuiContatosEmpresaForm(data);
+    data = atribuiNutricionistaEmpresaForm(data);
     if (super_admin) {
       const super_admin_contato = data.super_admin.contatos.pop();
-      this.props.change(
-        "super_admin.nome",
-        data.super_admin.nome ? data.super_admin.nome : undefined
-      );
-      this.props.change("super_admin.email", data.super_admin.email);
-      this.props.change("super_admin.cpf", data.super_admin.cpf);
-      this.props.change("super_admin.cargo", data.super_admin.cargo);
-      this.props.change(
-        "super_admin.telefone",
-        super_admin_contato ? super_admin_contato.telefone : undefined
-      );
-    }
-    this.props.change("bairro", data.bairro);
-    this.props.change("cidade", data.cidade);
-    this.props.change("estado", data.estado);
-    this.props.change("numero", data.numero);
-    this.props.change("complemento", data.complemento);
-    this.props.change("eh_distribuidor", data.eh_distribuidor);
-    if (data.tipo_servico !== "TERCEIRIZADA") {
-      this.setState({ ehDistribuidor: true });
-      this.props.change("numero_contrato", data.numero);
-      this.props.change("tipo_alimento", data.tipo_alimento);
-      this.props.change("tipo_empresa", data.tipo_empresa);
-      this.props.change("tipo_servico", data.tipo_servico);
-      this.props.change("situacao", data.ativo);
-      this.props.change(
-        "data_cadastro",
-        moment(data.criado_em, "DD/MM/YYYY").format("DD/MM/YYYY")
-      );
-    }
-    this.props.change("responsavel_nome", data.responsavel_nome);
-    this.props.change("responsavel_email", data.responsavel_email);
-    this.props.change("responsavel_cpf", data.responsavel_cpf);
-    this.props.change("responsavel_telefone", data.responsavel_telefone);
-    this.props.change("responsavel_cargo", data.responsavel_cargo);
-    this.atribuiContatosEmpresaForm(data.contatos);
-    this.atribuiContatosPessoaEmpresaForm(data.contatos);
-    this.atribuiNutricionistaEmpresaForm(data.contatos, data.nutricionistas);
-    this.atribuiContratosForm(data.contratos);
-  }
 
-  componentDidMount() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) this.setState({ carregando: true });
-    getLotesSimples().then(response => {
-      this.setState({
-        lotes: transformaObjetos(response.data),
-        lotesRaw: response.data.results
+      data.superuser_nome = data.super_admin.nome
+        ? data.super_admin.nome
+        : undefined;
+      data.superuser_cpf = data.super_admin.cpf;
+      data.superuser_cargo = data.super_admin.cargo;
+      data.superuser_telefone = super_admin_contato
+        ? super_admin_contato.telefone
+        : undefined;
+      data.superuser_email = data.super_admin.email;
+      setSuperUser({
+        nome: data.superuser_nome,
+        cpf: data.superuser_cpf,
+        cargo: data.superuser_cargo,
+        telefone: data.superuser_telefone,
+        email: data.superuser_email
       });
-    });
-    getCNPJsEmpresas().then(response => {
-      this.setState({
-        listaCNPJ: response.data.results
-      });
-    });
-  }
-
-  inciaFormEndereco = () => {
-    const { dadosEndereco } = this.state;
-    const { change } = this.props;
-    if (dadosEndereco.request !== null) {
-      if (dadosEndereco.request) {
-        change("endereco", dadosEndereco.endereco);
-        change("bairro", dadosEndereco.bairro);
-        change("cidade", dadosEndereco.cidade);
-        change("estado", dadosEndereco.estado);
-      } else {
-        dadosEndereco.desabilitado = false;
-        this.setState({ dadosEndereco });
-      }
     }
+    setInitialValuesForm(data);
+    setTerceirizada(data);
   };
 
-  componentDidUpdate(prevProps, prevState) {
-    let lotes = this.state.lotes;
-    const tipoPerfil = localStorage.getItem("perfil");
-    let validate = false;
-    if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
-      validate = false;
-    } else if (
-      tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
-      tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
-      tipoPerfil === PERFIL.DILOG_CRONOGRAMA
-    ) {
-      validate = true;
-    } else {
-      validate = false;
-    }
-    this.inciaFormEndereco();
+  const atribuiContratosForm = data => {
+    setContratos(data.contratos);
+    data.contratos.forEach((contato, indice) => {
+      data[`numero_contrato_${indice}`] = contato.numero;
+      data[`numero_processo_${indice}`] = contato.processo;
+      data[`vigencia_de_${indice}`] = contato.vigencias[0].data_inicial;
+      data[`vigencia_ate_${indice}`] = contato.vigencias[0].data_inicial;
+    });
+
+    return data;
+  };
+
+  const abrirModal = () => {
+    setExibirModal(true);
+  };
+
+  const fecharModal = () => {
+    setExibirModal(false);
+  };
+
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    if (lotes !== prevState.lotes) {
-      if (uuid) {
-        const tituloModal = "Confirma atualização de Empresa?";
-        this.setState({ uuid, tituloModal });
-        getTerceirizadaUUID(uuid).then(response => {
-          if (response.status !== HTTP_STATUS.NOT_FOUND) {
-            this.props.reset();
-            let lotesNomesSelecionados = [];
-            let lotesSelecionados = [];
-            response.data.lotes.forEach(lote => {
-              lotesNomesSelecionados.push(lote.nome);
-              lotesSelecionados.push(lote.uuid);
-            });
-            this.setState({
-              lotesNomesSelecionados,
-              lotesSelecionados
-            });
-          }
-          this.setState({
-            terceirizada: response.data,
-            carregando: false,
-            ehDistribuidor: validate
+    if (uuid) {
+      setUuid(uuid);
+      setCarregando(true);
+      setTituloModal("Confirma atualização de Empresa?");
+      getTerceirizadaUUID(uuid).then(response => {
+        if (response.status !== HTTP_STATUS.NOT_FOUND) {
+          let lotesNomesSelecionados = [];
+          let lotesSelecionados = [];
+          response.data.lotes.forEach(lote => {
+            lotesNomesSelecionados.push(lote.nome);
+            lotesSelecionados.push(lote.uuid);
           });
-          this.setaValoresForm(response.data);
-        });
-      } else {
-        this.props.change("data_cadastro", moment().format("DD/MM/YYYY"));
-        this.setState({
-          uuid: null,
-          redirect: false,
-          carregando: false,
-          ehDistribuidor: validate
-        });
-      }
-    }
-    if (this.state.ehDistribuidor !== prevState.ehDistribuidor) {
-      this.setState({ ehDistribuidor: validate });
-    }
-  }
-
-  renderizarLabelLote(selected, options) {
-    if (selected.length === 0) {
-      return "Selecione um ou mais lotes...";
-    }
-    if (selected.length === options.length) {
-      return "Todos os lotes foram selecionados";
-    }
-    if (selected.length === 1) {
-      return `${selected.length} lote selecionado`;
-    }
-    return `${selected.length} lotes selecionados`;
-  }
-
-  lidarComSelecionados(values) {
-    const { lotes, lotesRaw, terceirizada, lotesSelecionados } = this.state;
-    if (
-      terceirizada.lotes
-        .map(lote => lote.uuid)
-        .filter(lote => !values.includes(lote)).length > 0
-    ) {
-      toastError(
-        "Não é possível remover um lote, apenas transferí-lo para outra empresa."
-      );
-      return;
-    }
-    const loteSelecionado = values.find(
-      lote => !lotesSelecionados.includes(lote)
-    );
-    if (
-      loteSelecionado &&
-      lotesRaw.find(l => l.uuid === loteSelecionado).terceirizada
-    ) {
-      this.setState({
-        loteAdicionado: lotesRaw.find(l => l.uuid === loteSelecionado),
-        exibirModalTransferenciaLote: true
+          setLotesSelecionados(lotesSelecionados);
+        }
+        setaValoresForm(response.data);
+        setCarregando(false);
       });
     }
-
-    let lotesNomesSelecionados = [];
-    values.forEach(value => {
-      const indice = lotes.findIndex(lote => lote.uuid === value);
-      lotesNomesSelecionados.push(lotes[indice].label);
-    });
-
-    this.setState({
-      lotesNomesSelecionados,
-      lotesSelecionados: values
-    });
-  }
-
-  naoAceitaTransferenciaLote = lote => {
-    const { lotesSelecionados, lotesNomesSelecionados } = this.state;
-    this.setState({
-      exibirModalTransferenciaLote: false,
-      lotesSelecionados: lotesSelecionados.filter(l => l !== lote.uuid),
-      lotesNomesSelecionados: lotesNomesSelecionados.filter(
-        l => l !== lote.nome
-      )
-    });
-  };
-
-  resetForm() {
-    this.props.reset();
-  }
-
-  salvaFormulario() {
-    this.resetForm();
-    this.setState({ lotesSelecionados: [] });
-  }
-
-  onSubmit(values) {
-    const uuid = this.state.uuid;
-
-    const request = formataJsonParaEnvio(values, this.state);
-
+    setEhDistribuidor(verificarUsuarioEhDistribuidor());
+  }, []);
+  const onSubmit = async values => {
+    const dados = {
+      ehDistribuidor: ehDistribuidor,
+      contatosPessoaEmpresa: contatosPessoaEmpresa,
+      contratos: contratos,
+      contatosEmpresa: contatosEmpresa,
+      contatosNutricionista: contatosNutricionista,
+      lotesSelecionados: lotesSelecionados,
+      super_admin: superUser
+    };
+    const data = formataJsonParaEnvio(values, dados);
     if (uuid !== null) {
-      updateTerceirizada(uuid, request).then(response => {
-        if (response.status === HTTP_STATUS.OK) {
-          toastSuccess("Empresa atualizada com sucesso!");
-          this.setRedirect();
-          this.resetForm();
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(
-            `Erro ao atualizar cadastro de empresa: ${getError(response.data)}.`
-          );
-        } else {
-          toastError(`Erro ao atualizar cadastro de empresa`);
-        }
-      });
+      if (!ehDistribuidor) {
+        updateTerceirizada(uuid, data).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Empresa atualizada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao atualizar cadastro de empresa: ${getError(
+                response.data
+              )}.`
+            );
+          } else {
+            toastError(`Erro ao atualizar cadastro de empresa`);
+          }
+        });
+      } else {
+        updateNaoTerceirizada(uuid, data).then(response => {
+          if (response.status === HTTP_STATUS.OK) {
+            toastSuccess("Empresa atualizada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao atualizar cadastro de empresa: ${getError(
+                response.data
+              )}.`
+            );
+          } else {
+            toastError(`Erro ao atualizar cadastro de empresa`);
+          }
+        });
+      }
     } else {
-      createTerceirizada(request).then(response => {
-        if (response.status === HTTP_STATUS.CREATED) {
-          toastSuccess("Empresa cadastrada com sucesso!");
-          this.setRedirect();
-          this.resetForm();
-        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-          toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
-        } else {
-          toastError(`Erro ao cadastrar empresa`);
-        }
-      });
-    }
-  }
-
-  onKeyPress(event) {
-    if (event.which === ENTER) {
-      event.preventDefault();
-    }
-  }
-
-  onCheckClicked() {
-    const { ehDistribuidor } = this.state;
-    this.props.change("eh_distribuidor", !ehDistribuidor);
-    this.setState({ ehDistribuidor: !ehDistribuidor });
-  }
-
-  temTracos = value => {
-    const { qtdField } = this.state;
-    const valid = value.indexOf("-") > -1;
-    if (valid) {
-      this.setState({ qtdField: 9 });
-    } else {
-      if (qtdField !== 8) {
-        this.setState({ qtdField: 8 });
+      if (!ehDistribuidor) {
+        createTerceirizada(data).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Empresa cadastrada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao cadastrar empresa: ${getError(response.data)}.`
+            );
+          } else {
+            toastError(`Erro ao cadastrar empresa`);
+          }
+        });
+      } else {
+        createNaoTerceirizada(data).then(response => {
+          if (response.status === HTTP_STATUS.CREATED) {
+            toastSuccess("Empresa cadastrada com sucesso!");
+            history.push("/configuracoes/cadastros/empresas-cadastradas");
+          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+            toastError(
+              `Erro ao cadastrar empresa: ${getError(response.data)}.`
+            );
+          } else {
+            toastError(`Erro ao cadastrar empresa`);
+          }
+        });
       }
     }
-    return valid;
   };
 
-  buscaCep = async value => {
-    const { dadosEndereco } = this.state;
-    if (value.length === 8 && !this.temTracos(value)) {
-      const response = await getEnderecoPorCEP(value);
-      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
-        const { data } = response;
-        dadosEndereco.desabilitado = true;
-        dadosEndereco.bairro = data.bairro;
-        dadosEndereco.cidade = data.localidade;
-        dadosEndereco.endereco = data.logradouro;
-        dadosEndereco.estado = data.uf;
-        dadosEndereco.request = true;
-      } else {
-        dadosEndereco.desabilitado = false;
-        dadosEndereco.bairro = null;
-        dadosEndereco.cidade = null;
-        dadosEndereco.endereco = null;
-        dadosEndereco.estado = null;
-      }
-    } else if (value.length === 9 && this.temTracos(value)) {
-      const response = await getEnderecoPorCEP(value);
-      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
-        const { data } = response;
-        dadosEndereco.desabilitado = true;
-        dadosEndereco.bairro = data.bairro;
-        dadosEndereco.cidade = data.localidade;
-        dadosEndereco.endereco = data.logradouro;
-        dadosEndereco.estado = data.uf;
-        dadosEndereco.request = true;
-      } else {
-        dadosEndereco.desabilitado = false;
-        dadosEndereco.bairro = null;
-        dadosEndereco.cidade = null;
-        dadosEndereco.endereco = null;
-        dadosEndereco.estado = null;
-      }
-    } else {
-      dadosEndereco.desabilitado = true;
-      dadosEndereco.bairro = null;
-      dadosEndereco.cidade = null;
-      dadosEndereco.endereco = null;
-      dadosEndereco.estado = null;
-    }
-    this.setState({ dadosEndereco });
-  };
-
-  render() {
-    const { handleSubmit } = this.props;
-    const {
-      contatosEmpresaForm,
-      contatosPessoaEmpresaForm,
-      contatosTerceirizadaForm,
-      contatosNutricionista,
-      lotes,
-      lotesSelecionados,
-      lotesNomesSelecionados,
-      uuid,
-      valoresForm,
-      exibirModal,
-      tituloModal,
-      carregando,
-      ehDistribuidor,
-      dadosEndereco,
-      qtdField,
-      atualizarLotes,
-      exibirModalTransferenciaLote,
-      loteAdicionado,
-      contratos,
-      exibirModalRemoverContrato,
-      contratoARemover
-    } = this.state;
-    return (
-      <Spin tip="Carregando..." spinning={carregando}>
-        <div className="cadastro cadastro-empresa pt-3">
-          {this.renderRedirect()}
-          {exibirModalTransferenciaLote && (
-            <ModalTransferirLote
-              lote={loteAdicionado}
-              closeModalNao={this.naoAceitaTransferenciaLote}
-              closeModalSim={() =>
-                this.setState({ exibirModalTransferenciaLote: false })
-              }
-              showModal={exibirModalTransferenciaLote}
-            />
-          )}
-          <ModalCadastroEmpresa
-            titulo={tituloModal}
-            values={valoresForm}
-            onSubmit={this.onSubmit}
-            closeModal={this.fecharModal}
-            showModal={exibirModal}
-          />
-          <ModalRemoveContrato
-            numeroContrato={contratoARemover.numero}
-            values={valoresForm}
-            onSubmit={this.encerraContrato}
-            closeModal={this.fecharModalRemoverContrato}
-            showModal={exibirModalRemoverContrato}
-          />
-
-          <form onSubmit={handleSubmit} onKeyPress={this.onKeyPress}>
-            <div className="card">
-              <div>
-                <div className="card-body">
-                  <div className="card-title green">Dados da Empresa</div>
-                  <div className="row pt-3">
-                    <div className="col-12 text-right">
-                      <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                        <Botao
-                          texto="Empresas Cadastradas"
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                      </Link>
-                    </div>
-                  </div>
-
-                  <div className="row pt-3">
-                    <div className="col-9">
-                      <Field
-                        component={InputText}
-                        label="Razão social"
-                        name="razao_social"
-                        required
-                        validate={required}
-                        maxlength="150"
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="cadastro cadastro-empresa pt-3">
+        <div className="card">
+          <div>
+            <div>
+              {!carregando && (
+                <Form
+                  initialValues={initialValuesForm}
+                  onSubmit={onSubmit}
+                  render={({ handleSubmit, form, values }) => (
+                    <form onSubmit={handleSubmit}>
+                      <DadosEmpresa ehDistribuidor={ehDistribuidor} />
+                      <EnderecoEmpresa
+                        values={values}
+                        ehDistribuidor={ehDistribuidor}
+                        contatosEmpresaForm={contatosEmpresaForm}
+                        setContatosEmpresaForm={setContatosEmpresaForm}
+                        contatosEmpresa={contatosEmpresa}
+                        setContatosEmpresa={setContatosEmpresa}
                       />
-                    </div>
-                    {ehDistribuidor && (
-                      <div className="col-3">
-                        <Field
-                          component={InputText}
-                          label="Data de Cadastro"
-                          name="data_cadastro"
-                          disabled
-                        />
-                      </div>
-                    )}
-                  </div>
-                  <div className="row pt-3">
-                    <div className="col-8">
-                      <Field
-                        component={InputText}
-                        label="Nome Fantasia"
-                        name="nome_fantasia"
-                        validate={required}
-                        required
-                        maxlength="150"
+                      <AdministradorSistemaFormSet
+                        ehDistribuidor={ehDistribuidor}
+                        superUser={superUser}
+                        setSuperUser={setSuperUser}
                       />
-                    </div>
-                    <div className="col-4">
-                      <Field
-                        {...fieldCnpj}
-                        component={InputText}
-                        label="CNPJ"
-                        name="cnpj"
-                        placeholder="Digite o CNPJ da Empresa"
-                        required
-                        validate={[required, tamanhoCnpj, this.validaCNPJ]}
+                      <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
+                      <ContatoFormSet
+                        ehDistribuidor={ehDistribuidor}
+                        contatosPessoaEmpresaForm={contatosPessoaEmpresaForm}
+                        setContatosPessoaEmpresaForm={
+                          setContatosPessoaEmpresaForm
+                        }
+                        contatosPessoaEmpresa={contatosPessoaEmpresa}
+                        setContatosPessoaEmpresa={setContatosPessoaEmpresa}
                       />
-                    </div>
-                  </div>
-
-                  {ehDistribuidor && (
-                    <div className="row pt-3">
-                      <div className="col-4">
-                        <Field
-                          component={Select}
-                          label="Tipo de Serviço"
-                          name="tipo_servico"
-                          validate={required}
-                          required
-                          naoDesabilitarPrimeiraOpcao
-                          options={[
-                            {
-                              nome: "Selecione...",
-                              uuid: ""
-                            },
-                            {
-                              nome: "Distribuidor (Armazém)",
-                              uuid: "DISTRIBUIDOR_ARMAZEM"
-                            },
-                            {
-                              nome: "Fornecedor",
-                              uuid: "FORNECEDOR"
-                            },
-                            {
-                              nome: "Fornecedor e Distribuidor",
-                              uuid: "FORNECEDOR_E_DISTRIBUIDOR"
-                            }
-                          ]}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={Select}
-                          label="Tipo de Empresa"
-                          name="tipo_empresa"
-                          validate={required}
-                          required
-                          naoDesabilitarPrimeiraOpcao
-                          options={[
-                            {
-                              nome: "Selecione...",
-                              uuid: ""
-                            },
-                            {
-                              nome: "Convencional",
-                              uuid: "CONVENCIONAL"
-                            },
-                            {
-                              nome: "Agricultura Familiar",
-                              uuid: "AGRICULTURA_FAMILIAR"
-                            }
-                          ]}
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={Select}
-                          label="Tipo de Alimento"
-                          name="tipo_alimento"
-                          validate={required}
-                          required
-                          naoDesabilitarPrimeiraOpcao
-                          options={[
-                            {
-                              nome: "Selecione...",
-                              uuid: ""
-                            },
-                            {
-                              nome: "Congelados e resfriados",
-                              uuid: "CONGELADOS_E_RESFRIADOS"
-                            },
-                            {
-                              nome: "FLVO",
-                              uuid: "FLVO"
-                            },
-                            {
-                              nome: "Pães & bolos",
-                              uuid: "PAES_E_BOLO"
-                            },
-                            {
-                              nome: "Secos",
-                              uuid: "SECOS"
-                            }
-                          ]}
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {ehDistribuidor && (
-                    <div className="row pt-3">
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          label="Número de Contrato"
-                          name="numero_contrato"
-                          validate={required}
-                          required
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <hr className="linha-form" />
-                <div>
-                  <div className="card-body">
-                    <div className="card-title green">Endereço da Empresa</div>
-                    <div className="row pt-3">
-                      <div className="col-3">
-                        <Field
-                          label="CEP"
-                          name={`cep`}
-                          component={InputText}
-                          required
-                          maxlength={qtdField}
-                          onChange={event => {
-                            this.buscaCep(event.target.value);
-                          }}
-                          validate={qtdField === 8 ? required : [required, cep]}
-                        />
-                      </div>
-                      <div className="col-9">
-                        <Field
-                          component={InputText}
-                          label="Endereço"
-                          name="endereco"
-                          validate={required}
-                          required
-                          disabled={dadosEndereco.desabilitado}
-                          maxlength="150"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="row pt-3">
-                      <div className="col-3">
-                        <Field
-                          component={InputText}
-                          label="Número"
-                          name="numero"
-                          maxlength="5"
-                        />
-                      </div>
-                      <div className="col-4">
-                        <Field
-                          component={InputText}
-                          label="Complemento"
-                          name="complemento"
-                          maxlength="45"
-                        />
-                      </div>
-                      <div className="col-5">
-                        <Field
-                          component={InputText}
-                          label="Bairro"
-                          name="bairro"
-                          required
-                          validate={required}
-                          disabled={dadosEndereco.desabilitado}
-                          maxlength="140"
-                        />
-                      </div>
-                    </div>
-                    <div className="row pt-3">
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          label="Cidade"
-                          name="cidade"
-                          validate={required}
-                          required
-                          disabled={dadosEndereco.desabilitado}
-                          maxlength="140"
-                        />
-                      </div>
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          label="Estado"
-                          name="estado"
-                          validate={required}
-                          required
-                          disabled={dadosEndereco.desabilitado}
-                          maxlength="140"
-                        />
-                      </div>
-                    </div>
-                    {!ehDistribuidor && (
-                      <div className="container-fields row">
-                        <div className="col-11">
-                          {contatosEmpresaForm.map(
-                            (contatoEmpresa, indiceEmpresa) => {
-                              return (
-                                <FormSection
-                                  nomeForm={`contatoEmpresa_${indiceEmpresa}`}
-                                  name={contatoEmpresa}
-                                  key={indiceEmpresa}
-                                >
-                                  <div className="fields-set">
-                                    <div>
-                                      <Field
-                                        name={`telefone_empresa_${indiceEmpresa}`}
-                                        component={TelefoneOuCelular}
-                                        label="Telefone"
-                                        id={`telefone_empresa_${indiceEmpresa}`}
-                                        setaContatosEmpresa={
-                                          this.setaContatosEmpresa
-                                        }
-                                        indice={indiceEmpresa}
-                                        cenario="contatoEmpresa"
-                                        validate={required}
-                                        required
-                                        maxlength="140"
-                                      />
-                                    </div>
-                                    <div>
-                                      <Field
-                                        name={`email_empresa_${indiceEmpresa}`}
-                                        component={InputText}
-                                        label="E-mail"
-                                        validate={email}
-                                        onChange={event =>
-                                          this.setaContatosEmpresa(
-                                            "email",
-                                            event.target.value,
-                                            indiceEmpresa
-                                          )
-                                        }
-                                        maxlength="140"
-                                      />
-                                    </div>
-                                  </div>
-                                </FormSection>
-                              );
-                            }
-                          )}
-                        </div>
-                        <div className={`col-1 mt-auto mb-1`}>
-                          <Botao
-                            texto="+"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            onClick={() => {
-                              this.nomeFormContatoEmpresa();
-                              this.adicionaContatoEmpresa();
-                            }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <hr className="linha-form" />
-
-                {!ehDistribuidor && (
-                  <FormSection name={"super_admin"}>
-                    <div className="card-body">
-                      <div className="card-title font-weight-bold">
-                        Principal administrador do sistema
-                      </div>
-                      <div className="row">
-                        <div className="col">
-                          <Field
-                            name={`email`}
-                            component={InputText}
-                            label="E-mail"
-                            type="email"
-                            required
-                            validate={[required, email]}
-                            maxlength="140"
-                          />
-                        </div>
-                        <div className="col">
-                          <Field
-                            name={`nome`}
-                            component={InputText}
-                            label={"Nome"}
-                            validate={required}
-                            required
-                            maxlength="140"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="col">
-                          <Field
-                            {...cpfMask}
-                            name={`cpf`}
-                            component={InputText}
-                            label="CPF"
-                            required
-                            validate={[required, validaCPF]}
-                          />
-                        </div>
-                        <div className="col">
-                          <Field
-                            name={`telefone`}
-                            component={InputPhoneNumber}
-                            label={"Telefone"}
-                            validate={required}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-md-6">
-                          <Field
-                            name={`cargo`}
-                            component={InputText}
-                            label="Cargo"
-                            required
-                            validate={required}
-                            maxlength="50"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </FormSection>
-                )}
-
-                <hr className="linha-form" />
-
-                <div>
-                  <div className="card-body">
-                    {ehDistribuidor ? (
-                      <Fragment>
-                        <div className="card-title green">
-                          Cadastro do Usuário Responsável pelo acesso ao Sistema
-                        </div>
-                        <div className="row">
-                          <div className="col-4">
+                      <NutricionistaFormSet
+                        ehDistribuidor={ehDistribuidor}
+                        contatosTerceirizadaForm={contatosTerceirizadaForm}
+                        setContatosTerceirizadaForm={
+                          setContatosTerceirizadaForm
+                        }
+                        contatosNutricionista={contatosNutricionista}
+                        setContatosNutricionista={setContatosNutricionista}
+                      />
+                      <ContratosFormSet
+                        ehDistribuidor={ehDistribuidor}
+                        contratos={contratos}
+                        setContratos={setContratos}
+                        terceirizada={terceirizada}
+                      />
+                      <LotesFormSet
+                        ehDistribuidor={ehDistribuidor}
+                        lotesSelecionados={lotesSelecionados}
+                        setLotesSelecionados={setLotesSelecionados}
+                        terceirizada={terceirizada}
+                      />
+                      <ModalCadastroEmpresa
+                        titulo={tituloModal}
+                        values={values}
+                        onSubmit={() => handleSubmit()}
+                        closeModal={fecharModal}
+                        showModal={exibirModal}
+                      />
+                      {/* Situação */}
+                      {ehDistribuidor && (
+                        <div className="card-body">
+                          <div className="w-25">
                             <Field
-                              component={InputText}
-                              label="Nome"
-                              name="responsavel_nome"
+                              component={Select}
+                              label="Situação"
+                              name="situacao"
                               required
-                              validate={required}
-                              maxlength="150"
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              {...cpfMask}
-                              component={InputText}
-                              label="CPF"
-                              name="responsavel_cpf"
-                              required
-                              validate={[required, validaCPF]}
-                            />
-                          </div>
-                          <div className="col-4">
-                            <Field
-                              component={InputText}
-                              label="Cargo"
-                              name="responsavel_cargo"
-                              required
-                              validate={required}
-                              maxlength="40"
-                            />
-                          </div>
-                        </div>
-                        <div className="row pt-3">
-                          <div className="col-4">
-                            <Field
-                              component={TelefoneOuCelular}
-                              label="Telefone"
-                              name="responsavel_telefone"
-                              cenario="distribuidor"
-                              required
-                              validate={required}
-                            />
-                          </div>
-                          <div className="col-8">
-                            <Field
-                              component={InputText}
-                              label="Email"
-                              name="responsavel_email"
-                              type="email"
-                              required
-                              validate={[required, email]}
-                              maxlength="150"
-                            />
-                          </div>
-                        </div>
-                      </Fragment>
-                    ) : (
-                      <Fragment>
-                        <div className="row">
-                          <div className="col-7">
-                            <Field
-                              component={InputText}
-                              label="Representante Legal"
-                              name="representante_legal"
-                              required
-                              validate={required}
-                              maxlength="140"
-                            />
-                          </div>
-                          <div className="col-5">
-                            <Field
-                              name={`telefone_representante`}
-                              label="Telefone"
-                              component={TelefoneOuCelular}
-                              id={`telefone_representante`}
-                              setaContatoRepresentante={
-                                this.setaContatoRepresentante
-                              }
-                              cenario="contatoRepresentante"
-                            />
-                          </div>
-                        </div>
-                        <div className="row pt-3">
-                          <div className="col-7">
-                            <Field
-                              component={InputText}
-                              label="E-mail"
-                              name="email_representante_legal"
-                              validate={email}
-                              maxlength="140"
-                            />
-                          </div>
-                        </div>
-                      </Fragment>
-                    )}
-                  </div>
-                </div>
-
-                <hr className="linha-form" />
-
-                {ehDistribuidor && (
-                  <Fragment>
-                    <div>
-                      <div className="card-body">
-                        <div className="card-title green">Contatos</div>
-
-                        <div className="container-fields row">
-                          <div className="col-11">
-                            {contatosPessoaEmpresaForm.map(
-                              (contatoEmpresa, indiceEmpresa) => {
-                                return (
-                                  <FormSection
-                                    nomeForm={`contatoPessoaEmpresa_${indiceEmpresa}`}
-                                    name={contatoEmpresa}
-                                    key={indiceEmpresa}
-                                  >
-                                    <div className="fields-set-contatos">
-                                      <div>
-                                        <Field
-                                          name={`nome_contato_${indiceEmpresa}`}
-                                          component={InputText}
-                                          label="Nome"
-                                          required
-                                          validate={required}
-                                          onChange={event =>
-                                            this.setaContatosPessoaEmpresa(
-                                              "nome",
-                                              event.target.value,
-                                              indiceEmpresa
-                                            )
-                                          }
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                      <div>
-                                        <Field
-                                          name={`telefone_contato_${indiceEmpresa}`}
-                                          component={TelefoneOuCelular}
-                                          label="Telefone"
-                                          id={`telefone_contato_${indiceEmpresa}`}
-                                          setaContatosEmpresa={
-                                            this.setaContatosPessoaEmpresa
-                                          }
-                                          indice={indiceEmpresa}
-                                          cenario="contatoEmpresa"
-                                          validate={required}
-                                          required
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                      <div>
-                                        <Field
-                                          name={`email_contato_${indiceEmpresa}`}
-                                          component={InputText}
-                                          label="E-mail"
-                                          validate={email}
-                                          onChange={event =>
-                                            this.setaContatosPessoaEmpresa(
-                                              "email",
-                                              event.target.value,
-                                              indiceEmpresa
-                                            )
-                                          }
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                    </div>
-                                  </FormSection>
-                                );
-                              }
-                            )}
-                          </div>
-                          <div className={`col-1 mt-auto mb-1`}>
-                            <Botao
-                              texto="+"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              onClick={() => {
-                                this.nomeFormContatoPessoaEmpresa();
-                                this.adicionaContatoPessoaEmpresa();
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <hr className="linha-form" />
-                    <div>
-                      <div className="card-body">
-                        <div className="card-title green">Contratos</div>
-                        {contratos.map((contrato, index) => {
-                          return (
-                            <Fragment key={index}>
-                              <div className="row">
-                                <div className="col-6">
-                                  <Field
-                                    name={`numero_processo_${index}`}
-                                    component={InputText}
-                                    label="Nº do Processo Administrativo do Contrato"
-                                    required
-                                    validate={required}
-                                    apenasNumeros
-                                    disabled={contrato.encerrado}
-                                  />
-                                </div>
-                                <div className="col-6">
-                                  <Field
-                                    name={`numero_contrato_${index}`}
-                                    component={InputText}
-                                    label="Nº do Contrato"
-                                    required
-                                    validate={required}
-                                    disabled={contrato.encerrado}
-                                  />
-                                </div>
-                                <div className="col-3">
-                                  <Field
-                                    component={InputComData}
-                                    label="Vigência do Contrato"
-                                    name={`vigencia_de_${index}`}
-                                    placeholder="De"
-                                    writable={false}
-                                    disabled={contrato.encerrado}
-                                  />
-                                </div>
-                                <div className="col-3">
-                                  <Field
-                                    component={InputComData}
-                                    label="&nbsp;"
-                                    name={`vigencia_ate_${index}`}
-                                    placeholder="Até"
-                                    writable={false}
-                                    disabled={contrato.encerrado}
-                                  />
-                                </div>
-                                {this.state.terceirizada &&
-                                  (contrato.encerrado ? (
-                                    <div className="col-6">
-                                      <div className="aviso-encerramento">
-                                        <strong>Aviso:</strong> Contrato
-                                        encerrado em{" "}
-                                        {contrato.data_hora_encerramento}
-                                      </div>
-                                    </div>
-                                  ) : (
-                                    <div className="col-3">
-                                      <Botao
-                                        className="btn-encerrar-contrato"
-                                        texto="Encerrar Contrato"
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.RED_OUTLINE}
-                                        onClick={() => {
-                                          this.exibirModalRemoverContrato(
-                                            index
-                                          );
-                                        }}
-                                      />
-                                    </div>
-                                  ))}
-                              </div>
-                              <div className="flex-center my-3">
-                                <Botao
-                                  texto="+ Adicionar"
-                                  className="mr-4"
-                                  type={BUTTON_TYPE.BUTTON}
-                                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                                  onClick={() => {
-                                    this.adicionaContrato();
-                                  }}
-                                />
-
-                                {index > 0 && (
-                                  <Tooltip title="Remover Contrato">
-                                    <span>
-                                      <Botao
-                                        texto="Remover Contrato"
-                                        icon="fas fa-trash"
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={BUTTON_STYLE.RED_OUTLINE}
-                                        onClick={() => {
-                                          this.removeContrato(index);
-                                        }}
-                                      />
-                                    </span>
-                                  </Tooltip>
-                                )}
-                              </div>
-                            </Fragment>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <hr className="linha-form" />
-                    <div className="card-body">
-                      <div className="w-25">
-                        <Field
-                          component={Select}
-                          label="Situação"
-                          name="situacao"
-                          validate={required}
-                          required
-                          options={[
-                            {
-                              nome: "Selecione...",
-                              uuid: ""
-                            },
-                            {
-                              nome: "Ativo",
-                              uuid: true
-                            },
-                            {
-                              nome: "Inativo",
-                              uuid: false
-                            }
-                          ]}
-                        />
-                      </div>
-                    </div>
-                  </Fragment>
-                )}
-
-                {!ehDistribuidor && (
-                  <div>
-                    <hr className="linha-form" />
-                    <div className="card-body">
-                      <div className="container-fields">
-                        <div className="fields">
-                          {contatosTerceirizadaForm.map(
-                            (contatoTerceirizada, indiceTerceirizada) => {
-                              return (
-                                <FormSection
-                                  nomeForm={`contatoTerceirizada_${indiceTerceirizada}`}
-                                  name={contatoTerceirizada}
-                                  key={indiceTerceirizada}
-                                >
-                                  {indiceTerceirizada > 0 && <hr />}
-                                  <div className="form-section-terceirizada">
-                                    <div className="section-nutri-crn">
-                                      <div>
-                                        <Field
-                                          name={`nutricionista_nome_${indiceTerceirizada}`}
-                                          component={InputText}
-                                          label="Nutricionista Responsável Técnico"
-                                          required
-                                          validate={required}
-                                          onChange={event =>
-                                            this.setaContatosNutricionista(
-                                              "responsavel",
-                                              event.target.value,
-                                              indiceTerceirizada
-                                            )
-                                          }
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                      <div>
-                                        <Field
-                                          name={`nutricionista_crn_${indiceTerceirizada}`}
-                                          label="CRN"
-                                          component={InputText}
-                                          onChange={event =>
-                                            this.setaContatosNutricionista(
-                                              "crn",
-                                              event.target.value,
-                                              indiceTerceirizada
-                                            )
-                                          }
-                                          required
-                                          validate={required}
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                      {contatosNutricionista.length > 1 && (
-                                        <div className="trash">
-                                          <i
-                                            onClick={() =>
-                                              this.excluirNutricionista(
-                                                indiceTerceirizada
-                                              )
-                                            }
-                                            className="fas fa-trash"
-                                          />
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="section-nutri-contato pt-2">
-                                      <div>
-                                        <Field
-                                          name={`telefone_terceirizada_${indiceTerceirizada}`}
-                                          component={TelefoneOuCelular}
-                                          label="Telefone/Celular Técnico"
-                                          id={`telefone_terceirizada_${indiceTerceirizada}`}
-                                          setaContatosNutricionista={
-                                            this.setaContatosNutricionista
-                                          }
-                                          indice={indiceTerceirizada}
-                                          required
-                                          validate={required}
-                                        />
-                                      </div>
-                                      <div>
-                                        <Field
-                                          name={`email_terceirizada_${indiceTerceirizada}`}
-                                          label="E-mail"
-                                          type={"email"}
-                                          component={InputText}
-                                          required
-                                          validate={[email, required]}
-                                          onChange={event =>
-                                            this.setaContatosNutricionista(
-                                              "email",
-                                              event.target.value,
-                                              indiceTerceirizada
-                                            )
-                                          }
-                                          maxlength="140"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </FormSection>
-                              );
-                            }
-                          )}
-                        </div>
-                        <div className={`col-1 mt-auto mb-1`}>
-                          <Botao
-                            texto="+"
-                            type={BUTTON_TYPE.BUTTON}
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                            onClick={() => {
-                              this.nomeFormContatoTerceirizada();
-                              this.adicionaContatoNutricionista();
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {!ehDistribuidor && (
-                  <Fragment>
-                    <hr className="linha-form" />
-
-                    <div>
-                      <div className="card-body">
-                        <div className="row pt-3">
-                          <div className="col-12">
-                            <label className="label font-weight-normal pb-3">
-                              Lotes de atendimento
-                              <span
-                                onClick={() =>
-                                  this.setState({
-                                    atualizarLotes: !atualizarLotes
-                                  })
+                              options={[
+                                {
+                                  nome: "Selecione...",
+                                  uuid: ""
+                                },
+                                {
+                                  nome: "Ativo",
+                                  uuid: true
+                                },
+                                {
+                                  nome: "Inativo",
+                                  uuid: false
                                 }
-                                className="link editar-lotes ml-3"
-                              >
-                                editar lotes
-                              </span>
-                            </label>
-
-                            {this.state.lotes.length ? (
-                              <Field
-                                component={StatefulMultiSelect}
-                                name="lotes"
-                                selected={lotesSelecionados}
-                                options={lotes}
-                                valueRenderer={this.renderizarLabelLote}
-                                onSelectedChanged={value => {
-                                  this.lidarComSelecionados(value);
-                                }}
-                                disabled={!atualizarLotes}
-                                overrideStrings={{
-                                  search: "Busca",
-                                  selectSomeItems: "Selecione",
-                                  allItemsAreSelected:
-                                    "Todos os itens estão selecionados",
-                                  selectAll: "Todos"
-                                }}
-                              />
-                            ) : (
-                              <div className="col-6">Carregando lotes..</div>
-                            )}
-                          </div>
-                          <div className="col-12">
-                            {lotesNomesSelecionados.length > 0 && (
-                              <div className="row pt-3">
-                                <div className="col-12">
-                                  <label className="label-selected-unities">
-                                    Lotes Selecionados
-                                  </label>
-                                  {lotesNomesSelecionados.map(
-                                    (lote, indice) => {
-                                      return (
-                                        <div
-                                          className="value-selected-unities"
-                                          key={indice}
-                                        >
-                                          {lote}
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                            )}
+                              ]}
+                            />
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </Fragment>
-                )}
-                <div className="card-body">
-                  <div className="row mt-5">
-                    {uuid === null ? (
-                      <div className="col-12 text-right">
-                        <Botao
-                          texto="Cancelar"
-                          onClick={event => this.resetForm(event)}
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                        />
-                        <Botao
-                          texto={"Salvar"}
-                          onClick={handleSubmit(values =>
-                            this.exibirModal({
-                              ...values
-                            })
+                      )}
+                      {/* /Situação */}
+                      <div className="card-body">
+                        <div className="row mt-5">
+                          {uuid === null ? (
+                            <div className="col-12 text-right">
+                              <Botao
+                                texto="Cancelar"
+                                onClick={event => this.resetForm(event)}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                              />
+                              <Botao
+                                texto={"Salvar"}
+                                className="ml-3"
+                                onClick={e => {
+                                  e.preventDefault();
+                                  abrirModal();
+                                }}
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN}
+                              />
+                            </div>
+                          ) : (
+                            <div className="col-12 text-right">
+                              <Link to="/configuracoes/cadastros/empresas-cadastradas">
+                                <Botao
+                                  texto="Cancelar"
+                                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                                />
+                              </Link>
+                              <Botao
+                                texto={"Atualizar"}
+                                onClick={e => {
+                                  e.preventDefault();
+                                  abrirModal();
+                                }}
+                                className="ml-3"
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN}
+                              />
+                            </div>
                           )}
-                          className="ml-3"
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN}
-                        />
+                        </div>
                       </div>
-                    ) : (
-                      <div className="col-12 text-right">
-                        <Link to="/configuracoes/cadastros/empresas-cadastradas">
-                          <Botao
-                            texto="Cancelar"
-                            style={BUTTON_STYLE.GREEN_OUTLINE}
-                          />
-                        </Link>
-                        <Botao
-                          texto={"Atualizar"}
-                          onClick={handleSubmit(values =>
-                            this.exibirModal({
-                              ...values
-                            })
-                          )}
-                          className="ml-3"
-                          type={BUTTON_TYPE.SUBMIT}
-                          style={BUTTON_STYLE.GREEN}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+                    </form>
+                  )}
+                />
+              )}
             </div>
-          </form>
+          </div>
         </div>
-      </Spin>
-    );
-  }
-}
-
-const CadastroEmpresaForm = reduxForm({
-  form: "cadastroEmpresaForm",
-  enableReinitialize: true
-})(CadastroEmpresa);
-const mapStateToProps = state => {
-  return {
-    initialValues: state.cadastroEmpresaForm.data
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  bindActionCreators(
-    {
-      loadEmpresa
-    },
-    dispatch
+      </div>
+    </Spin>
   );
 };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CadastroEmpresaForm);
