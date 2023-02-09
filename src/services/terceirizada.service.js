@@ -72,6 +72,27 @@ export const getTerceirizadaUUID = uuid => {
     });
 };
 
+export const createNaoTerceirizada = payload => {
+  const url = `${API_URL}/empresas-nao-terceirizadas/`;
+
+  let status = 0;
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
 export const createTerceirizada = payload => {
   const url = `${API_URL}/terceirizadas/`;
 
@@ -95,6 +116,27 @@ export const createTerceirizada = payload => {
 
 export const updateTerceirizada = (uuid, payload) => {
   const url = `${API_URL}/terceirizadas/${uuid}/`;
+
+  let status = 0;
+  return fetch(url, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+    headers: authToken
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error.json();
+    });
+};
+
+export const updateNaoTerceirizada = (uuid, payload) => {
+  const url = `${API_URL}/empresas-nao-terceirizadas/${uuid}/`;
 
   let status = 0;
   return fetch(url, {
