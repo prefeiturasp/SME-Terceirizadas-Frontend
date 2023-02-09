@@ -45,7 +45,7 @@ const verificarUsuarioEhDistribuidor = () => {
   return false;
 };
 
-export const CadastroEmpresaRefatorada = () => {
+export const CadastroEmpresa = () => {
   const history = useHistory();
   const [lotesSelecionados, setLotesSelecionados] = useState([]);
   const [initialValuesForm, setInitialValuesForm] = useState({

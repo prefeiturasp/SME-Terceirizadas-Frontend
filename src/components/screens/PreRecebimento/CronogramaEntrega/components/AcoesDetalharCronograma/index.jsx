@@ -5,7 +5,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { fornecedorAssinaCronograma } from "services/cronograma.service";
+import { cronogramaAssina } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -24,7 +24,7 @@ export default ({ cronograma }) => {
 
   const handleSim = password => {
     setLoading(true);
-    fornecedorAssinaCronograma(cronograma.uuid, password)
+    cronogramaAssina(cronograma.uuid, password)
       .then(response => {
         if (response.status === 200) {
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -51,7 +51,7 @@ export default ({ cronograma }) => {
 
   return (
     <>
-      {cronograma.status === "Enviado ao Fornecedor" && (
+      {cronograma.status === "Validado Fornecedor" && (
         <Botao
           texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}

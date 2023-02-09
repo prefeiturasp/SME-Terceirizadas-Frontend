@@ -167,6 +167,8 @@ export const formataCards = (items, apontaParaEdicao, titulo) => {
         : item.log_mais_recente,
     link: gerarLinkDoItem(item, apontaParaEdicao, titulo),
     nome_usuario_log_de_reclamacao: item.nome_usuario_log_de_reclamacao,
-    status: item.status
+    status: item.status,
+    marca: item.marca_produto,
+    editais: item.editais
   }));
 };

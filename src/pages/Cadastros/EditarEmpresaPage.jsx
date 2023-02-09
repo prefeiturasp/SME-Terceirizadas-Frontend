@@ -7,7 +7,7 @@ import {
   EDITAR_EMPRESA,
   EMPRESAS_CADASTRADAS
 } from "../../configs/constants";
-import { CadastroEmpresaRefatorada } from "components/screens/Cadastros/CadastroEmpresa/CadastroEmpresaRefatorada";
+import { CadastroEmpresa } from "components/screens/Cadastros/CadastroEmpresa/CadastroEmpresa";
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${EDITAR_EMPRESA}`,
@@ -28,6 +28,6 @@ export default () => (
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${EMPRESAS_CADASTRADAS}`}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <CadastroEmpresaRefatorada />
+    <CadastroEmpresa />
   </Page>
 );

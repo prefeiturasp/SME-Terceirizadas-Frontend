@@ -699,3 +699,12 @@ export const imprimeFichaIdentificacaoProduto = async (uuid, params) => {
   });
   saveAs(data, "ficha_identificacao_produto.pdf");
 };
+
+export const gerarExcelRelatorioProdutosHomologados = async params => {
+  const url = `/produtos/exportar-xlsx/`;
+  const response = await axios.post(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

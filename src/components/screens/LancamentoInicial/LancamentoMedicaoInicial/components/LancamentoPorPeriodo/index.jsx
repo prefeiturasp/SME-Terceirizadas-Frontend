@@ -7,7 +7,9 @@ import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import CardLancamento from "./CardLancamento";
 import { CORES } from "./helpers";
 import { getPeriodosInclusaoContinua } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { PERFIL } from "constants/shared";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export default ({
   escolaInstituicao,
@@ -54,6 +56,19 @@ export default ({
       return objSolicitacaoMIFinalizada.anexo.arquivo;
     if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo)
       return solicitacaoMedicaoInicial.anexo.arquivo;
+  };
+
+  const pdfOcorrenciasMedicaoFinalizada = () => {
+    if (solicitacaoMedicaoInicial.anexos) {
+      const pdfAnexo = solicitacaoMedicaoInicial.anexos.find(anexo =>
+        anexo.arquivo.includes(".pdf")
+      );
+      if (pdfAnexo) {
+        medicaoInicialExportarOcorrenciasPDF(pdfAnexo.arquivo);
+      } else {
+        toastError("Arquivo PDF de ocorrências não encontrado");
+      }
+    }
   };
 
   const renderBotaoExportarPlanilha = () => {
@@ -163,12 +178,20 @@ export default ({
                     </a>
                   )}
                   {renderBotaoExportarPDF() && (
-                    <Botao
-                      texto="Exportar PDF"
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="float-right"
-                      onClick={() => {}}
-                    />
+                    <>
+                      <Botao
+                        texto="Exportar PDF"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-right"
+                        onClick={() => {}}
+                      />
+                      <Botao
+                        texto="Exportar Ocorrências"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="float-right mr-2"
+                        onClick={() => pdfOcorrenciasMedicaoFinalizada()}
+                      />
+                    </>
                   )}
                 </>
               )}
