@@ -24,7 +24,11 @@ import {
 } from "components/Shareable/Botao/constants";
 import HTTP_STATUS from "http-status-codes";
 import { ESCOLA, CODAE, TERCEIRIZADA } from "configs/constants";
-import { statusEnum, TIPO_PERFIL } from "constants/shared";
+import {
+  statusEnum,
+  TIPO_PERFIL,
+  TIPO_SOLICITACAO_DIETA
+} from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
 import "antd/dist/antd.css";
 import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
@@ -54,6 +58,7 @@ const Relatorio = ({ visao }) => {
   const [solicitacaoVigenteAtiva, setSolicitacaoVigenteAtiva] = useState(null);
   const [dietasAbertas, setDietasAbertas] = useState([]);
   const [dadosDietaAberta, setDadosDietaAberta] = useState(null);
+  const [editar, setEditar] = useState(false);
 
   const dietaCancelada = status ? ehSolicitacaoDeCancelamento(status) : false;
   const tipoPerfil = localStorage.getItem("tipo_perfil");
@@ -87,6 +92,10 @@ const Relatorio = ({ visao }) => {
         }
       }
     );
+  };
+
+  const habilitarEdicao = () => {
+    setEditar(!editar);
   };
 
   const getDietasEspeciaisAbertas = content => {
@@ -225,6 +234,21 @@ const Relatorio = ({ visao }) => {
     );
   };
 
+  const BotaoEditarDieta = ({ nome }) => {
+    return (
+      <div className="form-group float-right mt-4">
+        <Botao
+          texto={nome}
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN_OUTLINE}
+          icon={BUTTON_ICON.PEN}
+          className="ml-3"
+          onClick={() => habilitarEdicao()}
+        />
+      </div>
+    );
+  };
+
   const getHistorico = () => {
     return historico;
   };
@@ -301,8 +325,10 @@ const Relatorio = ({ visao }) => {
                 exibirUsuariosSimultaneos() ? "col-3" : "col-12"
               } col-3 mb-3`}
             >
-              {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
-              {dietaEspecial && historico && (
+              {dietaEspecial && !editar && (
+                <BotaoImprimir uuid={dietaEspecial.uuid} />
+              )}
+              {dietaEspecial && !editar && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
                   texto="Histórico"
@@ -333,6 +359,7 @@ const Relatorio = ({ visao }) => {
                 dietaCancelada={dietaCancelada}
                 card={card}
                 solicitacaoVigenteAtiva={solicitacaoVigenteAtiva}
+                editar={editar}
               />
               {status === statusEnum.CODAE_A_AUTORIZAR &&
                 visao === ESCOLA &&
@@ -350,19 +377,23 @@ const Relatorio = ({ visao }) => {
                 )}
             </>
           )}
-          {status === statusEnum.CODAE_A_AUTORIZAR && visao === CODAE && (
-            <FormAutorizaDietaEspecial
-              dietaEspecial={dietaEspecial}
-              onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
-              visao={visao}
-              setTemSolicitacaoCadastroProduto={() =>
-                setDietaEspecial({
-                  ...dietaEspecial,
-                  tem_solicitacao_cadastro_produto: true
-                })
-              }
-            />
-          )}
+          {(status === statusEnum.CODAE_A_AUTORIZAR ||
+            (status === statusEnum.CODAE_AUTORIZADO && editar)) &&
+            visao === CODAE && (
+              <FormAutorizaDietaEspecial
+                dietaEspecial={dietaEspecial}
+                onAutorizarOuNegar={() => loadSolicitacao(dietaEspecial.uuid)}
+                visao={visao}
+                setTemSolicitacaoCadastroProduto={() =>
+                  setDietaEspecial({
+                    ...dietaEspecial,
+                    tem_solicitacao_cadastro_produto: true
+                  })
+                }
+                editar={editar}
+                cancelar={() => habilitarEdicao()}
+              />
+            )}
 
           {dietaEspecial &&
             status === statusEnum.ESCOLA_SOLICITOU_INATIVACAO &&
@@ -403,10 +434,17 @@ const Relatorio = ({ visao }) => {
           {dietaEspecial &&
             status === statusEnum.CODAE_AUTORIZADO &&
             card !== "inativas-temp" && (
-              <BotaoGerarProtocolo
-                uuid={dietaEspecial.uuid}
-                eh_importado={dietaEspecial.eh_importado}
-              />
+              <>
+                {!editar && (
+                  <BotaoGerarProtocolo
+                    uuid={dietaEspecial.uuid}
+                    eh_importado={dietaEspecial.eh_importado}
+                  />
+                )}
+                {dietaEspecial.tipo_solicitacao !==
+                  TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
+                  !editar && <BotaoEditarDieta nome="Editar" />}
+              </>
             )}
         </div>
       </div>

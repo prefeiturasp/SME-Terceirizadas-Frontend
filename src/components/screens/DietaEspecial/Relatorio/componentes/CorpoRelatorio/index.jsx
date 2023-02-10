@@ -36,7 +36,8 @@ const CorpoRelatorio = ({
   dietaEspecial,
   dietaCancelada,
   card,
-  solicitacaoVigenteAtiva
+  solicitacaoVigenteAtiva,
+  editar
 }) => {
   const onSubmit = () => {
     // será desenvolvido na história 41937
@@ -82,7 +83,8 @@ const CorpoRelatorio = ({
       ].includes(dietaEspecial.status_solicitacao) ||
         (card && ["inativas", "inativas-temp"].includes(card))) &&
       dietaEspecial.eh_importado === false &&
-      dietaEspecial.ativo === false
+      dietaEspecial.ativo === false &&
+      !editar
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
@@ -104,6 +106,7 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === false &&
+      !editar &&
       (["TERMINADA_AUTOMATICAMENTE_SISTEMA", "CODAE_AUTORIZADO"].includes(
         dietaEspecial.status_solicitacao
       ) ||

@@ -124,6 +124,7 @@ export const tipoDeStatus = status => {
     case "Em aberto para preenchimento pela UE":
     case "Informação encerrada pela CODAE":
     case "CODAE homologou":
+    case "CODAE Atualizou o protocolo":
       return "prosseguiu";
 
     case "CODAE pediu correção":
