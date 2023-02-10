@@ -64,5 +64,11 @@ div.acompanhamento-de-lancamentos {
       color: $redMI;
       border-color: $redMI;
     }
+
+    &.cinza {
+      color: $grayPlaceholder;
+      border-color: $grayPlaceholder;
+      cursor: default;
+    }
   }
 }
