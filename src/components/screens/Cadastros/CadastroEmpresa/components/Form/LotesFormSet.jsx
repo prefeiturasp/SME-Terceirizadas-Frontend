@@ -86,6 +86,7 @@ export const LotesFormSet = props => {
         setLotesRaw(response.data.results);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

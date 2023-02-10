@@ -318,6 +318,7 @@ export const CadastroEmpresa = () => {
       });
     }
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onSubmit = async values => {
     const dados = {
