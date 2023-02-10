@@ -1,15 +1,16 @@
 @import "styles/variables.scss";
 
 .weeks-tabs {
-  .ant-tabs-tab-active {
+  .ant-tabs-tab.ant-tabs-tab-active {
     background: $green !important;
     font-weight: 700;
-
     .ant-tabs-tab-btn {
       color: $white !important;
     }
+    .ant-tabs-tab-btn:hover {
+      color: $white !important;
+    }
   }
-
   .ant-tabs-tab {
     .ant-tabs-tab-btn:hover {
       color: $green !important;
