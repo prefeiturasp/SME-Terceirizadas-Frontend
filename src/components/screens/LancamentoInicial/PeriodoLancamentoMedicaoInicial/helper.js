@@ -2,7 +2,8 @@ export const formatarPayloadPeriodoLancamento = (
   values,
   tabelaAlimentacaoRows,
   tabelaDietaEnteralRows,
-  dadosIniciaisFiltered
+  dadosIniciaisFiltered,
+  diasDaSemanaSelecionada
 ) => {
   if (values["periodo_escolar"].includes(" - ")) {
     values["grupo"] = values["periodo_escolar"].split(" - ")[0];
@@ -49,7 +50,10 @@ export const formatarPayloadPeriodoLancamento = (
   });
 
   valoresMedicao = valoresMedicao.filter(valorMed => {
-    return !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0);
+    return (
+      !(valorMed.nome_campo === "observacoes" && valorMed.valor === 0) &&
+      diasDaSemanaSelecionada.includes(valorMed.dia)
+    );
   });
 
   Object.entries(values).forEach(([key]) => {
