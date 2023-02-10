@@ -41,8 +41,11 @@ export const AcompanhamentoDeLancamentos = () => {
                       key={key}
                       total={dadosPorStatus.total}
                       classeCor={
-                        MEDICAO_CARD_NOME_POR_STATUS_DRE[dadosPorStatus.status]
-                          .cor
+                        dadosPorStatus.total
+                          ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
+                              dadosPorStatus.status
+                            ].cor
+                          : "cinza"
                       }
                     >
                       {
