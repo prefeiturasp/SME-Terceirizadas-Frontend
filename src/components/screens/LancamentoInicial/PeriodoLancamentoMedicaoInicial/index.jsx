@@ -113,6 +113,10 @@ export default () => {
   ] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formValuesAtualizados, setFormValuesAtualizados] = useState(null);
+  const [diasDaSemanaSelecionada, setDiasDaSemanaSelecionada] = useState(null);
+  const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] = useState(
+    null
+  );
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -591,6 +595,11 @@ export default () => {
             ] = valor_medicao.valor ? `${valor_medicao.valor}` : null;
           });
       });
+
+    valoresMedicao &&
+      valoresMedicao.length > 0 &&
+      setUltimaAtualizacaoMedicao(valoresMedicao[0].medicao_alterado_em);
+
     setDadosIniciais({
       ...dadosMesPeriodo,
       ...dadosValoresInclusoesAutorizadas,
@@ -630,6 +639,7 @@ export default () => {
           )
         );
       }
+      setDiasDaSemanaSelecionada(diasSemana.filter(dia => Number(dia) < 20));
       week = weekColumns.map(column => {
         return { ...column, dia: diasSemana[column["position"]] };
       });
@@ -649,7 +659,11 @@ export default () => {
           format(addDays(dia, i + 1 - diaDaSemanaNumerico), "dd")
         );
       }
-
+      if ([4, 5, 6].includes(Number(semanaSelecionada))) {
+        setDiasDaSemanaSelecionada(diasSemana.filter(dia => Number(dia) > 10));
+      } else {
+        setDiasDaSemanaSelecionada(diasSemana);
+      }
       week = weekColumns.map(column => {
         return { ...column, dia: diasSemana[column["position"]] };
       });
@@ -682,6 +696,27 @@ export default () => {
     categoriasDeMedicao,
     tabelaAlimentacaoRows,
     valoresPeriodosLancamentos
+  ]);
+
+  useEffect(() => {
+    const tresMinutos = 180000;
+    const intervalCall = setInterval(() => {
+      formValuesAtualizados &&
+        !disableBotaoSalvarLancamentos &&
+        onSubmit(
+          formValuesAtualizados,
+          dadosValoresInclusoesAutorizadasState,
+          true
+        );
+    }, tresMinutos);
+    return () => {
+      clearInterval(intervalCall);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    formValuesAtualizados,
+    dadosValoresInclusoesAutorizadasState,
+    disableBotaoSalvarLancamentos
   ]);
 
   const onSubmitObservacao = async (values, dia, categoria) => {
@@ -797,7 +832,11 @@ export default () => {
     setDisableBotaoSalvarLancamentos(true);
   };
 
-  const onSubmit = async (values, dadosValoresInclusoesAutorizadasState) => {
+  const onSubmit = async (
+    values,
+    dadosValoresInclusoesAutorizadasState,
+    ehSalvamentoAutomático = false
+  ) => {
     const erro = validarFormulario(
       values,
       diasSobremesaDoce,
@@ -807,7 +846,7 @@ export default () => {
       weekColumns
     );
     if (erro) {
-      toastError(erro);
+      !ehSalvamentoAutomático && toastError(erro);
       return;
     }
     const urlParams = new URLSearchParams(window.location.search);
@@ -846,7 +885,7 @@ export default () => {
       tabelaAlimentacaoRows,
       tabelaDietaEnteralRows,
       dadosIniciaisFiltered,
-      valoresPeriodosLancamentos
+      diasDaSemanaSelecionada
     );
     if (payload.valores_medicao.length === 0)
       return toastWarn("Não há valores para serem salvos");
@@ -858,19 +897,25 @@ export default () => {
         payload
       );
       if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Lançamentos salvos com sucesso");
+        !ehSalvamentoAutomático &&
+          toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
-        return toastError("Erro ao salvar lançamentos.");
+        return (
+          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+        );
       }
     } else {
       setLoading(true);
       const response = await setPeriodoLancamento(payload);
       if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess("Lançamentos salvos com sucesso");
+        !ehSalvamentoAutomático &&
+          toastSuccess("Lançamentos salvos com sucesso");
         valores_medicao_response = response.data.valores_medicao;
       } else {
-        return toastError("Erro ao salvar lançamentos.");
+        return (
+          !ehSalvamentoAutomático && toastError("Erro ao salvar lançamentos.")
+        );
       }
     }
     setValoresPeriodosLancamentos(valores_medicao_response);
@@ -886,6 +931,7 @@ export default () => {
       mesAnoConsiderado
     );
     setLoading(false);
+    setDisableBotaoSalvarLancamentos(true);
   };
 
   const onChangeSemana = (values, key) => {
@@ -1012,7 +1058,12 @@ export default () => {
   ) => {
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
-    } else if ((value || previous) && value !== previous) {
+    } else if (
+      (value || previous) &&
+      value !== previous &&
+      !["Mês anterior", "Mês posterior"].includes(value) &&
+      !["Mês anterior", "Mês posterior"].includes(previous)
+    ) {
       setDisableBotaoSalvarLancamentos(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
@@ -1199,6 +1250,12 @@ export default () => {
                     categoriasDeMedicao.map(categoria => (
                       <div key={categoria.uuid}>
                         <b className="pb-2 section-title">{categoria.nome}</b>
+                        {categoria.nome === "ALIMENTAÇÃO" &&
+                          ultimaAtualizacaoMedicao && (
+                            <p className="ultimo-salvamento mb-0">
+                              Último salvamento {ultimaAtualizacaoMedicao}
+                            </p>
+                          )}
                         <section className="tabela-tipos-alimentacao">
                           <article>
                             <div
