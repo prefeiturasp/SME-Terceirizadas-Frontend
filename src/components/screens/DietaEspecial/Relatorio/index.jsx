@@ -325,8 +325,10 @@ const Relatorio = ({ visao }) => {
                 exibirUsuariosSimultaneos() ? "col-3" : "col-12"
               } col-3 mb-3`}
             >
-              {dietaEspecial && <BotaoImprimir uuid={dietaEspecial.uuid} />}
-              {dietaEspecial && historico && (
+              {dietaEspecial && !editar && (
+                <BotaoImprimir uuid={dietaEspecial.uuid} />
+              )}
+              {dietaEspecial && !editar && historico && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
                   texto="Histórico"

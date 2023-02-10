@@ -374,7 +374,6 @@ const CorpoRelatorio = ({
           />
 
           {dietaEspecial && montaCorpoRelatorio()}
-          <p>Valor de editar: {editar}</p>
         </form>
       )}
     />
