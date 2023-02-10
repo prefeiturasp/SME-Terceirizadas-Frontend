@@ -68,6 +68,7 @@ div.acompanhamento-de-lancamentos {
     &.cinza {
       color: $grayPlaceholder;
       border-color: $grayPlaceholder;
+      cursor: default;
     }
   }
 }
