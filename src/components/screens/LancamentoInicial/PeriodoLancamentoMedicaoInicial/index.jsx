@@ -31,7 +31,6 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
-import ModalSalvarLancamento from "./components/ModalSalvarLancamento";
 import { deepCopy, deepEqual } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
@@ -99,13 +98,11 @@ export default () => {
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
-  const [showModalSalvarLancamento, setShowModalSalvarLancamento] = useState(
-    false
-  );
   const [
     disableBotaoSalvarLancamentos,
     setDisableBotaoSalvarLancamentos
   ] = useState(true);
+  const [exibirTooltip, setExibirTooltip] = useState(false);
   const [showDiaObservacaoDiaria, setDiaObservacaoDiaria] = useState(null);
   const [
     showCategoriaObservacaoDiaria,
@@ -1065,14 +1062,17 @@ export default () => {
       !["Mês anterior", "Mês posterior"].includes(previous)
     ) {
       setDisableBotaoSalvarLancamentos(false);
+      setExibirTooltip(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
       if (value === null) {
         valuesInputArray.length = 0;
       }
-      value.match(/\d+/g) !== null && valuesInputArray.length > 0
-        ? setDisableBotaoSalvarLancamentos(false)
-        : setDisableBotaoSalvarLancamentos(true);
+      if (value.match(/\d+/g) !== null && valuesInputArray.length > 0) {
+        setDisableBotaoSalvarLancamentos(false);
+      } else {
+        setDisableBotaoSalvarLancamentos(true);
+      }
     }
 
     if (
@@ -1090,6 +1090,7 @@ export default () => {
     }
     if (Object.keys(errors).length > 0) {
       setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
     }
 
     const valuesFrequencia = Object.fromEntries(
@@ -1694,18 +1695,18 @@ export default () => {
                     texto="Salvar Lançamentos"
                     type={BUTTON_TYPE.BUTTON}
                     style={`${BUTTON_STYLE.GREEN}`}
-                    onClick={() => setShowModalSalvarLancamento(true)}
-                    disabled={disableBotaoSalvarLancamentos}
-                  />
-                  <ModalSalvarLancamento
-                    closeModal={() => setShowModalSalvarLancamento(false)}
-                    showModal={showModalSalvarLancamento}
-                    onSubmit={() =>
+                    onClick={() =>
                       onSubmit(
                         formValuesAtualizados,
                         dadosValoresInclusoesAutorizadasState
                       )
                     }
+                    disabled={disableBotaoSalvarLancamentos}
+                    exibirTooltip={
+                      disableBotaoSalvarLancamentos && exibirTooltip
+                    }
+                    tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
+                    classTooltip="icone-info-invalid"
                   />
                 </div>
               </div>
