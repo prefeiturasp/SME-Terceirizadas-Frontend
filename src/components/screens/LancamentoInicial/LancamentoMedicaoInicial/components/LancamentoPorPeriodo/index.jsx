@@ -95,17 +95,10 @@ export default ({
     if (!solicitacaoMedicaoInicial) {
       return false;
     }
-    if (solicitacaoMedicaoInicial) {
-      return ![
-        String(solicitacaoMedicaoInicial.status),
-        String(objSolicitacaoMIFinalizada.status)
-      ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
-    } else {
-      return (
-        String(objSolicitacaoMIFinalizada.status) !==
-        "MEDICAO_ENCERRADA_PELA_CODAE"
-      );
-    }
+    return (
+      solicitacaoMedicaoInicial.status ===
+      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    );
   };
 
   return (
