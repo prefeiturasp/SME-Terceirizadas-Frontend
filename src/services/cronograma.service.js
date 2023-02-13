@@ -37,3 +37,11 @@ export const cronogramaAssina = async (uuid, password) => {
     password: password
   });
 };
+
+export const dinutreAssinaCronograma = async (uuid, password) => {
+  console.log(uuid);
+  const url = `/cronogramas/${uuid}/dinutre-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};

@@ -4,7 +4,12 @@ import { Spin } from "antd";
 import { getCronograma } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
-import { usuarioEhCronograma, usuarioEhFornecedor } from "helpers/utilities";
+import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
+import {
+  usuarioEhCronograma,
+  usuarioEhDinutreDiretoria,
+  usuarioEhFornecedor
+} from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import DadosCronograma from "../DadosCronograma";
@@ -82,6 +87,9 @@ export default () => {
                 <div className="mt-4 mb-4">
                   <AcoesDetalharCronograma cronograma={cronograma} />
                 </div>
+              )}
+              {usuarioEhDinutreDiretoria() && (
+                <AcoesDetalharDinutreDiretoria cronograma={cronograma} />
               )}
             </>
           )}

@@ -373,6 +373,10 @@ export const usuarioEhCodaeDilog = () => {
   );
 };
 
+export const usuarioEhDinutreDiretoria = () => {
+  return localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
+};
+
 export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
