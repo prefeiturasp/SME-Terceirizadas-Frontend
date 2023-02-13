@@ -71,4 +71,31 @@ div.acompanhamento-de-lancamentos {
       cursor: default;
     }
   }
+
+  table.resultados {
+    width: 100%;
+    font-size: 14px;
+    color: $blackInput;
+
+    thead {
+      tr {
+        background-color: $grayLightHeader;
+        font-weight: 700;
+
+        th {
+          border: 1px solid $grayDisabled;
+          padding: 0.5em;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 1px solid $grayDisabled;
+          padding: 0.5em;
+        }
+      }
+    }
+  }
 }
