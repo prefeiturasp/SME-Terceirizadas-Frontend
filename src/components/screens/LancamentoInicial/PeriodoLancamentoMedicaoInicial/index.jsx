@@ -58,6 +58,7 @@ import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import { Modal } from "react-bootstrap";
 import "./styles.scss";
 
 export default () => {
@@ -114,6 +115,8 @@ export default () => {
   const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] = useState(
     null
   );
+  const [showModalErro, setShowModalErro] = useState(false);
+  const [formTest, setFormTest] = useState(false);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -163,6 +166,10 @@ export default () => {
       toastError("Erro ao carregar Inclusões Autorizadas");
       return [];
     }
+  };
+
+  const handleModalClose = () => {
+    setShowModalErro(false);
   };
 
   useEffect(() => {
@@ -885,7 +892,9 @@ export default () => {
       diasDaSemanaSelecionada
     );
     if (payload.valores_medicao.length === 0)
-      return toastWarn("Não há valores para serem salvos");
+      return (
+        !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
+      );
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       setLoading(true);
@@ -932,14 +941,24 @@ export default () => {
   };
 
   const onChangeSemana = (values, key) => {
-    Object.entries(values).forEach(([key]) => {
-      return (
-        !["mes_lancamento", "periodo_escolar", "week"].includes(key) &&
-        delete values[key]
+    if (disableBotaoSalvarLancamentos && exibirTooltip) {
+      setShowModalErro(true);
+    } else {
+      Object.entries(values).forEach(([key]) => {
+        return (
+          !["mes_lancamento", "periodo_escolar", "week"].includes(key) &&
+          delete values[key]
+        );
+      });
+      setSemanaSelecionada(key);
+
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true
       );
-    });
-    setSemanaSelecionada(key);
-    return (values["week"] = Number(key));
+      return (values["week"] = Number(key));
+    }
   };
 
   const defaultValue = (column, row) => {
@@ -1193,12 +1212,16 @@ export default () => {
             <form onSubmit={handleSubmit}>
               <FormSpy
                 subscription={{ values: true, active: true }}
-                onChange={changes =>
+                onChange={changes => {
                   setFormValuesAtualizados({
                     week: semanaSelecionada,
                     ...changes.values
-                  })
-                }
+                  });
+                  setFormTest({
+                    week: semanaSelecionada,
+                    ...changes.values
+                  });
+                }}
               />
               <div className="card mt-3">
                 <div className="card-body">
@@ -1229,10 +1252,11 @@ export default () => {
                   </div>
                   <div className="weeks-tabs mb-2">
                     <Tabs
+                      activeKey={semanaSelecionada}
                       defaultActiveKey={semanaSelecionada}
-                      onChange={key =>
-                        onChangeSemana(formValuesAtualizados, key)
-                      }
+                      onChange={key => {
+                        onChangeSemana(formTest, key);
+                      }}
                       type="card"
                     >
                       {Array.apply(null, {
@@ -1709,6 +1733,30 @@ export default () => {
                     classTooltip="icone-info-invalid"
                   />
                 </div>
+                <Modal
+                  dialogClassName="modal-dialog-centered"
+                  show={showModalErro}
+                  onHide={handleModalClose}
+                >
+                  <Modal.Header closeButton>
+                    <Modal.Title>
+                      <b>Aviso de Erro</b>
+                    </Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Existem campos a serem corrigidos. Realize as correções para
+                    prosseguir para a próxima semana.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Botao
+                      texto="FECHAR"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => handleModalClose()}
+                      style={BUTTON_STYLE.RED}
+                      className="float-right"
+                    />
+                  </Modal.Footer>
+                </Modal>
               </div>
             </form>
           )}
