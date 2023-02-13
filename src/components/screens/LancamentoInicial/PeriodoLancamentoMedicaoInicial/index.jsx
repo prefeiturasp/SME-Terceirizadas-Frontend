@@ -116,7 +116,7 @@ export default () => {
     null
   );
   const [showModalErro, setShowModalErro] = useState(false);
-  const [formTest, setFormTest] = useState(false);
+  const [formValuesSemana, setFormValuesSemana] = useState(false);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -1217,7 +1217,7 @@ export default () => {
                     week: semanaSelecionada,
                     ...changes.values
                   });
-                  setFormTest({
+                  setFormValuesSemana({
                     week: semanaSelecionada,
                     ...changes.values
                   });
@@ -1255,7 +1255,7 @@ export default () => {
                       activeKey={semanaSelecionada}
                       defaultActiveKey={semanaSelecionada}
                       onChange={key => {
-                        onChangeSemana(formTest, key);
+                        onChangeSemana(formValuesSemana, key);
                       }}
                       type="card"
                     >
@@ -1752,7 +1752,7 @@ export default () => {
                       texto="FECHAR"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => handleModalClose()}
-                      style={BUTTON_STYLE.RED}
+                      style={BUTTON_STYLE.GREEN}
                       className="float-right"
                     />
                   </Modal.Footer>
