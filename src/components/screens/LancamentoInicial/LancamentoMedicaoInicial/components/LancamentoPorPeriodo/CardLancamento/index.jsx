@@ -19,8 +19,7 @@ export default ({
   totalAlimentacoes,
   tipos_alimentacao,
   periodoSelecionado,
-  solicitacaoMedicaoInicial,
-  objSolicitacaoMIFinalizada
+  solicitacaoMedicaoInicial
 }) => {
   const history = useHistory();
   const alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
@@ -34,20 +33,13 @@ export default ({
   ));
 
   const desabilitarBotaoEditar = () => {
-    if (solicitacaoMedicaoInicial) {
-      return [
-        String(solicitacaoMedicaoInicial.status),
-        String(objSolicitacaoMIFinalizada.status)
-      ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
-    }
     if (!solicitacaoMedicaoInicial) {
       return true;
-    } else {
-      return (
-        String(objSolicitacaoMIFinalizada.status) ===
-        "MEDICAO_ENCERRADA_PELA_CODAE"
-      );
     }
+    return (
+      solicitacaoMedicaoInicial.status !==
+      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    );
   };
 
   const handleClickEditar = () => {
