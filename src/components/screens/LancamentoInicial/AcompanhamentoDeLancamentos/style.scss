@@ -4,6 +4,11 @@ div.acompanhamento-de-lancamentos {
   font-size: 12px;
   color: $blackInput;
 
+  label {
+    font-size: 14px;
+    color: $gray;
+  }
+
   div.card-medicao-por-status {
     height: 124px;
     width: 129px;
@@ -72,10 +77,17 @@ div.acompanhamento-de-lancamentos {
     }
   }
 
+  div.titulo-tabela {
+    font-weight: 600;
+    font-size: 14px;
+    color: $greenDark;
+  }
+
   table.resultados {
-    width: 100%;
+    width: 98%;
     font-size: 14px;
     color: $blackInput;
+    margin-left: 1em;
 
     thead {
       tr {
