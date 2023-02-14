@@ -31,6 +31,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
+import ModalErro from "./components/ModalErro";
 import { deepCopy, deepEqual } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
@@ -58,7 +59,6 @@ import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
-import { Modal } from "react-bootstrap";
 import "./styles.scss";
 
 export default () => {
@@ -116,7 +116,6 @@ export default () => {
     null
   );
   const [showModalErro, setShowModalErro] = useState(false);
-  const [formValuesSemana, setFormValuesSemana] = useState(false);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -166,10 +165,6 @@ export default () => {
       toastError("Erro ao carregar Inclusões Autorizadas");
       return [];
     }
-  };
-
-  const handleModalClose = () => {
-    setShowModalErro(false);
   };
 
   useEffect(() => {
@@ -944,14 +939,7 @@ export default () => {
     if (disableBotaoSalvarLancamentos && exibirTooltip) {
       setShowModalErro(true);
     } else {
-      Object.entries(values).forEach(([key]) => {
-        return (
-          !["mes_lancamento", "periodo_escolar", "week"].includes(key) &&
-          delete values[key]
-        );
-      });
       setSemanaSelecionada(key);
-
       onSubmit(
         formValuesAtualizados,
         dadosValoresInclusoesAutorizadasState,
@@ -1212,16 +1200,12 @@ export default () => {
             <form onSubmit={handleSubmit}>
               <FormSpy
                 subscription={{ values: true, active: true }}
-                onChange={changes => {
+                onChange={changes =>
                   setFormValuesAtualizados({
                     week: semanaSelecionada,
                     ...changes.values
-                  });
-                  setFormValuesSemana({
-                    week: semanaSelecionada,
-                    ...changes.values
-                  });
-                }}
+                  })
+                }
               />
               <div className="card mt-3">
                 <div className="card-body">
@@ -1255,7 +1239,7 @@ export default () => {
                       activeKey={semanaSelecionada}
                       defaultActiveKey={semanaSelecionada}
                       onChange={key => {
-                        onChangeSemana(formValuesSemana, key);
+                        onChangeSemana(formValuesAtualizados, key);
                       }}
                       type="card"
                     >
@@ -1733,30 +1717,10 @@ export default () => {
                     classTooltip="icone-info-invalid"
                   />
                 </div>
-                <Modal
-                  dialogClassName="modal-dialog-centered"
-                  show={showModalErro}
-                  onHide={handleModalClose}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>
-                      <b>Aviso de Erro</b>
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Existem campos a serem corrigidos. Realize as correções para
-                    prosseguir para a próxima semana.
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Botao
-                      texto="FECHAR"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => handleModalClose()}
-                      style={BUTTON_STYLE.GREEN}
-                      className="float-right"
-                    />
-                  </Modal.Footer>
-                </Modal>
+                <ModalErro
+                  showModalErro={showModalErro}
+                  setShowModalErro={setShowModalErro}
+                />
               </div>
             </form>
           )}
