@@ -304,7 +304,7 @@ export const AcompanhamentoDeLancamentos = () => {
                                   <tr className="row">
                                     <th className="col-6">Nome da UE</th>
                                     <th className="col-2 text-center">
-                                      Status
+                                      Status do lançamento
                                     </th>
                                     <th className="col-2 text-center">
                                       Última atualização
