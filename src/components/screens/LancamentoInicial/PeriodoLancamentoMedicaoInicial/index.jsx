@@ -668,7 +668,6 @@ export default () => {
       });
       setWeekColumns(week);
     }
-
     const formatar = async () => {
       formatarDadosValoresMedicao(
         mesAnoFormatadoState,
@@ -834,7 +833,8 @@ export default () => {
   const onSubmit = async (
     values,
     dadosValoresInclusoesAutorizadasState,
-    ehSalvamentoAutomático = false
+    ehSalvamentoAutomático = false,
+    chamarFuncaoFormatar = true
   ) => {
     const erro = validarFormulario(
       values,
@@ -920,30 +920,33 @@ export default () => {
       }
     }
     setValoresPeriodosLancamentos(valores_medicao_response);
-    await formatarDadosValoresMedicao(
-      mesAnoFormatadoState,
-      valores_medicao_response,
-      categoriasDeMedicao,
-      tabelaAlimentacaoRows,
-      valoresMatriculados,
-      tabelaDietaRows,
-      logQtdDietasAutorizadas,
-      inclusoesAutorizadas,
-      mesAnoConsiderado
-    );
+    if (chamarFuncaoFormatar) {
+      await formatarDadosValoresMedicao(
+        mesAnoFormatadoState,
+        valores_medicao_response,
+        categoriasDeMedicao,
+        tabelaAlimentacaoRows,
+        valoresMatriculados,
+        tabelaDietaRows,
+        logQtdDietasAutorizadas,
+        inclusoesAutorizadas,
+        mesAnoConsiderado
+      );
+    }
     setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
   };
 
-  const onChangeSemana = (values, key) => {
-    if (disableBotaoSalvarLancamentos && exibirTooltip) {
+  const onChangeSemana = async (values, key) => {
+    if (exibirTooltip) {
       setShowModalErro(true);
     } else {
       setSemanaSelecionada(key);
       onSubmit(
         formValuesAtualizados,
         dadosValoresInclusoesAutorizadasState,
-        true
+        true,
+        false
       );
       return (values["week"] = Number(key));
     }
@@ -1068,6 +1071,7 @@ export default () => {
       !["Mês anterior", "Mês posterior"].includes(value) &&
       !["Mês anterior", "Mês posterior"].includes(previous)
     ) {
+      setExibirTooltip(false);
       setDisableBotaoSalvarLancamentos(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
@@ -1096,6 +1100,7 @@ export default () => {
     }
     if (Object.keys(errors).length > 0) {
       setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
     }
 
     const valuesFrequencia = Object.fromEntries(
@@ -1122,22 +1127,6 @@ export default () => {
       }
     });
 
-    const erro = validarFormulario(
-      values,
-      diasSobremesaDoce,
-      location,
-      categoriasDeMedicao,
-      dadosValoresInclusoesAutorizadasState,
-      weekColumns
-    );
-
-    if (erro) {
-      setDisableBotaoSalvarLancamentos(true);
-      setExibirTooltip(true);
-    } else {
-      setDisableBotaoSalvarLancamentos(false);
-      setExibirTooltip(false);
-    }
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
@@ -1251,7 +1240,6 @@ export default () => {
                   <div className="weeks-tabs mb-2">
                     <Tabs
                       activeKey={semanaSelecionada}
-                      defaultActiveKey={semanaSelecionada}
                       onChange={key => {
                         onChangeSemana(formValuesAtualizados, key);
                       }}
