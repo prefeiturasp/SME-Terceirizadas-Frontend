@@ -189,4 +189,8 @@ button.general-button {
       border: 1px solid $grayDisabled;
     }
   }
+
+  &.no-border {
+    border: none;
+  }
 }
