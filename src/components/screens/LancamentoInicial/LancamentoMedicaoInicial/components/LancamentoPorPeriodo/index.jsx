@@ -185,7 +185,7 @@ export default ({
                         onClick={() => pdfOcorrenciasMedicaoFinalizada()}
                         disabled={
                           !solicitacaoMedicaoInicial.anexos ||
-                          !solicitacaoMedicaoInicial.anexos.lenght
+                          solicitacaoMedicaoInicial.anexos.length === 0
                         }
                       />
                     </>
