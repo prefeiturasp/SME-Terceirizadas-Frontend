@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { meusDados } from "services/perfil.service";
 import FormCadastro from "./components/FormCadastro";
 import CardMatriculados from "../../../Shareable/CardMatriculados";
+import { meusDados } from "services/perfil.service";
 
 export default () => {
   const [quantidadeAlunos, setQuantidadeAlunos] = useState(0);
   const [solicitacoesVigentes, setSolicitacoesVigentes] = useState(null);
-  const [meusDadosEscola, setMeusDadosEscola] = useState({});
+  const [meusDadosEscola, setMeusDadosEscola] = useState(null);
+  const [meusDados_, setMeusDados] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -15,14 +16,16 @@ export default () => {
         meusDados.vinculo_atual.instituicao.quantidade_alunos
       );
       setMeusDadosEscola(meusDados.vinculo_atual.instituicao);
+      setMeusDados(meusDados);
     });
   }, []);
 
   return (
-    meusDadosEscola && (
+    meusDadosEscola &&
+    meusDados_ && (
       <>
         <CardMatriculados
-          meusDados={meusDadosEscola}
+          meusDados={meusDados_}
           numeroAlunos={quantidadeAlunos}
         />
         <div className="card card-dieta-alteracao-ue mt-3">

@@ -31,6 +31,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
+import ModalErro from "./components/ModalErro";
 import { deepCopy, deepEqual } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
@@ -114,6 +115,7 @@ export default () => {
   const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] = useState(
     null
   );
+  const [showModalErro, setShowModalErro] = useState(false);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -885,7 +887,9 @@ export default () => {
       diasDaSemanaSelecionada
     );
     if (payload.valores_medicao.length === 0)
-      return toastWarn("Não há valores para serem salvos");
+      return (
+        !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
+      );
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       setLoading(true);
@@ -932,14 +936,17 @@ export default () => {
   };
 
   const onChangeSemana = (values, key) => {
-    Object.entries(values).forEach(([key]) => {
-      return (
-        !["mes_lancamento", "periodo_escolar", "week"].includes(key) &&
-        delete values[key]
+    if (disableBotaoSalvarLancamentos && exibirTooltip) {
+      setShowModalErro(true);
+    } else {
+      setSemanaSelecionada(key);
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true
       );
-    });
-    setSemanaSelecionada(key);
-    return (values["week"] = Number(key));
+      return (values["week"] = Number(key));
+    }
   };
 
   const defaultValue = (column, row) => {
@@ -1229,10 +1236,11 @@ export default () => {
                   </div>
                   <div className="weeks-tabs mb-2">
                     <Tabs
+                      activeKey={semanaSelecionada}
                       defaultActiveKey={semanaSelecionada}
-                      onChange={key =>
-                        onChangeSemana(formValuesAtualizados, key)
-                      }
+                      onChange={key => {
+                        onChangeSemana(formValuesAtualizados, key);
+                      }}
                       type="card"
                     >
                       {Array.apply(null, {
@@ -1709,6 +1717,10 @@ export default () => {
                     classTooltip="icone-info-invalid"
                   />
                 </div>
+                <ModalErro
+                  showModalErro={showModalErro}
+                  setShowModalErro={setShowModalErro}
+                />
               </div>
             </form>
           )}
