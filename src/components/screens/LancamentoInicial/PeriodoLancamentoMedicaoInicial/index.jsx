@@ -828,6 +828,7 @@ export default () => {
     );
     setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
+    setExibirTooltip(false);
   };
 
   const onSubmit = async (
@@ -1054,6 +1055,21 @@ export default () => {
 
   let valuesInputArray = [];
 
+  const desabilitaTooltip = values => {
+    const erro = validarFormulario(
+      values,
+      diasSobremesaDoce,
+      location,
+      categoriasDeMedicao,
+      dadosValoresInclusoesAutorizadasState,
+      weekColumns
+    );
+    if (erro) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
+  };
+
   const onChangeInput = (
     value,
     previous,
@@ -1065,6 +1081,7 @@ export default () => {
   ) => {
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
+      desabilitaTooltip(values);
     } else if (
       (value || previous) &&
       value !== previous &&
@@ -1081,6 +1098,7 @@ export default () => {
       if (value.match(/\d+/g) !== null && valuesInputArray.length > 0) {
         setDisableBotaoSalvarLancamentos(false);
       } else {
+        desabilitaTooltip(values);
         setDisableBotaoSalvarLancamentos(true);
       }
     }
@@ -1126,7 +1144,7 @@ export default () => {
         setDisableBotaoSalvarLancamentos(true);
       }
     });
-
+    desabilitaTooltip(values);
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
@@ -1698,6 +1716,7 @@ export default () => {
                         )
                       }
                       dadosIniciais={dadosIniciais}
+                      setExibirTooltip={() => setExibirTooltip(true)}
                     />
                   )}
                   <Botao
@@ -1712,9 +1731,7 @@ export default () => {
                       )
                     }
                     disabled={disableBotaoSalvarLancamentos}
-                    exibirTooltip={
-                      disableBotaoSalvarLancamentos && exibirTooltip
-                    }
+                    exibirTooltip={exibirTooltip}
                     tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
                     classTooltip="icone-info-invalid"
                   />
