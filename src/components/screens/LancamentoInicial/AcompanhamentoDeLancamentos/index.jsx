@@ -172,13 +172,17 @@ export const AcompanhamentoDeLancamentos = () => {
                             onPageChanged={onPageChanged}
                             setResultados={setResultados}
                             setStatusSelecionado={setStatusSelecionado}
+                            statusSelecionado={statusSelecionado}
                             total={dadosPorStatus.total}
                             classeCor={
-                              dadosPorStatus.total
+                              dadosPorStatus.total &&
+                              (!statusSelecionado ||
+                                statusSelecionado === dadosPorStatus.status)
                                 ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
                                     dadosPorStatus.status
                                   ].cor
-                                : "cinza"
+                                : `cinza ${dadosPorStatus.total &&
+                                    "cursor-pointer"}`
                             }
                           >
                             {
@@ -290,57 +294,66 @@ export const AcompanhamentoDeLancamentos = () => {
                           <div className="titulo-tabela mt-3 mb-3">
                             Resultados
                           </div>
-                          <table className="resultados">
-                            <thead>
-                              <tr className="row">
-                                <th className="col-6">Nome da UE</th>
-                                <th className="col-2 text-center">Status</th>
-                                <th className="col-2 text-center">
-                                  Última atualização
-                                </th>
-                                <th className="col-2 text-center">Ações</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {resultados.dados.map((dado, key) => {
-                                return (
-                                  <tr key={key} className="row">
-                                    <td className="col-6 pt-3">
-                                      {dado.escola}
-                                    </td>
-                                    <td className="col-2 text-center pt-3">
-                                      {dado.status}
-                                    </td>
-                                    <td className="col-2 text-center pt-3">
-                                      {dado.log_mais_recente}
-                                    </td>
-                                    <td className="col-2 text-center">
-                                      <Botao
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={`${
-                                          BUTTON_STYLE.GREEN_OUTLINE
-                                        } no-border`}
-                                        icon={BUTTON_ICON.EYE}
-                                      />
-                                      <Botao
-                                        type={BUTTON_TYPE.BUTTON}
-                                        style={`${
-                                          BUTTON_STYLE.GREEN_OUTLINE
-                                        } no-border`}
-                                        icon={BUTTON_ICON.DOWNLOAD}
-                                      />
-                                    </td>
+                          {resultados.dados.length === 0 && (
+                            <div>Nenhum resultado encontrado.</div>
+                          )}
+                          {resultados.dados.length > 0 && (
+                            <>
+                              <table className="resultados">
+                                <thead>
+                                  <tr className="row">
+                                    <th className="col-6">Nome da UE</th>
+                                    <th className="col-2 text-center">
+                                      Status
+                                    </th>
+                                    <th className="col-2 text-center">
+                                      Última atualização
+                                    </th>
+                                    <th className="col-2 text-center">Ações</th>
                                   </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
-                          <Paginacao
-                            onChange={page => onPageChanged(page)}
-                            total={resultados.total}
-                            pageSize={PAGE_SIZE}
-                            current={currentPage}
-                          />
+                                </thead>
+                                <tbody>
+                                  {resultados.dados.map((dado, key) => {
+                                    return (
+                                      <tr key={key} className="row">
+                                        <td className="col-6 pt-3">
+                                          {dado.escola}
+                                        </td>
+                                        <td className="col-2 text-center pt-3">
+                                          {dado.status}
+                                        </td>
+                                        <td className="col-2 text-center pt-3">
+                                          {dado.log_mais_recente}
+                                        </td>
+                                        <td className="col-2 text-center">
+                                          <Botao
+                                            type={BUTTON_TYPE.BUTTON}
+                                            style={`${
+                                              BUTTON_STYLE.GREEN_OUTLINE
+                                            } no-border`}
+                                            icon={BUTTON_ICON.EYE}
+                                          />
+                                          <Botao
+                                            type={BUTTON_TYPE.BUTTON}
+                                            style={`${
+                                              BUTTON_STYLE.GREEN_OUTLINE
+                                            } no-border`}
+                                            icon={BUTTON_ICON.DOWNLOAD}
+                                          />
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                              <Paginacao
+                                onChange={page => onPageChanged(page)}
+                                total={resultados.total}
+                                pageSize={PAGE_SIZE}
+                                current={currentPage}
+                              />
+                            </>
+                          )}
                         </>
                       )}
                     </Spin>
