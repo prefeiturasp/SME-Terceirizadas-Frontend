@@ -183,6 +183,10 @@ export default ({
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="float-right mr-2"
                         onClick={() => pdfOcorrenciasMedicaoFinalizada()}
+                        disabled={
+                          !solicitacaoMedicaoInicial.anexos ||
+                          !solicitacaoMedicaoInicial.anexos.lenght
+                        }
                       />
                     </>
                   )}
