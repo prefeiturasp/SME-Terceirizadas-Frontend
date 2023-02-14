@@ -1069,7 +1069,6 @@ export default () => {
       !["Mês anterior", "Mês posterior"].includes(previous)
     ) {
       setDisableBotaoSalvarLancamentos(false);
-      setExibirTooltip(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
       if (value === null) {
@@ -1097,7 +1096,6 @@ export default () => {
     }
     if (Object.keys(errors).length > 0) {
       setDisableBotaoSalvarLancamentos(true);
-      setExibirTooltip(true);
     }
 
     const valuesFrequencia = Object.fromEntries(
@@ -1124,6 +1122,22 @@ export default () => {
       }
     });
 
+    const erro = validarFormulario(
+      values,
+      diasSobremesaDoce,
+      location,
+      categoriasDeMedicao,
+      dadosValoresInclusoesAutorizadasState,
+      weekColumns
+    );
+
+    if (erro) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    } else {
+      setDisableBotaoSalvarLancamentos(false);
+      setExibirTooltip(false);
+    }
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
