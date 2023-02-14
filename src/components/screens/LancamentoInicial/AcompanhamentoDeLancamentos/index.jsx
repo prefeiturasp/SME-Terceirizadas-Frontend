@@ -54,7 +54,7 @@ export const AcompanhamentoDeLancamentos = () => {
     setLoadingComFiltros(true);
     const response = await getDashboardMedicaoInicial(params);
     if (response.status === HTTP_STATUS.OK) {
-      setDadosDashboard(response.data.results);
+      !dadosDashboard && setDadosDashboard(response.data.results);
       if (statusSelecionado) {
         setResultados(
           response.data.results.find(res => res.status === statusSelecionado)
@@ -128,11 +128,11 @@ export const AcompanhamentoDeLancamentos = () => {
   }, [meusDados]);
 
   const onPageChanged = async page => {
-    setLoading(true);
+    setLoadingComFiltros(true);
     const params = { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE };
     setCurrentPage(page);
     await getDashboardMedicaoInicialAsync(params);
-    setLoading(false);
+    setLoadingComFiltros(false);
   };
 
   const getNomesItemsFiltrado = value => {
@@ -147,7 +147,8 @@ export const AcompanhamentoDeLancamentos = () => {
   };
 
   const onSubmit = values => {
-    getDashboardMedicaoInicialAsync(values);
+    setCurrentPage(1);
+    getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
   };
 
   return (
@@ -155,44 +156,48 @@ export const AcompanhamentoDeLancamentos = () => {
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={LOADING}>
         {!erroAPI && !LOADING && (
-          <div className="card mt-3">
-            <div className="card-body">
-              <div className="d-flex">
-                {dadosDashboard.map((dadosPorStatus, key) => {
-                  return (
-                    <CardMedicaoPorStatus
-                      key={key}
-                      dados={dadosPorStatus}
-                      page={currentPage}
-                      onPageChanged={onPageChanged}
-                      setResultados={setResultados}
-                      setStatusSelecionado={setStatusSelecionado}
-                      total={dadosPorStatus.total}
-                      classeCor={
-                        dadosPorStatus.total
-                          ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
-                              dadosPorStatus.status
-                            ].cor
-                          : "cinza"
-                      }
-                    >
-                      {
-                        MEDICAO_CARD_NOME_POR_STATUS_DRE[dadosPorStatus.status]
-                          .nome
-                      }
-                    </CardMedicaoPorStatus>
-                  );
-                })}
-              </div>
-              <div className="text-center mt-3">
-                Selecione os status acima para visualizar a listagem detalhada
-              </div>
-              {statusSelecionado && (
-                <>
-                  <hr />
-                  <Form onSubmit={onSubmit}>
-                    {({ handleSubmit, form, values }) => (
-                      <form onSubmit={handleSubmit}>
+          <Form onSubmit={onSubmit}>
+            {({ handleSubmit, form, values }) => (
+              <form onSubmit={handleSubmit}>
+                <div className="card mt-3">
+                  <div className="card-body">
+                    <div className="d-flex">
+                      {dadosDashboard.map((dadosPorStatus, key) => {
+                        return (
+                          <CardMedicaoPorStatus
+                            key={key}
+                            dados={dadosPorStatus}
+                            form={form}
+                            page={currentPage}
+                            onPageChanged={onPageChanged}
+                            setResultados={setResultados}
+                            setStatusSelecionado={setStatusSelecionado}
+                            total={dadosPorStatus.total}
+                            classeCor={
+                              dadosPorStatus.total
+                                ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
+                                    dadosPorStatus.status
+                                  ].cor
+                                : "cinza"
+                            }
+                          >
+                            {
+                              MEDICAO_CARD_NOME_POR_STATUS_DRE[
+                                dadosPorStatus.status
+                              ].nome
+                            }
+                          </CardMedicaoPorStatus>
+                        );
+                      })}
+                    </div>
+                    <div className="text-center mt-3">
+                      Selecione os status acima para visualizar a listagem
+                      detalhada
+                    </div>
+                    {statusSelecionado && (
+                      <>
+                        <hr />
+
                         <div className="row">
                           <div className="col-4">
                             <Field
@@ -277,69 +282,73 @@ export const AcompanhamentoDeLancamentos = () => {
                             />
                           </div>
                         </div>
-                      </form>
+                      </>
                     )}
-                  </Form>
-                </>
-              )}
-              <Spin tip="Carregando..." spinning={loadingComFiltros}>
-                {resultados && (
-                  <>
-                    <div className="titulo-tabela mt-3 mb-3">Resultados</div>
-                    <table className="resultados">
-                      <thead>
-                        <tr className="row">
-                          <th className="col-6">Nome da UE</th>
-                          <th className="col-2 text-center">Status</th>
-                          <th className="col-2 text-center">
-                            Última atualização
-                          </th>
-                          <th className="col-2 text-center">Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {resultados.dados.map((dado, key) => {
-                          return (
-                            <tr key={key} className="row">
-                              <td className="col-6 pt-3">{dado.escola}</td>
-                              <td className="col-2 text-center pt-3">
-                                {dado.status}
-                              </td>
-                              <td className="col-2 text-center pt-3">
-                                {dado.log_mais_recente}
-                              </td>
-                              <td className="col-2 text-center">
-                                <Botao
-                                  type={BUTTON_TYPE.BUTTON}
-                                  style={`${
-                                    BUTTON_STYLE.GREEN_OUTLINE
-                                  } no-border`}
-                                  icon={BUTTON_ICON.EYE}
-                                />
-                                <Botao
-                                  type={BUTTON_TYPE.BUTTON}
-                                  style={`${
-                                    BUTTON_STYLE.GREEN_OUTLINE
-                                  } no-border`}
-                                  icon={BUTTON_ICON.DOWNLOAD}
-                                />
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                    <Paginacao
-                      onChange={page => onPageChanged(page)}
-                      total={resultados.total}
-                      pageSize={PAGE_SIZE}
-                      current={currentPage}
-                    />
-                  </>
-                )}
-              </Spin>
-            </div>
-          </div>
+                    <Spin tip="Carregando..." spinning={loadingComFiltros}>
+                      {resultados && (
+                        <>
+                          <div className="titulo-tabela mt-3 mb-3">
+                            Resultados
+                          </div>
+                          <table className="resultados">
+                            <thead>
+                              <tr className="row">
+                                <th className="col-6">Nome da UE</th>
+                                <th className="col-2 text-center">Status</th>
+                                <th className="col-2 text-center">
+                                  Última atualização
+                                </th>
+                                <th className="col-2 text-center">Ações</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {resultados.dados.map((dado, key) => {
+                                return (
+                                  <tr key={key} className="row">
+                                    <td className="col-6 pt-3">
+                                      {dado.escola}
+                                    </td>
+                                    <td className="col-2 text-center pt-3">
+                                      {dado.status}
+                                    </td>
+                                    <td className="col-2 text-center pt-3">
+                                      {dado.log_mais_recente}
+                                    </td>
+                                    <td className="col-2 text-center">
+                                      <Botao
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={`${
+                                          BUTTON_STYLE.GREEN_OUTLINE
+                                        } no-border`}
+                                        icon={BUTTON_ICON.EYE}
+                                      />
+                                      <Botao
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={`${
+                                          BUTTON_STYLE.GREEN_OUTLINE
+                                        } no-border`}
+                                        icon={BUTTON_ICON.DOWNLOAD}
+                                      />
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                          <Paginacao
+                            onChange={page => onPageChanged(page)}
+                            total={resultados.total}
+                            pageSize={PAGE_SIZE}
+                            current={currentPage}
+                          />
+                        </>
+                      )}
+                    </Spin>
+                  </div>
+                </div>
+              </form>
+            )}
+          </Form>
         )}
       </Spin>
     </div>
