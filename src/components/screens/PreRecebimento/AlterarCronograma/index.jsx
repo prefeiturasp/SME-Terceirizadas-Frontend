@@ -179,7 +179,6 @@ export default () => {
                             checarQuantidadeInformada(values.motivos) &&
                               checarDatasInformadas(values.motivos, values)
                           );
-                          console.log(podeSubmeter);
                         } else {
                           setpodeSubmeter(false);
                         }
