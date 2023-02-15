@@ -8,6 +8,7 @@ const instance = axios.create({
   headers: AUTH_TOKEN
 });
 instance.interceptors.request.use(function(config) {
+  if (config.url.includes("/media/")) return config;
   if (!config.url.endsWith("/")) {
     throw new Error(
       "URLs devem obrigatoriamente terminar em '/': " + config.url
