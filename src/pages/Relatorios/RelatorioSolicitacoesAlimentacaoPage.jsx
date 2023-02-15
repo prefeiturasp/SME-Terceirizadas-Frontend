@@ -5,7 +5,8 @@ import { RELATORIO_SOLICITACOES_ALIMENTACAO } from "../../configs/constants";
 import { RelatorioSolicitacoesAlimentacao } from "components/screens/Relatorios/SolicitacoesAlimentacao";
 import {
   usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhMedicao
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -35,7 +36,7 @@ const anteriores = [
 const endpointPorPerfil = () => {
   if (usuarioEhDRE()) {
     return filtrarSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao()) {
+  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return filtrarSolicitacoesAlimentacaoCODAE;
   } else {
     return "PERFIL_INVALIDO";
@@ -45,7 +46,7 @@ const endpointPorPerfil = () => {
 const endpointGerarExcel = () => {
   if (usuarioEhDRE()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao()) {
+  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
   } else {
     return "PERFIL_INVALIDO";
@@ -55,7 +56,7 @@ const endpointGerarExcel = () => {
 const endpointGerarPDF = () => {
   if (usuarioEhDRE()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao()) {
+  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
   } else {
     return "PERFIL_INVALIDO";
