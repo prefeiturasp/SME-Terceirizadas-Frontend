@@ -3,10 +3,53 @@ import "./styles.scss";
 import { Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
+import { useEffect } from "react";
+import { OnChange } from "react-final-form-listeners";
+import { calculaRestante } from "../helpers";
 
-export default ({ cronograma, motivos }) => {
+export default ({
+  etapas,
+  motivos,
+  cronograma,
+  values,
+  restante,
+  setRestante,
+  setpodeSubmeter
+}) => {
+  useEffect(() => {
+    setRestante(cronograma.qtd_total_programada);
+  }, []);
+
+  const textoFaltante = () => {
+    let textoPadrao = (
+      <div>
+        Faltam
+        <span className="font-weight-bold">
+          &nbsp;
+          {restante}
+          &nbsp;
+        </span>
+        para programar
+      </div>
+    );
+
+    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
+
+    return (
+      <div className="row">
+        <div
+          className={`col-12 texto-alimento-faltante ${
+            restante === 0 ? "verde" : "vermelho"
+          }`}
+        >
+          {restante < 0 ? textoAcima : textoPadrao}
+        </div>
+      </div>
+    );
+  };
+
   return (
-    cronograma && (
+    etapas && (
       <div className="grid-cronograma mt-4">
         <div className="grid-cronograma-header head-crono">
           <div>
@@ -35,7 +78,7 @@ export default ({ cronograma, motivos }) => {
             </>
           )}
         </div>
-        {cronograma.etapas.map(etapa => (
+        {etapas.map(etapa => (
           <div className="grid-cronograma-body" key={etapa.uuid}>
             <div>
               <div>{etapa.data_programada}</div>
@@ -57,6 +100,24 @@ export default ({ cronograma, motivos }) => {
                     maxDate={null}
                     writable
                   />
+
+                  <OnChange name={`data_programada_${etapa.uuid}`}>
+                    {async value => {
+                      if (value) {
+                        if (values.motivos && values.justificativa) {
+                          let podeSubmeter = etapas.every(
+                            etapa =>
+                              values[`data_programada_${etapa.uuid}`] !==
+                                undefined &&
+                              values[`data_programada_${etapa.uuid}`] !== null
+                          );
+                          setpodeSubmeter(podeSubmeter);
+                        }
+                      } else {
+                        setpodeSubmeter(false);
+                      }
+                    }}
+                  </OnChange>
                 </div>
               </div>
             )}
@@ -73,13 +134,36 @@ export default ({ cronograma, motivos }) => {
                       name={`quantidade_total_${etapa.uuid}`}
                       placeholder="Quantidade"
                       className="input-busca-produto"
+                      required
                     />
+                    <OnChange name={`quantidade_total_${etapa.uuid}`}>
+                      {async value => {
+                        if (value) {
+                          const resto = calculaRestante(values, cronograma);
+                          setRestante(resto);
+                          if (
+                            values.motivos &&
+                            values.justificativa &&
+                            resto === 0
+                          ) {
+                            setpodeSubmeter(true);
+                          } else {
+                            setpodeSubmeter(false);
+                          }
+                        } else {
+                          setpodeSubmeter(false);
+                          setRestante(cronograma.qtd_total_programada);
+                        }
+                      }}
+                    </OnChange>
                   </div>
                 </div>
               </>
             )}
           </div>
         ))}
+        {motivos.includes("ALTERAR_QTD_ALIMENTO") && textoFaltante(values)}
+        <div />
       </div>
     )
   );
