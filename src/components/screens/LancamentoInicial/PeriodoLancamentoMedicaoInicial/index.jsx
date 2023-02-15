@@ -1748,7 +1748,8 @@ export default () => {
                         )
                       }
                       dadosIniciais={dadosIniciais}
-                      setExibirTooltip={() => setExibirTooltip(true)}
+                      setExibirTooltip={value => setExibirTooltip(value)}
+                      errors={errors}
                     />
                   )}
                   <Botao
