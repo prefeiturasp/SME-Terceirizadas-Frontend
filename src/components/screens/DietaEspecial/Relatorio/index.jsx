@@ -41,6 +41,7 @@ import { Spin } from "antd";
 import "./style.scss";
 import ModalAvisoDietaImportada from "./componentes/ModalAvisoDietaImportada";
 import { Websocket } from "services/websocket";
+import { usuarioEhCoordenadorNutriCODAE } from "helpers/utilities";
 
 const Relatorio = ({ visao }) => {
   const [dietaEspecial, setDietaEspecial] = useState(null);
@@ -443,7 +444,10 @@ const Relatorio = ({ visao }) => {
                 )}
                 {dietaEspecial.tipo_solicitacao !==
                   TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
-                  !editar && <BotaoEditarDieta nome="Editar" />}
+                  !editar &&
+                  usuarioEhCoordenadorNutriCODAE() && (
+                    <BotaoEditarDieta nome="Editar" />
+                  )}
               </>
             )}
         </div>
