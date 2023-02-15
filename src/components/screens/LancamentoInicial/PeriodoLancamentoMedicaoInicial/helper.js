@@ -97,3 +97,58 @@ export const deveExistirObservacao = (
       values[`observacoes__dia_${dia}__categoria_${categoria}`] !== undefined
   );
 };
+
+export const valorZeroFrequencia = (
+  value,
+  rowName,
+  categoria,
+  dia,
+  form,
+  tabelaAlimentacaoRows,
+  tabelaDietaRows,
+  tabelaDietaEnteralRows,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo
+) => {
+  if (rowName === "frequencia" && value && Number(value) === 0) {
+    let linhasDaTabela = null;
+    if (categoria.nome.includes("ENTERAL")) {
+      linhasDaTabela = tabelaDietaEnteralRows;
+    } else if (categoria.nome.includes("DIETA")) {
+      linhasDaTabela = tabelaDietaRows;
+    } else {
+      linhasDaTabela = tabelaAlimentacaoRows;
+      if (
+        Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+          String(key).includes(`__dia_${dia}__categoria_${categoria.id}`)
+        ) &&
+        !validacaoDiaLetivo(dia)
+      ) {
+        linhasDaTabela = linhasDaTabela.filter(linha =>
+          Object.keys(
+            Object.fromEntries(
+              Object.entries(dadosValoresInclusoesAutorizadasState).filter(
+                ([key]) => key.includes(dia)
+              )
+            )
+          ).some(key => key.includes(linha.name))
+        );
+      }
+    }
+
+    linhasDaTabela.forEach(linha => {
+      ![
+        "matriculados",
+        "frequencia",
+        "observacoes",
+        "dietas_autorizadas"
+      ].includes(linha.name) &&
+        form.change(
+          `${linha.name}__dia_${dia}__categoria_${categoria.id}`,
+          "0"
+        );
+    });
+    return true;
+  }
+  return;
+};
