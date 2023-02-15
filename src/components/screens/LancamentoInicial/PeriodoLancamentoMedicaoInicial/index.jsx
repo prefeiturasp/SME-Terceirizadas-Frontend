@@ -37,13 +37,15 @@ import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
   botaoAdicionarObrigatorioTabelaAlimentacao,
+  campoFrequenciaValor0ESemObservacao,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario
 } from "./validacoes";
 import {
   deveExistirObservacao,
-  formatarPayloadPeriodoLancamento
+  formatarPayloadPeriodoLancamento,
+  valorZeroFrequencia
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -727,8 +729,8 @@ export default () => {
         (["Mês anterior", "Mês posterior", null].includes(value) ||
           key.includes("matriculados") ||
           key.includes("dietas_autorizadas") ||
-          key.includes("repeticao") ||
-          key.includes("emergencial")) &&
+          (!validacaoDiaLetivo(dia) &&
+            (key.includes("repeticao") || key.includes("emergencial")))) &&
         delete valuesMesmoDiaDaObservacao[key]
       );
     });
@@ -1077,8 +1079,21 @@ export default () => {
     values,
     dia,
     categoria,
-    rowName
+    rowName,
+    form
   ) => {
+    const ehZeroFrequencia = valorZeroFrequencia(
+      value,
+      rowName,
+      categoria,
+      dia,
+      form,
+      tabelaAlimentacaoRows,
+      tabelaDietaRows,
+      tabelaDietaEnteralRows,
+      dadosValoresInclusoesAutorizadasState,
+      validacaoDiaLetivo
+    );
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
       desabilitaTooltip(values);
@@ -1145,6 +1160,16 @@ export default () => {
       }
     });
     desabilitaTooltip(values);
+
+    if (
+      (ehZeroFrequencia &&
+        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]) ||
+      campoFrequenciaValor0ESemObservacao(dia, categoria, values)
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
+
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
     }
@@ -1426,7 +1451,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         column.dia,
                                                         categoria,
-                                                        row.name
+                                                        row.name,
+                                                        form
                                                       );
                                                     }}
                                                   </OnChange>
@@ -1680,7 +1706,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         column.dia,
                                                         categoria,
-                                                        row.name
+                                                        row.name,
+                                                        form
                                                       );
                                                     }}
                                                   </OnChange>
