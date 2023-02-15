@@ -30,7 +30,8 @@ export default ({
   valoresPeriodosLancamentos,
   onSubmit,
   dadosIniciais,
-  setExibirTooltip
+  setExibirTooltip,
+  errors
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -62,7 +63,11 @@ export default ({
           ),
           1
         );
-        setExibirTooltip();
+        if (Object.keys(errors).length > 0) {
+          setExibirTooltip(true);
+        } else {
+          setExibirTooltip(false);
+        }
         toastSuccess("Observação excluída com sucesso");
       } else {
         toastError(msgError);
