@@ -44,7 +44,7 @@ export default () => {
   const history = useHistory();
 
   const checarQuantidadeInformada = values_ => {
-    return !values_.includes("ALTERAR_QTD_ALIMENTO") || restante === 0; 
+    return !values_.includes("ALTERAR_QTD_ALIMENTO") || restante === 0;
   };
 
   const checarDatasInformadas = (values_, values) => {
@@ -68,7 +68,7 @@ export default () => {
     if (values_.length !== 0 && values.justificativa) {
       setpodeSubmeter(
         checarQuantidadeInformada(values_) &&
-        checarDatasInformadas(values_, values)
+          checarDatasInformadas(values_, values)
       );
     }
     if (values_.includes("OUTROS")) {
@@ -79,7 +79,7 @@ export default () => {
       return;
     }
     form.change("motivos", values_);
-  }
+  };
 
   const getDetalhes = async () => {
     if (uuid) {
@@ -131,7 +131,9 @@ export default () => {
                       hasSelectAll={false}
                       options={opcoesMotivos}
                       selected={values.motivos || []}
-                      onSelectedChanged={(values_) => handleMotivosChange(values_, values, form)}
+                      onSelectedChanged={values_ =>
+                        handleMotivosChange(values_, values, form)
+                      }
                       overrideStrings={{
                         search: "Busca",
                         selectSomeItems: "Selecione o(s) Motivo(s)",

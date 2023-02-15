@@ -141,8 +141,10 @@ export default ({
                         if (value) {
                           const resto = calculaRestante(values, cronograma);
                           setRestante(resto);
-                          const temMotivosEJustificativa = values.motivos && values.justificativa;
-                          const podeSubmeter = temMotivosEJustificativa && resto === 0;
+                          const temMotivosEJustificativa =
+                            values.motivos && values.justificativa;
+                          const podeSubmeter =
+                            temMotivosEJustificativa && resto === 0;
                           setpodeSubmeter(podeSubmeter);
                         } else {
                           setpodeSubmeter(false);
