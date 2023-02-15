@@ -80,6 +80,18 @@ const ModalCadastroVinculo = ({
       uuid: sub.uuid,
       nome: sub.nome
     }));
+    const perfil = JSON.parse(localStorage.getItem("perfil"));
+
+    const options_perfil_map = {
+      COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
+      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos"
+    };
+
+    if (perfil in options_perfil_map) {
+      options_subs = options_subs.filter(
+        option => option.nome === options_perfil_map[perfil]
+      );
+    }
 
     setSubdivisoes(options_subs);
   };
