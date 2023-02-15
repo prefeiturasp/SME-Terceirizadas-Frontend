@@ -18,6 +18,19 @@
   }
 }
 
+.default-color-first-semana:first-child {
+  .ant-tabs-nav {
+    .ant-tabs-tab:first-child {
+      background-color: #198459;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 0.25px currentColor;
+      .ant-tabs-tab-btn:hover {
+        color: $white !important;
+      }
+    }
+  }
+}
 .tabela-tipos-alimentacao {
   margin-top: 10px;
   margin-bottom: 32px;
