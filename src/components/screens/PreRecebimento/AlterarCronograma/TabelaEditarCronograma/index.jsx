@@ -18,7 +18,7 @@ export default ({
 }) => {
   useEffect(() => {
     setRestante(cronograma.qtd_total_programada);
-  }, []);
+  }, [cronograma]);
 
   const textoFaltante = () => {
     let textoPadrao = (
@@ -141,15 +141,9 @@ export default ({
                         if (value) {
                           const resto = calculaRestante(values, cronograma);
                           setRestante(resto);
-                          if (
-                            values.motivos &&
-                            values.justificativa &&
-                            resto === 0
-                          ) {
-                            setpodeSubmeter(true);
-                          } else {
-                            setpodeSubmeter(false);
-                          }
+                          const temMotivosEJustificativa = values.motivos && values.justificativa;
+                          const podeSubmeter = temMotivosEJustificativa && resto === 0;
+                          setpodeSubmeter(podeSubmeter);
                         } else {
                           setpodeSubmeter(false);
                           setRestante(cronograma.qtd_total_programada);
@@ -162,7 +156,9 @@ export default ({
             )}
           </div>
         ))}
-        {motivos.includes("ALTERAR_QTD_ALIMENTO") && textoFaltante(values)}
+        <div className="text-center">
+          {motivos.includes("ALTERAR_QTD_ALIMENTO") && textoFaltante(values)}
+        </div>
         <div />
       </div>
     )

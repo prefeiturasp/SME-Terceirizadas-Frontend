@@ -4,7 +4,6 @@ import {
   cadastraSolicitacaoAlteracaoCronograma,
   getCronograma
 } from "services/cronograma.service";
-import "./styles.scss";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
@@ -45,10 +44,7 @@ export default () => {
   const history = useHistory();
 
   const checarQuantidadeInformada = values_ => {
-    if (values_.includes("ALTERAR_QTD_ALIMENTO")) {
-      return restante === 0;
-    }
-    return true;
+    return !values_.includes("ALTERAR_QTD_ALIMENTO") || restante === 0; 
   };
 
   const checarDatasInformadas = (values_, values) => {
@@ -64,6 +60,27 @@ export default () => {
     return true;
   };
 
+  const handleMotivosChange = (values_, values, form) => {
+    setpodeSubmeter(false);
+    if (manterDataEQuantidade(values, values_)) {
+      values_ = values_.filter(value_ => value_ !== "OUTROS");
+    }
+    if (values_.length !== 0 && values.justificativa) {
+      setpodeSubmeter(
+        checarQuantidadeInformada(values_) &&
+        checarDatasInformadas(values_, values)
+      );
+    }
+    if (values_.includes("OUTROS")) {
+      if (values_.length !== 0 && values.justificativa) {
+        setpodeSubmeter(true);
+      }
+      form.change("motivos", ["OUTROS"]);
+      return;
+    }
+    form.change("motivos", values_);
+  }
+
   const getDetalhes = async () => {
     if (uuid) {
       const responseCronograma = await getCronograma(uuid);
@@ -77,8 +94,7 @@ export default () => {
 
   useEffect(() => {
     getDetalhes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [uuid]);
 
   return (
     <div className="card mt-3">
@@ -115,28 +131,7 @@ export default () => {
                       hasSelectAll={false}
                       options={opcoesMotivos}
                       selected={values.motivos || []}
-                      onSelectedChanged={values_ => {
-                        setpodeSubmeter(false);
-                        if (manterDataEQuantidade(values, values_)) {
-                          values_ = values_.filter(
-                            value_ => value_ !== "OUTROS"
-                          );
-                        }
-                        if (values_.length !== 0 && values.justificativa) {
-                          setpodeSubmeter(
-                            checarQuantidadeInformada(values_) &&
-                              checarDatasInformadas(values_, values)
-                          );
-                        }
-                        if (values_.includes("OUTROS")) {
-                          if (values_.length !== 0 && values.justificativa) {
-                            setpodeSubmeter(true);
-                          }
-                          form.change("motivos", ["OUTROS"]);
-                          return;
-                        }
-                        form.change("motivos", values_);
-                      }}
+                      onSelectedChanged={(values_) => handleMotivosChange(values_, values, form)}
                       overrideStrings={{
                         search: "Busca",
                         selectSomeItems: "Selecione o(s) Motivo(s)",
