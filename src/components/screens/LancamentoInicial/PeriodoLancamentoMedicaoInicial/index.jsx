@@ -1287,6 +1287,11 @@ export default () => {
                         onChangeSemana(formValuesAtualizados, key);
                       }}
                       type="card"
+                      className={`${
+                        semanaSelecionada === 1
+                          ? "default-color-first-semana"
+                          : ""
+                      }`}
                     >
                       {Array.apply(null, {
                         length: isSunday(lastDayOfMonth(mesAnoConsiderado))
