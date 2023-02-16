@@ -18,7 +18,7 @@ export default props => (
         texto="OK"
         type={BUTTON_TYPE.BUTTON}
         onClick={props.closeModal}
-        style={BUTTON_STYLE.BLUE}
+        style={BUTTON_STYLE.GREEN}
         className="ml-3"
       />
     </Modal.Footer>
