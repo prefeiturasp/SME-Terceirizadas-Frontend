@@ -80,6 +80,18 @@ const ModalCadastroVinculo = ({
       uuid: sub.uuid,
       nome: sub.nome
     }));
+    const perfil = JSON.parse(localStorage.getItem("perfil"));
+
+    const subdivisoes_restrita_por_perfil = {
+      COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
+      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos"
+    };
+
+    if (perfil in subdivisoes_restrita_por_perfil) {
+      options_subs = options_subs.filter(
+        option => option.nome === subdivisoes_restrita_por_perfil[perfil]
+      );
+    }
 
     setSubdivisoes(options_subs);
   };
@@ -161,6 +173,7 @@ const ModalCadastroVinculo = ({
       setTipoUsuario("SERVIDOR");
     }
   }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica]);
+
   return (
     <>
       <ModalExclusaoVinculo show={showExclusao} setShow={setShowExclusao} />
@@ -332,6 +345,12 @@ const ModalCadastroVinculo = ({
                               className="input-busca-produto"
                               required
                               options={subdivisoes}
+                              disabled={subdivisoes.length === 1}
+                              defaultValue={
+                                subdivisoes.length === 1
+                                  ? subdivisoes[0].uuid
+                                  : undefined
+                              }
                               validate={required}
                             />
                           </div>
