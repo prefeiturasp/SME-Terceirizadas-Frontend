@@ -1394,7 +1394,8 @@ const routesConfig = [
     path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
