@@ -49,6 +49,7 @@ const Especificaoes = ({
       if (
         opcoesUnidadesDeMedida &&
         opcoesEmbalagens &&
+        fields.length === 0 &&
         ([null, undefined].includes(especificacoesIniciais) ||
           especificacoesIniciais.length === 0)
       ) {
