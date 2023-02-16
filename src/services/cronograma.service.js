@@ -20,11 +20,20 @@ export const getListagemCronogramas = async params => {
   return await axios.get(url, { params });
 };
 
-export const fornecedorConfirma = async uuid => {
-  const url = `/cronogramas/${uuid}/fornecedor-confirma-cronograma/`;
-  return await axios.patch(url);
+export const fornecedorAssinaCronograma = async (uuid, password) => {
+  const url = `/cronogramas/${uuid}/fornecedor-assina-cronograma/`;
+  return await axios.patch(url, {
+    password: password
+  });
 };
 
 export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
   return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
+};
+
+export const cronogramaAssina = async (uuid, password) => {
+  const url = `/cronogramas/${uuid}/cronograma-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
 };

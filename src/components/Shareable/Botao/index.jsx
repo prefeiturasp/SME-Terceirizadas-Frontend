@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 import { BUTTON_STYLE, BUTTON_TYPE } from "./constants";
+import { Tooltip } from "antd";
 import "./style.scss";
 
 export const Botao = props => {
@@ -16,8 +17,12 @@ export const Botao = props => {
     titulo,
     texto,
     type,
+    exibirTooltip,
+    tooltipTitulo,
+    classTooltip,
     tabindex
   } = props;
+  const [exibeMensagem, setExibeMensagem] = useState(false);
   return (
     <button
       type={type}
@@ -25,6 +30,8 @@ export const Botao = props => {
       data-cy={texto}
       className={`general-button ${style} ${className}`}
       onClick={onClick}
+      onMouseOver={() => setExibeMensagem(true)}
+      onMouseOut={() => setExibeMensagem(false)}
       disabled={disabled}
       accept={accept}
       tabIndex={tabindex}
@@ -38,6 +45,11 @@ export const Botao = props => {
           id={iconId}
           className={`${icon} ${texto && "text-and-icon-right"}`}
         />
+      )}
+      {exibirTooltip && (
+        <Tooltip open={exibeMensagem} title={tooltipTitulo}>
+          <i className={`fas fa-info ${classTooltip}`} />
+        </Tooltip>
       )}
     </button>
   );
@@ -53,7 +65,10 @@ Botao.propTypes = {
   style: PropTypes.string,
   texto: PropTypes.string,
   titulo: PropTypes.string,
-  type: PropTypes.string
+  type: PropTypes.string,
+  exibirTooltip: PropTypes.bool,
+  tooltipTitulo: PropTypes.string,
+  classTooltip: PropTypes.string
 };
 
 Botao.defaultProps = {
@@ -62,7 +77,10 @@ Botao.defaultProps = {
   style: BUTTON_STYLE.GREEN,
   texto: "",
   titulo: "",
-  type: BUTTON_TYPE.BUTTON
+  type: BUTTON_TYPE.BUTTON,
+  exibirTooltip: false,
+  tooltipTitulo: "",
+  classTooltip: ""
 };
 
 export default Botao;

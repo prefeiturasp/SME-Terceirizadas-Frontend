@@ -233,12 +233,7 @@ export const StatusSolicitacoesDietaEspecial = () => {
 };
 
 export const painelInicial = () => {
-  // switch (localStorage.getItem("tipo_perfil")) {
-  //   case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-  //     return DashboardCODAEPage;
-  //   default:
   return PainelInicialPage;
-  //}
 };
 
 export const inclusaoAlimentacao = () => {

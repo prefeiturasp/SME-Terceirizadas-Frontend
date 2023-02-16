@@ -281,6 +281,9 @@ const ENDPOINT = {
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
 
+ENDPOINT.ATUALIZA_PROTOCOLO_DIETA = uuid =>
+  `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/codae-atualiza-protocolo`;
+
 ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
   `${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/informa-suspensao/`;
 
@@ -450,6 +453,23 @@ export const cnpjMask = [
   /\d/
 ];
 
+export const cpfMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/
+];
+
 export const cepMask = [/\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/];
 
 export const telefoneMask = [
@@ -468,4 +488,19 @@ export const telefoneMask = [
   /\d/,
   /\d/,
   /\d/
+];
+
+export const MESES = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro"
 ];

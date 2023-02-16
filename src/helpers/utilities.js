@@ -451,7 +451,7 @@ export const usuarioEhPreRecebimento = () => {
   */
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
-    usuarioEhLogistica()
+    usuarioEhCodaeDilog()
   );
 };
 
@@ -810,11 +810,12 @@ export const exibirGA = () => {
   }
 };
 
-export const exibirLancamentoMedicaoInicial = () => {
+export const exibirModuloMedicaoInicial = () => {
   return (
-    usuarioEhEscola() &&
-    !usuarioEscolaEhGestaoDireta() &&
-    !["treinamento", "production"].includes(ENVIRONMENT)
+    !["treinamento", "production"].includes(ENVIRONMENT) &&
+    (usuarioEhDRE() ||
+      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhMedicao())
   );
 };
 

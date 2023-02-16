@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Modal } from "react-bootstrap";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { fornecedorConfirma } from "services/cronograma.service";
-import { Spin } from "antd";
+import { fornecedorAssinaCronograma } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
   PRE_RECEBIMENTO
 } from "../../../../../../configs/constants";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 
 export default ({ cronograma }) => {
   const [show, setShow] = useState(false);
@@ -23,22 +22,25 @@ export default ({ cronograma }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleSim = () => {
+  const handleSim = password => {
     setLoading(true);
-    fornecedorConfirma(cronograma.uuid)
+    fornecedorAssinaCronograma(cronograma.uuid, password)
       .then(response => {
         if (response.status === 200) {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setShow(false);
           setLoading(false);
           history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
-          toastSuccess("Cronograma confirmado com sucesso!");
+          toastSuccess("Cronograma assinado com sucesso!");
         }
       })
-      .catch(() => {
-        setShow(false);
+      .catch(e => {
+        if (e.response && e.response.status === 401) {
+          toastError("Senha inválida.");
+        } else {
+          toastError(e.response.data.detail);
+        }
         setLoading(false);
-        toastError("Erro: Não foi possível confirmar o cronograma.");
       });
   };
 
@@ -51,7 +53,7 @@ export default ({ cronograma }) => {
     <>
       {cronograma.status === "Enviado ao Fornecedor" && (
         <Botao
-          texto="Confirmar Cronograma"
+          texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           className="float-right ml-3"
@@ -67,33 +69,16 @@ export default ({ cronograma }) => {
         onClick={() => handleBack()}
       />
 
-      <Modal show={show} onHide={handleClose} backdrop={"static"}>
-        <Spin tip="Carregando..." spinning={loading}>
-          <Modal.Header closeButton>
-            <Modal.Title> Confirmar Cronograma </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            Você confirma a entrega dos alimentos nas datas e quantidades
-            descritas no cronograma de entrega: {cronograma.numero}?
-          </Modal.Body>
-          <Modal.Footer>
-            <Botao
-              texto="Não"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={() => handleClose()}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
-            />
-            <Botao
-              texto="Sim"
-              type={BUTTON_TYPE.BUTTON}
-              style={BUTTON_STYLE.GREEN}
-              className="ml-3"
-              onClick={() => handleSim()}
-            />
-          </Modal.Footer>
-        </Spin>
-      </Modal>
+      <ModalAssinaturaUsuario
+        titulo="Assinar Cronograma"
+        texto={`Você confirma a assinatura digital do cronograma de entrega ${
+          cronograma.numero
+        }?`}
+        show={show}
+        loading={loading}
+        handleClose={handleClose}
+        handleSim={handleSim}
+      />
     </>
   );
 };

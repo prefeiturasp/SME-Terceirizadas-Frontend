@@ -509,14 +509,15 @@ export const escolaOuNutriReclamaDoProduto = async (uuid, payload) => {
 };
 
 export const ativarProduto = async (uuid, payload) => {
-  return await axios.patch(`/homologacoes-produtos/${uuid}/ativar/`, payload);
+  return await axios
+    .patch(`/homologacoes-produtos/${uuid}/ativar/`, payload)
+    .catch(ErrorHandlerFunction);
 };
 
 export const suspenderProduto = async (uuid, payload) => {
-  return await axios.patch(
-    `/homologacoes-produtos/${uuid}/suspender/`,
-    payload
-  );
+  return await axios
+    .patch(`/homologacoes-produtos/${uuid}/suspender/`, payload)
+    .catch(ErrorHandlerFunction);
 };
 
 export const getNumeroProtocoloAnaliseSensorial = async () => {
@@ -690,10 +691,20 @@ export const cadastrarProdutoEdital = async payload =>
 export const atualizarProdutoEdital = async (payload, uuid) =>
   await axios.patch(`/cadastro-produtos-edital/${uuid}/`, payload);
 
-export const imprimeFichaIdentificacaoProduto = async uuid => {
+export const imprimeFichaIdentificacaoProduto = async (uuid, params) => {
   const url = `/homologacoes-produtos/${uuid}/gerar-pdf-ficha-identificacao-produto/`;
   const { data } = await axios.get(url, {
+    params,
     responseType: "blob"
   });
   saveAs(data, "ficha_identificacao_produto.pdf");
+};
+
+export const gerarExcelRelatorioProdutosHomologados = async params => {
+  const url = `/produtos/exportar-xlsx/`;
+  const response = await axios.post(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
