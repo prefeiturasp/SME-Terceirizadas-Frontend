@@ -94,6 +94,18 @@ export const campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao = (
   return erro;
 };
 
+export const campoFrequenciaValor0ESemObservacao = (dia, categoria, values) => {
+  let erro = false;
+  if (
+    values[`frequencia__dia_${dia}__categoria_${categoria.id}`] &&
+    Number(values[`frequencia__dia_${dia}__categoria_${categoria.id}`]) === 0 &&
+    !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   values,
   dia,
@@ -131,7 +143,8 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       categoria,
       dadosValoresInclusoesAutorizadasState,
       values
-    )
+    ) ||
+    campoFrequenciaValor0ESemObservacao(dia, categoria, values)
   );
 };
 
@@ -142,12 +155,14 @@ export const botaoAdicionarObrigatorio = (
   diasSobremesaDoce,
   location
 ) => {
-  return repeticaoSobremesaDoceComValorESemObservacao(
-    values,
-    dia,
-    categoria,
-    diasSobremesaDoce,
-    location
+  return (
+    repeticaoSobremesaDoceComValorESemObservacao(
+      values,
+      dia,
+      categoria,
+      diasSobremesaDoce,
+      location
+    ) || campoFrequenciaValor0ESemObservacao(dia, categoria, values)
   );
 };
 
@@ -326,7 +341,7 @@ export const validacoesTabelaAlimentacao = (
     ) &&
     !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
   ) {
-    if (!(Number(value) === 0 && !validacaoDiaLetivo(dia))) {
+    if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
       return `Foi autorizada inclusão de alimentação ${
         location.state && location.state.grupo ? "contínua" : ""
       } nesta data. Informe a frequência de alunos.`;
@@ -334,7 +349,7 @@ export const validacoesTabelaAlimentacao = (
   } else if (
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    [NaN, 0].includes(maxFrequencia) &&
+    [NaN].includes(maxFrequencia) &&
     (inputName.includes("refeicao") ||
       inputName.includes("sobremesa") ||
       inputName.includes("lanche")) &&
@@ -473,7 +488,7 @@ export const validacoesTabelasDietas = (
   } else if (
     value &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
-    [NaN, 0].includes(maxFrequencia) &&
+    [NaN].includes(maxFrequencia) &&
     (inputName.includes("lanche_4h") ||
       inputName.includes("lanche") ||
       inputName.includes("refeicao"))

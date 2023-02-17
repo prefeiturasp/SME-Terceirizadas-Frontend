@@ -373,10 +373,6 @@ export const usuarioEhCodaeDilog = () => {
   );
 };
 
-export const usuarioEhDinutreDiretoria = () => {
-  return localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
-};
-
 export const usuarioEhEscola = () => {
   return [
     PERFIL.ADMINISTRADOR_ESCOLA,
@@ -458,6 +454,9 @@ export const usuarioEhPreRecebimento = () => {
     usuarioEhCodaeDilog()
   );
 };
+
+export const usuarioEhDinutreDiretoria = () =>
+  localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
 
 export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));

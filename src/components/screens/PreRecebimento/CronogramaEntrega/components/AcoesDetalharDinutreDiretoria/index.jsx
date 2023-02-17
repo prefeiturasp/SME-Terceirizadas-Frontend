@@ -30,7 +30,9 @@ export default ({ cronograma }) => {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setShow(false);
           setLoading(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          if (!history.goBack()) {
+            history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          }
           toastSuccess("Cronograma assinado com sucesso!");
         }
       })

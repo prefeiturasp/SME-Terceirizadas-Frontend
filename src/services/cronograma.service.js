@@ -45,3 +45,6 @@ export const dinutreAssinaCronograma = async (uuid, password) => {
     password: password
   });
 };
+
+export const getDashboardCronograma = async () =>
+  await axios.get(`/cronogramas/dashboard/`);
