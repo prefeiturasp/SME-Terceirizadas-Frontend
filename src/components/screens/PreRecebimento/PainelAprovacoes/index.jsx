@@ -52,7 +52,11 @@ export default () => {
   };
 
   const gerarLinkDoItem = item => {
-    if (item.status.toLowerCase() === "assinado dinutre") {
+    if (
+      ["assinado dinutre", "assinado cronograma"].includes(
+        item.status.toLowerCase()
+      )
+    ) {
       return `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`;
     }
   };
