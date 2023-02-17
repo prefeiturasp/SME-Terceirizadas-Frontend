@@ -123,7 +123,9 @@ export const Container = () => {
     ) {
       response.data.results[0].tipos_alimentacao = response.data.results[0].tipos_alimentacao.filter(
         tipo_alimentacao =>
-          ["Lanche 4h", "Refeição", "Sobremesa"].includes(tipo_alimentacao.nome)
+          ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"].includes(
+            tipo_alimentacao.nome
+          )
       );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
