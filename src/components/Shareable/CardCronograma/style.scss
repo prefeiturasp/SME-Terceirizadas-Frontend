@@ -1,0 +1,66 @@
+@import "../../../styles/variables.scss";
+
+.card-title-status {
+  font-weight: 600;
+  font-size: 13px;
+  color: $blackInput;
+  letter-spacing: 0.01em;
+  padding-top: 5px;
+  span {
+    color: $grayPlaceholder;
+    font-weight: normal;
+    font-size: 10px;
+    padding-right: 5px;
+  }
+}
+
+.card-panel {
+  border-left: 10px solid !important;
+  i {
+    padding: 0 10px;
+  }
+  hr {
+    margin-top: 5px;
+  }
+  p.data {
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #707683;
+    margin-bottom: 0.3rem;
+    span {
+      font-weight: normal;
+    }
+  }
+  a.see-more {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    color: $blue;
+    padding: 10px 0;
+  }
+}
+
+.ajuste-icones {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 0.5em;
+  img {
+    height: 1em;
+  }
+}
+
+.card-colored {
+  &.card-pendente-assinatura {
+    border-left-color: $orange !important;
+    i {
+      color: $orange;
+    }
+  }
+  &.card-aguardando-dilog {
+    border-left-color: $greenLight !important;
+    i {
+      color: $greenLight;
+    }
+  }
+}
