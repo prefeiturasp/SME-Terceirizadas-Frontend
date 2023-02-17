@@ -27,6 +27,7 @@ const TabelaProdutos = ({ produtos }) => {
           <div>Marca</div>
           <div>Fabricante</div>
           <div>Status</div>
+          <div>Editais</div>
           <div />
         </div>
       </section>
@@ -40,6 +41,7 @@ const TabelaProdutos = ({ produtos }) => {
               <div>
                 {checaStatus(produto.ultima_homologacao) ? "Ativo" : "Suspenso"}
               </div>
+              <div>{produto.vinculos_produto_edital || " -- "}</div>
               <div>
                 <Link
                   to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${

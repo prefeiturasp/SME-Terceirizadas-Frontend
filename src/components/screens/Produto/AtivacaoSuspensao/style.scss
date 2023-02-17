@@ -15,7 +15,7 @@
 
 .tabela-ativacao-suspensao-produto {
   display: grid;
-  grid-template-columns: auto 20% 20% 10% 108px;
+  grid-template-columns: 20% 15% 18% 10% auto 12%;
 }
 
 .tabela-header-ativacao-suspensao-produto {
@@ -31,10 +31,6 @@
     color: #42474a;
     border: 1px solid #e9eaea;
   }
-}
-
-.tabela-body-ativacao-suspensao-produto {
-  height: 48px;
 }
 
 .item-ativacao-suspensao-produto > div {
