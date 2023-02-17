@@ -370,7 +370,9 @@ class DashBoardDietaEspecial extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={getNomeCardAguardandoAutorizacao()}
+                    cardTitle={`${getNomeCardAguardandoAutorizacao()} (${
+                      pendentesListFiltered ? pendentesListFiltered.length : "0"
+                    })`}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={
                       pendentesListFiltered ? pendentesListFiltered : []
@@ -381,7 +383,11 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
+                    cardTitle={`"Autorizadas" (${
+                      autorizadasListFiltered
+                        ? autorizadasListFiltered.length
+                        : "0"
+                    })`}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasListFiltered ? autorizadasListFiltered : []
