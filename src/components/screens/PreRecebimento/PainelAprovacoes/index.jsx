@@ -8,6 +8,7 @@ import {
   comparaObjetosMoment,
   truncarString
 } from "helpers/utilities";
+import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -43,11 +44,17 @@ export default () => {
 
   const formataCards = items => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
-      uuid: item.uuid,
       text: getText(item),
       date: item.log_mais_recente,
+      link: gerarLinkDoItem(item),
       status: item.status
     }));
+  };
+
+  const gerarLinkDoItem = item => {
+    if (item.status.toLowerCase() === "assinado dinutre") {
+      return `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`;
+    }
   };
 
   return (
