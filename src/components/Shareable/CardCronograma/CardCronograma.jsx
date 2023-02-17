@@ -1,7 +1,6 @@
 import React from "react";
 import "./style.scss";
 import { NavLink } from "react-router-dom";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
 
 export const CardCronograma = props => {
   const { cardTitle, cardType, solicitations, icon, loading } = props;
@@ -9,12 +8,7 @@ export const CardCronograma = props => {
   const renderSolicitations = solicitations => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
       return (
-        <NavLink
-          key={key}
-          to={`/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
-            solicitation.uuid
-          }`}
-        >
+        <NavLink key={key} to={solicitation.link}>
           <p key={key} className={`data`}>
             {solicitation.text}
             <span className="float-right">{solicitation.date}</span>
