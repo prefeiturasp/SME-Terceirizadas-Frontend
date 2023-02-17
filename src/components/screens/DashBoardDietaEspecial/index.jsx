@@ -11,7 +11,8 @@ import CardAtalho from "../../Shareable/CardAtalho";
 import {
   dataAtual,
   usuarioEhEscola,
-  usuarioEhTerceirizada
+  usuarioEhTerceirizada,
+  usuarioEhCoordenadorNutriCODAE
 } from "../../../helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
 
@@ -331,6 +332,18 @@ class DashBoardDietaEspecial extends Component {
     });
   }
 
+  contadorDietas(title, dietas) {
+    if (usuarioEhCoordenadorNutriCODAE()) {
+      if (dietas && dietas.length > 0) {
+        return `${title} (${dietas.length})`;
+      } else {
+        return `${title} (0)`;
+      }
+    } else {
+      return title;
+    }
+  }
+
   render() {
     const {
       autorizadasListFiltered,
@@ -370,7 +383,10 @@ class DashBoardDietaEspecial extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={getNomeCardAguardandoAutorizacao()}
+                    cardTitle={`${this.contadorDietas(
+                      getNomeCardAguardandoAutorizacao(),
+                      pendentesListFiltered
+                    )}`}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={
                       pendentesListFiltered ? pendentesListFiltered : []
@@ -381,7 +397,10 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
+                    cardTitle={`${this.contadorDietas(
+                      "Autorizadas",
+                      autorizadasListFiltered
+                    )}`}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasListFiltered ? autorizadasListFiltered : []
