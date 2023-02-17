@@ -68,10 +68,12 @@ class WizardFormTerceiraPagina extends Component {
             return {
               volume: especificacao.volume,
               unidade_de_medida: especificacao.unidade_de_medida
-                ? especificacao.unidade_de_medida.uuid
+                ? especificacao.unidade_de_medida.uuid ||
+                  especificacao.unidade_de_medida
                 : undefined,
               embalagem_produto: especificacao.embalagem_produto
-                ? especificacao.embalagem_produto.uuid
+                ? especificacao.embalagem_produto.uuid ||
+                  especificacao.embalagem_produto
                 : undefined
             };
           })
