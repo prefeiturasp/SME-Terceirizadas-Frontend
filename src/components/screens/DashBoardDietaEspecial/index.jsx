@@ -337,7 +337,7 @@ class DashBoardDietaEspecial extends Component {
       if (dietas && dietas.length > 0) {
         return `${title} (${dietas.length})`;
       } else {
-        return `${title} 0`;
+        return `${title} (0)`;
       }
     } else {
       return title;
