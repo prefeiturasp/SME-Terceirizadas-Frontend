@@ -14,14 +14,14 @@ import {
 const MenuPreRecebimento = () => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
-      {(usuarioEhPreRecebimento() || usuarioEhFornecedor()) && (
-        <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
-          Cronograma de Entrega
-        </LeafItem>
-      )}
       {usuarioEhDinutreDiretoria() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}>
           Painel de Aprovações
+        </LeafItem>
+      )}
+      {(usuarioEhPreRecebimento() || usuarioEhFornecedor()) && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
+          Cronograma de Entrega
         </LeafItem>
       )}
     </Menu>

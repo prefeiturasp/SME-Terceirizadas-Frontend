@@ -43,6 +43,7 @@ export default () => {
 
   const formataCards = items => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
+      uuid: item.uuid,
       text: getText(item),
       date: item.log_mais_recente,
       status: item.status
