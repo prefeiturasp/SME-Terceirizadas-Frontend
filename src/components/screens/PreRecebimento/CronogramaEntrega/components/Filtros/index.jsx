@@ -30,10 +30,9 @@ const options_status = usuarioEhFornecedor()
         label: "Alteração Fornecedor"
       },
       {
-        value: "VALIDADO_FORNECEDOR",
-        label: "Validado Fornecedor"
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
       },
-      { value: "ENTREGA_CONFIRMADA", label: "Entrega Confirmada" },
       {
         value: "SOLICITADO_ALTERACAO",
         label: "Solicitado Alteração"
@@ -56,8 +55,8 @@ const options_status = usuarioEhFornecedor()
         label: "Alteração Fornecedor"
       },
       {
-        value: "VALIDADO_FORNECEDOR",
-        label: "Validado Fornecedor"
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
       },
       { value: "RASCUNHO", label: "Rascunho" },
       {
@@ -82,8 +81,8 @@ const options_status = usuarioEhFornecedor()
         label: "Alteração Fornecedor"
       },
       {
-        value: "VALIDADO_FORNECEDOR",
-        label: "Validado Fornecedor"
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
       },
       { value: "RASCUNHO", label: "Rascunho" },
       {
@@ -111,8 +110,8 @@ const options_status = usuarioEhFornecedor()
         label: "Alteração Fornecedor"
       },
       {
-        value: "VALIDADO_FORNECEDOR",
-        label: "Validado Fornecedor"
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
       },
       { value: "RASCUNHO", label: "Rascunho" }
     ];
