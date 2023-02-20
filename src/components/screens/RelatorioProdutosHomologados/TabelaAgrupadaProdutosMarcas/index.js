@@ -3,18 +3,24 @@ import { Pagination } from "antd";
 
 import "./style.scss";
 
-const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
+const TabelaAgrupadaProdutosMarcas = ({
+  dadosProdutos,
+  filtros,
+  getProdutosHomologados,
+  quantidadeHomologados
+}) => {
   const [page, setPage] = useState(1);
+
+  const PAGE_SIZE = 10;
 
   const onChangePagination = page => {
     setPage(page);
+    getProdutosHomologados({
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      ...filtros
+    });
   };
-
-  const totalResultados = dadosProdutos && dadosProdutos.length;
-  const pageSize = 10;
-  const dadosProdutosPaginado =
-    dadosProdutos &&
-    dadosProdutos.slice(pageSize * (page - 1), pageSize * page);
 
   return (
     <div>
@@ -28,22 +34,22 @@ const TabelaAgrupadaProdutosMarcas = ({ dadosProdutos }) => {
         </thead>
         <tbody>
           {dadosProdutos &&
-            dadosProdutosPaginado.map((produto, index) => {
+            dadosProdutos.map((produto, index) => {
               return (
                 <tr key={index} className="table-body-items">
                   <td>{produto.nome}</td>
-                  <td>{produto.marcas ? produto.marcas.join(", ") : ""}</td>
-                  <td>{produto.editais ? produto.editais.join(", ") : ""}</td>
+                  <td>{produto.marca}</td>
+                  <td>{produto.edital}</td>
                 </tr>
               );
             })}
         </tbody>
       </table>
       <Pagination
-        total={totalResultados}
+        total={quantidadeHomologados}
         onChange={onChangePagination}
         current={page}
-        pageSize={pageSize}
+        pageSize={PAGE_SIZE}
       />
     </div>
   );

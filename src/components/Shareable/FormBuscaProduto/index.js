@@ -367,7 +367,7 @@ export const FormBuscaProduto = ({
                 Visão agrupada por nome e marca
               </label>
             </div>
-            <div className="col-6 text-right">
+            <div className="col-6 text-right mt-3">
               {!!exibirBotaoVoltar && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}

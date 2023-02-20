@@ -487,10 +487,10 @@ export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
 
 export const getHomologacoesDeProdutoPorStatusTitulo = async (
   status,
-  titulo_produto
+  params
 ) => {
   const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
-  return await axios.post(url, titulo_produto);
+  return await axios.get(url, { params });
 };
 
 export const getTodosOsProdutos = async () => {
@@ -549,17 +549,10 @@ export const flegarHomologacaoPDF = async uuid => {
   return await axios.post(`/homologacoes-produtos/${uuid}/gerar-pdf/`);
 };
 
-export const getProdutosPorTerceirizada = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-por-parametros-agrupado-terceirizada/`,
-    filtro
-  );
-};
-
-export const getProdutosAgrupadosNomeMarcas = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-por-parametros-agrupado-nome-marcas/`,
-    filtro
+export const getProdutosPorTerceirizada = async params => {
+  return await axios.get(
+    `/painel-gerencial-homologacoes-produtos/filtro-por-parametros-agrupado-terceirizada/`,
+    { params }
   );
 };
 

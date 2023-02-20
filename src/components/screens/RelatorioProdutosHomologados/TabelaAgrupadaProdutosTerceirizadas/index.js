@@ -10,11 +10,21 @@ import {
   usuarioEhTerceirizada
 } from "helpers/utilities";
 
-const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
+const TabelaAgrupadaProdutosTerceirizadas = ({
+  dadosProdutos,
+  filtros,
+  getProdutosHomologados,
+  quantidadeHomologados
+}) => {
   const [page, setPage] = useState(1);
 
   const onChangePagination = page => {
     setPage(page);
+    getProdutosHomologados({
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      ...filtros
+    });
   };
 
   const exibirNomeTerceirizada =
@@ -24,11 +34,7 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
     !usuarioEhNutricionistaSupervisao() &&
     !usuarioEhCODAENutriManifestacao();
 
-  const totalResultados = dadosProdutos && dadosProdutos.length;
-  const pageSize = 10;
-  const dadosProdutosPaginado =
-    dadosProdutos &&
-    dadosProdutos.slice(pageSize * (page - 1), pageSize * page);
+  const PAGE_SIZE = 10;
 
   return dadosProdutos ? (
     <div>
@@ -46,7 +52,7 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
         </thead>
         <tbody>
           {dadosProdutos &&
-            dadosProdutosPaginado.map((produto, index) => {
+            dadosProdutos.map((produto, index) => {
               return (
                 <tr key={index} className="table-body-items">
                   {exibirNomeTerceirizada && <td>{produto.terceirizada}</td>}
@@ -62,10 +68,10 @@ const TabelaAgrupadaProdutosTerceirizadas = ({ dadosProdutos }) => {
         </tbody>
       </table>
       <Pagination
-        total={totalResultados}
+        total={quantidadeHomologados}
         onChange={onChangePagination}
         current={page}
-        pageSize={pageSize}
+        pageSize={PAGE_SIZE}
       />
     </div>
   ) : (
