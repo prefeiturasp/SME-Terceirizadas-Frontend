@@ -40,3 +40,12 @@ export const prepararPayloadEtapas = (cronograma, values) => {
     return etapas;
   }
 };
+
+export const calculaRestante = (values, cronograma) => {
+  let resto = cronograma.qtd_total_programada;
+  cronograma.etapas.forEach(etapa => {
+    if (values[`quantidade_total_${etapa.uuid}`])
+      resto -= values[`quantidade_total_${etapa.uuid}`];
+  });
+  return resto;
+};
