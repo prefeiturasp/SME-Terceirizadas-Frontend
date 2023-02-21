@@ -32,7 +32,8 @@ const TabelaAgrupadaProdutosTerceirizadas = ({
     !usuarioEhTerceirizada() &&
     !usuarioEhCODAEGestaoAlimentacao() &&
     !usuarioEhNutricionistaSupervisao() &&
-    !usuarioEhCODAENutriManifestacao();
+    !usuarioEhCODAENutriManifestacao() &&
+    !filtros.agrupado_por_nome_e_marca;
 
   const PAGE_SIZE = 10;
 
@@ -45,9 +46,13 @@ const TabelaAgrupadaProdutosTerceirizadas = ({
             <th>Produto</th>
             <th>Marca</th>
             <th>Edital</th>
-            <th>Tipo</th>
-            <th>Cadastro</th>
-            <th>Homologação</th>
+            {!filtros.agrupado_por_nome_e_marca && (
+              <>
+                <th>Tipo</th>
+                <th>Cadastro</th>
+                <th>Homologação</th>
+              </>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -59,9 +64,13 @@ const TabelaAgrupadaProdutosTerceirizadas = ({
                   <td>{produto.nome}</td>
                   <td>{produto.marca}</td>
                   <td>{produto.edital}</td>
-                  <td>{produto.tipo}</td>
-                  <td>{produto.cadastro}</td>
-                  <td>{produto.homologacao}</td>
+                  {!filtros.agrupado_por_nome_e_marca && (
+                    <>
+                      <td>{produto.tipo}</td>
+                      <td>{produto.cadastro}</td>
+                      <td>{produto.homologacao}</td>
+                    </>
+                  )}
                 </tr>
               );
             })}

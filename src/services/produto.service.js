@@ -556,23 +556,13 @@ export const getProdutosPorTerceirizada = async params => {
   );
 };
 
-export const getRelatorioProdutosHomologados = async params => {
-  const { data } = await axios.get(
-    "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
-    {
-      params,
-      responseType: "blob"
-    }
-  );
-  saveAs(data, "relatorio_produtos_homologados.pdf");
-};
-
-export const getRelatorioProdutosAgrupadosMarcasHomologados = async params => {
-  const { data } = await axios.get("/produtos/marcas-por-produto/", {
-    params,
-    responseType: "blob"
-  });
-  saveAs(data, "relatorio_agrupados_produtos_marcas_homologados.pdf");
+export const getPDFRelatorioProdutosHomologados = async params => {
+  const url = "/painel-gerencial-homologacoes-produtos/exportar-pdf/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getProdutosSuspensos = async payload => {

@@ -16,12 +16,10 @@ import {
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
-import TabelaAgrupadaProdutosMarcas from "./TabelaAgrupadaProdutosMarcas";
 import TabelaAgrupadaProdutosTerceirizadas from "./TabelaAgrupadaProdutosTerceirizadas";
 import {
   getProdutosPorTerceirizada,
-  getRelatorioProdutosHomologados,
-  getRelatorioProdutosAgrupadosMarcasHomologados
+  getPDFRelatorioProdutosHomologados
 } from "services/produto.service";
 
 import "./style.scss";
@@ -38,7 +36,7 @@ const RelatorioProdutosHomologados = () => {
   const [filtros, setFiltros] = useState(null);
   const [valoresIniciais, setValoresIniciais] = useState(null);
   const [carregando, setCarregando] = useState(true);
-  const [exportandoXLS, setExportandoXLS] = useState(false);
+  const [exportando, setExportando] = useState(false);
   const [
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads
@@ -81,17 +79,25 @@ const RelatorioProdutosHomologados = () => {
   };
 
   const exportarXLSX = async params => {
-    setExportandoXLS(true);
-    const response = await gerarExcelRelatorioProdutosHomologados({
-      eh_xlsx: true,
-      ...params
-    });
+    setExportando(true);
+    const response = await gerarExcelRelatorioProdutosHomologados(params);
     if (response.status === HTTP_STATUS.OK) {
       setExibirModalCentralDownloads(true);
     } else {
       toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
     }
-    setExportandoXLS(false);
+    setExportando(false);
+  };
+
+  const exportarPDF = async params => {
+    setExportando(true);
+    const response = await getPDFRelatorioProdutosHomologados(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+    setExportando(false);
   };
 
   return (
@@ -109,6 +115,7 @@ const RelatorioProdutosHomologados = () => {
                     setDadosProdutos(null);
                   }}
                   valoresIniciais={valoresIniciais}
+                  setErroAPI={setErroAPI}
                 />
               )}
 
@@ -134,22 +141,12 @@ const RelatorioProdutosHomologados = () => {
               {filtros && dadosProdutos && dadosProdutos.length > 0 && (
                 <div className="mt-3">
                   <p className="resultadoTitle">Resultado detalhado</p>
-                  {filtros.agrupado_por_nome_e_marca && (
-                    <TabelaAgrupadaProdutosMarcas
-                      dadosProdutos={dadosProdutos}
-                      quantidadeHomologados={quantidadeHomologados}
-                      getProdutosHomologados={getProdutosHomologados}
-                      filtros={filtros}
-                    />
-                  )}
-                  {!filtros.agrupado_por_nome_e_marca && (
-                    <TabelaAgrupadaProdutosTerceirizadas
-                      dadosProdutos={dadosProdutos}
-                      quantidadeHomologados={quantidadeHomologados}
-                      getProdutosHomologados={getProdutosHomologados}
-                      filtros={filtros}
-                    />
-                  )}
+                  <TabelaAgrupadaProdutosTerceirizadas
+                    dadosProdutos={dadosProdutos}
+                    quantidadeHomologados={quantidadeHomologados}
+                    getProdutosHomologados={getProdutosHomologados}
+                    filtros={filtros}
+                  />
                   <hr />
                   <div className="row">
                     <div className="col-12 text-right">
@@ -158,7 +155,7 @@ const RelatorioProdutosHomologados = () => {
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         icon={BUTTON_ICON.FILE_EXCEL}
                         type={BUTTON_TYPE.BUTTON}
-                        disabled={exportandoXLS}
+                        disabled={exportando}
                         onClick={() => {
                           exportarXLSX(filtros);
                         }}
@@ -179,13 +176,7 @@ const RelatorioProdutosHomologados = () => {
                         onClick={async () => {
                           const params = gerarParametrosConsulta(filtros);
                           setCarregando(true);
-                          if (filtros.agrupado_por_nome_e_marca) {
-                            await getRelatorioProdutosAgrupadosMarcasHomologados(
-                              params
-                            );
-                          } else {
-                            await getRelatorioProdutosHomologados(params);
-                          }
+                          await exportarPDF(params);
                           setCarregando(false);
                         }}
                       />
