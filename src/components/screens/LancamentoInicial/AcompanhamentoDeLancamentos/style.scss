@@ -4,6 +4,11 @@ div.acompanhamento-de-lancamentos {
   font-size: 12px;
   color: $blackInput;
 
+  label {
+    font-size: 14px;
+    color: $gray;
+  }
+
   div.card-medicao-por-status {
     height: 124px;
     width: 129px;
@@ -69,6 +74,44 @@ div.acompanhamento-de-lancamentos {
       color: $grayPlaceholder;
       border-color: $grayPlaceholder;
       cursor: default;
+
+      &.cursor-pointer {
+        cursor: pointer;
+      }
+    }
+  }
+
+  div.titulo-tabela {
+    font-weight: 600;
+    font-size: 14px;
+    color: $greenDark;
+  }
+
+  table.resultados {
+    width: 98%;
+    font-size: 14px;
+    color: $blackInput;
+    margin-left: 1em;
+
+    thead {
+      tr {
+        background-color: $grayLightHeader;
+        font-weight: 700;
+
+        th {
+          border: 1px solid $grayDisabled;
+          padding: 0.5em;
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 1px solid $grayDisabled;
+          padding: 0.5em;
+        }
+      }
     }
   }
 }

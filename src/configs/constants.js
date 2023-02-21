@@ -196,6 +196,7 @@ export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
+export const PAINEL_APROVACOES = "painel-aprovacoes";
 
 // Status dos pedidos
 

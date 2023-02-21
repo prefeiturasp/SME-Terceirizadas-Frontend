@@ -48,6 +48,7 @@ const Especificaoes = ({
       if (
         opcoesUnidadesDeMedida &&
         opcoesEmbalagens &&
+        fields.length === 0 &&
         ([null, undefined].includes(especificacoesIniciais) ||
           especificacoesIniciais.length === 0)
       ) {
@@ -56,7 +57,7 @@ const Especificaoes = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [opcoesEmbalagens]);
 
   return (
     <>
@@ -107,7 +108,7 @@ const Especificaoes = ({
               />
             </div>
             <div className="col-1 excluir-especificacoes">
-              {fields.length > 1 && (
+              {fields.length > 1 && index !== 0 && (
                 <Botao
                   icon={BUTTON_ICON.TRASH}
                   onClick={() => fields.remove(index)}

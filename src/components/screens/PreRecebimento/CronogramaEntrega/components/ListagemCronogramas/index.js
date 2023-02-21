@@ -71,7 +71,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
-                          {cronograma.status === "Validado Fornecedor" &&
+                          {cronograma.status === "Assinado Fornecedor" &&
                             usuarioEhFornecedor() && (
                               <>
                                 <span className="ml-1">|</span>

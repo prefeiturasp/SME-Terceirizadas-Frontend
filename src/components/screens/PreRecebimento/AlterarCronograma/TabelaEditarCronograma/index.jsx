@@ -6,6 +6,7 @@ import InputText from "components/Shareable/Input/InputText";
 import { useEffect } from "react";
 import { OnChange } from "react-final-form-listeners";
 import { calculaRestante } from "../helpers";
+import { required } from "helpers/fieldValidators";
 
 export default ({
   etapas,
@@ -17,7 +18,7 @@ export default ({
   setpodeSubmeter
 }) => {
   useEffect(() => {
-    setRestante(cronograma.qtd_total_programada);
+    setRestante(restante);
   }, [cronograma]);
 
   const textoFaltante = () => {
@@ -46,6 +47,25 @@ export default ({
         </div>
       </div>
     );
+  };
+
+  const verificarDatasEtapas = () => {
+    if (motivos.includes("ALTERAR_DATA_ENTREGA")) {
+      return etapas.every(
+        etapa =>
+          values[`data_programada_${etapa.uuid}`] !== undefined &&
+          values[`data_programada_${etapa.uuid}`] !== null
+      );
+    }
+    return true;
+  };
+
+  const verificarQuantidade = () => {
+    if (motivos.includes("ALTERAR_QTD_ALIMENTO")) {
+      return restante === 0;
+    }
+
+    return true;
   };
 
   return (
@@ -99,18 +119,15 @@ export default ({
                     minDate={null}
                     maxDate={null}
                     writable
+                    validate={required}
                   />
 
                   <OnChange name={`data_programada_${etapa.uuid}`}>
                     {async value => {
                       if (value) {
                         if (values.motivos && values.justificativa) {
-                          let podeSubmeter = etapas.every(
-                            etapa =>
-                              values[`data_programada_${etapa.uuid}`] !==
-                                undefined &&
-                              values[`data_programada_${etapa.uuid}`] !== null
-                          );
+                          let podeSubmeter =
+                            verificarDatasEtapas() && verificarQuantidade();
                           setpodeSubmeter(podeSubmeter);
                         }
                       } else {
@@ -135,20 +152,23 @@ export default ({
                       placeholder="Quantidade"
                       className="input-busca-produto"
                       required
+                      validate={required}
                     />
                     <OnChange name={`quantidade_total_${etapa.uuid}`}>
                       {async value => {
+                        const resto = calculaRestante(values, cronograma);
                         if (value) {
-                          const resto = calculaRestante(values, cronograma);
                           setRestante(resto);
                           const temMotivosEJustificativa =
                             values.motivos && values.justificativa;
                           const podeSubmeter =
-                            temMotivosEJustificativa && resto === 0;
+                            temMotivosEJustificativa &&
+                            resto === 0 &&
+                            verificarDatasEtapas();
                           setpodeSubmeter(podeSubmeter);
                         } else {
                           setpodeSubmeter(false);
-                          setRestante(cronograma.qtd_total_programada);
+                          setRestante(resto);
                         }
                       }}
                     </OnChange>

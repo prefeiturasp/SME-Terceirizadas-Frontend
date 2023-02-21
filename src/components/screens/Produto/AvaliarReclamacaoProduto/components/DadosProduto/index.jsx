@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from "react";
-import { stringSeparadaPorVirgulas } from "helpers/utilities";
+import React, { Component } from "react";
 import { formataInformacoesNutricionais } from "components/screens/Produto/Homologacao/helper";
 import { Collapse } from "react-collapse";
 import "./style.scss";
@@ -43,18 +42,6 @@ export class DadosProduto extends Component {
             </p>
           </div>
         </div>
-        {produto.eh_para_alunos_com_dieta && (
-          <Fragment>
-            <div className="row">
-              <div className="col-12 report-label-value">
-                <p>Protocolos</p>
-                <p className="value">
-                  {stringSeparadaPorVirgulas(produto.protocolos, "nome")}
-                </p>
-              </div>
-            </div>
-          </Fragment>
-        )}
         <div className="row">
           <div className="col-6 report-label-value">
             <p>Marca</p>

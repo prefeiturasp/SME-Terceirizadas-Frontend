@@ -119,7 +119,8 @@ import {
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
-  usuarioEhFornecedor
+  usuarioEhFornecedor,
+  usuarioEhDinutreDiretoria
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -192,6 +193,7 @@ import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagem
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
+import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 
 const routesConfig = [
@@ -1394,7 +1396,8 @@ const routesConfig = [
     path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1595,6 +1598,12 @@ const routesConfig = [
     component: EditarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
+    component: PainelAprovacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhDinutreDiretoria()
   }
 ];
 

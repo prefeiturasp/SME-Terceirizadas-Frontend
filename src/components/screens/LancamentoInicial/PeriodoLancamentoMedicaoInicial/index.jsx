@@ -31,18 +31,21 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
+import ModalErro from "./components/ModalErro";
 import { deepCopy, deepEqual } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
   botaoAdicionarObrigatorioTabelaAlimentacao,
+  campoFrequenciaValor0ESemObservacao,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario
 } from "./validacoes";
 import {
   deveExistirObservacao,
-  formatarPayloadPeriodoLancamento
+  formatarPayloadPeriodoLancamento,
+  valorZeroFrequencia
 } from "./helper";
 import {
   getCategoriasDeMedicao,
@@ -114,6 +117,7 @@ export default () => {
   const [ultimaAtualizacaoMedicao, setUltimaAtualizacaoMedicao] = useState(
     null
   );
+  const [showModalErro, setShowModalErro] = useState(false);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -666,7 +670,6 @@ export default () => {
       });
       setWeekColumns(week);
     }
-
     const formatar = async () => {
       formatarDadosValoresMedicao(
         mesAnoFormatadoState,
@@ -726,8 +729,8 @@ export default () => {
         (["Mês anterior", "Mês posterior", null].includes(value) ||
           key.includes("matriculados") ||
           key.includes("dietas_autorizadas") ||
-          key.includes("repeticao") ||
-          key.includes("emergencial")) &&
+          (!validacaoDiaLetivo(dia) &&
+            (key.includes("repeticao") || key.includes("emergencial")))) &&
         delete valuesMesmoDiaDaObservacao[key]
       );
     });
@@ -827,12 +830,14 @@ export default () => {
     );
     setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
+    setExibirTooltip(false);
   };
 
   const onSubmit = async (
     values,
     dadosValoresInclusoesAutorizadasState,
-    ehSalvamentoAutomático = false
+    ehSalvamentoAutomático = false,
+    chamarFuncaoFormatar = true
   ) => {
     const erro = validarFormulario(
       values,
@@ -885,7 +890,9 @@ export default () => {
       diasDaSemanaSelecionada
     );
     if (payload.valores_medicao.length === 0)
-      return toastWarn("Não há valores para serem salvos");
+      return (
+        !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
+      );
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       setLoading(true);
@@ -916,30 +923,36 @@ export default () => {
       }
     }
     setValoresPeriodosLancamentos(valores_medicao_response);
-    await formatarDadosValoresMedicao(
-      mesAnoFormatadoState,
-      valores_medicao_response,
-      categoriasDeMedicao,
-      tabelaAlimentacaoRows,
-      valoresMatriculados,
-      tabelaDietaRows,
-      logQtdDietasAutorizadas,
-      inclusoesAutorizadas,
-      mesAnoConsiderado
-    );
+    if (chamarFuncaoFormatar) {
+      await formatarDadosValoresMedicao(
+        mesAnoFormatadoState,
+        valores_medicao_response,
+        categoriasDeMedicao,
+        tabelaAlimentacaoRows,
+        valoresMatriculados,
+        tabelaDietaRows,
+        logQtdDietasAutorizadas,
+        inclusoesAutorizadas,
+        mesAnoConsiderado
+      );
+    }
     setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
   };
 
-  const onChangeSemana = (values, key) => {
-    Object.entries(values).forEach(([key]) => {
-      return (
-        !["mes_lancamento", "periodo_escolar", "week"].includes(key) &&
-        delete values[key]
+  const onChangeSemana = async (values, key) => {
+    if (exibirTooltip) {
+      setShowModalErro(true);
+    } else {
+      setSemanaSelecionada(key);
+      onSubmit(
+        formValuesAtualizados,
+        dadosValoresInclusoesAutorizadasState,
+        true,
+        false
       );
-    });
-    setSemanaSelecionada(key);
-    return (values["week"] = Number(key));
+      return (values["week"] = Number(key));
+    }
   };
 
   const defaultValue = (column, row) => {
@@ -1044,6 +1057,21 @@ export default () => {
 
   let valuesInputArray = [];
 
+  const desabilitaTooltip = values => {
+    const erro = validarFormulario(
+      values,
+      diasSobremesaDoce,
+      location,
+      categoriasDeMedicao,
+      dadosValoresInclusoesAutorizadasState,
+      weekColumns
+    );
+    if (erro) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
+  };
+
   const onChangeInput = (
     value,
     previous,
@@ -1051,18 +1079,32 @@ export default () => {
     values,
     dia,
     categoria,
-    rowName
+    rowName,
+    form
   ) => {
+    const ehZeroFrequencia = valorZeroFrequencia(
+      value,
+      rowName,
+      categoria,
+      dia,
+      form,
+      tabelaAlimentacaoRows,
+      tabelaDietaRows,
+      tabelaDietaEnteralRows,
+      dadosValoresInclusoesAutorizadasState,
+      validacaoDiaLetivo
+    );
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
+      desabilitaTooltip(values);
     } else if (
       (value || previous) &&
       value !== previous &&
       !["Mês anterior", "Mês posterior"].includes(value) &&
       !["Mês anterior", "Mês posterior"].includes(previous)
     ) {
-      setDisableBotaoSalvarLancamentos(false);
       setExibirTooltip(false);
+      setDisableBotaoSalvarLancamentos(false);
     } else if (typeof value === "string") {
       value.match(/\d+/g) !== null && valuesInputArray.push(value);
       if (value === null) {
@@ -1071,6 +1113,7 @@ export default () => {
       if (value.match(/\d+/g) !== null && valuesInputArray.length > 0) {
         setDisableBotaoSalvarLancamentos(false);
       } else {
+        desabilitaTooltip(values);
         setDisableBotaoSalvarLancamentos(true);
       }
     }
@@ -1116,6 +1159,16 @@ export default () => {
         setDisableBotaoSalvarLancamentos(true);
       }
     });
+    desabilitaTooltip(values);
+
+    if (
+      (ehZeroFrequencia &&
+        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]) ||
+      campoFrequenciaValor0ESemObservacao(dia, categoria, values)
+    ) {
+      setDisableBotaoSalvarLancamentos(true);
+      setExibirTooltip(true);
+    }
 
     if (deveExistirObservacao(categoria.id, values, calendarioMesConsiderado)) {
       return;
@@ -1229,11 +1282,16 @@ export default () => {
                   </div>
                   <div className="weeks-tabs mb-2">
                     <Tabs
-                      defaultActiveKey={semanaSelecionada}
-                      onChange={key =>
-                        onChangeSemana(formValuesAtualizados, key)
-                      }
+                      activeKey={semanaSelecionada}
+                      onChange={key => {
+                        onChangeSemana(formValuesAtualizados, key);
+                      }}
                       type="card"
+                      className={`${
+                        semanaSelecionada === 1
+                          ? "default-color-first-semana"
+                          : ""
+                      }`}
                     >
                       {Array.apply(null, {
                         length: isSunday(lastDayOfMonth(mesAnoConsiderado))
@@ -1398,7 +1456,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         column.dia,
                                                         categoria,
-                                                        row.name
+                                                        row.name,
+                                                        form
                                                       );
                                                     }}
                                                   </OnChange>
@@ -1652,7 +1711,8 @@ export default () => {
                                                         formValuesAtualizados,
                                                         column.dia,
                                                         categoria,
-                                                        row.name
+                                                        row.name,
+                                                        form
                                                       );
                                                     }}
                                                   </OnChange>
@@ -1688,6 +1748,8 @@ export default () => {
                         )
                       }
                       dadosIniciais={dadosIniciais}
+                      setExibirTooltip={value => setExibirTooltip(value)}
+                      errors={errors}
                     />
                   )}
                   <Botao
@@ -1702,13 +1764,15 @@ export default () => {
                       )
                     }
                     disabled={disableBotaoSalvarLancamentos}
-                    exibirTooltip={
-                      disableBotaoSalvarLancamentos && exibirTooltip
-                    }
+                    exibirTooltip={exibirTooltip}
                     tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
                     classTooltip="icone-info-invalid"
                   />
                 </div>
+                <ModalErro
+                  showModalErro={showModalErro}
+                  setShowModalErro={setShowModalErro}
+                />
               </div>
             </form>
           )}

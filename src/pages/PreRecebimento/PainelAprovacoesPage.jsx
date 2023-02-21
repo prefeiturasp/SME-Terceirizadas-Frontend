@@ -2,12 +2,12 @@ import React from "react";
 import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
-import DetalharCronograma from "components/screens/PreRecebimento/CronogramaEntrega/components/DetalharCronograma";
+import { PAINEL_APROVACOES, PRE_RECEBIMENTO } from "configs/constants";
+import PainelAprovacoes from "components/screens/PreRecebimento/PainelAprovacoes";
 
 const atual = {
-  href: `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}`,
-  titulo: "Detalhamento do Cronograma de Entrega"
+  href: `/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`,
+  titulo: "Painel de Aprovações"
 };
 
 const anteriores = [
@@ -18,8 +18,8 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page botaoVoltar titulo={atual.titulo}>
+  <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <DetalharCronograma />
+    <PainelAprovacoes />
   </Page>
 );

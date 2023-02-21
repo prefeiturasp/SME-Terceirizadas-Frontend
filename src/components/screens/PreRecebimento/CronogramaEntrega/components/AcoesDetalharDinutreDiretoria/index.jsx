@@ -5,7 +5,7 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { cronogramaAssina } from "services/cronograma.service";
+import { dinutreAssinaCronograma } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   CRONOGRAMA_ENTREGA,
@@ -24,13 +24,15 @@ export default ({ cronograma }) => {
 
   const handleSim = password => {
     setLoading(true);
-    cronogramaAssina(cronograma.uuid, password)
+    dinutreAssinaCronograma(cronograma.uuid, password)
       .then(response => {
         if (response.status === 200) {
           window.scrollTo({ top: 0, behavior: "smooth" });
           setShow(false);
           setLoading(false);
-          history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          if (!history.goBack()) {
+            history.push(`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`);
+          }
           toastSuccess("Cronograma assinado com sucesso!");
         }
       })
@@ -51,7 +53,7 @@ export default ({ cronograma }) => {
 
   return (
     <>
-      {cronograma.status === "Assinado Fornecedor" && (
+      {cronograma.status === "Assinado Cronograma" && (
         <Botao
           texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}
