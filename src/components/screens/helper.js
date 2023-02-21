@@ -2,10 +2,12 @@ import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
   ALTERACAO_TIPO_ALIMENTACAO_CEMEI,
+  DETALHE_CRONOGRAMA,
   DIETA_ESPECIAL,
   INCLUSAO_ALIMENTACAO,
   INCLUSAO_ALIMENTACAO_CEMEI,
   INVERSAO_CARDAPIO,
+  PRE_RECEBIMENTO,
   RELATORIO,
   SOLICITACAO_KIT_LANCHE,
   SOLICITACAO_KIT_LANCHE_CEMEI,
@@ -254,4 +256,16 @@ export const getDataHomologacao = logs => {
     logs
   );
   return arr[0] ? arr[0].criado_em : "--";
+};
+
+export const gerarLinkDoItem = item => {
+  const mapeamentoItens = {
+    "assinado dinutre": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+      item.uuid
+    }`,
+    "assinado cronograma": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+      item.uuid
+    }`
+  };
+  return mapeamentoItens[item.status.toLowerCase()];
 };

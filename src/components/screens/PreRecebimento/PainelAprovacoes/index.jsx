@@ -8,8 +8,7 @@ import {
   comparaObjetosMoment,
   truncarString
 } from "helpers/utilities";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
-
+import { gerarLinkDoItem } from "components/screens/helper";
 export default () => {
   const [carregando, setCarregando] = useState(false);
 
@@ -51,16 +50,6 @@ export default () => {
     }));
   };
 
-  const gerarLinkDoItem = item => {
-    if (
-      ["assinado dinutre", "assinado cronograma"].includes(
-        item.status.toLowerCase()
-      )
-    ) {
-      return `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`;
-    }
-  };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-painel-cronograma">
@@ -74,6 +63,7 @@ export default () => {
                   cardType={card.style}
                   solicitations={formataCards(card.items ? card.items : [])}
                   icon={card.icon}
+                  href={card.href}
                 />
               </div>
             ))}
