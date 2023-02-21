@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.scss";
 import { Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -17,6 +17,7 @@ export default ({
   setRestante,
   setpodeSubmeter
 }) => {
+  const [exibirMensagemFaltante, setExibirMensagemFaltante] = useState(true);
   useEffect(() => {
     setRestante(restante);
   }, [cronograma]);
@@ -71,28 +72,28 @@ export default ({
   return (
     etapas && (
       <div className="grid-cronograma mt-4">
-        <div className="grid-cronograma-header head-crono">
+        <div className="grid-cronograma-header">
           <div>
-            <div>Data programada</div>
+            <div className="title head-crono">Data programada</div>
           </div>
           <div>
-            <div>Etapa</div>
+            <div className="title head-crono">Etapa</div>
           </div>
           <div>
-            <div>Parte</div>
+            <div className="title head-crono">Parte</div>
           </div>
           {motivos.includes("ALTERAR_DATA_ENTREGA") && (
             <div className="crono-header-green">
-              <div>Informar Nova Data</div>
+              <div className="title">Informar Nova Data</div>
             </div>
           )}
 
           {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
             <>
               <div>
-                <div>Quantidade</div>
+                <div className="title head-crono">Quantidade</div>
               </div>
-              <div className="crono-header-green">
+              <div className="title crono-header-green">
                 <div>Informar Nova Quantidade</div>
               </div>
             </>
@@ -172,15 +173,18 @@ export default ({
                         }
                       }}
                     </OnChange>
+                    {exibirMensagemFaltante && (
+                      <div className="text-right">
+                        {motivos.includes("ALTERAR_QTD_ALIMENTO") &&
+                          textoFaltante(values)}
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
             )}
           </div>
         ))}
-        <div className="text-center">
-          {motivos.includes("ALTERAR_QTD_ALIMENTO") && textoFaltante(values)}
-        </div>
         <div />
       </div>
     )
