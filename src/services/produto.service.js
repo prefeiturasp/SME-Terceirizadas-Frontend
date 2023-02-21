@@ -153,10 +153,6 @@ export const getReclamacoesTerceirizadaPorFiltro = async params => {
   });
 };
 
-export const getProdutosPorFiltro = async filtro => {
-  return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
-};
-
 export const getProdutosRelatorioSituacao = async params => {
   return await axios.get(`/produtos/filtro-relatorio-situacao-produto/`, {
     params
@@ -588,10 +584,6 @@ export const getProdutosListagem = async params => {
 
 export const solicitarCadastroProdutoDieta = async payload => {
   return await axios.post(`/solicitacao-cadastro-produto-dieta/`, payload);
-};
-
-export const getNomeProdutosHomologados = async () => {
-  return await axios.get(`/produtos/lista-nomes-homologados/`);
 };
 
 export const getSubstitutos = async () => {
