@@ -333,15 +333,8 @@ class DashBoardDietaEspecial extends Component {
   }
 
   contadorDietas(title, dietas) {
-    if (usuarioEhCoordenadorNutriCODAE()) {
-      if (dietas && dietas.length > 0) {
-        return `${title} (${dietas.length})`;
-      } else {
-        return `${title} (0)`;
-      }
-    } else {
-      return title;
-    }
+    if (!usuarioEhCoordenadorNutriCODAE()) return title;
+    return `${title}${dietas && " (" + dietas.length + ")"}`;
   }
 
   render() {
