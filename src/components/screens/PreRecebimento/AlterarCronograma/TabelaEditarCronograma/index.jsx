@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./styles.scss";
 import { Field } from "react-final-form";
 import { InputComData } from "components/Shareable/DatePicker";
@@ -17,7 +17,6 @@ export default ({
   setRestante,
   setpodeSubmeter
 }) => {
-  const [exibirMensagemFaltante, setExibirMensagemFaltante] = useState(true);
   useEffect(() => {
     setRestante(restante);
   }, [cronograma]);
@@ -173,12 +172,11 @@ export default ({
                         }
                       }}
                     </OnChange>
-                    {exibirMensagemFaltante && (
-                      <div className="text-right">
-                        {motivos.includes("ALTERAR_QTD_ALIMENTO") &&
-                          textoFaltante(values)}
-                      </div>
-                    )}
+
+                    <div className="text-right">
+                      {motivos.includes("ALTERAR_QTD_ALIMENTO") &&
+                        textoFaltante(values)}
+                    </div>
                   </div>
                 </div>
               </>
