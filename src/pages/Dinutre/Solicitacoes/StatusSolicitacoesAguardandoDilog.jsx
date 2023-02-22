@@ -7,8 +7,11 @@ import {
   PRE_RECEBIMENTO,
   AGUARDANDO_DILOG
 } from "configs/constants";
-import { getDashboardCronograma } from "services/cronograma.service";
-import { Solicitacoes } from "./Solicitacoes";
+import {
+  getDashboardCronograma,
+  getDashboardCronogramaComFiltros
+} from "services/cronograma.service";
+import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 import { CARD_AGUARDANDO_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
@@ -18,7 +21,7 @@ const atual = {
 
 const limit = 10;
 
-const params = { status: "ASSINADO_DINUTRE", offset: 0, limit: limit };
+const paramsDefault = { status: "ASSINADO_DINUTRE", offset: 0, limit: limit };
 
 export default () => {
   return (
@@ -28,12 +31,13 @@ export default () => {
       voltarPara={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}
     >
       <Breadcrumb home="/" atual={atual} />
-      <Solicitacoes
+      <SolicitacoesCronogramaStatusGenerico
         icone={CARD_AGUARDANDO_ASSINATURA.icon}
         titulo={CARD_AGUARDANDO_ASSINATURA.titulo}
         cardType={CARD_AGUARDANDO_ASSINATURA.style}
         getSolicitacoes={getDashboardCronograma}
-        params={params}
+        getSolicitacoesComFiltros={getDashboardCronogramaComFiltros}
+        params={paramsDefault}
         limit={limit}
       />
     </Page>

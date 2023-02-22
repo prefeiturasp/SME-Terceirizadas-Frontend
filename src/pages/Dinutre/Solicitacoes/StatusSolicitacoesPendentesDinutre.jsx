@@ -7,9 +7,13 @@ import {
   PRE_RECEBIMENTO,
   SOLICITACOES_PENDENTES
 } from "configs/constants";
-import { getDashboardCronograma } from "services/cronograma.service";
-import { Solicitacoes } from "./Solicitacoes";
+import {
+  getDashboardCronograma,
+  getDashboardCronogramaComFiltros
+} from "services/cronograma.service";
 import { CARD_PENDENTES_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
+
+import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
 
 const atual = {
   href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
@@ -32,11 +36,12 @@ export default () => {
       voltarPara={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}
     >
       <Breadcrumb home="/" atual={atual} />
-      <Solicitacoes
+      <SolicitacoesCronogramaStatusGenerico
         icone={CARD_PENDENTES_ASSINATURA.icon}
         titulo={CARD_PENDENTES_ASSINATURA.titulo}
         cardType={CARD_PENDENTES_ASSINATURA.style}
         getSolicitacoes={getDashboardCronograma}
+        getSolicitacoesComFiltros={getDashboardCronogramaComFiltros}
         params={paramsDefault}
         limit={limit}
       />
