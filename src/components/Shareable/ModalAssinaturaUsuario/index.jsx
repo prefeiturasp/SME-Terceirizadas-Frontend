@@ -45,7 +45,7 @@ export const ModalAssinaturaUsuario = props => {
               </p>
               <div>
                 <Form
-                  onSubmit={handleSim}
+                  onSubmit={() => {}}
                   render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                       <div className="row">

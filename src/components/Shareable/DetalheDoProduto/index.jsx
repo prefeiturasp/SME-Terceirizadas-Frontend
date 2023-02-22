@@ -96,6 +96,24 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       <div className="mb-4 mt-4">
         <hr />
       </div>
+      <div className="report-label-value pl-0">
+        <p>
+          {status === "suspenso"
+            ? "Produto Suspenso nos Editais"
+            : "Editais Vinculados ao Produto"}
+        </p>
+        <p className="value">
+          {produto.vinculos_produto_edital
+            .filter(vinculo =>
+              status === "suspenso" ? vinculo.suspenso : !vinculo.suspenso
+            )
+            .map(vinculo => vinculo.edital.numero)
+            .join(", ")}
+        </p>
+      </div>
+      <div className="mb-4 mt-4">
+        <hr />
+      </div>
       <div className="title">Identificação do Produto</div>
       <div className="row">
         <div className="col-12 report-label-value">

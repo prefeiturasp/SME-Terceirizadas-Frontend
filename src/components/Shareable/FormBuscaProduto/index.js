@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import moment from "moment";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
@@ -90,25 +91,29 @@ export const FormBuscaProduto = ({
   exibirBotaoVoltar,
   naoExibirLimparFiltros,
   onLimparDados,
-  valoresIniciais
+  valoresIniciais,
+  setErroAPI
 }) => {
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [editaisDRE, setEditaisDRE] = useState([]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const listaEditaisDRE = await getEditaisDre();
-        let listaRsultados = listaEditaisDRE.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element.numero, label: element.numero };
-        });
-        setEditaisDRE(listaFormatada);
-      } catch (erro) {
-        throw erro;
+    const getListaEditaisDREAsync = async () => {
+      const response = await getEditaisDre();
+      if (response.status === HTTP_STATUS.OK) {
+        setEditaisDRE(
+          response.data.results.map(element => {
+            return { value: element.numero, label: element.numero };
+          })
+        );
+      } else {
+        setErroAPI &&
+          setErroAPI(
+            "Erro ao carregar editais da DRE. Tente novamente mais tarde"
+          );
       }
-    })();
+    };
     const endpoints = [
       getNomesUnicosProdutos(),
       getNomesUnicosMarcas(),
@@ -137,6 +142,7 @@ export const FormBuscaProduto = ({
       );
     }
     fetchData();
+    usuarioEhDRE() && getListaEditaisDREAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -367,7 +373,7 @@ export const FormBuscaProduto = ({
                 Visão agrupada por nome e marca
               </label>
             </div>
-            <div className="col-6 text-right">
+            <div className="col-6 text-right mt-3">
               {!!exibirBotaoVoltar && (
                 <Botao
                   type={BUTTON_TYPE.BUTTON}
