@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import { getProdutosListagem } from "services/produto.service";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import { deepEqual, gerarParametrosConsulta } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
@@ -17,7 +17,7 @@ const checaStatus = obj =>
   obj.status === "CODAE_HOMOLOGADO" ||
   obj.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU";
 
-const TabelaProdutos = ({ produtos }) => {
+const TabelaProdutos = ({ filtros, produtos }) => {
   if (!produtos) return false;
   return (
     <section className="mb-3">
@@ -27,7 +27,12 @@ const TabelaProdutos = ({ produtos }) => {
           <div>Marca</div>
           <div>Fabricante</div>
           <div>Status</div>
-          <div>Editais</div>
+          <div>
+            Editais{" "}
+            {filtros && deepEqual(filtros.status, ["CODAE_SUSPENDEU"])
+              ? "suspensos"
+              : "ativos"}
+          </div>
           <div />
         </div>
       </section>
@@ -124,7 +129,7 @@ const AtivacaoSuspencaoProduto = () => {
         {produtos && produtosCount > 0 && (
           <div className="container-tabela">
             <LabelResultadoDaBusca filtros={filtros} />
-            <TabelaProdutos produtos={produtos} />
+            <TabelaProdutos filtros={filtros} produtos={produtos} />
             <Pagination
               current={page}
               total={produtosCount}
