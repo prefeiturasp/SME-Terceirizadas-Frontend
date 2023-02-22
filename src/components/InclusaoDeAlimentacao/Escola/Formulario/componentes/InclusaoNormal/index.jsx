@@ -169,6 +169,12 @@ export const PeriodosInclusaoNormal = ({
           NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY
         );
       }
+    } else {
+      form.change(
+        `quantidades_periodo[
+            ${indice}].tipos_alimentacao_selecionados`,
+        values_
+      );
     }
   };
 
