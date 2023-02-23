@@ -2,7 +2,11 @@
   .grid-cronograma-header {
     > div {
       font-weight: bold;
+    }
+
+    .title {
       padding: 10px 19px;
+      min-height: 90px;
     }
 
     .crono-header-green {

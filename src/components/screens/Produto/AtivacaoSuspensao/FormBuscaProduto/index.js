@@ -12,7 +12,8 @@ import {
 import {
   getNomesUnicosProdutos,
   getNomesUnicosMarcas,
-  getNomesUnicosFabricantes
+  getNomesUnicosFabricantes,
+  getNomesUnicosEditais
 } from "services/produto.service";
 import "./style.scss";
 
@@ -48,14 +49,16 @@ const FormBuscaProduto = ({
       Promise.all([
         getNomesUnicosProdutos(),
         getNomesUnicosMarcas(),
-        getNomesUnicosFabricantes()
-      ]).then(([produtos, marcas, fabricantes]) => {
+        getNomesUnicosFabricantes(),
+        getNomesUnicosEditais()
+      ]).then(([produtos, marcas, fabricantes, editais]) => {
         dispatch({
           type: "popularDados",
           payload: {
             produtos: produtos.data.results,
             marcas: marcas.data.results,
-            fabricantes: fabricantes.data.results
+            fabricantes: fabricantes.data.results,
+            editais: editais.data.results
           }
         });
       });
@@ -68,7 +71,7 @@ const FormBuscaProduto = ({
       onSubmit={onSubmit}
       render={({ form, handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="busca-produtos-ativacao">
-          <Row>
+          <Row gutter={[16, 16]}>
             <Col>
               <Field
                 component={AutoCompleteFieldUnaccent}
@@ -77,6 +80,15 @@ const FormBuscaProduto = ({
                 placeholder="Digite nome do produto"
                 className="input-busca-produto"
                 name="nome_produto"
+              />
+            </Col>
+            <Col>
+              <Field
+                component={AutoCompleteFieldUnaccent}
+                dataSource={state.dados.editais}
+                label="Edital"
+                placeholder="Digite edital do produto"
+                name="nome_edital"
               />
             </Col>
           </Row>
@@ -102,7 +114,7 @@ const FormBuscaProduto = ({
             </Col>
             {exibirStatus && (
               <Col md={24} lg={6}>
-                <div className="">
+                <div className="select-status">
                   <Field
                     component={SelectSelecione}
                     label="Status"
