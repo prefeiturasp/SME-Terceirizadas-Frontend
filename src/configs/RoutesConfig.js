@@ -1421,7 +1421,7 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE()
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LOGISTICA}/${

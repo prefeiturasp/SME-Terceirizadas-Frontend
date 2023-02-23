@@ -9,7 +9,8 @@ import {
 import {
   exibirModuloMedicaoInicial,
   usuarioEhDRE,
-  usuarioEhEscola
+  usuarioEhEscola,
+  usuarioEhMedicao
 } from "helpers/utilities";
 
 export default () => {
@@ -25,7 +26,7 @@ export default () => {
             Lançamento Medição Inicial
           </LeafItem>
         )}
-        {usuarioEhDRE() && (
+        {(usuarioEhDRE() || usuarioEhMedicao()) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
           </LeafItem>
