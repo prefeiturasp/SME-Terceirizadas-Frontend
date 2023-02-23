@@ -113,7 +113,6 @@ import {
   usuarioEhPreRecebimento,
   usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
   exibirLancamentoMedicaoInicial,
@@ -1554,9 +1553,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
     component: EntregasDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioComAcessoTelaEntregasDilog() ||
-      usuarioEhCoordenadorNutriSupervisao()
+    tipoUsuario: usuarioComAcessoTelaEntregasDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,
