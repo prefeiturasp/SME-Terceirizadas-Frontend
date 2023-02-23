@@ -144,6 +144,7 @@ export default () => {
                   cardType={card.style}
                   solicitations={formataCards(card.items ? card.items : [])}
                   icon={card.icon}
+                  href={card.href}
                 />
               </div>
             ))}

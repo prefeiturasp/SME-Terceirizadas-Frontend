@@ -1,0 +1,80 @@
+@import "../../../styles/variables.scss";
+
+.card-title-status {
+  font-weight: 600;
+  font-size: 13px;
+  color: $blackInput;
+  letter-spacing: 0.01em;
+  padding-top: 5px;
+  span {
+    color: $grayPlaceholder;
+    font-weight: normal;
+    font-size: 10px;
+    padding-right: 5px;
+  }
+}
+
+.card-listagem-solicitacoes {
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.card-list-panel {
+  overflow: auto;
+  border: none !important;
+  i {
+    padding: 0 10px;
+  }
+  hr {
+    margin-top: 5px;
+  }
+  p.data {
+    padding: 0 10px;
+    font-weight: bold;
+    font-size: 12px;
+    color: $blackInput;
+    cursor: pointer;
+    margin-bottom: 0.3rem;
+    span {
+      font-weight: normal;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  p.conferida {
+    color: #198459 !important;
+  }
+  span.date-time {
+    font-size: 10px;
+    color: $blackInput;
+    padding-right: 35px;
+  }
+  span.conferida {
+    color: #198459 !important;
+  }
+  a.see-more {
+    font-weight: bold;
+    font-size: 13px;
+    text-align: center;
+    color: $blue;
+    padding: 10px 0;
+  }
+}
+
+.ajuste-icones {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 0.5em;
+  img {
+    height: 1em;
+  }
+}
