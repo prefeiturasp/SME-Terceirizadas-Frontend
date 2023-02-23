@@ -3,7 +3,7 @@ import "./style.scss";
 import { NavLink } from "react-router-dom";
 
 export const CardCronograma = props => {
-  const { cardTitle, cardType, solicitations, icon, loading } = props;
+  const { cardTitle, cardType, solicitations, icon, loading, href } = props;
 
   const renderSolicitations = solicitations => {
     return solicitations.slice(0, 5).map((solicitation, key) => {
@@ -21,7 +21,11 @@ export const CardCronograma = props => {
   const renderVerMais = solicitations => {
     return (
       solicitations.length > 5 && (
-        <NavLink to="" className="see-more" data-cy={`ver-mais-${cardType}`}>
+        <NavLink
+          to={`${href}`}
+          className="see-more"
+          data-cy={`ver-mais-${cardType}`}
+        >
           Ver Mais
         </NavLink>
       )
