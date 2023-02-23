@@ -81,6 +81,7 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
   useEffect(() => {
     setCurrentPage(1);
     getSolicitacoesAsync(params);
+    // eslint-disable-next-line
   }, []);
 
   const onPageChanged = async page => {
