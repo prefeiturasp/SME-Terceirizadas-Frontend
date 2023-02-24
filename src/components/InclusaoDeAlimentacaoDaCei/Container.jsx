@@ -6,7 +6,6 @@ import { dataParaUTC } from "helpers/utilities";
 import { getMeusDados } from "services/perfil.service";
 import { getMotivosInclusaoNormal } from "services/inclusaoDeAlimentacao";
 import { getDiasUteis } from "services/diasUteis.service";
-import { minhasFaixasEtarias } from "services/inclusaoDeAlimentacao/cei.legacy.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 
 export const Container = () => {
@@ -15,17 +14,9 @@ export const Container = () => {
   const [periodos, setPeriodos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
-  const [todasFaixas, setTodasFaixas] = useState(null);
   const [vinculosAlimentacao, setVinculosAlimentacao] = useState(null);
 
   const [erro, setErro] = useState(false);
-
-  const getTodasFaixasEtarias = async () => {
-    const response = await minhasFaixasEtarias();
-    if (response.status === HTTP_STATUS.OK) {
-      setTodasFaixas(response.data.results);
-    }
-  };
 
   const getVinculosAlimentacao = async escola_uuid => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
@@ -76,7 +67,6 @@ export const Container = () => {
     getMeusDadosAsync();
     getMotivosInclusaoNormalAsync();
     getDiasUteisAsync();
-    getTodasFaixasEtarias();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -86,7 +76,6 @@ export const Container = () => {
     periodos &&
     proximosDoisDiasUteis &&
     proximosCincoDiasUteis &&
-    todasFaixas &&
     vinculosAlimentacao;
 
   return (
@@ -102,7 +91,6 @@ export const Container = () => {
           periodos={periodos}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
-          todasFaixas={todasFaixas}
           vinculosAlimentacao={vinculosAlimentacao}
         />
       )}
