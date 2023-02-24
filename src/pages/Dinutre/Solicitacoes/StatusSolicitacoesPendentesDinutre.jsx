@@ -29,13 +29,24 @@ const paramsDefault = {
 };
 
 export default () => {
+  const anteriores = [
+    {
+      href: `#`,
+      titulo: "Pré-Recebimento"
+    },
+    {
+      href: `/pre-recebimento/painel-aprovacoes`,
+      titulo: "Painel de Aprovações"
+    }
+  ];
+
   return (
     <Page
       titulo={atual.titulo}
       botaoVoltar
       voltarPara={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}
     >
-      <Breadcrumb home="/" atual={atual} />
+      <Breadcrumb home="/" atual={atual} anteriores={anteriores} />
       <SolicitacoesCronogramaStatusGenerico
         icone={CARD_PENDENTES_ASSINATURA.icon}
         titulo={CARD_PENDENTES_ASSINATURA.titulo}
