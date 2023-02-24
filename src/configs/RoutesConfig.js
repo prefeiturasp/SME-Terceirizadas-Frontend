@@ -179,6 +179,8 @@ import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
+import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
@@ -1603,6 +1605,18 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
     component: PainelAprovacoesPage,
     exact: true,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
+    component: StatusSolicitacoesAguardandoDilog,
+    exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   }
 ];

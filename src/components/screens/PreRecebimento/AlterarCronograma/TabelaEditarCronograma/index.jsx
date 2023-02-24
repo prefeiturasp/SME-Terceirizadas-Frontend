@@ -19,6 +19,7 @@ export default ({
 }) => {
   useEffect(() => {
     setRestante(restante);
+    // eslint-disable-next-line
   }, [cronograma]);
 
   const textoFaltante = () => {
