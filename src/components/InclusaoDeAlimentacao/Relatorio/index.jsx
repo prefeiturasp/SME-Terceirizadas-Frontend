@@ -5,7 +5,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
-import CorpoRelatorio from "./componentes/CorpoRelatorio";
+import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
 import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
 import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
 import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
@@ -309,15 +309,22 @@ class Relatorio extends Component {
                   tipoSolicitacao={tipoSolicitacao}
                   meusDados={meusDados}
                 />
-                {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
-                  inclusaoDeAlimentacao.inclusoes.find(
-                    inclusao => inclusao.cancelado
-                  ) && (
+                {[
+                  TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+                  TIPO_SOLICITACAO.SOLICITACAO_CEI
+                ].includes(tipoSolicitacao) &&
+                  (
+                    inclusaoDeAlimentacao.inclusoes ||
+                    inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei
+                  ).find(inclusao => inclusao.cancelado) && (
                     <>
                       <hr />
                       <p>
                         <strong>Histórico de cancelamento parcial</strong>
-                        {inclusaoDeAlimentacao.inclusoes
+                        {(
+                          inclusaoDeAlimentacao.inclusoes ||
+                          inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei
+                        )
                           .filter(inclusao => inclusao.cancelado)
                           .map((inclusao, key) => {
                             return (
@@ -331,13 +338,29 @@ class Relatorio extends Component {
                       </p>
                     </>
                   )}
-                <RelatorioHistoricoJustificativaEscola
-                  solicitacao={inclusaoDeAlimentacao}
-                />
+                {[
+                  TIPO_SOLICITACAO.SOLICITACAO_NORMAL,
+                  TIPO_SOLICITACAO.SOLICITACAO_CEI
+                ].includes(tipoSolicitacao) &&
+                  !(
+                    inclusaoDeAlimentacao.inclusoes ||
+                    inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei
+                  ).find(inclusao => inclusao.cancelado) && (
+                    <RelatorioHistoricoJustificativaEscola
+                      solicitacao={inclusaoDeAlimentacao}
+                    />
+                  )}
+                {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_CONTINUA &&
+                  !inclusaoDeAlimentacao.quantidades_periodo.find(
+                    qp => qp.cancelado
+                  ) && (
+                    <RelatorioHistoricoJustificativaEscola
+                      solicitacao={inclusaoDeAlimentacao}
+                    />
+                  )}
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inclusaoDeAlimentacao}
                 />
-
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (

@@ -1,8 +1,10 @@
 @import "styles/variables.scss";
 
 div.relatorio-inclusao-cemei {
-  .red {
-    color: $red;
+  td.cancelado {
+    span {
+      text-decoration: line-through;
+    }
   }
 
   .yellow {

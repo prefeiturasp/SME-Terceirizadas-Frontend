@@ -153,12 +153,26 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                         className={`col-2 ${
                           solicitacao.dias_motivos_da_inclusao_cemei.find(
                             i => i.data === dia
-                          ).cancelado
-                            ? `red`
+                          ).cancelado ||
+                          solicitacao.status === "ESCOLA_CANCELOU"
+                            ? `cancelado`
                             : ""
                         }`}
                       >
-                        {dia}
+                        <span>{dia}</span>
+                        {(solicitacao.dias_motivos_da_inclusao_cemei.find(
+                          i => i.data === dia
+                        ).cancelado ||
+                          solicitacao.status === "ESCOLA_CANCELOU") && (
+                          <div>
+                            <strong>justificativa:</strong>{" "}
+                            {solicitacao.dias_motivos_da_inclusao_cemei.find(
+                              i => i.data === dia
+                            ).cancelado_justificativa ||
+                              solicitacao.logs[solicitacao.logs.length - 1]
+                                .justificativa}
+                          </div>
+                        )}
                       </td>
                     );
                   })}
@@ -312,9 +326,13 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                   </div>
                 </div>
               )}
-              <RelatorioHistoricoJustificativaEscola
-                solicitacao={solicitacao}
-              />
+              {!solicitacao.dias_motivos_da_inclusao_cemei.find(
+                inclusao => inclusao.cancelado
+              ) && (
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={solicitacao}
+                />
+              )}
               <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
             </div>
           </div>
