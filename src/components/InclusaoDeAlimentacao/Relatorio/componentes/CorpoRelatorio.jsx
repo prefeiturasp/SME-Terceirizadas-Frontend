@@ -64,7 +64,7 @@ const renderParteAvulsa = (
                         {(getDia(dia).cancelado ||
                           inclusaoDeAlimentacao.status ===
                             "ESCOLA_CANCELOU") && (
-                          <div>
+                          <div className="dark-red">
                             <strong>justificativa:</strong>{" "}
                             {getDia(dia).cancelado_justificativa ||
                               inclusaoDeAlimentacao.logs[
@@ -331,12 +331,12 @@ export const CorpoRelatorio = ({ ...props }) => {
                               )}
                             </p>
 
-                            {(quantidade_por_periodo.cancelado ||
+                            {(quantidade_por_periodo.cancelado_justificativa ||
                               inclusaoDeAlimentacao.status ===
                                 "ESCOLA_CANCELOU") && (
-                              <p className="justificativa-cancelamento">
+                              <p className="justificativa-cancelamento dark-red">
                                 <span className="font-weight-bold">
-                                  PERÍODO CANCELADO - JUSTIFICATIVA:{" "}
+                                  justificativa:{" "}
                                 </span>
                                 {quantidade_por_periodo.cancelado_justificativa ||
                                   inclusaoDeAlimentacao.logs.find(
