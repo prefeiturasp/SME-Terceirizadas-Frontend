@@ -915,9 +915,7 @@ class AlteracaoCardapio extends Component {
           }
           break;
         case "LPR - Lanche por Refeição":
-          opcoesDeLanche = tipos_alimentacao.filter(
-            ta => ta.nome === "Lanche"
-          );
+          opcoesDeLanche = tipos_alimentacao.filter(ta => ta.nome === "Lanche");
           opcoesDeLanche4h = tipos_alimentacao.filter(
             ta => ta.nome === "Lanche 4h"
           );
