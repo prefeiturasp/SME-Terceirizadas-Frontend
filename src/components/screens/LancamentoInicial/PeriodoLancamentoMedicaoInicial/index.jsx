@@ -38,13 +38,26 @@ import {
   botaoAdicionarObrigatorio,
   botaoAdicionarObrigatorioTabelaAlimentacao,
   campoFrequenciaValor0ESemObservacao,
+  exibirTooltipLPRAutorizadas,
+  exibirTooltipRPLAutorizadas,
+  exibirTooltipErroQtdMaiorQueAutorizado,
+  exibirTooltipFrequenciaDiaNaoLetivo,
+  exibirTooltipSuspensoesAutorizadas,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
-  validarFormulario
+  validarFormulario,
+  campoComSuspensaoAutorizadaESemObservacao,
+  campoLancheComLPRAutorizadaESemObservacao,
+  campoRefeicaoComRPLAutorizadaESemObservacao,
+  exibirTooltipSemAlimentacaoPreAutorizadaInformada
 } from "./validacoes";
 import {
+  desabilitarField,
   deveExistirObservacao,
   formatarPayloadPeriodoLancamento,
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
+  getSolicitacoesInclusaoAutorizadasAsync,
+  getSolicitacoesSuspensoesAutorizadasAsync,
   valorZeroFrequencia
 } from "./helper";
 import {
@@ -54,12 +67,10 @@ import {
   getLogDietasAutorizadasPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
-  updateValoresPeriodosLancamentos,
-  getSolicitacoesInclusoesAutorizadasEscola
+  updateValoresPeriodosLancamentos
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { getSolicitacoesAutorizadasEscola } from "services/painelEscola.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import "./styles.scss";
 
@@ -83,8 +94,12 @@ export default () => {
   const [tabelaDietaRows, setTabelaDietaRows] = useState([]);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
-  const [solicitacoesAutorizadas, setSolicitacoesAutorizadas] = useState([]);
   const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
+  const [
+    alteracoesAlimentacaoAutorizadas,
+    setAlteracoesAlimentacaoAutorizadas
+  ] = useState(null);
   const [
     dadosValoresInclusoesAutorizadasState,
     setDadosValoresInclusoesAutorizadasState
@@ -135,37 +150,6 @@ export default () => {
       setDiasSobremesaDoce(response.data);
     } else {
       toastError("Erro ao carregar dias de sobremesa doce");
-    }
-  };
-
-  const getSolicitacoesInclusaoAutorizadasAsync = async (
-    escolaUuuid,
-    mes,
-    ano,
-    nome_periodo_escolar
-  ) => {
-    const params = {};
-    params["escola_uuid"] = escolaUuuid;
-    params["tipo_solicitacao"] = "Inclusão de";
-    params["mes"] = mes;
-    params["ano"] = ano;
-    params["nome_periodo_escolar"] = nome_periodo_escolar;
-    if (
-      location.state.grupo &&
-      location.state.grupo.includes("Programas e Projetos")
-    ) {
-      params["tipo_doc"] = "INC_ALIMENTA_CONTINUA";
-    } else {
-      params["excluir_inclusoes_continuas"] = true;
-    }
-    const responseAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
-      params
-    );
-    if (responseAutorizadas.status === HTTP_STATUS.OK) {
-      return responseAutorizadas.data.results;
-    } else {
-      toastError("Erro ao carregar Inclusões Autorizadas");
-      return [];
     }
   };
 
@@ -382,18 +366,32 @@ export default () => {
       );
       setCalendarioMesConsiderado(response_dias_calendario.data);
 
-      const solicitacoesAutorizadasEscola = await getSolicitacoesAutorizadasEscola(
-        escola.uuid
-      );
-      setSolicitacoesAutorizadas(solicitacoesAutorizadasEscola.data.results);
-
       const response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+        escola.uuid,
+        mes,
+        ano,
+        periodo.periodo_escolar.nome,
+        location
+      );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
+      const response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
         escola.uuid,
         mes,
         ano,
         periodo.periodo_escolar.nome
       );
-      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+      setSuspensoesAutorizadas(response_suspensoes_autorizadas);
+
+      const response_alteracoes_alimentacao_autorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+        escola.uuid,
+        mes,
+        ano,
+        periodo.periodo_escolar.nome
+      );
+      setAlteracoesAlimentacaoAutorizadas(
+        response_alteracoes_alimentacao_autorizadas
+      );
 
       await formatarDadosValoresMedicao(
         mesAnoFormatado,
@@ -421,7 +419,7 @@ export default () => {
     matriculados,
     rowsDietas,
     logQtdDietasAutorizadas,
-    solInclusaoAutorizadas,
+    solInclusoesAutorizadas,
     mesAno
   ) => {
     let dadosValoresMedicoes = {};
@@ -485,9 +483,9 @@ export default () => {
           tiposAlimentacaoFormatadas.forEach(alimentacao => {
             if (
               categoria.nome.includes("ALIMENTAÇÃO") &&
-              solInclusaoAutorizadas
+              solInclusoesAutorizadas
             ) {
-              const inclusoesFiltradas = solInclusaoAutorizadas.filter(
+              const inclusoesFiltradas = solInclusoesAutorizadas.filter(
                 inclusao => inclusao.alimentacoes.includes(alimentacao.name)
               );
               for (let i = 1; i <= 31; i++) {
@@ -988,52 +986,6 @@ export default () => {
     return ehDiaLetivo;
   };
 
-  const desabilitarField = (dia, rowName, categoria, values) => {
-    const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
-      locale: ptBR
-    }).toString();
-    const mesAtual = format(mesAnoDefault, "LLLL", {
-      locale: ptBR
-    }).toString();
-
-    if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
-      return true;
-    }
-    if (
-      `${rowName}__dia_${dia}__categoria_${categoria}` in
-        dadosValoresInclusoesAutorizadasState &&
-      !["Mês anterior", "Mês posterior"].includes(
-        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-      )
-    ) {
-      return false;
-    } else if (
-      `${rowName}__dia_${dia}__categoria_${categoria}` ===
-        `frequencia__dia_${dia}__categoria_${categoria}` &&
-      Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-        String(key).includes(`__dia_${dia}__categoria_${categoria}`)
-      ) &&
-      !["Mês anterior", "Mês posterior"].includes(
-        values[`${rowName}__dia_${dia}__categoria_${categoria}`]
-      )
-    ) {
-      return false;
-    } else {
-      return (
-        !validacaoDiaLetivo(dia) ||
-        validacaoSemana(dia) ||
-        rowName === "matriculados" ||
-        rowName === "dietas_autorizadas" ||
-        !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
-        Number(
-          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-        ) === 0 ||
-        (mesConsiderado === mesAtual &&
-          Number(dia) >= format(mesAnoDefault, "dd"))
-      );
-    }
-  };
-
   const openModalObservacaoDiaria = (dia, categoria) => {
     setShowModalObservacaoDiaria(true);
     setDiaObservacaoDiaria(dia);
@@ -1080,7 +1032,9 @@ export default () => {
     dia,
     categoria,
     rowName,
-    form
+    form,
+    column,
+    row
   ) => {
     const ehZeroFrequencia = valorZeroFrequencia(
       value,
@@ -1124,7 +1078,6 @@ export default () => {
         values,
         dia,
         categoria,
-        rowName,
         dadosValoresInclusoesAutorizadasState,
         validacaoDiaLetivo
       )
@@ -1164,7 +1117,47 @@ export default () => {
     if (
       (ehZeroFrequencia &&
         !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]) ||
-      campoFrequenciaValor0ESemObservacao(dia, categoria, values)
+      campoFrequenciaValor0ESemObservacao(dia, categoria, values) ||
+      campoComSuspensaoAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        suspensoesAutorizadas
+      ) ||
+      campoRefeicaoComRPLAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      campoLancheComLPRAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      (categoria.nome.includes("ALIMENTAÇÃO") &&
+        (exibirTooltipSuspensoesAutorizadas(
+          values,
+          row,
+          column,
+          categoria,
+          suspensoesAutorizadas
+        ) ||
+          exibirTooltipRPLAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            alteracoesAlimentacaoAutorizadas
+          ) ||
+          exibirTooltipLPRAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            alteracoesAlimentacaoAutorizadas
+          )))
     ) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -1180,14 +1173,14 @@ export default () => {
     allValues
   ) => {
     return validacoesTabelaAlimentacao(
-      mesAnoConsiderado,
-      solicitacoesAutorizadas,
       rowName,
       dia,
       categoria,
       value,
       allValues,
       dadosValoresInclusoesAutorizadasState,
+      suspensoesAutorizadas,
+      alteracoesAlimentacaoAutorizadas,
       validacaoDiaLetivo,
       location
     );
@@ -1428,7 +1421,12 @@ export default () => {
                                                       column.dia,
                                                       row.name,
                                                       categoria.id,
-                                                      formValuesAtualizados
+                                                      formValuesAtualizados,
+                                                      mesAnoConsiderado,
+                                                      mesAnoDefault,
+                                                      dadosValoresInclusoesAutorizadasState,
+                                                      validacaoDiaLetivo,
+                                                      validacaoSemana
                                                     )}
                                                     dia={column.dia}
                                                     defaultValue={defaultValue(
@@ -1457,7 +1455,9 @@ export default () => {
                                                         column.dia,
                                                         categoria,
                                                         row.name,
-                                                        form
+                                                        form,
+                                                        column,
+                                                        row
                                                       );
                                                     }}
                                                   </OnChange>
@@ -1512,9 +1512,12 @@ export default () => {
                                                         categoria,
                                                         diasSobremesaDoce,
                                                         location,
-                                                        row.name,
+                                                        row,
                                                         dadosValoresInclusoesAutorizadasState,
-                                                        validacaoDiaLetivo
+                                                        validacaoDiaLetivo,
+                                                        column,
+                                                        suspensoesAutorizadas,
+                                                        alteracoesAlimentacaoAutorizadas
                                                       )
                                                         ? BUTTON_STYLE.RED_OUTLINE
                                                         : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -1548,7 +1551,12 @@ export default () => {
                                                       column.dia,
                                                       row.name,
                                                       categoria.id,
-                                                      formValuesAtualizados
+                                                      formValuesAtualizados,
+                                                      mesAnoConsiderado,
+                                                      mesAnoDefault,
+                                                      dadosValoresInclusoesAutorizadasState,
+                                                      validacaoDiaLetivo,
+                                                      validacaoSemana
                                                     )}
                                                     exibeTooltipDiaSobremesaDoce={
                                                       row.name ===
@@ -1575,30 +1583,13 @@ export default () => {
                                                       }` in
                                                       dadosValoresInclusoesAutorizadasState
                                                     }
-                                                    exibeTooltipSemAlimentacaoPreAutorizadaInformada={
-                                                      `${row.name}__dia_${
-                                                        column.dia
-                                                      }__categoria_${
-                                                        categoria.id
-                                                      }` in
-                                                        dadosValoresInclusoesAutorizadasState &&
-                                                      Number(
-                                                        formValuesAtualizados[
-                                                          `${row.name}__dia_${
-                                                            column.dia
-                                                          }__categoria_${
-                                                            categoria.id
-                                                          }`
-                                                        ]
-                                                      ) === 0 &&
-                                                      !formValuesAtualizados[
-                                                        `observacoes__dia_${
-                                                          column.dia
-                                                        }__categoria_${
-                                                          categoria.id
-                                                        }`
-                                                      ]
-                                                    }
+                                                    exibeTooltipSemAlimentacaoPreAutorizadaInformada={exibirTooltipSemAlimentacaoPreAutorizadaInformada(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      dadosValoresInclusoesAutorizadasState
+                                                    )}
                                                     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                       `${row.name}__dia_${
                                                         column.dia
@@ -1617,66 +1608,42 @@ export default () => {
                                                         }`
                                                       ]
                                                     }
-                                                    exibeTooltipFrequenciaDiaNaoLetivo={
-                                                      !validacaoDiaLetivo(
-                                                        column.dia
-                                                      ) &&
-                                                      row.name ===
-                                                        "frequencia" &&
-                                                      Object.keys(
-                                                        dadosValoresInclusoesAutorizadasState
-                                                      ).some(key =>
-                                                        String(key).includes(
-                                                          `__dia_${
-                                                            column.dia
-                                                          }__categoria_${
-                                                            categoria.id
-                                                          }`
-                                                        )
-                                                      ) &&
-                                                      Number(
-                                                        formValuesAtualizados[
-                                                          `frequencia__dia_${
-                                                            column.dia
-                                                          }__categoria_${
-                                                            categoria.id
-                                                          }`
-                                                        ]
-                                                      ) === 0
-                                                    }
-                                                    exibeTooltipErroQtdMaiorQueAutorizado={
-                                                      `${row.name}__dia_${
-                                                        column.dia
-                                                      }__categoria_${
-                                                        categoria.id
-                                                      }` in
-                                                        dadosValoresInclusoesAutorizadasState &&
-                                                      Number(
-                                                        formValuesAtualizados[
-                                                          `${row.name}__dia_${
-                                                            column.dia
-                                                          }__categoria_${
-                                                            categoria.id
-                                                          }`
-                                                        ]
-                                                      ) >
-                                                        Number(
-                                                          dadosValoresInclusoesAutorizadasState[
-                                                            `${row.name}__dia_${
-                                                              column.dia
-                                                            }__categoria_${
-                                                              categoria.id
-                                                            }`
-                                                          ]
-                                                        ) &&
-                                                      !formValuesAtualizados[
-                                                        `observacoes__dia_${
-                                                          column.dia
-                                                        }__categoria_${
-                                                          categoria.id
-                                                        }`
-                                                      ]
-                                                    }
+                                                    exibeTooltipFrequenciaDiaNaoLetivo={exibirTooltipFrequenciaDiaNaoLetivo(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      dadosValoresInclusoesAutorizadasState,
+                                                      validacaoDiaLetivo
+                                                    )}
+                                                    exibeTooltipErroQtdMaiorQueAutorizado={exibirTooltipErroQtdMaiorQueAutorizado(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      dadosValoresInclusoesAutorizadasState
+                                                    )}
+                                                    exibeTooltipSuspensoesAutorizadas={exibirTooltipSuspensoesAutorizadas(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      suspensoesAutorizadas
+                                                    )}
+                                                    exibeTooltipRPLAutorizadas={exibirTooltipRPLAutorizadas(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      alteracoesAlimentacaoAutorizadas
+                                                    )}
+                                                    exibeTooltipLPRAutorizadas={exibirTooltipLPRAutorizadas(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      alteracoesAlimentacaoAutorizadas
+                                                    )}
                                                     numeroDeInclusoesAutorizadas={
                                                       dadosValoresInclusoesAutorizadasState[
                                                         `${row.name}__dia_${
@@ -1712,7 +1679,9 @@ export default () => {
                                                         column.dia,
                                                         categoria,
                                                         row.name,
-                                                        form
+                                                        form,
+                                                        column,
+                                                        row
                                                       );
                                                     }}
                                                   </OnChange>
