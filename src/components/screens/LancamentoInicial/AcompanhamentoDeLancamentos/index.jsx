@@ -25,7 +25,11 @@ import MeusDadosContext from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
 import { getEscolasTrecTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
-import { formatarOpcoesDRE, usuarioEhMedicao } from "helpers/utilities";
+import {
+  formatarOpcoesDRE,
+  usuarioEhDRE,
+  usuarioEhMedicao
+} from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 
@@ -113,7 +117,9 @@ export const AcompanhamentoDeLancamentos = () => {
   }, [diretoriaRegional]);
 
   useEffect(() => {
-    const uuid = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    const uuid = usuarioEhDRE()
+      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+      : diretoriaRegional;
 
     const getLotesAsync = async () => {
       const response = await getLotesSimples({
@@ -139,7 +145,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
     meusDados && getLotesAsync();
     meusDados && getEscolasTrecTotalAsync();
-  }, [meusDados]);
+  }, [meusDados, diretoriaRegional]);
 
   const onPageChanged = async page => {
     setLoadingComFiltros(true);
@@ -184,6 +190,15 @@ export const AcompanhamentoDeLancamentos = () => {
     getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
   };
 
+  const resetForm = form => {
+    let diretoria_regional = form.getFieldState(
+      "diretoria_regional" || undefined
+    );
+    form.reset();
+    diretoria_regional &&
+      form.change("diretoria_regional", diretoria_regional.value);
+  };
+
   return (
     <div className="acompanhamento-de-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
@@ -226,6 +241,7 @@ export const AcompanhamentoDeLancamentos = () => {
                               key={key}
                               dados={dadosPorStatus}
                               form={form}
+                              resetForm={resetForm}
                               page={currentPage}
                               onPageChanged={onPageChanged}
                               setResultados={setResultados}
@@ -337,7 +353,7 @@ export const AcompanhamentoDeLancamentos = () => {
                           <div className="col-4 mt-auto text-right">
                             <Botao
                               type={BUTTON_TYPE.BUTTON}
-                              onClick={() => form.reset()}
+                              onClick={() => resetForm(form)}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               texto="Limpar"
                               className="mr-3"
