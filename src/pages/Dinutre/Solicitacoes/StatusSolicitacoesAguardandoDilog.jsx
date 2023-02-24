@@ -24,13 +24,24 @@ const limit = 10;
 const paramsDefault = { status: "ASSINADO_DINUTRE", offset: 0, limit: limit };
 
 export default () => {
+  const anteriores = [
+    {
+      href: `#`,
+      titulo: "Pré-Recebimento"
+    },
+    {
+      href: `/pre-recebimento/painel-aprovacoes`,
+      titulo: "Painel de Aprovações"
+    }
+  ];
+
   return (
     <Page
       titulo={atual.titulo}
       botaoVoltar
       voltarPara={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}
     >
-      <Breadcrumb home="/" atual={atual} />
+      <Breadcrumb home="/" atual={atual} anteriores={anteriores} />
       <SolicitacoesCronogramaStatusGenerico
         icone={CARD_AGUARDANDO_ASSINATURA.icon}
         titulo={CARD_AGUARDANDO_ASSINATURA.titulo}
