@@ -778,6 +778,7 @@ export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
 
   const dresPermitidas = [
+    "CAPELA DO SOCORRO",
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
