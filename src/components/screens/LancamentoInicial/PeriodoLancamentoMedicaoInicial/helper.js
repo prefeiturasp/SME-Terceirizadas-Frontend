@@ -1,3 +1,13 @@
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import HTTP_STATUS from "http-status-codes";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import {
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
+  getSolicitacoesInclusoesAutorizadasEscola,
+  getSolicitacoesSuspensoesAutorizadasEscola
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+
 export const formatarPayloadPeriodoLancamento = (
   values,
   tabelaAlimentacaoRows,
@@ -151,4 +161,138 @@ export const valorZeroFrequencia = (
     return true;
   }
   return;
+};
+
+export const desabilitarField = (
+  dia,
+  rowName,
+  categoria,
+  values,
+  mesAnoConsiderado,
+  mesAnoDefault,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo,
+  validacaoSemana
+) => {
+  const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
+    locale: ptBR
+  }).toString();
+  const mesAtual = format(mesAnoDefault, "LLLL", {
+    locale: ptBR
+  }).toString();
+
+  if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
+    return true;
+  }
+  if (
+    `${rowName}__dia_${dia}__categoria_${categoria}` in
+      dadosValoresInclusoesAutorizadasState &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
+  ) {
+    return false;
+  } else if (
+    `${rowName}__dia_${dia}__categoria_${categoria}` ===
+      `frequencia__dia_${dia}__categoria_${categoria}` &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+    ) &&
+    !["Mês anterior", "Mês posterior"].includes(
+      values[`${rowName}__dia_${dia}__categoria_${categoria}`]
+    )
+  ) {
+    return false;
+  } else {
+    return (
+      !validacaoDiaLetivo(dia) ||
+      validacaoSemana(dia) ||
+      rowName === "matriculados" ||
+      rowName === "dietas_autorizadas" ||
+      !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
+      Number(
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) === 0 ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd"))
+    );
+  }
+};
+
+export const getSolicitacoesInclusaoAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano,
+  nome_periodo_escolar,
+  location
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Inclusão de";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  if (
+    location.state.grupo &&
+    location.state.grupo.includes("Programas e Projetos")
+  ) {
+    params["tipo_doc"] = "INC_ALIMENTA_CONTINUA";
+  } else {
+    params["excluir_inclusoes_continuas"] = true;
+  }
+  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesAutorizadasEscola(
+    params
+  );
+  if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseInclusoesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Inclusões Autorizadas");
+    return [];
+  }
+};
+
+export const getSolicitacoesSuspensoesAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano,
+  nome_periodo_escolar
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Suspensão";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  const responseSuspensoesAutorizadas = await getSolicitacoesSuspensoesAutorizadasEscola(
+    params
+  );
+  if (responseSuspensoesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseSuspensoesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Suspensões Autorizadas");
+    return [];
+  }
+};
+
+export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano,
+  nome_periodo_escolar
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Alteração";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
+    params
+  );
+  if (responseAlteracoesAlimentacaoAutorizadas.status === HTTP_STATUS.OK) {
+    return responseAlteracoesAlimentacaoAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Alterações de Alimentação Autorizadas");
+    return [];
+  }
 };

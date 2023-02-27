@@ -32,7 +32,10 @@ export const InputText = props => {
     exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
-    exibeTooltipFrequenciaDiaNaoLetivo
+    exibeTooltipFrequenciaDiaNaoLetivo,
+    exibeTooltipSuspensoesAutorizadas,
+    exibeTooltipRPLAutorizadas,
+    exibeTooltipLPRAutorizadas
   } = props;
 
   let msgTooltip = "";
@@ -68,10 +71,6 @@ export const InputText = props => {
       exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo &&
       Number(input.value) > Number(numeroDeInclusoesAutorizadas)
     );
-  };
-
-  const exibirTooltipFrequenciaDiaNaoLetivo = () => {
-    return exibeTooltipFrequenciaDiaNaoLetivo;
   };
 
   return (
@@ -125,10 +124,37 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
-      {exibirTooltipFrequenciaDiaNaoLetivo() && (
+      {exibeTooltipFrequenciaDiaNaoLetivo && (
         <Tooltip
           title={
             "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensoesAutorizadas && (
+        <Tooltip
+          title={
+            "Há suspensão de alimentação autorizada para essa data. Obrigatório adicionar observação para lançamentos neste dia."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipRPLAutorizadas && (
+        <Tooltip
+          title={
+            "Há autorização de RPL para essa data. Justifique o apontamento de refeição."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLPRAutorizadas && (
+        <Tooltip
+          title={
+            "Há autorização de LPR para essa data. Justifique o apontamento de Lanche. Obrigatório adicionar observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -156,10 +182,14 @@ export const InputText = props => {
             ? "invalid-field"
             : ""
         } ${
-          exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-          exibirTooltipFrequenciaDiaNaoLetivo() ||
-          exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
-          exibeTooltipErroQtdMaiorQueAutorizado
+          !meta.error &&
+          (exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
+            exibeTooltipFrequenciaDiaNaoLetivo ||
+            exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
+            exibeTooltipErroQtdMaiorQueAutorizado ||
+            exibeTooltipSuspensoesAutorizadas ||
+            exibeTooltipRPLAutorizadas ||
+            exibeTooltipLPRAutorizadas)
             ? "border-warning"
             : ""
         }`}
