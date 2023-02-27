@@ -9,7 +9,6 @@ import {
 } from "components/Shareable/Botao/constants";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
-import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
@@ -25,6 +24,7 @@ import {
   periodosDaInclusao
 } from "../../helpers";
 import "./style.scss";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 
 export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
   const [imprimindo, setImprimindo] = useState(false);
@@ -153,12 +153,26 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                         className={`col-2 ${
                           solicitacao.dias_motivos_da_inclusao_cemei.find(
                             i => i.data === dia
-                          ).cancelado
-                            ? `red`
+                          ).cancelado ||
+                          solicitacao.status === "ESCOLA_CANCELOU"
+                            ? `cancelado`
                             : ""
                         }`}
                       >
-                        {dia}
+                        <span>{dia}</span>
+                        {(solicitacao.dias_motivos_da_inclusao_cemei.find(
+                          i => i.data === dia
+                        ).cancelado_justificativa ||
+                          solicitacao.status === "ESCOLA_CANCELOU") && (
+                          <div className="dark-red">
+                            <strong>justificativa:</strong>{" "}
+                            {solicitacao.dias_motivos_da_inclusao_cemei.find(
+                              i => i.data === dia
+                            ).cancelado_justificativa ||
+                              solicitacao.logs[solicitacao.logs.length - 1]
+                                .justificativa}
+                          </div>
+                        )}
                       </td>
                     );
                   })}
@@ -279,19 +293,19 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                 </>
               )}
               {solicitacao.dias_motivos_da_inclusao_cemei.find(
-                inclusao => inclusao.cancelado
+                inclusao => inclusao.cancelado_justificativa
               ) && (
                 <>
                   <hr />
                   <p>
-                    <strong>Histórico de cancelamento parcial</strong>
+                    <strong>Histórico de cancelamento</strong>
                     {solicitacao.dias_motivos_da_inclusao_cemei
-                      .filter(inclusao => inclusao.cancelado)
+                      .filter(inclusao => inclusao.cancelado_justificativa)
                       .map((inclusao, key) => {
                         return (
                           <div key={key}>
                             {inclusao.data}
-                            {" - "}
+                            {" - justificativa: "}
                             {inclusao.cancelado_justificativa}
                           </div>
                         );
@@ -312,10 +326,12 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
                   </div>
                 </div>
               )}
-              <RelatorioHistoricoJustificativaEscola
-                solicitacao={solicitacao}
-              />
               <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
+              {solicitacao.status !== "ESCOLA_CANCELOU" && (
+                <RelatorioHistoricoJustificativaEscola
+                  solicitacao={solicitacao}
+                />
+              )}
             </div>
           </div>
         );
