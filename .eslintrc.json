@@ -26,7 +26,10 @@
     "react/display-name": 0,
     "no-var": "error",
     "no-class-assign": "off", // TODO: investigar  essa regra.
-    "react/no-string-refs": "off" // TODO: investigar  essa regra.
+    "react/no-string-refs": "off", // TODO: investigar  essa regra.
+    "no-dupe-else-if": "on",
+    "no-import-assign": "on",
+    "no-setter-return": "on"
   },
   "settings": {
     "react": {

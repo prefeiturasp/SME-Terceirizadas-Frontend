@@ -71,21 +71,15 @@ export const getProtocoloDietaEspecial = async uuid => {
   saveAs(data, "protocolo_dieta_especial.pdf");
 };
 
-export const getRelatorioInclusaoAlimentacao = (uuid, tipoSolicitacao) => {
+export const getRelatorioInclusaoAlimentacao = async (
+  uuid,
+  tipoSolicitacao
+) => {
   let url = `${getInclusaoPath(tipoSolicitacao)}/${uuid}/relatorio/`;
-  fetch(url, {
-    method: "GET",
-    headers: authToken,
+  const { data } = await axios.get(url, {
     responseType: "blob"
-  })
-    .then(response => response.blob())
-    .then(data => {
-      let a = document.createElement("a");
-      const fileURL = URL.createObjectURL(data);
-      a.href = fileURL;
-      a.download = `inclusao_alimentacao.pdf`;
-      a.click();
-    });
+  });
+  saveAs(data, "inclusao_alimentacao.pdf");
 };
 
 export const getRelatorioInclusaoAlimentacaoCEMEI = async (

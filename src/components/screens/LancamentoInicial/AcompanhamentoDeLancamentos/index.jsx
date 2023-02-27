@@ -24,6 +24,14 @@ import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service
 import MeusDadosContext from "context/MeusDadosContext";
 import { getLotesSimples } from "services/lote.service";
 import { getEscolasTrecTotal } from "services/escola.service";
+import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
+import {
+  formatarOpcoesDRE,
+  usuarioEhDRE,
+  usuarioEhMedicao
+} from "helpers/utilities";
+import { ASelect } from "components/Shareable/MakeField";
+import { Select as SelectAntd } from "antd";
 
 export const AcompanhamentoDeLancamentos = () => {
   const { meusDados } = useContext(MeusDadosContext);
@@ -35,6 +43,8 @@ export const AcompanhamentoDeLancamentos = () => {
   const [lotes, setLotes] = useState(null);
   const [tiposUnidades, setTiposUnidades] = useState(null);
   const [nomesEscolas, setNomesEscolas] = useState(null);
+  const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
+  const [diretoriaRegional, setDiretoriaRegional] = useState(null);
 
   const [erroAPI, setErroAPI] = useState("");
   const [loading, setLoading] = useState(true);
@@ -43,18 +53,25 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const PAGE_SIZE = 10;
   const LOADING =
-    !dadosDashboard ||
+    (!usuarioEhMedicao && !dadosDashboard) ||
     !mesesAnos ||
     !tiposUnidades ||
     !lotes ||
     !nomesEscolas ||
     loading;
 
-  const getDashboardMedicaoInicialAsync = async (params = null) => {
+  const getDashboardMedicaoInicialAsync = async (params = {}) => {
     setLoadingComFiltros(true);
+    if (diretoriaRegional) {
+      params = { ...params, dre: diretoriaRegional };
+    }
     const response = await getDashboardMedicaoInicial(params);
     if (response.status === HTTP_STATUS.OK) {
-      !dadosDashboard && setDadosDashboard(response.data.results);
+      const dashboardResults = response.data.results;
+
+      if (!usuarioEhMedicao() || diretoriaRegional) {
+        setDadosDashboard(dashboardResults);
+      }
       if (statusSelecionado) {
         setResultados(
           response.data.results.find(res => res.status === statusSelecionado)
@@ -91,15 +108,18 @@ export const AcompanhamentoDeLancamentos = () => {
         );
       }
     };
-
+    getDiretoriasRegionaisAsync();
     getDashboardMedicaoInicialAsync();
     getMesesAnosSolicitacoesMedicaoinicialAsync();
     getTiposUnidadeEscolarAsync();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [diretoriaRegional]);
 
   useEffect(() => {
-    const uuid = meusDados && meusDados.vinculo_atual.instituicao.uuid;
+    const uuid = usuarioEhDRE()
+      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+      : diretoriaRegional;
 
     const getLotesAsync = async () => {
       const response = await getLotesSimples({
@@ -125,7 +145,7 @@ export const AcompanhamentoDeLancamentos = () => {
 
     meusDados && getLotesAsync();
     meusDados && getEscolasTrecTotalAsync();
-  }, [meusDados]);
+  }, [meusDados, diretoriaRegional]);
 
   const onPageChanged = async page => {
     setLoadingComFiltros(true);
@@ -146,9 +166,37 @@ export const AcompanhamentoDeLancamentos = () => {
     return [];
   };
 
+  const getDiretoriasRegionaisAsync = async () => {
+    const response = await getDiretoriaregionalSimplissima();
+    if (response.status === HTTP_STATUS.OK) {
+      const { Option } = SelectAntd;
+      const dres = formatarOpcoesDRE(response.data.results).map(dre => {
+        return <Option key={dre.value}>{dre.label}</Option>;
+      });
+      setDiretoriasRegionais(
+        [
+          <Option value="" key={0} hidden>
+            Selecione a DRE para visualizar os resultados
+          </Option>
+        ].concat(dres)
+      );
+    } else {
+      setErroAPI("Erro ao carregar DREs");
+    }
+  };
+
   const onSubmit = values => {
     setCurrentPage(1);
     getDashboardMedicaoInicialAsync({ status: statusSelecionado, ...values });
+  };
+
+  const resetForm = form => {
+    let diretoria_regional = form.getFieldState(
+      "diretoria_regional" || undefined
+    );
+    form.reset();
+    diretoria_regional &&
+      form.change("diretoria_regional", diretoria_regional.value);
   };
 
   return (
@@ -160,43 +208,75 @@ export const AcompanhamentoDeLancamentos = () => {
             {({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
+                  {usuarioEhMedicao() && (
+                    <div className="col-5">
+                      <Field
+                        component={ASelect}
+                        showSearch
+                        className="seletor-dre"
+                        onChange={value => {
+                          form.change(`diretoria_regional`, value || undefined);
+                          setDiretoriaRegional(value || undefined);
+                          setStatusSelecionado(null);
+                          setResultados(null);
+                        }}
+                        name="diretoria_regional"
+                        filterOption={(inputValue, option) =>
+                          option.props.children
+                            .toString()
+                            .toLowerCase()
+                            .includes(inputValue.toLowerCase())
+                        }
+                        naoDesabilitarPrimeiraOpcao
+                      >
+                        {diretoriasRegionais}
+                      </Field>
+                    </div>
+                  )}
                   <div className="card-body">
                     <div className="d-flex">
-                      {dadosDashboard.map((dadosPorStatus, key) => {
-                        return (
-                          <CardMedicaoPorStatus
-                            key={key}
-                            dados={dadosPorStatus}
-                            form={form}
-                            page={currentPage}
-                            onPageChanged={onPageChanged}
-                            setResultados={setResultados}
-                            setStatusSelecionado={setStatusSelecionado}
-                            statusSelecionado={statusSelecionado}
-                            total={dadosPorStatus.total}
-                            classeCor={
-                              dadosPorStatus.total &&
-                              (!statusSelecionado ||
-                                statusSelecionado === dadosPorStatus.status)
-                                ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
-                                    dadosPorStatus.status
-                                  ].cor
-                                : `cinza ${dadosPorStatus.total &&
-                                    "cursor-pointer"}`
-                            }
-                          >
-                            {
-                              MEDICAO_CARD_NOME_POR_STATUS_DRE[
-                                dadosPorStatus.status
-                              ].nome
-                            }
-                          </CardMedicaoPorStatus>
-                        );
-                      })}
+                      {dadosDashboard &&
+                        dadosDashboard.map((dadosPorStatus, key) => {
+                          return (
+                            <CardMedicaoPorStatus
+                              key={key}
+                              dados={dadosPorStatus}
+                              form={form}
+                              resetForm={resetForm}
+                              page={currentPage}
+                              onPageChanged={onPageChanged}
+                              setResultados={setResultados}
+                              setStatusSelecionado={setStatusSelecionado}
+                              statusSelecionado={statusSelecionado}
+                              total={dadosPorStatus.total}
+                              classeCor={
+                                dadosPorStatus.total &&
+                                (!statusSelecionado ||
+                                  statusSelecionado === dadosPorStatus.status)
+                                  ? MEDICAO_CARD_NOME_POR_STATUS_DRE[
+                                      dadosPorStatus.status
+                                    ].cor
+                                  : `cinza ${dadosPorStatus.total &&
+                                      "cursor-pointer"}`
+                              }
+                            >
+                              {
+                                MEDICAO_CARD_NOME_POR_STATUS_DRE[
+                                  dadosPorStatus.status
+                                ].nome
+                              }
+                            </CardMedicaoPorStatus>
+                          );
+                        })}
                     </div>
+
                     <div className="text-center mt-3">
-                      Selecione os status acima para visualizar a listagem
-                      detalhada
+                      {!loading && !loadingComFiltros && dadosDashboard && (
+                        <span>
+                          Selecione os status acima para visualizar a listagem
+                          detalhada
+                        </span>
+                      )}{" "}
                     </div>
                     {statusSelecionado && (
                       <>
@@ -274,7 +354,7 @@ export const AcompanhamentoDeLancamentos = () => {
                           <div className="col-4 mt-auto text-right">
                             <Botao
                               type={BUTTON_TYPE.BUTTON}
-                              onClick={() => form.reset()}
+                              onClick={() => resetForm(form)}
                               style={BUTTON_STYLE.GREEN_OUTLINE}
                               texto="Limpar"
                               className="mr-3"
