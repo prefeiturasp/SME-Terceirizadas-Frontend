@@ -234,6 +234,7 @@ const FormAutorizaDietaEspecial = ({
       if (
         dietaEspecial.tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE
       ) {
+        setShowAutorizarAlteracaoUEModal(false);
         toastSuccess("Solicitação de alteração de U.E autorizada com sucesso!");
       } else {
         toastSuccess(response.data.detail);
