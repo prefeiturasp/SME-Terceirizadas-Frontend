@@ -169,7 +169,7 @@ export const AcompanhamentoDeLancamentos = () => {
       });
       setDiretoriasRegionais(
         [
-          <Option value="" key={0}>
+          <Option value="" key={0} hidden>
             Selecione a DRE para visualizar os resultados
           </Option>
         ].concat(dres)
@@ -212,6 +212,7 @@ export const AcompanhamentoDeLancamentos = () => {
                             .toLowerCase()
                             .includes(inputValue.toLowerCase())
                         }
+                        naoDesabilitarPrimeiraOpcao
                       >
                         {diretoriasRegionais}
                       </Field>
