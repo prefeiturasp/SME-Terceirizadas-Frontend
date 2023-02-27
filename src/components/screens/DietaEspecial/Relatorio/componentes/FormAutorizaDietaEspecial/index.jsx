@@ -241,7 +241,9 @@ const FormAutorizaDietaEspecial = ({
     } else {
       toastError("Houve um erro ao autorizar a Dieta Especial");
     }
-    //cancelar();
+    if (editar) {
+      cancelar();
+    }
     onAutorizarOuNegar();
   };
 
