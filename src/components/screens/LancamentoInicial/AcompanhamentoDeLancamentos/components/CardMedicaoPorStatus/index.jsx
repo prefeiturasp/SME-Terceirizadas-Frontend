@@ -11,7 +11,8 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
     setResultados,
     statusSelecionado,
     setStatusSelecionado,
-    total
+    total,
+    resetForm
   } = props;
 
   return (
@@ -19,7 +20,7 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
       onClick={() => {
         if (total) {
           setResultados(statusSelecionado === dados.status ? null : dados);
-          form.reset();
+          resetForm(form);
           setStatusSelecionado(
             statusSelecionado === dados.status ? null : dados.status
           );
