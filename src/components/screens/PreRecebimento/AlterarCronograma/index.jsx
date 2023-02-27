@@ -92,6 +92,14 @@ export default () => {
     }
   };
 
+  const verificarQuantidadesPreenchidas = values => {
+    return etapas.every(
+      etapa =>
+        values[`quantidade_total_${etapa.uuid}`] !== undefined &&
+        values[`quantidade_total_${etapa.uuid}`] !== null
+    );
+  };
+
   useEffect(() => {
     getDetalhes();
   }, [uuid]);
@@ -153,6 +161,9 @@ export default () => {
                         motivos={values.motivos}
                         cronograma={cronograma}
                         values={values}
+                        verificarQuantidadesPreenchidas={
+                          verificarQuantidadesPreenchidas
+                        }
                         setpodeSubmeter={setpodeSubmeter}
                         restante={restante}
                         setRestante={setRestante}
@@ -174,7 +185,8 @@ export default () => {
                         if (value && values.motivos) {
                           setpodeSubmeter(
                             checarQuantidadeInformada(values.motivos) &&
-                              checarDatasInformadas(values.motivos, values)
+                              checarDatasInformadas(values.motivos, values) &&
+                              verificarQuantidadesPreenchidas(values)
                           );
                         } else {
                           setpodeSubmeter(false);

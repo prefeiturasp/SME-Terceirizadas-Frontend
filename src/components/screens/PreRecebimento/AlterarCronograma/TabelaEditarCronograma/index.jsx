@@ -15,7 +15,8 @@ export default ({
   values,
   restante,
   setRestante,
-  setpodeSubmeter
+  setpodeSubmeter,
+  verificarQuantidadesPreenchidas
 }) => {
   useEffect(() => {
     setRestante(restante);
@@ -99,90 +100,102 @@ export default ({
           )}
         </div>
         {etapas.map(etapa => (
-          <div className="grid-cronograma-body" key={etapa.uuid}>
-            <div>
-              <div>{etapa.data_programada}</div>
-            </div>
-            <div>
-              <div>{etapa.etapa}</div>
-            </div>
-            <div>
-              <div>{etapa.parte}</div>
-            </div>
-            {motivos.includes("ALTERAR_DATA_ENTREGA") && (
+          <>
+            <div className="grid-cronograma-body" key={etapa.uuid}>
               <div>
-                <div>
-                  <Field
-                    component={InputComData}
-                    name={`data_programada_${etapa.uuid}`}
-                    placeholder="Selecionar Data"
-                    minDate={null}
-                    maxDate={null}
-                    writable
-                    validate={required}
-                  />
-
-                  <OnChange name={`data_programada_${etapa.uuid}`}>
-                    {async value => {
-                      if (value) {
-                        if (values.motivos && values.justificativa) {
-                          let podeSubmeter =
-                            verificarDatasEtapas() && verificarQuantidade();
-                          setpodeSubmeter(podeSubmeter);
-                        }
-                      } else {
-                        setpodeSubmeter(false);
-                      }
-                    }}
-                  </OnChange>
-                </div>
+                <div>{etapa.data_programada}</div>
               </div>
-            )}
-
-            {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
-              <>
-                <div>
-                  <div>{etapa.quantidade}</div>
-                </div>
+              <div>
+                <div>{etapa.etapa}</div>
+              </div>
+              <div>
+                <div>{etapa.parte}</div>
+              </div>
+              {motivos.includes("ALTERAR_DATA_ENTREGA") && (
                 <div>
                   <div>
                     <Field
-                      component={InputText}
-                      name={`quantidade_total_${etapa.uuid}`}
-                      placeholder="Quantidade"
-                      className="input-busca-produto"
-                      required
+                      component={InputComData}
+                      name={`data_programada_${etapa.uuid}`}
+                      placeholder="Selecionar Data"
+                      minDate={null}
+                      maxDate={null}
+                      writable
                       validate={required}
                     />
-                    <OnChange name={`quantidade_total_${etapa.uuid}`}>
+
+                    <OnChange name={`data_programada_${etapa.uuid}`}>
                       {async value => {
-                        const resto = calculaRestante(values, cronograma);
                         if (value) {
-                          setRestante(resto);
-                          const temMotivosEJustificativa =
-                            values.motivos && values.justificativa;
-                          const podeSubmeter =
-                            temMotivosEJustificativa &&
-                            resto === 0 &&
-                            verificarDatasEtapas();
-                          setpodeSubmeter(podeSubmeter);
+                          if (values.motivos && values.justificativa) {
+                            let podeSubmeter =
+                              verificarDatasEtapas() &&
+                              verificarQuantidade() &&
+                              verificarQuantidadesPreenchidas(values);
+                            setpodeSubmeter(podeSubmeter);
+                          }
                         } else {
                           setpodeSubmeter(false);
-                          setRestante(resto);
                         }
                       }}
                     </OnChange>
-
-                    <div className="text-right">
-                      {motivos.includes("ALTERAR_QTD_ALIMENTO") &&
-                        textoFaltante(values)}
-                    </div>
                   </div>
                 </div>
-              </>
-            )}
-          </div>
+              )}
+
+              {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
+                <>
+                  <div>
+                    <div>{etapa.quantidade}</div>
+                  </div>
+                  <div>
+                    <div>
+                      <Field
+                        component={InputText}
+                        type="number"
+                        name={`quantidade_total_${etapa.uuid}`}
+                        placeholder="Quantidade"
+                        className="input-busca-produto"
+                        required
+                        validate={required}
+                      />
+                      <OnChange name={`quantidade_total_${etapa.uuid}`}>
+                        {async value => {
+                          const resto = calculaRestante(values, cronograma);
+                          if (value) {
+                            setRestante(resto);
+                            const temMotivosEJustificativa =
+                              values.motivos && values.justificativa;
+                            const podeSubmeter =
+                              temMotivosEJustificativa &&
+                              resto === 0 &&
+                              verificarDatasEtapas() &&
+                              verificarQuantidadesPreenchidas(values);
+                            setpodeSubmeter(podeSubmeter);
+                          } else {
+                            setpodeSubmeter(false);
+                            setRestante(resto);
+                          }
+                        }}
+                      </OnChange>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </>
         ))}
+
+        {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
+          <div className="grid-cronograma-body">
+            <div />
+            <div />
+            {motivos.includes("ALTERAR_DATA_ENTREGA") && <div />}
+            <div />
+            <div />
+            <div>{textoFaltante(values)}</div>
+          </div>
+        )}
         <div />
       </div>
     )
