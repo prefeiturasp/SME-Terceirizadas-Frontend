@@ -93,11 +93,14 @@ export default () => {
   };
 
   const verificarQuantidadesPreenchidas = values => {
-    return etapas.every(
-      etapa =>
-        values[`quantidade_total_${etapa.uuid}`] !== undefined &&
-        values[`quantidade_total_${etapa.uuid}`] !== null
-    );
+    if (values.motivos.includes("ALTERAR_QTD_ALIMENTO")) {
+      return etapas.every(
+        etapa =>
+          values[`quantidade_total_${etapa.uuid}`] !== undefined &&
+          values[`quantidade_total_${etapa.uuid}`] !== null
+      );
+    }
+    return true;
   };
 
   useEffect(() => {
