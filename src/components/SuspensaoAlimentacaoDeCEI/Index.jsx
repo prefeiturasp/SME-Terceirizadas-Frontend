@@ -367,23 +367,26 @@ class SuspensaoAlimentacaoDeCEI extends Component {
                 <section className="section-descricao-periodo">Período</section>
                 <section className="form-check-periodos">
                   {periodos
-                    .filter(periodo => periodo.nome === "INTEGRAL")
+                    .filter(periodo => periodo.possui_alunos_regulares)
                     .map((periodo, index) => {
                       return (
-                        <label
-                          className={`container check-${periodo.nome}`}
-                          key={index}
-                        >
-                          {periodo.nome}
-                          <input
-                            type="checkbox"
-                            checked={periodo.check}
-                            onClick={() => this.checkItem(periodo)}
-                          />
-                          <span
-                            className={`checkmark check-${periodo.check}`}
-                          />
-                        </label>
+                        <div className="row" key={index}>
+                          <div className="col-12">
+                            <label
+                              className={`container check-${periodo.nome}`}
+                            >
+                              {periodo.nome}
+                              <input
+                                type="checkbox"
+                                checked={periodo.check}
+                                onClick={() => this.checkItem(periodo)}
+                              />
+                              <span
+                                className={`checkmark check-${periodo.check}`}
+                              />
+                            </label>
+                          </div>
+                        </div>
                       );
                     })}
                 </section>
