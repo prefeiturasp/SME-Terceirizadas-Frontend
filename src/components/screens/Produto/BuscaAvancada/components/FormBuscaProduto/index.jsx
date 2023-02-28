@@ -24,11 +24,7 @@ import {
   getNomesUnicosEditais
 } from "services/produto.service";
 
-import {
-  getOpecoesStatus,
-  retornaStatusBackend,
-  getTodasOpcoesStatusPorPerfil
-} from "./helpers";
+import { getOpecoesStatus, retornaStatusBackend } from "./helpers";
 import "./style.scss";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { required } from "helpers/fieldValidators";
@@ -123,25 +119,16 @@ const FormBuscaProduto = ({ setFiltros, setPage, initialValues, history }) => {
       formValues.eh_para_alunos_com_dieta = true;
     }
 
-    if (formValues.status && formValues.status.length !== 0) {
+    if (formValues.status) {
       if (formValues.status.includes("Todos")) {
-        formValues.status = getTodasOpcoesStatusPorPerfil();
-      } else if (formValues.status.length === 1 && formValues.status[0] === "")
-        formValues.status = getTodasOpcoesStatusPorPerfil();
-      else {
+        delete formValues.status;
+      } else {
+        if (formValues.status[0] === "") formValues.status.splice(0, 1);
         formValues.status.forEach((status, index) => {
-          if (status !== "") {
-            const statusBackend = retornaStatusBackend(status);
-            if (Array.isArray(statusBackend)) {
-              statusBackend.map(status => formValues.status.push(status));
-              formValues.status.splice(index, 1);
-            } else formValues.status[index] = statusBackend;
-          }
+          const statusBackend = retornaStatusBackend(status);
+          formValues.status[index] = statusBackend;
         });
       }
-      if (formValues.status[0] === "") formValues.status.splice(0, 1);
-    } else {
-      formValues.status = getTodasOpcoesStatusPorPerfil();
     }
 
     setFiltros({ ...formValues });

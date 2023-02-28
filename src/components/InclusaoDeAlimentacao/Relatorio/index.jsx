@@ -1,21 +1,27 @@
-import React, { Component } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
-import { reduxForm, formValueSelector } from "redux-form";
-import { connect } from "react-redux";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
-import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
-import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
-import { statusEnum } from "../../../constants/shared";
-import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
-import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
-import { meusDados } from "services/perfil.service";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { ModalAutorizarAposQuestionamento } from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
+import {
+  prazoDoPedidoMensagem,
+  usuarioEhEscola,
+  visualizaBotoesDoFluxo
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { formValueSelector, reduxForm } from "redux-form";
+import { meusDados } from "services/perfil.service";
+import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
+
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { ModalCancelarInclusaoContinua } from "./componentes/ModalCancelarInclusaoContinua";
@@ -224,6 +230,7 @@ class Relatorio extends Component {
 
     const renderModalCancelamentoContinuo = inclusao => {
       return (
+        usuarioEhEscola() &&
         inclusao &&
         inclusao.motivo &&
         !inclusao.motivo.nome.includes("ETEC") &&
