@@ -21,6 +21,7 @@ import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "services/perfil.service";
 import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
+
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { ModalCancelarInclusaoContinua } from "./componentes/ModalCancelarInclusaoContinua";
