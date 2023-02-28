@@ -68,7 +68,6 @@ export const AcompanhamentoDeLancamentos = () => {
     const response = await getDashboardMedicaoInicial(params);
     if (response.status === HTTP_STATUS.OK) {
       const dashboardResults = response.data.results;
-
       if (!usuarioEhMedicao() || diretoriaRegional) {
         setDadosDashboard(dashboardResults);
       }
@@ -382,7 +381,10 @@ export const AcompanhamentoDeLancamentos = () => {
                               <table className="resultados">
                                 <thead>
                                   <tr className="row">
-                                    <th className="col-6">Nome da UE</th>
+                                    <th className="col-5">Nome da UE</th>
+                                    <th className="col-1 text-center">
+                                      Tipo de UE
+                                    </th>
                                     <th className="col-2 text-center">
                                       Status do lançamento
                                     </th>
@@ -396,8 +398,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                   {resultados.dados.map((dado, key) => {
                                     return (
                                       <tr key={key} className="row">
-                                        <td className="col-6 pt-3">
+                                        <td className="col-5 pt-3">
                                           {dado.escola}
+                                        </td>
+                                        <td className="col-1 text-center pt-3">
+                                          {dado.tipo_unidade}
                                         </td>
                                         <td className="col-2 text-center pt-3">
                                           {dado.status}
