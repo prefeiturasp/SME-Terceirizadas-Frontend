@@ -25,8 +25,9 @@ export const formataPayload = values => {
     .split("/")
     .reverse()
     .join("-");
-  const faixas_etarias = [];
+
   values_.substituicoes.forEach(substituicao => {
+    const faixas_etarias = [];
     substituicao.periodo_escolar = substituicao.uuid;
     substituicao.faixas_etarias.forEach(faixa => {
       if (substituicao.faixas[faixa.faixa_etaria.uuid]) {

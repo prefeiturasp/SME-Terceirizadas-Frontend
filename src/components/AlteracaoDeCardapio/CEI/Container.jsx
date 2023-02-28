@@ -1,7 +1,10 @@
 import React, { useContext, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { agregarDefault, dataParaUTC } from "helpers/utilities";
-import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
+import {
+  getMotivosAlteracaoCardapio,
+  getPeriodosComMatriculadosPorUE
+} from "services/alteracaoDeCardapio";
 import { getDiasUteis } from "services/diasUteis.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { useEffect } from "react";
@@ -16,6 +19,7 @@ export const Container = () => {
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
+  const [periodosValidos, setPeriodosValidos] = useState([]);
 
   const getMotivosAlteracaoCardapioAsync = async () => {
     const response = await getMotivosAlteracaoCardapio();
@@ -28,6 +32,15 @@ export const Container = () => {
     }
   };
 
+  const getPeriodosValidos = async escola_uuid => {
+    const response = await getPeriodosComMatriculadosPorUE(escola_uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosValidos(response.data);
+    } else {
+      setErroAPI("Erro ao carregar períodos válidos.");
+    }
+  };
+
   const getVinculosTipoAlimentacaoPorEscolaAsync = async escola_uuid => {
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
     if (response.status === HTTP_STATUS.OK) {
@@ -35,6 +48,7 @@ export const Container = () => {
     } else {
       setErroAPI("Erro ao carregar vínculos de tipo de alimentação.");
     }
+    getPeriodosValidos(escola_uuid);
   };
 
   const getDiasUteisAsync = async () => {
@@ -58,6 +72,7 @@ export const Container = () => {
       getVinculosTipoAlimentacaoPorEscolaAsync(
         meusDados.vinculo_atual.instituicao.uuid
       );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meusDados]);
 
   const LOADING =
@@ -67,6 +82,18 @@ export const Container = () => {
     !motivos ||
     !vinculos;
 
+  const filtroPeriodos = () => {
+    return meusDados.vinculo_atual.instituicao.periodos_escolares.filter(
+      periodo => periodosValidos.includes(periodo.nome)
+    );
+  };
+
+  const filtroVinculos = () => {
+    return vinculos.filter(
+      vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
+    );
+  };
+
   return (
     <Spin tip="Carregando..." spinning={LOADING && !erroAPI}>
       {erroAPI && <div>{erroAPI}</div>}
@@ -74,18 +101,13 @@ export const Container = () => {
         <AlteracaoDoTipoDeAlimentacaoCEI
           meusDados={meusDados}
           motivos={motivos}
-          periodos={meusDados.vinculo_atual.instituicao.periodos_escolares.filter(
-            periodo => periodo.nome === "INTEGRAL"
-          )}
+          periodos={filtroPeriodos()}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
-          vinculos={vinculos.filter(
-            vinculo => vinculo.periodo_escolar.nome === "INTEGRAL"
-          )}
+          vinculos={filtroVinculos()}
         />
       )}
     </Spin>
   );
 };
-
 export default Container;
