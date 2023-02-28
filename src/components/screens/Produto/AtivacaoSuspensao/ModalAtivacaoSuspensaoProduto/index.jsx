@@ -73,7 +73,8 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
     if (vinculos_produto_edital) {
       if (
         this.props.ehCardSuspensos ||
-        this.props.status === "CODAE_SUSPENDEU"
+        this.props.status === "CODAE_SUSPENDEU" ||
+        this.props.suspenso
       ) {
         vinculos_produto_edital = vinculos_produto_edital.filter(
           vinculo => vinculo.suspenso

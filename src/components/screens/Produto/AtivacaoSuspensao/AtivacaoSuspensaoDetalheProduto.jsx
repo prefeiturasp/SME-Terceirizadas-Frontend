@@ -27,11 +27,12 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
   const [acao, setAcao] = useState();
   const [uuid, setUuid] = useState();
   const [status, setStatus] = useState(null);
+  const [suspenso, setEhSuspenso] = useState(false);
 
-  const carregaHomologacao = uuid => {
+  const carregaHomologacao = (uuid, suspenso = false) => {
     async function fetchData() {
       const response = await getHomologacaoProduto(uuid);
-      setAtivo(checaStatus(response.data));
+      setAtivo(checaStatus(response.data) && !suspenso);
       setProduto(response.data.produto);
       setStatus(response.data.status);
     }
@@ -42,8 +43,10 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
     async function fetchData() {
       const urlParams = new URLSearchParams(window.location.search);
       const uuid = urlParams.get("id");
+      const suspenso_param = urlParams.get("suspenso");
       setUuid(uuid);
-      carregaHomologacao(uuid);
+      setEhSuspenso(suspenso_param);
+      carregaHomologacao(uuid, suspenso_param);
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,8 +61,9 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
           acao={acao}
           produto={produto || {}}
           idHomologacao={uuid}
-          atualizarDados={() => carregaHomologacao(uuid)}
+          atualizarDados={() => carregaHomologacao(uuid, suspenso)}
           status={status}
+          suspenso={suspenso}
         />
         <div className="card">
           <div className="card-body">
@@ -96,6 +100,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                 <DetalheDoProduto
                   produto={produto}
                   status={ativo ? "ativo" : "suspenso"}
+                  suspenso={suspenso}
                 />
 
                 <div className="row">
