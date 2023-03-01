@@ -1001,7 +1001,7 @@ class AlteracaoCardapio extends Component {
                   <Field
                     component={Select}
                     name="motivo"
-                    label="Tipo de Alteração 111"
+                    label="Tipo de Alteração"
                     options={motivos}
                     validate={required}
                     required
