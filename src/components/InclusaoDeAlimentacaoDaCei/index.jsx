@@ -40,6 +40,7 @@ import { OnChange } from "react-final-form-listeners";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { Rascunhos } from "./Rascunhos";
 import { formataPayload, validarForm } from "./helper";
+import { Spin } from "antd";
 import "./style.scss";
 
 export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
@@ -55,23 +56,25 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
   const [showModal, setShowModal] = useState(false);
   const [valoresIniciais, setValoresIniciais] = useState(null);
   const [rascunhos, setRascunhos] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const onSubmit = async (values, form) => {
+  const onSubmit = async values => {
     const payload = formataPayload(values);
     const erro = validarForm(payload);
     if (erro) {
       toastError(erro);
       return;
     }
+    setLoading(true);
     if (payload.uuid) {
       const response = await atualizarInclusoesDaCEI(payload, payload.uuid);
       if (response.status === HTTP_STATUS.OK) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
-          iniciarPedido(response.data.uuid, form);
+          iniciarPedido(response.data.uuid, values);
         } else {
           toastSuccess("Rascunho atualizado com sucesso");
+          refresh(values);
         }
-        refresh(form);
       } else {
         toastError(getError(response.data));
       }
@@ -79,34 +82,34 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
       const response = await criarInclusoesDaCEI(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         if (values.status === STATUS_DRE_A_VALIDAR) {
-          iniciarPedido(response.data.uuid, form);
+          iniciarPedido(response.data.uuid, values);
         } else {
           toastSuccess("Solicitação Rascunho criada com sucesso!");
+          refresh(values);
         }
-        refresh(form);
       } else {
         toastError(getError(response.data));
       }
     }
+    setLoading(false);
   };
 
-  const iniciarPedido = async (uuid, form) => {
+  const iniciarPedido = async (uuid, values) => {
     const response = await iniciarInclusoesDaCEI(uuid);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Inclusão de Alimentação enviada com sucesso!");
-      refresh(form);
+      refresh(values);
     } else {
       toastError(getError(response.data));
     }
   };
 
-  const resetForm = async form => {
-    form.change("escola", valoresIniciais.escola);
-    form.change(
-      "dias_motivos_da_inclusao_cei",
-      valoresIniciais.dias_motivos_da_inclusao_cei
-    );
-    form.change("periodos_e_faixas", valoresIniciais.periodos_e_faixas);
+  const resetForm = values => {
+    values.uuid = undefined;
+    values.escola = valoresIniciais.escola;
+    values.dias_motivos_da_inclusao_cei =
+      valoresIniciais.dias_motivos_da_inclusao_cei;
+    values.periodos_e_faixas = valoresIniciais.periodos_e_faixas;
   };
 
   const outroMotivoSelecionado = (values, index) => {
@@ -240,12 +243,12 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     );
   };
 
-  const removerRascunho = async (id_externo, uuid, form) => {
+  const removerRascunho = async (id_externo, uuid, values) => {
     if (window.confirm("Deseja remover este rascunho?")) {
       const response = await excluirInclusoesDaCei(uuid);
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         toastSuccess(`Rascunho # ${id_externo} excluído com sucesso`);
-        refresh(form);
+        refresh(values);
       } else {
         toastError(
           `Houve um erro ao excluir o rascunho: ${getError(response.data)}`
@@ -254,9 +257,9 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
     }
   };
 
-  const refresh = form => {
+  const refresh = values => {
     getRascunhos();
-    resetForm(form);
+    resetForm(values);
   };
 
   useEffect(() => {
@@ -303,6 +306,7 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
         dias_motivos_da_inclusao_cei: [{ motivo: undefined }],
         periodos_e_faixas: periodos_e_faixas
       });
+      setLoading(false);
     }
     getRascunhos();
     fetch();
@@ -310,538 +314,556 @@ export const InclusaoDeAlimentacaoDaCei = ({ ...props }) => {
 
   return valoresIniciais && valoresIniciais.periodos_e_faixas ? (
     <div>
-      <Form
-        keepDirtyOnReinitialize
-        mutators={{
-          ...arrayMutators
-        }}
-        initialValues={valoresIniciais}
-        onSubmit={onSubmit}
-      >
-        {({
-          handleSubmit,
-          submitting,
-          form,
-          form: {
-            mutators: { push }
-          },
-          values
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Field component={"input"} type="hidden" name="uuid" />
-            <CardMatriculados
-              meusDados={meusDados}
-              numeroAlunos={
-                meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
-              }
-            />
-            {rascunhos && rascunhos.length > 0 && (
-              <div className="mt-3">
-                <span className="page-title">Rascunhos</span>
-                <Rascunhos
-                  rascunhos={rascunhos}
-                  removerRascunho={removerRascunho}
-                  carregarRascunho={carregarRascunho}
-                  form={form}
-                  values={values}
-                />
+      <Spin tip="Carregando..." spinning={loading}>
+        <Form
+          keepDirtyOnReinitialize
+          mutators={{
+            ...arrayMutators
+          }}
+          initialValues={valoresIniciais}
+          onSubmit={onSubmit}
+        >
+          {({
+            handleSubmit,
+            submitting,
+            form,
+            form: {
+              mutators: { push }
+            },
+            values
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Field component={"input"} type="hidden" name="uuid" />
+              <CardMatriculados
+                meusDados={meusDados}
+                numeroAlunos={
+                  meusDados.vinculo_atual.instituicao.quantidade_alunos || 0
+                }
+              />
+              {rascunhos && rascunhos.length > 0 && (
+                <div className="mt-3">
+                  <span className="page-title">Rascunhos</span>
+                  <Rascunhos
+                    rascunhos={rascunhos}
+                    removerRascunho={removerRascunho}
+                    carregarRascunho={carregarRascunho}
+                    form={form}
+                    values={values}
+                  />
+                </div>
+              )}
+              <div className="mt-2 page-title">
+                {values.uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
               </div>
-            )}
-            <div className="mt-2 page-title">
-              {values.uuid ? `Solicitação # ${"1234AB"}` : "Nova Solicitação"}
-            </div>
-            <div className="card solicitation mt-2">
-              <div className="card-body">
-                <div className="card-title font-weight-bold">
-                  Descrição da Inclusão de Alimentação
-                </div>
-                <FieldArray name="dias_motivos_da_inclusao_cei">
-                  {({ fields }) =>
-                    fields.map((name, index) => (
-                      <div key={index}>
-                        <div className="row">
-                          <div className="col-6">
-                            <Field
-                              component={Select}
-                              name={`${name}.motivo`}
-                              label="Motivo"
-                              options={agregarDefault(motivos)}
-                              required
-                              validate={required}
-                              naoDesabilitarPrimeiraOpcao
+              <div className="card solicitation mt-2">
+                <div className="card-body">
+                  <div className="card-title font-weight-bold">
+                    Descrição da Inclusão de Alimentação
+                  </div>
+                  <FieldArray name="dias_motivos_da_inclusao_cei">
+                    {({ fields }) =>
+                      fields.map((name, index) => (
+                        <div key={index}>
+                          <div className="row">
+                            <div className="col-6">
+                              <Field
+                                component={Select}
+                                name={`${name}.motivo`}
+                                label="Motivo"
+                                options={agregarDefault(motivos)}
+                                required
+                                validate={required}
+                                naoDesabilitarPrimeiraOpcao
+                              />
+                            </div>
+                            <DataInclusaoNormal
+                              name={name}
+                              nameFieldArray="dias_motivos_da_inclusao_cei"
+                              onDataChanged={onDataChanged}
+                              values={values}
+                              index={index}
+                              proximosDoisDiasUteis={proximosDoisDiasUteis}
+                              form={form}
                             />
                           </div>
-                          <DataInclusaoNormal
-                            name={name}
-                            nameFieldArray="dias_motivos_da_inclusao_cei"
-                            onDataChanged={onDataChanged}
-                            values={values}
-                            index={index}
-                            proximosDoisDiasUteis={proximosDoisDiasUteis}
-                            form={form}
-                          />
-                        </div>
-                        {outroMotivoSelecionado(values, index) && (
-                          <div className="mt-3">
-                            <OutroMotivo name={name} />
-                          </div>
-                        )}
-                        <hr />
-                      </div>
-                    ))
-                  }
-                </FieldArray>
-                {motivoSelecionado(values) && (
-                  <div className="mt-3">
-                    <AdicionarDia
-                      push={push}
-                      nameFieldArray="dias_motivos_da_inclusao_cei"
-                    />
-                  </div>
-                )}
-                <div className="row my-2">
-                  <div className="col-12">
-                    <p>Períodos</p>
-                  </div>
-                </div>
-                {valoresIniciais.periodos_e_faixas.map(
-                  (periodo_faixa, periodo_faixa_idx) => {
-                    return (
-                      <>
-                        <div className="col-12 mt-2" key={periodo_faixa_idx}>
-                          <label
-                            style={{
-                              background: "#D4FFE0",
-                              border: `1px solid #DADADA`,
-                              borderRadius: "5px",
-                              marginBottom: "1%",
-                              width: "100%",
-                              padding: "8px 15px",
-                              height: "40px"
-                            }}
-                          >
-                            <Field
-                              component={"input"}
-                              type="checkbox"
-                              name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
-                            />
-                            <OnChange
-                              name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
-                            >
-                              {async value => {
-                                let _periodos_e_faixas = deepCopy(
-                                  values.periodos_e_faixas
-                                );
-                                if (
-                                  !value &&
-                                  periodo_faixa.nome === "INTEGRAL"
-                                ) {
-                                  _periodos_e_faixas = _periodos_e_faixas.map(
-                                    _periodo_faixa => {
-                                      if (
-                                        _periodo_faixa.nome ===
-                                        periodo_faixa.nome
-                                      ) {
-                                        _periodo_faixa.periodos = _periodo_faixa.periodos.map(
-                                          _periodo => {
-                                            _periodo.checked = false;
-                                            _periodo.faixas_etarias = _periodo.faixas_etarias.map(
-                                              _fx => {
-                                                if (_fx["quantidade_alunos"]) {
-                                                  delete _fx[
-                                                    "quantidade_alunos"
-                                                  ];
-                                                }
-                                                return _fx;
-                                              }
-                                            );
-                                            return _periodo;
-                                          }
-                                        );
-                                      }
-                                      return _periodo_faixa;
-                                    }
-                                  );
-                                }
-                                if (
-                                  !value &&
-                                  periodo_faixa.nome !== "INTEGRAL"
-                                ) {
-                                  _periodos_e_faixas = _periodos_e_faixas.map(
-                                    _periodo_faixa => {
-                                      if (
-                                        _periodo_faixa.nome ===
-                                        periodo_faixa.nome
-                                      ) {
-                                        _periodo_faixa.faixas_etarias = _periodo_faixa.faixas_etarias.map(
-                                          _fx => {
-                                            if (_fx["quantidade_alunos"]) {
-                                              delete _fx["quantidade_alunos"];
-                                            }
-                                            return _fx;
-                                          }
-                                        );
-                                      }
-                                      return _periodo_faixa;
-                                    }
-                                  );
-                                }
-                                form.change(
-                                  "periodos_e_faixas",
-                                  _periodos_e_faixas
-                                );
-                              }}
-                            </OnChange>
-                            <span
-                              className="checkbox-custom"
-                              data-cy={`checkbox-${periodo_faixa.nome}`}
-                            />
-                            {periodo_faixa.nome}
-                          </label>
-                        </div>
-                        {values.periodos_e_faixas[periodo_faixa_idx].checked &&
-                          periodo_faixa.nome !== "INTEGRAL" && (
-                            <div className="col-12 mt-2">
-                              <p>
-                                Tipos de Alimentação do período{" "}
-                                {periodo_faixa.nome.toLowerCase()}:{" "}
-                                <b className="alimentosStyle">
-                                  {alimentacoesFormatadas(periodo_faixa)}
-                                </b>
-                              </p>
+                          {outroMotivoSelecionado(values, index) && (
+                            <div className="mt-3">
+                              <OutroMotivo name={name} />
                             </div>
                           )}
-                        {values.periodos_e_faixas[periodo_faixa_idx].checked &&
-                          (periodo_faixa.nome !== "INTEGRAL" ? (
-                            <div className="col-12 mt-3">
-                              <table className="table faixas-etarias-cei-alteracao">
-                                <thead>
-                                  <tr>
-                                    <th className="col-7">Faixa Etária</th>
-                                    <th className="col-3 text-center">
-                                      Alunos Matriculados
-                                    </th>
-                                    <th className="col-2 text-center">
-                                      Quantidade
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {values.periodos_e_faixas[
-                                    periodo_faixa_idx
-                                  ].faixas_etarias.map((fa, k) => {
-                                    return (
-                                      <tr key={k}>
-                                        <td>{fa.faixa_etaria.__str__}</td>
-                                        <td className="text-center">
-                                          {fa.count}
-                                        </td>
-                                        <td className="text-center">
-                                          <Field
-                                            component={InputText}
-                                            type="number"
-                                            step="1"
-                                            min="0"
-                                            max={parseInt(
-                                              fa.count ? fa.count : 0
-                                            )}
-                                            name={`periodos_e_faixas[${periodo_faixa_idx}][faixas_etarias][${k}][quantidade_alunos]`}
-                                            validate={composeValidators(
-                                              naoPodeSerZero,
-                                              maxValue(
-                                                parseInt(
-                                                  fa.count ? fa.count : 0
-                                                )
-                                              )
-                                            )}
-                                            className="input-quantidades"
-                                          />
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                                  <tr>
-                                    <td>Total</td>
-                                    <td className="text-center">
-                                      {
-                                        values.periodos_e_faixas[
-                                          periodo_faixa_idx
-                                        ].total_matriculados
-                                      }
-                                    </td>
-                                    <td className="text-center">
-                                      {values.periodos_e_faixas[
-                                        periodo_faixa_idx
-                                      ].faixas_etarias
-                                        ? values.periodos_e_faixas[
-                                            periodo_faixa_idx
-                                          ].faixas_etarias.reduce(
-                                            (somatorio, f) => {
-                                              return (
-                                                somatorio +
-                                                parseInt(
-                                                  f.quantidade_alunos
-                                                    ? f.quantidade_alunos
-                                                    : 0
-                                                )
-                                              );
-                                            },
-                                            0
-                                          )
-                                        : 0}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          ) : (
-                            valoresIniciais.periodos_e_faixas[
-                              periodo_faixa_idx
-                            ].periodos.map((periodo, periodo_idx) => {
-                              const background = periodos.find(
-                                p => p.uuid === periodo.uuid
-                              ).background;
-                              const borderColor = periodos.find(
-                                p => p.uuid === periodo.uuid
-                              ).borderColor;
-                              return (
-                                <div
-                                  className="container-fluid"
-                                  key={periodo_idx}
-                                >
-                                  <div className="col-12 mt-2">
-                                    <label
-                                      style={{
-                                        background: background,
-                                        border: `1px solid ${borderColor}`,
-                                        borderRadius: "5px",
-                                        marginBottom: "1%",
-                                        width: "100%",
-                                        padding: "8px 15px",
-                                        height: "40px"
-                                      }}
-                                    >
-                                      <Field
-                                        component={"input"}
-                                        type="checkbox"
-                                        name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
-                                      />
-                                      <OnChange
-                                        name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
-                                      >
-                                        {async value => {
-                                          let _periodos_e_faixas = deepCopy(
-                                            values.periodos_e_faixas
-                                          );
-                                          if (!value) {
-                                            _periodos_e_faixas = _periodos_e_faixas.map(
-                                              _periodo_faixa => {
-                                                if (
-                                                  _periodo_faixa.nome ===
-                                                  "INTEGRAL"
-                                                ) {
-                                                  _periodo_faixa.periodos = _periodo_faixa.periodos.map(
-                                                    _periodo => {
-                                                      if (
-                                                        _periodo.nome ===
-                                                        periodo.nome
-                                                      ) {
-                                                        _periodo.faixas_etarias = _periodo.faixas_etarias.map(
-                                                          _fx => {
-                                                            if (
-                                                              _fx[
-                                                                "quantidade_alunos"
-                                                              ]
-                                                            ) {
-                                                              delete _fx[
-                                                                "quantidade_alunos"
-                                                              ];
-                                                            }
-                                                            return _fx;
-                                                          }
-                                                        );
-                                                      }
-                                                      return _periodo;
-                                                    }
-                                                  );
+                          <hr />
+                        </div>
+                      ))
+                    }
+                  </FieldArray>
+                  {motivoSelecionado(values) && (
+                    <div className="mt-3">
+                      <AdicionarDia
+                        push={push}
+                        nameFieldArray="dias_motivos_da_inclusao_cei"
+                      />
+                    </div>
+                  )}
+                  <div className="row my-2">
+                    <div className="col-12">
+                      <p>Períodos</p>
+                    </div>
+                  </div>
+                  {valoresIniciais.periodos_e_faixas.map(
+                    (periodo_faixa, periodo_faixa_idx) => {
+                      return (
+                        <>
+                          <div className="col-12 mt-2" key={periodo_faixa_idx}>
+                            <label
+                              style={{
+                                background: "#D4FFE0",
+                                border: `1px solid #DADADA`,
+                                borderRadius: "5px",
+                                marginBottom: "1%",
+                                width: "100%",
+                                padding: "8px 15px",
+                                height: "40px"
+                              }}
+                            >
+                              <Field
+                                component={"input"}
+                                type="checkbox"
+                                name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
+                              />
+                              <OnChange
+                                name={`periodos_e_faixas[${periodo_faixa_idx}].checked`}
+                              >
+                                {async value => {
+                                  let _periodos_e_faixas = deepCopy(
+                                    values.periodos_e_faixas
+                                  );
+                                  if (
+                                    !value &&
+                                    periodo_faixa.nome === "INTEGRAL"
+                                  ) {
+                                    _periodos_e_faixas = _periodos_e_faixas.map(
+                                      _periodo_faixa => {
+                                        if (
+                                          _periodo_faixa.nome ===
+                                          periodo_faixa.nome
+                                        ) {
+                                          _periodo_faixa.periodos = _periodo_faixa.periodos.map(
+                                            _periodo => {
+                                              _periodo.checked = false;
+                                              _periodo.faixas_etarias = _periodo.faixas_etarias.map(
+                                                _fx => {
+                                                  if (
+                                                    _fx["quantidade_alunos"]
+                                                  ) {
+                                                    delete _fx[
+                                                      "quantidade_alunos"
+                                                    ];
+                                                  }
+                                                  return _fx;
                                                 }
-                                                return _periodo_faixa;
-                                              }
-                                            );
-                                          }
-                                          form.change(
-                                            "periodos_e_faixas",
-                                            _periodos_e_faixas
+                                              );
+                                              return _periodo;
+                                            }
                                           );
-                                        }}
-                                      </OnChange>
-                                      <span
-                                        className="checkbox-custom"
-                                        data-cy={`checkbox-${
-                                          valoresIniciais.periodos_e_faixas[
+                                        }
+                                        return _periodo_faixa;
+                                      }
+                                    );
+                                  }
+                                  if (
+                                    !value &&
+                                    periodo_faixa.nome !== "INTEGRAL"
+                                  ) {
+                                    _periodos_e_faixas = _periodos_e_faixas.map(
+                                      _periodo_faixa => {
+                                        if (
+                                          _periodo_faixa.nome ===
+                                          periodo_faixa.nome
+                                        ) {
+                                          _periodo_faixa.faixas_etarias = _periodo_faixa.faixas_etarias.map(
+                                            _fx => {
+                                              if (_fx["quantidade_alunos"]) {
+                                                delete _fx["quantidade_alunos"];
+                                              }
+                                              return _fx;
+                                            }
+                                          );
+                                        }
+                                        return _periodo_faixa;
+                                      }
+                                    );
+                                  }
+                                  form.change(
+                                    "periodos_e_faixas",
+                                    _periodos_e_faixas
+                                  );
+                                }}
+                              </OnChange>
+                              <span
+                                className="checkbox-custom"
+                                data-cy={`checkbox-${periodo_faixa.nome}`}
+                              />
+                              {periodo_faixa.nome}
+                            </label>
+                          </div>
+                          {values.periodos_e_faixas[periodo_faixa_idx]
+                            .checked &&
+                            periodo_faixa.nome !== "INTEGRAL" && (
+                              <div className="col-12 mt-2">
+                                <p>
+                                  Tipos de Alimentação do período{" "}
+                                  {periodo_faixa.nome.toLowerCase()}:{" "}
+                                  <b className="alimentosStyle">
+                                    {alimentacoesFormatadas(periodo_faixa)}
+                                  </b>
+                                </p>
+                              </div>
+                            )}
+                          {values.periodos_e_faixas[periodo_faixa_idx]
+                            .checked &&
+                            (periodo_faixa.nome !== "INTEGRAL" ? (
+                              <div className="col-12 mt-3">
+                                <table className="table faixas-etarias-cei-alteracao">
+                                  <thead>
+                                    <tr>
+                                      <th className="col-7">Faixa Etária</th>
+                                      <th className="col-3 text-center">
+                                        Alunos Matriculados
+                                      </th>
+                                      <th className="col-2 text-center">
+                                        Quantidade
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {values.periodos_e_faixas[
+                                      periodo_faixa_idx
+                                    ].faixas_etarias.map((fa, k) => {
+                                      return (
+                                        <tr key={k}>
+                                          <td>{fa.faixa_etaria.__str__}</td>
+                                          <td className="text-center">
+                                            {fa.count}
+                                          </td>
+                                          <td className="text-center">
+                                            <Field
+                                              component={InputText}
+                                              type="number"
+                                              step="1"
+                                              min="0"
+                                              max={parseInt(
+                                                fa.count ? fa.count : 0
+                                              )}
+                                              name={`periodos_e_faixas[${periodo_faixa_idx}][faixas_etarias][${k}][quantidade_alunos]`}
+                                              validate={composeValidators(
+                                                naoPodeSerZero,
+                                                maxValue(
+                                                  parseInt(
+                                                    fa.count ? fa.count : 0
+                                                  )
+                                                )
+                                              )}
+                                              className="input-quantidades"
+                                            />
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                    <tr>
+                                      <td>Total</td>
+                                      <td className="text-center">
+                                        {
+                                          values.periodos_e_faixas[
                                             periodo_faixa_idx
-                                          ].periodos[periodo_idx].nome
-                                        }`}
-                                      />
-                                      {periodo.nome}
-                                    </label>
-                                  </div>
-                                  {values.periodos_e_faixas[periodo_faixa_idx]
-                                    .periodos[periodo_idx].checked && (
+                                          ].total_matriculados
+                                        }
+                                      </td>
+                                      <td className="text-center">
+                                        {values.periodos_e_faixas[
+                                          periodo_faixa_idx
+                                        ].faixas_etarias
+                                          ? values.periodos_e_faixas[
+                                              periodo_faixa_idx
+                                            ].faixas_etarias.reduce(
+                                              (somatorio, f) => {
+                                                return (
+                                                  somatorio +
+                                                  parseInt(
+                                                    f.quantidade_alunos
+                                                      ? f.quantidade_alunos
+                                                      : 0
+                                                  )
+                                                );
+                                              },
+                                              0
+                                            )
+                                          : 0}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : (
+                              valoresIniciais.periodos_e_faixas[
+                                periodo_faixa_idx
+                              ].periodos.map((periodo, periodo_idx) => {
+                                const background = periodos.find(
+                                  p => p.uuid === periodo.uuid
+                                ).background;
+                                const borderColor = periodos.find(
+                                  p => p.uuid === periodo.uuid
+                                ).borderColor;
+                                return (
+                                  <div
+                                    className="container-fluid"
+                                    key={periodo_idx}
+                                  >
                                     <div className="col-12 mt-2">
-                                      <p>
-                                        Tipos de Alimentação do período{" "}
-                                        {periodo.nome.toLowerCase()}:{" "}
-                                        <b className="alimentosStyle">
-                                          {alimentacoesFormatadas(periodo)}
-                                        </b>
-                                      </p>
-                                    </div>
-                                  )}
-                                  {values.periodos_e_faixas[periodo_faixa_idx]
-                                    .periodos[periodo_idx].checked && (
-                                    <div className="col-12 mt-3">
-                                      <table className="table faixas-etarias-cei-alteracao">
-                                        <thead>
-                                          <tr>
-                                            <th className="col-7">
-                                              Faixa Etária
-                                            </th>
-                                            <th className="col-3 text-center">
-                                              Alunos Matriculados
-                                            </th>
-                                            <th className="col-2 text-center">
-                                              Quantidade
-                                            </th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {values.periodos_e_faixas[
-                                            periodo_faixa_idx
-                                          ].periodos[
-                                            periodo_idx
-                                          ].faixas_etarias.map((fa, k) => {
-                                            return (
-                                              <tr key={k}>
-                                                <td>
-                                                  {fa.faixa_etaria.__str__}
-                                                </td>
-                                                <td className="text-center">
-                                                  {fa.count}
-                                                </td>
-                                                <td className="text-center">
-                                                  <Field
-                                                    component={InputText}
-                                                    type="number"
-                                                    step="1"
-                                                    min="0"
-                                                    max={parseInt(
-                                                      fa.count ? fa.count : 0
-                                                    )}
-                                                    name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].faixas_etarias[${k}].quantidade_alunos`}
-                                                    validate={composeValidators(
-                                                      naoPodeSerZero,
-                                                      maxValue(
-                                                        parseInt(
-                                                          fa.count
-                                                            ? fa.count
-                                                            : 0
-                                                        )
-                                                      )
-                                                    )}
-                                                    className="input-quantidades"
-                                                  />
-                                                </td>
-                                              </tr>
+                                      <label
+                                        style={{
+                                          background: background,
+                                          border: `1px solid ${borderColor}`,
+                                          borderRadius: "5px",
+                                          marginBottom: "1%",
+                                          width: "100%",
+                                          padding: "8px 15px",
+                                          height: "40px"
+                                        }}
+                                      >
+                                        <Field
+                                          component={"input"}
+                                          type="checkbox"
+                                          name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
+                                        />
+                                        <OnChange
+                                          name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].checked`}
+                                        >
+                                          {async value => {
+                                            let _periodos_e_faixas = deepCopy(
+                                              values.periodos_e_faixas
                                             );
-                                          })}
-                                          <tr>
-                                            <td>Total</td>
-                                            <td className="text-center">
-                                              {
-                                                values.periodos_e_faixas[
+                                            if (!value) {
+                                              _periodos_e_faixas = _periodos_e_faixas.map(
+                                                _periodo_faixa => {
+                                                  if (
+                                                    _periodo_faixa.nome ===
+                                                    "INTEGRAL"
+                                                  ) {
+                                                    _periodo_faixa.periodos = _periodo_faixa.periodos.map(
+                                                      _periodo => {
+                                                        if (
+                                                          _periodo.nome ===
+                                                          periodo.nome
+                                                        ) {
+                                                          _periodo.faixas_etarias = _periodo.faixas_etarias.map(
+                                                            _fx => {
+                                                              if (
+                                                                _fx[
+                                                                  "quantidade_alunos"
+                                                                ]
+                                                              ) {
+                                                                delete _fx[
+                                                                  "quantidade_alunos"
+                                                                ];
+                                                              }
+                                                              return _fx;
+                                                            }
+                                                          );
+                                                        }
+                                                        return _periodo;
+                                                      }
+                                                    );
+                                                  }
+                                                  return _periodo_faixa;
+                                                }
+                                              );
+                                            }
+                                            form.change(
+                                              "periodos_e_faixas",
+                                              _periodos_e_faixas
+                                            );
+                                          }}
+                                        </OnChange>
+                                        <span
+                                          className="checkbox-custom"
+                                          data-cy={`checkbox-${
+                                            valoresIniciais.periodos_e_faixas[
+                                              periodo_faixa_idx
+                                            ].periodos[periodo_idx].nome
+                                          }`}
+                                        />
+                                        {periodo.nome}
+                                      </label>
+                                    </div>
+                                    {values.periodos_e_faixas[periodo_faixa_idx]
+                                      .periodos[periodo_idx].checked && (
+                                      <div className="col-12 mt-2">
+                                        <p>
+                                          Tipos de Alimentação do período{" "}
+                                          {periodo.nome.toLowerCase()}:{" "}
+                                          <b className="alimentosStyle">
+                                            {alimentacoesFormatadas(periodo)}
+                                          </b>
+                                        </p>
+                                      </div>
+                                    )}
+                                    {values.periodos_e_faixas[periodo_faixa_idx]
+                                      .periodos[periodo_idx].checked && (
+                                      <div className="col-12 mt-3">
+                                        <table className="table faixas-etarias-cei-alteracao">
+                                          <thead>
+                                            <tr>
+                                              <th className="col-7">
+                                                Faixa Etária
+                                              </th>
+                                              <th className="col-3 text-center">
+                                                Alunos Matriculados
+                                              </th>
+                                              <th className="col-2 text-center">
+                                                Quantidade
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {values.periodos_e_faixas[
+                                              periodo_faixa_idx
+                                            ].periodos[
+                                              periodo_idx
+                                            ].faixas_etarias.map((fa, k) => {
+                                              return (
+                                                <tr key={k}>
+                                                  <td>
+                                                    {fa.faixa_etaria.__str__}
+                                                  </td>
+                                                  <td className="text-center">
+                                                    {fa.count}
+                                                  </td>
+                                                  <td className="text-center">
+                                                    <Field
+                                                      component={InputText}
+                                                      type="number"
+                                                      step="1"
+                                                      min="0"
+                                                      max={parseInt(
+                                                        fa.count ? fa.count : 0
+                                                      )}
+                                                      name={`periodos_e_faixas[${periodo_faixa_idx}].periodos[${periodo_idx}].faixas_etarias[${k}].quantidade_alunos`}
+                                                      validate={composeValidators(
+                                                        naoPodeSerZero,
+                                                        maxValue(
+                                                          parseInt(
+                                                            fa.count
+                                                              ? fa.count
+                                                              : 0
+                                                          )
+                                                        )
+                                                      )}
+                                                      className="input-quantidades"
+                                                    />
+                                                  </td>
+                                                </tr>
+                                              );
+                                            })}
+                                            <tr>
+                                              <td>Total</td>
+                                              <td className="text-center">
+                                                {
+                                                  values.periodos_e_faixas[
+                                                    periodo_faixa_idx
+                                                  ].periodos[periodo_idx]
+                                                    .total_matriculados
+                                                }
+                                              </td>
+                                              <td className="text-center">
+                                                {values.periodos_e_faixas[
                                                   periodo_faixa_idx
                                                 ].periodos[periodo_idx]
-                                                  .total_matriculados
-                                              }
-                                            </td>
-                                            <td className="text-center">
-                                              {values.periodos_e_faixas[
-                                                periodo_faixa_idx
-                                              ].periodos[periodo_idx]
-                                                .faixas_etarias
-                                                ? values.periodos_e_faixas[
-                                                    periodo_faixa_idx
-                                                  ].periodos[
-                                                    periodo_idx
-                                                  ].faixas_etarias.reduce(
-                                                    (somatorio, f) => {
-                                                      return (
-                                                        somatorio +
-                                                        parseInt(
-                                                          f.quantidade_alunos
-                                                            ? f.quantidade_alunos
-                                                            : 0
-                                                        )
-                                                      );
-                                                    },
-                                                    0
-                                                  )
-                                                : 0}
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })
-                          ))}
-                      </>
-                    );
-                  }
-                )}
-                <div className="row float-right mt-4">
-                  <div className="col-12">
-                    <Botao
-                      texto="Cancelar"
-                      onClick={() => {
-                        resetForm(form);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto={
-                        values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
-                      }
-                      className="ml-3"
-                      disabled={submitting}
-                      type={BUTTON_TYPE.SUBMIT}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Enviar"
-                      type={BUTTON_TYPE.BUTTON}
-                      disabled={submitting}
-                      onClick={() => {
-                        values["status"] = STATUS_DRE_A_VALIDAR;
-                        handleSubmit(values => onSubmit(values, form));
-                      }}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
+                                                  .faixas_etarias
+                                                  ? values.periodos_e_faixas[
+                                                      periodo_faixa_idx
+                                                    ].periodos[
+                                                      periodo_idx
+                                                    ].faixas_etarias.reduce(
+                                                      (somatorio, f) => {
+                                                        return (
+                                                          somatorio +
+                                                          parseInt(
+                                                            f.quantidade_alunos
+                                                              ? f.quantidade_alunos
+                                                              : 0
+                                                          )
+                                                        );
+                                                      },
+                                                      0
+                                                    )
+                                                  : 0}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })
+                            ))}
+                        </>
+                      );
+                    }
+                  )}
+                  <div className="row float-right mt-4">
+                    <div className="col-12">
+                      <Botao
+                        texto="Cancelar"
+                        onClick={() => {
+                          form.change("uuid", undefined);
+                          form.change("escola", valoresIniciais.escola);
+                          form.change(
+                            "dias_motivos_da_inclusao_cei",
+                            valoresIniciais.dias_motivos_da_inclusao_cei
+                          );
+                          form.change(
+                            "periodos_e_faixas",
+                            valoresIniciais.periodos_e_faixas
+                          );
+                        }}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                      <Botao
+                        texto={
+                          values.uuid ? "Atualizar rascunho" : "Salvar rascunho"
+                        }
+                        className="ml-3"
+                        disabled={submitting}
+                        type={BUTTON_TYPE.SUBMIT}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        onClick={() => {
+                          handleSubmit(values => onSubmit(values));
+                        }}
+                      />
+                      <Botao
+                        texto="Enviar"
+                        type={BUTTON_TYPE.BUTTON}
+                        disabled={submitting}
+                        onClick={() => {
+                          values["status"] = STATUS_DRE_A_VALIDAR;
+                          handleSubmit(values => onSubmit(values));
+                        }}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
-        )}
-      </Form>
-      <ModalDataPrioritaria
-        showModal={showModal}
-        closeModal={() => setShowModal(false)}
-      />
+            </form>
+          )}
+        </Form>
+        <ModalDataPrioritaria
+          showModal={showModal}
+          closeModal={() => setShowModal(false)}
+        />
+      </Spin>
     </div>
   ) : (
     <></>
