@@ -89,6 +89,10 @@
       }
     }
 
+    .multiselect-AlteracaoDeCardapio {
+      background-color: blue;
+    }
+
     tbody {
       tr {
         border: 1px solid $grayDisabled;
@@ -104,4 +108,8 @@
       }
     }
   }
+}
+.multi-select .dropdown .dropdown-heading {
+  display: flex !important;
+  justify-content: space-between !important;
 }
