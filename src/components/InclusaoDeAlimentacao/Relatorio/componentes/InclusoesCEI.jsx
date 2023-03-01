@@ -10,9 +10,9 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
   const unique = arr => [...new Set(arr)];
 
   const nomes_periodos = unique(
-    inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias.map(
-      qa => qa.periodo.nome
-    )
+    inclusaoDeAlimentacao.quantidade_alunos_por_faixas_etarias
+      .filter(qa => qa.periodo_externo.nome === "INTEGRAL")
+      .map(qa => qa.periodo.nome)
   );
 
   const nomes_periodos_externos = unique(
