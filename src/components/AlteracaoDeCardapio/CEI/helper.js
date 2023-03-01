@@ -21,11 +21,14 @@ export const totalAlunosInputPorPeriodo = (values, index) => {
 
 export const formataPayload = values => {
   const values_ = deepCopy(values);
+  let filteredSubstituicoes = values_.substituicoes.filter(obj =>
+    obj.hasOwnProperty("faixas_etarias")
+  );
+  values_.substituicoes = filteredSubstituicoes;
   values_.data = values_.data
     .split("/")
     .reverse()
     .join("-");
-
   values_.substituicoes.forEach(substituicao => {
     const faixas_etarias = [];
     substituicao.periodo_escolar = substituicao.uuid;
@@ -47,7 +50,6 @@ export const formataPayload = values => {
         substituicao.tipos_alimentacao_de_selecionados;
     }
   });
-
   return values_;
 };
 
