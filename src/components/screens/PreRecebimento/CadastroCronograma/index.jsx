@@ -22,7 +22,6 @@ import {
   getRascunhos
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { Modal } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
 import Rascunhos from "../RascunhosCronograma";
@@ -35,6 +34,7 @@ import {
   getListaProdutosEdital,
   getUnidadesDeMedidaProduto
 } from "services/produto.service";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -210,7 +210,9 @@ export default () => {
   const salvarCronograma = async (values, rascunho) => {
     setCarregando(true);
     let payload = formataPayload(values, rascunho);
-
+    if (!rascunho) {
+      payload["password"] = values["password"];
+    }
     try {
       let response = edicao
         ? await editaCronograma(payload, uuidCronograma)
@@ -233,8 +235,12 @@ export default () => {
         setCarregando(false);
       }
     } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
-      setCarregando(false);
+      if (error.response.status === 401) {
+        toastError("Senha inválida.");
+        setCarregando(false);
+      } else {
+        exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
+      }
     }
   };
 
@@ -925,41 +931,20 @@ export default () => {
                     disabled={validaRascunho(values)}
                   />
                 </div>
-                <Modal
+                <ModalAssinaturaUsuario
+                  titulo="Assinar Cronograma"
+                  texto="Você confirma a assinatura digital deste cronograma de entrega"
                   show={showModal}
-                  onHide={() => {
+                  loading={carregando}
+                  handleClose={() => {
                     setShowModal(false);
+                    setCarregando(false);
                   }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>Salvar e Enviar</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    Deseja salvar o cadastro do cronograma e enviar ao
-                    Fornecedor?
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Botao
-                      texto="Continuar Editando"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setShowModal(false);
-                        setCarregando(false);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Salvar e Enviar"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        salvarCronograma(values, false);
-                      }}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </Modal.Footer>
-                </Modal>
+                  handleSim={password => {
+                    values["password"] = password;
+                    salvarCronograma(values, false);
+                  }}
+                />
               </form>
             )}
           />

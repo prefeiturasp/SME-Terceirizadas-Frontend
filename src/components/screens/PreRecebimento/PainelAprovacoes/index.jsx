@@ -65,7 +65,7 @@ export default () => {
 
   const gerarLinkDoItem = item => {
     if (
-      ["assinado dinutre", "assinado cronograma"].includes(
+      ["assinado dinutre", "assinado fornecedor"].includes(
         item.status.toLowerCase()
       )
     ) {
