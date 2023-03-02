@@ -458,6 +458,9 @@ export const usuarioEhPreRecebimento = () => {
 export const usuarioEhDinutreDiretoria = () =>
   localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
 
+export const usuarioEhDilogDiretoria = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_DIRETORIA;
+
 export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
 };
