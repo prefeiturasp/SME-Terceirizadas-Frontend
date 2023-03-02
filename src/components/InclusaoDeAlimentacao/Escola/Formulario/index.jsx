@@ -542,7 +542,15 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     <Botao
                       texto="Enviar inclusão"
                       type={BUTTON_TYPE.SUBMIT}
-                      disabled={submitting}
+                      disabled={
+                        submitting ||
+                        (values &&
+                          motivoETECSelecionado(values) &&
+                          values.quantidades_periodo &&
+                          values.quantidades_periodo.some(
+                            q => !q.tipos_alimentacao_selecionados.length
+                          ))
+                      }
                       onClick={() => {
                         values["status"] = STATUS_DRE_A_VALIDAR;
                         handleSubmit(values => onSubmit(values, form));

@@ -131,8 +131,11 @@ export const PeriodosInclusaoNormal = ({
       const LANCHE_4H_UUID = periodos[0].tipos_alimentacao.find(
         ta => ta.nome === "Lanche 4h"
       ).uuid;
-      const NOT_LANCHE_4H_UUID_ARRAY = periodos[0].tipos_alimentacao
-        .filter(ta => ta.uuid !== LANCHE_4H_UUID)
+      const LANCHE_EMERGENCIAL = periodos[0].tipos_alimentacao.find(
+        ta => ta.nome === "Lanche Emergencial"
+      ).uuid;
+      const NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY = periodos[0].tipos_alimentacao
+        .filter(ta => ![LANCHE_4H_UUID, LANCHE_EMERGENCIAL].includes(ta.uuid))
         .map(ta => ta.uuid);
       if (values_.at(-1) === LANCHE_4H_UUID) {
         form.change(
@@ -140,11 +143,30 @@ export const PeriodosInclusaoNormal = ({
         ${indice}].tipos_alimentacao_selecionados`,
           [LANCHE_4H_UUID]
         );
-      } else {
+      } else if (values_.at(-1) === LANCHE_EMERGENCIAL) {
         form.change(
           `quantidades_periodo[
         ${indice}].tipos_alimentacao_selecionados`,
-          NOT_LANCHE_4H_UUID_ARRAY
+          [LANCHE_EMERGENCIAL]
+        );
+      } else if (
+        !values_.at(-1) ||
+        values.quantidades_periodo[
+          indice
+        ].tipos_alimentacao_selecionados.includes(values_.at(-1))
+      ) {
+        form.change(
+          `quantidades_periodo[
+        ${indice}].tipos_alimentacao_selecionados`,
+          []
+        );
+      } else if (
+        NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY.includes(values_.at(-1))
+      ) {
+        form.change(
+          `quantidades_periodo[
+        ${indice}].tipos_alimentacao_selecionados`,
+          NOT_LANCHE_4H_OR_EMERGENCIAL_UUID_ARRAY
         );
       }
     } else {

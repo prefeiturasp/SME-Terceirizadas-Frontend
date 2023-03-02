@@ -4,7 +4,6 @@ import {
   cadastraSolicitacaoAlteracaoCronograma,
   getCronograma
 } from "services/cronograma.service";
-import "./styles.scss";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
@@ -38,23 +37,76 @@ const manterDataEQuantidade = (values, values_) => {
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
+  const [restante, setRestante] = useState(undefined);
+  const [etapas, setEtapas] = useState([{}]);
   const [cronograma, setCronograma] = useState(null);
   const [podeSubmeter, setpodeSubmeter] = useState(false);
   const history = useHistory();
+
+  const checarQuantidadeInformada = values_ => {
+    return !values_.includes("ALTERAR_QTD_ALIMENTO") || restante === 0;
+  };
+
+  const checarDatasInformadas = (values_, values) => {
+    if (values_.includes("ALTERAR_DATA_ENTREGA")) {
+      let podeSubmeter = etapas.every(
+        etapa =>
+          values[`data_programada_${etapa.uuid}`] !== undefined &&
+          values[`data_programada_${etapa.uuid}`] !== null
+      );
+      return podeSubmeter;
+    }
+
+    return true;
+  };
+
+  const handleMotivosChange = (values_, values, form) => {
+    setpodeSubmeter(false);
+    if (manterDataEQuantidade(values, values_)) {
+      values_ = values_.filter(value_ => value_ !== "OUTROS");
+    }
+    if (values_.length !== 0 && values.justificativa) {
+      setpodeSubmeter(
+        checarQuantidadeInformada(values_) &&
+          checarDatasInformadas(values_, values)
+      );
+    }
+    if (values_.includes("OUTROS")) {
+      if (values_.length !== 0 && values.justificativa) {
+        setpodeSubmeter(true);
+      }
+      form.change("motivos", ["OUTROS"]);
+      return;
+    }
+    form.change("motivos", values_);
+  };
 
   const getDetalhes = async () => {
     if (uuid) {
       const responseCronograma = await getCronograma(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         setCronograma(responseCronograma.data);
+        setEtapas(responseCronograma.data.etapas);
+        setRestante(responseCronograma.data.qtd_total_programada);
       }
     }
   };
 
+  const verificarQuantidadesPreenchidas = values => {
+    if (values.motivos.includes("ALTERAR_QTD_ALIMENTO")) {
+      return etapas.every(
+        etapa =>
+          values[`quantidade_total_${etapa.uuid}`] !== undefined &&
+          values[`quantidade_total_${etapa.uuid}`] !== null
+      );
+    }
+    return true;
+  };
+
   useEffect(() => {
     getDetalhes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // eslint-disable-next-line
+  }, [uuid]);
 
   return (
     <div className="card mt-3">
@@ -91,23 +143,9 @@ export default () => {
                       hasSelectAll={false}
                       options={opcoesMotivos}
                       selected={values.motivos || []}
-                      onSelectedChanged={values_ => {
-                        if (values_.length !== 0 && values.justificativa) {
-                          setpodeSubmeter(true);
-                        } else {
-                          setpodeSubmeter(false);
-                        }
-                        if (manterDataEQuantidade(values, values_)) {
-                          values_ = values_.filter(
-                            value_ => value_ !== "OUTROS"
-                          );
-                        }
-                        if (values_.includes("OUTROS")) {
-                          form.change("motivos", ["OUTROS"]);
-                          return;
-                        }
-                        form.change("motivos", values_);
-                      }}
+                      onSelectedChanged={values_ =>
+                        handleMotivosChange(values_, values, form)
+                      }
                       overrideStrings={{
                         search: "Busca",
                         selectSomeItems: "Selecione o(s) Motivo(s)",
@@ -123,8 +161,16 @@ export default () => {
                     values.motivos.includes("ALTERAR_QTD_ALIMENTO")) ? (
                     <div>
                       <TabelaEditarCronograma
-                        cronograma={cronograma}
+                        etapas={etapas}
                         motivos={values.motivos}
+                        cronograma={cronograma}
+                        values={values}
+                        verificarQuantidadesPreenchidas={
+                          verificarQuantidadesPreenchidas
+                        }
+                        setpodeSubmeter={setpodeSubmeter}
+                        restante={restante}
+                        setRestante={setRestante}
                       />
                     </div>
                   ) : null}
@@ -141,7 +187,11 @@ export default () => {
                     <OnChange name="justificativa">
                       {value => {
                         if (value && values.motivos) {
-                          setpodeSubmeter(true);
+                          setpodeSubmeter(
+                            checarQuantidadeInformada(values.motivos) &&
+                              checarDatasInformadas(values.motivos, values) &&
+                              verificarQuantidadesPreenchidas(values)
+                          );
                         } else {
                           setpodeSubmeter(false);
                         }

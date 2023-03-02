@@ -34,6 +34,7 @@ export const ALUNO = "aluno";
 export const NUTRISUPERVISAO = "nutrisupervisao";
 export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
+export const DINUTRE = "dinutre";
 
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
@@ -196,6 +197,9 @@ export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
+export const PAINEL_APROVACOES = "painel-aprovacoes";
+
+export const AGUARDANDO_DILOG = "aguardando-dilog";
 
 // Status dos pedidos
 

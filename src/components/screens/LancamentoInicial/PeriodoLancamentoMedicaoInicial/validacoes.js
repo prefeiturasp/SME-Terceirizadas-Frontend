@@ -1,5 +1,3 @@
-import { format, getYear } from "date-fns";
-import { ALT_CARDAPIO } from "components/screens/helper";
 import { deepCopy } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
@@ -26,7 +24,6 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   values,
   dia,
   categoria,
-  rowName,
   dadosValoresInclusoesAutorizadasState,
   validacaoDiaLetivo
 ) => {
@@ -106,27 +103,102 @@ export const campoFrequenciaValor0ESemObservacao = (dia, categoria, values) => {
   return erro;
 };
 
+export const campoComSuspensaoAutorizadaESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  suspensoesAutorizadas
+) => {
+  let erro = false;
+  let alimentacoes = [];
+  suspensoesAutorizadas &&
+    suspensoesAutorizadas
+      .filter(suspensao => suspensao.dia === column.dia)
+      .forEach(suspensao => {
+        alimentacoes = alimentacoes.concat(suspensao.alimentacoes);
+      });
+  alimentacoes.forEach(alimentacao => {
+    if (
+      formValuesAtualizados[
+        `${alimentacao}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) {
+      erro = true;
+    }
+  });
+  return erro;
+};
+
+export const campoRefeicaoComRPLAutorizadaESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  let erro = false;
+  if (
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
+    ).length > 0 &&
+    formValuesAtualizados[
+      `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
+export const campoLancheComLPRAutorizadaESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  let erro = false;
+  if (
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
+    ).length > 0 &&
+    (formValuesAtualizados[
+      `lanche__dia_${column.dia}__categoria_${categoria.id}`
+    ] ||
+      formValuesAtualizados[
+        `lanche_4h__dia_${column.dia}__categoria_${categoria.id}`
+      ])
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
-  values,
+  formValuesAtualizados,
   dia,
   categoria,
   diasSobremesaDoce,
   location,
-  rowName,
+  row,
   dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  validacaoDiaLetivo,
+  column,
+  suspensoesAutorizadas,
+  alteracoesAlimentacaoAutorizadas
 ) => {
   return (
     botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-      values,
+      formValuesAtualizados,
       dia,
       categoria,
-      rowName,
       dadosValoresInclusoesAutorizadasState,
       validacaoDiaLetivo
     ) ||
     repeticaoSobremesaDoceComValorESemObservacao(
-      values,
+      formValuesAtualizados,
       dia,
       categoria,
       diasSobremesaDoce,
@@ -136,15 +208,37 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       dia,
       categoria,
       dadosValoresInclusoesAutorizadasState,
-      values
+      formValuesAtualizados
     ) ||
     campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
       dia,
       categoria,
       dadosValoresInclusoesAutorizadasState,
-      values
+      formValuesAtualizados
     ) ||
-    campoFrequenciaValor0ESemObservacao(dia, categoria, values)
+    campoFrequenciaValor0ESemObservacao(
+      dia,
+      categoria,
+      formValuesAtualizados
+    ) ||
+    campoComSuspensaoAutorizadaESemObservacao(
+      formValuesAtualizados,
+      column,
+      categoria,
+      suspensoesAutorizadas
+    ) ||
+    campoRefeicaoComRPLAutorizadaESemObservacao(
+      formValuesAtualizados,
+      column,
+      categoria,
+      alteracoesAlimentacaoAutorizadas
+    ) ||
+    campoLancheComLPRAutorizadaESemObservacao(
+      formValuesAtualizados,
+      column,
+      categoria,
+      alteracoesAlimentacaoAutorizadas
+    )
   );
 };
 
@@ -274,14 +368,14 @@ export const validarFormulario = (
 };
 
 export const validacoesTabelaAlimentacao = (
-  mesAnoConsiderado,
-  solicitacoesAutorizadas,
   rowName,
   dia,
   categoria,
   value,
   allValues,
   dadosValoresInclusoesAutorizadasState,
+  suspensoesAutorizadas,
+  alteracoesAlimentacaoAutorizadas,
   validacaoDiaLetivo,
   location
 ) => {
@@ -311,22 +405,15 @@ export const validacoesTabelaAlimentacao = (
     }
   }
 
-  const data = `${dia}/${format(mesAnoConsiderado, "MM")}/${getYear(
-    mesAnoConsiderado
-  )}`;
-  const existeAlteracaoCardapioRPL =
-    solicitacoesAutorizadas.filter(
-      solicitacao =>
-        solicitacao.tipo_doc === ALT_CARDAPIO &&
-        solicitacao.data_evento === data &&
-        solicitacao.motivo === "RPL - Refeição por Lanche"
+  const existeAlteracaoAlimentacaoRPL =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao => alteracao.dia === dia && alteracao.motivo.includes("RPL")
     ).length > 0;
-  const existeAlteracaoCardapioLPR =
-    solicitacoesAutorizadas.filter(
-      solicitacao =>
-        solicitacao.tipo_doc === ALT_CARDAPIO &&
-        solicitacao.data_evento === data &&
-        solicitacao.motivo === "LPR - Lanche por Refeição"
+  const existeAlteracaoAlimentacaoLPR =
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao => alteracao.dia === dia && alteracao.motivo.includes("LPR")
     ).length > 0;
 
   const maxMatriculados = Number(
@@ -377,9 +464,10 @@ export const validacoesTabelaAlimentacao = (
     return undefined;
   } else if (
     value &&
-    existeAlteracaoCardapioRPL &&
+    existeAlteracaoAlimentacaoRPL &&
     inputName.includes("lanche") &&
-    !inputName.includes("emergencial")
+    !inputName.includes("emergencial") &&
+    !allValues[`refeicao__dia_${dia}__categoria_${categoria}`]
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -388,9 +476,11 @@ export const validacoesTabelaAlimentacao = (
     }
   } else if (
     value &&
-    existeAlteracaoCardapioLPR &&
+    existeAlteracaoAlimentacaoLPR &&
     inputName.includes("refeicao") &&
-    !inputName.includes("repeticao")
+    !inputName.includes("repeticao") &&
+    (!allValues[`lanche__dia_${dia}__categoria_${categoria}`] &&
+      !allValues[`lanche_4h__dia_${dia}__categoria_${categoria}`])
   ) {
     if (Number(value) > 2 * maxFrequencia) {
       return "Lançamento maior que 2x a frequência de alunos no dia.";
@@ -496,4 +586,145 @@ export const validacoesTabelasDietas = (
     return "Frequência acima inválida ou não preenchida.";
   }
   return undefined;
+};
+
+export const exibirTooltipSemAlimentacaoPreAutorizadaInformada = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  dadosValoresInclusoesAutorizadasState
+) => {
+  return (
+    `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+      dadosValoresInclusoesAutorizadasState &&
+    Number(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) === 0 &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
+export const exibirTooltipFrequenciaDiaNaoLetivo = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  dadosValoresInclusoesAutorizadasState,
+  validacaoDiaLetivo
+) => {
+  return (
+    !validacaoDiaLetivo(column.dia) &&
+    row.name === "frequencia" &&
+    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+      String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
+    ) &&
+    Number(
+      formValuesAtualizados[
+        `frequencia__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) === 0
+  );
+};
+
+export const exibirTooltipErroQtdMaiorQueAutorizado = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  dadosValoresInclusoesAutorizadasState
+) => {
+  return (
+    `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
+      dadosValoresInclusoesAutorizadasState &&
+    Number(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) >
+      Number(
+        dadosValoresInclusoesAutorizadasState[
+          `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+        ]
+      ) &&
+    !formValuesAtualizados[
+      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
+    ]
+  );
+};
+
+export const exibirTooltipSuspensoesAutorizadas = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  suspensoesAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    suspensoesAutorizadas &&
+    suspensoesAutorizadas.filter(
+      suspensao =>
+        suspensao.dia === column.dia &&
+        suspensao.alimentacoes.includes(row.name)
+    ).length > 0
+  );
+};
+
+export const exibirTooltipRPLAutorizadas = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia && alteracao.motivo.includes("RPL")
+    ).length > 0 &&
+    (row.name.includes("refeicao") && !row.name.includes("repeticao"))
+  );
+};
+
+export const exibirTooltipLPRAutorizadas = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    (!["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    alteracoesAlimentacaoAutorizadas &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
+    ).length > 0 &&
+    (row.name.includes("lanche") && !row.name.includes("emergencial"))
+  );
 };

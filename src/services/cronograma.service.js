@@ -37,3 +37,17 @@ export const cronogramaAssina = async (uuid, password) => {
     password: password
   });
 };
+
+export const dinutreAssinaCronograma = async (uuid, password) => {
+  console.log(uuid);
+  const url = `/cronogramas/${uuid}/dinutre-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};
+
+export const getDashboardCronograma = async (params = null) =>
+  await axios.get(`/cronogramas/dashboard/`, { params });
+
+export const getDashboardCronogramaComFiltros = async params =>
+  await axios.get(`/cronogramas/dashboard-com-filtro/`, { params });

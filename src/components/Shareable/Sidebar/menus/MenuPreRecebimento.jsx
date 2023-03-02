@@ -1,7 +1,12 @@
 import React from "react";
 import { Menu, LeafItem } from "./shared";
-import { PRE_RECEBIMENTO, CRONOGRAMA_ENTREGA } from "configs/constants";
 import {
+  PRE_RECEBIMENTO,
+  CRONOGRAMA_ENTREGA,
+  PAINEL_APROVACOES
+} from "configs/constants";
+import {
+  usuarioEhDinutreDiretoria,
   usuarioEhFornecedor,
   usuarioEhPreRecebimento
 } from "helpers/utilities";
@@ -9,6 +14,11 @@ import {
 const MenuPreRecebimento = () => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
+      {usuarioEhDinutreDiretoria() && (
+        <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}>
+          Painel de Aprovações
+        </LeafItem>
+      )}
       {(usuarioEhPreRecebimento() || usuarioEhFornecedor()) && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
           Cronograma de Entrega

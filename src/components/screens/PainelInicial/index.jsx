@@ -90,7 +90,7 @@ const PainelInicial = ({ history }) => {
             onClick={() => {
               usuarioEhEscola() &&
                 history.push("/lancamento-inicial/lancamento-medicao-inicial");
-              usuarioEhDRE() &&
+              (usuarioEhDRE() || usuarioEhMedicao()) &&
                 history.push(
                   `/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`
                 );

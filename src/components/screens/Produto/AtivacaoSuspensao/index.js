@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import { Link } from "react-router-dom";
 import { getProdutosListagem } from "services/produto.service";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import { deepEqual, gerarParametrosConsulta } from "helpers/utilities";
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
 import {
@@ -13,11 +13,40 @@ import FormBuscaProduto from "./FormBuscaProduto";
 import { ATIVACAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
 import "./style.scss";
 
-const checaStatus = obj =>
-  obj.status === "CODAE_HOMOLOGADO" ||
-  obj.status === "ESCOLA_OU_NUTRICIONISTA_RECLAMOU";
+const TabelaProdutos = ({ filtros, produtos }) => {
+  let arrayDeProdutosRenderizados = [];
+  const checaStatus = produto => {
+    let retorno =
+      (produto.ultima_homologacao.status === "CODAE_HOMOLOGADO" ||
+        produto.ultima_homologacao.status ===
+          "ESCOLA_OU_NUTRICIONISTA_RECLAMOU") &&
+      !arrayDeProdutosRenderizados.includes(produto.id_externo);
+    arrayDeProdutosRenderizados.push(produto.id_externo);
+    if (filtros && filtros.status.length === 1) {
+      if (
+        deepEqual(filtros.status, ["CODAE_SUSPENDEU"]) &&
+        produto.ultima_homologacao.status === "CODAE_HOMOLOGADO"
+      ) {
+        retorno = false;
+      }
+    }
 
-const TabelaProdutos = ({ produtos }) => {
+    return retorno;
+  };
+
+  const nomeDaColunaEditais = filtros => {
+    let nome = "Editais";
+    if (filtros && filtros.status.length === 1) {
+      if (deepEqual(filtros.status, ["CODAE_SUSPENDEU"])) {
+        nome += " suspensos";
+      } else {
+        nome += " ativos";
+      }
+    }
+
+    return nome;
+  };
+
   if (!produtos) return false;
   return (
     <section className="mb-3">
@@ -27,6 +56,7 @@ const TabelaProdutos = ({ produtos }) => {
           <div>Marca</div>
           <div>Fabricante</div>
           <div>Status</div>
+          <div>{nomeDaColunaEditais(filtros)}</div>
           <div />
         </div>
       </section>
@@ -37,23 +67,47 @@ const TabelaProdutos = ({ produtos }) => {
               <div>{produto.nome}</div>
               <div>{produto.marca.nome}</div>
               <div>{produto.fabricante.nome}</div>
-              <div>
-                {checaStatus(produto.ultima_homologacao) ? "Ativo" : "Suspenso"}
-              </div>
-              <div>
-                <Link
-                  to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
-                    produto.ultima_homologacao.uuid
-                  }`}
-                >
-                  <Botao
-                    type={BUTTON_TYPE.BUTTON}
-                    texto="Visualizar"
-                    icon={undefined}
-                    style={BUTTON_STYLE.GREEN}
-                  />
-                </Link>
-              </div>
+              {checaStatus(produto) ? (
+                <>
+                  <div>Ativo</div>
+                  <div>{produto.vinculos_produto_edital_ativos || " -- "}</div>
+                  <div>
+                    <Link
+                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
+                        produto.ultima_homologacao.uuid
+                      }`}
+                    >
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        texto="Visualizar"
+                        icon={undefined}
+                        style={BUTTON_STYLE.GREEN}
+                      />
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>Suspenso</div>
+                  <div>
+                    {produto.vinculos_produto_edital_suspensos || " -- "}
+                  </div>
+                  <div>
+                    <Link
+                      to={`/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${
+                        produto.ultima_homologacao.uuid
+                      }&suspenso=true`}
+                    >
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        texto="Visualizar"
+                        icon={undefined}
+                        style={BUTTON_STYLE.GREEN}
+                      />
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );
@@ -89,6 +143,7 @@ const AtivacaoSuspencaoProduto = () => {
   }, [filtros, setProdutos, page]);
 
   const onSubmitForm = formValues => {
+    setPage(1);
     const status = [];
     switch (formValues.status) {
       case "ativo":
@@ -122,7 +177,7 @@ const AtivacaoSuspencaoProduto = () => {
         {produtos && produtosCount > 0 && (
           <div className="container-tabela">
             <LabelResultadoDaBusca filtros={filtros} />
-            <TabelaProdutos produtos={produtos} />
+            <TabelaProdutos filtros={filtros} produtos={produtos} />
             <Pagination
               current={page}
               total={produtosCount}

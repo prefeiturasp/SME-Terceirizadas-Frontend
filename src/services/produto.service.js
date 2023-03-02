@@ -153,10 +153,6 @@ export const getReclamacoesTerceirizadaPorFiltro = async params => {
   });
 };
 
-export const getProdutosPorFiltro = async filtro => {
-  return await axios.post(`/produtos/filtro-por-parametros/`, filtro);
-};
-
 export const getProdutosRelatorioSituacao = async params => {
   return await axios.get(`/produtos/filtro-relatorio-situacao-produto/`, {
     params
@@ -487,10 +483,10 @@ export const getHomologacoesDeProdutoPorStatus = async (status, page = 0) => {
 
 export const getHomologacoesDeProdutoPorStatusTitulo = async (
   status,
-  titulo_produto
+  params
 ) => {
   const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
-  return await axios.post(url, titulo_produto);
+  return await axios.get(url, { params });
 };
 
 export const getTodosOsProdutos = async () => {
@@ -549,37 +545,20 @@ export const flegarHomologacaoPDF = async uuid => {
   return await axios.post(`/homologacoes-produtos/${uuid}/gerar-pdf/`);
 };
 
-export const getProdutosPorTerceirizada = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-por-parametros-agrupado-terceirizada/`,
-    filtro
+export const getProdutosPorTerceirizada = async params => {
+  return await axios.get(
+    `/painel-gerencial-homologacoes-produtos/filtro-por-parametros-agrupado-terceirizada/`,
+    { params }
   );
 };
 
-export const getProdutosAgrupadosNomeMarcas = async filtro => {
-  return await axios.post(
-    `/produtos/filtro-por-parametros-agrupado-nome-marcas/`,
-    filtro
-  );
-};
-
-export const getRelatorioProdutosHomologados = async params => {
-  const { data } = await axios.get(
-    "/produtos/relatorio-por-parametros-agrupado-terceirizada/",
-    {
-      params,
-      responseType: "blob"
-    }
-  );
-  saveAs(data, "relatorio_produtos_homologados.pdf");
-};
-
-export const getRelatorioProdutosAgrupadosMarcasHomologados = async params => {
-  const { data } = await axios.get("/produtos/marcas-por-produto/", {
-    params,
-    responseType: "blob"
-  });
-  saveAs(data, "relatorio_agrupados_produtos_marcas_homologados.pdf");
+export const getPDFRelatorioProdutosHomologados = async params => {
+  const url = "/painel-gerencial-homologacoes-produtos/exportar-pdf/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getProdutosSuspensos = async payload => {
@@ -605,10 +584,6 @@ export const getProdutosListagem = async params => {
 
 export const solicitarCadastroProdutoDieta = async payload => {
   return await axios.post(`/solicitacao-cadastro-produto-dieta/`, payload);
-};
-
-export const getNomeProdutosHomologados = async () => {
-  return await axios.get(`/produtos/lista-nomes-homologados/`);
 };
 
 export const getSubstitutos = async () => {

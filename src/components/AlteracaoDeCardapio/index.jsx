@@ -19,6 +19,8 @@ import {
 } from "../../helpers/fieldValidators";
 import {
   checaSeDataEstaEntre2e5DiasUteis,
+  escolaEhCei,
+  escolaEhCEMEI,
   fimDoCalendario,
   formatarParaMultiselect,
   getError
@@ -829,12 +831,29 @@ class AlteracaoCardapio extends Component {
         substituto => !value.includes(substituto.uuid)
       );
       if (motivo) {
+        let opcoesSubstitutosLanche, opcoesSubstitutosLanche4h;
         switch (motivo.nome) {
           case "RPL - Refeição por Lanche":
-            opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
-              ["Lanche"].includes(ta.nome)
+            opcoesSubstitutosLanche = opcoesSubstitutos.filter(
+              ta => ta.nome === "Lanche"
             );
+            opcoesSubstitutosLanche4h = opcoesSubstitutos.filter(
+              ta => ta.nome === "Lanche 4h"
+            );
+            if (
+              !escolaEhCei() &&
+              !escolaEhCEMEI() &&
+              periodo.nome === "NOITE"
+            ) {
+              opcoesSubstitutos = [
+                ...opcoesSubstitutosLanche,
+                ...opcoesSubstitutosLanche4h
+              ];
+            } else {
+              opcoesSubstitutos = opcoesSubstitutosLanche;
+            }
             break;
+
           case "LPR - Lanche por Refeição":
             if (ehEscolaEspecial) {
               opcoesSubstitutos = opcoesSubstitutos.filter(ta =>
@@ -878,10 +897,11 @@ class AlteracaoCardapio extends Component {
     );
   }
 
-  formataOpcoesDe(tipos_alimentacao) {
+  formataOpcoesDe(tipos_alimentacao, periodo) {
     let { motivo, ehEscolaEspecial } = this.state;
     let opcoesDe = tipos_alimentacao;
     if (motivo) {
+      let opcoesDeLanche, opcoesDeLanche4h;
       switch (motivo.nome) {
         case "RPL - Refeição por Lanche":
           if (ehEscolaEspecial) {
@@ -895,9 +915,15 @@ class AlteracaoCardapio extends Component {
           }
           break;
         case "LPR - Lanche por Refeição":
-          opcoesDe = tipos_alimentacao.filter(ta =>
-            ["Lanche"].includes(ta.nome)
+          opcoesDeLanche = tipos_alimentacao.filter(ta => ta.nome === "Lanche");
+          opcoesDeLanche4h = tipos_alimentacao.filter(
+            ta => ta.nome === "Lanche 4h"
           );
+          if (!escolaEhCei() && !escolaEhCEMEI() && periodo === "NOITE") {
+            opcoesDe = [...opcoesDeLanche, ...opcoesDeLanche4h];
+          } else {
+            opcoesDe = opcoesDeLanche;
+          }
           break;
         case "Lanche Emergencial":
           opcoesDe = tipos_alimentacao.filter(
@@ -1089,7 +1115,10 @@ class AlteracaoCardapio extends Component {
                         multiple
                         selected={optionsAlimentacaoDe[periodo.nome] || []}
                         options={
-                          this.formataOpcoesDe(periodo.tipos_alimentacao) || []
+                          this.formataOpcoesDe(
+                            periodo.tipos_alimentacao,
+                            periodo.nome
+                          ) || []
                         }
                         nomeDoItemNoPlural="Alimentos"
                         onChange={value =>
@@ -1097,7 +1126,6 @@ class AlteracaoCardapio extends Component {
                         }
                         validate={periodo.validador}
                       />
-
                       <Field
                         component={MultiSelect}
                         disableSearch

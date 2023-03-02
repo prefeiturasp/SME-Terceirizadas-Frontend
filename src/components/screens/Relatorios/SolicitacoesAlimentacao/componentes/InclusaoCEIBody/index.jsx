@@ -18,6 +18,12 @@ export const InclusaoCEIBody = ({ ...props }) => {
         )
       );
 
+  const periodosExternos = unique(
+    solicitacao.quantidade_alunos_por_faixas_etarias.map(
+      qa => qa.periodo_externo.nome
+    )
+  );
+
   const getVinculosAlimentacao = async () => {
     const escola_uuid = solicitacao.escola.uuid;
     const response = await getVinculosTipoAlimentacaoPorEscola(escola_uuid);
@@ -95,103 +101,119 @@ export const InclusaoCEIBody = ({ ...props }) => {
                 );
               }
             )}
-            <div className="row">
-              <div className="col-12">
-                <label className="label-periodo-cei-cemei">INTEGRAL</label>
-              </div>
-            </div>
             {vinculosAlimentacao &&
-              nomes_periodos.map((periodo, idx) => {
-                let faixas_etarias = [];
-                if (solicitacao.periodo_escolar) {
-                  faixas_etarias =
-                    solicitacao.quantidade_alunos_por_faixas_etarias;
-                } else {
-                  faixas_etarias = solicitacao.quantidade_alunos_por_faixas_etarias.filter(
-                    qpf => qpf.periodo.nome === periodo
+              periodosExternos.map((periodoExt, index) => {
+                return nomes_periodos.map((periodo, idx) => {
+                  let faixas_etarias = [];
+                  if (solicitacao.periodo_escolar) {
+                    faixas_etarias =
+                      solicitacao.quantidade_alunos_por_faixas_etarias;
+                  } else {
+                    faixas_etarias = solicitacao.quantidade_alunos_por_faixas_etarias.filter(
+                      qpf =>
+                        qpf.periodo.nome === periodo &&
+                        qpf.periodo_externo.nome === periodoExt
+                    );
+                  }
+                  const alimentosFormatados = vinculosAlimentacao
+                    .find(v => v.periodo_escolar.nome === periodoExt)
+                    .tipos_alimentacao.map(ta => ta.nome)
+                    .join(", ");
+                  const total = faixas_etarias.reduce(function(acc, v) {
+                    return acc + (v.quantidade || v.quantidade_alunos);
+                  }, 0);
+                  const total_matriculados = faixas_etarias.reduce(function(
+                    acc,
+                    v
+                  ) {
+                    return acc + (v.matriculados_quando_criado || 0);
+                  },
+                  0);
+                  return (
+                    <Fragment key={idx}>
+                      {(periodoExt !== "INTEGRAL" && periodoExt === periodo) ||
+                      (periodoExt === "INTEGRAL" &&
+                        periodo === nomes_periodos[0]) ? (
+                        <div key={index} className="row">
+                          <div className="col-12">
+                            <label className="label-periodo-cei-cemei">
+                              {periodoExt}
+                            </label>
+                          </div>
+                        </div>
+                      ) : null}
+                      {periodoExt === periodo || periodoExt === "INTEGRAL" ? (
+                        <>
+                          {periodoExt !== periodo || periodo === "INTEGRAL" ? (
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="container-fluid pr-0">
+                                  <label className="label-periodo-cei-cemei">
+                                    {periodo}
+                                  </label>
+                                </div>
+                              </div>
+                            </div>
+                          ) : null}
+                          <div className="row mt-3">
+                            <div className="col-12">
+                              <div className="container-fluid pr-0">
+                                <p>
+                                  Tipos de Inclusão de Alimentação:{" "}
+                                  <b>{alimentosFormatados}</b>
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <div className="col-12">
+                              <div className="container-fluid pr-0">
+                                <table className="table table-bordered table-items">
+                                  <thead>
+                                    <tr className="table-head-items">
+                                      <th className="col-8">Faixa Etária</th>
+                                      <th className="col-2 text-center">
+                                        Alunos Matriculados
+                                      </th>
+                                      <th className="col-2 text-center">
+                                        Quantidade
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {faixas_etarias.map((faixa, idxFaixa) => {
+                                      return (
+                                        <tr
+                                          className="table-body-items"
+                                          key={idxFaixa}
+                                        >
+                                          <td>{faixa.faixa_etaria.__str__}</td>
+                                          <td className="text-center">
+                                            {faixa.matriculados_quando_criado}
+                                          </td>
+                                          <td className="text-center">
+                                            {faixa.quantidade_alunos}
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                    <tr className="table-head-items">
+                                      <td>Total</td>
+                                      <td className="text-center">
+                                        {total_matriculados}
+                                      </td>
+                                      <td className="text-center">{total}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      ) : null}
+                    </Fragment>
                   );
-                }
-                const alimentosFormatados = vinculosAlimentacao
-                  .find(v => v.periodo_escolar.nome === periodo)
-                  .tipos_alimentacao.map(ta => ta.nome)
-                  .join(", ");
-                const total = faixas_etarias.reduce(function(acc, v) {
-                  return acc + (v.quantidade || v.quantidade_alunos);
-                }, 0);
-                const total_matriculados = faixas_etarias.reduce(function(
-                  acc,
-                  v
-                ) {
-                  return acc + (v.matriculados_quando_criado || 0);
-                },
-                0);
-                return (
-                  <Fragment key={idx}>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-fluid pr-0">
-                          <label className="label-periodo-cei-cemei">
-                            {periodo}
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row mt-3">
-                      <div className="col-12">
-                        <div className="container-fluid pr-0">
-                          <p>
-                            Tipos de Inclusão de Alimentação:{" "}
-                            <b>{alimentosFormatados}</b>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-12">
-                        <div className="container-fluid pr-0">
-                          <table className="table table-bordered table-items">
-                            <thead>
-                              <tr className="table-head-items">
-                                <th className="col-8">Faixa Etária</th>
-                                <th className="col-2 text-center">
-                                  Alunos Matriculados
-                                </th>
-                                <th className="col-2 text-center">
-                                  Quantidade
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {faixas_etarias.map((faixa, idxFaixa) => {
-                                return (
-                                  <tr
-                                    className="table-body-items"
-                                    key={idxFaixa}
-                                  >
-                                    <td>{faixa.faixa_etaria.__str__}</td>
-                                    <td className="text-center">
-                                      {faixa.matriculados_quando_criado}
-                                    </td>
-                                    <td className="text-center">
-                                      {faixa.quantidade_alunos}
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                              <tr className="table-head-items">
-                                <td>Total</td>
-                                <td className="text-center">
-                                  {total_matriculados}
-                                </td>
-                                <td className="text-center">{total}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </Fragment>
-                );
+                });
               })}
           </div>
         </td>

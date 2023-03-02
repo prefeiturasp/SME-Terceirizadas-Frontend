@@ -180,6 +180,13 @@ export const getEscolaPeriodoEscolares = async () => {
   return axios.get(url);
 };
 
+export const getPeriodosComMatriculadosPorUE = async uuid => {
+  const url = `/${
+    ENDPOINT.PERIODOS_COM_MATRICULADOS_POR_UE
+  }/?escola_uuid=${uuid}/`;
+  return axios.get(url);
+};
+
 export const createAlteracaoCardapioCEMEI = async payload => {
   const url = `alteracoes-cardapio-cemei/`;
   const response = await axios.post(url, payload).catch(ErrorHandlerFunction);
