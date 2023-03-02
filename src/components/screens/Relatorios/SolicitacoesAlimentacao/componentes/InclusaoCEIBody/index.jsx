@@ -64,13 +64,16 @@ export const InclusaoCEIBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+              </div>
+              <div className="col-3">
                 <p>Motivo:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Dia(s) de Inclusão:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
               </div>
             </div>
@@ -78,24 +81,29 @@ export const InclusaoCEIBody = ({ ...props }) => {
               (dia_motivo_inclusao, idx) => {
                 return (
                   <div className="row mt-3" key={idx}>
-                    <div className="col-4">
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                    <div className="col-3">
                       <p>
                         <b>{dia_motivo_inclusao.motivo.nome}</b>
                       </p>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       <p>
                         <b>{dia_motivo_inclusao.data}</b>
                       </p>
                     </div>
                     {idx === 0 ? (
-                      <div className="col-4">
+                      <div className="col-3">
                         <p>
                           <b>{log && log.criado_em.split(" ")[0]}</b>
                         </p>
                       </div>
                     ) : (
-                      <div className="col-4" />
+                      <div className="col-3" />
                     )}
                   </div>
                 );
