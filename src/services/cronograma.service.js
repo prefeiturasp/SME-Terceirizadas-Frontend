@@ -46,6 +46,14 @@ export const dinutreAssinaCronograma = async (uuid, password) => {
   });
 };
 
+export const codaeAssinaCronograma = async (uuid, password) => {
+  console.log(uuid);
+  const url = `/cronogramas/${uuid}/codae-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};
+
 export const getDashboardCronograma = async (params = null) =>
   await axios.get(`/cronogramas/dashboard/`, { params });
 
