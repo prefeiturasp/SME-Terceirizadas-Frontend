@@ -1,10 +1,11 @@
 import { Spin } from "antd";
-import React, { useEffect, useState } from "react";
+import HTTP_STATUS from "http-status-codes";
+import React, { useContext, useEffect, useState } from "react";
+import { getInitalState } from "components/Shareable/FormBuscaProduto/helper";
 import {
-  getInitalState,
-  formataResultado
-} from "components/Shareable/FormBuscaProduto/helper";
-import { getNomesUnicosEditais } from "services/produto.service";
+  gerarExcelRelatorioProdutosHomologados,
+  getNomesUnicosEditais
+} from "services/produto.service";
 
 import Botao from "components/Shareable/Botao";
 import {
@@ -15,165 +16,181 @@ import {
 import FormBuscaProduto from "components/Shareable/FormBuscaProduto";
 import { gerarParametrosConsulta } from "helpers/utilities";
 
-import TabelaAgrupadaProdutosMarcas from "./TabelaAgrupadaProdutosMarcas";
 import TabelaAgrupadaProdutosTerceirizadas from "./TabelaAgrupadaProdutosTerceirizadas";
 import {
   getProdutosPorTerceirizada,
-  getProdutosAgrupadosNomeMarcas,
-  getRelatorioProdutosHomologados,
-  getRelatorioProdutosAgrupadosMarcasHomologados
+  getPDFRelatorioProdutosHomologados
 } from "services/produto.service";
 
 import "./style.scss";
-import { meusDados } from "services/perfil.service";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import MeusDadosContext from "context/MeusDadosContext";
 
 const RelatorioProdutosHomologados = () => {
+  const { meusDados } = useContext(MeusDadosContext);
+
   const [dadosProdutos, setDadosProdutos] = useState(null);
   const [quantidadeHomologados, setQuantidadeHomologados] = useState(null);
   const [quantidadeMarcas, setQuantidadeMarcas] = useState(null);
   const [filtros, setFiltros] = useState(null);
   const [valoresIniciais, setValoresIniciais] = useState(null);
-  const [carregando, setCarregando] = useState(false);
+  const [carregando, setCarregando] = useState(true);
+  const [exportando, setExportando] = useState(false);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
+  const [erroAPI, setErroAPI] = useState("");
 
   useEffect(() => {
-    setCarregando(true);
-
-    async function defineFiltrosPadroes() {
+    const getValoresIniciaisAsync = async () => {
       let responseEditais = await getNomesUnicosEditais();
-      let responseMeusDados = await meusDados();
-      let instituicaoNome = responseMeusDados.vinculo_atual.instituicao.nome;
+      let instituicaoNome = meusDados.vinculo_atual.instituicao.nome;
       let valores = getInitalState(
         responseEditais.data.results,
         instituicaoNome
       );
       setValoresIniciais(valores);
       setCarregando(false);
-    }
-    if (!valoresIniciais) {
-      defineFiltrosPadroes();
-    }
+    };
 
-    if (!filtros) return;
-    async function fetchData() {
-      setCarregando(true);
-      setDadosProdutos(null);
-      let response;
-      if (filtros.agrupado_por_nome_e_marca) {
-        response = await getProdutosAgrupadosNomeMarcas(filtros);
-        setDadosProdutos(formataResultado(response.data));
-      } else {
-        response = await getProdutosPorTerceirizada(filtros);
-        setDadosProdutos(response.data);
-      }
-      const produtos = response.data;
-      setQuantidadeHomologados(produtos.length);
-      const contagemMarcas = produtos.reduce((acc, produtos) => {
-        acc[produtos.marca] = (acc[produtos.marca] || 0) + 1;
-        return acc;
-      }, {});
-      setQuantidadeMarcas(Object.keys(contagemMarcas).length);
-      setCarregando(false);
-    }
-    fetchData();
-  }, [filtros, setDadosProdutos, valoresIniciais, quantidadeHomologados]);
+    meusDados && getValoresIniciaisAsync();
+  }, [meusDados]);
 
-  const onSubmitForm = formValues => {
-    setFiltros(formValues);
+  const getProdutosHomologados = async (filtros_ = filtros) => {
+    setCarregando(true);
+    const response = await getProdutosPorTerceirizada(filtros_);
+    if (response.status === HTTP_STATUS.OK) {
+      setDadosProdutos(response.data.results);
+      setQuantidadeHomologados(response.data.count);
+      setQuantidadeMarcas(response.data.total_marcas);
+    } else {
+      setErroAPI(
+        "Erro ao carregar produtos homologados. Tente novamente mais tarde."
+      );
+    }
+    setCarregando(false);
   };
 
-  const totalResultados = dadosProdutos && dadosProdutos.length;
+  const onSubmitForm = async formValues => {
+    setFiltros(formValues);
+    await getProdutosHomologados(formValues);
+  };
+
+  const exportarXLSX = async params => {
+    setExportando(true);
+    const response = await gerarExcelRelatorioProdutosHomologados(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar xlsx. Tente novamente mais tarde.");
+    }
+    setExportando(false);
+  };
+
+  const exportarPDF = async params => {
+    setExportando(true);
+    const response = await getPDFRelatorioProdutosHomologados(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+    setExportando(false);
+  };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 page-relatorio-produtos-homologados">
         <div className="card-body">
-          {valoresIniciais && (
-            <FormBuscaProduto
-              onSubmit={onSubmitForm}
-              onAtualizaProdutos={() => {}}
-              onLimparDados={() => {
-                setDadosProdutos(null);
-              }}
-              valoresIniciais={valoresIniciais}
-            />
-          )}
-
-          {quantidadeHomologados && !carregando && (
-            <div className="row">
-              <div className="col-12 mt-3 ">
-                <p className="quantitativo">
-                  QUANTITATIVO DE PRODUTOS HOMOLOGADOS DO EDITAL
-                </p>
-              </div>
-              <div className="col-12 mt-1">
-                <p className="totalHomologadosValor">
-                  Total de produtos homologados: <b>{quantidadeHomologados}</b>
-                  <span className="ml-5">
-                    Total de marcas homologadas: <b>{quantidadeMarcas}</b>{" "}
-                  </span>
-                </p>
-              </div>
-            </div>
-          )}
-
-          {filtros &&
-            filtros.agrupado_por_nome_e_marca &&
-            totalResultados > 0 &&
-            dadosProdutos && (
-              <div className="mt-3">
-                <p className="resultadoTitle">Resultado detalhado</p>
-                <TabelaAgrupadaProdutosMarcas dadosProdutos={dadosProdutos} />
-                <hr />
-                <Botao
-                  type={BUTTON_TYPE.BUTTON}
-                  titulo="imprimir"
-                  texto="imprimir"
-                  style={BUTTON_STYLE.GREEN}
-                  icon={BUTTON_ICON.PRINT}
-                  className="float-right ml-3"
-                  onClick={async () => {
-                    const params = gerarParametrosConsulta(filtros);
-                    setCarregando(true);
-                    await getRelatorioProdutosAgrupadosMarcasHomologados(
-                      params
-                    );
-                    setCarregando(false);
+          {erroAPI && <>{erroAPI}</>}
+          {!erroAPI && (
+            <>
+              {valoresIniciais && (
+                <FormBuscaProduto
+                  onSubmit={onSubmitForm}
+                  onAtualizaProdutos={() => {}}
+                  onLimparDados={() => {
+                    setDadosProdutos(null);
                   }}
+                  valoresIniciais={valoresIniciais}
+                  setErroAPI={setErroAPI}
                 />
-              </div>
-            )}
+              )}
 
-          {filtros &&
-            !filtros.agrupado_por_nome_e_marca &&
-            totalResultados > 0 &&
-            dadosProdutos && (
-              <div className="mt-3">
-                <p className="resultadoTitle">Resultado detalhado</p>
-                <TabelaAgrupadaProdutosTerceirizadas
-                  dadosProdutos={dadosProdutos}
-                />
-                <hr />
-                <Botao
-                  type={BUTTON_TYPE.BUTTON}
-                  titulo="imprimir"
-                  texto="imprimir"
-                  style={BUTTON_STYLE.GREEN}
-                  icon={BUTTON_ICON.PRINT}
-                  className="float-right ml-3"
-                  onClick={async () => {
-                    const params = gerarParametrosConsulta(filtros);
-                    setCarregando(true);
-                    await getRelatorioProdutosHomologados(params);
-                    setCarregando(false);
-                  }}
-                />
-              </div>
-            )}
+              {quantidadeHomologados > 0 && !carregando && (
+                <div className="row">
+                  <div className="col-12 mt-3 ">
+                    <p className="quantitativo">
+                      QUANTITATIVO DE PRODUTOS HOMOLOGADOS DO EDITAL
+                    </p>
+                  </div>
+                  <div className="col-12 mt-1">
+                    <p className="totalHomologadosValor">
+                      Total de produtos homologados:{" "}
+                      <b>{quantidadeHomologados}</b>
+                      <span className="ml-5">
+                        Total de marcas homologadas: <b>{quantidadeMarcas}</b>{" "}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              )}
 
-          {totalResultados === 0 && (
-            <div className="text-center mt-5">
-              Não existem dados para filtragem informada.
-            </div>
+              {filtros && dadosProdutos && dadosProdutos.length > 0 && (
+                <div className="mt-3">
+                  <p className="resultadoTitle">Resultado detalhado</p>
+                  <TabelaAgrupadaProdutosTerceirizadas
+                    dadosProdutos={dadosProdutos}
+                    quantidadeHomologados={quantidadeHomologados}
+                    getProdutosHomologados={getProdutosHomologados}
+                    filtros={filtros}
+                  />
+                  <hr />
+                  <div className="row">
+                    <div className="col-12 text-right">
+                      <Botao
+                        texto="Exportar Excel"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={BUTTON_ICON.FILE_EXCEL}
+                        type={BUTTON_TYPE.BUTTON}
+                        disabled={exportando}
+                        onClick={() => {
+                          exportarXLSX(filtros);
+                        }}
+                        className="mr-3"
+                      />
+                      {exibirModalCentralDownloads && (
+                        <ModalSolicitacaoDownload
+                          show={exibirModalCentralDownloads}
+                          setShow={setExibirModalCentralDownloads}
+                        />
+                      )}
+                      <Botao
+                        type={BUTTON_TYPE.BUTTON}
+                        titulo="Imprimir"
+                        texto="Imprimir"
+                        style={BUTTON_STYLE.GREEN}
+                        icon={BUTTON_ICON.PRINT}
+                        onClick={async () => {
+                          const params = gerarParametrosConsulta(filtros);
+                          setCarregando(true);
+                          await exportarPDF(params);
+                          setCarregando(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {dadosProdutos && dadosProdutos.length === 0 && (
+                <div className="mt-5">
+                  Não existem dados para filtragem informada.
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

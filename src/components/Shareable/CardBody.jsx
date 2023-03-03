@@ -23,7 +23,7 @@ const CardBody = props => {
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
   const loadingDietas = props.loadingDietas || false;
-
+  const pathname = window.location.pathname;
   useEffect(() => {
     (async () => {
       try {
@@ -52,10 +52,9 @@ const CardBody = props => {
                 <div className="row">
                   <div
                     className={`${
-                      (ehTerceirizada &&
-                        props.listaStatus &&
-                        props.listaLotes) ||
-                      ehDashboardGestaoProduto
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
                         ? "col-12 text-right"
                         : exibirFiltrosDataEventoETipoSolicitacao
                         ? "col-3 px-0"
@@ -141,41 +140,43 @@ const CardBody = props => {
                       </OnChange>
                     </div>
                   )}
-                  {exibirFiltrosDataEventoETipoSolicitacao && (
-                    <>
-                      <div
-                        className={`${
-                          ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
-                        }`}
-                      >
-                        <Field
-                          component={Select}
-                          name="tipo_solicitacao"
-                          naoDesabilitarPrimeiraOpcao
-                          placeholder="Tipo de Solicitação"
-                          options={TIPOS_SOLICITACOES_OPTIONS}
-                        />
-                      </div>
-                      <OnChange name="tipo_solicitacao">
-                        {() => {
-                          props.onChange(values);
-                        }}
-                      </OnChange>
-                      <div className="col-3 pl-0">
-                        <Field
-                          name="data_evento"
-                          minDate={null}
-                          component={InputComData}
-                          placeholder="Data do evento"
-                        />
-                        <OnChange name="data_evento">
+                  {exibirFiltrosDataEventoETipoSolicitacao &&
+                    pathname === "/painel-gestao-produto" &&
+                    ehTerceirizada && (
+                      <>
+                        <div
+                          className={`${
+                            ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
+                          }`}
+                        >
+                          <Field
+                            component={Select}
+                            name="tipo_solicitacao"
+                            naoDesabilitarPrimeiraOpcao
+                            placeholder="Tipo de Solicitação"
+                            options={TIPOS_SOLICITACOES_OPTIONS}
+                          />
+                        </div>
+                        <OnChange name="tipo_solicitacao">
                           {() => {
                             props.onChange(values);
                           }}
                         </OnChange>
-                      </div>
-                    </>
-                  )}
+                        <div className="col-3 pl-0">
+                          <Field
+                            name="data_evento"
+                            minDate={null}
+                            component={InputComData}
+                            placeholder="Data do evento"
+                          />
+                          <OnChange name="data_evento">
+                            {() => {
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                      </>
+                    )}
                   {ehDashboardGestaoProduto && (
                     <div
                       className={`${

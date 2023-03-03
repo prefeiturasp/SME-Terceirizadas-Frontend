@@ -12,8 +12,109 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+import {
+  usuarioEhCronograma,
+  usuarioEhDinutreDiretoria
+} from "helpers/utilities";
 
 const FORM_NAME = "buscaCronogramaDeEntrega";
+
+const options_status = usuarioEhEmpresaFornecedor()
+  ? [
+      {
+        value: "ENVIADO_AO_FORNECEDOR",
+        label: "Recebido"
+      },
+      {
+        value: "ALTERACAO_FORNECEDOR",
+        label: "Alteração Fornecedor"
+      },
+      {
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
+      },
+      {
+        value: "SOLICITADO_ALTERACAO",
+        label: "Solicitado Alteração"
+      }
+    ]
+  : usuarioEhCronograma()
+  ? [
+      {
+        value: "ENVIADO_AO_FORNECEDOR",
+        label: "Enviado ao Fornecedor"
+      },
+      {
+        value: "ALTERACAO_CODAE",
+        label: "Alteração CODAE"
+      },
+      { value: "APROVADO", label: "Aprovado" },
+      { value: "REPROVADO", label: "Reprovado" },
+      {
+        value: "ALTERACAO_FORNECEDOR",
+        label: "Alteração Fornecedor"
+      },
+      {
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
+      },
+      { value: "RASCUNHO", label: "Rascunho" },
+      {
+        value: "ASSINADO_CRONOGRAMA",
+        label: "Assinado Cronograma"
+      }
+    ]
+  : usuarioEhDinutreDiretoria()
+  ? [
+      {
+        value: "ENVIADO_AO_FORNECEDOR",
+        label: "Enviado ao Fornecedor"
+      },
+      {
+        value: "ALTERACAO_CODAE",
+        label: "Alteração CODAE"
+      },
+      { value: "APROVADO", label: "Aprovado" },
+      { value: "REPROVADO", label: "Reprovado" },
+      {
+        value: "ALTERACAO_FORNECEDOR",
+        label: "Alteração Fornecedor"
+      },
+      {
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
+      },
+      { value: "RASCUNHO", label: "Rascunho" },
+      {
+        value: "ASSINADO_CRONOGRAMA",
+        label: "Assinado Cronograma"
+      },
+      {
+        value: "ASSINADO_DINUTRE",
+        label: "Assinado Dinutre"
+      }
+    ]
+  : [
+      {
+        value: "ENVIADO_AO_FORNECEDOR",
+        label: "Enviado ao Fornecedor"
+      },
+      {
+        value: "ALTERACAO_CODAE",
+        label: "Alteração CODAE"
+      },
+      { value: "APROVADO", label: "Aprovado" },
+      { value: "REPROVADO", label: "Reprovado" },
+      {
+        value: "ALTERACAO_FORNECEDOR",
+        label: "Alteração Fornecedor"
+      },
+      {
+        value: "ASSINADO_FORNECEDOR",
+        label: "Assinado Fornecedor"
+      },
+      { value: "RASCUNHO", label: "Rascunho" }
+    ];
 
 export default ({
   setFiltros,
@@ -29,44 +130,6 @@ export default ({
     }
     setFiltros({ ...filtros });
   };
-
-  const options_status = usuarioEhEmpresaFornecedor()
-    ? [
-        {
-          value: "ENVIADO_AO_FORNECEDOR",
-          label: "Recebido"
-        },
-        {
-          value: "ALTERACAO_FORNECEDOR",
-          label: "Alteração Fornecedor"
-        },
-        {
-          value: "VALIDADO_FORNECEDOR",
-          label: "Validado Fornecedor"
-        },
-        { value: "ENTREGA_CONFIRMADA", label: "Entrega Confirmada" }
-      ]
-    : [
-        {
-          value: "ENVIADO_AO_FORNECEDOR",
-          label: "Enviado ao Fornecedor"
-        },
-        {
-          value: "ALTERACAO_CODAE",
-          label: "Alteração CODAE"
-        },
-        { value: "APROVADO", label: "Aprovado" },
-        { value: "REPROVADO", label: "Reprovado" },
-        {
-          value: "ALTERACAO_FORNECEDOR",
-          label: "Alteração Fornecedor"
-        },
-        {
-          value: "VALIDADO_FORNECEDOR",
-          label: "Validado Fornecedor"
-        },
-        { value: "RASCUNHO", label: "Rascunho" }
-      ];
 
   return (
     <div className="filtros-cronograma-de-entrega">

@@ -1,19 +1,20 @@
-import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
+import HTTP_STATUS from "http-status-codes";
 import * as R from "ramda";
 import { Modal } from "react-bootstrap";
 import { Field, Form } from "react-final-form";
-import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import CKEditorField from "components/Shareable/CKEditorField";
 import InputText from "components/Shareable/Input/InputText";
 import ManagedInputFileField from "components/Shareable/Input/InputFile/ManagedField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
   BUTTON_STYLE,
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
+import { peloMenosUmCaractere, required } from "helpers/fieldValidators";
 import { ativarProduto, suspenderProduto } from "services/produto.service";
 import { meusDados } from "services/perfil.service";
 import "./style.scss";
@@ -57,13 +58,38 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
         );
         resolve();
         this.props.atualizarDados();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      } else {
         toastError(
           `Houve um erro ao registrar a ${this.props.acao} de produto`
         );
         reject(response.data);
       }
+      this.props.closeModal();
     });
+  };
+
+  opcoesEditais = () => {
+    let vinculos_produto_edital = this.props.produto.vinculos_produto_edital;
+    if (vinculos_produto_edital) {
+      if (
+        this.props.ehCardSuspensos ||
+        this.props.status === "CODAE_SUSPENDEU" ||
+        this.props.suspenso
+      ) {
+        vinculos_produto_edital = vinculos_produto_edital.filter(
+          vinculo => vinculo.suspenso
+        );
+      } else {
+        vinculos_produto_edital = vinculos_produto_edital.filter(
+          vinculo => !vinculo.suspenso
+        );
+      }
+      return vinculos_produto_edital.map(vinculo => ({
+        value: vinculo.edital.uuid,
+        label: vinculo.edital.numero
+      }));
+    }
+    return vinculos_produto_edital;
   };
 
   render() {
@@ -105,7 +131,21 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
                   </div>
                 </div>
                 <div className="form-row">
-                  <div className="col-12">
+                  <div className="multiselect-editais col-6">
+                    <Field
+                      label={`${
+                        this.props.acao === "suspensão" ? "Suspender" : "Ativar"
+                      } produto nos editais`}
+                      component={MultiSelect}
+                      disableSearch
+                      name="editais_para_suspensao_ativacao"
+                      multiple
+                      nomeDoItemNoPlural="itens"
+                      options={this.opcoesEditais()}
+                      required
+                    />
+                  </div>
+                  <div className="col-6 input-nome">
                     <Field
                       component={InputText}
                       label="Nome"
@@ -174,7 +214,12 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
                       className="ml-3"
                       disabled={
                         submitting ||
-                        peloMenosUmCaractere(values.justificativa) !== undefined
+                        peloMenosUmCaractere(values.justificativa) !==
+                          undefined ||
+                        (!values.editais_para_suspensao_ativacao ||
+                          (values.editais_para_suspensao_ativacao &&
+                            values.editais_para_suspensao_ativacao.length ===
+                              0))
                       }
                     />
                   </div>

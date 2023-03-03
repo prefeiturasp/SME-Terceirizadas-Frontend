@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Spin } from "antd";
 import { withRouter } from "react-router-dom";
 import {
@@ -26,27 +26,27 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
   const [ativo, setAtivo] = useState(false);
   const [acao, setAcao] = useState();
   const [uuid, setUuid] = useState();
+  const [status, setStatus] = useState(null);
+  const [suspenso, setEhSuspenso] = useState(false);
 
-  const carregaHomologacao = useCallback(
-    _uuid => {
-      async function fetchData() {
-        setProduto(null);
-        setAcao(null);
-        const response = await getHomologacaoProduto(_uuid || uuid);
-        setAtivo(checaStatus(response.data));
-        setProduto(response.data.produto);
-      }
-      fetchData();
-    },
-    [uuid]
-  );
+  const carregaHomologacao = (uuid, suspenso = false) => {
+    async function fetchData() {
+      const response = await getHomologacaoProduto(uuid);
+      setAtivo(checaStatus(response.data) && !suspenso);
+      setProduto(response.data.produto);
+      setStatus(response.data.status);
+    }
+    fetchData();
+  };
 
   useEffect(() => {
     async function fetchData() {
       const urlParams = new URLSearchParams(window.location.search);
       const uuid = urlParams.get("id");
+      const suspenso_param = urlParams.get("suspenso");
       setUuid(uuid);
-      carregaHomologacao(uuid);
+      setEhSuspenso(suspenso_param);
+      carregaHomologacao(uuid, suspenso_param);
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,7 +61,9 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
           acao={acao}
           produto={produto || {}}
           idHomologacao={uuid}
-          atualizarDados={carregaHomologacao}
+          atualizarDados={() => carregaHomologacao(uuid, suspenso)}
+          status={status}
+          suspenso={suspenso}
         />
         <div className="card">
           <div className="card-body">
@@ -69,7 +71,7 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
               <div className="col-12 text-right">
                 <Botao
                   className="mr-3"
-                  style={BUTTON_STYLE.BLUE}
+                  style={BUTTON_STYLE.GREEN}
                   texto="Voltar"
                   icon={BUTTON_ICON.ARROW_LEFT}
                   onClick={() => history.goBack()}
@@ -98,13 +100,14 @@ const AtivacaoSuspensaoDetalheProduto = ({ history }) => {
                 <DetalheDoProduto
                   produto={produto}
                   status={ativo ? "ativo" : "suspenso"}
+                  suspenso={suspenso}
                 />
 
                 <div className="row">
                   <div className="col-12 text-right">
                     <Botao
                       className="mr-3"
-                      style={BUTTON_STYLE.BLUE}
+                      style={BUTTON_STYLE.GREEN}
                       texto="Voltar"
                       icon={BUTTON_ICON.ARROW_LEFT}
                       onClick={() => history.goBack()}

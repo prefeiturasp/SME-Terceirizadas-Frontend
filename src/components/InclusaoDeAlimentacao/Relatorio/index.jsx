@@ -1,21 +1,27 @@
-import React, { Component } from "react";
-import HTTP_STATUS from "http-status-codes";
-import { Botao } from "../../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
-import { reduxForm, formValueSelector } from "redux-form";
-import { connect } from "react-redux";
-import { visualizaBotoesDoFluxo } from "../../../helpers/utilities";
-import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL, TIPO_SOLICITACAO } from "../../../constants/shared";
-import { statusEnum } from "../../../constants/shared";
-import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
-import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
-import { meusDados } from "services/perfil.service";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { ModalAutorizarAposQuestionamento } from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
+import {
+  prazoDoPedidoMensagem,
+  usuarioEhEscolaTerceirizada,
+  visualizaBotoesDoFluxo
+} from "helpers/utilities";
+import HTTP_STATUS from "http-status-codes";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { formValueSelector, reduxForm } from "redux-form";
+import { meusDados } from "services/perfil.service";
+import { CorpoRelatorio } from "./componentes/CorpoRelatorio";
+
 // services
 import { obterSolicitacaoDeInclusaoDeAlimentacao } from "services/inclusaoDeAlimentacao";
 import { ModalCancelarInclusaoContinua } from "./componentes/ModalCancelarInclusaoContinua";
@@ -224,6 +230,7 @@ class Relatorio extends Component {
 
     const renderModalCancelamentoContinuo = inclusao => {
       return (
+        usuarioEhEscolaTerceirizada() &&
         inclusao &&
         inclusao.motivo &&
         !inclusao.motivo.nome.includes("ETEC") &&
@@ -309,35 +316,46 @@ class Relatorio extends Component {
                   tipoSolicitacao={tipoSolicitacao}
                   meusDados={meusDados}
                 />
-                {tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL &&
-                  inclusaoDeAlimentacao.inclusoes.find(
-                    inclusao => inclusao.cancelado
-                  ) && (
-                    <>
-                      <hr />
-                      <p>
-                        <strong>Histórico de cancelamento parcial</strong>
-                        {inclusaoDeAlimentacao.inclusoes
-                          .filter(inclusao => inclusao.cancelado)
-                          .map((inclusao, key) => {
-                            return (
-                              <div key={key}>
-                                {inclusao.data}
-                                {" - "}
-                                {inclusao.cancelado_justificativa}
-                              </div>
-                            );
-                          })}
-                      </p>
-                    </>
-                  )}
-                <RelatorioHistoricoJustificativaEscola
-                  solicitacao={inclusaoDeAlimentacao}
-                />
+                {(
+                  inclusaoDeAlimentacao.inclusoes ||
+                  inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei ||
+                  inclusaoDeAlimentacao.quantidades_periodo
+                ).find(inclusao => inclusao.cancelado_justificativa) && (
+                  <>
+                    <hr />
+                    <p>
+                      <strong>Histórico de cancelamento</strong>
+                      {(
+                        inclusaoDeAlimentacao.inclusoes ||
+                        inclusaoDeAlimentacao.dias_motivos_da_inclusao_cei ||
+                        inclusaoDeAlimentacao.quantidades_periodo
+                      )
+                        .filter(inclusao => inclusao.cancelado_justificativa)
+                        .map((inclusao, key) => {
+                          return (
+                            <div key={key}>
+                              {inclusao.data ||
+                                `${
+                                  inclusao.periodo_escolar.nome
+                                } - ${inclusao.tipos_alimentacao
+                                  .map(ta => ta.nome)
+                                  .join(", ")} - ${inclusao.numero_alunos}`}
+                              {" - "}
+                              justificativa: {inclusao.cancelado_justificativa}
+                            </div>
+                          );
+                        })}
+                    </p>
+                  </>
+                )}
+                {inclusaoDeAlimentacao.status !== "ESCOLA_CANCELOU" && (
+                  <RelatorioHistoricoJustificativaEscola
+                    solicitacao={inclusaoDeAlimentacao}
+                  />
+                )}
                 <RelatorioHistoricoQuestionamento
                   solicitacao={inclusaoDeAlimentacao}
                 />
-
                 {visualizaBotoesDoFluxo(inclusaoDeAlimentacao) && (
                   <div className="form-group row float-right mt-4">
                     {EXIBIR_BOTAO_NAO_APROVAR && (

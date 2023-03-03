@@ -9,6 +9,18 @@ button.general-button {
   padding: 0 12px;
   text-align: center;
   border: 1px solid;
+  i.icone-info-invalid {
+    background-color: $blackSubtle;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
   i.text-and-icon-left {
     padding-right: 8px;
   }
@@ -176,5 +188,9 @@ button.general-button {
       color: $grayDisabled;
       border: 1px solid $grayDisabled;
     }
+  }
+
+  &.no-border {
+    border: none;
   }
 }

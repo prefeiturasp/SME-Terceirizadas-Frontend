@@ -11,7 +11,7 @@ import { required } from "../../../../../../helpers/fieldValidators";
 
 export default class SubstituicoesField extends Component {
   render() {
-    const { alimentos, produtos, form } = this.props;
+    const { alimentos, produtos, form, values } = this.props;
     return (
       <div className="substituicoes-field">
         <div className="row">
@@ -22,22 +22,25 @@ export default class SubstituicoesField extends Component {
         <FieldArray name="substituicoes">
           {({ fields }) =>
             fields.map((name, index) => (
-              <Field
-                component={Substituicao}
-                name={name}
-                key={index}
-                chave={index}
-                alimentos={alimentos}
-                produtos={produtos}
-                addOption={() => fields.push({})}
-                removeOption={() => {
-                  fields.swap(index, fields.length - 1);
-                  fields.pop();
-                }}
-                validate={required}
-                deveHabilitarApagar={fields.length > 1}
-                required
-              />
+              <>
+                <Field
+                  component={Substituicao}
+                  name={name}
+                  key={index}
+                  chave={index}
+                  values={values}
+                  form={form}
+                  alimentos={alimentos}
+                  produtos={produtos}
+                  addOption={() => fields.push({})}
+                  removeOption={() => {
+                    fields.remove(index);
+                  }}
+                  validate={required}
+                  deveHabilitarApagar={fields.length > 1}
+                  required
+                />
+              </>
             ))
           }
         </FieldArray>

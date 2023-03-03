@@ -248,7 +248,7 @@ export const noSpaceStartOrEnd = value =>
 export const alphaNumericAndSingleSpaceBetweenCharacters = value =>
   value && /[^a-zA-Z0-9\s]/.test(value)
     ? "Apenas letras e números"
-    : /[^a-zA-Z0-9]+[\s{2,}]/.test(value)
+    : /[^a-zA-Z0-9]+[\s]/.test(value)
     ? "Remover excesso de espaços"
     : undefined;
 

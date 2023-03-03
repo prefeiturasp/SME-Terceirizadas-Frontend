@@ -69,6 +69,14 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   ) {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
+    usuarioEhCODAEGestaoProduto() &&
+    item.status === "CODAE_HOMOLOGADO" &&
+    item.data_edital_suspenso_mais_recente
+  ) {
+    return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${
+      item.uuid
+    }&card_suspensos=${true}`;
+  } else if (
     usuarioEhEmpresaTerceirizada() &&
     [
       CODAE_HOMOLOGADO,
@@ -114,8 +122,14 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
 };
 
 export const ordenaPorLogMaisRecente = (a, b) => {
-  const data_a = parseDataHoraBrToMoment(a.log_mais_recente);
-  const data_b = parseDataHoraBrToMoment(b.log_mais_recente);
+  let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
+  let data_b = parseDataHoraBrToMoment(b.log_mais_recente);
+  if (a.status === "CODAE_HOMOLOGADO" && a.data_edital_suspenso_mais_recente) {
+    data_a = parseDataHoraBrToMoment(a.data_edital_suspenso_mais_recente);
+  }
+  if (b.status === "CODAE_HOMOLOGADO" && b.data_edital_suspenso_mais_recente) {
+    data_b = parseDataHoraBrToMoment(b.data_edital_suspenso_mais_recente);
+  }
   return comparaObjetosMoment(data_b, data_a);
 };
 
@@ -149,9 +163,15 @@ const getText = item => {
 export const formataCards = (items, apontaParaEdicao, titulo) => {
   return items.sort(ordenaPorLogMaisRecente).map(item => ({
     text: getText(item),
-    date: item.log_mais_recente,
+    date:
+      item.status === "CODAE_HOMOLOGADO" &&
+      item.data_edital_suspenso_mais_recente
+        ? item.data_edital_suspenso_mais_recente
+        : item.log_mais_recente,
     link: gerarLinkDoItem(item, apontaParaEdicao, titulo),
     nome_usuario_log_de_reclamacao: item.nome_usuario_log_de_reclamacao,
-    status: item.status
+    status: item.status,
+    marca: item.marca_produto,
+    editais: item.editais
   }));
 };

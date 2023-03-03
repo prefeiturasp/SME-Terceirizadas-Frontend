@@ -23,6 +23,7 @@ export const SOLICITACAO_CADASTRO_PRODUTO = "solicitacao-cadastro-produto";
 export const ATIVAS_ANATIVAS = "ativas-inativas";
 export const GESTAO_PRODUTO = "gestao-produto";
 export const LANCAMENTO_INICIAL = "lancamento-inicial";
+export const MEDICAO_INICIAL = "medicao-inicial";
 export const LOGISTICA = "logistica";
 
 export const CODAE = "codae";
@@ -33,6 +34,7 @@ export const ALUNO = "aluno";
 export const NUTRISUPERVISAO = "nutrisupervisao";
 export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
+export const DINUTRE = "dinutre";
 
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
@@ -180,6 +182,7 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
+export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
@@ -194,11 +197,15 @@ export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
+export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
+export const PAINEL_APROVACOES = "painel-aprovacoes";
+
+export const AGUARDANDO_DILOG = "aguardando-dilog";
 
 // Status dos pedidos
 

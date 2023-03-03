@@ -49,13 +49,16 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+              </div>
+              <div className="col-3">
                 <p>Motivo:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Dia(s) de suspensão:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
               </div>
             </div>
@@ -63,17 +66,22 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
               (suspensao, idxSuspensao) => {
                 return (
                   <div className="row mt-3" key={idxSuspensao}>
-                    <div className="col-4">
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                    <div className="col-3">
                       <p>
                         <b>{suspensao.motivo.nome}</b>
                       </p>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       <p>
                         <b>{suspensao.data}</b>
                       </p>
                     </div>
-                    <div className="col-4">
+                    <div className="col-3">
                       {idxSuspensao === 0 && (
                         <p>
                           <b>{solicitacao.criado_em.split(" ")[0]}</b>
@@ -85,10 +93,10 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
               }
             )}
             <div className="row mt-3">
-              <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+              <div className="col-3">
                 <p>Período:</p>
               </div>
-              <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+              <div className="col-3">
                 <p>Tipos de Alimentação:</p>
               </div>
               {!ehEscolaComum && (
@@ -96,7 +104,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                   <p>Alunos:</p>
                 </div>
               )}
-              <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+              <div className="col-3">
                 <p>Quantidade:</p>
               </div>
             </div>
@@ -104,12 +112,12 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
               (quantidade_periodo, idxQPP) => {
                 return (
                   <div className="row mt-3" key={idxQPP}>
-                    <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+                    <div className="col-3">
                       <p>
                         <b>{quantidade_periodo.periodo_escolar.nome}</b>
                       </p>
                     </div>
-                    <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+                    <div className="col-3">
                       <p>
                         <b>
                           {quantidade_periodo.tipos_alimentacao
@@ -125,7 +133,7 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                         </p>
                       </div>
                     )}
-                    <div className={`${ehEscolaComum ? "col-4" : "col-3"}`}>
+                    <div className="col-3">
                       <p>
                         <b>{quantidade_periodo.numero_alunos}</b>
                       </p>

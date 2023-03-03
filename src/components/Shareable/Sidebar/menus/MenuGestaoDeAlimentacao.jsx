@@ -143,7 +143,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         </SubMenu>
       )}
-      {(usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()) && (
+      {(usuarioEhDRE() ||
+        usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhMedicao()) && (
         <SubMenu
           icon="fa-chevron-down"
           path="relatorios"

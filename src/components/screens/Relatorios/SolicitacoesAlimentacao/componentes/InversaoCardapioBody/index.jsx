@@ -42,19 +42,25 @@ export const InversaoCardapioBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+                <p>
+                  <b># {solicitacao.id_externo}</b>
+                </p>
+              </div>
+              <div className="col-3">
                 <p>Substituição De:</p>
                 <p>
                   <b>{solicitacao.data_de}</b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Substituição Para:</p>
                 <p>
                   <b>{solicitacao.data_para}</b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>
@@ -63,7 +69,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
             </div>
             {solicitacao.data_de_inversao_2 && (
               <div className="row mt-3">
-                <div className="col-4">
+                <div className="col-3">
                   <p>Substituição De:</p>
                   <p>
                     {solicitacao.data_de_inversao_2 && (
@@ -73,7 +79,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
                     )}
                   </p>
                 </div>
-                <div className="col-4">
+                <div className="col-3">
                   <p>Substituição Para:</p>
                   <p>
                     {solicitacao.data_para_inversao_2 && (
@@ -86,9 +92,9 @@ export const InversaoCardapioBody = ({ ...props }) => {
             {solicitacao.motivo && solicitacao.motivo !== "<p></p>" && (
               <div className="row">
                 {solicitacao.tipos_alimentacao.length > 0 && (
-                  <div className="col-4">
-                    <p>Tipos de Alimentação</p>
-                    <p>
+                  <div className="col-3">
+                    <p>Tipos de Alimentação:</p>
+                    <p style={{ fontWeight: "bold" }}>
                       {stringSeparadaPorVirgulas(
                         solicitacao.tipos_alimentacao,
                         "nome"
@@ -96,7 +102,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
                     </p>
                   </div>
                 )}
-                <div className="col-4">
+                <div className="col-3">
                   <p>Motivo:</p>
                   <b>
                     <p
@@ -109,7 +115,7 @@ export const InversaoCardapioBody = ({ ...props }) => {
                 </div>
                 {solicitacao.observacao &&
                   solicitacao.observacao !== "<p></p>" && (
-                    <div className="col-4">
+                    <div className="col-3">
                       <p>Observação:</p>
                       <b>
                         <p

@@ -270,12 +270,17 @@ export const terceirizadaRespondeQuestionamentoSolitacaoUnificada = async (
   }
 };
 
-export const cancelaKitLancheUnificadoDre = async (uuid, justificativa) => {
+export const cancelaKitLancheUnificadoDre = async (
+  uuid,
+  justificativa,
+  tipoSolicitacao,
+  escolas_selecionadas
+) => {
   const url = `${URL_SOLICITACAO_UNIFICADA}/${uuid}/${FLUXO.DRE_CANCELA}/`;
   const OBJ_REQUEST = {
     headers: authToken,
     method: "PATCH",
-    body: JSON.stringify({ justificativa })
+    body: JSON.stringify({ justificativa, escolas_selecionadas })
   };
   let status = 0;
   try {

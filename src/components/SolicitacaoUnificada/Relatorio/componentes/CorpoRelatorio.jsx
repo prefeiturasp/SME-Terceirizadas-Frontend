@@ -30,6 +30,9 @@ export const CorpoRelatorio = props => {
     if (copyLogs.slice(-1)[0].usuario.tipo_usuario === "escola") {
       copyLogs.splice(-1);
     }
+    if (copyLogs.slice(-1)[0].usuario.tipo_usuario === "diretoriaregional") {
+      copyLogs.splice(-1);
+    }
     const nomeEscola = localStorage.getItem("nome_instituicao");
     escolasQuantidades = escolasQuantidades.filter(
       eq => `"${eq.escola.nome}"` === nomeEscola
@@ -40,7 +43,12 @@ export const CorpoRelatorio = props => {
         descricao: "",
         justificativa: escolasQuantidades[0].cancelado_justificativa,
         resposta_sim_nao: false,
-        status_evento_explicacao: "Escola cancelou",
+        status_evento_explicacao: `${
+          escolasQuantidades[0].cancelado_por.tipo_usuario ===
+          "diretoriaregional"
+            ? "DRE"
+            : "Escola"
+        } cancelou`,
         usuario: escolasQuantidades[0].cancelado_por
       });
     }
@@ -136,6 +144,7 @@ export const CorpoRelatorio = props => {
                 key={key}
                 escola_quantidade={escola_quantidade}
                 solicitacaoUnificada={solicitacaoUnificada}
+                visao={visao}
               />
             );
           })}

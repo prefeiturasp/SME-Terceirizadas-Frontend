@@ -28,9 +28,14 @@ export const InputText = props => {
     apenasNumeros,
     exibeTooltipDiaSobremesaDoce,
     exibeTooltipAlimentacoesAutorizadas,
+    exibeTooltipErroQtdMaiorQueAutorizado,
+    exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
-    exibeTooltipFrequenciaDiaNaoLetivo
+    exibeTooltipFrequenciaDiaNaoLetivo,
+    exibeTooltipSuspensoesAutorizadas,
+    exibeTooltipRPLAutorizadas,
+    exibeTooltipLPRAutorizadas
   } = props;
 
   let msgTooltip = "";
@@ -66,10 +71,6 @@ export const InputText = props => {
       exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo &&
       Number(input.value) > Number(numeroDeInclusoesAutorizadas)
     );
-  };
-
-  const exibirTooltipFrequenciaDiaNaoLetivo = () => {
-    return exibeTooltipFrequenciaDiaNaoLetivo;
   };
 
   return (
@@ -114,10 +115,46 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
-      {exibirTooltipFrequenciaDiaNaoLetivo() && (
+      {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
+        <Tooltip
+          title={
+            "Nenhuma alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipFrequenciaDiaNaoLetivo && (
         <Tooltip
           title={
             "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipSuspensoesAutorizadas && (
+        <Tooltip
+          title={
+            "Há suspensão de alimentação autorizada para essa data. Obrigatório adicionar observação para lançamentos neste dia."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipRPLAutorizadas && (
+        <Tooltip
+          title={
+            "Há autorização de RPL para essa data. Justifique o apontamento de refeição."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLPRAutorizadas && (
+        <Tooltip
+          title={
+            "Há autorização de LPR para essa data. Justifique o apontamento de Lanche. Obrigatório adicionar observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -128,6 +165,15 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-error" />
         </Tooltip>
       )}
+      {!meta.error &&
+        exibeTooltipErroQtdMaiorQueAutorizado &&
+        !["Mês anterior", "Mês posterior"].includes(input.value) && (
+          <Tooltip
+            title={`Número apontado de alimentação é maior que número autorizado (${numeroDeInclusoesAutorizadas}). Justifique na Observação.`}
+          >
+            <i className="fas fa-info icone-info-warning" />
+          </Tooltip>
+        )}
 
       <input
         {...input}
@@ -136,8 +182,14 @@ export const InputText = props => {
             ? "invalid-field"
             : ""
         } ${
-          exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-          exibirTooltipFrequenciaDiaNaoLetivo()
+          !meta.error &&
+          (exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
+            exibeTooltipFrequenciaDiaNaoLetivo ||
+            exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
+            exibeTooltipErroQtdMaiorQueAutorizado ||
+            exibeTooltipSuspensoesAutorizadas ||
+            exibeTooltipRPLAutorizadas ||
+            exibeTooltipLPRAutorizadas)
             ? "border-warning"
             : ""
         }`}

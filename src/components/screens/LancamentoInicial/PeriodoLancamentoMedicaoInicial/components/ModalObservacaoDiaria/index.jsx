@@ -29,7 +29,9 @@ export default ({
   rowName,
   valoresPeriodosLancamentos,
   onSubmit,
-  dadosIniciais
+  dadosIniciais,
+  setExibirTooltip,
+  errors
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -61,6 +63,11 @@ export default ({
           ),
           1
         );
+        if (Object.keys(errors).length > 0) {
+          setExibirTooltip(true);
+        } else {
+          setExibirTooltip(false);
+        }
         toastSuccess("Observação excluída com sucesso");
       } else {
         toastError(msgError);
@@ -198,7 +205,8 @@ export default ({
           </div>
         </Modal.Body>
         <Modal.Footer className="botoes-modal-footer">
-          {!["<p></p>\n", null, ""].includes(
+          {values &&
+          !["<p></p>\n", null, ""].includes(
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           ) &&
           valoresPeriodosLancamentos.length > 0 &&

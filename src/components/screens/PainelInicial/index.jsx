@@ -18,11 +18,12 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhEscolaAbastecimento,
   exibirGA,
-  exibirLancamentoMedicaoInicial,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
+  exibirModuloMedicaoInicial
 } from "helpers/utilities";
+import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
 
 const PainelInicial = ({ history }) => {
   const exibeMenuValidandoAmbiente = exibirGA();
@@ -81,13 +82,18 @@ const PainelInicial = ({ history }) => {
           </CardLogo>
         </Col>
       )}
-      {exibirLancamentoMedicaoInicial() && (
+      {exibirModuloMedicaoInicial() && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Medição Inicial"}
-            onClick={() =>
-              history.push("/lancamento-inicial/lancamento-medicao-inicial")
-            }
+            onClick={() => {
+              usuarioEhEscolaTerceirizada() &&
+                history.push("/lancamento-inicial/lancamento-medicao-inicial");
+              (usuarioEhDRE() || usuarioEhMedicao()) &&
+                history.push(
+                  `/medicao-inicial/${ACOMPANHAMENTO_DE_LANCAMENTOS}`
+                );
+            }}
           >
             <IconeMedicaoInicial />
           </CardLogo>

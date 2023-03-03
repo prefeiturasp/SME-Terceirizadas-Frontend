@@ -49,12 +49,15 @@ export const Container = () => {
     }
   };
 
-  const setInitialValuesForm = data => {
+  const setInitialValuesForm = (data, card_suspensos) => {
     let values = {
       ...data,
       produto: {
         ...data.produto,
-        editais: formataEditais(data.produto.vinculos_produto_edital),
+        editais: formataEditais(
+          data.produto.vinculos_produto_edital,
+          card_suspensos
+        ),
         dieta_especial: formataValoresBooleanos(
           data.produto.eh_para_alunos_com_dieta
         ),
@@ -71,12 +74,13 @@ export const Container = () => {
   const getHomologacaoProdutoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
+    const card_suspensos = urlParams.get("card_suspensos");
 
     const response = await getHomologacaoProduto(uuid);
     if (response.status === HTTP_STATUS.OK) {
       setHomologacao(response.data);
       setProduto(response.data.produto);
-      setInitialValuesForm(response.data);
+      setInitialValuesForm(response.data, card_suspensos);
     } else {
       toastError("Erro ao carregar homologação do produto");
       setErro(true);

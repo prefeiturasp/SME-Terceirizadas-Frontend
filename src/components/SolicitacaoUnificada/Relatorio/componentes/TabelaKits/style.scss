@@ -1,0 +1,8 @@
+@import "styles/variables.scss";
+
+.tabela-escolas {
+  &.cancelado {
+    color: $grayLight !important;
+    text-decoration: line-through;
+  }
+}

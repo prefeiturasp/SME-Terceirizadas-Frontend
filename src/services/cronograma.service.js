@@ -20,7 +20,42 @@ export const getListagemCronogramas = async params => {
   return await axios.get(url, { params });
 };
 
-export const fornecedorConfirma = async uuid => {
-  const url = `/cronogramas/${uuid}/fornecedor-confirma-cronograma/`;
-  return await axios.patch(url);
+export const fornecedorAssinaCronograma = async (uuid, password) => {
+  const url = `/cronogramas/${uuid}/fornecedor-assina-cronograma/`;
+  return await axios.patch(url, {
+    password: password
+  });
 };
+
+export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
+  return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
+};
+
+export const cronogramaAssina = async (uuid, password) => {
+  const url = `/cronogramas/${uuid}/cronograma-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};
+
+export const dinutreAssinaCronograma = async (uuid, password) => {
+  console.log(uuid);
+  const url = `/cronogramas/${uuid}/dinutre-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};
+
+export const codaeAssinaCronograma = async (uuid, password) => {
+  console.log(uuid);
+  const url = `/cronogramas/${uuid}/codae-assina/`;
+  return await axios.patch(url, {
+    password: password
+  });
+};
+
+export const getDashboardCronograma = async (params = null) =>
+  await axios.get(`/cronogramas/dashboard/`, { params });
+
+export const getDashboardCronogramaComFiltros = async params =>
+  await axios.get(`/cronogramas/dashboard-com-filtro/`, { params });

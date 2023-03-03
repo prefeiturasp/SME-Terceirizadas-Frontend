@@ -159,6 +159,16 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     return values && values.substituicoes[indice];
   };
 
+  const encontrarIndiceSubstituicao = periodoEscolarUuid => {
+    for (let index = 0; index < solicitacao.substituicoes.length; index++) {
+      const substituicao = solicitacao.substituicoes[index];
+      if (substituicao.periodo_escolar.uuid === periodoEscolarUuid) {
+        return index;
+      }
+    }
+    return -1; // não encontrou
+  };
+
   const getFaixasEtariasPorPeriodo = async (periodo, data, index, form) => {
     form.change(`substituicoes[${index}].loading_faixas`, true);
     const response = await getAlunosPorFaixaEtariaNumaData(periodo, data);
@@ -169,11 +179,22 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
           faixas => faixas.faixa_etaria.inicio > 11 && faixas.count > 0
         )
       );
+
       if (solicitacao) {
         const faixasQuantidades = {};
-        solicitacao.substituicoes[index].faixas_etarias.forEach(faixa => {
-          faixasQuantidades[faixa.faixa_etaria.uuid] = faixa.quantidade;
-        });
+
+        const periodoEscolarUuid = periodo;
+        const indiceSubstituicao = encontrarIndiceSubstituicao(
+          periodoEscolarUuid
+        );
+
+        solicitacao.substituicoes[indiceSubstituicao] &&
+          solicitacao.substituicoes[indiceSubstituicao].faixas_etarias.forEach(
+            faixa => {
+              faixasQuantidades[faixa.faixa_etaria.uuid] = faixa.quantidade;
+            }
+          );
+
         await form.change(`substituicoes[${index}].faixas`, faixasQuantidades);
         await form.change(`substituicoes[${index}].loading_faixas`, false);
         setSolicitacao(null);

@@ -1,13 +1,18 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
+import { Collapse } from "react-collapse";
 import { formataInformacoesNutricionais } from "components/screens/Produto/Homologacao/helper";
 import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
-import { Collapse } from "react-collapse";
-import { stringSeparadaPorVirgulas } from "helpers/utilities";
-import "./styles.scss";
 import InformacaoDeReclamante from "components/Shareable/InformacaoDeReclamante";
 import TabelaEspecificacoesProduto from "../TabelaEspecificacoesProduto";
+import "./styles.scss";
 
-const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
+const DetalheDoProduto = ({
+  produto,
+  status,
+  reclamacao,
+  questionamento,
+  suspenso
+}) => {
   const [ativos, setAtivos] = useState([]);
   const infoNutri = formataInformacoesNutricionais(produto);
   const terceirizada = produto.ultima_homologacao.rastro_terceirizada;
@@ -39,7 +44,7 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
               <p>Status do produto </p>
               <p className="value text-uppercase"> {status} </p>
             </div>
-            {status === "suspenso" && (
+            {(status === "suspenso" || suspenso) && (
               <>
                 <div className="col-4 report-label-value">
                   <p>Motivo da supensão</p>
@@ -47,7 +52,9 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
                     <div
                       className="value-item value-uppercase"
                       dangerouslySetInnerHTML={{
-                        __html: ultimoLog.justificativa
+                        __html: suspenso
+                          ? ultimoLog.justificativa.split("<br>")[0]
+                          : ultimoLog.justificativa
                       }}
                     />
                   </p>
@@ -97,6 +104,26 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
       <div className="mb-4 mt-4">
         <hr />
       </div>
+      <div className="report-label-value pl-0">
+        <p>
+          {status === "suspenso" || suspenso
+            ? "Produto Suspenso nos Editais"
+            : "Editais Vinculados ao Produto"}
+        </p>
+        <p className="value">
+          {produto.vinculos_produto_edital
+            .filter(vinculo =>
+              status === "suspenso" || suspenso
+                ? vinculo.suspenso
+                : !vinculo.suspenso
+            )
+            .map(vinculo => vinculo.edital.numero)
+            .join(", ")}
+        </p>
+      </div>
+      <div className="mb-4 mt-4">
+        <hr />
+      </div>
       <div className="title">Identificação do Produto</div>
       <div className="row">
         <div className="col-12 report-label-value">
@@ -108,18 +135,6 @@ const DetalheDoProduto = ({ produto, status, reclamacao, questionamento }) => {
           </p>
         </div>
       </div>
-      {produto.eh_para_alunos_com_dieta && (
-        <Fragment>
-          <div className="row">
-            <div className="col-12 report-label-value">
-              <p>Protocolos</p>
-              <p className="value">
-                {stringSeparadaPorVirgulas(produto.protocolos, "nome")}
-              </p>
-            </div>
-          </div>
-        </Fragment>
-      )}
       <div className="row">
         <div className="col-6 report-label-value">
           <p>Marca</p>

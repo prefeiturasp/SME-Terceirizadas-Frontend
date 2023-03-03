@@ -122,14 +122,17 @@ export const tipoDeStatus = status => {
     case "Terceirizada tomou ciência do cancelamento":
     case "CODAE suspendeu o produto":
     case "Em aberto para preenchimento pela UE":
-    case "Informação encerrada pela CODAE":
+    case "Enviado pela UE":
     case "CODAE homologou":
+    case "CODAE Atualizou o protocolo":
       return "prosseguiu";
 
     case "CODAE pediu correção":
     case "Questionamento pela CODAE":
     case "Terceirizada respondeu questionamento":
     case "CODAE pediu análise sensorial":
+    case "Suspenso em alguns editais":
+    case "Ativo em alguns editais":
       return "questionado";
 
     case "Escola cancelou":

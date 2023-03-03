@@ -34,11 +34,10 @@
 
   .form-check-periodos {
     display: grid;
-    grid-template-columns: 49.5% 49.5%;
-    column-gap: 1%;
+    grid-template-columns: 100%;
 
     .container {
-      display: flex;
+      display: inline-flex;
       justify-content: flex-start;
       align-items: center;
       position: relative;
@@ -56,6 +55,20 @@
     }
 
     .check-INTEGRAL {
+      background: #ebedff;
+      border: 1px solid #b2baff;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .check-TARDE {
+      background: #ebedff;
+      border: 1px solid #b2baff;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+
+    .check-MANHA {
       background: #ebedff;
       border: 1px solid #b2baff;
       box-sizing: border-box;

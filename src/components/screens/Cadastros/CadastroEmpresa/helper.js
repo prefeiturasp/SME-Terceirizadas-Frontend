@@ -1,4 +1,7 @@
 import { createTextMask } from "redux-form-input-masks";
+import { getEnderecoPorCEP } from "services/cep.service";
+import HTTP_STATUS from "http-status-codes";
+import { removeCaracteresEspeciais } from "helpers/utilities";
 
 export function transformaObjetos(objetos, lista = [], obj = {}) {
   try {
@@ -129,8 +132,6 @@ export const retornArrayTerceirizadas = response => {
 };
 
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
-  const { ehDistribuidor } = valoresState;
-
   if (valoresState.ehDistribuidor) {
     const contatosNutri = [
       {
@@ -145,7 +146,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
     const contatosEmpresa = valoresState.contatosPessoaEmpresa.map(item => {
       return {
         nome: item.nome,
-        telefone: item.telefone,
+        telefone: removeCaracteresEspeciais(item.telefone),
         email: item.email
       };
     });
@@ -168,7 +169,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       tipo_servico: valoresForm.tipo_servico,
       numero_contrato: valoresForm.numero_contrato,
       razao_social: valoresForm.razao_social,
-      cnpj: valoresForm.cnpj,
+      cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatos,
@@ -176,14 +177,14 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor_ou_fornecedor:
-        valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
-      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_cpf: removeCaracteresEspeciais(valoresForm.responsavel_cpf),
       responsavel_nome: valoresForm.responsavel_nome,
-      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_telefone: removeCaracteresEspeciais(
+        valoresForm.responsavel_telefone
+      ),
       responsavel_email: valoresForm.responsavel_email,
       lotes: [],
       ativo: valoresForm.situacao,
@@ -209,39 +210,79 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
           valoresState.contatosNutricionista.length === 1
             ? true
             : nutri.super_admin_terceirizadas,
-        telefone: nutri.telefone,
+        telefone: removeCaracteresEspeciais(nutri.telefone),
         email: nutri.email,
         eh_nutricionista: true
       });
     });
-    const contatosEmpresa = [...valoresState.contatosEmpresa, ...contatosNutri];
-    const super_admin = { ...valoresForm.super_admin };
+    const contatosEmpresaFormatado = valoresState.contatosEmpresa.map(item => {
+      return {
+        telefone: removeCaracteresEspeciais(item.telefone),
+        email: item.email
+      };
+    });
+    const contatosEmpresa = [...contatosEmpresaFormatado, ...contatosNutri];
+    let super_admin = { ...valoresState.super_admin };
+    super_admin["cpf"] = removeCaracteresEspeciais(super_admin["cpf"]);
     super_admin.contatos = [
-      { email: super_admin.email, telefone: super_admin.telefone }
+      {
+        email: super_admin.email,
+        telefone: super_admin.telefone
+          ? removeCaracteresEspeciais(super_admin.telefone)
+          : null
+      }
     ];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,
-      cnpj: valoresForm.cnpj,
+      cnpj: removeCaracteresEspeciais(valoresForm.cnpj),
       representante_legal: valoresForm.representante_legal,
-      representante_telefone: valoresForm.telefone_representante,
-      representante_email: valoresForm.email_representante_legal,
+      representante_telefone: valoresForm.telefone_representante
+        ? valoresForm.telefone_representante.replace(/[^a-z0-9]/gi, "")
+        : "",
+      representante_email: valoresForm.representante_email,
       endereco: valoresForm.endereco,
       cep: valoresForm.cep.replace(/[^a-z0-9]/gi, ""),
       contatos: contatosEmpresa,
       bairro: valoresForm.bairro,
       cidade: valoresForm.cidade,
       complemento: valoresForm.complemento,
-      eh_distribuidor: valoresForm.eh_distribuidor || ehDistribuidor,
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
       responsavel_cpf: valoresForm.responsavel_cpf,
       responsavel_nome: valoresForm.responsavel_nome,
-      responsavel_telefone: valoresForm.responsavel_telefone,
+      responsavel_telefone: valoresForm.responsavel_telefone
+        ? valoresForm.responsavel_telefone.replace(/[^a-z0-9]/gi, "")
+        : "",
       responsavel_email: valoresForm.responsavel_email,
       lotes: valoresState.lotesSelecionados,
       super_admin: super_admin
     };
   }
+};
+
+export const buscaCep = async value => {
+  const dadosEndereco = {
+    desabilitado: true,
+    bairro: null,
+    cidade: null,
+    endereco: null,
+    estado: null
+  };
+  const response = await getEnderecoPorCEP(value);
+  if (value.length === 8) {
+    if (response.status === HTTP_STATUS.OK && !response.data.erro) {
+      const { data } = response;
+      dadosEndereco.desabilitado = true;
+      dadosEndereco.bairro = data.bairro;
+      dadosEndereco.cidade = data.localidade;
+      dadosEndereco.endereco = data.logradouro;
+      dadosEndereco.estado = data.uf;
+      dadosEndereco.request = true;
+    } else {
+      dadosEndereco.desabilitado = false;
+    }
+  }
+  return dadosEndereco;
 };

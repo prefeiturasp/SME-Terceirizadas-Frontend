@@ -12,7 +12,8 @@ import {
   dataAtual,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhCoordenadorNutriCODAE
 } from "../../../helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
 
@@ -344,6 +345,11 @@ class DashBoardDietaEspecial extends Component {
     });
   }
 
+  contadorDietas(title, dietas) {
+    if (!usuarioEhCoordenadorNutriCODAE()) return title;
+    return `${title}${dietas && " (" + dietas.length + ")"}`;
+  }
+
   render() {
     const {
       autorizadasListFiltered,
@@ -384,7 +390,10 @@ class DashBoardDietaEspecial extends Component {
               <div className="row">
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={getNomeCardAguardandoAutorizacao()}
+                    cardTitle={`${this.contadorDietas(
+                      getNomeCardAguardandoAutorizacao(),
+                      pendentesListFiltered
+                    )}`}
                     cardType={CARD_TYPE_ENUM.PENDENTE}
                     solicitations={
                       pendentesListFiltered ? pendentesListFiltered : []
@@ -395,7 +404,10 @@ class DashBoardDietaEspecial extends Component {
                 </div>
                 <div className="col-6">
                   <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
+                    cardTitle={`${this.contadorDietas(
+                      "Autorizadas",
+                      autorizadasListFiltered
+                    )}`}
                     cardType={CARD_TYPE_ENUM.AUTORIZADO}
                     solicitations={
                       autorizadasListFiltered ? autorizadasListFiltered : []

@@ -6,7 +6,8 @@ import {
   CADASTRO_CRONOGRAMA,
   DETALHE_CRONOGRAMA,
   PRE_RECEBIMENTO,
-  EDITAR
+  EDITAR,
+  ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
@@ -44,7 +45,9 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                 !usuarioEhEmpresaFornecedor()) && (
                 <div className="grid-table body-table">
                   <div className={`${bordas}`}>{cronograma.numero}</div>
-                  <div className={`${bordas}`}>{cronograma.nome_produto}</div>
+                  <div className={`${bordas}`}>
+                    {cronograma.produto && cronograma.produto.nome}
+                  </div>
                   <div className={`${bordas}`}>
                     {cronograma.qtd_total_programada}
                   </div>
@@ -69,6 +72,22 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
+                          {cronograma.status === "Assinado Fornecedor" &&
+                            usuarioEhEmpresaFornecedor() && (
+                              <>
+                                <span className="ml-1">|</span>
+                                <NavLink
+                                  className="float-left ml-1"
+                                  to={`/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}?uuid=${
+                                    cronograma.uuid
+                                  }`}
+                                >
+                                  <span className="link-acoes green">
+                                    Solicitar Alteração
+                                  </span>
+                                </NavLink>
+                              </>
+                            )}
                         </>
                       ) : (
                         <>

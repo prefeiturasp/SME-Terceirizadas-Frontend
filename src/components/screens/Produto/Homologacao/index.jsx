@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoTerceirizada } from "components/Shareable/FluxoDeStatus/helper";
 import { Form } from "react-final-form";
@@ -49,6 +49,12 @@ export const Homologacao = ({
     log => log.status_evento_explicacao === "CODAE pediu análise sensorial"
   );
   const [editais, setEditais] = useState(setDefaultEditaisVinculados());
+  const [ehCardSuspensos, setEhCardSuspensos] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setEhCardSuspensos(urlParams.get("card_suspensos"));
+  }, [ehCardSuspensos]);
 
   return (
     <div className="card mt-3">
@@ -58,6 +64,7 @@ export const Homologacao = ({
           getHomologacaoProdutoAsync={() => getHomologacaoProdutoAsync()}
           terceirizadas={terceirizadas}
           protocoloAnalise={protocoloAnalise}
+          ehCardSuspensos={ehCardSuspensos}
         />
         <div className="row">
           <div className="col-12 mt-2">
@@ -81,7 +88,9 @@ export const Homologacao = ({
               <DadosDaEmpresa />
               {homologacao.logs.filter(
                 log => log.status_evento_explicacao === "CODAE homologou"
-              ).length > 0 && <EditaisVinculados />}
+              ).length > 0 && (
+                <EditaisVinculados ehCardSuspensos={ehCardSuspensos} />
+              )}
               <IdentificacaoProduto homologacao={homologacao} />
               <InformacoesNutricionais homologacao={homologacao} />
               <InformacoesProduto homologacao={homologacao} />
@@ -119,7 +128,11 @@ export const Homologacao = ({
             </form>
           )}
         </Form>
-        <BotoesRodape homologacao={homologacao} />
+        <BotoesRodape
+          homologacao={homologacao}
+          getHomologacaoProdutoAsync={() => getHomologacaoProdutoAsync()}
+          ehCardSuspensos={ehCardSuspensos}
+        />
       </div>
     </div>
   );

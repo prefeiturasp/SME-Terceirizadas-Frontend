@@ -21,7 +21,8 @@ import {
   getAlimentos,
   atualizaDietaEspecial,
   getSolicitacoesDietaEspecial,
-  CODAEAutorizaDietaEspecial
+  CODAEAutorizaDietaEspecial,
+  CODAEAtualizaProtocoloDietaEspecial
 } from "services/dietaEspecial.service";
 import { getSubstitutos } from "services/produto.service";
 import { getMotivosNegacaoDietaEspecial } from "services/painelNutricionista.service";
@@ -56,7 +57,9 @@ const FormAutorizaDietaEspecial = ({
   dietaEspecial,
   onAutorizarOuNegar,
   visao,
-  dietaCancelada
+  dietaCancelada,
+  editar,
+  cancelar
 }) => {
   const [diagnosticos, setDiagnosticos] = useState(undefined);
   const [alergiasError, setAlergiasError] = useState(false);
@@ -203,6 +206,7 @@ const FormAutorizaDietaEspecial = ({
       solicitacoesVigentes &&
       solicitacoesVigentes.length > 0 &&
       !showAutorizarModal &&
+      !editar &&
       dietaEspecial.tipo_solicitacao !== TIPO_SOLICITACAO_DIETA.ALTERACAO_UE
     ) {
       setShowAutorizarModal(true);
@@ -223,20 +227,23 @@ const FormAutorizaDietaEspecial = ({
       let data = moment(data_termino, "DD/MM/YYYY");
       data_termino = moment(data).format("YYYY-MM-DD");
     }
-    const response = await CODAEAutorizaDietaEspecial(
-      dietaEspecial.uuid,
-      values
-    );
+    const response = editar
+      ? await CODAEAtualizaProtocoloDietaEspecial(dietaEspecial.uuid, values)
+      : await CODAEAutorizaDietaEspecial(dietaEspecial.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       if (
         dietaEspecial.tipo_solicitacao === TIPO_SOLICITACAO_DIETA.ALTERACAO_UE
       ) {
+        setShowAutorizarAlteracaoUEModal(false);
         toastSuccess("Solicitação de alteração de U.E autorizada com sucesso!");
       } else {
-        toastSuccess("Autorização de Dieta Especial realizada com sucesso!");
+        toastSuccess(response.data.detail);
       }
     } else {
       toastError("Houve um erro ao autorizar a Dieta Especial");
+    }
+    if (editar) {
+      cancelar();
     }
     onAutorizarOuNegar();
   };
@@ -367,6 +374,7 @@ const FormAutorizaDietaEspecial = ({
                 {dietaEspecial.tipo_solicitacao !==
                   TIPO_SOLICITACAO_DIETA.ALTERACAO_UE &&
                   !dietaCancelada &&
+                  !editar &&
                   tipoUsuario === '"dieta_especial"' && (
                     <Botao
                       texto="Salvar Rascunho"
@@ -405,6 +413,30 @@ const FormAutorizaDietaEspecial = ({
                         type={BUTTON_TYPE.BUTTON}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         onClick={() => setShowModalNegaDieta(true)}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                    </>
+                  )}
+                {dietaEspecial.status_solicitacao ===
+                  statusEnum.CODAE_AUTORIZADO &&
+                  visao === CODAE &&
+                  editar &&
+                  tipoUsuario === '"dieta_especial"' && (
+                    <>
+                      <Botao
+                        texto="Salvar"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => validaAlergias(form)}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3 float-right"
+                        disabled={submitting}
+                      />
+                      <Botao
+                        texto="Cancelar"
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.RED_OUTLINE}
+                        onClick={() => cancelar()}
                         className="ml-3 float-right"
                         disabled={submitting}
                       />

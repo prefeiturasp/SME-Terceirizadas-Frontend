@@ -18,7 +18,8 @@ export const BotoesCabecalho = ({
   homologacao,
   getHomologacaoProdutoAsync,
   terceirizadas,
-  protocoloAnalise
+  protocoloAnalise,
+  ehCardSuspensos
 }) => {
   const ehGPCODAE =
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.GESTAO_PRODUTO;
@@ -27,6 +28,7 @@ export const BotoesCabecalho = ({
     false
   );
   const [showModalSuspender, setShowModalSuspender] = useState(false);
+  const [acao, setAcao] = useState();
 
   const checaStatus = status => {
     return ["CODAE_HOMOLOGADO", "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"].includes(
@@ -37,6 +39,10 @@ export const BotoesCabecalho = ({
   const getHistorico = () => {
     getHomologacaoProdutoAsync();
     return homologacao.logs;
+  };
+
+  const params = {
+    eh_card_suspensos: ehCardSuspensos
   };
 
   return (
@@ -69,17 +75,21 @@ export const BotoesCabecalho = ({
       <ModalAtivacaoSuspensaoProduto
         showModal={showModalSuspender}
         closeModal={() => setShowModalSuspender(false)}
-        acao="suspensão"
+        acao={acao}
         produto={homologacao.produto}
         idHomologacao={homologacao.uuid}
         atualizarDados={() => getHomologacaoProdutoAsync()}
+        ehCardSuspensos={ehCardSuspensos}
+        status={homologacao.status}
       />
       <div className="col-12">
         <Botao
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           icon={BUTTON_ICON.PRINT}
-          onClick={() => imprimeFichaIdentificacaoProduto(homologacao.uuid)}
+          onClick={() =>
+            imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
+          }
           className="float-right"
         />
         <Botao
@@ -89,24 +99,41 @@ export const BotoesCabecalho = ({
           onClick={() => setShowModal(true)}
           className="mr-2 float-right"
         />
-        {checaStatus(homologacao.status) && ehGPCODAE && (
+        {checaStatus(homologacao.status) && ehGPCODAE && ehCardSuspensos && (
+          <Botao
+            texto="Ativar"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            onClick={() => {
+              setShowModalSuspender(true);
+              setAcao("ativação");
+            }}
+            className="mr-2 float-right"
+          />
+        )}
+        {checaStatus(homologacao.status) && ehGPCODAE && !ehCardSuspensos && (
           <Botao
             texto="Suspender"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={() => setShowModalSuspender(true)}
+            onClick={() => {
+              setShowModalSuspender(true);
+              setAcao("suspensão");
+            }}
             className="mr-2 float-right"
           />
         )}
-        {homologacao.status === "CODAE_HOMOLOGADO" && ehGPCODAE && (
-          <Botao
-            texto="Solicitar análise sensorial"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={() => setShowModalAnaliseSensorial(true)}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            className="mr-2 float-right"
-          />
-        )}
+        {homologacao.status === "CODAE_HOMOLOGADO" &&
+          ehGPCODAE &&
+          !ehCardSuspensos && (
+            <Botao
+              texto="Solicitar análise sensorial"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => setShowModalAnaliseSensorial(true)}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="mr-2 float-right"
+            />
+          )}
       </div>
       <div className="col-12">
         <hr />

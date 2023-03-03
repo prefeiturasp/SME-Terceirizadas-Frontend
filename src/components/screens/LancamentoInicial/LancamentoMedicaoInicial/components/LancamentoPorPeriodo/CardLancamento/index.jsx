@@ -14,12 +14,12 @@ import {
 
 export default ({
   textoCabecalho,
+  grupo,
   cor,
   totalAlimentacoes,
   tipos_alimentacao,
   periodoSelecionado,
-  solicitacaoMedicaoInicial,
-  objSolicitacaoMIFinalizada
+  solicitacaoMedicaoInicial
 }) => {
   const history = useHistory();
   const alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
@@ -33,20 +33,13 @@ export default ({
   ));
 
   const desabilitarBotaoEditar = () => {
-    if (solicitacaoMedicaoInicial) {
-      return [
-        String(solicitacaoMedicaoInicial.status),
-        String(objSolicitacaoMIFinalizada.status)
-      ].includes("MEDICAO_ENCERRADA_PELA_CODAE");
-    }
     if (!solicitacaoMedicaoInicial) {
       return true;
-    } else {
-      return (
-        String(objSolicitacaoMIFinalizada.status) ===
-        "MEDICAO_ENCERRADA_PELA_CODAE"
-      );
     }
+    return (
+      solicitacaoMedicaoInicial.status !==
+      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    );
   };
 
   const handleClickEditar = () => {
@@ -55,6 +48,7 @@ export default ({
       search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
       state: {
         periodo: textoCabecalho,
+        grupo,
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao
       }
@@ -71,6 +65,7 @@ export default ({
         >
           <div className="row">
             <div className="col-10 pl-0 mb-2 periodo-cabecalho">
+              {grupo && `${grupo} - `}
               {textoCabecalho}
             </div>
           </div>

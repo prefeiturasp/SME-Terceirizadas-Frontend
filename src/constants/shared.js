@@ -281,10 +281,14 @@ const ENDPOINT = {
   QUANTIDADE_ALUNOS_POR_PERIODO: "quantidade-alunos-por-periodo",
   SOLICITACOES_DIETA_ESPECIAL: "solicitacoes-dieta-especial",
   SOLICITACOES_DIETA_ESPECIAL_ATIVAS_INATIVAS:
-    "solicitacoes-dieta-especial-ativas-inativas"
+    "solicitacoes-dieta-especial-ativas-inativas",
+  PERIODOS_COM_MATRICULADOS_POR_UE: "periodos-com-matriculados-por-ue"
 };
 ENDPOINT.AUTORIZAR_DIETA = uuid =>
   `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/autorizar`;
+
+ENDPOINT.ATUALIZA_PROTOCOLO_DIETA = uuid =>
+  `${ENDPOINT.SOLICITACOES_DIETA_ESPECIAL}/${uuid}/codae-atualiza-protocolo`;
 
 ENDPOINT.INFORMA_SUSPENSAO_DA_CEI = uuid =>
   `${ENDPOINT.SUSPENSAO_ALIMENTACAO_DA_CEI}/${uuid}/informa-suspensao/`;
@@ -490,4 +494,19 @@ export const cpfMask = [
   "-",
   /\d/,
   /\d/
+];
+
+export const MESES = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro"
 ];

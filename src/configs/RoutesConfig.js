@@ -115,7 +115,6 @@ import {
   usuarioComAcessoTelaEntregasDilog,
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
-  exibirLancamentoMedicaoInicial,
   usuarioEhCoordenadorCODAE,
   usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
@@ -126,7 +125,8 @@ import {
   usuarioEhEscolaAbastecimentoDiretor,
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCoordenadorNutriCODAE,
-  usuarioEhCoordenadorGpCODAE
+  usuarioEhCoordenadorGpCODAE,
+  usuarioEhDinutreDiretoria
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -188,6 +188,8 @@ import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDil
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
+import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
+import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
@@ -203,6 +205,9 @@ import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagem
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
+import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
+import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
+import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 
 const routesConfig = [
   {
@@ -623,14 +628,14 @@ const routesConfig = [
     component: EmpresasCadastradas,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/empresa`,
     component: CadastroEmpresaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -639,7 +644,7 @@ const routesConfig = [
     component: EditarEmpresaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhQualquerCODAE() || usuarioEhLogistica() || usuarioEhCronograma()
+      usuarioEhQualquerCODAE() || usuarioEhCodaeDilog() || usuarioEhCronograma()
   },
   {
     path: `/configuracoes/cadastros/editais-contratos`,
@@ -1422,7 +1427,8 @@ const routesConfig = [
     path: `/${constants.RELATORIO_SOLICITACOES_ALIMENTACAO}`,
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao()
+    tipoUsuario:
+      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1430,7 +1436,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: exibirLancamentoMedicaoInicial()
+    tipoUsuario: usuarioEhEscolaTerceirizada()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1438,7 +1444,15 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: exibirLancamentoMedicaoInicial()
+    tipoUsuario: usuarioEhEscolaTerceirizada()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.ACOMPANHAMENTO_DE_LANCAMENTOS
+    }`,
+    component: AcompanhamentoDeLancamentosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LOGISTICA}/${
@@ -1592,6 +1606,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
+    component: AlterarCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
+  },
+  {
     /*
     TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
     temporariamente ao Cadastro de Cronograma. Após finalização da definição de
@@ -1614,6 +1634,24 @@ const routesConfig = [
     component: EditarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma() || usuarioEhLogistica()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
+    component: PainelAprovacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
+    component: StatusSolicitacoesPendentesDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
+    component: StatusSolicitacoesAguardandoDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
   }
 ];
 

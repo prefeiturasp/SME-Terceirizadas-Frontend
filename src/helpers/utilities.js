@@ -171,7 +171,7 @@ export const mensagemCancelamento = (status, tipoDoc) => {
     case statusEnum.DRE_VALIDADO:
       return "Esta solicitação já foi validada pela DRE. ";
     case statusEnum.CODAE_A_AUTORIZAR:
-      return "Esta solicitação está aguardando autorização da CODAE. ";
+      return "Esta solicitação está aguardando validação da CODAE. ";
     case statusEnum.TERCEIRIZADA_TOMOU_CIENCIA:
     case statusEnum.CODAE_AUTORIZADO:
       return tipoDoc === TIPOS_SOLICITACAO_LABEL.SOLICITACAO_UNIFICADA
@@ -496,13 +496,19 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
 export const usuarioEhPreRecebimento = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
-    usuarioEhLogistica()
+    usuarioEhCodaeDilog()
   );
 };
 
 export const usuarioEhPreRecebimentoSemLogistica = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO;
 };
+
+export const usuarioEhDinutreDiretoria = () =>
+  localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
+
+export const usuarioEhDilogDiretoria = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_DIRETORIA;
 
 export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
@@ -839,16 +845,16 @@ export const exibirGA = () => {
   if (!["production"].includes(ENVIRONMENT)) return true;
 
   const dresPermitidas = [
+    "CAPELA DO SOCORRO",
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
-    "SAO MATEUS"
+    "SAO MATEUS",
+    "SAO MIGUEL"
   ];
 
   if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
-      case `"gestao_alimentacao_terceirizada"`:
-        return true;
       case `"diretoriaregional"`:
         return dresPermitidas.some(dre =>
           localStorage.getItem("nome_instituicao").includes(dre)
@@ -861,9 +867,10 @@ export const exibirGA = () => {
         return JSON.parse(localStorage.getItem("lotes")).find(lote =>
           dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
+      case `"gestao_alimentacao_terceirizada"`:
       case `"nutricao_manifestacao"`:
-        return true;
       case `"supervisao_nutricao"`:
+      case `"medicao"`:
         return true;
       default:
         return false;
@@ -871,11 +878,14 @@ export const exibirGA = () => {
   }
 };
 
-export const exibirLancamentoMedicaoInicial = () => {
+export const exibirModuloMedicaoInicial = () => {
   return (
-    usuarioEhEscolaTerceirizada() ||
-    (usuarioEhEscolaTerceirizadaDiretor() &&
-      !["treinamento", "production"].includes(ENVIRONMENT))
+    !["treinamento", "production"].includes(ENVIRONMENT) &&
+    (usuarioEhDRE() ||
+      ((usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor()) &&
+        !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhMedicao())
   );
 };
 
