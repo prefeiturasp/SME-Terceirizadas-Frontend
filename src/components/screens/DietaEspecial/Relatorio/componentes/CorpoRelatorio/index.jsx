@@ -317,14 +317,19 @@ const CorpoRelatorio = ({
       mutators={{ ...arrayMutators }}
       render={({ values }) => (
         <form>
-          {dietaEspecial.status_solicitacao === "CODAE_NEGOU_PEDIDO" && [
+          {["CODAE_NEGOU_PEDIDO", "CODAE_NEGOU_CANCELAMENTO"].includes(
+            dietaEspecial.status_solicitacao
+          ) && [
             <MotivoNegacao
               key={0}
               motivoNegacao={dietaEspecial.motivo_negacao}
             />,
             <JustificativaNegacao
               key={1}
-              justificativaNegacao={dietaEspecial.justificativa_negacao}
+              justificativaNegacao={
+                dietaEspecial.justificativa_negacao ||
+                dietaEspecial.logs[dietaEspecial.logs.length - 1].justificativa
+              }
             />
           ]}
           {card &&
