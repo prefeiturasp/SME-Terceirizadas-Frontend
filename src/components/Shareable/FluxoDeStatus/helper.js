@@ -133,6 +133,7 @@ export const tipoDeStatus = status => {
     case "CODAE pediu análise sensorial":
     case "Suspenso em alguns editais":
     case "Ativo em alguns editais":
+    case "Vínculo do Edital ao Produto":
       return "questionado";
 
     case "Escola cancelou":
