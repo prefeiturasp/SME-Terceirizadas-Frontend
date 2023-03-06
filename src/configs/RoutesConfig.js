@@ -197,6 +197,7 @@ import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
+import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 
 const routesConfig = [
   {
@@ -1564,6 +1565,14 @@ const routesConfig = [
     component: CronogramaEntregaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.SOLICITACAO_ALTERACAO_CRONOGRAMA
+    }`,
+    component: SolicitacaoAlteracaoCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhPreRecebimento()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
