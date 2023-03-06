@@ -120,7 +120,8 @@ import {
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
   usuarioEhFornecedor,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
+  usuarioEhDiretorUE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1423,7 +1424,7 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
   },
   {
     path: `/${constants.LOGISTICA}/${
