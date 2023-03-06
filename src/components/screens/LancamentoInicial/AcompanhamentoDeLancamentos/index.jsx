@@ -27,6 +27,7 @@ import { getEscolasTrecTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
+  usuarioEhDiretorUE,
   usuarioEhDRE,
   usuarioEhMedicao
 } from "helpers/utilities";
@@ -69,7 +70,16 @@ export const AcompanhamentoDeLancamentos = () => {
     if (response.status === HTTP_STATUS.OK) {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
-        setDadosDashboard(dashboardResults);
+        let NovoDashboardResults = [...dashboardResults];
+        if (usuarioEhDiretorUE())
+          NovoDashboardResults = NovoDashboardResults.filter(
+            medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
+          );
+        else
+          NovoDashboardResults = NovoDashboardResults.filter(
+            medicoes => medicoes.status !== "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+          );
+        setDadosDashboard(NovoDashboardResults);
       }
       if (statusSelecionado) {
         setResultados(
@@ -277,7 +287,7 @@ export const AcompanhamentoDeLancamentos = () => {
                         </span>
                       )}{" "}
                     </div>
-                    {statusSelecionado && (
+                    {statusSelecionado && !usuarioEhDiretorUE() && (
                       <>
                         <hr />
 
@@ -381,10 +391,16 @@ export const AcompanhamentoDeLancamentos = () => {
                               <table className="resultados">
                                 <thead>
                                   <tr className="row">
-                                    <th className="col-5">Nome da UE</th>
-                                    <th className="col-1 text-center">
-                                      Tipo de UE
+                                    <th className="col-5 pl-2">
+                                      {usuarioEhDiretorUE
+                                        ? "Período do Lançamento"
+                                        : "Nome da UE"}
                                     </th>
+                                    {!usuarioEhDiretorUE() && (
+                                      <th className="col-1 text-center">
+                                        Tipo de UE
+                                      </th>
+                                    )}
                                     <th className="col-2 text-center">
                                       Status do lançamento
                                     </th>
@@ -398,12 +414,16 @@ export const AcompanhamentoDeLancamentos = () => {
                                   {resultados.dados.map((dado, key) => {
                                     return (
                                       <tr key={key} className="row">
-                                        <td className="col-5 pt-3">
-                                          {dado.escola}
+                                        <td className="col-5 pl-2 pt-3">
+                                          {usuarioEhDiretorUE()
+                                            ? dado.mes_ano
+                                            : dado.escola}
                                         </td>
-                                        <td className="col-1 text-center pt-3">
-                                          {dado.tipo_unidade}
-                                        </td>
+                                        {!usuarioEhDiretorUE() && (
+                                          <td className="col-1 text-center pt-3">
+                                            {dado.tipo_unidade}
+                                          </td>
+                                        )}
                                         <td className="col-2 text-center pt-3">
                                           {dado.status}
                                         </td>
