@@ -22,7 +22,7 @@ const FORM_NAME = "buscaCronogramaDeEntrega";
 const options_status = usuarioEhFornecedor()
   ? [
       {
-        value: "ENVIADO_AO_FORNECEDOR",
+        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
         label: "Recebido"
       },
       {
@@ -41,7 +41,7 @@ const options_status = usuarioEhFornecedor()
   : usuarioEhCronograma()
   ? [
       {
-        value: "ENVIADO_AO_FORNECEDOR",
+        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
         label: "Enviado ao Fornecedor"
       },
       {
@@ -58,16 +58,12 @@ const options_status = usuarioEhFornecedor()
         value: "ASSINADO_FORNECEDOR",
         label: "Assinado Fornecedor"
       },
-      { value: "RASCUNHO", label: "Rascunho" },
-      {
-        value: "ASSINADO_CRONOGRAMA",
-        label: "Assinado Cronograma"
-      }
+      { value: "RASCUNHO", label: "Rascunho" }
     ]
   : usuarioEhDinutreDiretoria()
   ? [
       {
-        value: "ENVIADO_AO_FORNECEDOR",
+        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
         label: "Enviado ao Fornecedor"
       },
       {
@@ -85,10 +81,6 @@ const options_status = usuarioEhFornecedor()
         label: "Assinado Fornecedor"
       },
       { value: "RASCUNHO", label: "Rascunho" },
-      {
-        value: "ASSINADO_CRONOGRAMA",
-        label: "Assinado Cronograma"
-      },
       {
         value: "ASSINADO_DINUTRE",
         label: "Assinado Dinutre"
