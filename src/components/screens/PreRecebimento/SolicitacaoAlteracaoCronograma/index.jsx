@@ -80,6 +80,11 @@ export default () => {
               </div>
             </>
           )}
+          {total === 0 && (
+            <div className="text-center mt-5 pt-5">
+              Não existe informação para os critérios de busca utilizados.
+            </div>
+          )}
         </div>
       </div>
     </Spin>
