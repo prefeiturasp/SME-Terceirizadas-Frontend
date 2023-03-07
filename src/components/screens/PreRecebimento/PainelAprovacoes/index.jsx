@@ -65,7 +65,7 @@ export default () => {
 
   const gerarLinkDoItem = item => {
     if (
-      ["assinado dinutre", "assinado fornecedor"].includes(
+      ["assinado dinutre", "assinado fornecedor", "assinado codae"].includes(
         item.status.toLowerCase()
       )
     ) {
@@ -138,7 +138,7 @@ export default () => {
           </div>
           <div className="row">
             {cards.map((card, index) => (
-              <div className="col-6" key={index}>
+              <div className="col-6 mb-4" key={index}>
                 <CardCronograma
                   cardTitle={card.titulo}
                   cardType={card.style}

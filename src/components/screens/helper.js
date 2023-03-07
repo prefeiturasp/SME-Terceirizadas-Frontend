@@ -265,6 +265,9 @@ export const gerarLinkDoItem = item => {
     }`,
     "assinado fornecedor": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
       item.uuid
+    }`,
+    "assinado codae": `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${
+      item.uuid
     }`
   };
   return mapeamentoItens[item.status.toLowerCase()];

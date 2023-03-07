@@ -5,28 +5,23 @@ import {
   DINUTRE,
   PAINEL_APROVACOES,
   PRE_RECEBIMENTO,
-  SOLICITACOES_PENDENTES
+  ASSINADO_CODAE
 } from "configs/constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros
 } from "services/cronograma.service";
-import { CARD_PENDENTES_ASSINATURA } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
-
 import { SolicitacoesCronogramaStatusGenerico } from "components/screens/SolicitacoesCronogramaStatusGenerico";
+import { CARD_CRONOGRAMAS_ASSINADOS } from "components/screens/PreRecebimento/PainelAprovacoes/constants";
 
 const atual = {
-  href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`,
-  titulo: "Cronogramas Pendentes de Assinatura"
+  href: `/${DINUTRE}/${ASSINADO_CODAE}`,
+  titulo: "Cronogramas Assinados"
 };
 
 const limit = 10;
 
-const paramsDefault = {
-  status: "ASSINADO_FORNECEDOR",
-  offset: 0,
-  limit: limit
-};
+const paramsDefault = { status: "ASSINADO_CODAE", offset: 0, limit: limit };
 
 export default () => {
   const anteriores = [
@@ -48,9 +43,9 @@ export default () => {
     >
       <Breadcrumb home="/" atual={atual} anteriores={anteriores} />
       <SolicitacoesCronogramaStatusGenerico
-        icone={CARD_PENDENTES_ASSINATURA.icon}
-        titulo={CARD_PENDENTES_ASSINATURA.titulo}
-        cardType={CARD_PENDENTES_ASSINATURA.style}
+        icone={CARD_CRONOGRAMAS_ASSINADOS.icon}
+        titulo={CARD_CRONOGRAMAS_ASSINADOS.titulo}
+        cardType={CARD_CRONOGRAMAS_ASSINADOS.style}
         getSolicitacoes={getDashboardCronograma}
         getSolicitacoesComFiltros={getDashboardCronogramaComFiltros}
         params={paramsDefault}
