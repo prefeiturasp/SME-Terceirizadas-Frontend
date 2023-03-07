@@ -186,6 +186,7 @@ import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
 import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
@@ -1401,6 +1402,12 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
+  },
+  {
+    path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
+    component: RelatorioAlunosMatriculadosPage,
+    exact: true,
+    tipoUsuario: usuarioEhTerceirizada()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
