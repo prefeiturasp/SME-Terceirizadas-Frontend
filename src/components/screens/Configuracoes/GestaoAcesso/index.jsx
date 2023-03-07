@@ -73,7 +73,7 @@ export default ({ diretor_escola, empresa, geral }) => {
     }
 
     setVisoes(options_visoes);
-    setListaPerfis(lista_perfis);
+    setListaPerfis(options_perfis);
   };
 
   const setPerfisVisao = (lista_perfis, visao) => {
