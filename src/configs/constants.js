@@ -190,6 +190,8 @@ export const CENTRAL_DOWNLOADS = "central-downloads";
 
 export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
+export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
+  "solicitacao-alteracao-cronograma";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
