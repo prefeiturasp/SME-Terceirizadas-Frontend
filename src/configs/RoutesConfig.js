@@ -199,7 +199,9 @@ import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
+import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 
 const routesConfig = [
   {
@@ -1435,6 +1437,14 @@ const routesConfig = [
     tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
   },
   {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.CONFERENCIA_DOS_LANCAMENTOS
+    }`,
+    component: ConferenciaDosLancamentosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
+  },
+  {
     path: `/${constants.LOGISTICA}/${
       constants.DISPONIBILIZACAO_DE_SOLICITACOES
     }`,
@@ -1573,6 +1583,14 @@ const routesConfig = [
     component: CronogramaEntregaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.SOLICITACAO_ALTERACAO_CRONOGRAMA
+    }`,
+    component: SolicitacaoAlteracaoCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,

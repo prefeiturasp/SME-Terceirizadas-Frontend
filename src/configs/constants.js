@@ -184,12 +184,15 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
+export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
 
 export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
+export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
+  "solicitacao-alteracao-cronograma";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
