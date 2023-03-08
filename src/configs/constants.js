@@ -134,6 +134,7 @@ export const RELATORIO_GESTAO_DIETA_ESPECIAL =
 export const RELATORIO_QUANTITATIVO_DIAG_DIETA_ESP =
   "relatorio-quantitativo-diag-dieta-esp";
 export const RELATORIO_SOLICITACOES_ALIMENTACAO = `${RELATORIO}/solicitacoes-alimentacao`;
+export const RELATORIO_ALUNOS_MATRICULADOS = `${RELATORIO}/alunos-matriculados`;
 export const PANORAMA_ESCOLA = "panorama-escola";
 export const HOMOLOGACAO_PRODUTO = "homologacao-produto";
 export const RECLAMACAO_DE_PRODUTO = "nova-reclamacao-de-produto";
@@ -192,7 +193,7 @@ export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
 export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
   "solicitacao-alteracao-cronograma";
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
-export const DETALHE_CRONOGRAMA = "datalhe-cronograma";
+export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
@@ -202,6 +203,7 @@ export const PRODUTOS = "produtos";
 export const PAINEL_APROVACOES = "painel-aprovacoes";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
+export const ASSINADO_CODAE = "assinado-codae";
 
 // Status dos pedidos
 

@@ -16,7 +16,10 @@ import {
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
-    if (status === "Enviado ao Fornecedor" && usuarioEhFornecedor()) {
+    if (
+      status === "Assinado e Enviado ao Fornecedor" &&
+      usuarioEhFornecedor()
+    ) {
       return "Recebido";
     } else {
       return status;
