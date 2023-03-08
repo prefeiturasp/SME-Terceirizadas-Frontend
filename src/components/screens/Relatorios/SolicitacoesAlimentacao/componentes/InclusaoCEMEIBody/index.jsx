@@ -72,11 +72,15 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
             {solicitacao.dias_motivos_da_inclusao_cemei.map((inclusao, idx) => {
               return (
                 <div className="row mt-3" key={idx}>
-                  <div className="col-3">
-                    <p>
-                      <b># {solicitacao.id_externo}</b>
-                    </p>
-                  </div>
+                  {idx === 0 ? (
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="col-3" />
+                  )}
                   <div className="col-3">
                     <p>
                       <b>{inclusao.motivo.nome}</b>
