@@ -40,8 +40,8 @@ export const ModalAssinaturaUsuario = props => {
             <div>
               <p>
                 Confirme sua senha de acesso ao{" "}
-                <span className="green">SIGPAE</span> para assinar digitalmente
-                o documento:
+                <span className="green font-weight-bold">SIGPAE</span> para
+                assinar digitalmente o documento:
               </p>
               <div>
                 <Form

@@ -199,6 +199,7 @@ import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
+import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
 
 const routesConfig = [
   {
@@ -1624,6 +1625,12 @@ const routesConfig = [
   {
     path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
     component: StatusSolicitacoesAguardandoDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
+    component: StatusSolicitacoesAssinadoCODAE,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   }
