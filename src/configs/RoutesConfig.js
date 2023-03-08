@@ -1572,7 +1572,7 @@ const routesConfig = [
     }`,
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento()
+    tipoUsuario: usuarioEhCronograma()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
