@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import HTTP_STATUS from "http-status-codes";
@@ -33,8 +34,13 @@ import {
 } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
+import {
+  CONFERENCIA_DOS_LANCAMENTOS,
+  MEDICAO_INICIAL
+} from "configs/constants";
 
 export const AcompanhamentoDeLancamentos = () => {
+  const history = useHistory();
   const { meusDados } = useContext(MeusDadosContext);
 
   const [dadosDashboard, setDadosDashboard] = useState(null);
@@ -206,6 +212,16 @@ export const AcompanhamentoDeLancamentos = () => {
     form.reset();
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
+  };
+
+  const handleClickVisualizar = (uuidSolicitacaoMedicao, escolaUuid) => {
+    history.push({
+      pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+      search: `uuid=${uuidSolicitacaoMedicao}`,
+      state: {
+        escolaUuid: escolaUuid
+      }
+    });
   };
 
   return (
@@ -437,6 +453,12 @@ export const AcompanhamentoDeLancamentos = () => {
                                               BUTTON_STYLE.GREEN_OUTLINE
                                             } no-border`}
                                             icon={BUTTON_ICON.EYE}
+                                            onClick={() =>
+                                              handleClickVisualizar(
+                                                dado.uuid,
+                                                dado.escola_uuid
+                                              )
+                                            }
                                           />
                                           <Botao
                                             type={BUTTON_TYPE.BUTTON}

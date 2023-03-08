@@ -201,6 +201,7 @@ import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 
 const routesConfig = [
   {
@@ -1434,6 +1435,14 @@ const routesConfig = [
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
     tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.CONFERENCIA_DOS_LANCAMENTOS
+    }`,
+    component: ConferenciaDosLancamentosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
   },
   {
     path: `/${constants.LOGISTICA}/${

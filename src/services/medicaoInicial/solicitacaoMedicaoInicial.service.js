@@ -35,3 +35,12 @@ export const updateSolicitacaoMedicaoInicial = async (uuid, params) => {
     return data;
   }
 };
+
+export const retrieveSolicitacaoMedicaoInicial = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
