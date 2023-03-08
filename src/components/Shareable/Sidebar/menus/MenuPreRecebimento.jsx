@@ -7,6 +7,7 @@ import {
   SOLICITACAO_ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import {
+  usuarioEhCronograma,
   usuarioEhDinutreDiretoria,
   usuarioEhFornecedor,
   usuarioEhPreRecebimento
@@ -25,7 +26,7 @@ const MenuPreRecebimento = () => {
           Cronograma de Entrega
         </LeafItem>
       )}
-      {usuarioEhPreRecebimento() && (
+      {usuarioEhCronograma() && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
         >
