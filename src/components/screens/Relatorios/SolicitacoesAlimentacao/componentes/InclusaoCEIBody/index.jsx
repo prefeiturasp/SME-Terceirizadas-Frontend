@@ -81,11 +81,15 @@ export const InclusaoCEIBody = ({ ...props }) => {
               (dia_motivo_inclusao, idx) => {
                 return (
                   <div className="row mt-3" key={idx}>
-                    <div className="col-3">
-                      <p>
-                        <b># {solicitacao.id_externo}</b>
-                      </p>
-                    </div>
+                    {idx === 0 ? (
+                      <div className="col-3">
+                        <p>
+                          <b># {solicitacao.id_externo}</b>
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="col-3" />
+                    )}
                     <div className="col-3">
                       <p>
                         <b>{dia_motivo_inclusao.motivo.nome}</b>

@@ -67,9 +67,11 @@ export const SuspensaoAlimentacaoBody = ({ ...props }) => {
                 return (
                   <div className="row mt-3" key={idxSuspensao}>
                     <div className="col-3">
-                      <p>
-                        <b># {solicitacao.id_externo}</b>
-                      </p>
+                      {idxSuspensao === 0 && (
+                        <p>
+                          <b># {solicitacao.id_externo}</b>
+                        </p>
+                      )}
                     </div>
                     <div className="col-3">
                       <p>
