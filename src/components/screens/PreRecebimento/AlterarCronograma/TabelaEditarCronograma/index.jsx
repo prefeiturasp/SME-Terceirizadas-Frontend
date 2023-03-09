@@ -75,7 +75,7 @@ export default ({
       <div className="grid-cronograma mt-4">
         <div className="grid-cronograma-header">
           <div>
-            <div className="title head-crono">Data programada</div>
+            <div className="title head-crono">Data Programada</div>
           </div>
           <div>
             <div className="title head-crono">Etapa</div>

@@ -36,6 +36,10 @@ const options_status = usuarioEhFornecedor()
       {
         value: "SOLICITADO_ALTERACAO",
         label: "Solicitado Alteração"
+      },
+      {
+        value: "ASSINADO_CODAE",
+        label: "Assinado CODAE"
       }
     ]
   : usuarioEhCronograma()
