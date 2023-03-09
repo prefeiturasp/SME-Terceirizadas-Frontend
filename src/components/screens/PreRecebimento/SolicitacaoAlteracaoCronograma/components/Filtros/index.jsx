@@ -44,7 +44,7 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
               <div className="col-6">
                 <Field
                   component={InputText}
-                  label="Nome do Fornecedor"
+                  label="Nome da Empresa"
                   name="fornecedor"
                   placeholder="Digite o nome da empresa"
                   className="input-busca-cronograma"
@@ -61,8 +61,8 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   placeholder="De"
                   minDate={null}
                   maxDate={
-                    values.data_final
-                      ? moment(values.data_final, "DD/MM/YYYY")._d
+                    values.data_before
+                      ? moment(values.data_before, "DD/MM/YYYY")._d
                       : null
                   }
                 />
@@ -76,8 +76,8 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   popperPlacement="bottom-end"
                   placeholder="Até"
                   minDate={
-                    values.data_inicial
-                      ? moment(values.data_inicial, "DD/MM/YYYY")._d
+                    values.data_after
+                      ? moment(values.data_after, "DD/MM/YYYY")._d
                       : null
                   }
                   maxDate={null}
