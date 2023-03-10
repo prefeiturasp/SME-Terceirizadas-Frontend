@@ -121,7 +121,8 @@ import {
   usuarioEhCodaeDilog,
   usuarioEhFornecedor,
   usuarioEhDinutreDiretoria,
-  usuarioEhDiretorUE
+  usuarioEhDiretorUE,
+  usuarioEhDilogDiretoria
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1632,7 +1633,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
     component: PainelAprovacoesPage,
     exact: true,
-    tipoUsuario: usuarioEhDinutreDiretoria()
+    tipoUsuario: usuarioEhDinutreDiretoria() || usuarioEhDilogDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
