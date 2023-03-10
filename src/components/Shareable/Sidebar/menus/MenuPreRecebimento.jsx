@@ -8,6 +8,7 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCronograma,
+  usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhFornecedor,
   usuarioEhPreRecebimento
@@ -16,7 +17,7 @@ import {
 const MenuPreRecebimento = () => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
-      {usuarioEhDinutreDiretoria() && (
+      {(usuarioEhDinutreDiretoria() || usuarioEhDilogDiretoria()) && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}>
           Painel de Aprovações
         </LeafItem>

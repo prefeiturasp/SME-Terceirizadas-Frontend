@@ -32,8 +32,22 @@ export const CARD_CRONOGRAMAS_ASSINADOS = {
   href: `/${DINUTRE}/${ASSINADO_CODAE}`
 };
 
-export const cards = [
+export const CARD_PENDENTES_ASSINATURA_DILOG = {
+  id: "Pendentes de Assinatura",
+  titulo: "Pendentes de Assinatura",
+  icon: "fa-exclamation-triangle",
+  style: "card-pendente-assinatura",
+  incluir_status: ["ASSINADO_DINUTRE"],
+  href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`
+};
+
+export const cards_dinutre = [
   CARD_PENDENTES_ASSINATURA,
   CARD_AGUARDANDO_ASSINATURA,
+  CARD_CRONOGRAMAS_ASSINADOS
+];
+
+export const cards_dilog = [
+  CARD_PENDENTES_ASSINATURA_DILOG,
   CARD_CRONOGRAMAS_ASSINADOS
 ];
