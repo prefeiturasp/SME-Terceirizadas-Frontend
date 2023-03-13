@@ -130,6 +130,19 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
         </SubMenu>
       )}
+      {PERFIL === "terceirizada" && (
+        <SubMenu
+          icon="fa-chevron-down"
+          path="relatorios"
+          onClick={onSubmenuClick}
+          title="Relatórios"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/relatorio/alunos-matriculados`}>
+            Alunos Matriculados
+          </LeafItem>
+        </SubMenu>
+      )}
       {usuarioEhCODAEGestaoAlimentacao() && (
         <SubMenu
           icon="fa-chevron-down"

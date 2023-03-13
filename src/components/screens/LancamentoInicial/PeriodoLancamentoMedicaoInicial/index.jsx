@@ -853,22 +853,16 @@ export default () => {
     const uuid = urlParams.get("uuid");
     let valuesClone = deepCopy(values);
     setDadosIniciais(values);
-    let dadosIniciaisClone = deepCopy(values);
+    const idCategoriaAlimentacao = categoriasDeMedicao.find(categoria =>
+      categoria.nome.includes("ALIMENTAÇÃO")
+    ).id;
     valuesClone.solicitacao_medicao_inicial = uuid;
     Object.entries(valuesClone).forEach(([key, value]) => {
       return (
         (["Mês anterior", "Mês posterior", null].includes(value) ||
-          key.includes("matriculados") ||
-          key.includes("dietas_autorizadas")) &&
+          (key.includes("matriculados") &&
+            !key.includes(`categoria_${idCategoriaAlimentacao}`))) &&
         delete valuesClone[key]
-      );
-    });
-    Object.entries(dadosIniciaisClone).forEach(([key, value]) => {
-      return (
-        (["Mês anterior", "Mês posterior", null].includes(value) ||
-          key.includes("matriculados") ||
-          key.includes("dietas_autorizadas")) &&
-        delete dadosIniciaisClone[key]
       );
     });
 

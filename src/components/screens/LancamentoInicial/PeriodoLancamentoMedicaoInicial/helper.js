@@ -296,3 +296,175 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
     return [];
   }
 };
+
+export const formatarLinhasTabelaAlimentacao = tipos_alimentacao => {
+  const tiposAlimentacaoFormatadas = tipos_alimentacao.map(alimentacao => {
+    return {
+      ...alimentacao,
+      name: alimentacao.nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_")
+    };
+  });
+  const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
+    ali => ali.nome === "Refeição"
+  );
+  if (indexRefeicao !== -1) {
+    tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
+    tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
+      nome: "Repet. Refeição",
+      name: "repeticao_refeicao",
+      uuid: null
+    });
+  }
+
+  const indexSobremesa = tiposAlimentacaoFormatadas.findIndex(
+    ali => ali.nome === "Sobremesa"
+  );
+  if (indexSobremesa !== -1) {
+    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1ª Ofe.";
+    tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
+      nome: "Repet. Sobremesa",
+      name: "repeticao_sobremesa",
+      uuid: null
+    });
+  }
+
+  const indexLancheEmergencial = tiposAlimentacaoFormatadas.findIndex(
+    ali => ali.nome === "Lanche Emergencial"
+  );
+  if (indexLancheEmergencial !== -1) {
+    tiposAlimentacaoFormatadas[indexLancheEmergencial].nome =
+      "Lanche Emergenc.";
+  }
+
+  tiposAlimentacaoFormatadas.unshift(
+    {
+      nome: "Matriculados",
+      name: "matriculados",
+      uuid: null
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null
+    }
+  );
+
+  tiposAlimentacaoFormatadas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null
+  });
+
+  return tiposAlimentacaoFormatadas;
+};
+
+export const formatarLinhasTabelasDietas = tipos_alimentacao => {
+  const linhasTabelasDietas = [];
+  linhasTabelasDietas.push(
+    {
+      nome: "Dietas Autorizadas",
+      name: "dietas_autorizadas",
+      uuid: null
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null
+    }
+  );
+
+  const indexLanche4h = tipos_alimentacao.findIndex(ali =>
+    ali.nome.includes("4h")
+  );
+  if (indexLanche4h !== -1) {
+    linhasTabelasDietas.push({
+      nome: tipos_alimentacao[indexLanche4h].nome,
+      name: tipos_alimentacao[indexLanche4h].nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_"),
+      uuid: tipos_alimentacao[indexLanche4h].uuid
+    });
+  }
+
+  const indexLanche = tipos_alimentacao.findIndex(ali => ali.nome === "Lanche");
+  if (indexLanche !== -1) {
+    linhasTabelasDietas.push({
+      nome: "Lanche",
+      name: "Lanche"
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replaceAll(/ /g, "_"),
+      uuid: tipos_alimentacao[indexLanche].uuid
+    });
+  }
+
+  linhasTabelasDietas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null
+  });
+
+  return linhasTabelasDietas;
+};
+
+export const formatarLinhasTabelaDietaEnteral = (
+  tipos_alimentacao,
+  linhasTabelasDietas
+) => {
+  const indexRefeicaoDieta = tipos_alimentacao.findIndex(
+    ali => ali.nome === "Refeição"
+  );
+  linhasTabelasDietas.splice(linhasTabelasDietas.length - 1, 0, {
+    nome: "Refeição",
+    name: "refeicao",
+    uuid: tipos_alimentacao[indexRefeicaoDieta].uuid
+  });
+
+  return linhasTabelasDietas;
+};
+
+export const validacaoSemana = (dia, semanaSelecionada) => {
+  return (
+    (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
+    ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(dia) < 10)
+  );
+};
+
+export const defaultValue = (
+  column,
+  row,
+  semanaSelecionada,
+  valoresLancamentos,
+  categoria
+) => {
+  let result = null;
+
+  const valorLancamento = valoresLancamentos.find(
+    valor =>
+      Number(valor.categoria_medicao) === Number(categoria.id) &&
+      Number(valor.dia) === Number(column.dia) &&
+      valor.nome_campo === row.name
+  );
+
+  if (valorLancamento) {
+    result = valorLancamento.valor;
+  }
+  if (Number(semanaSelecionada) === 1 && Number(column.dia) > 20) {
+    result = "Mês anterior";
+  }
+  if (
+    [4, 5, 6].includes(Number(semanaSelecionada)) &&
+    Number(column.dia) < 10
+  ) {
+    result = "Mês posterior";
+  }
+
+  return result;
+};

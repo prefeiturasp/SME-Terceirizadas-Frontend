@@ -53,7 +53,7 @@ export default ({ cronograma }) => {
 
   return (
     <>
-      {cronograma.status === "Assinado Cronograma" && (
+      {cronograma.status === "Assinado Fornecedor" && (
         <Botao
           texto="Assinar Cronograma"
           type={BUTTON_TYPE.BUTTON}

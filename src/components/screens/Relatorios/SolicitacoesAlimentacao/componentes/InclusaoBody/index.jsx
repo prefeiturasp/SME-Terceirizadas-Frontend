@@ -48,11 +48,15 @@ export const InclusaoBody = ({ ...props }) => {
             {solicitacao.inclusoes.map((inclusao, idx) => {
               return (
                 <div className="row" key={idx}>
-                  <div className="col-3">
-                    <p>
-                      <b># {solicitacao.id_externo}</b>
-                    </p>
-                  </div>
+                  {idx === 0 ? (
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="col-3" />
+                  )}
                   <div className="col-3">
                     <p>
                       <b>{inclusao.motivo.nome}</b>

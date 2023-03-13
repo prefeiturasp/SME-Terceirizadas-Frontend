@@ -1,7 +1,7 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cards } from "./constants";
+import { cards_dinutre, cards_dilog } from "./constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros
@@ -9,17 +9,21 @@ import {
 import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
-  truncarString
+  truncarString,
+  usuarioEhDilogDiretoria
 } from "helpers/utilities";
 import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
+import { useCallback } from "react";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [filtrado, setFiltrado] = useState(false);
+
+  const cards = usuarioEhDilogDiretoria() ? cards_dilog : cards_dinutre;
 
   const ordenaPorLogMaisRecente = (a, b) => {
     let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
@@ -33,26 +37,30 @@ export default () => {
     return `${item.numero} - ${truncarString(item.produto, TAMANHO_MAXIMO)}`;
   };
 
-  const buscaCronogramas = async (filtros = null) => {
-    setCarregando(true);
-    let dadosDashboard;
-    if (!filtros) {
-      dadosDashboard = await getDashboardCronograma();
-    } else {
-      dadosDashboard = await getDashboardCronogramaComFiltros(filtros);
-    }
-    cards.forEach(card => {
-      dadosDashboard.data.results.forEach(data => {
-        if (card.incluir_status.includes(data.status)) {
-          card.items = data.dados;
-        }
+  const buscaCronogramas = useCallback(
+    async (filtros = null) => {
+      setCarregando(true);
+      let dadosDashboard;
+      if (!filtros) {
+        dadosDashboard = await getDashboardCronograma();
+      } else {
+        dadosDashboard = await getDashboardCronogramaComFiltros(filtros);
+      }
+      cards.forEach(card => {
+        dadosDashboard.data.results.forEach(data => {
+          if (card.incluir_status.includes(data.status)) {
+            card.items = data.dados;
+          }
+        });
       });
-    });
-    setCarregando(false);
-  };
+      setCarregando(false);
+    },
+    [cards]
+  );
+
   useEffect(() => {
     buscaCronogramas();
-  }, []);
+  }, [buscaCronogramas]);
 
   const formataCards = items => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
@@ -65,7 +73,7 @@ export default () => {
 
   const gerarLinkDoItem = item => {
     if (
-      ["assinado dinutre", "assinado cronograma"].includes(
+      ["assinado dinutre", "assinado fornecedor", "assinado codae"].includes(
         item.status.toLowerCase()
       )
     ) {
@@ -138,7 +146,7 @@ export default () => {
           </div>
           <div className="row">
             {cards.map((card, index) => (
-              <div className="col-6" key={index}>
+              <div className="col-6 mb-4" key={index}>
                 <CardCronograma
                   cardTitle={card.titulo}
                   cardType={card.style}
