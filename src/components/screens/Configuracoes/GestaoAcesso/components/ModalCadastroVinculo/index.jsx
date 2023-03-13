@@ -84,7 +84,9 @@ const ModalCadastroVinculo = ({
 
     const subdivisoes_restrita_por_perfil = {
       COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
-      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos"
+      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos",
+      COORDENADOR_SUPERVISAO_NUTRICAO:
+        "CODAE - Coordenador Supervisão de Nutrição"
     };
 
     if (perfil in subdivisoes_restrita_por_perfil) {
