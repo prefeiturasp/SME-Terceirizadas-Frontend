@@ -149,7 +149,10 @@ export default class ModalHistorico extends Component {
                         <article>
                           {logSelecionado.justificativa !== "" && (
                             <>
-                              <div>Justificativa:</div>
+                              {logSelecionado.status_evento_explicacao !==
+                              "Vínculo do Edital ao Produto" ? (
+                                <div>Justificativa:</div>
+                              ) : null}
                               <div
                                 dangerouslySetInnerHTML={{
                                   __html: logSelecionado.justificativa

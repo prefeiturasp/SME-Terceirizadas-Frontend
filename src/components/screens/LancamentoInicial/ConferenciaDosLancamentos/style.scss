@@ -1,0 +1,82 @@
+@import "styles/variables.scss";
+
+div.conferencia-dos-lancamentos {
+  .section-title-conf-lancamentos {
+    font-size: 16px;
+    font-weight: 700;
+    color: $green;
+  }
+
+  .periodo-final-tabela-lancamento {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 28px;
+
+    .periodo {
+      font-size: 14px !important;
+    }
+
+    .botoes {
+      margin-left: 10px;
+    }
+  }
+
+  .content-section-ocorrencias {
+    border: 1px solid $grayDisabled;
+    border-radius: 4px;
+    padding: 14px 14px 10px 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .value-avaliacao-servico-red {
+      color: $red;
+    }
+
+    .value-avaliacao-servico-green {
+      color: $green;
+    }
+
+    .download-ocorrencias {
+      color: $green;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  }
+
+  .content-section-acompanhamento-lancamento {
+    border-radius: 4px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $green;
+    align-items: center;
+
+    b {
+      color: white;
+    }
+
+    .content-section-acompanhamento-lancamento-right {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .acompanhamento-status-lancamento {
+        padding: 2px 12px;
+        border-radius: 24px;
+        font-size: 14px;
+        background-color: $white;
+        opacity: 0.8;
+        color: black;
+      }
+
+      .visualizar-lancamento {
+        cursor: pointer;
+      }
+    }
+  }
+}
