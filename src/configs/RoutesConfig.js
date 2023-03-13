@@ -126,7 +126,8 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
+  usuarioEhCoordenadorNutriSupervisao
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -789,7 +790,9 @@ const routesConfig = [
     component: GestaoAcessoGeralPage,
     exact: true,
     tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,

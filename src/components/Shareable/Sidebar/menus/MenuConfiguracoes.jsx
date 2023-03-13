@@ -49,7 +49,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhAdministradorRepresentanteCodae();
 
   const exibirGestaoAcesso =
-    usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE();
+    usuarioEhCoordenadorNutriCODAE() ||
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCoordenadorNutriSupervisao();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
