@@ -2,12 +2,16 @@ import React, { Fragment } from "react";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Field, Form } from "react-final-form";
 import Botao from "components/Shareable/Botao";
+import HTTP_STATUS from "http-status-codes";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { toastInfo } from "components/Shareable/Toast/dialogs";
+import { toastError } from "components/Shareable/Toast/dialogs";
 import { formataOpcoes } from "../../helpers";
+import { filtrarAlunosMatriculados } from "services/alunosMatriculados.service";
+import { deepCopy } from "helpers/utilities";
+import { formataOpcoesDropdown } from "../../helpers";
 
 export const Filtros = ({ ...props }) => {
   const {
@@ -15,11 +19,34 @@ export const Filtros = ({ ...props }) => {
     lotes,
     tiposUnidades,
     unidadesEducacionais,
-    listaOpcoes
+    listaOpcoes,
+    setFiltrando,
+    setFiltros,
+    setPage,
+    setResultado,
+    setTotal,
+    setShowPeriodosFaixas
   } = props;
 
-  const onSubmit = () => {
-    toastInfo("Essa funcionalidade ainda não foi implementada.");
+  const onSubmit = async values => {
+    setFiltrando(true);
+    let _values = deepCopy(values);
+    const page = 1;
+    _values["limit"] = 10;
+    _values["offset"] = (page - 1) * _values["limit"];
+    setFiltros(values);
+    setPage(1);
+    const response = await filtrarAlunosMatriculados(_values);
+    if (response.status === HTTP_STATUS.OK) {
+      setTotal(response.data.count);
+      setResultado(response.data.results);
+      setShowPeriodosFaixas(formataOpcoesDropdown(response.data.results));
+    } else {
+      toastError(
+        "Houve um erro ao filtrar alunos matriculados, tente novamente mais tarde"
+      );
+    }
+    setFiltrando(false);
   };
 
   const filtrarOpcoesEscola = values => {
@@ -149,6 +176,9 @@ export const Filtros = ({ ...props }) => {
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   onClick={() => {
                     form.reset();
+                    setResultado(undefined);
+                    setTotal(undefined);
+                    setShowPeriodosFaixas([]);
                   }}
                 />
                 <Botao
