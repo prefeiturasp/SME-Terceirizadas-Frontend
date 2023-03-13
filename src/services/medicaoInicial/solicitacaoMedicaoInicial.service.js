@@ -44,3 +44,12 @@ export const retrieveSolicitacaoMedicaoInicial = async uuid => {
     return data;
   }
 };
+
+export const getPeriodosGruposMedicao = async params => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/periodos-grupos-medicao/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

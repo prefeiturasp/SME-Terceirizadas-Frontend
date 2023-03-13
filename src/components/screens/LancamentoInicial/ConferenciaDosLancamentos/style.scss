@@ -7,6 +7,22 @@ div.conferencia-dos-lancamentos {
     color: $green;
   }
 
+  .periodo-final-tabela-lancamento {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 28px;
+
+    .periodo {
+      font-size: 14px !important;
+    }
+
+    .botoes {
+      margin-left: 10px;
+    }
+  }
+
   .content-section-ocorrencias {
     border: 1px solid $grayDisabled;
     border-radius: 4px;

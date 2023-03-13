@@ -8,10 +8,13 @@ import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
+import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
-import { getPeriodosInclusaoContinua } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { retrieveSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  getPeriodosGruposMedicao,
+  retrieveSolicitacaoMedicaoInicial
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
 import "./style.scss";
 
@@ -23,9 +26,9 @@ export const ConferenciaDosLancamentos = () => {
   const [dadosIniciais, setDadosIniciais] = useState(null);
   const [solicitacao, setSolicitacao] = useState(null);
   const [periodosSimples, setPeriodosSimples] = useState(null);
-  const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
-    null
-  );
+  const [periodosGruposMedicao, setPeriodosGruposMedicao] = useState(null);
+  const [mesSolicitacao, setMesSolicitacao] = useState(null);
+  const [anoSolicitacao, setAnoSolicitacao] = useState(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,7 +43,6 @@ export const ConferenciaDosLancamentos = () => {
     const getSolMedInicialAsync = async () => {
       const response = await retrieveSolicitacaoMedicaoInicial(uuid);
       if (response.status === HTTP_STATUS.OK) {
-        setSolicitacao(response.data);
         mes = response.data.mes;
         ano = response.data.ano;
         const data = new Date(`${mes}/01/${ano}`);
@@ -53,11 +55,13 @@ export const ConferenciaDosLancamentos = () => {
           mes_lancamento: `${mesString} / ${ano}`,
           unidade_educacional: escola
         };
+        setSolicitacao(response.data);
+        setMesSolicitacao(mes);
+        setAnoSolicitacao(ano);
       } else {
         setErroAPI("Erro ao carregar Medição Inicial.");
       }
       dados_iniciais && setDadosIniciais(dados_iniciais);
-      getPeriodosInclusaoContinuaAsync(mes, ano);
       setLoading(false);
     };
 
@@ -74,24 +78,23 @@ export const ConferenciaDosLancamentos = () => {
       }
     };
 
-    const getPeriodosInclusaoContinuaAsync = async (mes, ano) => {
-      const escola = escolaUuid;
-      const response = await getPeriodosInclusaoContinua({
-        mes,
-        ano,
-        escola
-      });
+    const getPeriodosGruposMedicaoAsync = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const uuid = urlParams.get("uuid");
+      const params = { uuid_solicitacao: uuid };
+      const response = await getPeriodosGruposMedicao(params);
       if (response.status === HTTP_STATUS.OK) {
-        setPeriodosInclusaoContinua(response.data.periodos);
+        setPeriodosGruposMedicao(response.data.results);
       } else {
         setErroAPI(
-          "Erro ao carregar períodos de inclusão contínua. Tente novamente mais tarde."
+          "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
         );
       }
     };
 
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -112,11 +115,11 @@ export const ConferenciaDosLancamentos = () => {
     <div className="conferencia-dos-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={loading}>
-        {!erroAPI && dadosIniciais && periodosSimples && (
+        {!erroAPI && dadosIniciais && periodosGruposMedicao && (
           <Form
             onSubmit={() => {}}
             initialValues={dadosIniciais}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, form }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
                   <div className="card-body">
@@ -188,51 +191,18 @@ export const ConferenciaDosLancamentos = () => {
                       <p className="section-title-conf-lancamentos">
                         Acompanhamento do lançamento
                       </p>
-                      {periodosSimples.map((periodo, index) => (
-                        <div
-                          key={index}
-                          className="content-section-acompanhamento-lancamento mb-3"
-                        >
-                          <p className="mb-0">
-                            <b>{periodo.periodo_escolar.nome}</b>
-                          </p>
-                          <div className="content-section-acompanhamento-lancamento-right">
-                            <div className="acompanhamento-status-lancamento mr-3">
-                              Pendente de Análise
-                            </div>
-                            <p
-                              className="visualizar-lancamento mb-0"
-                              onClick={() => {}}
-                            >
-                              <b>VISUALIZAR</b>
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                      {periodosInclusaoContinua &&
-                        Object.keys(periodosInclusaoContinua).map(
-                          (periodo, index) => (
-                            <div
-                              key={index}
-                              className="content-section-acompanhamento-lancamento mb-3"
-                            >
-                              <p className="mb-0">
-                                <b>Programas e Projetos - {periodo}</b>
-                              </p>
-                              <div className="content-section-acompanhamento-lancamento-right">
-                                <div className="acompanhamento-status-lancamento mr-3">
-                                  Pendente de Análise
-                                </div>
-                                <p
-                                  className="visualizar-lancamento mb-0"
-                                  onClick={() => {}}
-                                >
-                                  <b>VISUALIZAR</b>
-                                </p>
-                              </div>
-                            </div>
-                          )
-                        )}
+                      {periodosGruposMedicao.map((periodoGrupo, index) => {
+                        return (
+                          <TabelaLancamentosPeriodo
+                            key={index}
+                            periodoGrupo={periodoGrupo}
+                            periodosSimples={periodosSimples}
+                            mesSolicitacao={mesSolicitacao}
+                            anoSolicitacao={anoSolicitacao}
+                            form={form}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
