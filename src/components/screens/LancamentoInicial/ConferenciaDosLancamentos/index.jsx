@@ -6,14 +6,15 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
   getPeriodosGruposMedicao,
-  retrieveSolicitacaoMedicaoInicial
+  retrieveSolicitacaoMedicaoInicial,
+  dreAprovaMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
 import "./style.scss";
@@ -29,6 +30,20 @@ export const ConferenciaDosLancamentos = () => {
   const [periodosGruposMedicao, setPeriodosGruposMedicao] = useState(null);
   const [mesSolicitacao, setMesSolicitacao] = useState(null);
   const [anoSolicitacao, setAnoSolicitacao] = useState(null);
+
+  const getPeriodosGruposMedicaoAsync = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const params = { uuid_solicitacao: uuid };
+    const response = await getPeriodosGruposMedicao(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosGruposMedicao(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
+      );
+    }
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -78,20 +93,6 @@ export const ConferenciaDosLancamentos = () => {
       }
     };
 
-    const getPeriodosGruposMedicaoAsync = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const uuid = urlParams.get("uuid");
-      const params = { uuid_solicitacao: uuid };
-      const response = await getPeriodosGruposMedicao(params);
-      if (response.status === HTTP_STATUS.OK) {
-        setPeriodosGruposMedicao(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
-        );
-      }
-    };
-
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
@@ -109,6 +110,20 @@ export const ConferenciaDosLancamentos = () => {
         toastError("Arquivo PDF de ocorrências não encontrado");
       }
     }
+  };
+
+  const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
+    const response = await dreAprovaMedicao(
+      periodoGrupo.uuid_medicao_periodo_grupo
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(`Período ${nomePeridoFormatado} aprovado com sucesso!`);
+    } else {
+      setErroAPI(
+        `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
+      );
+    }
+    getPeriodosGruposMedicaoAsync();
   };
 
   return (
@@ -200,6 +215,12 @@ export const ConferenciaDosLancamentos = () => {
                             mesSolicitacao={mesSolicitacao}
                             anoSolicitacao={anoSolicitacao}
                             form={form}
+                            aprovarPeriodo={(
+                              periodoGrupo,
+                              nomePeridoFormatado
+                            ) =>
+                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
+                            }
                           />
                         );
                       })}
