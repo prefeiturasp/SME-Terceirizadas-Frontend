@@ -36,6 +36,8 @@ import {
   MEDICAO_STATUS_DE_PROGRESSO
 } from "../../constants";
 import { deepCopy } from "helpers/utilities";
+import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
+import { formatarNomePeriodo } from "../../helper";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -44,7 +46,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     periodosSimples,
     mesSolicitacao,
     anoSolicitacao,
-    form
+    form,
+    aprovarPeriodo
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -64,7 +67,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
+  const [showModalAprovarPeriodo, setShowModalAprovarPeriodo] = useState(false);
   const [loading, setLoading] = useState(false);
+  const statusPermitidosParaAprovacao = [
+    "MEDICAO_ENVIADA_PELA_UE",
+    "MEDICAO_CORRIGIDA_PELA_UE"
+  ];
+  const logPeriodoAprovado = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Aprovado pela DRE"
+  );
 
   useEffect(() => {
     if (showTabelaLancamentosPeriodo) {
@@ -218,7 +229,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         </p>
         <div className="content-section-acompanhamento-lancamento-right">
           <div className="acompanhamento-status-lancamento mr-3">
-            {MEDICAO_STATUS_DE_PROGRESSO["MEDICAO_ENVIADA_PELA_UE"].nome}
+            {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
           </div>
           <p
             className="visualizar-lancamento mb-0"
@@ -355,6 +366,15 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               ))}
           </div>
+          {logPeriodoAprovado && (
+            <div className="row">
+              <div className="col-12">
+                <p>{`Período ${formatarNomePeriodo(
+                  periodoGrupo.nome_periodo_grupo
+                )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
+              </div>
+            </div>
+          )}
           <div className="periodo-final-tabela-lancamento mb-4">
             <div className="col-8 pl-0 pr-4">
               <p className="section-title-conf-lancamentos periodo mb-0">
@@ -373,10 +393,22 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 texto="Aprovar Período"
                 style={BUTTON_STYLE.GREEN}
                 className="col-5"
-                onClick={() => {}}
+                onClick={() => setShowModalAprovarPeriodo(true)}
+                disabled={
+                  !statusPermitidosParaAprovacao.includes(periodoGrupo.status)
+                }
               />
             </div>
           </div>
+          <ModalAprovarPeriodo
+            showModal={showModalAprovarPeriodo}
+            setShowModal={value => setShowModalAprovarPeriodo(value)}
+            periodoGrupo={periodoGrupo}
+            aprovarPeriodo={nomePeridoFormatado => {
+              setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
+              aprovarPeriodo(periodoGrupo, nomePeridoFormatado);
+            }}
+          />
           <Modal
             dialogClassName="modal-50w"
             show={showModalObservacaoDiaria}
