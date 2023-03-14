@@ -53,3 +53,12 @@ export const getPeriodosGruposMedicao = async params => {
     return data;
   }
 };
+
+export const dreAprovaMedicao = async uuid => {
+  const url = `medicao-inicial/medicao/${uuid}/dre-aporva-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
