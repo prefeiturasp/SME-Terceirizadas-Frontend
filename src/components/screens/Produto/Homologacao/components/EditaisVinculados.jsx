@@ -1,6 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
-import { InputText } from "components/Shareable/Input/InputText";
+import { TextArea } from "components/Shareable/TextArea/TextArea";
 
 export const EditaisVinculados = ({ ehCardSuspensos }) => {
   return (
@@ -14,12 +14,13 @@ export const EditaisVinculados = ({ ehCardSuspensos }) => {
       </div>
       <div className="col-12">
         <Field
-          component={InputText}
+          component={TextArea}
           label={
             ehCardSuspensos
               ? "Produto Suspenso nos Editais"
               : "Editais Vinculados ao Produto"
           }
+          className="editais-vinculados-textarea"
           name="produto.editais"
           disabled={true}
         />
