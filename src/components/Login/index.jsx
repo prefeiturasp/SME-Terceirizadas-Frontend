@@ -216,10 +216,7 @@ export class Login extends Component {
                     <i className="fas fa-truck" />
                   </div>
                   <div className="texto">
-                    Acesse com seu <strong>CPF</strong> de 11 dígitos
-                  </div>
-                  <div className="rodape">
-                    A <strong>senha</strong> é a cadastrada no primeiro acesso
+                    Instruções de <strong>acesso</strong>, em breve
                   </div>
                 </div>
               </div>
@@ -574,12 +571,6 @@ export class Login extends Component {
             Fornecedor ou Distribuidor: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
-        </div>
-        <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
-            Rede Parceira: &nbsp;
-          </span>
-          Digite seu <strong>Código Operador</strong>.
         </div>
         <Form
           onSubmit={this.handleRecuperaSenha}
