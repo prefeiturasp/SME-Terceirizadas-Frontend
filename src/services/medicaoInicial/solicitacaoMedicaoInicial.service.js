@@ -55,8 +55,17 @@ export const getPeriodosGruposMedicao = async params => {
 };
 
 export const dreAprovaMedicao = async uuid => {
-  const url = `medicao-inicial/medicao/${uuid}/dre-aporva-medicao/`;
+  const url = `medicao-inicial/medicao/${uuid}/dre-aprova-medicao/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const drePedeCorrecaMedicao = async (uuid, params) => {
+  const url = `medicao-inicial/medicao/${uuid}/dre-pede-correcao-medicao/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

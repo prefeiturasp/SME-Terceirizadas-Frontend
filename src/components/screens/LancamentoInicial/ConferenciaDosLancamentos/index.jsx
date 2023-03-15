@@ -134,7 +134,7 @@ export const ConferenciaDosLancamentos = () => {
           <Form
             onSubmit={() => {}}
             initialValues={dadosIniciais}
-            render={({ handleSubmit, form }) => (
+            render={({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
                   <div className="card-body">
@@ -220,6 +220,10 @@ export const ConferenciaDosLancamentos = () => {
                               nomePeridoFormatado
                             ) =>
                               aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
+                            }
+                            values={values}
+                            getPeriodosGruposMedicaoAsync={() =>
+                              getPeriodosGruposMedicaoAsync()
                             }
                           />
                         );
