@@ -1,4 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
+import { OnChange } from "react-final-form-listeners";
 import { Field } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import { Spin, Tabs } from "antd";
@@ -12,6 +13,7 @@ import {
   startOfMonth,
   subDays
 } from "date-fns";
+import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import InputValueMedicao from "components/Shareable/Input/InputValueMedicao";
 import {
@@ -28,16 +30,25 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
 import {
-  getCategoriasDeMedicao,
-  getValoresPeriodosLancamentos
-} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+  toastError,
+  toastSuccess,
+  toastWarn
+} from "components/Shareable/Toast/dialogs";
 import {
+  diasSemana,
   initialStateWeekColumns,
   MEDICAO_STATUS_DE_PROGRESSO
 } from "../../constants";
 import { deepCopy } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
+import { ModalCancelarCorrecao } from "../ModalCancelarCorrecao";
+import { ModalSalvarCorrecao } from "../ModalSalvarCorrecao";
 import { formatarNomePeriodo } from "../../helper";
+import {
+  getCategoriasDeMedicao,
+  getValoresPeriodosLancamentos
+} from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { drePedeCorrecaMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -47,7 +58,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     mesSolicitacao,
     anoSolicitacao,
     form,
-    aprovarPeriodo
+    aprovarPeriodo,
+    values,
+    getPeriodosGruposMedicaoAsync
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -64,11 +77,21 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [tabelaDietaRows, setTabelaDietaRows] = useState(null);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState(null);
   const [valoresLancamentos, setValoresLancamentos] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [modoCorrecao, setModoCorrecao] = useState(false);
+  const [valoresParaCorrecao, setValoresParaCorrecao] = useState({});
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
   const [showModalAprovarPeriodo, setShowModalAprovarPeriodo] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [
+    showModalCancelarSolicitacao,
+    setShowModalCancelarSolicitacao
+  ] = useState(false);
+  const [showModalSalvarSolicitacao, setShowModalSalvarSolicitacao] = useState(
+    false
+  );
+
   const statusPermitidosParaAprovacao = [
     "MEDICAO_ENVIADA_PELA_UE",
     "MEDICAO_CORRIGIDA_PELA_UE"
@@ -221,6 +244,134 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     form.change("observacao_modal", valorObservacao);
   };
 
+  const onChangeSemana = key => {
+    setSemanaSelecionada(key);
+  };
+
+  const ehInputParaCorrecao = inputNameMedicao => {
+    return (
+      Object.keys(values).filter(
+        key =>
+          key.includes(`ckbox_dias_semana__${inputNameMedicao}`) &&
+          values[`ckbox_dias_semana__${inputNameMedicao}`]
+      ).length > 0
+    );
+  };
+
+  const resetValuesCorrecao = uuidMedicaoPeriodoGrupo => {
+    setShowTabelaLancamentosPeriodo(false);
+    setModoCorrecao(false);
+    form.change(
+      `descricao_correcao__periodo_grupo_${uuidMedicaoPeriodoGrupo.slice(
+        0,
+        5
+      )}`,
+      ""
+    );
+    Object.keys(values).forEach(key => {
+      if (
+        key.includes("ckbox_dias_semana") &&
+        key.includes(
+          `uuid_medicao_periodo_grupo_${uuidMedicaoPeriodoGrupo.slice(0, 5)}`
+        )
+      ) {
+        form.change(key, false);
+      }
+    });
+  };
+
+  const salvarCorrecao = async uuidMedicaoPeriodoGrupo => {
+    let uuidsValoresMedicaoParaCorrecao = [];
+    Object.keys(valoresParaCorrecao).forEach(key => {
+      const keySplitted = key.split("__");
+      const nome_campo = keySplitted[0];
+      const dia = keySplitted[1].match(/\d/g).join("");
+      const idCategoria = keySplitted[2].match(/\d/g).join("");
+      const lancamento = valoresLancamentos.find(
+        valor =>
+          valor.nome_campo === nome_campo &&
+          Number(valor.dia) === Number(dia) &&
+          Number(valor.categoria_medicao) === Number(idCategoria)
+      );
+
+      const uuidValorMedicao = lancamento.uuid;
+      uuidsValoresMedicaoParaCorrecao.push(uuidValorMedicao);
+    });
+
+    if (uuidsValoresMedicaoParaCorrecao.length === 0) {
+      toastWarn("Não existem valores para correção");
+      return;
+    }
+
+    const descricao_correcao =
+      values[
+        `descricao_correcao__periodo_grupo_${uuidMedicaoPeriodoGrupo.slice(
+          0,
+          5
+        )}`
+      ];
+    const payload = {
+      uuids_valores_medicao_para_correcao: uuidsValoresMedicaoParaCorrecao,
+      justificativa: descricao_correcao
+    };
+
+    const response = await drePedeCorrecaMedicao(
+      uuidMedicaoPeriodoGrupo,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Solicitação de correção salva com sucesso");
+    } else {
+      toastError("Houve um erro ao salvar solicitação de correção");
+    }
+
+    setValoresParaCorrecao({});
+    getPeriodosGruposMedicaoAsync();
+    setModoCorrecao(false);
+    resetValuesCorrecao(uuidMedicaoPeriodoGrupo);
+  };
+
+  const cancelarCorrecao = uuidMedicaoPeriodoGrupo => {
+    resetValuesCorrecao(uuidMedicaoPeriodoGrupo);
+    toastWarn("Solicitação de correção cancelada");
+  };
+
+  const onChangeCheckBox = (column, categoria, periodoGrupo) => {
+    const keys = Object.keys(values).filter(key =>
+      key.includes(
+        `dia_${column.dia}__categoria_${
+          categoria.id
+        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+          0,
+          5
+        )}`
+      )
+    );
+    const valuesParaCorrecao = Object.keys(values)
+      .filter(
+        key =>
+          keys.includes(key) &&
+          !key.includes("ckbox_dias_semana") &&
+          values[key] &&
+          values[
+            `ckbox_dias_semana__dia_${column.dia}__categoria_${
+              categoria.id
+            }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+              0,
+              5
+            )}`
+          ]
+      )
+      .reduce((object, key) => {
+        return Object.assign(object, {
+          [key]: values[key]
+        });
+      }, {});
+    setValoresParaCorrecao(
+      Object.assign(valoresParaCorrecao, valuesParaCorrecao)
+    );
+  };
+
   return (
     <div key={key}>
       <div className="content-section-acompanhamento-lancamento mb-3">
@@ -228,7 +379,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           <b>{periodoGrupo.nome_periodo_grupo}</b>
         </p>
         <div className="content-section-acompanhamento-lancamento-right">
-          <div className="acompanhamento-status-lancamento mr-3">
+          <div
+            className={`acompanhamento-status-lancamento mr-3 ${
+              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
+            }`}
+          >
             {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
           </div>
           <p
@@ -249,7 +404,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
           <div className="weeks-tabs mb-2">
             <Tabs
               activeKey={semanaSelecionada}
-              onChange={key => setSemanaSelecionada(key)}
+              onChange={key => onChangeSemana(key)}
               type="card"
               className={`${
                 semanaSelecionada === 1 ? "default-color-first-semana" : ""
@@ -259,7 +414,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
             {categoriasDeMedicao &&
               categoriasDeMedicao.length > 0 &&
               categoriasDeMedicao.map(categoria => (
-                <div key={categoria.uuid}>
+                <div key={categoria.id}>
                   <b className="pb-2 section-title">{categoria.nome}</b>
                   <section className="tabela-tipos-alimentacao">
                     <article>
@@ -267,21 +422,63 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                         className={"grid-table-tipos-alimentacao header-table"}
                       >
                         <div />
-                        {weekColumns.map(column => (
-                          <div key={column.dia}>{column.dia}</div>
-                        ))}
+                        {weekColumns.map(column => {
+                          return modoCorrecao &&
+                            !validacaoSemana(column.dia, semanaSelecionada) ? (
+                            <div
+                              className="dias-semana-tabela"
+                              key={column.dia}
+                            >
+                              <Field
+                                className="input-dias-semana-tabela"
+                                component={"input"}
+                                type="checkbox"
+                                name={`ckbox_dias_semana__dia_${
+                                  column.dia
+                                }__categoria_${
+                                  categoria.id
+                                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                  0,
+                                  5
+                                )}`}
+                              />
+                              <div
+                                key={column.dia}
+                                className="label-dias-semana-tabela"
+                              >
+                                {column.dia}
+                              </div>
+                              <OnChange
+                                name={`ckbox_dias_semana__dia_${
+                                  column.dia
+                                }__categoria_${
+                                  categoria.id
+                                }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                  0,
+                                  5
+                                )}`}
+                              >
+                                {() =>
+                                  onChangeCheckBox(
+                                    column,
+                                    categoria,
+                                    periodoGrupo
+                                  )
+                                }
+                              </OnChange>
+                            </div>
+                          ) : (
+                            <div key={column.dia}>{column.dia}</div>
+                          );
+                        })}
                       </div>
                       <div
                         className={"grid-table-tipos-alimentacao header-table"}
                       >
                         <div />
-                        <div>Seg.</div>
-                        <div>Ter.</div>
-                        <div>Qua.</div>
-                        <div>Qui.</div>
-                        <div>Sex.</div>
-                        <div>Sáb.</div>
-                        <div>Dom.</div>
+                        {diasSemana.map((dia, index) => (
+                          <div key={index}>{dia}</div>
+                        ))}
                       </div>
                       {escolherTabela(categoria).map((row, index) => {
                         return (
@@ -336,14 +533,32 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                       />
                                     )
                                   ) : (
-                                    <div className="field-values-input">
+                                    <div
+                                      className={`field-values-input${
+                                        ehInputParaCorrecao(
+                                          `dia_${column.dia}__categoria_${
+                                            categoria.id
+                                          }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                            0,
+                                            5
+                                          )}`
+                                        ) && modoCorrecao
+                                          ? " input-para-correcao"
+                                          : ""
+                                      }`}
+                                    >
                                       <Field
                                         className={`m-2`}
                                         component={InputValueMedicao}
                                         apenasNumeros
                                         name={`${row.name}__dia_${
                                           column.dia
-                                        }__categoria_${categoria.id}`}
+                                        }__categoria_${
+                                          categoria.id
+                                        }__uuid_medicao_periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                                          0,
+                                          5
+                                        )}`}
                                         disabled={true}
                                         defaultValue={defaultValue(
                                           column,
@@ -365,39 +580,98 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   </section>
                 </div>
               ))}
-          </div>
-          {logPeriodoAprovado && (
-            <div className="row">
-              <div className="col-12">
-                <p>{`Período ${formatarNomePeriodo(
-                  periodoGrupo.nome_periodo_grupo
-                )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
+            {logPeriodoAprovado && (
+              <div className="row">
+                <div className="col-12">
+                  <p>{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
+                </div>
               </div>
-            </div>
-          )}
-          <div className="periodo-final-tabela-lancamento mb-4">
-            <div className="col-8 pl-0 pr-4">
-              <p className="section-title-conf-lancamentos periodo mb-0">
-                {periodoGrupo.nome_periodo_grupo}
-              </p>
-              <hr className="my-0" />
-            </div>
-            <div className="botoes col-4 px-0">
-              <Botao
-                texto="Solicitar Correção"
-                style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                className="col-6 mr-3"
-                onClick={() => {}}
-              />
-              <Botao
-                texto="Aprovar Período"
-                style={BUTTON_STYLE.GREEN}
-                className="col-5"
-                onClick={() => setShowModalAprovarPeriodo(true)}
-                disabled={
-                  !statusPermitidosParaAprovacao.includes(periodoGrupo.status)
-                }
-              />
+            )}
+            {modoCorrecao && (
+              <>
+                <div className="red">
+                  Selecione
+                  <b>
+                    {" "}
+                    nas tabelas acima os dias em que a unidade deve realizar as
+                    correções{" "}
+                  </b>
+                  e informe no campo abaixo todas as correções a serem
+                  realizadas.
+                </div>
+                <div className="mt-3">
+                  <p className="mb-0">
+                    Descrição da Correção <span className="red">*</span>
+                  </p>
+                  <Field
+                    component={CKEditorField}
+                    name={`descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                      0,
+                      5
+                    )}`}
+                    placeholder="Informe quais os pontos necessários de correção da Medição Inicial"
+                    required
+                  />
+                </div>
+              </>
+            )}
+            <div className="periodo-final-tabela-lancamento mb-4">
+              <div className={`col-${modoCorrecao ? 6 : 8} pl-0 pr-4`}>
+                <p className="section-title-conf-lancamentos periodo mb-0">
+                  {periodoGrupo.nome_periodo_grupo}
+                </p>
+                <hr className="my-0" />
+              </div>
+              {modoCorrecao ? (
+                <div className="botoes col-6 px-0">
+                  <Botao
+                    texto="Cancelar"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="col-3 mr-4"
+                    onClick={() => setShowModalCancelarSolicitacao(true)}
+                  />
+                  <Botao
+                    texto="Salvar Solicitação de Correção para UE"
+                    style={BUTTON_STYLE.GREEN}
+                    className="col-8"
+                    disabled={
+                      !values[
+                        `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                          0,
+                          5
+                        )}`
+                      ]
+                    }
+                    onClick={() => setShowModalSalvarSolicitacao(true)}
+                  />
+                </div>
+              ) : (
+                <div className="botoes col-4 px-0">
+                  <Botao
+                    texto="Solicitar Correção"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="col-6 mr-3"
+                    onClick={() => setModoCorrecao(true)}
+                    disabled={[
+                      "MEDICAO_APROVADA_PELA_DRE",
+                      "MEDICAO_CORRECAO_SOLICITADA"
+                    ].includes(periodoGrupo.status)}
+                  />
+                  <Botao
+                    texto="Aprovar Período"
+                    style={BUTTON_STYLE.GREEN}
+                    className="col-5"
+                    onClick={() => setShowModalAprovarPeriodo(true)}
+                    disabled={
+                      !statusPermitidosParaAprovacao.includes(
+                        periodoGrupo.status
+                      )
+                    }
+                  />
+                </div>
+              )}
             </div>
           </div>
           <ModalAprovarPeriodo
@@ -408,6 +682,21 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
               aprovarPeriodo(periodoGrupo, nomePeridoFormatado);
             }}
+          />
+          <ModalCancelarCorrecao
+            showModal={showModalCancelarSolicitacao}
+            setShowModal={value => setShowModalCancelarSolicitacao(value)}
+            cancelarCorrecao={() =>
+              cancelarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
+            }
+          />
+          <ModalSalvarCorrecao
+            showModal={showModalSalvarSolicitacao}
+            setShowModal={value => setShowModalSalvarSolicitacao(value)}
+            periodoGrupo={periodoGrupo}
+            salvarCorrecao={() =>
+              salvarCorrecao(periodoGrupo.uuid_medicao_periodo_grupo)
+            }
           />
           <Modal
             dialogClassName="modal-50w"
