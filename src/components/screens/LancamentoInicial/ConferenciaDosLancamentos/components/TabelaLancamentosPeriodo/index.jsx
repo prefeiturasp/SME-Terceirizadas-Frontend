@@ -384,7 +384,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
             }`}
           >
-            {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
+            {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
+              MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
           </div>
           <p
             className="visualizar-lancamento mb-0"
