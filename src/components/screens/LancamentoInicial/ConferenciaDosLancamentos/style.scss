@@ -7,6 +7,31 @@ div.conferencia-dos-lancamentos {
     color: $green;
   }
 
+  .dias-semana-tabela {
+    display: flex;
+    justify-content: center;
+
+    .label-dias-semana-tabela {
+      margin-left: 4px;
+      border: 0;
+    }
+
+    input {
+      accent-color: #c73932;
+    }
+  }
+
+  .input-dias-semana-tabela {
+    position: absolute;
+    margin-left: 8px;
+  }
+
+  .input-para-correcao {
+    div.input {
+      background-color: #c73932;
+    }
+  }
+
   .periodo-final-tabela-lancamento {
     display: flex;
     flex-direction: row;
@@ -72,6 +97,10 @@ div.conferencia-dos-lancamentos {
         background-color: $white;
         opacity: 0.8;
         color: black;
+      }
+
+      .red {
+        color: $red;
       }
 
       .visualizar-lancamento {
