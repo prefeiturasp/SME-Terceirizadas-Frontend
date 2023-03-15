@@ -581,25 +581,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   </section>
                 </div>
               ))}
-            <div className="row">
-              <div className="col-12">
-                <p className="titulo-historico-periodo">
-                  Histórico de Correções:
-                </p>
-              </div>
-            </div>
             {logPeriodoAprovado && (
-              <div className="container-fluid">
-                <div className="row">
-                  <ul className="historico-periodo">
-                    <li className="log-historico">
-                      <div className="col-12">
-                        <p className="periodo-aprovado">{`Período ${formatarNomePeriodo(
-                          periodoGrupo.nome_periodo_grupo
-                        )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
-                      </div>
-                    </li>
-                  </ul>
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  aprovado em ${logPeriodoAprovado.criado_em}`}</p>
                 </div>
               </div>
             )}
