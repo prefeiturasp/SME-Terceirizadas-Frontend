@@ -19,6 +19,9 @@ export const MEDICAO_STATUS_DE_PROGRESSO = {
   },
   MEDICAO_APROVADA_PELA_CODAE: {
     nome: "Aprovado pela CODAE"
+  },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: "Em aberto para preenchimento pela UE"
   }
 };
 

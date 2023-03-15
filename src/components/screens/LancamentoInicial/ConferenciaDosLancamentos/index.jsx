@@ -45,54 +45,53 @@ export const ConferenciaDosLancamentos = () => {
     }
   };
 
-  useEffect(() => {
+  const getSolMedInicialAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const escolaUuid = location.state.escolaUuid;
+    const response = await retrieveSolicitacaoMedicaoInicial(uuid);
     let dados_iniciais;
     let mes;
     let mesString;
     let ano;
     let escola;
+    if (response.status === HTTP_STATUS.OK) {
+      mes = response.data.mes;
+      ano = response.data.ano;
+      const data = new Date(`${mes}/01/${ano}`);
+      mesString = format(data, "LLLL", {
+        locale: ptBR
+      }).toString();
+      mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
+      escola = response.data.escola;
+      dados_iniciais = {
+        mes_lancamento: `${mesString} / ${ano}`,
+        unidade_educacional: escola
+      };
+      setSolicitacao(response.data);
+      setMesSolicitacao(mes);
+      setAnoSolicitacao(ano);
+    } else {
+      setErroAPI("Erro ao carregar Medição Inicial.");
+    }
+    dados_iniciais && setDadosIniciais(dados_iniciais);
+    setLoading(false);
+  };
 
-    const getSolMedInicialAsync = async () => {
-      const response = await retrieveSolicitacaoMedicaoInicial(uuid);
-      if (response.status === HTTP_STATUS.OK) {
-        mes = response.data.mes;
-        ano = response.data.ano;
-        const data = new Date(`${mes}/01/${ano}`);
-        mesString = format(data, "LLLL", {
-          locale: ptBR
-        }).toString();
-        mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
-        escola = response.data.escola;
-        dados_iniciais = {
-          mes_lancamento: `${mesString} / ${ano}`,
-          unidade_educacional: escola
-        };
-        setSolicitacao(response.data);
-        setMesSolicitacao(mes);
-        setAnoSolicitacao(ano);
-      } else {
-        setErroAPI("Erro ao carregar Medição Inicial.");
-      }
-      dados_iniciais && setDadosIniciais(dados_iniciais);
-      setLoading(false);
-    };
-
-    const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
-      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-        escolaUuid
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
+    const escolaUuid = location.state.escolaUuid;
+    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+      escolaUuid
+    );
+    if (response_vinculos.status === HTTP_STATUS.OK) {
+      setPeriodosSimples(response_vinculos.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
-      if (response_vinculos.status === HTTP_STATUS.OK) {
-        setPeriodosSimples(response_vinculos.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos simples. Tente novamente mais tarde."
-        );
-      }
-    };
+    }
+  };
 
+  useEffect(() => {
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
@@ -113,6 +112,7 @@ export const ConferenciaDosLancamentos = () => {
   };
 
   const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
+    setLoading(true);
     const response = await dreAprovaMedicao(
       periodoGrupo.uuid_medicao_periodo_grupo
     );
@@ -123,6 +123,8 @@ export const ConferenciaDosLancamentos = () => {
         `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
       );
     }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
   };
 
