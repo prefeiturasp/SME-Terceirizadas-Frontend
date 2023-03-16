@@ -29,7 +29,7 @@ export const TabelaResultado = ({ ...props }) => {
         <div className="col-7 text-right">
           <p className="helper-grid-alunos-matriculados">
             <i className="fa fa-info-circle mr-2" />
-            Veja o nome da Unid. Educacional passando o mouse sobre o número.
+            Veja o nome da Unid. Educacional passando o mouse sobre o nome.
           </p>
         </div>
       </div>
