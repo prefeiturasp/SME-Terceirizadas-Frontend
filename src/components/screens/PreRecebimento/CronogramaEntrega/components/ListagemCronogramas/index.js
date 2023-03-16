@@ -16,7 +16,10 @@ import {
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
-    if (status === "Enviado ao Fornecedor" && usuarioEhFornecedor()) {
+    if (
+      status === "Assinado e Enviado ao Fornecedor" &&
+      usuarioEhFornecedor()
+    ) {
       return "Recebido";
     } else {
       return status;
@@ -71,7 +74,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
-                          {cronograma.status === "Assinado Fornecedor" &&
+                          {cronograma.status === "Assinado CODAE" &&
                             usuarioEhFornecedor() && (
                               <>
                                 <span className="ml-1">|</span>

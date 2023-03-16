@@ -44,13 +44,19 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+                <p>
+                  <b># {solicitacao.id_externo}</b>
+                </p>
+              </div>
+              <div className="col-3">
                 <p>Tipo de Alteração:</p>
                 <p>
                   <b>{solicitacao.motivo.nome}</b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Data(s) do Evento:</p>
                 <p>
                   <b>
@@ -62,7 +68,7 @@ export const AlteracaoCEMEIBody = ({ ...props }) => {
                   </b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>

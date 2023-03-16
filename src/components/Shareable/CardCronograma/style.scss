@@ -58,6 +58,12 @@
     }
   }
   &.card-aguardando-dilog {
+    border-left-color: $purple !important;
+    i {
+      color: $purple;
+    }
+  }
+  &.card-cronogramas-assinados {
     border-left-color: $greenLight !important;
     i {
       color: $greenLight;

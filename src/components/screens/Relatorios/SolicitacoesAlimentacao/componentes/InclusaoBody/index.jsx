@@ -32,49 +32,61 @@ export const InclusaoBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+              </div>
+              <div className="col-3">
                 <p>Motivo:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Dia(s) de Inclusão:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
               </div>
             </div>
             {solicitacao.inclusoes.map((inclusao, idx) => {
               return (
                 <div className="row" key={idx}>
-                  <div className="col-4">
+                  {idx === 0 ? (
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="col-3" />
+                  )}
+                  <div className="col-3">
                     <p>
                       <b>{inclusao.motivo.nome}</b>
                     </p>
                   </div>
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>
                       <b>{inclusao.data}</b>
                     </p>
                   </div>
                   {idx === 0 ? (
-                    <div className="col-4">
+                    <div className="col-3">
                       <p>
                         <b>{log && log.criado_em.split(" ")[0]}</b>
                       </p>
                     </div>
                   ) : (
-                    <div className="col-4" />
+                    <div className="col-3" />
                   )}
                 </div>
               );
             })}
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
                 <p>Período:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Tipos de Alimentação:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>No de Alunos:</p>
               </div>
             </div>
@@ -84,17 +96,17 @@ export const InclusaoBody = ({ ...props }) => {
                 .join(", ");
               return (
                 <div className="row" key={idx}>
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>
                       <b>{quantidade_periodo.periodo_escolar.nome}</b>
                     </p>
                   </div>
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>
                       <b>{tiposAlimentacao}</b>
                     </p>
                   </div>
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>
                       <b>{quantidade_periodo.numero_alunos}</b>
                     </p>

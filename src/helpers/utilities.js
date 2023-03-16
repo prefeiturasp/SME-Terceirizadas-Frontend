@@ -381,6 +381,12 @@ export const usuarioEhEscola = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhDiretorUE = () => {
+  return [PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const usuarioEscolaEhGestaoMistaParceira = () => {
   return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
     localStorage.getItem("tipo_gestao")
@@ -457,6 +463,9 @@ export const usuarioEhPreRecebimento = () => {
 
 export const usuarioEhDinutreDiretoria = () =>
   localStorage.getItem("perfil") === PERFIL.DINUTRE_DIRETORIA;
+
+export const usuarioEhDilogDiretoria = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_DIRETORIA;
 
 export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));

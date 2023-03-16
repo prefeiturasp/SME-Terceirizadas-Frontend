@@ -127,6 +127,13 @@ export default ({
           ))}
           {periodosInclusaoContinua &&
             Object.keys(periodosInclusaoContinua).map((periodo, index) => {
+              const vinculosDoPeriodo = periodosEscolaSimples.find(
+                p => p.periodo_escolar.nome === periodo
+              );
+              const tiposAlimentacao = vinculosDoPeriodo
+                ? vinculosDoPeriodo.tipos_alimentacao
+                : [];
+
               return (
                 <CardLancamento
                   key={index}
@@ -134,11 +141,7 @@ export default ({
                   textoCabecalho={periodo}
                   cor={CORES[4]}
                   totalAlimentacoes={0}
-                  tipos_alimentacao={
-                    periodosEscolaSimples.find(
-                      p => p.periodo_escolar.nome === periodo
-                    ).tipos_alimentacao
-                  }
+                  tipos_alimentacao={tiposAlimentacao}
                   periodoSelecionado={periodoSelecionado}
                   solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                   objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}

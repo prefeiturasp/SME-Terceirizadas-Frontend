@@ -37,13 +37,19 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+                <p>
+                  <b># {solicitacao.id_externo}</b>
+                </p>
+              </div>
+              <div className="col-3">
                 <p>Local do Passeio:</p>
                 <p>
                   <b>{solicitacao.local}</b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Opção Desejada:</p>
                 <p>
                   <b>
@@ -53,7 +59,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                   </b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
                 <p>
                   <b>{log && log.criado_em.split(" ")[0]}</b>
@@ -61,7 +67,7 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
               </div>
             </div>
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
                 <p>Tempo Previsto de Passeio:</p>
                 <p>
                   <b>
@@ -72,13 +78,13 @@ export const KitLancheAvulsaBody = ({ ...props }) => {
                   </b>
                 </p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>No Total de Kits:</p>
                 <p>
                   <b>{solicitacao.quantidade_alimentacoes}</b>
                 </p>
               </div>
-              <div className="col-4" />
+              <div className="col-3" />
             </div>
             {solicitacao.solicitacao_kit_lanche.descricao &&
               solicitacao.solicitacao_kit_lanche.descricao !== "<p></p>" && (

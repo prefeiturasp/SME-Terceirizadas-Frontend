@@ -56,37 +56,49 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
         <td colSpan={6}>
           <div className="container-fluid">
             <div className="row mt-3">
-              <div className="col-4">
+              <div className="col-3">
+                <p>ID da Solicitação:</p>
+              </div>
+              <div className="col-3">
                 <p>Motivo:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>Dia(s) de Inclusão:</p>
               </div>
-              <div className="col-4">
+              <div className="col-3">
                 <p>{labelData}</p>
               </div>
             </div>
             {solicitacao.dias_motivos_da_inclusao_cemei.map((inclusao, idx) => {
               return (
                 <div className="row mt-3" key={idx}>
-                  <div className="col-4">
+                  {idx === 0 ? (
+                    <div className="col-3">
+                      <p>
+                        <b># {solicitacao.id_externo}</b>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="col-3" />
+                  )}
+                  <div className="col-3">
                     <p>
                       <b>{inclusao.motivo.nome}</b>
                     </p>
                   </div>
-                  <div className="col-4">
+                  <div className="col-3">
                     <p>
                       <b>{inclusao.data}</b>
                     </p>
                   </div>
                   {idx === 0 ? (
-                    <div className="col-4">
+                    <div className="col-3">
                       <p>
                         <b>{log && log.criado_em.split(" ")[0]}</b>
                       </p>
                     </div>
                   ) : (
-                    <div className="col-4" />
+                    <div className="col-3" />
                   )}
                 </div>
               );

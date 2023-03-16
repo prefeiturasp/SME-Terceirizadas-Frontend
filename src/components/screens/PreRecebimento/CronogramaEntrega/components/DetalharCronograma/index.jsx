@@ -5,8 +5,10 @@ import { getCronograma } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
 import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
+import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
   usuarioEhCronograma,
+  usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhFornecedor
 } from "helpers/utilities";
@@ -90,6 +92,9 @@ export default () => {
               )}
               {usuarioEhDinutreDiretoria() && (
                 <AcoesDetalharDinutreDiretoria cronograma={cronograma} />
+              )}
+              {usuarioEhDilogDiretoria() && (
+                <AcoesDetalharDilogDiretoria cronograma={cronograma} />
               )}
             </>
           )}
