@@ -19,7 +19,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 
-export default ({ diretor_escola, empresa, geral }) => {
+export default ({ diretor_escola, empresa, geral, codae }) => {
   const [carregando, setCarregando] = useState(false);
   const [vinculos, setVinculos] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -50,6 +50,21 @@ export default ({ diretor_escola, empresa, geral }) => {
       uuid: visao.id,
       nome: visao.nome
     }));
+
+    if (codae) {
+      setVisoes(options_visoes.filter(visao => visao.uuid !== "EMPRESA"));
+      setPerfis(
+        lista_perfis
+          .filter(perfil => perfil.visao && perfil.visao !== "EMPRESA")
+          .map(visao => ({
+            uuid: visao.id,
+            nome: visao.nome
+          }))
+      );
+      setListaPerfis(lista_perfis);
+      setFiltros({});
+      return;
+    }
 
     if (diretor_escola) {
       setPerfisVisao(lista_perfis, "ESCOLA");
@@ -203,6 +218,7 @@ export default ({ diretor_escola, empresa, geral }) => {
         empresa={empresa}
         onSubmit={salvarAcesso}
         visaoUnica={visaoUnica}
+        codae={codae}
       />
       <ModalCadastroVinculo
         show={showEdicao}

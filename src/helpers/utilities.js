@@ -373,6 +373,10 @@ export const usuarioEhAdministradorNutriSupervisao = () => {
   );
 };
 
+export const usuarioEhDilog = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_LOGISTICA;
+};
+
 export const usuarioEhCodaeDilog = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA

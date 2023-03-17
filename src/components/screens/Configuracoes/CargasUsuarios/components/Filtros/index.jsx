@@ -20,20 +20,24 @@ import { OPTIONS_STATUS } from "../../constants";
 
 const FORM_NAME = "buscaCargasUsuarios";
 
-const OPTIONS_MODELO = [
-  {
-    uuid: "SERVIDOR",
-    nome: "Servidor"
-  },
-  {
-    uuid: "NAO_SERVIDOR",
-    nome: "Não Servidor"
-  }
-];
-
-export default ({ setFiltros, setPlanilhas, setShowCadastro }) => {
+export default ({ setFiltros, setPlanilhas, setShowCadastro, servidores }) => {
   const initialValues = {};
   const inicioResultado = useRef();
+
+  const OPTIONS_MODELO = [
+    {
+      uuid: "SERVIDOR",
+      nome: "Servidor"
+    },
+    ...(!servidores
+      ? [
+          {
+            uuid: "NAO_SERVIDOR",
+            nome: "Não Servidor"
+          }
+        ]
+      : [])
+  ];
 
   const onSubmit = async values => {
     const filtros = { ...values };
@@ -61,16 +65,18 @@ export default ({ setFiltros, setPlanilhas, setShowCadastro }) => {
             downloadPlanilhaServidor();
           }}
         />
-        <Botao
-          texto="Modelo Planilha Não Servidores"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          className="float-right ml-3"
-          icon="fas fa-download"
-          onClick={() => {
-            downloadPlanilhaNaoServidor();
-          }}
-        />
+        {!servidores && (
+          <Botao
+            texto="Modelo Planilha Não Servidores"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="float-right ml-3"
+            icon="fas fa-download"
+            onClick={() => {
+              downloadPlanilhaNaoServidor();
+            }}
+          />
+        )}
       </div>
 
       <Form
