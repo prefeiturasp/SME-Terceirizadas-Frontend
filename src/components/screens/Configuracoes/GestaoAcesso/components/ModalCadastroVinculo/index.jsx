@@ -50,7 +50,8 @@ const ModalCadastroVinculo = ({
   vinculo,
   toggleExclusao,
   empresa,
-  visaoUnica
+  visaoUnica,
+  codae
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -171,10 +172,10 @@ const ModalCadastroVinculo = ({
 
     if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
-    } else if (diretor_escola || visaoUnica) {
+    } else if (diretor_escola || visaoUnica || codae) {
       setTipoUsuario("SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica]);
+  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica, codae]);
 
   return (
     <>
@@ -198,7 +199,7 @@ const ModalCadastroVinculo = ({
                   {diretor_escola ||
                     empresa ||
                     visaoUnica !== undefined ||
-                    (!vinculo && (
+                    (!vinculo && !codae && (
                       <div className="row mx-0 my-1">
                         <span className="label-radio">
                           Selecione o tipo de usuário:

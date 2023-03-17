@@ -129,7 +129,8 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhDiretorUE,
   usuarioEhDilogDiretoria,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhDilog
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -190,6 +191,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
 import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
@@ -215,6 +217,7 @@ import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/Acom
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 
 const routesConfig = [
   {
@@ -774,8 +777,14 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
+    component: GestaoAcessoMasterPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -804,9 +813,15 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
+    tipoUsuario: usuarioEhDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
+    component: CargasUsuariosServidoresPage,
+    exact: true,
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhAdministradorRepresentanteCodae()
   },
   {

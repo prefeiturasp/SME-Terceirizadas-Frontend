@@ -18,7 +18,7 @@ import ModalCadastroPlanilha from "./components/ModalCadastroPlanilha";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalRemocaoPlanilha from "./components/ModalRemocaoPlanilha";
 
-export default () => {
+export default ({ servidores }) => {
   const [carregando, setCarregando] = useState(false);
   const [planilhas, setPlanilhas] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -133,6 +133,7 @@ export default () => {
           onSubmit={(tipoPlanilha, arquivo) => {
             createPlanilha(tipoPlanilha, arquivo);
           }}
+          servidores={servidores}
         />
         <ModalRemocaoPlanilha
           show={showRemocao}
@@ -144,6 +145,7 @@ export default () => {
             setFiltros={setFiltros}
             setPlanilhas={setPlanilhas}
             setShowCadastro={setShowCadastro}
+            servidores={servidores}
           />
           {planilhas && planilhas.length > 0 && (
             <>

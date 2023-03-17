@@ -2,12 +2,12 @@ import React from "react";
 import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import { GESTAO_ACESSO_CODAE_DILOG, CONFIGURACOES } from "configs/constants";
-import GestaoAcesso from "components/screens/Configuracoes/GestaoAcesso";
+import { CARGAS_USUARIOS, CONFIGURACOES } from "configs/constants";
+import CargasUsuarios from "components/screens/Configuracoes/CargasUsuarios";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${GESTAO_ACESSO_CODAE_DILOG}`,
-  titulo: "Gestão de Acesso"
+  href: `/${CONFIGURACOES}/${CARGAS_USUARIOS}`,
+  titulo: "Cargas de Usuários"
 };
 
 const anteriores = [
@@ -24,6 +24,6 @@ const anteriores = [
 export default () => (
   <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
-    <GestaoAcesso codae />
+    <CargasUsuarios servidores />
   </Page>
 );
