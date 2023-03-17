@@ -8,7 +8,6 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
-  usuarioEhAdministradorDRE,
   usuarioEhLogistica,
   usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
@@ -130,7 +129,6 @@ export const SidebarContent = () => {
     !usuarioEhEscolaTerceirizada() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhOutrosDilog() &&
     !usuarioEhPreRecebimentoSemLogistica() &&

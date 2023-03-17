@@ -163,9 +163,7 @@ export class SidebarContentDRE extends Component {
           <span>Relatórios</span>
         </NavLink>
       </li>,
-      [PERFIL.SUPLENTE, PERFIL.COGESTOR].includes(
-        localStorage.getItem("perfil")
-      ) && (
+      [PERFIL.COGESTOR_DRE].includes(localStorage.getItem("perfil")) && (
         <li key={4} className="nav-item">
           <Link
             className={`nav-link collapsed`}
