@@ -6,14 +6,15 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
   getPeriodosGruposMedicao,
-  retrieveSolicitacaoMedicaoInicial
+  retrieveSolicitacaoMedicaoInicial,
+  dreAprovaMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
 import "./style.scss";
@@ -30,68 +31,67 @@ export const ConferenciaDosLancamentos = () => {
   const [mesSolicitacao, setMesSolicitacao] = useState(null);
   const [anoSolicitacao, setAnoSolicitacao] = useState(null);
 
-  useEffect(() => {
+  const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const escolaUuid = location.state.escolaUuid;
+    const params = { uuid_solicitacao: uuid };
+    const response = await getPeriodosGruposMedicao(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosGruposMedicao(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getSolMedInicialAsync = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const response = await retrieveSolicitacaoMedicaoInicial(uuid);
     let dados_iniciais;
     let mes;
     let mesString;
     let ano;
     let escola;
+    if (response.status === HTTP_STATUS.OK) {
+      mes = response.data.mes;
+      ano = response.data.ano;
+      const data = new Date(`${mes}/01/${ano}`);
+      mesString = format(data, "LLLL", {
+        locale: ptBR
+      }).toString();
+      mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
+      escola = response.data.escola;
+      dados_iniciais = {
+        mes_lancamento: `${mesString} / ${ano}`,
+        unidade_educacional: escola
+      };
+      setSolicitacao(response.data);
+      setMesSolicitacao(mes);
+      setAnoSolicitacao(ano);
+    } else {
+      setErroAPI("Erro ao carregar Medição Inicial.");
+    }
+    dados_iniciais && setDadosIniciais(dados_iniciais);
+    setLoading(false);
+  };
 
-    const getSolMedInicialAsync = async () => {
-      const response = await retrieveSolicitacaoMedicaoInicial(uuid);
-      if (response.status === HTTP_STATUS.OK) {
-        mes = response.data.mes;
-        ano = response.data.ano;
-        const data = new Date(`${mes}/01/${ano}`);
-        mesString = format(data, "LLLL", {
-          locale: ptBR
-        }).toString();
-        mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
-        escola = response.data.escola;
-        dados_iniciais = {
-          mes_lancamento: `${mesString} / ${ano}`,
-          unidade_educacional: escola
-        };
-        setSolicitacao(response.data);
-        setMesSolicitacao(mes);
-        setAnoSolicitacao(ano);
-      } else {
-        setErroAPI("Erro ao carregar Medição Inicial.");
-      }
-      dados_iniciais && setDadosIniciais(dados_iniciais);
-      setLoading(false);
-    };
-
-    const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
-      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-        escolaUuid
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
+    const escolaUuid = location.state.escolaUuid;
+    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+      escolaUuid
+    );
+    if (response_vinculos.status === HTTP_STATUS.OK) {
+      setPeriodosSimples(response_vinculos.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
-      if (response_vinculos.status === HTTP_STATUS.OK) {
-        setPeriodosSimples(response_vinculos.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos simples. Tente novamente mais tarde."
-        );
-      }
-    };
+    }
+  };
 
-    const getPeriodosGruposMedicaoAsync = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const uuid = urlParams.get("uuid");
-      const params = { uuid_solicitacao: uuid };
-      const response = await getPeriodosGruposMedicao(params);
-      if (response.status === HTTP_STATUS.OK) {
-        setPeriodosGruposMedicao(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
-        );
-      }
-    };
-
+  useEffect(() => {
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
@@ -111,6 +111,23 @@ export const ConferenciaDosLancamentos = () => {
     }
   };
 
+  const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
+    setLoading(true);
+    const response = await dreAprovaMedicao(
+      periodoGrupo.uuid_medicao_periodo_grupo
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(`Período ${nomePeridoFormatado} aprovado com sucesso!`);
+    } else {
+      setErroAPI(
+        `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
+      );
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
   return (
     <div className="conferencia-dos-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
@@ -119,7 +136,7 @@ export const ConferenciaDosLancamentos = () => {
           <Form
             onSubmit={() => {}}
             initialValues={dadosIniciais}
-            render={({ handleSubmit, form }) => (
+            render={({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
                   <div className="card-body">
@@ -200,6 +217,16 @@ export const ConferenciaDosLancamentos = () => {
                             mesSolicitacao={mesSolicitacao}
                             anoSolicitacao={anoSolicitacao}
                             form={form}
+                            aprovarPeriodo={(
+                              periodoGrupo,
+                              nomePeridoFormatado
+                            ) =>
+                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
+                            }
+                            values={values}
+                            getPeriodosGruposMedicaoAsync={() =>
+                              getPeriodosGruposMedicaoAsync()
+                            }
                           />
                         );
                       })}
