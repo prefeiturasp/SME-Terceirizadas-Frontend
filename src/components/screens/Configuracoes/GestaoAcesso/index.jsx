@@ -73,7 +73,7 @@ export default ({ diretor_escola, empresa, geral }) => {
     }
 
     setVisoes(options_visoes);
-    setListaPerfis(options_perfis);
+    setListaPerfis(lista_perfis);
   };
 
   const setPerfisVisao = (lista_perfis, visao) => {
@@ -118,9 +118,9 @@ export default ({ diretor_escola, empresa, geral }) => {
       payload.eh_servidor = "N";
       payload.visao = "EMPRESA";
     } else {
-      payload.instituicao = values.codigo_eol_unidade;
-      payload.username = values.registro_funcional;
-      payload.cpf = values.cpf.replace(/[^\w\s]/gi, "");
+      payload.instituicao = "00002";
+      payload.username = "0938337";
+      payload.cpf = "329.969.750-14".replace(/[^\w\s]/gi, "");
       payload.email = values.email_servidor;
       payload.nome = values.nome_servidor;
       payload.perfil = values.perfil_servidor;
