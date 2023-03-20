@@ -88,6 +88,7 @@ const logout = () => {
   localStorage.removeItem("nome_instituicao");
   localStorage.removeItem("dre_nome");
   localStorage.removeItem("lotes");
+  localStorage.removeItem("modalCoreSSO");
   window.location.href = "/login";
 };
 
