@@ -436,7 +436,10 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={listaPerfis}
+                            options={listaPerfis.map(perfil => ({
+                              uuid: perfil.nome,
+                              nome: perfil.nome
+                            }))}
                             validate={required}
                             disabled={valoresEdicao && !empresa}
                           />

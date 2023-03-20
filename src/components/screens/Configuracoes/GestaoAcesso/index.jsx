@@ -19,7 +19,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 
-export default ({ diretor_escola, empresa, geral }) => {
+export default ({ diretor_escola, empresa, cogestor, geral }) => {
   const [carregando, setCarregando] = useState(false);
   const [vinculos, setVinculos] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -55,6 +55,8 @@ export default ({ diretor_escola, empresa, geral }) => {
       setPerfisVisao(lista_perfis, "ESCOLA");
     } else if (empresa) {
       setPerfisVisao(lista_perfis, "EMPRESA");
+    } else if (cogestor) {
+      setPerfisVisao(lista_perfis, "DRE");
     } else if (geral) {
       const perfis_subordinados = await getPerfisSubordinados();
       const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
@@ -73,7 +75,7 @@ export default ({ diretor_escola, empresa, geral }) => {
     }
 
     setVisoes(options_visoes);
-    setListaPerfis(options_perfis);
+    setListaPerfis(lista_perfis);
   };
 
   const setPerfisVisao = (lista_perfis, visao) => {
@@ -93,6 +95,11 @@ export default ({ diretor_escola, empresa, geral }) => {
     if (geral && !filtros.perfil) {
       filtros.perfil = perfisSubordinados;
     }
+
+    if (cogestor) {
+      filtros.perfil = "COGESTOR_DRE";
+    }
+
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getVinculosAtivos(payload);
 
