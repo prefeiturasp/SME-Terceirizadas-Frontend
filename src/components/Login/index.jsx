@@ -216,7 +216,10 @@ export class Login extends Component {
                     <i className="fas fa-truck" />
                   </div>
                   <div className="texto">
-                    Instruções de <strong>acesso</strong>, em breve
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
                   </div>
                 </div>
               </div>
@@ -227,11 +230,7 @@ export class Login extends Component {
                     <i className="fas fa-hotel" />
                   </div>
                   <div className="texto">
-                    Acesse com seu <strong>Código Operador</strong> de 7
-                    caracteres
-                  </div>
-                  <div className="rodape">
-                    A <strong>senha</strong> é a mesma de acesso ao EOL
+                    Instruções de <strong>acesso</strong>, em breve
                   </div>
                 </div>
               </div>
