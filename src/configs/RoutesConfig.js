@@ -130,7 +130,8 @@ import {
   usuarioEhDiretorUE,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhCogestorDRE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -218,6 +219,7 @@ import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/Solicitacao
 import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
+import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
 
 const routesConfig = [
   {
@@ -799,6 +801,12 @@ const routesConfig = [
     component: GestaoAcessoEmpresaPage,
     exact: true,
     tipoUsuario: usuarioEhAdmQualquerEmpresa()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_COGESTOR}`,
+    component: GestaoAcessoCogestorPage,
+    exact: true,
+    tipoUsuario: usuarioEhCogestorDRE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,

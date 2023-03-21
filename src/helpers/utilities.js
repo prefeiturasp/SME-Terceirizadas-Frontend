@@ -573,8 +573,8 @@ export const usuarioEhCoordenadorDRE = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
 };
 
-export const usuarioEhAdministradorDRE = () => {
-  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+export const usuarioEhCogestorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COGESTOR_DRE;
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {

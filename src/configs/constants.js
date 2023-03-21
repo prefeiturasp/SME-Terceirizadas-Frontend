@@ -193,6 +193,7 @@ export const GESTAO_ACESSO_MASTER = "gestao-acesso-master";
 export const GESTAO_ACESSO_CODAE_DILOG = "gestao-acesso-codae-dilog";
 export const GESTAO_ACESSO_DIRETOR_ESCOLA = "gestao-acesso-diretor-escola";
 export const GESTAO_ACESSO_EMPRESA = "gestao-acesso-empresa";
+export const GESTAO_ACESSO_COGESTOR = "gestao-cogestor";
 export const GESTAO_ACESSO_GERAL = "gestao-acesso";
 export const CARGAS_USUARIOS = "cargas-usuarios";
 export const CARGAS_USUARIOS_SERVIDORES = "cargas-usuarios-servidores";

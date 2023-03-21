@@ -10,6 +10,7 @@ import {
   CARGAS_USUARIOS,
   GESTAO_ACESSO_EMPRESA,
   GESTAO_ACESSO_GERAL,
+  GESTAO_ACESSO_COGESTOR,
   GESTAO_ACESSO_MASTER,
   CARGAS_USUARIOS_SERVIDORES
 } from "configs/constants";
@@ -25,6 +26,7 @@ import {
   usuarioEhCoordenadorCODAE,
   usuarioEhAdministradorRepresentanteCodae,
   usuarioEhAdmQualquerEmpresa,
+  usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
   usuarioEhDilog
 } from "helpers/utilities";
@@ -116,6 +118,19 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           activeMenu={activeMenu}
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_DIRETOR_ESCOLA}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {usuarioEhCogestorDRE() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_COGESTOR}/`}>
             Gestão de Acesso
           </LeafItem>
         </SubMenu>
