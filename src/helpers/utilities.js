@@ -809,8 +809,20 @@ export const exibirGA = () => {
           localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
-          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
+        return (
+          [
+            `"Anga"`,
+            `"ANGA"`,
+            `"CONVIDA"`,
+            `"Convida"`,
+            `"Apetece"`,
+            `"APETECE"`
+          ].includes(localStorage.getItem("nome_instituicao")) ||
+          JSON.parse(localStorage.getItem("lotes")).find(lote =>
+            dresPermitidas.some(dre =>
+              lote.diretoria_regional.nome.includes(dre)
+            )
+          )
         );
       case `"gestao_alimentacao_terceirizada"`:
       case `"nutricao_manifestacao"`:
