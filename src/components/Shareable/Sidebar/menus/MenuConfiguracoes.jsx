@@ -10,7 +10,9 @@ import {
   CARGAS_USUARIOS,
   GESTAO_ACESSO_EMPRESA,
   GESTAO_ACESSO_GERAL,
-  GESTAO_ACESSO_COGESTOR
+  GESTAO_ACESSO_COGESTOR,
+  GESTAO_ACESSO_MASTER,
+  CARGAS_USUARIOS_SERVIDORES
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -22,10 +24,11 @@ import {
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
-  usuarioEhLogistica,
   usuarioEhAdministradorRepresentanteCodae,
   usuarioEhAdmQualquerEmpresa,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
+  usuarioEhCodaeDilog,
+  usuarioEhDilog
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -45,13 +48,15 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCoordenadorGpCODAE();
 
-  const exibirGestaoUsuario =
-    usuarioEhLogistica() ||
+  const exibirGestaoUsuarioCODAE =
+    usuarioEhCodaeDilog() ||
     usuarioEhCoordenadorCODAE() ||
     usuarioEhAdministradorRepresentanteCodae();
 
   const exibirGestaoAcesso =
-    usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE();
+    usuarioEhCoordenadorNutriCODAE() ||
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCoordenadorNutriSupervisao();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
@@ -73,7 +78,23 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {exibirGestaoUsuario && (
+      {usuarioEhDilog() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_MASTER}/`}>
+            Gestão de Acesso
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
+            Cargas de Usuários
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {exibirGestaoUsuarioCODAE && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
@@ -83,7 +104,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_CODAE_DILOG}/`}>
             Gestão de Acesso
           </LeafItem>
-          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
+          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS_SERVIDORES}/`}>
             Cargas de Usuários
           </LeafItem>
         </SubMenu>

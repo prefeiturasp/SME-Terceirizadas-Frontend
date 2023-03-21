@@ -23,7 +23,7 @@ const atual = {
 const limit = 10;
 
 const paramsDefault = {
-  status: "ASSINADO_CRONOGRAMA",
+  status: "ASSINADO_FORNECEDOR",
   offset: 0,
   limit: limit
 };

@@ -373,6 +373,10 @@ export const usuarioEhAdministradorNutriSupervisao = () => {
   );
 };
 
+export const usuarioEhDilog = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_LOGISTICA;
+};
+
 export const usuarioEhCodaeDilog = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
@@ -405,6 +409,12 @@ export const usuarioEhAdmQualquerEmpresa = () => {
 
 export const usuarioEhQualquerUsuarioEmpresa = () => {
   return [PERFIL.USUARIO_EMPRESA].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDiretorUE = () => {
+  return [PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEscolaEhGestaoMistaParceira = () => {

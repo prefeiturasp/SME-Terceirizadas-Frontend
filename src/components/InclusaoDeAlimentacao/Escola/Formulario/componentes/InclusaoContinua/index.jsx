@@ -101,13 +101,10 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
   };
 
   const adicionarRecorrencia = async (form, values) => {
-    let ehCEU = false;
-    if (
+    const ehCEU =
       meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais ===
-      "CEU GESTAO"
-    ) {
-      ehCEU = true;
-    }
+      "CEU GESTAO";
+
     if (
       !values.dias_semana ||
       values.dias_semana.length === 0 ||
@@ -143,6 +140,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
       );
       return;
     }
+
     if (!values.quantidades_periodo) {
       form.change("quantidades_periodo", [
         {
@@ -153,6 +151,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
           observacao: values.observacao ? deepCopy(values.observacao) : ""
         }
       ]);
+      limpaRecorrencia(form);
     } else {
       await push("quantidades_periodo");
       ["dias_semana", "periodo_escolar", "numero_alunos", "observacao"].forEach(

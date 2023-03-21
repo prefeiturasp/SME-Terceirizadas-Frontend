@@ -49,7 +49,7 @@ export class Login extends Component {
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
       tab: TABS.ESCOLA,
-      showModal: false
+      showModal: true
     };
     this.emailInput = React.createRef();
   }
@@ -230,11 +230,7 @@ export class Login extends Component {
                     <i className="fas fa-hotel" />
                   </div>
                   <div className="texto">
-                    Acesse com seu <strong>Código Operador</strong> de 7
-                    caracteres
-                  </div>
-                  <div className="rodape">
-                    A <strong>senha</strong> é a mesma de acesso ao EOL
+                    Instruções de <strong>acesso</strong>, em breve
                   </div>
                 </div>
               </div>
@@ -574,12 +570,6 @@ export class Login extends Component {
             Fornecedor ou Distribuidor: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
-        </div>
-        <div className="texto-simples mt-3">
-          <span className="texto-simples-verde font-weight-bold">
-            Rede Parceira: &nbsp;
-          </span>
-          Digite seu <strong>Código Operador</strong>.
         </div>
         <Form
           onSubmit={this.handleRecuperaSenha}

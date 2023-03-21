@@ -127,6 +127,10 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
+  usuarioEhDiretorUE,
+  usuarioEhDilogDiretoria,
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhDilog,
   usuarioEhCogestorDRE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
@@ -188,6 +192,7 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
 import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
 import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
@@ -195,6 +200,7 @@ import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
 import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSolicitacoesAlimentacaoPage";
+import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
@@ -209,6 +215,10 @@ import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
+import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
+import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
 
 const routesConfig = [
@@ -769,8 +779,14 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
+    component: GestaoAcessoMasterPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -797,15 +813,23 @@ const routesConfig = [
     component: GestaoAcessoGeralPage,
     exact: true,
     tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
+    tipoUsuario: usuarioEhDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
+    component: CargasUsuariosServidoresPage,
+    exact: true,
     tipoUsuario:
       usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
+      usuarioEhCodaeDilog() ||
       usuarioEhAdministradorRepresentanteCodae()
   },
   {
@@ -1439,6 +1463,12 @@ const routesConfig = [
       usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
   },
   {
+    path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
+    component: RelatorioAlunosMatriculadosPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
+  },
+  {
     path: `/${constants.LANCAMENTO_INICIAL}/${
       constants.LANCAMENTO_MEDICAO_INICIAL
     }`,
@@ -1459,6 +1489,14 @@ const routesConfig = [
       constants.ACOMPANHAMENTO_DE_LANCAMENTOS
     }`,
     component: AcompanhamentoDeLancamentosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.CONFERENCIA_DOS_LANCAMENTOS
+    }`,
+    component: ConferenciaDosLancamentosPage,
     exact: true,
     tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
   },
@@ -1608,6 +1646,14 @@ const routesConfig = [
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.SOLICITACAO_ALTERACAO_CRONOGRAMA
+    }`,
+    component: SolicitacaoAlteracaoCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
+  },
+  {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
     exact: true,
@@ -1647,7 +1693,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
     component: PainelAprovacoesPage,
     exact: true,
-    tipoUsuario: usuarioEhDinutreDiretoria()
+    tipoUsuario: usuarioEhDinutreDiretoria() || usuarioEhDilogDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
@@ -1658,6 +1704,12 @@ const routesConfig = [
   {
     path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
     component: StatusSolicitacoesAguardandoDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
+    component: StatusSolicitacoesAssinadoCODAE,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   }

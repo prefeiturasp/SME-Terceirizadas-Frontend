@@ -99,6 +99,7 @@ export const FormBuscaProduto = ({
   const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [editaisDRE, setEditaisDRE] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getListaEditaisDREAsync = async () => {
@@ -140,6 +141,7 @@ export const FormBuscaProduto = ({
               status: STATUS_RECLAMACAO_PRODUTO
             }
           });
+          setLoading(false);
         }
       );
     }
@@ -180,7 +182,8 @@ export const FormBuscaProduto = ({
                       name="nome_terceirizada"
                       disabled={
                         values.agrupado_por_nome_e_marca ||
-                        usuarioEhEmpresaTerceirizada()
+                        usuarioEhEmpresaTerceirizada() ||
+                        loading
                       }
                     />
                   )}
@@ -200,7 +203,8 @@ export const FormBuscaProduto = ({
                           validate={required}
                           disabled={
                             usuarioEhEscolaTerceirizadaDiretor() ||
-                            usuarioEhEscolaTerceirizada()
+                            usuarioEhEscolaTerceirizada() ||
+                            loading
                           }
                         />
                       </div>
