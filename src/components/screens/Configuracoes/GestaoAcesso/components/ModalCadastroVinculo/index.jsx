@@ -50,6 +50,7 @@ const ModalCadastroVinculo = ({
   vinculo,
   toggleExclusao,
   empresa,
+  cogestor,
   visaoUnica
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
@@ -101,7 +102,7 @@ const ModalCadastroVinculo = ({
 
     if (response.status === 200) {
       const usuarioEOL = response.data;
-      if (diretor_escola) {
+      if (diretor_escola || cogestor) {
         const codigo_eol_unidade =
           meusDados.vinculo_atual.instituicao.codigo_eol;
         if (codigo_eol_unidade !== usuarioEOL.codigo_eol_unidade) {

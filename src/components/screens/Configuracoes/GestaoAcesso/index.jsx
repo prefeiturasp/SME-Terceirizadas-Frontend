@@ -207,6 +207,7 @@ export default ({ diretor_escola, empresa, cogestor, geral }) => {
         listaPerfis={visaoUnica ? perfis : listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
+        cogestor={cogestor}
         empresa={empresa}
         onSubmit={salvarAcesso}
         visaoUnica={visaoUnica}
