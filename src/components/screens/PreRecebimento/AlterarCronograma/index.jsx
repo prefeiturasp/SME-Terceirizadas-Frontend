@@ -36,7 +36,7 @@ const manterDataEQuantidade = (values, values_) => {
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
-  const [uuid, setUuid] = useState(urlParams.get("uuid"));
+  const uuid = urlParams.get("uuid");
   const [restante, setRestante] = useState(undefined);
   const [etapas, setEtapas] = useState([{}]);
   const [cronograma, setCronograma] = useState(null);
