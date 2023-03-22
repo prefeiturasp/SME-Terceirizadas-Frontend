@@ -232,6 +232,7 @@ export class Login extends Component {
                   <div className="texto">
                     Instruções de <strong>acesso</strong>, em breve
                   </div>
+                  <div className="rodape-fake" />
                 </div>
               </div>
             </div>
