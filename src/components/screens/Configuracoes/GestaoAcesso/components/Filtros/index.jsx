@@ -19,10 +19,11 @@ export default ({
   perfis,
   visaoUnica
 }) => {
-  const initialValues = {
-    visao: visaoUnica ? visaoUnica : undefined,
-    perfil: null
-  };
+  const initialValues = visaoUnica
+    ? {
+        visao: visaoUnica
+      }
+    : {};
   const inicioResultado = useRef();
 
   const onSubmit = async values => {
