@@ -1,10 +1,11 @@
 import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cards_dinutre, cards_dilog } from "./constants";
+import { cards_dinutre, cards_dilog, cards_alteracao } from "./constants";
 import {
   getDashboardCronograma,
-  getDashboardCronogramaComFiltros
+  getDashboardCronogramaComFiltros,
+  getDashboardSolicitacoesAlteracao
 } from "services/cronograma.service";
 import {
   parseDataHoraBrToMoment,
@@ -19,11 +20,19 @@ import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 import { useCallback } from "react";
 
+const cardsCronogramaInicial = usuarioEhDilogDiretoria()
+  ? cards_dilog
+  : cards_dinutre;
+
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [filtrado, setFiltrado] = useState(false);
+  const [cardsCronograma, setCardsCronograma] = useState(
+    cardsCronogramaInicial
+  );
+  const [cardsAlteracao, setCardsAlteracao] = useState(cards_alteracao);
 
-  const cards = usuarioEhDilogDiretoria() ? cards_dilog : cards_dinutre;
+  const dinutre = usuarioEhDilogDiretoria() ? false : true;
 
   const ordenaPorLogMaisRecente = (a, b) => {
     let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
@@ -31,42 +40,78 @@ export default () => {
     return comparaObjetosMoment(data_b, data_a);
   };
 
-  const getText = item => {
+  const getTextCronograma = item => {
     const TAMANHO_MAXIMO = 48;
 
     return `${item.numero} - ${truncarString(item.produto, TAMANHO_MAXIMO)}`;
   };
 
-  const buscaCronogramas = useCallback(
-    async (filtros = null) => {
-      setCarregando(true);
-      let dadosDashboard;
-      if (!filtros) {
-        dadosDashboard = await getDashboardCronograma();
-      } else {
-        dadosDashboard = await getDashboardCronogramaComFiltros(filtros);
-      }
-      cards.forEach(card => {
-        dadosDashboard.data.results.forEach(data => {
-          if (card.incluir_status.includes(data.status)) {
-            card.items = data.dados;
-          }
-        });
+  const getTextAlteracao = item => {
+    const TAMANHO_MAXIMO = 48;
+
+    return `${item.numero_solicitacao} - ${truncarString(
+      item.empresa,
+      TAMANHO_MAXIMO
+    )}`;
+  };
+
+  const buscaCronogramas = useCallback(async (filtros = null) => {
+    setCarregando(true);
+    let dadosDashboard;
+    if (!filtros) {
+      dadosDashboard = await getDashboardCronograma();
+    } else {
+      dadosDashboard = await getDashboardCronogramaComFiltros(filtros);
+    }
+    let cards = [];
+    cardsCronogramaInicial.forEach(card => {
+      dadosDashboard.data.results.forEach(data => {
+        if (card.incluir_status.includes(data.status)) {
+          card.items = data.dados;
+          cards.push(card);
+        }
       });
-      setCarregando(false);
-    },
-    [cards]
-  );
+    });
+    setCardsCronograma(cards);
+    setCarregando(false);
+  }, []);
+
+  const buscaSolicitacoes = useCallback(async () => {
+    setCarregando(true);
+    let dadosDashboard = await getDashboardSolicitacoesAlteracao();
+
+    let cards = [];
+    cards_alteracao.forEach(card => {
+      dadosDashboard.data.forEach(data => {
+        if (card.incluir_status.includes(data.status)) {
+          card.items = data.dados;
+          cards.push(card);
+        }
+      });
+    });
+    setCardsAlteracao(cards);
+    setCarregando(false);
+  }, []);
 
   useEffect(() => {
     buscaCronogramas();
-  }, [buscaCronogramas]);
+    if (dinutre) buscaSolicitacoes();
+  }, [buscaCronogramas, buscaSolicitacoes, dinutre]);
 
-  const formataCards = items => {
+  const formataCardsCronograma = items => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
-      text: getText(item),
+      text: getTextCronograma(item),
       date: item.log_mais_recente,
       link: gerarLinkDoItem(item),
+      status: item.status
+    }));
+  };
+
+  const formataCardsAlteracao = items => {
+    return items.sort(ordenaPorLogMaisRecente).map(item => ({
+      text: getTextAlteracao(item),
+      date: item.log_mais_recente,
+      link: "",
       status: item.status
     }));
   };
@@ -145,12 +190,36 @@ export default () => {
             </div>
           </div>
           <div className="row">
-            {cards.map((card, index) => (
+            {cardsCronograma.map((card, index) => (
               <div className="col-6 mb-4" key={index}>
                 <CardCronograma
                   cardTitle={card.titulo}
                   cardType={card.style}
-                  solicitations={formataCards(card.items ? card.items : [])}
+                  solicitations={formataCardsCronograma(
+                    card.items ? card.items : []
+                  )}
+                  icon={card.icon}
+                  href={card.href}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="card-body painel-cronograma">
+          <div className="card-title">
+            <div className="row">
+              <div className="col-5">Alterações de Cronogramas</div>
+            </div>
+          </div>
+          <div className="row">
+            {cardsAlteracao.map((card, index) => (
+              <div className="col-6 mb-4" key={index}>
+                <CardCronograma
+                  cardTitle={card.titulo}
+                  cardType={card.style}
+                  solicitations={formataCardsAlteracao(
+                    card.items ? card.items : []
+                  )}
                   icon={card.icon}
                   href={card.href}
                 />
