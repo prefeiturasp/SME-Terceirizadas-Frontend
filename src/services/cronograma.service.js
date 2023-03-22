@@ -36,6 +36,11 @@ export const getListagemSolicitacaoAlteracaoCronograma = async params => {
   return await axios.get(url, { params });
 };
 
+export const getSolicitacaoAlteracaoCronograma = async uuid => {
+  const url = `/solicitacao-de-alteracao-de-cronograma/${uuid}/`;
+  return await axios.get(url);
+};
+
 export const cronogramaAssina = async (uuid, password) => {
   const url = `/cronogramas/${uuid}/cronograma-assina/`;
   return await axios.patch(url, {
