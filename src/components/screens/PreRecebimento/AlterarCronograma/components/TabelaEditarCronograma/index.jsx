@@ -96,7 +96,10 @@ export default ({
                 <div className="title head-crono">Quantidade</div>
               </div>
               <div className="title crono-header-green">
-                <div>Informar Nova Quantidade</div>
+                <div>
+                  {!solicitacaoAlteracaoCronograma && "Informar "}Nova
+                  Quantidade
+                </div>
               </div>
             </>
           )}
@@ -122,7 +125,7 @@ export default ({
                       placeholder="Selecionar Data"
                       minDate={null}
                       maxDate={null}
-                      disabled={solicitacaoAlteracaoCronograma}
+                      disabled={solicitacaoAlteracaoCronograma !== null}
                       writable
                       validate={required}
                     />
@@ -158,7 +161,7 @@ export default ({
                         type="number"
                         name={`quantidade_total_${etapa.uuid}`}
                         placeholder="Quantidade"
-                        disabled={solicitacaoAlteracaoCronograma}
+                        disabled={solicitacaoAlteracaoCronograma !== null}
                         className="input-busca-produto"
                         required
                         validate={required}

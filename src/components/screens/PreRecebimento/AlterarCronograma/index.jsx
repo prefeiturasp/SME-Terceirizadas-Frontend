@@ -197,7 +197,6 @@ export default ({ analiseSolicitacao }) => {
                         component={StatefulMultiSelect}
                         name="motivos"
                         disableSearch={true}
-                        disabled={solicitacaoAlteracaoCronograma}
                         hasSelectAll={false}
                         options={opcoesMotivos}
                         selected={values.motivos || []}
@@ -254,7 +253,7 @@ export default ({ analiseSolicitacao }) => {
                       name="justificativa"
                       placeholder="Escreva o motivo da solicitação de alteração"
                       className="input-busca-produto"
-                      disabled={solicitacaoAlteracaoCronograma}
+                      disabled={solicitacaoAlteracaoCronograma !== null}
                     />
                     <OnChange name="justificativa">
                       {value => {
@@ -273,6 +272,9 @@ export default ({ analiseSolicitacao }) => {
                   <div className="mt-4 mb-4">
                     <AcoesAlterar
                       cronograma={cronograma}
+                      solicitacaoAlteracaoCronograma={
+                        solicitacaoAlteracaoCronograma
+                      }
                       handleSubmit={handleSubmit}
                       podeSubmeter={podeSubmeter}
                     />

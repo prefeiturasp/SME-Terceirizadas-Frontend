@@ -33,9 +33,11 @@ export default ({
           </div>
           <div className="col-3">
             <p>
-              <b>Número do Contrato:</b>
+              <b>Status:</b>
             </p>
-            <p className="head-green">{cronograma.contrato.numero}</p>
+            <p className="head-green">
+              {solicitacaoAlteracaoCronograma.status}
+            </p>
           </div>
         </div>
       ) : (
