@@ -26,7 +26,7 @@ export default ({ show, handleClose, loading, handleSim }) => {
               onSubmit={async values => {
                 handleSim(values);
               }}
-              render={({ handleSubmit, form, values }) => (
+              render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
                   <Field
                     component={TextArea}
