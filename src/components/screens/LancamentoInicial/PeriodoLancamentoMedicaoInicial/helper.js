@@ -5,6 +5,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesAutorizadasEscola,
+  getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 
@@ -13,11 +14,16 @@ export const formatarPayloadPeriodoLancamento = (
   tabelaAlimentacaoRows,
   tabelaDietaEnteralRows,
   dadosIniciaisFiltered,
-  diasDaSemanaSelecionada
+  diasDaSemanaSelecionada,
+  ehGrupoSolicitacoesDeAlimentacaoUrlParam
 ) => {
   if (values["periodo_escolar"].includes(" - ")) {
     values["grupo"] = values["periodo_escolar"].split(" - ")[0];
     values["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
+  }
+  if (values["periodo_escolar"].includes("Solicitações")) {
+    values["grupo"] = values["periodo_escolar"];
+    delete values["periodo_escolar"];
   }
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValues = valuesAsArray.filter(([key]) =>
@@ -55,7 +61,9 @@ export const formatarPayloadPeriodoLancamento = (
       valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
       nome_campo: nome_campo,
       categoria_medicao: idCategoria,
-      tipo_alimentacao: tipoAlimentacao.uuid || ""
+      tipo_alimentacao: !ehGrupoSolicitacoesDeAlimentacaoUrlParam
+        ? tipoAlimentacao.uuid
+        : ""
     });
   });
 
@@ -167,6 +175,7 @@ export const desabilitarField = (
   dia,
   rowName,
   categoria,
+  nomeCategoria,
   values,
   mesAnoConsiderado,
   mesAnoDefault,
@@ -181,6 +190,14 @@ export const desabilitarField = (
     locale: ptBR
   }).toString();
 
+  if (nomeCategoria.includes("SOLICITAÇÕES")) {
+    return (
+      !validacaoDiaLetivo(dia) ||
+      validacaoSemana(dia) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd"))
+    );
+  }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
@@ -278,14 +295,18 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   escolaUuuid,
   mes,
   ano,
-  nome_periodo_escolar
+  nomePeriodoEscolar,
+  ehLancheEmergencial = false
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
   params["tipo_solicitacao"] = "Alteração";
   params["mes"] = mes;
   params["ano"] = ano;
-  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  params["eh_lanche_emergencial"] = ehLancheEmergencial;
+  if (!ehLancheEmergencial) {
+    params["nome_periodo_escolar"] = nomePeriodoEscolar;
+  }
   const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
     params
   );
@@ -293,6 +314,27 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
     return responseAlteracoesAlimentacaoAutorizadas.data.results;
   } else {
     toastError("Erro ao carregar Alterações de Alimentação Autorizadas");
+    return [];
+  }
+};
+
+export const getSolicitacoesKitLanchesAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Kit Lanche";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  const responseKitLanchesAutorizadas = await getSolicitacoesKitLanchesAutorizadasEscola(
+    params
+  );
+  if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseKitLanchesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Kit Lanches Autorizadas");
     return [];
   }
 };
@@ -428,6 +470,29 @@ export const formatarLinhasTabelaDietaEnteral = (
   });
 
   return linhasTabelasDietas;
+};
+
+export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
+  const linhasTabelaSolicitacoesAlimentacao = [];
+  linhasTabelaSolicitacoesAlimentacao.push(
+    {
+      nome: "Lanche Emergenc.",
+      name: "lanche_emergencial",
+      uuid: null
+    },
+    {
+      nome: "Kit Lanche",
+      name: "kit_lanche",
+      uuid: null
+    },
+    {
+      nome: "Observações",
+      name: "observacoes",
+      uuid: null
+    }
+  );
+
+  return linhasTabelaSolicitacoesAlimentacao;
 };
 
 export const validacaoSemana = (dia, semanaSelecionada) => {
