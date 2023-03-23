@@ -176,6 +176,86 @@ export const campoLancheComLPRAutorizadaESemObservacao = (
   return erro;
 };
 
+export const camposKitLancheSolicitacoesAlimentacaoESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  kitLanchesAutorizadas
+) => {
+  let erro = false;
+  const kitLancheValue =
+    formValuesAtualizados[
+      `kit_lanche__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  if (
+    kitLanchesAutorizadas &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !kitLancheValue &&
+    kitLanchesAutorizadas.filter(
+      kit =>
+        kit.dia === column.dia &&
+        Number(kitLancheValue) !== Number(kit.numero_alunos)
+    ).length > 0
+  ) {
+    erro = true;
+  }
+  if (
+    kitLanchesAutorizadas &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    kitLancheValue &&
+    (kitLanchesAutorizadas.filter(
+      kit =>
+        kit.dia === column.dia &&
+        Number(kitLancheValue) !== Number(kit.numero_alunos)
+    ).length > 0 ||
+      kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length === 0)
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
+export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  let erro = false;
+  const lancheEmergencialValue =
+    formValuesAtualizados[
+      `lanche_emergencial__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  if (
+    alteracoesAlimentacaoAutorizadas &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !lancheEmergencialValue &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia &&
+        Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
+    ).length > 0
+  ) {
+    erro = true;
+  }
+  if (
+    alteracoesAlimentacaoAutorizadas &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    lancheEmergencialValue &&
+    (alteracoesAlimentacaoAutorizadas.filter(
+      alteracao =>
+        alteracao.dia === column.dia &&
+        Number(lancheEmergencialValue) !== Number(alteracao.numero_alunos)
+    ).length > 0 ||
+      alteracoesAlimentacaoAutorizadas.filter(
+        alteracao => alteracao.dia === column.dia
+      ).length === 0)
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   formValuesAtualizados,
   dia,
@@ -187,7 +267,8 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   validacaoDiaLetivo,
   column,
   suspensoesAutorizadas,
-  alteracoesAlimentacaoAutorizadas
+  alteracoesAlimentacaoAutorizadas,
+  kitLanchesAutorizadas
 ) => {
   return (
     botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
@@ -234,6 +315,18 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       alteracoesAlimentacaoAutorizadas
     ) ||
     campoLancheComLPRAutorizadaESemObservacao(
+      formValuesAtualizados,
+      column,
+      categoria,
+      alteracoesAlimentacaoAutorizadas
+    ) ||
+    camposKitLancheSolicitacoesAlimentacaoESemObservacao(
+      formValuesAtualizados,
+      column,
+      categoria,
+      kitLanchesAutorizadas
+    ) ||
+    camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
       formValuesAtualizados,
       column,
       categoria,
@@ -682,6 +775,7 @@ export const exibirTooltipSuspensoesAutorizadas = (
 };
 
 export const exibirTooltipRPLAutorizadas = (
+  //
   formValuesAtualizados,
   row,
   column,
@@ -726,5 +820,108 @@ export const exibirTooltipLPRAutorizadas = (
         alteracao.dia === column.dia && alteracao.motivo.includes("LPR")
     ).length > 0 &&
     (row.name.includes("lanche") && !row.name.includes("emergencial"))
+  );
+};
+
+export const exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  kitLanchesAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    (value &&
+      categoria.nome.includes("SOLICITAÇÕES") &&
+      !["Mês anterior", "Mês posterior"].includes(value) &&
+      kitLanchesAutorizadas &&
+      kitLanchesAutorizadas.filter(
+        kit =>
+          kit.dia === column.dia && Number(value) !== Number(kit.numero_alunos)
+      ).length > 0 &&
+      row.name.includes("kit_lanche")) ||
+    (!value &&
+      row.name.includes("kit_lanche") &&
+      kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length > 0)
+  );
+};
+
+export const exibirTooltipKitLancheSolAlimentacoes = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  kitLanchesAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    kitLanchesAutorizadas.filter(kit => kit.dia === column.dia).length === 0 &&
+    row.name.includes("kit_lanche")
+  );
+};
+
+export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    (value &&
+      categoria.nome.includes("SOLICITAÇÕES") &&
+      !["Mês anterior", "Mês posterior"].includes(value) &&
+      alteracoesAlimentacaoAutorizadas &&
+      alteracoesAlimentacaoAutorizadas.filter(
+        alteracao =>
+          alteracao.dia === column.dia &&
+          Number(value) !== Number(alteracao.numero_alunos)
+      ).length > 0 &&
+      row.name.includes("lanche_emergencial")) ||
+    (!value &&
+      row.name.includes("lanche_emergencial") &&
+      alteracoesAlimentacaoAutorizadas.filter(
+        alteracao => alteracao.dia === column.dia
+      ).length > 0)
+  );
+};
+
+export const exibirTooltipLancheEmergencialSolAlimentacoes = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  alteracoesAlimentacaoAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    categoria.nome.includes("SOLICITAÇÕES") &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    alteracoesAlimentacaoAutorizadas.filter(
+      alteracao => alteracao.dia === column.dia
+    ).length === 0 &&
+    row.name.includes("lanche_emergencial")
   );
 };
