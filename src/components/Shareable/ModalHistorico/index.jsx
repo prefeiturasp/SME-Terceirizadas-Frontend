@@ -59,7 +59,7 @@ export default class ModalHistorico extends Component {
     return (
       <Modal
         title="Histórico"
-        visible={visible}
+        open={visible}
         onOk={onOk}
         okText={"Fechar"}
         cancelText={"Cancelar"}
@@ -127,7 +127,7 @@ export default class ModalHistorico extends Component {
                         <div>{this.retornaIniciais(logSelecionado)}</div>
                       </div>
                       <div className="nome-fantasia-empresa">
-                        {logSelecionado.empresa}
+                        {logSelecionado.usuario.nome}
                       </div>
                       <div>
                         <div>{logSelecionado.criado_em.split(" ")[0]}</div>
@@ -138,9 +138,14 @@ export default class ModalHistorico extends Component {
                       <header>{logSelecionado.status_evento_explicacao}</header>
                       <section>
                         <article>
-                          <div>
-                            RF: {logSelecionado.usuario.registro_funcional}
-                          </div>
+                          {logSelecionado.usuario.tipo_usuario ===
+                          "terceirizada" ? (
+                            <div>CPF: {logSelecionado.usuario.cpf}</div>
+                          ) : (
+                            <div>
+                              RF: {logSelecionado.usuario.registro_funcional}
+                            </div>
+                          )}
                           <div className="criado-em">
                             <div>Data:</div>
                             <div>{logSelecionado.criado_em.split(" ")[0]}</div>
