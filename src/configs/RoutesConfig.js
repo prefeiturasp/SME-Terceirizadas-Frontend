@@ -1411,7 +1411,7 @@ const routesConfig = [
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
     component: RelatorioAlunosMatriculadosPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhTerceirizada() || usuarioEhDRE()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${

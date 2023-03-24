@@ -169,6 +169,11 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
             Solicitações de Alimentação
           </LeafItem>
+          {PERFIL === "dre" && (
+            <LeafItem to={`/relatorio/alunos-matriculados`}>
+              Alunos Matriculados
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>
