@@ -42,26 +42,34 @@ export const TabelaResultado = ({ ...props }) => {
                 <th className="col-1">Lote</th>
                 <th className="col-1">Tipo de unid.</th>
                 <th className="col-3">Unid. educacional</th>
-                <th className="col-2 text-center">Períodos</th>
+                <th className="col-1 text-center">Tipo de turma</th>
+                <th className="col-1 text-center">Período</th>
                 <th className="col-1 text-center">Matriculados</th>
                 <th className="col-1" />
               </tr>
             </thead>
             <tbody>
               {resultado.map((item, index) => {
-                const periodosString = item.periodos_escolares
-                  .filter(periodo => periodo.possui_alunos_regulares)
-                  .map(periodo => periodo.nome)
-                  .join(", ");
+                let totalMatriculados = item.quantidade_alunos;
+                if (item.alunos_por_faixa_etaria && item.escola.exibir_faixas) {
+                  totalMatriculados = Object.values(
+                    item.alunos_por_faixa_etaria
+                  ).reduce((total, value) => {
+                    return total + value;
+                  }, 0);
+                }
                 return (
                   <Fragment key={index}>
                     <tr className="table-body-items" key={index}>
                       <td>
-                        {item.diretoria_regional &&
-                          item.diretoria_regional.nome}
+                        {item.escola.diretoria_regional &&
+                          item.escola.diretoria_regional.nome}
                       </td>
-                      <td>{item.lote && item.lote.nome}</td>
-                      <td>{item.tipo_unidade && item.tipo_unidade.iniciais}</td>
+                      <td>{item.escola.lote && item.escola.lote.nome}</td>
+                      <td>
+                        {item.escola.tipo_unidade &&
+                          item.escola.tipo_unidade.iniciais}
+                      </td>
                       <td>
                         <Tooltip
                           color="#42474a"
@@ -70,15 +78,18 @@ export const TabelaResultado = ({ ...props }) => {
                             fontSize: "12px",
                             fontWeight: "700"
                           }}
-                          title={item.nome}
+                          title={item.escola.nome}
                         >
-                          {formataNome(item.nome)}
+                          {formataNome(item.escola.nome)}
                         </Tooltip>
                       </td>
-                      <td className="text-center">{periodosString}</td>
-                      <td className="text-center">{item.quantidade_alunos}</td>
+                      <td className="text-center">{item.tipo_turma}</td>
                       <td className="text-center">
-                        {item.eh_cei || item.eh_cemei ? (
+                        {item.periodo_escolar.nome}
+                      </td>
+                      <td className="text-center">{totalMatriculados}</td>
+                      <td className="text-center">
+                        {item.escola.eh_cei || item.escola.eh_cemei ? (
                           <i
                             className={`fas fa-${
                               showPeridosFaixas[index] &&
@@ -98,6 +109,7 @@ export const TabelaResultado = ({ ...props }) => {
                         <DetalhesCEIouCEMEI
                           faixasEtarias={faixasEtarias}
                           item={item}
+                          totalMatriculados={totalMatriculados}
                         />
                       )}
                   </Fragment>
