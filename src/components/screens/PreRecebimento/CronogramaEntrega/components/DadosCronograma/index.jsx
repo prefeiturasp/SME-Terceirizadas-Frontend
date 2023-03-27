@@ -1,32 +1,71 @@
 import React from "react";
 
-export default ({ cronograma, esconderInformacoesAdicionais }) => {
+export default ({
+  cronograma,
+  esconderInformacoesAdicionais,
+  solicitacaoAlteracaoCronograma
+}) => {
   return (
     <>
-      <div className="row detalhar-head">
-        <div className="col-4">
-          <p>
-            <b>Nº do Cronograma:</b>
-          </p>
-          <p className="head-green">{cronograma.numero}</p>
+      {solicitacaoAlteracaoCronograma ? (
+        <div className="row detalhar-head">
+          <div className="col-3">
+            <p>
+              <b>Data da Solicitação:</b>
+            </p>
+            <p className="head-green">
+              {solicitacaoAlteracaoCronograma.criado_em.split(" ")[0]}
+            </p>
+          </div>
+          <div className="col-3">
+            <p>
+              <b>Nº da Solicitação:</b>
+            </p>
+            <p className="head-green">
+              {solicitacaoAlteracaoCronograma.numero_solicitacao}
+            </p>
+          </div>
+          <div className="col-3">
+            <p>
+              <b>Nº do Cronograma:</b>
+            </p>
+            <p className="head-green">{cronograma.numero}</p>
+          </div>
+          <div className="col-3">
+            <p>
+              <b>Status:</b>
+            </p>
+            <p className="head-green">
+              {solicitacaoAlteracaoCronograma.status}
+            </p>
+          </div>
         </div>
-        <div className="col-4">
-          <p>
-            <b>Nº do Contrato:</b>
-          </p>
-          {cronograma.contrato && (
-            <p className="head-green">{cronograma.contrato.numero}</p>
-          )}
+      ) : (
+        <div className="row detalhar-head">
+          <div className="col-4">
+            <p>
+              <b>Nº do Cronograma:</b>
+            </p>
+            <p className="head-green">{cronograma.numero}</p>
+          </div>
+          <div className="col-4">
+            <p>
+              <b>Nº do Contrato:</b>
+            </p>
+            {cronograma.contrato && (
+              <p className="head-green">{cronograma.contrato.numero}</p>
+            )}
+          </div>
+          <div className="col-4">
+            <p>
+              <b>Nº do Processo SEI - Contratos:</b>
+            </p>
+            {cronograma.contrato && (
+              <p className="head-green">{cronograma.contrato.processo}</p>
+            )}
+          </div>
         </div>
-        <div className="col-4">
-          <p>
-            <b>Nº do Processo SEI - Contratos:</b>
-          </p>
-          {cronograma.contrato && (
-            <p className="head-green">{cronograma.contrato.processo}</p>
-          )}
-        </div>
-      </div>
+      )}
       <hr />
       {!esconderInformacoesAdicionais ? (
         <>
@@ -37,7 +76,11 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
             </p>
           </div>
           <hr />
-          <p className="head-green">Dados do produto e datas das entregas</p>
+          <p className="head-green">
+            {solicitacaoAlteracaoCronograma
+              ? "Dados do Produto"
+              : "Dados do produto e datas das entregas"}
+          </p>
           <br />
 
           <div className="row">
@@ -75,32 +118,35 @@ export default ({ cronograma, esconderInformacoesAdicionais }) => {
               </p>
             </div>
           </div>
-
-          <table className="table mt-4 mb-3">
-            <thead className="head-crono">
-              <th className="borda-crono">N° do Empenho</th>
-              <th className="borda-crono">Etapa</th>
-              <th className="borda-crono">Parte</th>
-              <th className="borda-crono">Data Programada</th>
-              <th className="borda-crono">Quantidade</th>
-              <th className="borda-crono">Total de Embalagens</th>
-            </thead>
-            <tbody>
-              {cronograma.etapas.length > 0 &&
-                cronograma.etapas.map((etapa, key) => {
-                  return (
-                    <tr key={key}>
-                      <td className="borda-crono">{etapa.numero_empenho}</td>
-                      <td className="borda-crono">{etapa.etapa}</td>
-                      <td className="borda-crono">{etapa.parte}</td>
-                      <td className="borda-crono">{etapa.data_programada}</td>
-                      <td className="borda-crono">{etapa.quantidade}</td>
-                      <td className="borda-crono">{etapa.total_embalagens}</td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+          {!solicitacaoAlteracaoCronograma && (
+            <table className="table mt-4 mb-3">
+              <thead className="head-crono">
+                <th className="borda-crono">N° do Empenho</th>
+                <th className="borda-crono">Etapa</th>
+                <th className="borda-crono">Parte</th>
+                <th className="borda-crono">Data Programada</th>
+                <th className="borda-crono">Quantidade</th>
+                <th className="borda-crono">Total de Embalagens</th>
+              </thead>
+              <tbody>
+                {cronograma.etapas.length > 0 &&
+                  cronograma.etapas.map((etapa, key) => {
+                    return (
+                      <tr key={key}>
+                        <td className="borda-crono">{etapa.numero_empenho}</td>
+                        <td className="borda-crono">{etapa.etapa}</td>
+                        <td className="borda-crono">{etapa.parte}</td>
+                        <td className="borda-crono">{etapa.data_programada}</td>
+                        <td className="borda-crono">{etapa.quantidade}</td>
+                        <td className="borda-crono">
+                          {etapa.total_embalagens}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          )}
         </>
       ) : (
         <>
