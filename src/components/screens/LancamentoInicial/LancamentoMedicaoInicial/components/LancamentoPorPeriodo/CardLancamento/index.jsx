@@ -1,36 +1,49 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
-
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
 
-import "./styles.scss";
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   PERIODO_LANCAMENTO
 } from "configs/constants";
+import "./styles.scss";
 
 export default ({
-  textoCabecalho,
+  textoCabecalho = null,
   grupo,
   cor,
-  totalAlimentacoes,
+  totalAlimentacoes = [],
   tipos_alimentacao,
   periodoSelecionado,
-  solicitacaoMedicaoInicial
+  solicitacaoMedicaoInicial,
+  ehGrupoSolicitacoesDeAlimentacao = false
 }) => {
   const history = useHistory();
-  const alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
-    <div key={key} className="mb-2">
-      <span style={{ color: cor }}>
-        <b>0</b>
-      </span>
-      <span className="ml-1">- {alimentacao.nome}</span>
-      <br />
-    </div>
-  ));
+  let alimentacoesFormatadas = [];
+  if (!ehGrupoSolicitacoesDeAlimentacao) {
+    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
+      <div key={key} className="mb-2">
+        <span style={{ color: cor }}>
+          <b>0</b>
+        </span>
+        <span className="ml-1">- {alimentacao.nome}</span>
+        <br />
+      </div>
+    ));
+  } else {
+    alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
+      <div key={key} className="mb-2">
+        <span style={{ color: cor }}>
+          <b>0</b>
+        </span>
+        <span className="ml-1">- {item}</span>
+        <br />
+      </div>
+    ));
+  }
 
   const desabilitarBotaoEditar = () => {
     if (!solicitacaoMedicaoInicial) {
@@ -45,7 +58,9 @@ export default ({
   const handleClickEditar = () => {
     history.push({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
-      search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
+      search: `uuid=${
+        solicitacaoMedicaoInicial.uuid
+      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}`,
       state: {
         periodo: textoCabecalho,
         grupo,
@@ -65,7 +80,8 @@ export default ({
         >
           <div className="row">
             <div className="col-10 pl-0 mb-2 periodo-cabecalho">
-              {grupo && `${grupo} - `}
+              {grupo &&
+                `${grupo} ${ehGrupoSolicitacoesDeAlimentacao ? "" : " - "} `}
               {textoCabecalho}
             </div>
           </div>

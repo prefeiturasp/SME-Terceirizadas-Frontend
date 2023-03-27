@@ -43,6 +43,10 @@ import {
   exibirTooltipErroQtdMaiorQueAutorizado,
   exibirTooltipFrequenciaDiaNaoLetivo,
   exibirTooltipSuspensoesAutorizadas,
+  exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
+  exibirTooltipKitLancheSolAlimentacoes,
+  exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
+  exibirTooltipLancheEmergencialSolAlimentacoes,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario,
@@ -57,6 +61,7 @@ import {
   formatarPayloadPeriodoLancamento,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
+  getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   valorZeroFrequencia
 } from "./helper";
@@ -93,6 +98,10 @@ export default () => {
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState([]);
   const [tabelaDietaRows, setTabelaDietaRows] = useState([]);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState([]);
+  const [
+    tabelaSolicitacoesAlimentacaoRows,
+    setTabelaSolicitacoesAlimentacaoRows
+  ] = useState([]);
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
   const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
@@ -100,6 +109,7 @@ export default () => {
     alteracoesAlimentacaoAutorizadas,
     setAlteracoesAlimentacaoAutorizadas
   ] = useState(null);
+  const [kitLanchesAutorizadas, setKitLanchesAutorizadas] = useState(null);
   const [
     dadosValoresInclusoesAutorizadasState,
     setDadosValoresInclusoesAutorizadasState
@@ -138,6 +148,10 @@ export default () => {
   let mesAnoDefault = new Date();
 
   const { TabPane } = Tabs;
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const ehGrupoSolicitacoesDeAlimentacaoUrlParam =
+    urlParams.get("ehGrupoSolicitacoesDeAlimentacao") === "true" ? true : false;
 
   const getListaDiasSobremesaDoceAsync = async escola_uuid => {
     const params = {
@@ -319,14 +333,52 @@ export default () => {
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
 
-      const response_categorias_medicao = await getCategoriasDeMedicao();
-      setCategoriasDeMedicao(response_categorias_medicao.data);
+      const rowsSolicitacoesAlimentacao = [];
+      rowsSolicitacoesAlimentacao.push(
+        {
+          nome: "Lanche Emergenc.",
+          name: "lanche_emergencial",
+          uuid: null
+        },
+        {
+          nome: "Kit Lanche",
+          name: "kit_lanche",
+          uuid: null
+        },
+        {
+          nome: "Observações",
+          name: "observacoes",
+          uuid: null
+        }
+      );
 
-      const params = {
-        nome_periodo_escolar: periodo.periodo_escolar.nome,
+      setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
+
+      const response_categorias_medicao = await getCategoriasDeMedicao();
+      if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+        setCategoriasDeMedicao(
+          response_categorias_medicao.data.filter(categoria => {
+            return categoria.nome.includes("SOLICITAÇÕES");
+          })
+        );
+      } else {
+        setCategoriasDeMedicao(
+          response_categorias_medicao.data.filter(categoria => {
+            return !categoria.nome.includes("SOLICITAÇÕES");
+          })
+        );
+      }
+
+      let params = {
         uuid_solicitacao_medicao: uuid,
         nome_grupo: location.state.grupo
       };
+      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+        params = {
+          ...params,
+          nome_periodo_escolar: periodo.periodo_escolar.nome
+        };
+      }
       const response_valores_periodos = await getValoresPeriodosLancamentos(
         params
       );
@@ -334,27 +386,83 @@ export default () => {
 
       const mes = format(mesAnoSelecionado, "MM");
       const ano = getYear(mesAnoSelecionado);
-      const params_matriculados = {
-        escola_uuid: escola.uuid,
-        mes: mes,
-        ano: ano,
-        tipo_turma: "REGULAR",
-        periodo_escolar: periodo.periodo_escolar.uuid
-      };
-      const response_matriculados = await getMatriculadosPeriodo(
-        params_matriculados
-      );
-      setValoresMatriculados(response_matriculados.data);
+      let response_matriculados = [];
+      let response_log_dietas_autorizadas = [];
+      let response_inclusoes_autorizadas = [];
+      let response_kit_lanches_autorizadas = [];
+      let response_suspensoes_autorizadas = [];
+      let response_alteracoes_alimentacao_autorizadas = [];
 
-      const params_dietas_autorizadas = {
-        escola_uuid: escola.uuid,
-        mes: mes,
-        ano: ano
-      };
-      const response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
-        params_dietas_autorizadas
-      );
-      setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
+      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+        const params_matriculados = {
+          escola_uuid: escola.uuid,
+          mes: mes,
+          ano: ano,
+          tipo_turma: "REGULAR",
+          periodo_escolar: periodo.periodo_escolar.uuid
+        };
+        response_matriculados = await getMatriculadosPeriodo(
+          params_matriculados
+        );
+        setValoresMatriculados(response_matriculados.data);
+
+        const params_dietas_autorizadas = {
+          escola_uuid: escola.uuid,
+          mes: mes,
+          ano: ano
+        };
+        response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
+          params_dietas_autorizadas
+        );
+        setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
+
+        response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo.periodo_escolar.nome,
+          location
+        );
+        setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
+        response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo.periodo_escolar.nome
+        );
+        setSuspensoesAutorizadas(response_suspensoes_autorizadas);
+
+        response_alteracoes_alimentacao_autorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo.periodo_escolar.nome
+        );
+        setAlteracoesAlimentacaoAutorizadas(
+          response_alteracoes_alimentacao_autorizadas
+        );
+      }
+
+      if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+        response_kit_lanches_autorizadas = await getSolicitacoesKitLanchesAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano
+        );
+        setKitLanchesAutorizadas(response_kit_lanches_autorizadas);
+
+        response_alteracoes_alimentacao_autorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          periodo.periodo_escolar.nome,
+          true
+        );
+        setAlteracoesAlimentacaoAutorizadas(
+          response_alteracoes_alimentacao_autorizadas
+        );
+      }
 
       const params_dias_calendario = {
         escola_uuid: escola.uuid,
@@ -366,33 +474,6 @@ export default () => {
       );
       setCalendarioMesConsiderado(response_dias_calendario.data);
 
-      const response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
-        escola.uuid,
-        mes,
-        ano,
-        periodo.periodo_escolar.nome,
-        location
-      );
-      setInclusoesAutorizadas(response_inclusoes_autorizadas);
-
-      const response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
-        escola.uuid,
-        mes,
-        ano,
-        periodo.periodo_escolar.nome
-      );
-      setSuspensoesAutorizadas(response_suspensoes_autorizadas);
-
-      const response_alteracoes_alimentacao_autorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync(
-        escola.uuid,
-        mes,
-        ano,
-        periodo.periodo_escolar.nome
-      );
-      setAlteracoesAlimentacaoAutorizadas(
-        response_alteracoes_alimentacao_autorizadas
-      );
-
       await formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
@@ -402,7 +483,10 @@ export default () => {
         rowsDietas,
         response_log_dietas_autorizadas.data,
         response_inclusoes_autorizadas,
-        mesAnoSelecionado
+        mesAnoSelecionado,
+        rowsSolicitacoesAlimentacao,
+        response_kit_lanches_autorizadas,
+        response_alteracoes_alimentacao_autorizadas
       );
       setLoading(false);
     };
@@ -420,25 +504,37 @@ export default () => {
     rowsDietas,
     logQtdDietasAutorizadas,
     solInclusoesAutorizadas,
-    mesAno
+    mesAno,
+    rowsSolicitacoesAlimentacao,
+    kitLanchesAutorizadas,
+    alteracoesAlimentacaoAutorizadas
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculados = {};
     let dadosValoresDietasAutorizadas = {};
+    let dadosValoresKitLanchesAutorizadas = {};
+    let dadosValoresAlteracoesAlimentacaoAutorizadas = {};
     let dadosValoresForaDoMes = {};
+    let periodoEscolar = "MANHA";
+    if (location.state) {
+      if (location.state.grupo && location.state.periodo) {
+        periodoEscolar = `${location.state.grupo} - ${location.state.periodo}`;
+      } else if (location.state.grupo) {
+        periodoEscolar = `${location.state.grupo}`;
+      } else {
+        periodoEscolar = `${location.state.periodo}`;
+      }
+    }
     const dadosMesPeriodo = {
       mes_lancamento: mesAnoFormatado,
-      periodo_escolar: location.state
-        ? `${location.state.grupo ? `${location.state.grupo} - ` : ""}${
-            location.state.periodo
-          }`
-        : "MANHA"
+      periodo_escolar: periodoEscolar
     };
     let dadosValoresInclusoesAutorizadas = {};
 
     categoriasMedicao &&
       categoriasMedicao.forEach(categoria => {
         matriculados &&
+          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
           matriculados.forEach(obj => {
             dadosValoresMatriculados[
               `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
@@ -466,6 +562,7 @@ export default () => {
             );
 
         logQtdDietasAutorizadas &&
+          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
           logQtdDietasAutorizadas.forEach(log => {
             categoria.nome === "DIETA ESPECIAL - TIPO A" &&
               log.classificacao.toUpperCase() === "TIPO A" &&
@@ -477,6 +574,26 @@ export default () => {
               (dadosValoresDietasAutorizadas[
                 `dietas_autorizadas__dia_${log.dia}__categoria_${categoria.id}`
               ] = `${log.quantidade}`);
+          });
+
+        kitLanchesAutorizadas &&
+          ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+          kitLanchesAutorizadas.forEach(kit => {
+            categoria.nome.includes("SOLICITAÇÕES") &&
+              (dadosValoresKitLanchesAutorizadas[
+                `kit_lanche__dia_${kit.dia}__categoria_${categoria.id}`
+              ] = `${kit.numero_alunos}`);
+          });
+
+        alteracoesAlimentacaoAutorizadas &&
+          ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+          alteracoesAlimentacaoAutorizadas.forEach(alteracao => {
+            categoria.nome.includes("SOLICITAÇÕES") &&
+              (dadosValoresAlteracoesAlimentacaoAutorizadas[
+                `lanche_emergencial__dia_${alteracao.dia}__categoria_${
+                  categoria.id
+                }`
+              ] = `${alteracao.numero_alunos}`);
           });
 
         tiposAlimentacaoFormatadas &&
@@ -552,8 +669,12 @@ export default () => {
         }
 
         tiposAlimentacaoFormatadas &&
-          rowsDietas &&
-          [tiposAlimentacaoFormatadas, rowsDietas].forEach(
+          (rowsDietas || rowsSolicitacoesAlimentacao) &&
+          [
+            tiposAlimentacaoFormatadas,
+            rowsDietas,
+            rowsSolicitacoesAlimentacao
+          ].forEach(
             each =>
               each &&
               each.forEach(tipo => {
@@ -602,6 +723,8 @@ export default () => {
     setDadosIniciais({
       ...dadosMesPeriodo,
       ...dadosValoresInclusoesAutorizadas,
+      ...dadosValoresKitLanchesAutorizadas,
+      ...dadosValoresAlteracoesAlimentacaoAutorizadas,
       ...dadosValoresMedicoes,
       ...dadosValoresMatriculados,
       ...dadosValoresDietasAutorizadas,
@@ -678,7 +801,10 @@ export default () => {
         tabelaDietaRows,
         logQtdDietasAutorizadas,
         inclusoesAutorizadas,
-        mesAnoConsiderado
+        mesAnoConsiderado,
+        tabelaSolicitacoesAlimentacaoRows,
+        kitLanchesAutorizadas,
+        alteracoesAlimentacaoAutorizadas
       );
     };
     semanaSelecionada && formatar();
@@ -772,7 +898,9 @@ export default () => {
         valor: ["<p></p>\n", ""].includes(v[1]) ? 0 : v[1],
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
-        tipo_alimentacao: tipoAlimentacao.uuid || ""
+        tipo_alimentacao: !ehGrupoSolicitacoesDeAlimentacaoUrlParam
+          ? tipoAlimentacao.uuid
+          : ""
       });
     });
 
@@ -788,6 +916,9 @@ export default () => {
     if (values["periodo_escolar"].includes(" - ")) {
       payload["grupo"] = values["periodo_escolar"].split(" - ")[0];
       payload["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
+    } else if (values["periodo_escolar"].includes("Solicitações")) {
+      payload["grupo"] = values["periodo_escolar"];
+      delete values["periodo_escolar"];
     } else {
       payload["periodo_escolar"] = values["periodo_escolar"];
     }
@@ -824,7 +955,10 @@ export default () => {
       tabelaDietaRows,
       logQtdDietasAutorizadas,
       inclusoesAutorizadas,
-      mesAnoConsiderado
+      mesAnoConsiderado,
+      tabelaSolicitacoesAlimentacaoRows,
+      kitLanchesAutorizadas,
+      alteracoesAlimentacaoAutorizadas
     );
     setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
@@ -879,7 +1013,8 @@ export default () => {
       tabelaAlimentacaoRows,
       tabelaDietaEnteralRows,
       dadosIniciaisFiltered,
-      diasDaSemanaSelecionada
+      diasDaSemanaSelecionada,
+      ehGrupoSolicitacoesDeAlimentacaoUrlParam
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -925,7 +1060,10 @@ export default () => {
         tabelaDietaRows,
         logQtdDietasAutorizadas,
         inclusoesAutorizadas,
-        mesAnoConsiderado
+        mesAnoConsiderado,
+        tabelaSolicitacoesAlimentacaoRows,
+        kitLanchesAutorizadas,
+        alteracoesAlimentacaoAutorizadas
       );
     }
     setLoading(false);
@@ -1151,7 +1289,39 @@ export default () => {
             column,
             categoria,
             alteracoesAlimentacaoAutorizadas
-          )))
+          ))) ||
+      (categoria.nome.includes("SOLICITAÇÕES") &&
+        ((exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          kitLanchesAutorizadas
+        ) ||
+          exibirTooltipKitLancheSolAlimentacoes(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            kitLanchesAutorizadas
+          ) ||
+          exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            alteracoesAlimentacaoAutorizadas
+          ) ||
+          exibirTooltipLancheEmergencialSolAlimentacoes(
+            formValuesAtualizados,
+            row,
+            column,
+            categoria,
+            alteracoesAlimentacaoAutorizadas
+          )) &&
+          !formValuesAtualizados[
+            `observacoes__dia_${dia}__categoria_${categoria.id}`
+          ]))
     ) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -1162,22 +1332,28 @@ export default () => {
     }
   };
 
-  const fieldValidationsTabelaAlimentacao = (rowName, dia, categoria) => (
-    value,
-    allValues
-  ) => {
-    return validacoesTabelaAlimentacao(
-      rowName,
-      dia,
-      categoria,
-      value,
-      allValues,
-      dadosValoresInclusoesAutorizadasState,
-      suspensoesAutorizadas,
-      alteracoesAlimentacaoAutorizadas,
-      validacaoDiaLetivo,
-      location
-    );
+  const fieldValidationsTabelaAlimentacao = (
+    rowName,
+    dia,
+    idCategoria,
+    nomeCategoria
+  ) => (value, allValues) => {
+    if (nomeCategoria.includes("SOLICITAÇÕES")) {
+      return undefined;
+    } else {
+      return validacoesTabelaAlimentacao(
+        rowName,
+        dia,
+        idCategoria,
+        value,
+        allValues,
+        dadosValoresInclusoesAutorizadasState,
+        suspensoesAutorizadas,
+        alteracoesAlimentacaoAutorizadas,
+        validacaoDiaLetivo,
+        location
+      );
+    }
   };
 
   const fieldValidationsTabelasDietas = (rowName, dia, categoria) => (
@@ -1296,7 +1472,8 @@ export default () => {
                     categoriasDeMedicao.map(categoria => (
                       <div key={categoria.uuid}>
                         <b className="pb-2 section-title">{categoria.nome}</b>
-                        {categoria.nome === "ALIMENTAÇÃO" &&
+                        {(categoria.nome === "ALIMENTAÇÃO" ||
+                          categoria.nome.includes("SOLICITAÇÕES")) &&
                           ultimaAtualizacaoMedicao && (
                             <p className="ultimo-salvamento mb-0">
                               Último salvamento {ultimaAtualizacaoMedicao}
@@ -1415,6 +1592,7 @@ export default () => {
                                                       column.dia,
                                                       row.name,
                                                       categoria.id,
+                                                      categoria.nome,
                                                       formValuesAtualizados,
                                                       mesAnoConsiderado,
                                                       mesAnoDefault,
@@ -1463,8 +1641,10 @@ export default () => {
                                       </Fragment>
                                     );
                                   })
-                                : tabelaAlimentacaoRows &&
-                                  tabelaAlimentacaoRows.map((row, index) => {
+                                : (categoria.nome.includes("SOLICITAÇÕES")
+                                    ? tabelaSolicitacoesAlimentacaoRows
+                                    : tabelaAlimentacaoRows
+                                  ).map((row, index) => {
                                     return (
                                       <Fragment key={index}>
                                         <div
@@ -1511,6 +1691,8 @@ export default () => {
                                                         validacaoDiaLetivo,
                                                         column,
                                                         suspensoesAutorizadas,
+                                                        alteracoesAlimentacaoAutorizadas,
+                                                        kitLanchesAutorizadas,
                                                         alteracoesAlimentacaoAutorizadas
                                                       )
                                                         ? BUTTON_STYLE.RED_OUTLINE
@@ -1545,6 +1727,7 @@ export default () => {
                                                       column.dia,
                                                       row.name,
                                                       categoria.id,
+                                                      categoria.nome,
                                                       formValuesAtualizados,
                                                       mesAnoConsiderado,
                                                       mesAnoDefault,
@@ -1638,6 +1821,34 @@ export default () => {
                                                       categoria,
                                                       alteracoesAlimentacaoAutorizadas
                                                     )}
+                                                    exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas={exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      kitLanchesAutorizadas
+                                                    )}
+                                                    exibeTooltipKitLancheSolAlimentacoes={exibirTooltipKitLancheSolAlimentacoes(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      kitLanchesAutorizadas
+                                                    )}
+                                                    exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas={exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      alteracoesAlimentacaoAutorizadas
+                                                    )}
+                                                    exibeTooltipLancheEmergencialSolAlimentacoes={exibirTooltipLancheEmergencialSolAlimentacoes(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      alteracoesAlimentacaoAutorizadas
+                                                    )}
                                                     numeroDeInclusoesAutorizadas={
                                                       dadosValoresInclusoesAutorizadasState[
                                                         `${row.name}__dia_${
@@ -1654,7 +1865,8 @@ export default () => {
                                                     validate={fieldValidationsTabelaAlimentacao(
                                                       row.name,
                                                       column.dia,
-                                                      categoria.id
+                                                      categoria.id,
+                                                      categoria.nome
                                                     )}
                                                   />
                                                   <OnChange

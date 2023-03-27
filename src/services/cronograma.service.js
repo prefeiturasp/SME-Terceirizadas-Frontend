@@ -31,9 +31,24 @@ export const cadastraSolicitacaoAlteracaoCronograma = async payload => {
   return await axios.post("solicitacao-de-alteracao-de-cronograma/", payload);
 };
 
+export const dilogCienteSolicitacaoAlteracaoCronograma = async (
+  uuid,
+  payload
+) => {
+  return await axios.patch(
+    `solicitacao-de-alteracao-de-cronograma/${uuid}/cronograma-ciente/`,
+    payload
+  );
+};
+
 export const getListagemSolicitacaoAlteracaoCronograma = async params => {
   const url = `/solicitacao-de-alteracao-de-cronograma/`;
   return await axios.get(url, { params });
+};
+
+export const getSolicitacaoAlteracaoCronograma = async uuid => {
+  const url = `/solicitacao-de-alteracao-de-cronograma/${uuid}/`;
+  return await axios.get(url);
 };
 
 export const cronogramaAssina = async (uuid, password) => {
@@ -44,7 +59,6 @@ export const cronogramaAssina = async (uuid, password) => {
 };
 
 export const dinutreAssinaCronograma = async (uuid, password) => {
-  console.log(uuid);
   const url = `/cronogramas/${uuid}/dinutre-assina/`;
   return await axios.patch(url, {
     password: password
@@ -52,7 +66,6 @@ export const dinutreAssinaCronograma = async (uuid, password) => {
 };
 
 export const codaeAssinaCronograma = async (uuid, password) => {
-  console.log(uuid);
   const url = `/cronogramas/${uuid}/codae-assina/`;
   return await axios.patch(url, {
     password: password

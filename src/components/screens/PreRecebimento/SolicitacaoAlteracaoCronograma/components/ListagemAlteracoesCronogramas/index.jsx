@@ -2,8 +2,17 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
+import * as constants from "configs/constants";
 
 const ListagemAlteracoesCronogramas = ({ alteracoesCronogramas }) => {
+  const labelBotãoDetalhar = status => {
+    const labels = {
+      "Em análise": "Analisar",
+      "Cronograma ciente": "Detalhar"
+    };
+    return labels[status];
+  };
+
   return (
     <section className="resultado-cronograma-de-entrega">
       <header>Resultados da Pesquisa</header>
@@ -26,8 +35,15 @@ const ListagemAlteracoesCronogramas = ({ alteracoesCronogramas }) => {
                 <div>{alteracaoCronograma.status}</div>
                 <div>{alteracaoCronograma.criado_em.split(" ")[0]}</div>
                 <div>
-                  <NavLink className="float-left" to="#">
-                    <span className="link-acoes green">Detalhar</span>
+                  <NavLink
+                    className="float-left"
+                    to={`/${constants.PRE_RECEBIMENTO}/${
+                      constants.ANALISE_CRONOGRAMA_DILOG
+                    }?uuid=${alteracaoCronograma.uuid}`}
+                  >
+                    <span className="link-acoes green">
+                      {labelBotãoDetalhar(alteracaoCronograma.status)}
+                    </span>
                   </NavLink>
                 </div>
               </div>

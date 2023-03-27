@@ -203,6 +203,7 @@ import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/Acom
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
 
 const routesConfig = [
   {
@@ -1411,7 +1412,13 @@ const routesConfig = [
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
     component: RelatorioAlunosMatriculadosPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario:
+      usuarioEhTerceirizada() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1604,6 +1611,12 @@ const routesConfig = [
     component: AlterarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_CRONOGRAMA_DILOG}`,
+    component: AnaliseDilogCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
   },
   {
     /*

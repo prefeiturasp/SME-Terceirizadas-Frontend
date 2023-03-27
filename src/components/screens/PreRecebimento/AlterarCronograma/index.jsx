@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import {
   cadastraSolicitacaoAlteracaoCronograma,
-  getCronograma
+  getCronograma,
+  getSolicitacaoAlteracaoCronograma
 } from "services/cronograma.service";
 import HTTP_STATUS from "http-status-codes";
 import { Form, Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import DadosCronograma from "../CronogramaEntrega/components/DadosCronograma";
-import TabelaEditarCronograma from "./TabelaEditarCronograma";
+import TabelaEditarCronograma from "./components/TabelaEditarCronograma";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import "./styles.scss";
-import { usuarioEhFornecedor } from "helpers/utilities";
-import AcoesAlterar from "./AcoesAlterar";
+import AcoesAlterar from "./components/AcoesAlterar";
 import { prepararPayloadCronograma } from "./helpers";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CRONOGRAMA_ENTREGA, PRE_RECEBIMENTO } from "configs/constants";
@@ -34,12 +34,16 @@ const manterDataEQuantidade = (values, values_) => {
   );
 };
 
-export default () => {
+export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   const [restante, setRestante] = useState(undefined);
   const [etapas, setEtapas] = useState([{}]);
   const [cronograma, setCronograma] = useState(null);
+  const [
+    solicitacaoAlteracaoCronograma,
+    setSolicitacaoAlteracaoCronograma
+  ] = useState(null);
   const [podeSubmeter, setpodeSubmeter] = useState(false);
   const history = useHistory();
 
@@ -82,12 +86,23 @@ export default () => {
   };
 
   const getDetalhes = async () => {
-    if (uuid) {
-      const responseCronograma = await getCronograma(uuid);
-      if (responseCronograma.status === HTTP_STATUS.OK) {
-        setCronograma(responseCronograma.data);
-        setEtapas(responseCronograma.data.etapas);
-        setRestante(responseCronograma.data.qtd_total_programada);
+    if (analiseSolicitacao) {
+      const responseSolicitacaoCronograma = await getSolicitacaoAlteracaoCronograma(
+        uuid
+      );
+      const responseCronograma = responseSolicitacaoCronograma.data.cronograma;
+      setSolicitacaoAlteracaoCronograma(responseSolicitacaoCronograma.data);
+      setCronograma(responseCronograma);
+      setEtapas(responseCronograma.etapas);
+      setRestante(responseCronograma.qtd_total_programada);
+    } else {
+      if (uuid) {
+        const responseCronograma = await getCronograma(uuid);
+        if (responseCronograma.status === HTTP_STATUS.OK) {
+          setCronograma(responseCronograma.data);
+          setEtapas(responseCronograma.data.etapas);
+          setRestante(responseCronograma.data.qtd_total_programada);
+        }
       }
     }
   };
@@ -103,6 +118,22 @@ export default () => {
     return true;
   };
 
+  const labelDeMotivos = motivos => {
+    let motivo = " ";
+    if (motivos !== undefined) {
+      if (motivos.includes("ALTERAR_DATA_ENTREGA")) {
+        motivo += " Alterar datas de entrega,";
+      }
+      if (motivos.includes("ALTERAR_QTD_ALIMENTO")) {
+        motivo += " Alterar quantidade programada,";
+      }
+      if (motivos.includes("OUTROS")) {
+        motivo += " Outros ";
+      }
+    }
+    return motivo.slice(0, -1);
+  };
+
   useEffect(() => {
     getDetalhes();
     // eslint-disable-next-line
@@ -113,10 +144,18 @@ export default () => {
       <div className="card-body">
         {cronograma && (
           <>
-            <DadosCronograma
-              cronograma={cronograma}
-              esconderInformacoesAdicionais={true}
-            />
+            {!solicitacaoAlteracaoCronograma ? (
+              <DadosCronograma
+                cronograma={cronograma}
+                esconderInformacoesAdicionais={true}
+              />
+            ) : (
+              <DadosCronograma
+                cronograma={cronograma}
+                solicitacaoAlteracaoCronograma={solicitacaoAlteracaoCronograma}
+                esconderInformacoesAdicionais={false}
+              />
+            )}
             <Form
               onSubmit={async values => {
                 const payload = prepararPayloadCronograma(cronograma, values);
@@ -129,39 +168,70 @@ export default () => {
                     toastError("Ocorreu um erro ao salvar o Cronograma");
                   });
               }}
-              initialValues={{}}
+              initialValues={values => {
+                if (solicitacaoAlteracaoCronograma) {
+                  let dados_iniciais = {
+                    motivos: solicitacaoAlteracaoCronograma
+                      ? solicitacaoAlteracaoCronograma.motivo
+                      : undefined,
+                    justificativa: solicitacaoAlteracaoCronograma.justificativa
+                  };
+                  solicitacaoAlteracaoCronograma.etapas.map(e => {
+                    dados_iniciais[`quantidade_total_${e.etapa}`] =
+                      e.nova_quantidade;
+                    dados_iniciais[`data_programada_${e.etapa}`] =
+                      e.nova_data_programada;
+                  });
+                  return dados_iniciais;
+                }
+                return values;
+              }}
               render={({ handleSubmit, form, values }) => (
                 <form onSubmit={handleSubmit}>
-                  <div>
-                    <label className="label font-weight-normal">
-                      <span>* </span>Motivo da Solicitação de Alteração
-                    </label>
-                    <Field
-                      component={StatefulMultiSelect}
-                      name="motivos"
-                      disableSearch={true}
-                      hasSelectAll={false}
-                      options={opcoesMotivos}
-                      selected={values.motivos || []}
-                      onSelectedChanged={values_ =>
-                        handleMotivosChange(values_, values, form)
-                      }
-                      overrideStrings={{
-                        search: "Busca",
-                        selectSomeItems: "Selecione o(s) Motivo(s)",
-                        allItemsAreSelected:
-                          "Todos os itens estão selecionados",
-                        selectAll: "Todos"
-                      }}
-                      required
-                    />
-                  </div>
+                  {!solicitacaoAlteracaoCronograma ? (
+                    <div>
+                      <label className="label font-weight-normal">
+                        <span>* </span>Motivo da Solicitação de Alteração
+                      </label>
+                      <Field
+                        component={StatefulMultiSelect}
+                        name="motivos"
+                        disableSearch={true}
+                        hasSelectAll={false}
+                        options={opcoesMotivos}
+                        selected={values.motivos || []}
+                        onSelectedChanged={values_ =>
+                          handleMotivosChange(values_, values, form)
+                        }
+                        overrideStrings={{
+                          search: "Busca",
+                          selectSomeItems: "Selecione o(s) Motivo(s)",
+                          allItemsAreSelected:
+                            "Todos os itens estão selecionados",
+                          selectAll: "Todos"
+                        }}
+                        required
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <hr />
+                      <p className="head-green">Solicitação de Alteração</p>
+                      <p>
+                        <span className="green">Motivo: </span>{" "}
+                        {labelDeMotivos(values.motivos)}
+                      </p>
+                    </>
+                  )}
                   {values.motivos &&
                   (values.motivos.includes("ALTERAR_DATA_ENTREGA") ||
                     values.motivos.includes("ALTERAR_QTD_ALIMENTO")) ? (
                     <div>
                       <TabelaEditarCronograma
                         etapas={etapas}
+                        solicitacaoAlteracaoCronograma={
+                          solicitacaoAlteracaoCronograma
+                        }
                         motivos={values.motivos}
                         cronograma={cronograma}
                         values={values}
@@ -183,6 +253,7 @@ export default () => {
                       name="justificativa"
                       placeholder="Escreva o motivo da solicitação de alteração"
                       className="input-busca-produto"
+                      disabled={solicitacaoAlteracaoCronograma !== null}
                     />
                     <OnChange name="justificativa">
                       {value => {
@@ -198,15 +269,16 @@ export default () => {
                       }}
                     </OnChange>
                   </div>
-                  {usuarioEhFornecedor() && (
-                    <div className="mt-4 mb-4">
-                      <AcoesAlterar
-                        cronograma={cronograma}
-                        handleSubmit={handleSubmit}
-                        podeSubmeter={podeSubmeter}
-                      />
-                    </div>
-                  )}
+                  <div className="mt-4 mb-4">
+                    <AcoesAlterar
+                      cronograma={cronograma}
+                      solicitacaoAlteracaoCronograma={
+                        solicitacaoAlteracaoCronograma
+                      }
+                      handleSubmit={handleSubmit}
+                      podeSubmeter={podeSubmeter}
+                    />
+                  </div>
                 </form>
               )}
             />
