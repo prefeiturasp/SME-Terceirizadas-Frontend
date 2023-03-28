@@ -12,6 +12,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalVoltar from "./ModalVoltar";
+import ModalAvisoCoreSSO from "../ModalAvisoCoreSSO";
 
 export const Page = ({ ...props }) => {
   const history = useHistory();
@@ -30,7 +31,7 @@ export const Page = ({ ...props }) => {
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
-  const { setMeusDados } = useContext(MeusDadosContext);
+  const { meusDados, setMeusDados } = useContext(MeusDadosContext);
 
   useEffect(() => {
     if (!localStorage.getItem("meusDados")) {
@@ -79,6 +80,7 @@ export const Page = ({ ...props }) => {
         toggle={() => setToggled(!toggled)}
         toggled={toggled}
       />
+      <ModalAvisoCoreSSO meusDados={meusDados} />
       <div id="content-wrapper" className="pt-5">
         <div
           className={`content-wrapper-div ${toggled &&

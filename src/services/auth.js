@@ -117,6 +117,7 @@ const logout = () => {
   localStorage.removeItem("eh_cemei");
   localStorage.removeItem("dre_nome");
   localStorage.removeItem("lotes");
+  localStorage.removeItem("modalCoreSSO");
   window.location.href = "/login";
 };
 
