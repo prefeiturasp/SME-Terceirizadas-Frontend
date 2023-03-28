@@ -176,7 +176,7 @@ export default ({ analiseSolicitacao }) => {
                       : undefined,
                     justificativa: solicitacaoAlteracaoCronograma.justificativa
                   };
-                  solicitacaoAlteracaoCronograma.etapas.map(e => {
+                  solicitacaoAlteracaoCronograma.etapas.forEach(e => {
                     dados_iniciais[`quantidade_total_${e.etapa}`] =
                       e.nova_quantidade;
                     dados_iniciais[`data_programada_${e.etapa}`] =

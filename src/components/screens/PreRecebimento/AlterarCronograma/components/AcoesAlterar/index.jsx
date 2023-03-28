@@ -6,7 +6,10 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { usuarioEhCronograma, usuarioEhFornecedor } from "helpers/utilities";
+import {
+  usuarioEhCronograma,
+  usuarioEhEmpresaFornecedor
+} from "helpers/utilities";
 import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
 import ModalAnalise from "../Modals/ModalAnalise";
 import { dilogCienteSolicitacaoAlteracaoCronograma } from "services/cronograma.service";
@@ -41,7 +44,7 @@ export default ({
 
   return (
     <>
-      {usuarioEhFornecedor() && (
+      {usuarioEhEmpresaFornecedor() && (
         <Botao
           texto="Enviar Solicitação"
           type={BUTTON_TYPE.BUTTON}
@@ -75,7 +78,7 @@ export default ({
         onClick={() => handleBack()}
       />
 
-      {usuarioEhFornecedor() && (
+      {usuarioEhEmpresaFornecedor() && (
         <ModalEnviarSolicitacao
           show={show}
           handleClose={handleClose}
