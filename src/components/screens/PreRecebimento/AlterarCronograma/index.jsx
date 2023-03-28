@@ -183,8 +183,9 @@ export default ({ analiseSolicitacao }) => {
                       e.nova_data_programada;
                   });
                   return dados_iniciais;
+                } else {
+                  return values;
                 }
-                return values;
               }}
               render={({ handleSubmit, form, values }) => (
                 <form onSubmit={handleSubmit}>
