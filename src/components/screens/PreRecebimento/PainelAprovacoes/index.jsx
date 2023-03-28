@@ -82,7 +82,7 @@ export default () => {
 
     let cards = [];
     cards_alteracao.forEach(card => {
-      dadosDashboard.data.forEach(data => {
+      dadosDashboard.data.results.forEach(data => {
         if (card.incluir_status.includes(data.status)) {
           card.items = data.dados;
           cards.push(card);
