@@ -229,6 +229,36 @@ const CardBody = props => {
                         </OnChange>
                       </div>
                     )}
+                    {pathname === "/painel-gestao-alimentacao" && (
+                      <>
+                        <div className="col-3">
+                          <Field
+                            component={Select}
+                            options={TIPOS_SOLICITACOES_OPTIONS}
+                            name="tipo_solicitacao"
+                            naoDesabilitarPrimeiraOpcao
+                          />
+                          <OnChange name="tipo_solicitacao">
+                            {() => {
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                        <div className="col-3">
+                          <Field
+                            name="data_evento"
+                            minDate={null}
+                            component={InputComData}
+                            placeholder="Data do evento"
+                          />
+                          <OnChange name="data_evento">
+                            {() => {
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </form>
