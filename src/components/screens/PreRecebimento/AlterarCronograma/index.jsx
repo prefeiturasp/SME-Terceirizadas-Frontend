@@ -176,15 +176,16 @@ export default ({ analiseSolicitacao }) => {
                       : undefined,
                     justificativa: solicitacaoAlteracaoCronograma.justificativa
                   };
-                  solicitacaoAlteracaoCronograma.etapas.map(e => {
+                  solicitacaoAlteracaoCronograma.etapas.forEach(e => {
                     dados_iniciais[`quantidade_total_${e.etapa}`] =
                       e.nova_quantidade;
                     dados_iniciais[`data_programada_${e.etapa}`] =
                       e.nova_data_programada;
                   });
                   return dados_iniciais;
+                } else {
+                  return values;
                 }
-                return values;
               }}
               render={({ handleSubmit, form, values }) => (
                 <form onSubmit={handleSubmit}>
