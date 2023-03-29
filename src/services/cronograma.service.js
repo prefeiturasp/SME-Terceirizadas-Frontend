@@ -77,3 +77,8 @@ export const getDashboardCronograma = async (params = null) =>
 
 export const getDashboardCronogramaComFiltros = async params =>
   await axios.get(`/cronogramas/dashboard-com-filtro/`, { params });
+
+export const getDashboardSolicitacoesAlteracao = async (params = null) =>
+  await axios.get(`/solicitacao-de-alteracao-de-cronograma/dashboard/`, {
+    params
+  });
