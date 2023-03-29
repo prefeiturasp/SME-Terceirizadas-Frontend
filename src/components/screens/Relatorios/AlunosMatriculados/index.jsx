@@ -114,6 +114,11 @@ export const AlunosMatriculados = () => {
             </Fragment>
           )}
         </Spin>
+        {!filtrando && resultado && resultado.length === 0 && (
+          <div className="sem-resultado-alunos-matriculados">
+            Não há alunos matriculados para os filtros selecionados.
+          </div>
+        )}
       </div>
     </div>
   );
