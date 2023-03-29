@@ -41,6 +41,15 @@ export const CARD_PENDENTES_ASSINATURA_DILOG = {
   href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`
 };
 
+export const CARD_SOLICITACOES_ALTERACOES = {
+  id: "Solicitações de Alterações",
+  titulo: "Solicitações de Alterações",
+  icon: "fa-check",
+  style: "card-cronogramas-assinados",
+  incluir_status: ["CRONOGRAMA_CIENTE"],
+  href: ``
+};
+
 export const cards_dinutre = [
   CARD_PENDENTES_ASSINATURA,
   CARD_AGUARDANDO_ASSINATURA,
@@ -51,3 +60,5 @@ export const cards_dilog = [
   CARD_PENDENTES_ASSINATURA_DILOG,
   CARD_CRONOGRAMAS_ASSINADOS
 ];
+
+export const cards_alteracao = [CARD_SOLICITACOES_ALTERACOES];
