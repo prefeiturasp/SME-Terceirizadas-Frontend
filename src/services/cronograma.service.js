@@ -82,3 +82,13 @@ export const getDashboardSolicitacoesAlteracao = async (params = null) =>
   await axios.get(`/solicitacao-de-alteracao-de-cronograma/dashboard/`, {
     params
   });
+
+export const getDashboardSolicitacoesAlteracaoComFiltros = async (
+  params = null
+) =>
+  await axios.get(
+    `/solicitacao-de-alteracao-de-cronograma/dashboard-com-filtro/`,
+    {
+      params
+    }
+  );

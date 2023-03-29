@@ -5,7 +5,8 @@ import { cards_dinutre, cards_dilog, cards_alteracao } from "./constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros,
-  getDashboardSolicitacoesAlteracao
+  getDashboardSolicitacoesAlteracao,
+  getDashboardSolicitacoesAlteracaoComFiltros
 } from "services/cronograma.service";
 import {
   parseDataHoraBrToMoment,
@@ -76,9 +77,16 @@ export default () => {
     setCarregando(false);
   }, []);
 
-  const buscaSolicitacoes = useCallback(async () => {
+  const buscaSolicitacoes = useCallback(async (filtros = null) => {
     setCarregando(true);
-    let dadosDashboard = await getDashboardSolicitacoesAlteracao();
+    let dadosDashboard;
+    if (!filtros) {
+      dadosDashboard = await getDashboardSolicitacoesAlteracao();
+    } else {
+      dadosDashboard = await getDashboardSolicitacoesAlteracaoComFiltros(
+        filtros
+      );
+    }
 
     let cards = [];
     cards_alteracao.forEach(card => {
@@ -126,7 +134,7 @@ export default () => {
     }
   };
 
-  const filtrarRequisicao = debounce((value, values) => {
+  const filtrarCronograma = debounce((value, values) => {
     const { nome_produto, numero_cronograma } = values;
     const podeFiltrar = [nome_produto, numero_cronograma].some(
       value => value && value.length > 2
@@ -143,6 +151,23 @@ export default () => {
     }
   }, 500);
 
+  const filtrarSolicitacao = debounce((value, values) => {
+    const { numero_cronograma, nome_fornecedor } = values;
+    const podeFiltrar = [numero_cronograma, nome_fornecedor].some(
+      value => value && value.length > 2
+    );
+    if (podeFiltrar) {
+      setCarregando(true);
+      let newParams = Object.assign({}, { ...values });
+      buscaSolicitacoes(newParams);
+      setFiltrado(true);
+    } else if (filtrado) {
+      setCarregando(true);
+      setFiltrado(false);
+      buscaSolicitacoes();
+    }
+  }, 500);
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-painel-cronograma">
@@ -153,7 +178,6 @@ export default () => {
               <div className="col-7">
                 <Form
                   initialValues={{
-                    nome_fornecedor: "",
                     numero_cronograma: "",
                     nome_produto: ""
                   }}
@@ -169,7 +193,7 @@ export default () => {
                         />
 
                         <OnChange name="numero_cronograma">
-                          {value => filtrarRequisicao(value, values)}
+                          {value => filtrarCronograma(value, values)}
                         </OnChange>
                       </div>
                       <div className="col-6">
@@ -180,7 +204,7 @@ export default () => {
                         />
 
                         <OnChange name="nome_produto">
-                          {value => filtrarRequisicao(value, values)}
+                          {value => filtrarCronograma(value, values)}
                         </OnChange>
                       </div>
                     </div>
@@ -209,6 +233,42 @@ export default () => {
           <div className="card-title">
             <div className="row">
               <div className="col-5">Alterações de Cronogramas</div>
+              <div className="col-7">
+                <Form
+                  initialValues={{
+                    nome_fornecedor: "",
+                    numero_cronograma: ""
+                  }}
+                  onSubmit={() => {}}
+                >
+                  {({ values }) => (
+                    <div className="row text-right">
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          name="numero_cronograma"
+                          placeholder="N° do Cronograma"
+                        />
+
+                        <OnChange name="numero_cronograma">
+                          {value => filtrarSolicitacao(value, values)}
+                        </OnChange>
+                      </div>
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          name="nome_fornecedor"
+                          placeholder="Nome do Fornecedor"
+                        />
+
+                        <OnChange name="nome_fornecedor">
+                          {value => filtrarSolicitacao(value, values)}
+                        </OnChange>
+                      </div>
+                    </div>
+                  )}
+                </Form>
+              </div>
             </div>
           </div>
           <div className="row">
