@@ -277,6 +277,19 @@ export const getRelatorioReclamacao = async params => {
   saveAs(data, "relatorio_reclamacao.pdf");
 };
 
+export const filtrarSolicitacoesAlimentacaoDRE = async params => {
+  const response = await axios
+    .get(
+      `${API_URL}/diretoria-regional-solicitacoes/filtrar-solicitacoes-ga/`,
+      { params }
+    )
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
   const response = await axios
     .get(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, { params })
@@ -287,12 +300,11 @@ export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
   }
 };
 
-export const filtrarSolicitacoesAlimentacaoDRE = async params => {
+export const filtrarSolicitacoesAlimentacaoTerceirizadas = async params => {
   const response = await axios
-    .get(
-      `${API_URL}/diretoria-regional-solicitacoes/filtrar-solicitacoes-ga/`,
-      { params }
-    )
+    .get(`${API_URL}/terceirizada-solicitacoes/filtrar-solicitacoes-ga/`, {
+      params
+    })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -322,6 +334,17 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
   }
 };
 
+export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async params => {
+  const url = `/terceirizada-solicitacoes/exportar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async params => {
   const url = `/diretoria-regional-solicitacoes/exportar-pdf/`;
   const response = await axios
@@ -335,6 +358,17 @@ export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async params => {
 
 export const gerarPDFRelatorioSolicitacoesAlimentacaoCODAE = async params => {
   const url = `/codae-solicitacoes/exportar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas = async params => {
+  const url = `/terceirizada-solicitacoes/exportar-pdf/`;
   const response = await axios
     .get(url, { params: params })
     .catch(ErrorHandlerFunction);

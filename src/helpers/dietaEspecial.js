@@ -125,7 +125,7 @@ export const formFiltrosObtemDreEEscolasDietas = async (
   } else {
     if (dadosUsuario.tipo_usuario === "diretoriaregional") {
       const { uuid, nome } = dadosUsuario.vinculo_atual.instituicao;
-      const resposta2 = await getEscolasTrecTotal(uuid);
+      const resposta2 = await getEscolasTrecTotal({ dre: uuid });
       setDiretoriasRegionais([{ value: uuid, label: nome }]);
       setNomeEscolas(formataNomeComCodEol(resposta2.data));
       setEscolas(formataUuidNomeComCodEol(resposta2.data));

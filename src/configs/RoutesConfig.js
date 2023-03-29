@@ -1406,7 +1406,10 @@ const routesConfig = [
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
