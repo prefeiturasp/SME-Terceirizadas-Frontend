@@ -19,7 +19,7 @@ export default () => {
       setDadosUsuario(response);
       setLotes(response.vinculo_atual.instituicao.lotes);
       const dre_uuid = response.vinculo_atual.instituicao.uuid;
-      getEscolasTrecTotal(dre_uuid).then(response => {
+      getEscolasTrecTotal({ dre: dre_uuid }).then(response => {
         setEscolas(response.data);
       });
     });

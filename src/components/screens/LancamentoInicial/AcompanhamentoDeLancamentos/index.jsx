@@ -148,7 +148,7 @@ export const AcompanhamentoDeLancamentos = () => {
     };
 
     const getEscolasTrecTotalAsync = async () => {
-      const response = await getEscolasTrecTotal(uuid);
+      const response = await getEscolasTrecTotal({ dre: uuid });
       if (response.status === HTTP_STATUS.OK) {
         setNomesEscolas(
           response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
