@@ -6,7 +6,7 @@ export const DetalhesCEIouCEMEI = ({ ...props }) => {
   return (
     <Fragment>
       <tr>
-        <td colSpan={7}>
+        <td colSpan={8}>
           <div className="container-fluid">
             <div className="row mt-3">
               <div className="col-12 mt-3">
