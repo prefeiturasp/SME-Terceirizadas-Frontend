@@ -1,6 +1,6 @@
-import { deepCopy } from "helpers/utilities";
 import React, { Fragment } from "react";
 import { DetalhesCEIouCEMEI } from "../DetalhesCEIouCEMEI";
+import { deepCopy, usuarioEhDRE } from "helpers/utilities";
 import { formataNome } from "../../helpers";
 import { Tooltip } from "antd";
 
@@ -38,11 +38,21 @@ export const TabelaResultado = ({ ...props }) => {
           <table className="table table-bordered table-items">
             <thead>
               <tr className="table-head-items">
-                <th className="col-3">DRE</th>
-                <th className="col-1">Lote</th>
-                <th className="col-1">Tipo de unid.</th>
+                {!usuarioEhDRE() && <th className="col-3">DRE</th>}
+                <th className={`${usuarioEhDRE() ? "col-2" : "col-1"}`}>
+                  Lote
+                </th>
+                <th className={`${usuarioEhDRE() ? "col-2" : "col-1"}`}>
+                  Tipo de unid.
+                </th>
                 <th className="col-3">Unid. educacional</th>
-                <th className="col-1 text-center">Tipo de turma</th>
+                <th
+                  className={`${
+                    usuarioEhDRE() ? "col-2" : "col-1"
+                  } text-center`}
+                >
+                  Tipo de turma
+                </th>
                 <th className="col-1 text-center">Período</th>
                 <th className="col-1 text-center">Matriculados</th>
                 <th className="col-1" />
@@ -61,10 +71,12 @@ export const TabelaResultado = ({ ...props }) => {
                 return (
                   <Fragment key={index}>
                     <tr className="table-body-items" key={index}>
-                      <td>
-                        {item.escola.diretoria_regional &&
-                          item.escola.diretoria_regional.nome}
-                      </td>
+                      {!usuarioEhDRE() && (
+                        <td>
+                          {item.escola.diretoria_regional &&
+                            item.escola.diretoria_regional.nome}
+                        </td>
+                      )}
                       <td>{item.escola.lote && item.escola.lote.nome}</td>
                       <td>
                         {item.escola.tipo_unidade &&
