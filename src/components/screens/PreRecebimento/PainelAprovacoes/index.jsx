@@ -205,29 +205,33 @@ export default () => {
             ))}
           </div>
         </div>
-        <div className="card-body painel-cronograma">
-          <div className="card-title">
+      </div>
+      {dinutre && (
+        <div className="card mt-3 card-painel-cronograma">
+          <div className="card-body painel-cronograma">
+            <div className="card-title">
+              <div className="row">
+                <div className="col-5">Alterações de Cronogramas</div>
+              </div>
+            </div>
             <div className="row">
-              <div className="col-5">Alterações de Cronogramas</div>
+              {cardsAlteracao.map((card, index) => (
+                <div className="col-6 mb-4" key={index}>
+                  <CardCronograma
+                    cardTitle={card.titulo}
+                    cardType={card.style}
+                    solicitations={formataCardsAlteracao(
+                      card.items ? card.items : []
+                    )}
+                    icon={card.icon}
+                    href={card.href}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-          <div className="row">
-            {cardsAlteracao.map((card, index) => (
-              <div className="col-6 mb-4" key={index}>
-                <CardCronograma
-                  cardTitle={card.titulo}
-                  cardType={card.style}
-                  solicitations={formataCardsAlteracao(
-                    card.items ? card.items : []
-                  )}
-                  icon={card.icon}
-                  href={card.href}
-                />
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
+      )}
     </Spin>
   );
 };
