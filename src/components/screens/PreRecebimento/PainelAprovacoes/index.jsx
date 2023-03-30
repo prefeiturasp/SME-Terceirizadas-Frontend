@@ -50,7 +50,7 @@ export default () => {
   const getTextAlteracao = item => {
     const TAMANHO_MAXIMO = 48;
 
-    return `${item.numero_solicitacao} - ${truncarString(
+    return `${item.cronograma} - ${truncarString(
       item.empresa,
       TAMANHO_MAXIMO
     )}`;
