@@ -57,11 +57,8 @@ export const Filtros = ({ ...props }) => {
       );
     }
     if (values.lotes && values.lotes.length) {
-      const dresDosLotesSelecionados = listaOpcoes.lotes
-        .filter(lote => values.lotes.includes(lote.uuid))
-        .map(lote => lote.diretoria_regional.uuid);
       escolas = escolas.filter(escola =>
-        dresDosLotesSelecionados.includes(escola.diretoria_regional.uuid)
+        values.lotes.includes(escola.lote.uuid)
       );
     }
     return formataOpcoes(escolas);

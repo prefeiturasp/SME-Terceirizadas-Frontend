@@ -237,6 +237,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
                 .tipo_unidade_escolar_iniciais !== "CEU GESTAO" &&
               values.numero_alunos &&
               values.periodo_escolar &&
+              values.dias_semana &&
               composeValidators(
                 naoPodeSerZero,
                 numericInteger,
