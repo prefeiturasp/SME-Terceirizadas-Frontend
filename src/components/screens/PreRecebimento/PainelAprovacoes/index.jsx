@@ -237,45 +237,44 @@ export default () => {
               <div className="row">
                 <div className="col-5">Alterações de Cronogramas</div>
                 <div className="col-7">
-                <Form
-                  initialValues={{
-                    nome_fornecedor: "",
-                    numero_cronograma: ""
-                  }}
-                  onSubmit={() => {}}
-                >
-                  {({ values }) => (
-                    <div className="row text-right">
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          name="numero_cronograma"
-                          placeholder="N° do Cronograma"
-                        />
+                  <Form
+                    initialValues={{
+                      nome_fornecedor: "",
+                      numero_cronograma: ""
+                    }}
+                    onSubmit={() => {}}
+                  >
+                    {({ values }) => (
+                      <div className="row text-right">
+                        <div className="col-6">
+                          <Field
+                            component={InputText}
+                            name="numero_cronograma"
+                            placeholder="N° do Cronograma"
+                          />
 
-                        <OnChange name="numero_cronograma">
-                          {value => filtrarSolicitacao(value, values)}
-                        </OnChange>
-                      </div>
-                      <div className="col-6">
-                        <Field
-                          component={InputText}
-                          name="nome_fornecedor"
-                          placeholder="Nome do Fornecedor"
-                        />
+                          <OnChange name="numero_cronograma">
+                            {value => filtrarSolicitacao(value, values)}
+                          </OnChange>
+                        </div>
+                        <div className="col-6">
+                          <Field
+                            component={InputText}
+                            name="nome_fornecedor"
+                            placeholder="Nome do Fornecedor"
+                          />
 
-                        <OnChange name="nome_fornecedor">
-                          {value => filtrarSolicitacao(value, values)}
-                        </OnChange>
+                          <OnChange name="nome_fornecedor">
+                            {value => filtrarSolicitacao(value, values)}
+                          </OnChange>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Form>
+                    )}
+                  </Form>
                 </div>
               </div>
             </div>
             <div className="row">
-
               {cardsAlteracao.map((card, index) => (
                 <div className="col-6 mb-4" key={index}>
                   <CardCronograma

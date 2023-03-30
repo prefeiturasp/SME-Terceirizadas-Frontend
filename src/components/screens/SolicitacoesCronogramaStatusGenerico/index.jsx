@@ -11,16 +11,6 @@ import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import { debounce } from "lodash";
 
-const gerarPayloadSolicitacao = itens => {
-  return itens.map(item => ({
-    empresa: item.empresa,
-    numero: item.numero,
-    produto: item.produto,
-    data: item.log_mais_recente,
-    link: gerarLinkDoItem(item)
-  }));
-};
-
 export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
   const {
     getSolicitacoes,
@@ -29,7 +19,8 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
     limit,
     titulo,
     icone,
-    cardType
+    cardType,
+    alteracao
   } = props;
   const [solicitacoes, setSolicitacoes] = useState(null);
   const [erro, setErro] = useState("");
@@ -40,6 +31,22 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const PAGE_SIZE = limit || 10;
+
+  const formataCardCronograma = itens => {
+    return itens.map(item => ({
+      texto: `${item.numero} - ${item.produto} - ${item.empresa}`,
+      data: item.log_mais_recente,
+      link: gerarLinkDoItem(item)
+    }));
+  };
+
+  const formataCardSolicitacao = itens => {
+    return itens.map(item => ({
+      texto: `${item.cronograma} - ${item.empresa}`,
+      data: item.log_mais_recente,
+      link: ""
+    }));
+  };
 
   const getSolicitacoesAsync = async (params, filtrar = false) => {
     let response;
@@ -52,7 +59,9 @@ export const SolicitacoesCronogramaStatusGenerico = ({ ...props }) => {
       let solicitacoes_new = response.data.results
         .map(solicitacao => solicitacao.dados)
         .map(dado => dado)[0];
-      solicitacoes_new = gerarPayloadSolicitacao(solicitacoes_new);
+      solicitacoes_new = alteracao
+        ? formataCardSolicitacao(solicitacoes_new)
+        : formataCardCronograma(solicitacoes_new);
       setSolicitacoes(solicitacoes_new);
       setCount(response.data.results[0].total);
     } else {
