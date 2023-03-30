@@ -2,6 +2,7 @@ import {
   AGUARDANDO_DILOG,
   ASSINADO_CODAE,
   DINUTRE,
+  SOLICITACOES_ALTERACOES,
   SOLICITACOES_PENDENTES
 } from "configs/constants";
 
@@ -47,7 +48,7 @@ export const CARD_SOLICITACOES_ALTERACOES = {
   icon: "fa-check",
   style: "card-cronogramas-assinados",
   incluir_status: ["CRONOGRAMA_CIENTE"],
-  href: ``
+  href: `/${DINUTRE}/${SOLICITACOES_ALTERACOES}`
 };
 
 export const cards_dinutre = [
