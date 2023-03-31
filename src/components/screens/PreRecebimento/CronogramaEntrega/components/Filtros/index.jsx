@@ -92,7 +92,7 @@ const options_status = usuarioEhFornecedor()
     ]
   : [
       {
-        value: "ENVIADO_AO_FORNECEDOR",
+        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
         label: "Enviado ao Fornecedor"
       },
       {
