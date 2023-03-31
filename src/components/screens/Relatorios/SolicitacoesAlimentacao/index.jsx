@@ -109,7 +109,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             setTotalBusca={setTotalBusca}
             setPage={setPage}
             setFiltros={setFiltros}
-            endpoint={endpoint}
+            endpoint={values => endpoint(values)}
             getSolicitacoesDetalhadasAsync={getSolicitacoesDetalhadasAsync}
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}

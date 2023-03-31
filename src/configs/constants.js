@@ -212,6 +212,7 @@ export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
 export const PAINEL_APROVACOES = "painel-aprovacoes";
+export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

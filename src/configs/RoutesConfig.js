@@ -194,8 +194,8 @@ import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiret
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
 import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
-import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
-import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
+import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
+import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
@@ -216,7 +216,8 @@ import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
-import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
+import StatusSolicitacoesAlteracoes from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoes";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
@@ -1461,7 +1462,10 @@ const routesConfig = [
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhTerceirizada()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1710,19 +1714,25 @@ const routesConfig = [
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
-    component: StatusSolicitacoesPendentesDinutre,
+    component: StatusCronogramasPendentesDinutre,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
-    component: StatusSolicitacoesAguardandoDilog,
+    component: StatusCronogramasAguardandoDilog,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
-    component: StatusSolicitacoesAssinadoCODAE,
+    component: StatusCronogramasAssinadoCODAE,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoes,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   }

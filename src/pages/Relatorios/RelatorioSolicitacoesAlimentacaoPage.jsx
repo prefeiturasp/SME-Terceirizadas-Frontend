@@ -6,15 +6,19 @@ import { RelatorioSolicitacoesAlimentacao } from "components/screens/Relatorios/
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhDRE,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhTerceirizada
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
   filtrarSolicitacoesAlimentacaoDRE,
+  filtrarSolicitacoesAlimentacaoTerceirizadas,
   gerarExcelRelatorioSolicitacoesAlimentacaoCODAE,
   gerarExcelRelatorioSolicitacoesAlimentacaoDRE,
+  gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas,
   gerarPDFRelatorioSolicitacoesAlimentacaoDRE,
-  gerarPDFRelatorioSolicitacoesAlimentacaoCODAE
+  gerarPDFRelatorioSolicitacoesAlimentacaoCODAE,
+  gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas
 } from "services/relatorios.service";
 
 const atual = {
@@ -38,6 +42,8 @@ const endpointPorPerfil = () => {
     return filtrarSolicitacoesAlimentacaoDRE;
   } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return filtrarSolicitacoesAlimentacaoCODAE;
+  } else if (usuarioEhTerceirizada()) {
+    return filtrarSolicitacoesAlimentacaoTerceirizadas;
   } else {
     return "PERFIL_INVALIDO";
   }
@@ -48,6 +54,8 @@ const endpointGerarExcel = () => {
     return gerarExcelRelatorioSolicitacoesAlimentacaoDRE;
   } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
+  } else if (usuarioEhTerceirizada()) {
+    return gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas;
   } else {
     return "PERFIL_INVALIDO";
   }
@@ -58,6 +66,8 @@ const endpointGerarPDF = () => {
     return gerarPDFRelatorioSolicitacoesAlimentacaoDRE;
   } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
+  } else if (usuarioEhTerceirizada()) {
+    return gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas;
   } else {
     return "PERFIL_INVALIDO";
   }
