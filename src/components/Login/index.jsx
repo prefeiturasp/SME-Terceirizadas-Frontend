@@ -730,7 +730,7 @@ export class Login extends Component {
   renderLogoTexto(texto) {
     return (
       <div className="logo-sigpae">
-        <img src="/assets/image/logo-sigpae.png" alt="" />
+        <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
         {texto && <div className="titulo">{texto}</div>}
       </div>
     );
