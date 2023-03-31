@@ -7,7 +7,7 @@ import {
   agregarDefault,
   deepCopy,
   usuarioEhDRE,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -55,7 +55,7 @@ export const Filtros = ({ ...props }) => {
       params["diretoria_regional__uuid"] =
         meusDados.vinculo_atual.instituicao.uuid;
     }
-    if (usuarioEhTerceirizada()) {
+    if (usuarioEhEmpresaTerceirizada()) {
       params["terceirizada__uuid"] = meusDados.vinculo_atual.instituicao.uuid;
     }
     const response = await getLotesSimples(params);
@@ -82,7 +82,7 @@ export const Filtros = ({ ...props }) => {
     if (usuarioEhDRE()) {
       params = { dre: meusDados.vinculo_atual.instituicao.uuid };
     }
-    if (usuarioEhTerceirizada()) {
+    if (usuarioEhEmpresaTerceirizada()) {
       params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
     }
     const response = await getEscolasTrecTotal(params);
