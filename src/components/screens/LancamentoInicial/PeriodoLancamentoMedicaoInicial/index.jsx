@@ -143,6 +143,7 @@ export default () => {
     null
   );
   const [showModalErro, setShowModalErro] = useState(false);
+  const [valoresObservacoes, setValoresObservacoes] = useState([]);
 
   const location = useLocation();
   let mesAnoDefault = new Date();
@@ -943,20 +944,10 @@ export default () => {
         return toastError("Erro ao salvar observação.");
       }
     }
-    setValoresPeriodosLancamentos(valores_medicao_response);
-    await formatarDadosValoresMedicao(
-      mesAnoFormatadoState,
-      valores_medicao_response,
-      categoriasDeMedicao,
-      tabelaAlimentacaoRows,
-      valoresMatriculados,
-      tabelaDietaRows,
-      logQtdDietasAutorizadas,
-      inclusoesAutorizadas,
-      mesAnoConsiderado,
-      tabelaSolicitacoesAlimentacaoRows,
-      kitLanchesAutorizadas,
-      alteracoesAlimentacaoAutorizadas
+    setValoresObservacoes(
+      valores_medicao_response.filter(
+        valor => valor.nome_campo === "observacoes"
+      )
     );
     setDisableBotaoSalvarLancamentos(true);
     setExibirTooltip(false);
@@ -1922,6 +1913,7 @@ export default () => {
                       dadosIniciais={dadosIniciais}
                       setExibirTooltip={value => setExibirTooltip(value)}
                       errors={errors}
+                      valoresObservacoes={valoresObservacoes}
                     />
                   )}
                   <Botao
