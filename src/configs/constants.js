@@ -196,12 +196,14 @@ export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
+export const ANALISE_CRONOGRAMA_DILOG = "analise-cronograma-dilog";
 export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
 export const PAINEL_APROVACOES = "painel-aprovacoes";
+export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

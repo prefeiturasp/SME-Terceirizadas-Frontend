@@ -25,6 +25,7 @@ import {
   formatarLinhasTabelaAlimentacao,
   formatarLinhasTabelaDietaEnteral,
   formatarLinhasTabelasDietas,
+  formatarLinhasTabelaSolicitacoesAlimentacao,
   validacaoSemana
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
 import InputText from "components/Shareable/Input/InputText";
@@ -76,6 +77,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState(null);
   const [tabelaDietaRows, setTabelaDietaRows] = useState(null);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState(null);
+  const [
+    tabelaSolicitacoesAlimentacaoRows,
+    setTabelaSolicitacoesAlimentacaoRows
+  ] = useState(null);
   const [valoresLancamentos, setValoresLancamentos] = useState(null);
   const [loading, setLoading] = useState(false);
   const [modoCorrecao, setModoCorrecao] = useState(false);
@@ -104,8 +109,20 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     if (showTabelaLancamentosPeriodo) {
       const getCategoriasDeMedicaoAsync = async () => {
         if (!categoriasDeMedicao) {
-          const response_categorias_medicao = await getCategoriasDeMedicao();
-          setCategoriasDeMedicao(response_categorias_medicao.data);
+          let response_categorias_medicao = await getCategoriasDeMedicao();
+          if (periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
+            setCategoriasDeMedicao(
+              response_categorias_medicao.data.filter(cat =>
+                cat.nome.includes("SOLICITAÇÕES")
+              )
+            );
+          } else {
+            setCategoriasDeMedicao(
+              response_categorias_medicao.data.filter(
+                cat => !cat.nome.includes("SOLICITAÇÕES")
+              )
+            );
+          }
         }
       };
       getCategoriasDeMedicaoAsync();
@@ -125,24 +142,31 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       );
       setTabItems(items);
 
-      const periodo = periodosSimples.find(
-        periodo => periodo.periodo_escolar.nome === periodoEscolar
-      );
-      const tipos_alimentacao = periodo.tipos_alimentacao;
-      const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
-        tipos_alimentacao
-      );
-      setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
-      const linhasTabelasDietas = formatarLinhasTabelasDietas(
-        tipos_alimentacao
-      );
-      setTabelaDietaRows(linhasTabelasDietas);
-      const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
-      const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
-        tipos_alimentacao,
-        cloneLinhasTabelasDietas
-      );
-      setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+      if (!periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
+        const periodo = periodosSimples.find(
+          periodo => periodo.periodo_escolar.nome === periodoEscolar
+        );
+        const tipos_alimentacao = periodo.tipos_alimentacao;
+        const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
+          tipos_alimentacao
+        );
+        setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+        const linhasTabelasDietas = formatarLinhasTabelasDietas(
+          tipos_alimentacao
+        );
+        setTabelaDietaRows(linhasTabelasDietas);
+        const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
+        const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
+          tipos_alimentacao,
+          cloneLinhasTabelasDietas
+        );
+        setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+      } else {
+        const linhasTabelaSolicitacoesAlimentacao = formatarLinhasTabelaSolicitacoesAlimentacao();
+        setTabelaSolicitacoesAlimentacaoRows(
+          linhasTabelaSolicitacoesAlimentacao
+        );
+      }
     }
 
     setData(new Date(`${mesSolicitacao}/01/${anoSolicitacao}`));
@@ -220,6 +244,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       return tabelaDietaEnteralRows;
     } else if (categoria.nome.includes("DIETA")) {
       return tabelaDietaRows;
+    } else if (categoria.nome.includes("SOLICITAÇÕES")) {
+      return tabelaSolicitacoesAlimentacaoRows;
     } else {
       return tabelaAlimentacaoRows;
     }
@@ -396,9 +422,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         </div>
       </div>
       {showTabelaLancamentosPeriodo &&
-      tabelaAlimentacaoRows &&
-      tabelaDietaRows &&
-      tabelaDietaEnteralRows &&
+      ((tabelaAlimentacaoRows && tabelaDietaRows && tabelaDietaEnteralRows) ||
+        tabelaSolicitacoesAlimentacaoRows) &&
       valoresLancamentos ? (
         <>
           <p className="section-title-conf-lancamentos">Lançamentos da UE</p>
