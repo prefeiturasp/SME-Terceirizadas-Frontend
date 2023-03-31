@@ -924,7 +924,6 @@ export default () => {
     }
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
-      setLoading(true);
       const response = await updateValoresPeriodosLancamentos(
         valoresPeriodosLancamentos[0].medicao_uuid,
         payload
@@ -936,7 +935,6 @@ export default () => {
         return toastError("Erro ao salvar observação.");
       }
     } else {
-      setLoading(true);
       const response = await setPeriodoLancamento(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Observação salva com sucesso");
@@ -960,7 +958,6 @@ export default () => {
       kitLanchesAutorizadas,
       alteracoesAlimentacaoAutorizadas
     );
-    setLoading(false);
     setDisableBotaoSalvarLancamentos(true);
     setExibirTooltip(false);
   };
