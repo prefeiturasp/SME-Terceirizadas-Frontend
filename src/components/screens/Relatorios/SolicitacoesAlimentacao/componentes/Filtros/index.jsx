@@ -3,7 +3,12 @@ import moment from "moment";
 import Select from "components/Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
-import { agregarDefault, deepCopy, usuarioEhDRE } from "helpers/utilities";
+import {
+  agregarDefault,
+  deepCopy,
+  usuarioEhDRE,
+  usuarioEhEmpresaTerceirizada
+} from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
@@ -50,6 +55,9 @@ export const Filtros = ({ ...props }) => {
       params["diretoria_regional__uuid"] =
         meusDados.vinculo_atual.instituicao.uuid;
     }
+    if (usuarioEhEmpresaTerceirizada()) {
+      params["terceirizada__uuid"] = meusDados.vinculo_atual.instituicao.uuid;
+    }
     const response = await getLotesSimples(params);
     if (response.status === HTTP_STATUS.OK) {
       setLotes(lotesToOptions(response.data.results));
@@ -70,9 +78,14 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getEscolasSimplissimaComDREUnpaginatedAsync = async () => {
-    const response = await getEscolasTrecTotal(
-      usuarioEhDRE() ? meusDados.vinculo_atual.instituicao.uuid : null
-    );
+    let params = null;
+    if (usuarioEhDRE()) {
+      params = { dre: meusDados.vinculo_atual.instituicao.uuid };
+    }
+    if (usuarioEhEmpresaTerceirizada()) {
+      params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
+    }
+    const response = await getEscolasTrecTotal(params);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(response.data);
     } else {

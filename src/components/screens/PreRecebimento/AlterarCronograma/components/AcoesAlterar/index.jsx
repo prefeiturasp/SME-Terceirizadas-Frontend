@@ -89,6 +89,7 @@ export default ({
       {usuarioEhCronograma() && (
         <ModalAnalise
           show={show}
+          setShow={setShow}
           handleClose={handleClose}
           loading={loading}
           handleSim={async values => {
