@@ -40,7 +40,7 @@ import CardListarSolicitacoes from "../../Shareable/CardListarSolicitacoes";
 import { Paginacao } from "../../Shareable/Paginacao";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import { getMeusLotes } from "services/lote.service";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -74,7 +74,7 @@ export class StatusSolicitacoes extends Component {
         instituicao: response.vinculo_atual.instituicao
       });
     });
-    if (usuarioEhTerceirizada()) {
+    if (usuarioEhEmpresaTerceirizada()) {
       await getMeusLotes().then(response => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(

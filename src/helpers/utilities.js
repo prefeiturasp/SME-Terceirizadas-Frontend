@@ -5,9 +5,15 @@ import {
   JS_DATE_DEZEMBRO,
   statusEnum,
   TIPOS_SOLICITACAO_LABEL,
+  TIPO_SERVICO,
   TIPO_SOLICITACAO
 } from "constants/shared";
-import { PERFIL, TIPO_PERFIL, TIPO_GESTAO } from "../constants/shared";
+import {
+  MODULO_GESTAO,
+  PERFIL,
+  TIPO_PERFIL,
+  TIPO_GESTAO
+} from "../constants/shared";
 import { RELATORIO } from "../configs/constants";
 import { ENVIRONMENT } from "constants/config";
 import { toastError } from "components/Shareable/Toast/dialogs";
@@ -298,12 +304,16 @@ export const visualizaBotoesDoFluxoSolicitacaoUnificada = solicitacao => {
 export const vizualizaBotoesDietaEspecial = solicitacao => {
   switch (solicitacao.status_solicitacao) {
     case statusEnum.CODAE_A_AUTORIZAR:
-      return usuarioEhEscola() || usuarioEhCODAEDietaEspecial();
+      return (
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhCODAEDietaEspecial()
+      );
     case statusEnum.ESCOLA_SOLICITOU_INATIVACAO:
       return usuarioEhCODAEDietaEspecial();
     case statusEnum.CODAE_AUTORIZADO:
     case statusEnum.CODAE_AUTORIZOU_INATIVACAO:
-      return usuarioEhTerceirizada();
+      return usuarioEhEmpresaTerceirizada();
     default:
       return false;
   }
@@ -335,10 +345,6 @@ export const formatarTelefone = value => {
   return cep.replace(/(\d{2})(\d{4})(\d{4})/g, "($1) $2-$3");
 };
 
-export const usuarioEhCoordenadorEscola = () => {
-  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_ESCOLA;
-};
-
 export const usuarioEhCoordenadorGpCODAE = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_GESTAO_PRODUTO;
 };
@@ -367,18 +373,42 @@ export const usuarioEhAdministradorNutriSupervisao = () => {
   );
 };
 
+export const usuarioEhDilog = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_LOGISTICA;
+};
+
 export const usuarioEhCodaeDilog = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
   );
 };
 
-export const usuarioEhEscola = () => {
-  return [
-    PERFIL.ADMINISTRADOR_ESCOLA,
-    PERFIL.DIRETOR,
-    PERFIL.DIRETOR_CEI
-  ].includes(localStorage.getItem("perfil"));
+export const usuarioEhEscolaTerceirizadaDiretor = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.TERCEIRIZADA
+  );
+};
+
+export const usuarioEhEscolaTerceirizada = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.TERCEIRIZADA
+  );
+};
+
+export const usuarioEhDiretorEscola = () => {
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhAdmQualquerEmpresa = () => {
+  return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
+export const usuarioEhQualquerUsuarioEmpresa = () => {
+  return [PERFIL.USUARIO_EMPRESA].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEhDiretorUE = () => {
@@ -406,19 +436,34 @@ export const usuarioEscolaEhGestaoDireta = () => {
   return [TIPO_GESTAO.DIRETA].includes(localStorage.getItem("tipo_gestao"));
 };
 
+export const usuarioEhEscolaAbastecimentoDiretor = () => {
+  return (
+    localStorage.getItem("perfil") === PERFIL.DIRETOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.ABASTECIMENTO
+  );
+};
+
 export const usuarioEhEscolaAbastecimento = () => {
-  return [
-    PERFIL.ADMINISTRADOR_ESCOLA_ABASTECIMENTO,
-    PERFIL.ADMINISTRADOR_UE_DIRETA,
-    PERFIL.ADMINISTRADOR_UE_MISTA,
-    PERFIL.ADMINISTRADOR_UE_PARCEIRA
-  ].includes(localStorage.getItem("perfil"));
+  return (
+    localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_UE &&
+    localStorage.getItem("modulo_gestao") === MODULO_GESTAO.ABASTECIMENTO
+  );
 };
 
 export const usuarioComAcessoTelaEntregasDilog = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_GABINETE,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
+    PERFIL.ADMINISTRADOR_SUPERVISAO_NUTRICAO,
+    PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+  ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhOutrosDilog = () => {
+  return [
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
@@ -449,16 +494,24 @@ export const usuarioEhDilogQualidadeOuCronograma = () => {
   );
 };
 
-export const usuarioEhPreRecebimento = () => {
-  /*
+/*
   TODO: Conforme solicitado pelos P.Os, usuários Logistica tem acesso
   temporariamente ao Pré Recebimento. Após finalização da definição de
   permissionamento deve se remover usuarioEhLogistica() desta regra.
+  Quando essa mudança for realizada, apagar o usuarioEhPreRecebimentoSemLogistica,
+  ele é uma solucao temporaria pro menu de configurações aparecer pros usuarios
+  de Logistica
   */
+
+export const usuarioEhPreRecebimento = () => {
   return (
     localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO ||
     usuarioEhCodaeDilog()
   );
+};
+
+export const usuarioEhPreRecebimentoSemLogistica = () => {
+  return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.PRE_RECEBIMENTO;
 };
 
 export const usuarioEhDinutreDiretoria = () =>
@@ -471,30 +524,41 @@ export const usuarioEhCronograma = () => {
   return [PERFIL.DILOG_CRONOGRAMA].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDistribuidora = () => {
-  return [PERFIL.ADMINISTRADOR_DISTRIBUIDORA].includes(
-    localStorage.getItem("perfil")
+export const usuarioEhEmpresaDistribuidora = () => {
+  return (
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
+    [
+      TIPO_SERVICO.DISTRIBUIDOR_ARMAZEM,
+      TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR
+    ].includes(localStorage.getItem("tipo_servico"))
   );
 };
 
-export const usuarioEhFornecedor = () => {
-  return [PERFIL.ADMINISTRADOR_FORNECEDOR].includes(
+export const usuarioEhEmpresaFornecedor = () => {
+  return (
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
+    [TIPO_SERVICO.FORNECEDOR, TIPO_SERVICO.FORNECEDOR_E_DISTRIBUIDOR].includes(
+      localStorage.getItem("tipo_servico")
+    )
+  );
+};
+
+export const usuarioEhAdministradorRepresentanteCodae = () => {
+  return [PERFIL.ADMINISTRADOR_REPRESENTANTE_CODAE].includes(
     localStorage.getItem("perfil")
   );
 };
 
 export const escolaEhCei = () => {
-  return /^"?cei|\scei\s|\scei$|^"?cci|\scci\s|\scci$/i.test(
-    localStorage.getItem("nome_instituicao")
-  );
+  return localStorage.getItem("eh_cei") === "true";
 };
 
 export const escolaEhCEMEI = () => {
-  return (
-    localStorage.getItem("nome_instituicao") &&
-    (localStorage.getItem("nome_instituicao").startsWith(`"CEMEI`) ||
-      localStorage.getItem("nome_instituicao").startsWith(`"CEU CEMEI`))
-  );
+  return localStorage.getItem("eh_cemei") === "true";
 };
 
 export const nomeInstituicao = () => {
@@ -509,8 +573,8 @@ export const usuarioEhCoordenadorDRE = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
 };
 
-export const usuarioEhAdministradorDRE = () => {
-  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+export const usuarioEhCogestorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COGESTOR_DRE;
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {
@@ -559,11 +623,12 @@ export const usuarioEhQualquerCODAE = () => {
   );
 };
 
-export const usuarioEhTerceirizada = () => {
+export const usuarioEhEmpresaTerceirizada = () => {
   return (
-    localStorage.getItem("tipo_perfil") === TIPO_PERFIL.TERCEIRIZADA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_DISTRIBUIDORA &&
-    localStorage.getItem("perfil") !== PERFIL.ADMINISTRADOR_FORNECEDOR
+    [PERFIL.ADMINISTRADOR_EMPRESA, PERFIL.USUARIO_EMPRESA].includes(
+      localStorage.getItem("perfil")
+    ) &&
+    [TIPO_SERVICO.TERCEIRIZADA].includes(localStorage.getItem("tipo_servico"))
   );
 };
 
@@ -839,7 +904,9 @@ export const exibirModuloMedicaoInicial = () => {
   return (
     !["treinamento", "production"].includes(ENVIRONMENT) &&
     (usuarioEhDRE() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta()) ||
+      ((usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor()) &&
+        !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhMedicao())
   );
 };

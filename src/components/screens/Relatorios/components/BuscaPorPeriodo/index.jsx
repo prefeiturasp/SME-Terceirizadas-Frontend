@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { meusDados } from "../../../../../services/perfil.service";
 import FiltrosDeBusca from "./FiltrosDeBusca";
 import {
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao
 } from "../../../../../helpers/utilities";
@@ -36,7 +37,10 @@ class BuscaPorPeriodo extends Component {
       });
     } else {
       meusDados().then(meusDados => {
-        if (usuarioEhEscola()) {
+        if (
+          usuarioEhEscolaTerceirizada() ||
+          usuarioEhEscolaTerceirizadaDiretor()
+        ) {
           escolas = [
             {
               nome: meusDados.vinculo_atual.instituicao.nome,

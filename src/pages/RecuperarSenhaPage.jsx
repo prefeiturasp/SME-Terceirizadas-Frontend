@@ -9,6 +9,7 @@ import {
 } from "../components/Shareable/Botao/constants";
 import { HeaderLogo } from "../components/Shareable/HeaderLogo";
 import InputText from "../components/Shareable/Input/InputText";
+import { InfoSenhaServidorMunicipal } from "../components/Shareable/InfoSenhaServidorMunicipal";
 import {
   toastError,
   toastSuccess
@@ -50,6 +51,8 @@ class RecuperarSenhaPage extends Component {
   render() {
     const { senha1, senha2, pristine, handleSubmit } = this.props;
     const { mensagem } = this.state;
+    const urlParams = new URLSearchParams(window.location.search);
+    const visao_perfil = urlParams.get("visao");
     return (
       <form onSubmit={handleSubmit(this.handleSubmit)}>
         <HeaderLogo />
@@ -85,6 +88,9 @@ class RecuperarSenhaPage extends Component {
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
                 />
+                {visao_perfil && visao_perfil !== "EMPRESA" && (
+                  <InfoSenhaServidorMunicipal />
+                )}
                 <div className="pt-3 text-center">
                   <Botao
                     texto="Confirmar senha"

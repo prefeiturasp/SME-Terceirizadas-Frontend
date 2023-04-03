@@ -10,29 +10,30 @@ import {
 } from "configs/constants";
 import { listarCardsPermitidos, CADASTROS } from "helpers/gestaoDeProdutos";
 import {
-  usuarioEhEscola,
-  usuarioEhTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
-  usuarioEhNutricionistaSupervisao,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEhNutricionistaSupervisao
 } from "helpers/utilities";
 
 const MenuGestaoDeProduto = ({ activeMenu, onSubmenuClick }) => {
   const menuItems = listarCardsPermitidos();
   const cadastroItems = CADASTROS;
   const exibirBusca = true;
-  const exibirCadastro = usuarioEhTerceirizada();
+  const exibirCadastro = usuarioEhEmpresaTerceirizada();
   const exibirAvaliarReclamacao = usuarioEhCODAEGestaoProduto();
   const exibirReclamacao =
     usuarioEhNutricionistaSupervisao() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira());
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor();
   const exibirReclamacaoUE =
-    usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira();
+    usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
   const exibirReclamacaoNutrisupervisao = usuarioEhNutricionistaSupervisao();
   const exibirAtivacao = usuarioEhCODAEGestaoProduto();
-  const exibirResponderReclamacao = usuarioEhTerceirizada();
+  const exibirResponderReclamacao = usuarioEhEmpresaTerceirizada();
   const usuarioEhTerceirizadaOuGP =
-    usuarioEhCODAEGestaoProduto() || usuarioEhTerceirizada();
+    usuarioEhCODAEGestaoProduto() || usuarioEhEmpresaTerceirizada();
 
   return (
     <Menu

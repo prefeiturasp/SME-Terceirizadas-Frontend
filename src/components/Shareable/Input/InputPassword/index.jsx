@@ -69,7 +69,7 @@ export const InputPassword = props => {
       />
       <i
         className={`show-hide ${
-          passwordShown ? "far fa-eye-slash" : "far fa-eye"
+          passwordShown ? "fa fa-eye-slash" : "fa fa-eye"
         }`}
         onClick={togglePasswordVisiblity}
       />

@@ -12,7 +12,10 @@ import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia"
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { statusEnum } from "constants/shared";
 import { TERCEIRIZADA } from "configs/constants";
-import { usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
+} from "helpers/utilities";
 import { getSuspensaoAlimentacaoCEI } from "services/suspensaoAlimentacaoCei.service";
 import "./style.scss";
 
@@ -71,7 +74,8 @@ export default ({ ...props }) => {
             />
           )}
           {solicitacaoSuspensao &&
-            usuarioEhEscola() &&
+            (usuarioEhEscolaTerceirizada() ||
+              usuarioEhEscolaTerceirizadaDiretor()) &&
             solicitacaoSuspensao.status !== "ESCOLA_CANCELOU" && (
               <>
                 {" "}
