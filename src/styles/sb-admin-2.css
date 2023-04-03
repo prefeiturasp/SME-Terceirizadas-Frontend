@@ -10575,7 +10575,7 @@ a:focus {
 #wrapper #content-wrapper {
   background-color: #f8f5f5;
   width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 #wrapper #content-wrapper #content {

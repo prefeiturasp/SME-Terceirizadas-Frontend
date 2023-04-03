@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import {
   SOLICITACOES_AUTORIZADAS,
   SOLICITACOES_CANCELADAS
@@ -11,7 +11,7 @@ import {
 import "./style.scss";
 
 export const InputSearchPendencias = props => {
-  const ehTerceirizada = usuarioEhTerceirizada();
+  const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const listaStatus = [
     { nome: "Conferência Status", uuid: "" },
     { nome: "Conferida", uuid: "1" },

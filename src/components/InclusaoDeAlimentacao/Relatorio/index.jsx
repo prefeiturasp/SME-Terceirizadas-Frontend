@@ -12,7 +12,7 @@ import { CODAE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import {
   prazoDoPedidoMensagem,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizada,
   visualizaBotoesDoFluxo
 } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
@@ -230,7 +230,7 @@ class Relatorio extends Component {
 
     const renderModalCancelamentoContinuo = inclusao => {
       return (
-        usuarioEhEscola() &&
+        usuarioEhEscolaTerceirizada() &&
         inclusao &&
         inclusao.motivo &&
         !inclusao.motivo.nome.includes("ETEC") &&

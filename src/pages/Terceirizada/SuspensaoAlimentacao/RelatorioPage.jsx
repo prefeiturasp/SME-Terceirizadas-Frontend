@@ -4,11 +4,11 @@ import Page from "components/Shareable/Page/Page";
 import Relatorio from "components/SuspensaoDeAlimentacao/Relatorio";
 import { HOME } from "../constants";
 import { TERCEIRIZADA, SUSPENSAO_ALIMENTACAO } from "configs/constants";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 let voltarPara = "/painel-gestao-alimentacao";
 
-if (usuarioEhTerceirizada())
+if (usuarioEhEmpresaTerceirizada())
   voltarPara = `/${TERCEIRIZADA}/${SUSPENSAO_ALIMENTACAO}`;
 
 const atual = {

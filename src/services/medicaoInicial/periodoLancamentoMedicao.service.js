@@ -102,3 +102,12 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola = async param
     return data;
   }
 };
+
+export const getSolicitacoesKitLanchesAutorizadasEscola = async params => {
+  const url = "escola-solicitacoes/kit-lanches-autorizadas/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

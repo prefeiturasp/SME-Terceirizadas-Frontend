@@ -1,0 +1,21 @@
+@import "../../../styles/variables.scss";
+
+.box-senha {
+  background-color: #f3f3f3;
+  padding: 10px;
+  color: #198459;
+
+  .txt-informacao {
+    color: #000;
+    font-size: 0.7em;
+  }
+
+  .icon-informacao {
+    font-size: 0.7em;
+    font-weight: bold;
+  }
+
+  .fas {
+    font-size: 1.8em;
+  }
+}

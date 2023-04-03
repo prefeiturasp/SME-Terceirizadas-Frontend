@@ -5,7 +5,7 @@ import { InputComData } from "components/Shareable/DatePicker";
 import InputText from "components/Shareable/Input/InputText";
 import { useEffect } from "react";
 import { OnChange } from "react-final-form-listeners";
-import { calculaRestante } from "../helpers";
+import { calculaRestante } from "../../helpers";
 import { required } from "helpers/fieldValidators";
 
 export default ({
@@ -16,6 +16,7 @@ export default ({
   restante,
   setRestante,
   setpodeSubmeter,
+  solicitacaoAlteracaoCronograma,
   verificarQuantidadesPreenchidas
 }) => {
   useEffect(() => {
@@ -95,7 +96,10 @@ export default ({
                 <div className="title head-crono">Quantidade</div>
               </div>
               <div className="title crono-header-green">
-                <div>Informar Nova Quantidade</div>
+                <div>
+                  {!solicitacaoAlteracaoCronograma && "Informar "}Nova
+                  Quantidade
+                </div>
               </div>
             </>
           )}
@@ -121,6 +125,7 @@ export default ({
                       placeholder="Selecionar Data"
                       minDate={null}
                       maxDate={null}
+                      disabled={solicitacaoAlteracaoCronograma !== null}
                       writable
                       validate={required}
                     />
@@ -156,6 +161,7 @@ export default ({
                         type="number"
                         name={`quantidade_total_${etapa.uuid}`}
                         placeholder="Quantidade"
+                        disabled={solicitacaoAlteracaoCronograma !== null}
                         className="input-busca-produto"
                         required
                         validate={required}
@@ -187,16 +193,17 @@ export default ({
           </>
         ))}
 
-        {motivos.includes("ALTERAR_QTD_ALIMENTO") && (
-          <div className="grid-cronograma-body">
-            <div />
-            <div />
-            {motivos.includes("ALTERAR_DATA_ENTREGA") && <div />}
-            <div />
-            <div />
-            <div>{textoFaltante(values)}</div>
-          </div>
-        )}
+        {motivos.includes("ALTERAR_QTD_ALIMENTO") &&
+          !solicitacaoAlteracaoCronograma && (
+            <div className="grid-cronograma-body">
+              <div />
+              <div />
+              {motivos.includes("ALTERAR_DATA_ENTREGA") && <div />}
+              <div />
+              <div />
+              <div>{textoFaltante(values)}</div>
+            </div>
+          )}
         <div />
       </div>
     )

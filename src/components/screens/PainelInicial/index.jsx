@@ -8,8 +8,7 @@ import IconeDietaEspecial from "../../Shareable/Icones/IconeDietaEspecial";
 import IconeAbastecimento from "../../Shareable/Icones/IconeAbastecimento";
 import IconeMedicaoInicial from "../../Shareable/Icones/IconeMedicaoInicial";
 import {
-  usuarioEhEscola,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhQualquerCODAE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
@@ -17,10 +16,11 @@ import {
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
-  usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira,
   usuarioEhEscolaAbastecimento,
   exibirGA,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaAbastecimentoDiretor,
   exibirModuloMedicaoInicial
 } from "helpers/utilities";
 import { ACOMPANHAMENTO_DE_LANCAMENTOS } from "configs/constants";
@@ -33,13 +33,12 @@ const PainelInicial = ({ history }) => {
       {exibeMenuValidandoAmbiente &&
         (usuarioEhCODAEGestaoAlimentacao() ||
           usuarioEhCODAENutriManifestacao() ||
-          usuarioEhTerceirizada() ||
+          usuarioEhEmpresaTerceirizada() ||
           usuarioEhDRE() ||
           usuarioEhMedicao() ||
           usuarioEhNutricionistaSupervisao() ||
-          (usuarioEhEscola() &&
-            !usuarioEscolaEhGestaoMistaParceira() &&
-            !usuarioEscolaEhGestaoDireta())) && (
+          usuarioEhEscolaTerceirizadaDiretor() ||
+          usuarioEhEscolaTerceirizada()) && (
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <CardLogo
               titulo={"Gestão de Alimentação"}
@@ -54,9 +53,10 @@ const PainelInicial = ({ history }) => {
         usuarioEhCODAEDietaEspecial() ||
         usuarioEhMedicao() ||
         usuarioEhNutricionistaSupervisao() ||
-        usuarioEhTerceirizada() ||
+        usuarioEhEmpresaTerceirizada() ||
         usuarioEhDRE() ||
-        usuarioEhEscola()) && (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Dieta Especial"}
@@ -68,12 +68,11 @@ const PainelInicial = ({ history }) => {
       )}
       {(usuarioEhQualquerCODAE() ||
         usuarioEhCODAENutriManifestacao() ||
-        usuarioEhTerceirizada() ||
+        usuarioEhEmpresaTerceirizada() ||
         usuarioEhNutricionistaSupervisao() ||
         usuarioEhDRE() ||
-        (usuarioEhEscola() &&
-          !usuarioEscolaEhGestaoMistaParceira() &&
-          !usuarioEscolaEhGestaoDireta())) && (
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Gestão de Produto"}
@@ -88,7 +87,7 @@ const PainelInicial = ({ history }) => {
           <CardLogo
             titulo={"Medição Inicial"}
             onClick={() => {
-              usuarioEhEscola() &&
+              usuarioEhEscolaTerceirizada() &&
                 history.push("/lancamento-inicial/lancamento-medicao-inicial");
               (usuarioEhDRE() || usuarioEhMedicao()) &&
                 history.push(
@@ -110,7 +109,8 @@ const PainelInicial = ({ history }) => {
           </CardLogo>
         </Col>
       )}
-      {usuarioEhEscolaAbastecimento() && (
+      {(usuarioEhEscolaAbastecimento() ||
+        usuarioEhEscolaAbastecimentoDiretor()) && (
         <Col xs={24} sm={24} md={24} lg={8} xl={8}>
           <CardLogo
             titulo={"Abastecimento"}

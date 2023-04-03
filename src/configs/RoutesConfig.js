@@ -96,33 +96,42 @@ import {
   relatoriosInclusaoDeAlimentacaoCEMEI
 } from "./helper";
 import {
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
   usuarioEhEscolaAbastecimento,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhCODAEGestaoProduto,
   usuarioEhQualquerCODAE,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhLogistica,
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioEhPreRecebimento,
   usuarioEhCronograma,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira,
   validaPerfilEscolaMistaParceira,
+  usuarioEhCoordenadorCODAE,
+  usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
-  usuarioEhFornecedor,
+  usuarioEhEmpresaFornecedor,
+  usuarioEhAdministradorRepresentanteCodae,
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhAdmQualquerEmpresa,
+  usuarioEhCoordenadorNutriCODAE,
+  usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
   usuarioEhDiretorUE,
-  usuarioEhDilogDiretoria
+  usuarioEhDilogDiretoria,
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhDilog,
+  usuarioEhCogestorDRE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -180,9 +189,13 @@ import NotificacoesPage from "pages/Notificacoes/NotificacoesPage";
 import CentralDownloadsPage from "pages/CentralDownloads/CentralDownloadsPage";
 import CadastroProdutosEdital from "pages/Cadastros/CadastroProdutosEdital";
 import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage";
+import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
+import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
+import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
-import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
-import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
+import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
+import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
@@ -194,15 +207,21 @@ import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaborat
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
+import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
 import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
+import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
-import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
+import StatusSolicitacoesAlteracoes from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoes";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
+import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
+import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
 
 const routesConfig = [
   {
@@ -222,14 +241,13 @@ const routesConfig = [
     component: painelGestaoAlimentacao(),
     exact: true,
     tipoUsuario:
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhMedicao()
   },
   {
@@ -255,100 +273,85 @@ const routesConfig = [
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL}`,
     component: DietaEspecialEscolaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.CANCELAMENTO}`,
     component: CancelamentoDietaPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.DIETA_ESPECIAL_ALTERACAO_UE}`,
     component: DietaEspecialAlteracaoUEPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasEscolaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesEscolaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasEscolaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesRecusadasEscolaPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: inclusaoAlimentacao(),
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: alteracaoCardapio(),
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosEscola,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.INVERSAO_CARDAPIO}`,
     component: RelatorioPageInversaoDiaCardapio.InversaoDeDiaDeCardapioPage,
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.ESCOLA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: suspensaoAlimentacao(),
     exact: false,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.DRE}/${constants.SOLICITACOES_AUTORIZADAS}`,
@@ -519,13 +522,13 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.INVERSAO_CARDAPIO}`,
     component: PainelPedidosInversaoDiaCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_AUTORIZADAS}`,
     component: StatusSolicitacoesAutorizadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -533,25 +536,25 @@ const routesConfig = [
     }`,
     component: StatusQuestionamentosCodae,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_PENDENTES}`,
     component: StatusSolicitacoesPendentesTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_NEGADAS}`,
     component: StatusSolicitacoesNegadasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACOES_CANCELADAS}`,
     component: StatusSolicitacoesCanceladasTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.DRE}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
@@ -563,13 +566,13 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.INCLUSAO_ALIMENTACAO}`,
     component: PainelPedidosInclusaoDeAlimentacaoTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${constants.SOLICITACAO_KIT_LANCHE}`,
     component: PainelPageKitLanche.PainelPedidosTerceirizada,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.TERCEIRIZADA}/${
@@ -577,7 +580,7 @@ const routesConfig = [
     }`,
     component: PainelPedidosSolicitacaoUnificadaTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SUSPENSAO_ALIMENTACAO}/${constants.RELATORIO}`,
@@ -595,7 +598,7 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.SUSPENSAO_ALIMENTACAO}`,
     component: PainelPedidosSuspensaoAlimentacao,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/configuracoes/cadastros/${constants.SOBREMESA_DOCE}`,
@@ -631,7 +634,8 @@ const routesConfig = [
     path: `/configuracoes/cadastros/horario-combos-alimentacao`,
     component: CadastroHorarioComboAlimentacaoPage,
     exact: false,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/configuracoes/cadastros/empresas-cadastradas`,
@@ -772,6 +776,65 @@ const routesConfig = [
     tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
+    component: GestaoAcessoCodaeDilogPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
+    component: GestaoAcessoMasterPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${
+      constants.GESTAO_ACESSO_DIRETOR_ESCOLA
+    }`,
+    component: GestaoAcessoDiretorEscolaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDiretorEscola()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
+    component: GestaoAcessoEmpresaPage,
+    exact: true,
+    tipoUsuario: usuarioEhAdmQualquerEmpresa()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_COGESTOR}`,
+    component: GestaoAcessoCogestorPage,
+    exact: true,
+    tipoUsuario: usuarioEhCogestorDRE()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
+    component: GestaoAcessoGeralPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
+    component: CargasUsuariosPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
+    component: CargasUsuariosServidoresPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
     path: `/configuracoes`,
     component: ConfigEmailPage,
     exact: false,
@@ -851,20 +914,21 @@ const routesConfig = [
     path: `/${constants.TERCEIRIZADA}/${constants.ALTERACAO_TIPO_ALIMENTACAO}`,
     component: PainelPedidosAlteracaoDeCardapioTerceirizadaPage,
     exact: false,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/painel-dieta-especial`,
     component: dashBoardDietaEspecial(),
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhMedicao()
   },
   {
@@ -874,13 +938,14 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -889,13 +954,14 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -904,13 +970,14 @@ const routesConfig = [
     component: StatusSolicitacoesDietaEspecial(),
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada()
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.SOLICITACOES_DIETA_ESPECIAL}/${
@@ -962,13 +1029,13 @@ const routesConfig = [
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.PRODUTO}`,
     component: CadastroProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.EDITAR}`,
     component: AtualizacaoProdutoFormPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${constants.BUSCA_PRODUTO}`,
@@ -991,7 +1058,7 @@ const routesConfig = [
     }`,
     component: BuscaProdutoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -999,7 +1066,7 @@ const routesConfig = [
     }`,
     component: BuscaAvancadaProdutoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
@@ -1007,7 +1074,7 @@ const routesConfig = [
     }`,
     component: RelatorioAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.PESQUISA_DESENVOLVIMENTO}/${
@@ -1033,22 +1100,19 @@ const routesConfig = [
     component: RelatorioReclamacaoProduto,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
     component: ResponderQuestionamentoUEPage,
     exact: true,
     tipoUsuario:
-      usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${
@@ -1071,14 +1135,15 @@ const routesConfig = [
     component: HomologacaoProdutoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoMistaParceira())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1087,14 +1152,13 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ReclamacaoDeProduto,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1103,16 +1167,15 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ProdutosSuspensos,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1120,7 +1183,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.CorrecaoDeProduto,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1130,12 +1193,11 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseReclamacao,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1145,11 +1207,10 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.ResponderQuestionamentoDaCodae,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1158,7 +1219,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.AguardandoAnaliseSensorial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1167,7 +1228,7 @@ const routesConfig = [
     }`,
     component: StatusSolicitacoesGestaoProduto.PendenteHomologacao,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1176,16 +1237,15 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.Homologados,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1195,16 +1255,15 @@ const routesConfig = [
     component: StatusSolicitacoesGestaoProduto.NaoHomologados,
     exact: true,
     tipoUsuario:
-      usuarioEhTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: "/painel-gestao-produto",
@@ -1216,10 +1275,9 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhDRE()
   },
   {
@@ -1229,9 +1287,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${constants.SUSPENSAO_DE_PRODUTO}`,
@@ -1242,10 +1299,9 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhDRE() ||
       usuarioEhNutricionistaSupervisao() ||
-      usuarioEhTerceirizada() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCODAENutriManifestacao()
   },
   {
@@ -1270,10 +1326,9 @@ const routesConfig = [
     exact: true,
     tipoUsuario:
       usuarioEhQualquerCODAE() ||
-      usuarioEhTerceirizada() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta()) ||
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE()
@@ -1282,19 +1337,19 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
     component: ConsultaResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
     component: ResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/cadastro-geral`,
     component: CadastroGeralPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto()
+    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/vincular-produto-edital`,
@@ -1322,7 +1377,7 @@ const routesConfig = [
     }`,
     component: AvaliarSolicitacaoCadastroProdutoPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario: usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1360,7 +1415,8 @@ const routesConfig = [
     path: `/${constants.DIETA_ESPECIAL}/${constants.RELATORIO_DIETA_ESPECIAL}`,
     component: RelatorioDietaEspecial,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
@@ -1372,7 +1428,8 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhDRE() ||
-      (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta())
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${constants.PROTOCOLO_PADRAO_DIETA}`,
@@ -1405,13 +1462,22 @@ const routesConfig = [
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhEmpresaTerceirizada()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
     component: RelatorioAlunosMatriculadosPage,
     exact: true,
-    tipoUsuario: usuarioEhTerceirizada()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1419,7 +1485,7 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscolaTerceirizada()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1427,7 +1493,7 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscola()
+    tipoUsuario: usuarioEhEscolaTerceirizada()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
@@ -1471,7 +1537,7 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.GESTAO_REQUISICAO_ENTREGA}`,
     component: GestaoRequisicaoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.GESTAO_SOLICITACAO_ALTERACAO}`,
@@ -1483,13 +1549,13 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONSULTA_SOLICITACAO_ALTERACAO}`,
     component: ConsultaSolicitacaoAlteracaoPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.INSUCESSO_ENTREGA}`,
     component: InsucessoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_INCONSISTENCIAS}`,
@@ -1501,19 +1567,21 @@ const routesConfig = [
     path: `/${constants.LOGISTICA}/${constants.CONFERIR_ENTREGA}`,
     component: ConferirEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA}`,
     component: ConferenciaDeGuiaPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.REGISTRAR_INSUCESSO}`,
     component: RegistrarInsucessoEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${
@@ -1521,45 +1589,48 @@ const routesConfig = [
     }`,
     component: ConferenciaDeGuiaComOcorrenciaPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CONFERENCIA_GUIA_RESUMO_FINAL}`,
     component: ConferenciaDeGuiaResumoFinalPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.DETALHAMENTO_GUIA}`,
     component: DetalhamentoGuiaPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.REPOSICAO_GUIA}`,
     component: ReposicaoDeGuiaPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.REPOSICAO_RESUMO_FINAL}`,
     component: ReposicaoResumoFinalPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaAbastecimento()
+    tipoUsuario:
+      usuarioEhEscolaAbastecimento() || usuarioEhEscolaAbastecimentoDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DILOG}`,
     component: EntregasDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioComAcessoTelaEntregasDilog() ||
-      usuarioEhCoordenadorNutriSupervisao()
+    tipoUsuario: usuarioComAcessoTelaEntregasDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DISTRIBUIDOR}`,
     component: EntregasDistribuidorPage,
     exact: true,
-    tipoUsuario: usuarioEhDistribuidora()
+    tipoUsuario: usuarioEhEmpresaDistribuidora()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.ENTREGAS_DRE}`,
@@ -1583,7 +1654,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.CRONOGRAMA_ENTREGA}`,
     component: CronogramaEntregaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${
@@ -1597,13 +1668,19 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
     component: DetalharCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.ALTERACAO_CRONOGRAMA}`,
     component: AlterarCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhFornecedor()
+    tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_CRONOGRAMA_DILOG}`,
+    component: AnaliseDilogCronogramaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCronograma()
   },
   {
     /*
@@ -1637,19 +1714,25 @@ const routesConfig = [
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
-    component: StatusSolicitacoesPendentesDinutre,
+    component: StatusCronogramasPendentesDinutre,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
-    component: StatusSolicitacoesAguardandoDilog,
+    component: StatusCronogramasAguardandoDilog,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
-    component: StatusSolicitacoesAssinadoCODAE,
+    component: StatusCronogramasAssinadoCODAE,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoes,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   }

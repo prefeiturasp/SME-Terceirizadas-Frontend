@@ -3,7 +3,11 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import { usuarioEhEscola, usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEmpresaTerceirizada
+} from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
@@ -12,8 +16,9 @@ import { getNomesUnicosEditais } from "services/produto.service";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
-  const ehTerceirizada = usuarioEhTerceirizada();
-  const ehEscola = usuarioEhEscola();
+  const ehTerceirizada = usuarioEhEmpresaTerceirizada();
+  const ehEscola =
+    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
@@ -229,32 +234,36 @@ const CardBody = props => {
                         </OnChange>
                       </div>
                     )}
-                    <div className="col-3">
-                      <Field
-                        component={Select}
-                        options={TIPOS_SOLICITACOES_OPTIONS}
-                        name="tipo_solicitacao"
-                        naoDesabilitarPrimeiraOpcao
-                      />
-                      <OnChange name="tipo_solicitacao">
-                        {() => {
-                          props.onChange(values);
-                        }}
-                      </OnChange>
-                    </div>
-                    <div className="col-3">
-                      <Field
-                        name="data_evento"
-                        minDate={null}
-                        component={InputComData}
-                        placeholder="Data do evento"
-                      />
-                      <OnChange name="data_evento">
-                        {() => {
-                          props.onChange(values);
-                        }}
-                      </OnChange>
-                    </div>
+                    {pathname === "/painel-gestao-alimentacao" && (
+                      <>
+                        <div className="col-3">
+                          <Field
+                            component={Select}
+                            options={TIPOS_SOLICITACOES_OPTIONS}
+                            name="tipo_solicitacao"
+                            naoDesabilitarPrimeiraOpcao
+                          />
+                          <OnChange name="tipo_solicitacao">
+                            {() => {
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                        <div className="col-3">
+                          <Field
+                            name="data_evento"
+                            minDate={null}
+                            component={InputComData}
+                            placeholder="Data do evento"
+                          />
+                          <OnChange name="data_evento">
+                            {() => {
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </form>

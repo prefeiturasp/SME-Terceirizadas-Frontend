@@ -6,11 +6,10 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhTerceirizada,
-  usuarioEhEscola,
-  usuarioEhDRE,
-  usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhDRE
 } from "helpers/utilities";
 import * as constants from "configs/constants";
 
@@ -19,35 +18,32 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEGestaoProduto() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhDRE();
 
   const exibirQuantitativoPorTerceirizada = usuarioEhCODAEGestaoProduto();
   const exibirRelatorioAnaliseSensorial =
-    usuarioEhTerceirizada() || usuarioEhCODAEGestaoProduto();
+    usuarioEhEmpresaTerceirizada() || usuarioEhCODAEGestaoProduto();
 
   const exibirMenuTodosPerfis =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEmpresaTerceirizada() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhDRE() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCODAENutriManifestacao();
 
@@ -55,7 +51,8 @@ const MenuRelatorios = () => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhDRE() ||
-    (usuarioEhEscola() && !usuarioEscolaEhGestaoDireta());
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor();
 
   return (
     <Menu id="Relatorios" icon="fa-file-alt" title={"Relatórios"}>

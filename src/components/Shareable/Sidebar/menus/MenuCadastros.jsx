@@ -19,7 +19,8 @@ import {
   usuarioEhCronograma,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
   usuarioEhLogistica,
   usuarioEhMedicao
 } from "helpers/utilities";
@@ -27,7 +28,8 @@ import {
 const MenuCadastros = () => {
   return (
     <Menu id="Cadastros" icon="fa-user-plus" title={"Cadastros"}>
-      {usuarioEhEscola() && (
+      {(usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <LeafItem
           to={`/${CONFIGURACOES}/${CADASTROS}/${HORARIO_COMBOS_ALIMENTACAO}`}
         >

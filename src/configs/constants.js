@@ -189,6 +189,15 @@ export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
 
+export const GESTAO_ACESSO_MASTER = "gestao-acesso-master";
+export const GESTAO_ACESSO_CODAE_DILOG = "gestao-acesso-codae-dilog";
+export const GESTAO_ACESSO_DIRETOR_ESCOLA = "gestao-acesso-diretor-escola";
+export const GESTAO_ACESSO_EMPRESA = "gestao-acesso-empresa";
+export const GESTAO_ACESSO_COGESTOR = "gestao-cogestor";
+export const GESTAO_ACESSO_GERAL = "gestao-acesso";
+export const CARGAS_USUARIOS = "cargas-usuarios";
+export const CARGAS_USUARIOS_SERVIDORES = "cargas-usuarios-servidores";
+
 export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
 export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
@@ -196,12 +205,14 @@ export const SOLICITACAO_ALTERACAO_CRONOGRAMA =
 export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
+export const ANALISE_CRONOGRAMA_DILOG = "analise-cronograma-dilog";
 export const LABORATORIO = "laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
 export const EMBALAGEM = "embalagem";
 export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
 export const PAINEL_APROVACOES = "painel-aprovacoes";
+export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

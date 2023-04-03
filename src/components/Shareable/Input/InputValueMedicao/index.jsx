@@ -35,7 +35,11 @@ export const InputText = props => {
     exibeTooltipFrequenciaDiaNaoLetivo,
     exibeTooltipSuspensoesAutorizadas,
     exibeTooltipRPLAutorizadas,
-    exibeTooltipLPRAutorizadas
+    exibeTooltipLPRAutorizadas,
+    exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
+    exibeTooltipKitLancheSolAlimentacoes,
+    exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
+    exibeTooltipLancheEmergencialSolAlimentacoes
   } = props;
 
   let msgTooltip = "";
@@ -160,6 +164,42 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas && (
+        <Tooltip
+          title={
+            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipKitLancheSolAlimentacoes && (
+        <Tooltip
+          title={
+            "Não há autorização para oferta de Kit Lanche. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas && (
+        <Tooltip
+          title={
+            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialSolAlimentacoes && (
+        <Tooltip
+          title={
+            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {(validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()) && (
         <Tooltip title={msgTooltip}>
           <i className="fas fa-info icone-info-error" />
@@ -189,7 +229,11 @@ export const InputText = props => {
             exibeTooltipErroQtdMaiorQueAutorizado ||
             exibeTooltipSuspensoesAutorizadas ||
             exibeTooltipRPLAutorizadas ||
-            exibeTooltipLPRAutorizadas)
+            exibeTooltipLPRAutorizadas ||
+            exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas ||
+            exibeTooltipKitLancheSolAlimentacoes ||
+            exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
+            exibeTooltipLancheEmergencialSolAlimentacoes)
             ? "border-warning"
             : ""
         }`}
