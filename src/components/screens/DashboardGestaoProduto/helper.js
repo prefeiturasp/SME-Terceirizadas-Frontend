@@ -1,11 +1,12 @@
 import {
   truncarString,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhEscola,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
   parseDataHoraBrToMoment,
-  comparaObjetosMoment
+  comparaObjetosMoment,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -46,12 +47,12 @@ export const incluirDados = (statuses, arr) => {
 const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
-    usuarioEhTerceirizada()
+    usuarioEhEmpresaTerceirizada()
   ) {
     return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
   } else if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_SENSORIAL &&
-    usuarioEhTerceirizada()
+    usuarioEhEmpresaTerceirizada()
   ) {
     return `/${PESQUISA_DESENVOLVIMENTO}/relatorio-analise-sensorial?uuid=${
       item.uuid
@@ -76,7 +77,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
       item.uuid
     }&card_suspensos=${true}`;
   } else if (
-    usuarioEhTerceirizada() &&
+    usuarioEhEmpresaTerceirizada() &&
     [
       CODAE_HOMOLOGADO,
       CODAE_SUSPENDEU,
@@ -88,7 +89,9 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   ) {
     return `/${GESTAO_PRODUTO}/${EDITAR}?uuid=${item.uuid}`;
   } else if (
-    (usuarioEhEscola() || usuarioEhTerceirizada()) &&
+    (usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEmpresaTerceirizada()) &&
     item.status.toLowerCase() === CODAE_QUESTIONOU_UE &&
     CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo === titulo
   ) {
@@ -97,7 +100,7 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     }`;
   } else if (
     CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo === titulo &&
-    usuarioEhEscola()
+    (usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada())
   ) {
     return `/${GESTAO_PRODUTO}/nova-reclamacao-de-produto?nome_produto=${
       item.nome_produto
@@ -135,7 +138,7 @@ const getText = item => {
   let appendix = "";
 
   if (
-    usuarioEhTerceirizada() &&
+    usuarioEhEmpresaTerceirizada() &&
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO
   ) {
     appendix = ` (${item.qtde_questionamentos})`;

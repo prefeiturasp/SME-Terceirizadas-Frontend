@@ -3,7 +3,10 @@ import {
   USUARIO_PODE_ATUALIZAR_FOTO_PROD
 } from "configs/constants";
 import { ENVIRONMENT } from "constants/config";
-import { usuarioEhEscola } from "helpers/utilities";
+import {
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
+} from "helpers/utilities";
 
 export const formatarSolicitacoesVigentes = solicitacoes => {
   solicitacoes.forEach(solicitacao => {
@@ -16,7 +19,7 @@ export const exibirParteInativacao = (solicitacao, uuid) => {
   return (
     solicitacao.ativo &&
     uuid &&
-    usuarioEhEscola() &&
+    (usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada()) &&
     ["CODAE_AUTORIZADO", "TERCEIRIZADA_TOMOU_CIENCIA"].includes(
       solicitacao.status_solicitacao
     )

@@ -7,14 +7,15 @@ import {
   RELATORIO_DIETA_ESPECIAL
 } from "configs/constants";
 import {
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhEscola,
   usuarioEhMedicao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAEGestaoAlimentacao,
-  usuarioEhCODAENutriManifestacao
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -24,23 +25,24 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhDRE() ||
-    usuarioEhEscola() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
     usuarioEhMedicao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao();
-  const exibeNovaSolicitacao = usuarioEhEscola();
+  const exibeNovaSolicitacao =
+    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const exibeConsultaDieta =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhEscola() ||
-    usuarioEhMedicao() ||
-    usuarioEhCODAEDietaEspecial() ||
-    usuarioEhDRE();
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada();
+  usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
-    usuarioEhTerceirizada() || usuarioEhNutricionistaSupervisao();
+    usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
@@ -65,7 +67,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
           {getNomeCardAguardandoAutorizacao()}
         </LeafItem>
       )}
-      {usuarioEhEscola() && (
+      {(usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()) && (
         <LeafItem to={`/${DIETA_ESPECIAL}/${CANCELAMENTO}`}>
           Cancel. Dieta Especial
         </LeafItem>

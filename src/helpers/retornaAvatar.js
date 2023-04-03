@@ -5,25 +5,27 @@ import { AvatarEscola } from "components/Shareable/Avatar/AvatarEscola";
 import { AvatarTerceirizada } from "components/Shareable/Avatar/AvatarTerceirizada";
 import React from "react";
 import {
-  usuarioEhCoordenadorEscola,
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioEhDRE,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaAbastecimento,
-  usuarioEhTerceirizada
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhEmpresaTerceirizada
 } from "./utilities";
 
 export default () => {
-  if (usuarioEhDistribuidora()) {
+  if (usuarioEhEmpresaDistribuidora()) {
     return <AvatarDistribuidor />;
-  } else if (usuarioEhTerceirizada()) {
+  } else if (usuarioEhEmpresaTerceirizada()) {
     return <AvatarTerceirizada />;
   } else if (usuarioEhDRE()) {
     return <AvatarDRE />;
   } else if (
-    usuarioEhEscola() ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhEscolaAbastecimento() ||
-    usuarioEhCoordenadorEscola()
+    usuarioEhEscolaAbastecimentoDiretor()
   ) {
     return <AvatarEscola />;
   } else {

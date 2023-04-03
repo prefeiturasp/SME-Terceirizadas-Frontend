@@ -3,14 +3,14 @@ import "./style.scss";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import ModalCadastrarItem from "components/Shareable/ModalCadastrarItem";
 import ModalExcluirItem from "../ModalExcluirItem";
-import { usuarioEhTerceirizada } from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 export default ({ resultado, changePage }) => {
   const [selecionado, setSelecionado] = useState(undefined);
   const [showModal, setShowModal] = useState(false);
   const [showModalExcluir, setShowModalExcluir] = useState(false);
 
-  const permissao = usuarioEhTerceirizada();
+  const permissao = usuarioEhEmpresaTerceirizada();
 
   const openModal = item => {
     setSelecionado(item);

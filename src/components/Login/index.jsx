@@ -2,18 +2,25 @@ import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Field, reduxForm } from "redux-form";
+import { Modal } from "react-bootstrap";
 import {
   length,
   required,
+  rfOuCpfOuCodOperador,
   semCaracteresEspeciais
 } from "../../helpers/fieldValidators";
 import authService from "../../services/auth";
-import { recuperaSenha, setUsuario } from "../../services/perfil.service";
+import {
+  atualizarSenhaLogado,
+  recuperaSenha,
+  setUsuario
+} from "../../services/perfil.service";
 import { Botao } from "../Shareable/Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
 import { InputText } from "../Shareable/Input/InputText";
 import { InputPassword } from "../Shareable/Input/InputPassword";
 import Select from "../Shareable/Select";
+import RequisitosSenha from "../Shareable/RequisitosSenha";
 import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
@@ -22,6 +29,8 @@ import {
   fieldCnpj,
   fieldCpf
 } from "../screens/Cadastros/CadastroEmpresa/helper";
+import { deepCopy } from "helpers/utilities";
+import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
 const TOOLTIP_CNPJ = `Somente números`;
@@ -39,7 +48,8 @@ export class Login extends Component {
       bloquearBotao: false,
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
-      tab: TABS.ESCOLA
+      tab: TABS.ESCOLA,
+      showModal: true
     };
     this.emailInput = React.createRef();
   }
@@ -49,7 +59,8 @@ export class Login extends Component {
     RECUPERAR_SENHA: 1,
     CADASTRAR: 2,
     RECUPERACAO_SENHA_OK: 3,
-    RECUPERACAO_SENHA_NAO_OK: 4
+    RECUPERACAO_SENHA_NAO_OK: 4,
+    PRIMEIRO_ACESSO: 5
   };
 
   componentDidMount() {
@@ -60,6 +71,8 @@ export class Login extends Component {
       componenteAtivo:
         tab === TABS.TERCEIRIZADAS
           ? this.COMPONENTE.CADASTRAR
+          : tab === TABS.PRIMEIRO_ACESSO
+          ? this.COMPONENTE.PRIMEIRO_ACESSO
           : this.COMPONENTE.LOGIN
     });
   }
@@ -77,15 +90,33 @@ export class Login extends Component {
     this.setState({ termos });
   }
 
-  handleSubmit = values => {
-    const { email, password } = values;
-    if (email && password) {
-      authService.login(email, password);
+  handleSubmit = async values => {
+    const { login, password } = values;
+    if (login && password) {
+      await authService.login(login, password);
     }
   };
 
-  handleRecuperaSenha = registro_funcional => {
-    recuperaSenha(registro_funcional.email_ou_rf).then(resp => {
+  handleAtualizarSenhaPrimeiroAcesso = async values => {
+    if (values.senha !== values.confirmar_senha) {
+      return;
+    }
+    const values_ = deepCopy(values);
+    values_["senha_atual"] = localStorage.getItem("senhaAtual");
+    const response = await atualizarSenhaLogado(values_);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("senha atualizada com sucesso!");
+      localStorage.removeItem("senhaAtual");
+      this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
+    } else {
+      toastError(
+        "Erro ao tentar atualizar a senha. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  handleRecuperaSenha = values => {
+    recuperaSenha(values.recuperar_login).then(resp => {
       if (resp.status === HTTP_STATUS.OK) {
         this.setState({
           componenteAtivo: this.COMPONENTE.RECUPERACAO_SENHA_OK,
@@ -140,32 +171,107 @@ export class Login extends Component {
     this.setState({ tab });
   }
 
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  openModal() {
+    this.setState({ showModal: true });
+  }
+
   renderLogin() {
     const { handleSubmit, submitting } = this.props;
-    const { bloquearBotao } = this.state;
+    const { bloquearBotao, showModal } = this.state;
     return (
       <div className="form">
+        <Modal
+          show={showModal}
+          onHide={this.closeModal.bind(this)}
+          dialogClassName="modal-como-acessar"
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Como acessar o SIGPAE</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="row">
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Servidor Municipal</div>
+                  <div className="icone">
+                    <i className="fas fa-chalkboard-teacher" />
+                  </div>
+                  <div className="texto">
+                    Acesse com seu <strong>RF</strong> de 7 dígitos
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a mesma de acesso ao Plateia e ao
+                    SGP
+                  </div>
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Fornecedor ou Distribuidor</div>
+                  <div className="icone">
+                    <i className="fas fa-truck" />
+                  </div>
+                  <div className="texto">
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
+                  </div>
+                  <div className="rodape">
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
+                  </div>
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="flex-card">
+                  <div className="titulo">Rede Parceira</div>
+                  <div className="icone">
+                    <i className="fas fa-hotel" />
+                  </div>
+                  <div className="texto">
+                    Instruções de <strong>acesso</strong>, em breve
+                  </div>
+                  <div className="rodape-fake" />
+                </div>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
         <form className="login" onSubmit={handleSubmit(this.handleSubmit)}>
+          <p className="como-acessar text-right">
+            <span onClick={() => this.openModal()}>Como Acessar?</span>
+          </p>
           <Field
             component={InputText}
+            className="input-login"
             esconderAsterisco
-            label="E-mail"
-            name="email"
-            placeholder={"nome@sme.prefeitura.sp.gov.br"}
+            label="Usuário"
+            name="login"
+            placeholder={"Digite seu RF ou CPF ou Código Operador"}
             required
-            type="email"
-            validate={[required]}
+            type="text"
+            maxlength="11"
+            validate={[required, rfOuCpfOuCodOperador]}
           />
           <Field
             component={InputPassword}
+            className="input-login"
             esconderAsterisco
             label="Senha"
             name="password"
-            placeholder={"******"}
+            placeholder={"Digite sua Senha"}
             required
             validate={required}
           />
-          <p className="mt-2">
+          <Botao
+            className="col-12 btn-acessar"
+            style={BUTTON_STYLE.GREEN}
+            texto="Acessar"
+            disabled={submitting || bloquearBotao}
+            type={BUTTON_TYPE.SUBMIT}
+          />
+          <p className="mt-3 text-center">
             <Link
               className="hyperlink"
               to="#"
@@ -177,26 +283,6 @@ export class Login extends Component {
               }
             >
               Esqueci minha senha
-            </Link>
-          </p>
-          <Botao
-            className="col-12"
-            style={BUTTON_STYLE.GREEN}
-            texto="Acessar"
-            disabled={submitting || bloquearBotao}
-            type={BUTTON_TYPE.SUBMIT}
-          />
-          <p className="mt-3">
-            Não possui uma conta? &nbsp;
-            <Link
-              className="hyperlink"
-              data-cy="ainda-nao-cadastrado"
-              onClick={() =>
-                this.setState({ componenteAtivo: this.COMPONENTE.CADASTRAR })
-              }
-              to="#"
-            >
-              Cadastre-se
             </Link>
           </p>
         </form>
@@ -412,8 +498,7 @@ export class Login extends Component {
   }
   renderRecuperacaoOK() {
     return (
-      <div>
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+      <div className="mt-4">
         <center>
           <div className="mt-3">
             <div className="alerta-verde mt-2">
@@ -421,7 +506,7 @@ export class Login extends Component {
               <p>E-mail de recuperação enviado com sucesso</p>
             </div>
             <p className="mt-1">
-              {`Seu link de recuperação de senha foi enviado para
+              {`O link de recuperação de senha foi enviado para
             ${this.state.email_recuperacao}`}
             </p>
             <p className="mt-2">Verifique sua caixa de entrada ou spam</p>
@@ -444,19 +529,16 @@ export class Login extends Component {
 
   renderRecuperacaoNOK() {
     return (
-      <div>
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
+      <div className="mt-4">
         <center className="mt-4">
           <div className="mt-3">
             <div className="alerta-vermelho mt-2">
               <i className="far fa-times-circle" />
-              <p>E-mail não encontrado</p>
+              <p>Usuário não encontrado</p>
             </div>
             <p className="mt-1">
-              Você não tem um e-mail cadastrado para recuperar sua senha.
-            </p>
-            <p className="mt-2">
-              Para restabelecer o seu acesso, procure o Diretor da sua unidade.
+              Não encontramos o usuário informado. Procure o responsável pelo
+              sistema na sua Unidade
             </p>
           </div>
         </center>
@@ -476,49 +558,152 @@ export class Login extends Component {
   }
 
   renderEsqueciSenha() {
-    const { handleSubmit } = this.props;
     return (
       <div className="form">
-        <h3 className="texto-simples-grande mt-3">Recuperação de Senha</h3>
-        <p className="texto-simples mt-4">
-          Caso você tenha cadastrado um endereço de e-mail, informe seu usuário
-          ou RF e ao continuar você receberá um e-mail com as orientações para
-          redefinição da sua senha.
-        </p>
-        <p className="texto-simples">
-          Se você não tem e-mail cadastrado ou não tem mais acesso ao endereço
-          de e-mail cadastrado, procure o responsável pelo SIGPAE na sua
-          unidade.
-        </p>
-        <form className="login ml-4 mr-4">
-          <Field
-            component={InputText}
-            esconderAsterisco
-            label="E-mail ou RF"
-            name="email_ou_rf"
-            placeholder={"nome@sme.prefeitura.sp.gov.br ou RF"}
-            validate={[required]}
-          />
-        </form>
-
-        <div className="alinha-direita mt-3 ml-4 mr-4">
-          <Botao
-            className="col-md-2 ml-3"
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            texto="Cancelar"
-            type={BUTTON_TYPE.SUBMIT}
-            onClick={() =>
-              this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
-            }
-          />
-          <Botao
-            className="col-md-2 ml-3"
-            style={BUTTON_STYLE.GREEN}
-            texto="Continuar"
-            type={BUTTON_TYPE.SUBMIT}
-            onClick={handleSubmit(values => this.handleRecuperaSenha(values))}
-          />
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Servidor Municipal: &nbsp;
+          </span>
+          Digite seu <strong>RF</strong>.
         </div>
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Fornecedor ou Distribuidor: &nbsp;
+          </span>
+          Digite seu <strong>CPF</strong>.
+        </div>
+        <Form
+          onSubmit={this.handleRecuperaSenha}
+          initialValues={{}}
+          validate={() => {}}
+          render={({ values }) => {
+            return (
+              <>
+                <form className="login mt-3">
+                  <FieldFF
+                    component={InputText}
+                    label="Usuário"
+                    name="recuperar_login"
+                    placeholder="Digite seu RF, CPF ou Código Operador"
+                    validate={required}
+                  />
+                </form>
+
+                <div className="alinha-direita">
+                  <Botao
+                    className="col-md-3 ml-3"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    texto="Cancelar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={() =>
+                      this.setState({ componenteAtivo: this.COMPONENTE.LOGIN })
+                    }
+                  />
+                  <Botao
+                    className="col-md-3 ml-3"
+                    style={BUTTON_STYLE.GREEN}
+                    texto="Continuar"
+                    type={BUTTON_TYPE.SUBMIT}
+                    onClick={() => this.handleRecuperaSenha(values)}
+                    disabled={!values.recuperar_login}
+                  />
+                </div>
+              </>
+            );
+          }}
+        />
+
+        <p className="texto-simples mt-4">
+          Você receberá um e-mail com as orientações para redefinição da sua
+          senha.
+        </p>
+        <p className="texto-simples mt-4">
+          Caso você não tenha cadastro ou não tenha mais acesso ao e-mail
+          cadastrado, procure o responsável pelo SIGPAE na sua unidade.
+        </p>
+      </div>
+    );
+  }
+
+  renderPrimeiroAcesso() {
+    return (
+      <div className="form primeiro-acesso">
+        <Form
+          onSubmit={this.handleAtualizarSenhaPrimeiroAcesso}
+          initialValues={{}}
+          validate={() => {}}
+          render={({ form, handleSubmit, values }) => {
+            const letra = values.senha
+              ? values.senha.match(/[a-zA-Z]/g)
+              : false;
+            const numero = values.senha ? values.senha.match(/[0-9]/g) : false;
+            const tamanho = values.senha ? values.senha.length >= 8 : false;
+            return (
+              <form onSubmit={handleSubmit}>
+                <p className="mb-0">
+                  Seja bem-vindo(a) ao <strong>SIGPAE</strong>
+                </p>
+                <p>SISTEMA DE GESTÂO DO PROGRAMA DE ALIMENTAÇÂO ESCOLAR!</p>
+                <p className="font-weight-bold">
+                  Atualize sua senha de acesso:
+                </p>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Nova Senha"
+                      name="senha"
+                      placeholder={"Digite uma nova senha de acesso"}
+                      onChange={event =>
+                        this.onSenhaChanged(event.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12">
+                    <FieldFF
+                      component={InputPassword}
+                      label="Confirmação da Nova Senha"
+                      name="confirmar_senha"
+                      placeholder={"Confirme a senha digitada"}
+                    />
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-12">
+                    <Botao
+                      className="w-100 my-2"
+                      style={BUTTON_STYLE.GREEN}
+                      texto="Confirmar"
+                      disabled={!letra || !numero || !tamanho}
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={() => {
+                        this.handleAtualizarSenhaPrimeiroAcesso(values);
+                      }}
+                    />
+                    {values.senha &&
+                      values.confirmar_senha &&
+                      values.senha !== values.confirmar_senha && (
+                        <div className="error-or-warning-message mb-3">
+                          <div className="error-message">
+                            As senhas não conferem!
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                </div>
+
+                <RequisitosSenha
+                  letra={letra}
+                  numero={numero}
+                  tamanho={tamanho}
+                />
+              </form>
+            );
+          }}
+        />
       </div>
     );
   }
@@ -535,8 +720,34 @@ export class Login extends Component {
         return this.renderRecuperacaoOK();
       case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
         return this.renderRecuperacaoNOK();
+      case this.COMPONENTE.PRIMEIRO_ACESSO:
+        return this.renderPrimeiroAcesso();
       default:
         return this.renderLogin();
+    }
+  }
+
+  renderLogoTexto(texto) {
+    return (
+      <div className="logo-sigpae">
+        <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
+        {texto && <div className="titulo">{texto}</div>}
+      </div>
+    );
+  }
+
+  renderLogoSwitch(param) {
+    switch (param) {
+      case this.COMPONENTE.RECUPERAR_SENHA:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.RECUPERACAO_SENHA_OK:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.RECUPERACAO_SENHA_NAO_OK:
+        return this.renderLogoTexto("Recuperação de Senha");
+      case this.COMPONENTE.PRIMEIRO_ACESSO:
+        return this.renderLogoTexto("Primeiro Acesso");
+      default:
+        return this.renderLogoTexto();
     }
   }
 
@@ -548,9 +759,7 @@ export class Login extends Component {
         <div className="login-bg" />
         <div className="right-half">
           <div className="container my-auto">
-            <div className="logo-sigpae">
-              <img src="/assets/image/logo-sigpae-com-texto.svg" alt="" />
-            </div>
+            {this.renderLogoSwitch(componenteAtivo)}
             {this.renderSwitch(componenteAtivo)}
             <div className="logo-prefeitura">
               <img src="/assets/image/EDUCAÇÃO_FUNDO_CLARO.png" alt="" />

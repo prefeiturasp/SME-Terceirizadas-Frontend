@@ -31,6 +31,7 @@ export const InputText = props => {
     contador,
     toUppercaseActive,
     apenasNumeros,
+    id,
     proibeLetras
   } = props;
   return (
@@ -56,6 +57,7 @@ export const InputText = props => {
           meta.touched &&
           (meta.error || meta.warning) &&
           "invalid-field"}`}
+        id={id}
         disabled={disabled}
         min={min}
         max={max}
