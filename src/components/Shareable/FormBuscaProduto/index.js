@@ -7,12 +7,13 @@ import { ASelect } from "components/Shareable/MakeField";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { Select as SelectAntd } from "antd";
 import {
-  usuarioEhTerceirizada,
-  usuarioEhEscola,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhNutricionistaSupervisao,
   usuarioEhCODAENutriManifestacao,
-  usuarioEhDRE
+  usuarioEhDRE,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
 } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
@@ -57,8 +58,9 @@ const initialState = {
 };
 
 const exibirFiltroNomeTerceirizada =
-  !usuarioEhEscola() &&
-  !usuarioEhTerceirizada() &&
+  !usuarioEhEscolaTerceirizadaDiretor() &&
+  !usuarioEhEscolaTerceirizada() &&
+  !usuarioEhEmpresaTerceirizada() &&
   !usuarioEhCODAEGestaoAlimentacao() &&
   !usuarioEhNutricionistaSupervisao() &&
   !usuarioEhCODAENutriManifestacao();
@@ -180,12 +182,14 @@ export const FormBuscaProduto = ({
                       name="nome_terceirizada"
                       disabled={
                         values.agrupado_por_nome_e_marca ||
-                        usuarioEhTerceirizada() ||
+                        usuarioEhEmpresaTerceirizada() ||
                         loading
                       }
                     />
                   )}
-                  {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                  {(usuarioEhEscolaTerceirizadaDiretor() ||
+                    usuarioEhEscolaTerceirizada() ||
+                    usuarioEhEmpresaTerceirizada()) && (
                     <div className="row">
                       <div className="col-6">
                         <Field
@@ -197,7 +201,11 @@ export const FormBuscaProduto = ({
                           name="nome_edital"
                           required
                           validate={required}
-                          disabled={usuarioEhEscola() || loading}
+                          disabled={
+                            usuarioEhEscolaTerceirizadaDiretor() ||
+                            usuarioEhEscolaTerceirizada() ||
+                            loading
+                          }
                         />
                       </div>
                       {state.tipos.length > 0 && (
@@ -242,77 +250,89 @@ export const FormBuscaProduto = ({
             </>
           )}
           <div className="row">
-            {!usuarioEhEscola() && !usuarioEhTerceirizada() && (
-              <>
-                <div
-                  className={`col-${
-                    !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
-                  }`}
-                >
-                  {usuarioEhDRE() ? (
-                    <>
-                      <span className="required-asterisk">*</span>
-                      <label className="mb-1 mt-2">Edital</label>
+            {!usuarioEhEscolaTerceirizadaDiretor() &&
+              !usuarioEhEscolaTerceirizada() &&
+              !usuarioEhEmpresaTerceirizada() && (
+                <>
+                  <div
+                    className={`col-${
+                      !usuarioEhEscolaTerceirizadaDiretor() &&
+                      !usuarioEhEscolaTerceirizada() &&
+                      !usuarioEhEmpresaTerceirizada()
+                        ? "6"
+                        : "4"
+                    }`}
+                  >
+                    {usuarioEhDRE() ? (
+                      <>
+                        <span className="required-asterisk">*</span>
+                        <label className="mb-1 mt-2">Edital</label>
+                        <Field
+                          component={ASelect}
+                          className="input-busca-tipo-item"
+                          name="nome_edital"
+                          filterOption={(inputValue, option) =>
+                            option.props.children
+                              .toString()
+                              .toLowerCase()
+                              .includes(inputValue.toLowerCase())
+                          }
+                          required
+                          validate={required}
+                          options={editaisDRE}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <span className="required-asterisk">*</span>
+                        <label className="mb-1 mt-2">Edital</label>
+                        <Field
+                          component={AutoCompleteField}
+                          dataSource={state.editais}
+                          className="input-busca-produto mt-1"
+                          onSearch={v => onSearch("editais", v)}
+                          name="nome_edital"
+                          required
+                          validate={required}
+                          disabled={
+                            usuarioEhEscolaTerceirizadaDiretor() ||
+                            usuarioEhEscolaTerceirizada()
+                          }
+                        />
+                      </>
+                    )}
+                  </div>
+
+                  {state.tipos.length > 0 && (
+                    <div
+                      className={`col-${
+                        !usuarioEhEscolaTerceirizadaDiretor() &&
+                        !usuarioEhEscolaTerceirizada() &&
+                        !usuarioEhEmpresaTerceirizada()
+                          ? "6"
+                          : "4"
+                      }`}
+                    >
+                      <label className="label-aselect mt-2">Tipo</label>
                       <Field
                         component={ASelect}
                         className="input-busca-tipo-item"
-                        name="nome_edital"
+                        placeholder="Selecione um tipo"
+                        suffixIcon={<CaretDownOutlined />}
+                        name="tipo"
                         filterOption={(inputValue, option) =>
                           option.props.children
                             .toString()
                             .toLowerCase()
                             .includes(inputValue.toLowerCase())
                         }
-                        required
-                        validate={required}
-                        options={editaisDRE}
-                        disabled={loading}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <span className="required-asterisk">*</span>
-                      <label className="mb-1 mt-2">Edital</label>
-                      <Field
-                        component={AutoCompleteField}
-                        dataSource={state.editais}
-                        className="input-busca-produto mt-1"
-                        onSearch={v => onSearch("editais", v)}
-                        name="nome_edital"
-                        required
-                        validate={required}
-                        disabled={usuarioEhEscola() || loading}
-                      />
-                    </>
+                      >
+                        {state.tipos}
+                      </Field>
+                    </div>
                   )}
-                </div>
-
-                {state.tipos.length > 0 && (
-                  <div
-                    className={`col-${
-                      !usuarioEhEscola() && !usuarioEhTerceirizada() ? "6" : "4"
-                    }`}
-                  >
-                    <label className="label-aselect mt-2">Tipo</label>
-                    <Field
-                      component={ASelect}
-                      className="input-busca-tipo-item"
-                      placeholder="Selecione um tipo"
-                      suffixIcon={<CaretDownOutlined />}
-                      name="tipo"
-                      filterOption={(inputValue, option) =>
-                        option.props.children
-                          .toString()
-                          .toLowerCase()
-                          .includes(inputValue.toLowerCase())
-                      }
-                    >
-                      {state.tipos}
-                    </Field>
-                  </div>
-                )}
-              </>
-            )}
+                </>
+              )}
           </div>
           <div className="row">
             <div className={`col-4`}>

@@ -131,24 +131,13 @@ export const atualizarEmail = payload => {
     });
 };
 
-export const atualizarSenhaLogado = payload => {
+export const atualizarSenhaLogado = async payload => {
   const url = `${API_URL}/usuarios/atualizar-senha/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    body: JSON.stringify(payload),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const confirmarEmail = (uuid, confirmationKey) => {
@@ -207,3 +196,16 @@ export const dadosDoAluno = codigoEol => {
 
 export const getAlunosListagem = async params =>
   await axios.get(`/alunos/`, { params });
+
+export const getPerfilListagem = async params =>
+  await axios.get(`/perfis/`, { params });
+
+export const getVisoesListagem = async params =>
+  await axios.get(`/perfis/visoes/`, { params });
+
+export const getPerfisSubordinados = async params => {
+  const perfil = localStorage.getItem("perfil").replace(/['"]+/g, "");
+  return await axios.get(`/perfis-vinculados/${perfil}/perfis-subordinados/`, {
+    params
+  });
+};

@@ -4,7 +4,10 @@ import { Sidebar } from "../Sidebar";
 import BotaoVoltar from "./BotaoVoltar";
 import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import "./style.scss";
-import { usuarioEhLogistica, usuarioEhDistribuidora } from "helpers/utilities";
+import {
+  usuarioEhLogistica,
+  usuarioEhEmpresaDistribuidora
+} from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
@@ -88,7 +91,7 @@ export const Page = ({ ...props }) => {
             <span className="texto-titulo">{titulo}</span>
             {botaoVoltar && <BotaoVoltar onClick={handleBack} />}
           </h1>
-          {(usuarioEhDistribuidora() || usuarioEhLogistica()) &&
+          {(usuarioEhEmpresaDistribuidora() || usuarioEhLogistica()) &&
             window.location.pathname === "/" && (
               <img
                 className="marca-dagua"

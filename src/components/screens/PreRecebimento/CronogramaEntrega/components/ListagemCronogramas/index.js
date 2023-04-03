@@ -11,14 +11,14 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
-  usuarioEhFornecedor
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
     if (
       status === "Assinado e Enviado ao Fornecedor" &&
-      usuarioEhFornecedor()
+      usuarioEhEmpresaFornecedor()
     ) {
       return "Recebido";
     } else {
@@ -43,8 +43,9 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
             ativos && ativos.includes(cronograma.uuid) ? "desativar-borda" : "";
           return (
             <div key={`${cronograma.numero}_${index}`}>
-              {((usuarioEhFornecedor() && cronograma.status !== "Rascunho") ||
-                !usuarioEhFornecedor()) && (
+              {((usuarioEhEmpresaFornecedor() &&
+                cronograma.status !== "Rascunho") ||
+                !usuarioEhEmpresaFornecedor()) && (
                 <div className="grid-table body-table">
                   <div className={`${bordas}`}>{cronograma.numero}</div>
                   <div className={`${bordas}`}>
@@ -75,7 +76,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
                           {cronograma.status === "Assinado CODAE" &&
-                            usuarioEhFornecedor() && (
+                            usuarioEhEmpresaFornecedor() && (
                               <>
                                 <span className="ml-1">|</span>
                                 <NavLink

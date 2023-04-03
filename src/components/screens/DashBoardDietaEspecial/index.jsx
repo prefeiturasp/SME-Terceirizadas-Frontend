@@ -10,8 +10,9 @@ import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardAtalho from "../../Shareable/CardAtalho";
 import {
   dataAtual,
-  usuarioEhEscola,
-  usuarioEhTerceirizada,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriCODAE
 } from "../../../helpers/utilities";
 import { getMeusLotes } from "services/lote.service";
@@ -62,7 +63,7 @@ class DashBoardDietaEspecial extends Component {
       });
     });
     this.loadDietas();
-    if (usuarioEhTerceirizada()) {
+    if (usuarioEhEmpresaTerceirizada()) {
       await getMeusLotes().then(response => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
@@ -166,7 +167,11 @@ class DashBoardDietaEspecial extends Component {
         });
       });
 
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEmpresaTerceirizada()
+    ) {
       await this.props
         .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
         .then(response => {
@@ -265,7 +270,11 @@ class DashBoardDietaEspecial extends Component {
     );
 
     let aguardandoVigenciaListFiltered = null;
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEmpresaTerceirizada()
+    ) {
       aguardandoVigenciaListFiltered = this.filtrarLote(
         aguardandoVigenciaList,
         values.lote
@@ -308,7 +317,11 @@ class DashBoardDietaEspecial extends Component {
       values.titulo
     );
 
-    if (usuarioEhEscola() || usuarioEhTerceirizada()) {
+    if (
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEmpresaTerceirizada()
+    ) {
       aguardandoVigenciaListFiltered = this.filtrarNome(
         aguardandoVigenciaListFiltered,
         values.titulo
@@ -354,7 +367,8 @@ class DashBoardDietaEspecial extends Component {
       dadosMeus
     } = this.state;
 
-    const podeIncluirDietaEspecial = usuarioEhEscola();
+    const podeIncluirDietaEspecial =
+      usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
     return (
       <div>
         <CardMatriculados
@@ -467,7 +481,9 @@ class DashBoardDietaEspecial extends Component {
                     href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                   />
                 </div>
-                {(usuarioEhEscola() || usuarioEhTerceirizada()) && (
+                {(usuarioEhEscolaTerceirizadaDiretor() ||
+                  usuarioEhEscolaTerceirizada() ||
+                  usuarioEhEmpresaTerceirizada()) && (
                   <div className="col-6">
                     <CardStatusDeSolicitacao
                       cardTitle={"Aguardando início da vigência"}

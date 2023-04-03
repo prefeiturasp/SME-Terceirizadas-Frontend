@@ -10,7 +10,7 @@ import {
   exibirModuloMedicaoInicial,
   usuarioEhDiretorUE,
   usuarioEhDRE,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizada,
   usuarioEhMedicao
 } from "helpers/utilities";
 
@@ -22,7 +22,7 @@ export default () => {
         icon="fas fa-pencil-alt"
         title={"Medição Inicial"}
       >
-        {usuarioEhEscola() && (
+        {usuarioEhEscolaTerceirizada() && (
           <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
             Lançamento Medição Inicial
           </LeafItem>

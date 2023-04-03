@@ -3,27 +3,30 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhEscola,
   usuarioEhEscolaAbastecimento,
-  usuarioEhTerceirizada,
+  usuarioEhEmpresaTerceirizada,
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
-  usuarioEhAdministradorDRE,
-  usuarioEhCoordenadorEscola,
   usuarioEhLogistica,
   usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
-  usuarioEhDistribuidora,
+  usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira,
   usuarioEhMedicao,
   exibirGA,
   usuarioEhDilogQualidadeOuCronograma,
-  usuarioEhFornecedor,
+  usuarioEhOutrosDilog,
+  usuarioEhPreRecebimentoSemLogistica,
+  usuarioEhEmpresaFornecedor,
+  usuarioEhAdministradorRepresentanteCodae,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhQualquerUsuarioEmpresa,
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog
 } from "helpers/utilities";
@@ -65,30 +68,30 @@ export const SidebarContent = () => {
   // criterios de exibicao abaixo
   const exibeMenuValidandoAmbiente = exibirGA();
   const exibirPainelInicial =
-    !usuarioEhCoordenadorEscola() &&
     !usuarioEhEscolaAbastecimento() &&
+    !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
-    !usuarioEhDistribuidora();
+    !usuarioEhEmpresaDistribuidora();
   const exibirGestaoAlimentacao =
     exibeMenuValidandoAmbiente &&
     (usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhDRE() ||
       usuarioEhMedicao() ||
-      (usuarioEhEscola() &&
-        !usuarioEscolaEhGestaoMistaParceira() &&
-        !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao());
   const exibirDietaEspecial =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
-    usuarioEhEscola() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
-    usuarioEhTerceirizada() ||
+    usuarioEhEmpresaTerceirizada() ||
     usuarioEhMedicao();
   const exibirGestaoProduto =
     usuarioEhCODAEGestaoAlimentacao() ||
@@ -96,51 +99,52 @@ export const SidebarContent = () => {
     usuarioEhCODAEGestaoProduto() ||
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhNutricionistaSupervisao() ||
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
+    usuarioEhEscolaTerceirizada() ||
     usuarioEhDRE() ||
-    usuarioEhTerceirizada();
+    usuarioEhEmpresaTerceirizada();
   const exibirCadastros =
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
     usuarioEhDilogQualidadeOuCronograma() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
-      (usuarioEhCODAEGestaoAlimentacao() || usuarioEhEscola()));
+      (usuarioEhCODAEGestaoAlimentacao() ||
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhEscolaTerceirizada()));
   const exibirRelatorios =
-    !usuarioEhCoordenadorEscola() &&
     !usuarioEhEscolaAbastecimento() &&
+    !usuarioEhEscolaAbastecimentoDiretor() &&
+    !usuarioEhEscolaAbastecimentoDiretor() &&
     !usuarioComAcessoTelaEntregasDilog() &&
     !usuarioEhLogistica() &&
-    !usuarioEhDistribuidora() &&
-    !usuarioEhFornecedor() &&
+    !usuarioEhEmpresaDistribuidora() &&
+    !usuarioEhEmpresaFornecedor() &&
     !usuarioEscolaEhGestaoDireta() &&
     !usuarioEhMedicao() &&
-    !usuarioEhPreRecebimento();
+    !usuarioEhPreRecebimento() &&
+    !usuarioEhAdministradorRepresentanteCodae();
 
   const exibirConfiguracoes =
-    !usuarioEhEscola() &&
+    !usuarioEhEscolaTerceirizada() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
-    !usuarioComAcessoTelaEntregasDilog() &&
-    !usuarioEhLogistica() &&
-    !usuarioEhDistribuidora() &&
-    !usuarioEhFornecedor() &&
-    !usuarioEhPreRecebimento();
+    !usuarioEhOutrosDilog() &&
+    !usuarioEhPreRecebimentoSemLogistica() &&
+    !usuarioEhQualquerUsuarioEmpresa();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
-    usuarioEhDistribuidora() ||
+    usuarioEhEmpresaDistribuidora() ||
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
+    usuarioEhEscolaAbastecimentoDiretor() ||
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
   const exibirMenuPreRecebimento =
-    usuarioEhPreRecebimento() || usuarioEhFornecedor();
+    usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
 
   const _props = {
     activeMenu,
@@ -162,7 +166,7 @@ export const SidebarContent = () => {
     exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={9} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={10} />
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />
   ];
 };

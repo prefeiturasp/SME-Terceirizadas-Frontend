@@ -1,0 +1,28 @@
+.modal-cadastro-vinculo {
+  width: 60vw !important;
+  max-width: 60vw !important;
+
+  color: #333333;
+
+  .label-radio {
+    font-weight: bold;
+    margin-right: 16px;
+  }
+
+  .botao-rf {
+    margin-top: 30px;
+    height: 35px;
+  }
+
+  .error-or-warning-message {
+    padding-top: 2.5px;
+  }
+
+  .texto-rodape {
+    width: 70%;
+    display: block;
+    color: gray;
+    font-size: 13px;
+    font-weight: bold;
+  }
+}

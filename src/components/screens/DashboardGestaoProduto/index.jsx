@@ -5,7 +5,11 @@ import CardStatusDeSolicitacao from "components/Shareable/CardStatusDeSolicitaca
 import CardBody from "components/Shareable/CardBody";
 import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
-import { dataAtual, usuarioEhEscola } from "helpers/utilities";
+import {
+  dataAtual,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
+} from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
   getDashboardGestaoProdutos,
@@ -226,7 +230,8 @@ export default class DashboardGestaoProduto extends Component {
             )}
           </CardBody>
         )}
-        {usuarioEhEscola() && (
+        {(usuarioEhEscolaTerceirizadaDiretor() ||
+          usuarioEhEscolaTerceirizada()) && (
           <div className="row row-shortcuts">
             <div className="col-sm-3 col-12">
               <CardAtalho
