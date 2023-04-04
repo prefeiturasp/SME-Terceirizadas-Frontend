@@ -1662,7 +1662,10 @@ const routesConfig = [
     }`,
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
@@ -1677,7 +1680,9 @@ const routesConfig = [
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_CRONOGRAMA_DILOG}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.DETALHAR_ALTERACAO_CRONOGRAMA
+    }`,
     component: AnaliseDilogCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma()
