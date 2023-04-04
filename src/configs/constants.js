@@ -106,7 +106,6 @@ export const SOLICITACOES = "solicitacoes";
 export const CONFIGURACOES = "configuracoes";
 export const MENSAGEM = "mensagem";
 export const GERENCIAMENTO_EMAILS = "gerenciamento-emails";
-export const PERMISSOES = "permissoes";
 export const PERFIL = "perfil";
 export const PESQUISA_DESENVOLVIMENTO = "pesquisa-desenvolvimento";
 export const PRODUTO = "produto";
