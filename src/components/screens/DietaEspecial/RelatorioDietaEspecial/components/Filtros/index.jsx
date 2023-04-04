@@ -655,7 +655,7 @@ const BuscaDietasForm = ({
           {(mostrarFiltrosAutorizadas || mostrarFiltrosCanceladas) && (
             <>
               <div className="row">
-                <div className="col-4">
+                <div className="col-3">
                   <label className="label font-weight-normal pb-2 pt-2">
                     Lote:
                   </label>
@@ -683,7 +683,7 @@ const BuscaDietasForm = ({
                     </div>
                   )}
                 </div>
-                <div className="col-4">
+                <div className="col-3">
                   <label className="label font-weight-normal pb-2 pt-2">
                     Classificação da dieta:
                   </label>
@@ -712,7 +712,7 @@ const BuscaDietasForm = ({
                   )}
                 </div>
                 {!usuarioEhNutricionistaSupervisao() ? (
-                  <div className="col-4">
+                  <div className="col-3">
                     <label className="label font-weight-normal pb-2 pt-2">
                       Protocolo padrão:
                     </label>
@@ -741,7 +741,7 @@ const BuscaDietasForm = ({
                     )}
                   </div>
                 ) : (
-                  <div className="col-4">
+                  <div className="col-3">
                     <label className="label font-weight-normal pb-2 pt-2">
                       Relação por Diagnóstico:
                     </label>
@@ -770,6 +770,27 @@ const BuscaDietasForm = ({
                     )}
                   </div>
                 )}
+                <div className="col-3">
+                  <label className="label font-weight-normal pb-2 pt-2">
+                    Unidades Educacionais :
+                  </label>
+                  <Field
+                    component={StatefulMultiSelect}
+                    name="unidades_educacionais"
+                    options={protocolosNoFiltro}
+                    valueRenderer={renderizarLabelProtocolo}
+                    selected={protocolosSelecionados}
+                    onSelectedChanged={value =>
+                      onChangeProtocolosSelecionados(value)
+                    }
+                    overrideStrings={{
+                      search: "Busca",
+                      selectSomeItems: "Selecione",
+                      allItemsAreSelected: "Todos os itens estão selecionados",
+                      selectAll: "Todos"
+                    }}
+                  />
+                </div>
               </div>
 
               <div
