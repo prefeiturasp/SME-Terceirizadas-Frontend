@@ -10,7 +10,6 @@ import AlteracaoDeCardapioPage from "../pages/Escola/AlteracaoDeCardapioPage";
 import AlteracaoDeCardapioCEIPage from "../pages/Escola/AlteracaoDeCardapioCEIPage";
 import SuspensaoDeAlimentacaoPage from "../pages/Escola/SuspensaoDeAlimentacaoPage";
 import SuspensaoDeAlimentacaoDeCEI from "../pages/Escola/SuspensaoDeAlimentacaoDeCEIPage";
-import * as PermissoesPage from "../pages/Configuracoes/PermissoesPage";
 import * as RelatoriosPage from "../pages/Relatorios/RelatoriosPage";
 import * as RelatoriosAlteracaoDeCardapio from "../pages/AlteracaoDeCardapio/RelatorioPage";
 import * as RelatoriosInversaoDiaCardapio from "../pages/InversaoDeDiaDeCardapio/RelatorioPage";
@@ -45,25 +44,6 @@ export const painelGestaoAlimentacao = () => {
       return DashboardNutriManifestacaoPage;
     default:
       return DashboardEscolaPage;
-  }
-};
-
-export const permissoes = () => {
-  switch (localStorage.getItem("tipo_perfil")) {
-    case TIPO_PERFIL.DIETA_ESPECIAL:
-      return PermissoesPage.PermissoesCODAEGestaoDietaEspecial;
-    case TIPO_PERFIL.GESTAO_PRODUTO:
-      return PermissoesPage.PermissoesCODAEGestaoProdutos;
-    case TIPO_PERFIL.SUPERVISAO_NUTRICAO:
-      return PermissoesPage.PermissoesCODAESupervisaoNutricao;
-    case TIPO_PERFIL.DIRETORIA_REGIONAL:
-      return PermissoesPage.PermissoesDRE;
-    case TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA:
-      return PermissoesPage.PermissoesCODAEGestaoAlimentacaoTerceirizada;
-    case TIPO_PERFIL.TERCEIRIZADA:
-      return PermissoesPage.PermissoesTerceirizada;
-    default:
-      return PermissoesPage.PermissoesEscola;
   }
 };
 
