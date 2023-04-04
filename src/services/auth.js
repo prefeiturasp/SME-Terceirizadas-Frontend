@@ -4,7 +4,7 @@ import { toastError } from "../components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 
-export const TOKEN_ALIAS = "TOKEN";
+export const TOKEN_ALIAS = "TOKEN_CORESSO";
 
 const login = async (login, password) => {
   try {
