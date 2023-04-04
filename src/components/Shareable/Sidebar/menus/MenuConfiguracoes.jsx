@@ -2,7 +2,6 @@ import React from "react";
 import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   CONFIGURACOES,
-  PERMISSOES,
   MENSAGEM,
   GERENCIAMENTO_EMAILS,
   GESTAO_ACESSO_CODAE_DILOG,
@@ -20,7 +19,6 @@ import {
   usuarioEhDiretorEscola,
   usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDRE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
@@ -32,13 +30,6 @@ import {
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
-  const exibirPermissoes =
-    usuarioEhCoordenadorNutriCODAE() ||
-    usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhDRE() ||
-    usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioEhEmpresaTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -60,10 +51,6 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
-      {exibirPermissoes && (
-        <LeafItem to={`/${CONFIGURACOES}/${PERMISSOES}`}>Permissões</LeafItem>
-      )}
-
       {exibirConfigEmail && (
         <>
           <LeafItem to={`/${CONFIGURACOES}`}>Disparo de E-mail</LeafItem>
