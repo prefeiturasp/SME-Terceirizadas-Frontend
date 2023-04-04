@@ -31,7 +31,8 @@ export default ({
   onSubmit,
   dadosIniciais,
   setExibirTooltip,
-  errors
+  errors,
+  valoresObservacoes
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -51,7 +52,14 @@ export default ({
         .filter(
           valor => String(valor.categoria_medicao) === String(categoria)
         )[0];
-      const uuidValor = valorAtual.uuid;
+      const uuidValor =
+        (valorAtual && valorAtual.uuid) ||
+        (valoresObservacoes &&
+          valoresObservacoes.find(
+            valor =>
+              String(valor.dia) === String(dia) &&
+              String(valor.categoria_medicao) === String(categoria)
+          ).uuid);
       const response = await deleteObservacaoValoresPeriodosLancamentos(
         uuidValor
       );
