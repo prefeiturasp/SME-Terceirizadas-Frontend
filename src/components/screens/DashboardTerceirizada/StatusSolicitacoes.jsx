@@ -10,8 +10,8 @@ import { InputSearchPendencias } from "../../Shareable/InputSearchPendencias";
 import { ordenaPorDate, extrairStatusDaSolicitacaoURL } from "./helper";
 import { getMeusLotes } from "services/lote.service";
 import {
-  usuarioEhAdministradorDRE,
-  usuarioEhTerceirizada
+  usuarioEhCogestorDRE,
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 import {
   ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS,
@@ -313,7 +313,7 @@ export class StatusSolicitacoes extends Component {
     } else {
       solicitacoes = solicitacoes.sort(ordenaPorDate);
     }
-    if (usuarioEhTerceirizada() || usuarioEhAdministradorDRE()) {
+    if (usuarioEhEmpresaTerceirizada() || usuarioEhCogestorDRE()) {
       await getMeusLotes().then(response => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(

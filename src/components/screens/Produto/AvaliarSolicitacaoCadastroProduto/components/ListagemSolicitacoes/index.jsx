@@ -5,7 +5,7 @@ import "./styles.scss";
 import FormPrevisaoCadastro from "../FormPrevisaoCadastro";
 import {
   usuarioEhCODAEDietaEspecial,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
 
 const ListagemProdutos = ({
@@ -15,7 +15,7 @@ const ListagemProdutos = ({
   setAtivos
 }) => {
   const usuarioNutricionistaCodae = usuarioEhCODAEDietaEspecial();
-  const usuarioTerceirizada = usuarioEhTerceirizada();
+  const usuarioTerceirizada = usuarioEhEmpresaTerceirizada();
   const onUpdateSolicitacao = (uuid, values) => {
     setSolicitacoes(
       solicitacoes.map(sol => {

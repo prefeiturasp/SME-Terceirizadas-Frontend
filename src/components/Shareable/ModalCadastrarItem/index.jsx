@@ -21,7 +21,10 @@ import {
   BUTTON_TYPE,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
-import { composeValidators, usuarioEhTerceirizada } from "helpers/utilities";
+import {
+  composeValidators,
+  usuarioEhEmpresaTerceirizada
+} from "helpers/utilities";
 import "./style.scss";
 
 export default ({ closeModal, showModal, item, changePage }) => {
@@ -30,7 +33,7 @@ export default ({ closeModal, showModal, item, changePage }) => {
 
   async function fetchData() {
     const respTipos = await getTiposItems();
-    const permissao = usuarioEhTerceirizada();
+    const permissao = usuarioEhEmpresaTerceirizada();
     if (permissao) {
       const result = respTipos.data.filter(
         data => data.tipo === "MARCA" || data.tipo === "FABRICANTE"

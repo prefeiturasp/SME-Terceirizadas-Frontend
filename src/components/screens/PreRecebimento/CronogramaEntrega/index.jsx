@@ -10,7 +10,7 @@ import { CADASTRO_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants.js";
 import Filtros from "./components/Filtros";
 import {
   gerarParametrosConsulta,
-  usuarioEhFornecedor
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 import { getListagemCronogramas } from "../../../../services/cronograma.service.js";
 import ListagemCronogramas from "./components/ListagemCronogramas";
@@ -65,7 +65,7 @@ export default () => {
       buscarCronogramas(1);
       setPage(1);
     }
-    if (usuarioEhFornecedor()) {
+    if (usuarioEhEmpresaFornecedor()) {
       buscaArmazens();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

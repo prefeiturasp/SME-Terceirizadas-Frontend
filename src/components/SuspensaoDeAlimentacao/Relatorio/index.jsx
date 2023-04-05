@@ -14,7 +14,11 @@ import {
 } from "components/Shareable/Botao/constants";
 import { SUSPENSAO_ALIMENTACAO, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
-import { getError, usuarioEhEscola } from "helpers/utilities";
+import {
+  getError,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada
+} from "helpers/utilities";
 import {
   getSuspensaoDeAlimentacaoUUID,
   terceirizadaTomaCienciaSuspensaoDeAlimentacao
@@ -198,7 +202,8 @@ class RelatorioSuspensaoAlimentacao extends Component {
                 <RelatorioHistoricoJustificativaEscola
                   solicitacao={suspensaoAlimentacao}
                 />
-                {usuarioEhEscola() &&
+                {(usuarioEhEscolaTerceirizada() ||
+                  usuarioEhEscolaTerceirizadaDiretor()) &&
                   suspensaoAlimentacao.status !== "ESCOLA_CANCELOU" && (
                     <>
                       {" "}

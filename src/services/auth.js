@@ -6,11 +6,11 @@ import { getError } from "helpers/utilities";
 
 export const TOKEN_ALIAS = "TOKEN";
 
-const login = async (email, password) => {
+const login = async (login, password) => {
   try {
     const response = await fetch(CONFIG.JWT_AUTH, {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ login, password }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
@@ -28,6 +28,11 @@ const login = async (email, password) => {
           "Content-Type": "application/json"
         }
       });
+
+      if (!json.last_login) {
+        localStorage.setItem("senhaAtual", password);
+        window.location.href = "/login?tab=PRIMEIRO_ACESSO";
+      }
 
       await fetch(`${CONFIG.API_URL}/usuarios/meus-dados/`, {
         method: "GET",
@@ -48,12 +53,32 @@ const login = async (email, password) => {
               JSON.stringify(result_.vinculo_atual.perfil.nome)
             );
             localStorage.setItem(
+              "visao_perfil",
+              JSON.stringify(result_.vinculo_atual.perfil.visao)
+            );
+            localStorage.setItem(
               "tipo_gestao",
               JSON.stringify(result_.vinculo_atual.instituicao.tipo_gestao)
             );
             localStorage.setItem(
               "nome_instituicao",
               JSON.stringify(result_.vinculo_atual.instituicao.nome)
+            );
+            localStorage.setItem(
+              "tipo_servico",
+              JSON.stringify(result_.vinculo_atual.instituicao.tipo_servico)
+            );
+            localStorage.setItem(
+              "modulo_gestao",
+              JSON.stringify(result_.vinculo_atual.instituicao.modulo_gestao)
+            );
+            localStorage.setItem(
+              "eh_cei",
+              JSON.stringify(result_.vinculo_atual.instituicao.eh_cei)
+            );
+            localStorage.setItem(
+              "eh_cemei",
+              JSON.stringify(result_.vinculo_atual.instituicao.eh_cemei)
             );
             localStorage.setItem(
               "dre_nome",
@@ -72,7 +97,7 @@ const login = async (email, password) => {
         });
       });
     } else {
-      toastError("Login e/ou senha inválidos");
+      toastError(`${json.detail}`);
     }
     return isValid;
   } catch (error) {
@@ -85,7 +110,11 @@ const logout = () => {
   localStorage.removeItem("tipo_perfil");
   localStorage.removeItem("perfil");
   localStorage.removeItem("tipo_gestao");
+  localStorage.removeItem("tipo_servico");
   localStorage.removeItem("nome_instituicao");
+  localStorage.removeItem("modulo_gestao");
+  localStorage.removeItem("eh_cei");
+  localStorage.removeItem("eh_cemei");
   localStorage.removeItem("dre_nome");
   localStorage.removeItem("lotes");
   localStorage.removeItem("modalCoreSSO");

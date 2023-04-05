@@ -26,31 +26,31 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhEscolaTerceirizada,
   usuarioEscolaEhGestaoDireta,
-  usuarioEscolaEhGestaoMistaParceira,
   usuarioEhNutricionistaSupervisao,
   usuarioEhMedicao
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
   const exibeMenuNovasSolicitacoes =
-    (usuarioEhEscola() &&
-      !usuarioEscolaEhGestaoMistaParceira() &&
-      !usuarioEscolaEhGestaoDireta()) ||
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhDRE();
   const exibeMenuConsultaDeSolicitacoes = !usuarioEscolaEhGestaoDireta();
-  const PERFIL = usuarioEhEscola()
-    ? ESCOLA
-    : usuarioEhDRE()
-    ? DRE
-    : usuarioEhCODAEGestaoAlimentacao()
-    ? CODAE
-    : usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
-    ? NUTRIMANIFESTACAO
-    : usuarioEhNutricionistaSupervisao()
-    ? NUTRISUPERVISAO
-    : TERCEIRIZADA;
+  const PERFIL =
+    usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
+      ? ESCOLA
+      : usuarioEhDRE()
+      ? DRE
+      : usuarioEhCODAEGestaoAlimentacao()
+      ? CODAE
+      : usuarioEhCODAENutriManifestacao() || usuarioEhMedicao()
+      ? NUTRIMANIFESTACAO
+      : usuarioEhNutricionistaSupervisao()
+      ? NUTRISUPERVISAO
+      : TERCEIRIZADA;
   return (
     <Menu
       id="GestaoAlimentacao"

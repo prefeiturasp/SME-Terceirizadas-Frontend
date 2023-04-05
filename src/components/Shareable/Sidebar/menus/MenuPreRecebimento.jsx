@@ -10,8 +10,8 @@ import {
   usuarioEhCronograma,
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
-  usuarioEhFornecedor,
-  usuarioEhPreRecebimento
+  usuarioEhPreRecebimento,
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 
 const MenuPreRecebimento = () => {
@@ -22,7 +22,7 @@ const MenuPreRecebimento = () => {
           Painel de Aprovações
         </LeafItem>
       )}
-      {(usuarioEhPreRecebimento() || usuarioEhFornecedor()) && (
+      {(usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()) && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`}>
           Cronograma de Entrega
         </LeafItem>

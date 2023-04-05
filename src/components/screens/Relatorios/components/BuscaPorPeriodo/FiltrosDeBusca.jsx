@@ -22,10 +22,11 @@ import {
 import { toastError } from "../../../../Shareable/Toast/dialogs";
 import "./style.scss";
 import {
-  usuarioEhEscola,
   usuarioEhDRE,
   usuarioEhCODAEGestaoAlimentacao,
-  converterDDMMYYYYparaYYYYMMDD
+  converterDDMMYYYYparaYYYYMMDD,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "../../../../../helpers/utilities";
 import { formataValues } from "./helper";
 import { getEscolasSimplissimaPorDiretoriaRegional } from "../../../../../services/escola.service";
@@ -154,7 +155,11 @@ class FiltrosDeBusca extends Component {
                         this.onDiretoriaRegionalChanged(event.target.value)
                       }
                       options={diretoriasRegionais}
-                      disabled={usuarioEhEscola() || usuarioEhDRE()}
+                      disabled={
+                        usuarioEhEscolaTerceirizadaDiretor() ||
+                        usuarioEhEscolaTerceirizada() ||
+                        usuarioEhDRE()
+                      }
                       naoDesabilitarPrimeiraOpcao
                     />
                   </div>
@@ -199,7 +204,8 @@ class FiltrosDeBusca extends Component {
                       component={Select}
                       options={escolasState || escolas}
                       disabled={
-                        usuarioEhEscola() ||
+                        usuarioEhEscolaTerceirizadaDiretor() ||
+                        usuarioEhEscolaTerceirizada() ||
                         (usuarioEhCODAEGestaoAlimentacao() &&
                           (!diretoria_regional || diretoria_regional === TODOS))
                       }

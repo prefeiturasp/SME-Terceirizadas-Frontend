@@ -104,6 +104,24 @@ export const length = size => value =>
     ? `Deve ter exatamente ${size} caracteres`
     : undefined;
 
+export const rfOuCpfOuCodOperador = value => {
+  if (value && value.length === 11) {
+    if (/[^0-9]/i.test(value)) {
+      return `O CPF deve conter apenas números`;
+    } else {
+      return undefined;
+    }
+  }
+  if (value && value.length === 7) {
+    if (/[^0-9]/i.test(value)) {
+      return `O RF deve conter apenas números, se for um Código de Operador, a letra deve ser o primeiro digito`;
+    } else {
+      return undefined;
+    }
+  }
+  return `Deve ter 7 ou 11 caracteres`;
+};
+
 export const semArroba = value =>
   value && value.includes("@") ? "Campo e-mail não deve conter @" : undefined;
 

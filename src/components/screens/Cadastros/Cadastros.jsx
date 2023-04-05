@@ -8,11 +8,12 @@ import IconeTipoAlimentacao from "../../Shareable/Icones/Cadastros/IconeTipoAlim
 import IconeHorarioCombo from "../../Shareable/Icones/Cadastros/IconeCadastroHorarioComboAlimentacao";
 import "./style.scss";
 import {
-  usuarioEhEscola,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
   usuarioEhDRE,
-  usuarioEhTerceirizada
+  usuarioEhEmpresaTerceirizada
 } from "../../../helpers/utilities";
 
 class Cadastros extends Component {
@@ -37,7 +38,8 @@ class Cadastros extends Component {
     } = this.state;
     const USUARIO_CODAE =
       usuarioEhCODAEGestaoAlimentacao() || usuarioEhCODAEDietaEspecial();
-    const USUARIO_SEM_PERMISSAO = usuarioEhDRE() || usuarioEhTerceirizada();
+    const USUARIO_SEM_PERMISSAO =
+      usuarioEhDRE() || usuarioEhEmpresaTerceirizada();
     return (
       <div>
         {USUARIO_SEM_PERMISSAO && (
@@ -114,21 +116,22 @@ class Cadastros extends Component {
           </div>
         )}
 
-        {usuarioEhEscola() && (
-          <div className="row mt-3">
-            <div
-              onMouseEnter={() => this.setState({ hoverHorarios: true })}
-              onMouseLeave={() => this.setState({ hoverHorarios: false })}
-              className="linked-card col-4"
-            >
-              <Link to="/configuracoes/cadastros/horario-combos-alimentacao">
-                <CardLogo titulo={"Horários de alimentações"}>
-                  <IconeHorarioCombo hover={hoverHorarios} />
-                </CardLogo>
-              </Link>
+        {usuarioEhEscolaTerceirizada() ||
+          (usuarioEhEscolaTerceirizadaDiretor() && (
+            <div className="row mt-3">
+              <div
+                onMouseEnter={() => this.setState({ hoverHorarios: true })}
+                onMouseLeave={() => this.setState({ hoverHorarios: false })}
+                className="linked-card col-4"
+              >
+                <Link to="/configuracoes/cadastros/horario-combos-alimentacao">
+                  <CardLogo titulo={"Horários de alimentações"}>
+                    <IconeHorarioCombo hover={hoverHorarios} />
+                  </CardLogo>
+                </Link>
+              </div>
             </div>
-          </div>
-        )}
+          ))}
       </div>
     );
   }
