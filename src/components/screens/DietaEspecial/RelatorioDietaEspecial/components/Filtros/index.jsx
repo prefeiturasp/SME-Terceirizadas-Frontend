@@ -44,6 +44,8 @@ const BuscaDietasForm = ({
   setProtocolosSelecionados,
   diagnosticosSelecionados,
   setDiagnosticosSelecionados,
+  unidadesSelecionadas,
+  setUnidadesSelecionadas,
   terceirizadaUuid,
   setTerceirizadaUuid,
   nutriSupervisao,
@@ -91,15 +93,16 @@ const BuscaDietasForm = ({
     }
   };
 
-  const getUnidadesEducacionais = async () => {
-    let data = { lotes: lotesSelecionados };
+  const getUnidadesEducacionais = async values => {
+    let data = { lotes: values };
     const response = await getUnidadesEducacionaisTercTotal(data);
     if (response.status === 200) {
-      const unidades = response.data.map(({ uuid, codigo_eol_escola }) => ({
-        uuid,
-        codigo_eol_escola
+      const unidades = response.data;
+      const unidadesOpcoes = unidades.map(unidade => ({
+        label: unidade.codigo_eol_escola,
+        value: unidade.codigo_eol
       }));
-      setUnidadesEducacionais(unidades);
+      setUnidadesEducacionais(unidadesOpcoes);
       setAtivaUnidadeEducaionais(false);
     } else {
       toastError("Erro ao buscar unidades educacionais");
@@ -108,9 +111,7 @@ const BuscaDietasForm = ({
 
   useEffect(() => {
     getMeusDados();
-    if (lotesSelecionados.length > 0) {
-      getUnidadesEducacionais(true);
-    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -323,7 +324,7 @@ const BuscaDietasForm = ({
     setDiagnosticoNoFiltro(diagnosticosFiltrados);
     setClassificacoesNoFiltro(classificacoesFiltradas);
     setProtocolosNoFiltro(protocolosFiltrados);
-    getUnidadesEducacionais();
+    getUnidadesEducacionais(values);
   };
 
   const renderizarLabelClassificacao = (selected, options) => {
@@ -539,6 +540,19 @@ const BuscaDietasForm = ({
     setLotesNoFiltro(lotesFiltrados);
   };
 
+  const renderizarLabelUnidades = (selected, options) => {
+    if (selected.length === 0) {
+      return "Selecione";
+    }
+    if (selected.length === options.length) {
+      return "Todas Unidades Educaionais foram selecionadas";
+    }
+    if (selected.length === 1) {
+      return `${selected.length} unidade educacional selecionada`;
+    }
+    return `${selected.length} unidades educacionais selecionadas`;
+  };
+
   const limparFiltros = () => {
     reset();
     setDataInicial(null);
@@ -552,6 +566,7 @@ const BuscaDietasForm = ({
     setDietasFiltradas([]);
     setStatusSelecionado(false);
     setFiltragemRealizada(false);
+    setUnidadesSelecionadas([]);
   };
 
   let dietasEspeciaisCopy = [...dietasEspeciais];
@@ -582,6 +597,11 @@ const BuscaDietasForm = ({
           diagnosticosSelecionados.includes(alergia_intolerancia.descricao)
         );
       });
+    }
+    if (unidadesSelecionadas.length) {
+      dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
+        unidadesSelecionadas.includes(dieta.codigo_eol_escola)
+      );
     }
     setDietasFiltradas(dietasEspeciaisCopy);
     if (dataInicial && dataFinal) {
@@ -680,7 +700,7 @@ const BuscaDietasForm = ({
           {(mostrarFiltrosAutorizadas || mostrarFiltrosCanceladas) && (
             <>
               <div className="row">
-                <div className="col-3">
+                <div className="col-4">
                   <label className="label font-weight-normal pb-2 pt-2">
                     Lote:
                   </label>
@@ -708,7 +728,7 @@ const BuscaDietasForm = ({
                     </div>
                   )}
                 </div>
-                <div className="col-3">
+                <div className="col-4">
                   <label className="label font-weight-normal pb-2 pt-2">
                     Classificação da dieta:
                   </label>
@@ -737,7 +757,7 @@ const BuscaDietasForm = ({
                   )}
                 </div>
                 {!usuarioEhNutricionistaSupervisao() ? (
-                  <div className="col-3">
+                  <div className="col-6 mt-3">
                     <label className="label font-weight-normal pb-2 pt-2">
                       Protocolo padrão:
                     </label>
@@ -748,9 +768,9 @@ const BuscaDietasForm = ({
                         options={protocolosNoFiltro}
                         valueRenderer={renderizarLabelProtocolo}
                         selected={protocolosSelecionados}
-                        onSelectedChanged={value =>
-                          onChangeProtocolosSelecionados(value)
-                        }
+                        onSelectedChanged={value => {
+                          onChangeProtocolosSelecionados(value);
+                        }}
                         overrideStrings={{
                           search: "Busca",
                           selectSomeItems: "Selecione",
@@ -766,7 +786,7 @@ const BuscaDietasForm = ({
                     )}
                   </div>
                 ) : (
-                  <div className="col-3">
+                  <div className="col-4">
                     <label className="label font-weight-normal pb-2 pt-2">
                       Relação por Diagnóstico:
                     </label>
@@ -795,7 +815,7 @@ const BuscaDietasForm = ({
                     )}
                   </div>
                 )}
-                <div className="col-3">
+                <div className="col-6 mt-3">
                   <label className="label font-weight-normal pb-2 pt-2">
                     Unidades Educacionais :
                   </label>
@@ -803,22 +823,22 @@ const BuscaDietasForm = ({
                     component={StatefulMultiSelect}
                     name="unidades_educacionais"
                     options={unidadesEducacionais}
-                    valueRenderer={renderizarLabelProtocolo}
-                    selected={protocolosSelecionados}
-                    onSelectedChanged={value =>
-                      onChangeProtocolosSelecionados(value)
-                    }
+                    valueRenderer={renderizarLabelUnidades}
+                    selected={unidadesSelecionadas}
+                    onSelectedChanged={value => {
+                      setUnidadesSelecionadas(value);
+                    }}
                     overrideStrings={{
                       search: "Busca",
                       selectSomeItems: "Selecione",
-                      allItemsAreSelected: "Todos os itens estão selecionados",
+                      allItemsAreSelected:
+                        "Todos as unidades estão selecionadas",
                       selectAll: "Todos"
                     }}
                     disabled={ativaUnidadeEducaionais}
                   />
                 </div>
               </div>
-
               <div
                 className={
                   dietasFiltradas && dietasFiltradas.length > 0
