@@ -222,6 +222,7 @@ import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/Confer
 import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
 import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
+import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
 
 const routesConfig = [
   {
@@ -1663,6 +1664,14 @@ const routesConfig = [
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhCronograma()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
+    }`,
+    component: SolicitacaoAlteracaoCronogramaFornecedorPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
