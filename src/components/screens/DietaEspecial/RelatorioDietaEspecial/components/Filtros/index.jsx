@@ -22,9 +22,13 @@ import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, reduxForm } from "redux-form";
-import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
+import {
+  getSolicitacoesRelatorioDietasEspeciais,
+  getUnidadesEducacionaisTercTotal
+} from "services/dietaEspecial.service";
 import { meusDados } from "services/perfil.service";
 import "./styles.scss";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 const BuscaDietasForm = ({
   setCarregando,
@@ -66,6 +70,8 @@ const BuscaDietasForm = ({
   const [diagnosticoNoFiltro, setDiagnosticoNoFiltro] = useState([]);
   const [classificacoesInicio, setClassificacoesInicio] = useState([]);
   const [classificacoesNoFiltro, setClassificacoesNoFiltro] = useState([]);
+  const [ativaUnidadeEducaionais, setAtivaUnidadeEducaionais] = useState(true);
+  const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
 
   const getMeusDados = async () => {
     setCarregando(true);
@@ -85,8 +91,26 @@ const BuscaDietasForm = ({
     }
   };
 
+  const getUnidadesEducacionais = async () => {
+    let data = { lotes: lotesSelecionados };
+    const response = await getUnidadesEducacionaisTercTotal(data);
+    if (response.status === 200) {
+      const unidades = response.data.map(({ uuid, codigo_eol_escola }) => ({
+        uuid,
+        codigo_eol_escola
+      }));
+      setUnidadesEducacionais(unidades);
+      setAtivaUnidadeEducaionais(false);
+    } else {
+      toastError("Erro ao buscar unidades educacionais");
+    }
+  };
+
   useEffect(() => {
     getMeusDados();
+    if (lotesSelecionados.length > 0) {
+      getUnidadesEducacionais(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -299,6 +323,7 @@ const BuscaDietasForm = ({
     setDiagnosticoNoFiltro(diagnosticosFiltrados);
     setClassificacoesNoFiltro(classificacoesFiltradas);
     setProtocolosNoFiltro(protocolosFiltrados);
+    getUnidadesEducacionais();
   };
 
   const renderizarLabelClassificacao = (selected, options) => {
@@ -777,7 +802,7 @@ const BuscaDietasForm = ({
                   <Field
                     component={StatefulMultiSelect}
                     name="unidades_educacionais"
-                    options={protocolosNoFiltro}
+                    options={unidadesEducacionais}
                     valueRenderer={renderizarLabelProtocolo}
                     selected={protocolosSelecionados}
                     onSelectedChanged={value =>
@@ -789,6 +814,7 @@ const BuscaDietasForm = ({
                       allItemsAreSelected: "Todos os itens estão selecionados",
                       selectAll: "Todos"
                     }}
+                    disabled={ativaUnidadeEducaionais}
                   />
                 </div>
               </div>
