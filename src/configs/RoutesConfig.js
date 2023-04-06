@@ -1678,7 +1678,10 @@ const routesConfig = [
     }`,
     component: AnaliseDilogCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     /*
