@@ -81,7 +81,6 @@ import {
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
-  permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosAlteracaoDeCardapioCEMEI,
@@ -768,12 +767,6 @@ const routesConfig = [
     component: MensagemPage,
     exact: false,
     tipoUsuario: usuarioEhQualquerCODAE()
-  },
-  {
-    path: `/configuracoes/permissoes`,
-    component: permissoes(),
-    exact: false,
-    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
