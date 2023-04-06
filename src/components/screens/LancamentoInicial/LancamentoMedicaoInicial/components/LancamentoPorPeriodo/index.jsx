@@ -8,11 +8,13 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
-  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
+  getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { CORES } from "./helpers";
 import { PERFIL } from "constants/shared";
+import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export default ({
   escolaInstituicao,
@@ -40,6 +42,10 @@ export default ({
   const [
     solicitacoesAlteracaoLancheEmergencialAutorizadas,
     setSolicitacoesAlteracaoLancheEmergencialAutorizadas
+  ] = useState(undefined);
+  const [
+    solicitacoesInclusoesEtecAutorizadas,
+    setSolicitacoesInclusoesEtecAutorizadas
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
 
@@ -96,10 +102,29 @@ export default ({
     }
   };
 
+  const getSolicitacoesInclusoesEtecAutorizadasAsync = async () => {
+    const escola_uuid = escolaInstituicao.uuid;
+    const tipo_solicitacao = "Inclusão de";
+    const response = await getSolicitacoesInclusoesEtecAutorizadasEscola({
+      escola_uuid,
+      mes,
+      ano,
+      tipo_solicitacao
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setSolicitacoesInclusoesEtecAutorizadas(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões ETEC Autorizadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
+    getSolicitacoesInclusoesEtecAutorizadasAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodoSelecionado]);
 
@@ -216,6 +241,19 @@ export default ({
               ehGrupoSolicitacoesDeAlimentacao={true}
             />
           )}
+          {solicitacoesInclusoesEtecAutorizadas &&
+            solicitacoesInclusoesEtecAutorizadas.length > 0 && (
+              <CardLancamento
+                grupo="ETEC"
+                cor={CORES[6]}
+                totalAlimentacoes={0}
+                tipos_alimentacao={tiposAlimentacaoETEC()}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                ehGrupoETEC={true}
+              />
+            )}
           <div className="row mt-4">
             <div className="col">
               {renderBotaoFinalizar() ? (
