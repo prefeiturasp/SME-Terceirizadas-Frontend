@@ -27,7 +27,9 @@ const MenuPreRecebimento = () => {
           Cronograma de Entrega
         </LeafItem>
       )}
-      {usuarioEhCronograma() && (
+      {(usuarioEhCronograma() ||
+        usuarioEhDinutreDiretoria() ||
+        usuarioEhDilogDiretoria()) && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
         >
