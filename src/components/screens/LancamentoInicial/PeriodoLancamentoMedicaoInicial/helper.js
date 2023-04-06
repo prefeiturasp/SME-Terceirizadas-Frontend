@@ -5,6 +5,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesAutorizadasEscola,
+  getSolicitacoesInclusoesEtecAutorizadasEscola,
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
@@ -15,13 +16,17 @@ export const formatarPayloadPeriodoLancamento = (
   tabelaDietaEnteralRows,
   dadosIniciaisFiltered,
   diasDaSemanaSelecionada,
-  ehGrupoSolicitacoesDeAlimentacaoUrlParam
+  ehGrupoSolicitacoesDeAlimentacaoUrlParam,
+  ehGrupoETECUrlParam
 ) => {
   if (values["periodo_escolar"].includes(" - ")) {
     values["grupo"] = values["periodo_escolar"].split(" - ")[0];
     values["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
   }
-  if (values["periodo_escolar"].includes("Solicitações")) {
+  if (
+    values["periodo_escolar"].includes("Solicitações") ||
+    values["periodo_escolar"] === "ETEC"
+  ) {
     values["grupo"] = values["periodo_escolar"];
     delete values["periodo_escolar"];
   }
@@ -61,9 +66,10 @@ export const formatarPayloadPeriodoLancamento = (
       valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
       nome_campo: nome_campo,
       categoria_medicao: idCategoria,
-      tipo_alimentacao: !ehGrupoSolicitacoesDeAlimentacaoUrlParam
-        ? tipoAlimentacao.uuid
-        : ""
+      tipo_alimentacao:
+        !ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam
+          ? tipoAlimentacao.uuid
+          : ""
     });
   });
 
@@ -181,7 +187,10 @@ export const desabilitarField = (
   mesAnoDefault,
   dadosValoresInclusoesAutorizadasState,
   validacaoDiaLetivo,
-  validacaoSemana
+  validacaoSemana,
+  ehGrupoETECUrlParam = false,
+  dadosValoresInclusoesEtecAutorizadasState = null,
+  inclusoesEtecAutorizadas = null
 ) => {
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
     locale: ptBR
@@ -197,6 +206,50 @@ export const desabilitarField = (
       (mesConsiderado === mesAtual &&
         Number(dia) >= format(mesAnoDefault, "dd"))
     );
+  }
+  if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
+    const inclusao = inclusoesEtecAutorizadas.filter(
+      inclusao => Number(inclusao.dia) === Number(dia)
+    );
+    if (
+      rowName === "frequencia" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`frequencia__dia_${dia}__categoria_${categoria}`]
+      ) &&
+      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+        String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+      )
+    ) {
+      return false;
+    } else if (
+      rowName === "repeticao_refeicao" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      (inclusao.length && inclusao[0].alimentacoes.includes("refeicao"))
+    ) {
+      return false;
+    } else if (
+      rowName === "repeticao_sobremesa" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      (inclusao.length && inclusao[0].alimentacoes.includes("sobremesa"))
+    ) {
+      return false;
+    } else {
+      return (
+        !validacaoDiaLetivo(dia) ||
+        validacaoSemana(dia) ||
+        rowName === "numero_de_alunos" ||
+        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+          String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+        ) ||
+        (inclusao.length && !inclusao[0].alimentacoes.includes(rowName)) ||
+        (mesConsiderado === mesAtual &&
+          Number(dia) >= format(mesAnoDefault, "dd"))
+      );
+    }
   }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
@@ -264,6 +317,27 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
     return responseInclusoesAutorizadas.data.results;
   } else {
     toastError("Erro ao carregar Inclusões Autorizadas");
+    return [];
+  }
+};
+
+export const getSolicitacoesInclusoesEtecAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Inclusão de";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesEtecAutorizadasEscola(
+    params
+  );
+  if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseInclusoesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Inclusões ETEC Autorizadas");
     return [];
   }
 };
