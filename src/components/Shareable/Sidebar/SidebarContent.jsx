@@ -14,7 +14,6 @@ import {
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEhMedicao,
   exibirGA,
@@ -140,7 +139,6 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
-    usuarioEhCoordenadorNutriSupervisao() ||
     usuarioComAcessoTelaEntregasDilog();
 
   const exibirMenuPreRecebimento =
