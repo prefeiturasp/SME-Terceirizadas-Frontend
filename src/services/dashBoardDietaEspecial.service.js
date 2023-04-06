@@ -2,6 +2,7 @@ import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
 import { fetchGet } from "./_fetch";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
   Authorization: `JWT ${authService.getToken()}`,
@@ -9,138 +10,88 @@ const authToken = {
 };
 
 // ESCOLA
-export const getDietaEspecialPendenteAutorizacaoEscola = (
+export const getDietaEspecialPendenteAutorizacaoEscola = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
   let url = `${API_URL}/escola-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/escola-solicitacoes/pendentes-autorizacao-dieta/${uuid}/?sem_paginacao=true`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialAutorizadasEscola = (
-  uuid,
-  sem_paginacao = false
-) => {
+export const getDietaEspecialAutorizadasEscola = async (uuid, params) => {
   let url = `${API_URL}/escola-solicitacoes/autorizados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/escola-solicitacoes/autorizados-dieta/${uuid}/?sem_paginacao=true`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialNegadasEscola = (uuid, sem_paginacao = false) => {
+export const getDietaEspecialNegadasEscola = async (uuid, params) => {
   let url = `${API_URL}/escola-solicitacoes/negados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/escola-solicitacoes/negados-dieta/${uuid}/?sem_paginacao=true`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialCanceladasEscola = (
-  uuid,
-  sem_paginacao = false
-) => {
+export const getDietaEspecialCanceladasEscola = async (uuid, params) => {
   let url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/escola-solicitacoes/cancelados-dieta/${uuid}/?sem_paginacao=true`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialAutorizadasTemporariamenteEscola = (
+export const getDietaEspecialAutorizadasTemporariamenteEscola = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
-    );
+  const url = `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return fetchGet(
-    `${API_URL}/escola-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
-  );
 };
 
-export const getDietaEspecialAguardandoVigenciaEscola = (
+export const getDietaEspecialAguardandoVigenciaEscola = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/?sem_paginacao=true`
-    );
+  const url = `${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return fetchGet(
-    `${API_URL}/escola-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
-  );
 };
 
-export const getDietaEspecialInativasTemporariamenteEscola = (
+export const getDietaEspecialInativasTemporariamenteEscola = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/?sem_paginacao=true`
-    );
+  const url = `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return fetchGet(
-    `${API_URL}/escola-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
-  );
 };
 
-export const getDietaEspecialInativasEscola = (uuid, sem_paginacao = false) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/?sem_paginacao=true`
-    );
+export const getDietaEspecialInativasEscola = async (uuid, params) => {
+  const url = `${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return fetchGet(`${API_URL}/escola-solicitacoes/inativas-dieta/${uuid}/`);
 };
 
 // DRE
