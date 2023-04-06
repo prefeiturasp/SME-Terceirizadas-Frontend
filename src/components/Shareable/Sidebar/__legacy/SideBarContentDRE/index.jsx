@@ -176,22 +176,6 @@ export class SidebarContentDRE extends Component {
             <i className="fas fa-cog" />
             <span>Configurações</span>
           </Link>
-          <div
-            id="collapseConfig"
-            className={`collapse`}
-            aria-labelledby="headingConfig"
-            data-parent="#accordionSidebar"
-          >
-            <div className="bg-white py-2 collapse-inner rounded">
-              <NavLink
-                activeClassName="active"
-                className="collapse-item"
-                to="/configuracoes/permissoes"
-              >
-                Permissões
-              </NavLink>
-            </div>
-          </div>
         </li>
       )
     ];
