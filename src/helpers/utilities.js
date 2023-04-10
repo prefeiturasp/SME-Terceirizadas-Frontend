@@ -397,10 +397,6 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
-export const usuarioEhDiretorEscola = () => {
-  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
-};
-
 export const usuarioEhAdmQualquerEmpresa = () => {
   return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
     localStorage.getItem("perfil")
@@ -409,6 +405,10 @@ export const usuarioEhAdmQualquerEmpresa = () => {
 
 export const usuarioEhQualquerUsuarioEmpresa = () => {
   return [PERFIL.USUARIO_EMPRESA].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDiretorUE = () => {
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEscolaEhGestaoMistaParceira = () => {
