@@ -29,6 +29,7 @@ import {
 import { meusDados } from "services/perfil.service";
 import "./styles.scss";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import HTTP_STATUS from "http-status-codes";
 
 const BuscaDietasForm = ({
   setCarregando,
@@ -96,7 +97,7 @@ const BuscaDietasForm = ({
   const getUnidadesEducacionais = async values => {
     let data = { lotes: values };
     const response = await getUnidadesEducacionaisTercTotal(data);
-    if (response.status === 200) {
+    if (response.status === HTTP_STATUS.OK) {
       const unidades = response.data;
       const unidadesOpcoes = unidades.map(unidade => ({
         label: unidade.codigo_eol_escola,
