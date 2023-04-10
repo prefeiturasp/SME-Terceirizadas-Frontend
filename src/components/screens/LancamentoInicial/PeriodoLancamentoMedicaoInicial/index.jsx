@@ -993,6 +993,7 @@ export default () => {
     let qtdCamposComErro = 0;
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       if (
+        !ehGrupoETECUrlParam &&
         !(key.includes("observacoes") || key.includes("frequencia")) &&
         Number(value) >
           Number(
@@ -1030,9 +1031,10 @@ export default () => {
         valor: ["<p></p>\n", ""].includes(v[1]) ? 0 : v[1],
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
-        tipo_alimentacao: !ehGrupoSolicitacoesDeAlimentacaoUrlParam
-          ? tipoAlimentacao.uuid
-          : ""
+        tipo_alimentacao:
+          !ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam
+            ? tipoAlimentacao.uuid
+            : ""
       });
     });
 
@@ -1048,7 +1050,10 @@ export default () => {
     if (values["periodo_escolar"].includes(" - ")) {
       payload["grupo"] = values["periodo_escolar"].split(" - ")[0];
       payload["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
-    } else if (values["periodo_escolar"].includes("Solicitações")) {
+    } else if (
+      values["periodo_escolar"].includes("Solicitações") ||
+      values["periodo_escolar"] === "ETEC"
+    ) {
       payload["grupo"] = values["periodo_escolar"];
       delete values["periodo_escolar"];
     } else {
