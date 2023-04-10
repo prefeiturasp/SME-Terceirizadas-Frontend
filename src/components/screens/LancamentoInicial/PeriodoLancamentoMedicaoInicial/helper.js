@@ -9,6 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -567,6 +568,78 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
   );
 
   return linhasTabelaSolicitacoesAlimentacao;
+};
+
+export const formatarLinhasTabelaEtecAlimentacao = () => {
+  const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
+  const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec.map(
+    alimentacao => {
+      return {
+        nome: alimentacao,
+        name: alimentacao
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replaceAll(/ /g, "_"),
+        uuid: null
+      };
+    }
+  );
+
+  const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+    ali => ali.nome === "Refeição"
+  );
+  if (indexRefeicaoEtec !== -1) {
+    tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
+      "Refeição 1ª Oferta";
+    tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
+      nome: "Repet. Refeição",
+      name: "repeticao_refeicao",
+      uuid: null
+    });
+  }
+
+  const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+    ali => ali.nome === "Sobremesa"
+  );
+  if (indexSobremesaEtec !== -1) {
+    tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
+      "Sobremesa 1ª Ofe.";
+    tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
+      nome: "Repet. Sobremesa",
+      name: "repeticao_sobremesa",
+      uuid: null
+    });
+  }
+
+  const indexLancheEmergencialEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+    ali => ali.nome === "Lanche Emergencial"
+  );
+  if (indexLancheEmergencialEtec !== -1) {
+    tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
+      "Lanche Emergenc.";
+  }
+
+  tiposAlimentacaoEtecFormatadas.unshift(
+    {
+      nome: "Número de Alunos",
+      name: "numero_de_alunos",
+      uuid: null
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null
+    }
+  );
+
+  tiposAlimentacaoEtecFormatadas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null
+  });
+
+  return tiposAlimentacaoEtecFormatadas;
 };
 
 export const validacaoSemana = (dia, semanaSelecionada) => {
