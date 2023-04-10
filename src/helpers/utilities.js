@@ -851,6 +851,7 @@ export const exibirGA = () => {
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
+    "GUAIANASES",
     "SAO MATEUS",
     "SAO MIGUEL"
   ];

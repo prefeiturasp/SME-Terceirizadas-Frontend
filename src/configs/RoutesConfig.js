@@ -125,11 +125,11 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
-  usuarioEhDiretorUE,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDilog,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
+  usuarioEhDiretorUE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1493,7 +1493,10 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
