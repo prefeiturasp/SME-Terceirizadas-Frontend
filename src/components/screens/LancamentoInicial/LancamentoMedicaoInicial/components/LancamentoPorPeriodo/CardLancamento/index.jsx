@@ -19,27 +19,28 @@ export default ({
   tipos_alimentacao,
   periodoSelecionado,
   solicitacaoMedicaoInicial,
-  ehGrupoSolicitacoesDeAlimentacao = false
+  ehGrupoSolicitacoesDeAlimentacao = false,
+  ehGrupoETEC = false
 }) => {
   const history = useHistory();
   let alimentacoesFormatadas = [];
-  if (!ehGrupoSolicitacoesDeAlimentacao) {
-    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>0</b>
-        </span>
-        <span className="ml-1">- {alimentacao.nome}</span>
-        <br />
-      </div>
-    ));
-  } else {
+  if (ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC) {
     alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
           <b>0</b>
         </span>
         <span className="ml-1">- {item}</span>
+        <br />
+      </div>
+    ));
+  } else {
+    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
+      <div key={key} className="mb-2">
+        <span style={{ color: cor }}>
+          <b>0</b>
+        </span>
+        <span className="ml-1">- {alimentacao.nome}</span>
         <br />
       </div>
     ));
@@ -60,7 +61,7 @@ export default ({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
       search: `uuid=${
         solicitacaoMedicaoInicial.uuid
-      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}`,
+      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}`,
       state: {
         periodo: textoCabecalho,
         grupo,
@@ -81,7 +82,9 @@ export default ({
           <div className="row">
             <div className="col-10 pl-0 mb-2 periodo-cabecalho">
               {grupo &&
-                `${grupo} ${ehGrupoSolicitacoesDeAlimentacao ? "" : " - "} `}
+                `${grupo} ${
+                  ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
+                } `}
               {textoCabecalho}
             </div>
           </div>

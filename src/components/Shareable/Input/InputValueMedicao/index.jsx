@@ -39,7 +39,10 @@ export const InputText = props => {
     exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
     exibeTooltipKitLancheSolAlimentacoes,
     exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
-    exibeTooltipLancheEmergencialSolAlimentacoes
+    exibeTooltipLancheEmergencialSolAlimentacoes,
+    exibeTooltipFrequenciaZeroTabelaEtec,
+    exibeTooltipLancheEmergTabelaEtec,
+    ehGrupoETECUrlParam
   } = props;
 
   let msgTooltip = "";
@@ -57,13 +60,20 @@ export const InputText = props => {
   };
 
   const validacaoLancheRefeicaoSobremesa1Oferta = () => {
-    if (
+    let validacao =
       validacaoMeta() &&
       (input.name.includes("refeicao") ||
         input.name.includes("sobremesa") ||
-        input.name.includes("lanche")) &&
-      !input.name.includes("repeticao")
-    ) {
+        input.name.includes("lanche"));
+    if (!ehGrupoETECUrlParam) {
+      validacao =
+        validacaoMeta() &&
+        (input.name.includes("refeicao") ||
+          input.name.includes("sobremesa") ||
+          input.name.includes("lanche")) &&
+        !input.name.includes("repeticao");
+    }
+    if (validacao) {
       msgTooltip = meta.error;
       return true;
     }
@@ -200,6 +210,24 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipFrequenciaZeroTabelaEtec && (
+        <Tooltip
+          title={
+            "Nenhuma frequência apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergTabelaEtec && (
+        <Tooltip
+          title={
+            "Foi solicitada inclusão de Lanche Emergencial no período. Justifique o apontamento nas Observações."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {(validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()) && (
         <Tooltip title={msgTooltip}>
           <i className="fas fa-info icone-info-error" />
@@ -233,7 +261,9 @@ export const InputText = props => {
             exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipKitLancheSolAlimentacoes ||
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
-            exibeTooltipLancheEmergencialSolAlimentacoes)
+            exibeTooltipLancheEmergencialSolAlimentacoes ||
+            exibeTooltipFrequenciaZeroTabelaEtec ||
+            exibeTooltipLancheEmergTabelaEtec)
             ? "border-warning"
             : ""
         }`}

@@ -1477,7 +1477,8 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1485,7 +1486,8 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
