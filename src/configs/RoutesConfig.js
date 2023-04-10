@@ -115,7 +115,6 @@ import {
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
   usuarioEhCoordenadorCODAE,
-  usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
@@ -789,7 +788,7 @@ const routesConfig = [
     }`,
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
-    tipoUsuario: usuarioEhDiretorEscola()
+    tipoUsuario: usuarioEhDiretorUE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,

@@ -16,7 +16,6 @@ import {
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhDiretorEscola,
   usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCoordenadorGpCODAE,
@@ -26,7 +25,8 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhDiretorUE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
@@ -97,7 +97,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </SubMenu>
       )}
 
-      {usuarioEhDiretorEscola() && (
+      {usuarioEhDiretorUE() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}

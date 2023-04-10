@@ -38,6 +38,7 @@ import {
   CONFERENCIA_DOS_LANCAMENTOS,
   MEDICAO_INICIAL
 } from "configs/constants";
+import { required } from "helpers/fieldValidators";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -210,6 +211,7 @@ export const AcompanhamentoDeLancamentos = () => {
       "diretoria_regional" || undefined
     );
     form.reset();
+    setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
   };
@@ -324,6 +326,8 @@ export const AcompanhamentoDeLancamentos = () => {
                                 }))
                               )}
                               naoDesabilitarPrimeiraOpcao
+                              validate={required}
+                              required
                             />
                           </div>
                           <div className="col-4">
