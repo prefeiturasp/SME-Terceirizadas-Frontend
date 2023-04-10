@@ -943,3 +943,7 @@ export const fimDoCalendario = () => {
     ? new Date(new Date().getFullYear() + 1, 11, 31)
     : new Date(new Date().getFullYear(), 11, 31);
 };
+
+export const tiposAlimentacaoETEC = () => {
+  return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
+};

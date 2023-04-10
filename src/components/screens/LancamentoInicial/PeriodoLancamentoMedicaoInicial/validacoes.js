@@ -256,6 +256,48 @@ export const camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao = (
   return erro;
 };
 
+export const camposLancheEmergTabelaEtec = (
+  formValuesAtualizados,
+  column,
+  categoria,
+  inclusoesEtecAutorizadas,
+  ehGrupoETECUrlParam
+) => {
+  let erro = false;
+  const refeicaoValue =
+    formValuesAtualizados[
+      `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const repeticaoRefeicaoValue =
+    formValuesAtualizados[
+      `repeticao_refeicao__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const sobremesaValue =
+    formValuesAtualizados[
+      `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const repeticaoSobremesaValue =
+    formValuesAtualizados[
+      `repeticao_sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const existeRefeicaoOuSobremesaValue =
+    (refeicaoValue && refeicaoValue > 0) ||
+    (repeticaoRefeicaoValue && repeticaoRefeicaoValue > 0) ||
+    (sobremesaValue && sobremesaValue > 0) ||
+    (repeticaoSobremesaValue && repeticaoSobremesaValue > 0);
+  if (
+    ehGrupoETECUrlParam &&
+    categoria.nome === "ALIMENTAÇÃO" &&
+    inclusoesEtecAutorizadas
+      .filter(inc => inc.dia === column.dia)[0]
+      .alimentacoes.includes("lanche_emergencial") &&
+    existeRefeicaoOuSobremesaValue
+  ) {
+    erro = true;
+  }
+  return erro;
+};
+
 export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   formValuesAtualizados,
   dia,
@@ -268,7 +310,9 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   column,
   suspensoesAutorizadas,
   alteracoesAlimentacaoAutorizadas,
-  kitLanchesAutorizadas
+  kitLanchesAutorizadas,
+  inclusoesEtecAutorizadas,
+  ehGrupoETECUrlParam = false
 ) => {
   return (
     botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
@@ -331,6 +375,13 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
       column,
       categoria,
       alteracoesAlimentacaoAutorizadas
+    ) ||
+    camposLancheEmergTabelaEtec(
+      formValuesAtualizados,
+      column,
+      categoria,
+      inclusoesEtecAutorizadas,
+      ehGrupoETECUrlParam
     )
   );
 };
@@ -681,6 +732,56 @@ export const validacoesTabelasDietas = (
   return undefined;
 };
 
+export const validacoesTabelaEtecAlimentacao = (
+  rowName,
+  dia,
+  categoria,
+  value,
+  allValues,
+  validacaoDiaLetivo,
+  validacaoSemana
+) => {
+  const maxNumeroAlunos = Number(
+    allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]
+  );
+  const maxFrequencia = Number(
+    allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
+  );
+  const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
+  if (
+    rowName === "frequencia" &&
+    !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
+    validacaoDiaLetivo(dia) &&
+    !validacaoSemana(dia)
+  ) {
+    return "Há solicitação de alimentação autorizada para esta data. Insira o número de frequentes.";
+  }
+  if (
+    value &&
+    Number(value) > maxNumeroAlunos &&
+    inputName.includes("frequencia")
+  ) {
+    return "O número de frequentes não pode ser maior que o número de autorizados.";
+  } else if (
+    value &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    ((maxFrequencia !== 0 && !maxFrequencia) ||
+      [NaN].includes(maxFrequencia)) &&
+    !inputName.includes("numero_de_alunos") &&
+    !inputName.includes("frequencia")
+  ) {
+    return "Frequência acima inválida ou não preenchida.";
+  } else if (
+    value &&
+    Number(value) > maxFrequencia &&
+    !inputName.includes("numero_de_alunos") &&
+    !inputName.includes("repeticao")
+  ) {
+    return "A quantidade não pode ser maior do que a quantidade inserida em Frequência.";
+  }
+  return undefined;
+};
+
 export const exibirTooltipSemAlimentacaoPreAutorizadaInformada = (
   formValuesAtualizados,
   row,
@@ -897,6 +998,7 @@ export const exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizada
       row.name.includes("lanche_emergencial")) ||
     (!value &&
       row.name.includes("lanche_emergencial") &&
+      alteracoesAlimentacaoAutorizadas &&
       alteracoesAlimentacaoAutorizadas.filter(
         alteracao => alteracao.dia === column.dia
       ).length > 0)
@@ -923,5 +1025,54 @@ export const exibirTooltipLancheEmergencialSolAlimentacoes = (
       alteracao => alteracao.dia === column.dia
     ).length === 0 &&
     row.name.includes("lanche_emergencial")
+  );
+};
+
+export const exibirTooltipFrequenciaZeroTabelaEtec = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  ehGrupoETECUrlParam
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    ehGrupoETECUrlParam &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    Number(value) === 0 &&
+    row.name === "frequencia"
+  );
+};
+
+export const exibirTooltipLancheEmergTabelaEtec = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria,
+  ehGrupoETECUrlParam,
+  inclusoesEtecAutorizadas
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    Number(value) > 0 &&
+    ehGrupoETECUrlParam &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    (row.name.includes("refeicao") ||
+      row.name.includes("repeticao_refeicao") ||
+      row.name.includes("sobremesa") ||
+      row.name.includes("repeticao_sobremesa")) &&
+    inclusoesEtecAutorizadas
+      .filter(inc => inc.dia === column.dia)[0]
+      .alimentacoes.includes("lanche_emergencial")
   );
 };
