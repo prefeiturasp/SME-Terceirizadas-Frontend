@@ -13,7 +13,7 @@ import {
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import { CORES } from "./helpers";
-import { PERFIL } from "constants/shared";
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export default ({
@@ -261,11 +261,7 @@ export default ({
                   texto="Finalizar"
                   style={BUTTON_STYLE.GREEN}
                   className="float-right"
-                  disabled={
-                    ![PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
-                      localStorage.getItem("perfil")
-                    )
-                  }
+                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
                   onClick={() => setShowModalFinalizarMedicao(true)}
                 />
               ) : (
