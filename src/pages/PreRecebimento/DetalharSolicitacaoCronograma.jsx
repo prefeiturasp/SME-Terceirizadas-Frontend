@@ -11,13 +11,17 @@ import AlterarCronograma from "components/screens/PreRecebimento/AlterarCronogra
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}`,
-  titulo: "Analisar Solicitação de Alteração"
+  titulo: "Detalhar Solicitação Alteração de Cronograma de Entrega"
 };
 
 const anteriores = [
   {
     href: `/`,
     titulo: "Pré-Recebimento"
+  },
+  {
+    href: `/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`,
+    titulo: "Alteração do Cronograma"
   }
 ];
 

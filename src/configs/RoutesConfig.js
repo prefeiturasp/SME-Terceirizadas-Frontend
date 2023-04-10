@@ -81,7 +81,6 @@ import {
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
-  permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosAlteracaoDeCardapioCEMEI,
@@ -768,12 +767,6 @@ const routesConfig = [
     component: MensagemPage,
     exact: false,
     tipoUsuario: usuarioEhQualquerCODAE()
-  },
-  {
-    path: `/configuracoes/permissoes`,
-    component: permissoes(),
-    exact: false,
-    tipoUsuario: constants.QUALQUER_USUARIO
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
@@ -1662,7 +1655,10 @@ const routesConfig = [
     }`,
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
@@ -1677,10 +1673,15 @@ const routesConfig = [
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_CRONOGRAMA_DILOG}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.DETALHAR_ALTERACAO_CRONOGRAMA
+    }`,
     component: AnaliseDilogCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     /*
