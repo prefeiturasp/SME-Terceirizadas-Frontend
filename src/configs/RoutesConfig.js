@@ -126,7 +126,6 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
-  usuarioEhDiretorUE,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDilog,
@@ -1494,7 +1493,10 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
