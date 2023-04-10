@@ -411,12 +411,6 @@ export const usuarioEhQualquerUsuarioEmpresa = () => {
   return [PERFIL.USUARIO_EMPRESA].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDiretorUE = () => {
-  return [PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
-    localStorage.getItem("perfil")
-  );
-};
-
 export const usuarioEscolaEhGestaoMistaParceira = () => {
   return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
     localStorage.getItem("tipo_gestao")
