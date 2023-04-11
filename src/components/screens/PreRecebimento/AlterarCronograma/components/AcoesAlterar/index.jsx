@@ -77,7 +77,7 @@ export default ({
       {usuarioEhDinutreDiretoria() &&
         solicitacaoAlteracaoCronograma.status === "Cronograma ciente" && (
           <Botao
-            texto="Enviar DINUTRE"
+            texto="Enviar DILOG"
             type={BUTTON_TYPE.BUTTON}
             style={BUTTON_STYLE.GREEN}
             className="float-right ml-3"

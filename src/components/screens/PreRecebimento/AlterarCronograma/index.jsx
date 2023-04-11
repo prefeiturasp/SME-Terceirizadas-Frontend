@@ -341,34 +341,34 @@ export default ({ analiseSolicitacao }) => {
                           disabled={true}
                         />
                       </div>
+                      <hr />
+                      <p className="head-green">Análise da DINUTRE</p>
+                      <Radio.Group
+                        size="large"
+                        onChange={onChangeCampos}
+                        value={aprovacaoDinutre}
+                      >
+                        <Radio className="radio-entrega-sim" value={true}>
+                          Analise Aprovada
+                        </Radio>
+                        <Radio className="radio-entrega-nao" value={false}>
+                          Analise Reprovada
+                        </Radio>
+                      </Radio.Group>
+                      {aprovacaoDinutre === false && (
+                        <div className="mt-4">
+                          <label className="label font-weight-normal">
+                            <span>* </span>Justificativa
+                          </label>
+                          <Field
+                            component={TextArea}
+                            name="justificativa_dinutre"
+                            placeholder="Escreva as alterações necessárias"
+                            className="input-busca-produto"
+                          />
+                        </div>
+                      )}
                     </>
-                  )}
-                  <hr />
-                  <p className="head-green">Análise da DINUTRE</p>
-                  <Radio.Group
-                    size="large"
-                    onChange={onChangeCampos}
-                    value={aprovacaoDinutre}
-                  >
-                    <Radio className="radio-entrega-sim" value={true}>
-                      Analise Aprovada
-                    </Radio>
-                    <Radio className="radio-entrega-nao" value={false}>
-                      Analise Reprovada
-                    </Radio>
-                  </Radio.Group>
-                  {aprovacaoDinutre === false && (
-                    <div className="mt-4">
-                      <label className="label font-weight-normal">
-                        <span>* </span>Justificativa
-                      </label>
-                      <Field
-                        component={TextArea}
-                        name="justificativa_dinutre"
-                        placeholder="Escreva as alterações necessárias"
-                        className="input-busca-produto"
-                      />
-                    </div>
                   )}
                   <div className="mt-4 mb-4">
                     <AcoesAlterar
