@@ -1,17 +1,64 @@
-.label {
-  span {
-    color: red;
+@import "../../../../styles/variables.scss";
+
+.alterar-cronograma {
+  .label {
+    span {
+      color: red;
+    }
   }
-}
 
-textarea {
-  min-height: 300px !important;
-}
+  textarea {
+    min-height: 300px !important;
+  }
 
-.vermelho {
-  color: #b40c02;
-}
+  .vermelho {
+    color: #b40c02;
+  }
 
-.verde {
-  color: #0c6b45;
+  .verde {
+    color: #0c6b45;
+  }
+
+  .radio-entrega-sim {
+    text-align: center;
+    padding: 5px 25px;
+    border: 1px solid green !important;
+    border-radius: 4px;
+
+    .ant-radio-wrapper:hover .ant-radio,
+    .ant-radio:hover .ant-radio-inner,
+    .ant-radio-input:focus + .ant-radio-inner {
+      border-color: $green;
+    }
+    .ant-radio-inner::after {
+      background-color: $green;
+    }
+    .ant-radio-checked::after {
+      border: 1px solid $green;
+    }
+    .ant-radio-checked .ant-radio-inner {
+      border-color: $green;
+    }
+  }
+
+  .radio-entrega-nao {
+    padding: 5px 25px;
+    border: 1px solid red !important;
+    border-radius: 4px;
+    margin-left: 10px;
+    .ant-radio-wrapper:hover .ant-radio,
+    .ant-radio:hover .ant-radio-inner,
+    .ant-radio-input:focus + .ant-radio-inner {
+      border-color: $red;
+    }
+    .ant-radio-inner::after {
+      background-color: $red;
+    }
+    .ant-radio-checked::after {
+      border: 1px solid $red;
+    }
+    .ant-radio-checked .ant-radio-inner {
+      border-color: $red;
+    }
+  }
 }

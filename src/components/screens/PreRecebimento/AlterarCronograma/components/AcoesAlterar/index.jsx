@@ -8,6 +8,7 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   usuarioEhCronograma,
+  usuarioEhDinutreDiretoria,
   usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 import ModalEnviarSolicitacao from "../Modals/ModalEnviarSolicitacao";
@@ -17,11 +18,13 @@ import {
   PRE_RECEBIMENTO,
   SOLICITACAO_ALTERACAO_CRONOGRAMA
 } from "configs/constants";
+import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
 
 export default ({
   handleSubmit,
   podeSubmeter,
-  solicitacaoAlteracaoCronograma
+  solicitacaoAlteracaoCronograma,
+  disabledDinutre
 }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -70,6 +73,18 @@ export default ({
             onClick={() => handleShow()}
           />
         )}
+
+      {usuarioEhDinutreDiretoria() &&
+        solicitacaoAlteracaoCronograma.status === "Cronograma ciente" && (
+          <Botao
+            texto="Enviar DINUTRE"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            className="float-right ml-3"
+            onClick={() => handleShow()}
+            disabled={disabledDinutre}
+          />
+        )}
       <Botao
         texto="Voltar"
         type={BUTTON_TYPE.BUTTON}
@@ -111,6 +126,14 @@ export default ({
               });
             setLoading(false);
           }}
+        />
+      )}
+      {usuarioEhDinutreDiretoria() && (
+        <ModalAnaliseDinutre
+          show={show}
+          handleClose={handleClose}
+          loading={loading}
+          handleSim={handleSim}
         />
       )}
     </>
