@@ -264,6 +264,9 @@ export const camposLancheEmergTabelaEtec = (
   ehGrupoETECUrlParam
 ) => {
   let erro = false;
+  const inclusaoEtec = inclusoesEtecAutorizadas.filter(
+    inc => inc.dia === column.dia
+  );
   const refeicaoValue =
     formValuesAtualizados[
       `refeicao__dia_${column.dia}__categoria_${categoria.id}`
@@ -288,9 +291,8 @@ export const camposLancheEmergTabelaEtec = (
   if (
     ehGrupoETECUrlParam &&
     categoria.nome === "ALIMENTAÇÃO" &&
-    inclusoesEtecAutorizadas
-      .filter(inc => inc.dia === column.dia)[0]
-      .alimentacoes.includes("lanche_emergencial") &&
+    inclusaoEtec.length &&
+    inclusaoEtec[0].alimentacoes.includes("lanche_emergencial") &&
     existeRefeicaoOuSobremesaValue
   ) {
     erro = true;
@@ -751,6 +753,7 @@ export const validacoesTabelaEtecAlimentacao = (
   if (
     rowName === "frequencia" &&
     !allValues[`frequencia__dia_${dia}__categoria_${categoria}`] &&
+    allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`] &&
     validacaoDiaLetivo(dia) &&
     !validacaoSemana(dia)
   ) {
