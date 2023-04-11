@@ -53,7 +53,6 @@ export const DashboardDietaEspecial = ({ ...props }) => {
 
   const LOADING =
     !instituicao ||
-    !aguardandoVigencia ||
     !aguardandoAutorizacao ||
     !autorizadas ||
     !autorizadasTemporariamente ||
@@ -113,7 +112,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseInativas.status === HTTP_STATUS.OK) {
-      setInativas(responseInativas.data.results);
+      setInativas(ajustarFormatoLog(responseInativas.data.results));
     } else {
       setErro("Erro ao carregar solicitações inativas.");
     }
@@ -123,7 +122,9 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseInativasTemporariamente.status === HTTP_STATUS.OK) {
-      setInativasTemporariamente(responseInativasTemporariamente.data.results);
+      setInativasTemporariamente(
+        ajustarFormatoLog(responseInativasTemporariamente.data.results)
+      );
     } else {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
     }
@@ -134,30 +135,33 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     );
     if (responseAutorizadasTemporariamente.status === HTTP_STATUS.OK) {
       setAutorizadasTemporariamente(
-        responseAutorizadasTemporariamente.data.results
+        ajustarFormatoLog(responseAutorizadasTemporariamente.data.results)
       );
     } else {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
     }
 
     if (
-      !usuarioEhEscolaTerceirizada() &&
-      !usuarioEhEscolaTerceirizadaDiretor() &&
-      !usuarioEhEmpresaTerceirizada()
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhEmpresaTerceirizada()
     ) {
-      setAguardandoVigencia([]);
-    } else {
       const responseAguardandoVigencia = await getDietaEspecialAguardandoVigencia(
         instituicao.uuid,
         params
       );
       if (responseAguardandoVigencia.status === HTTP_STATUS.OK) {
-        setAguardandoVigencia(responseAguardandoVigencia.data.results);
+        setAguardandoVigencia(
+          ajustarFormatoLog(responseAguardandoVigencia.data.results)
+        );
       } else {
         setErro("Erro ao carregar solicitações inativas temporariamente.");
       }
+    } else {
+      setAguardandoVigencia([]);
     }
   };
+
   const getMeusLotesAsync = async () => {
     if (!usuarioEhEmpresaTerceirizada()) {
       setListaLotes([]);
@@ -187,6 +191,8 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     }
   }, [meusDados]);
 
+  const onPesquisaChanged = () => {};
+
   const contadorDietas = (title, dietas) => {
     if (!usuarioEhCoordenadorNutriCODAE()) return title;
     return `${title}${dietas && " (" + dietas.length + ")"}`;
@@ -206,7 +212,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
               <CardBody
                 titulo={"Acompanhamento de solicitações dieta especial"}
                 dataAtual={dataAtual()}
-                onChange={() => {}}
+                onChange={values => onPesquisaChanged(values)}
                 listaLotes={listaLotes}
                 listaStatus={[
                   { nome: "Conferência Status", uuid: "" },
@@ -291,9 +297,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
                       href={`/solicitacoes-dieta-especial/solicitacoes-inativas-temporariamente`}
                     />
                   </div>
-                  {(usuarioEhEscolaTerceirizadaDiretor() ||
-                    usuarioEhEscolaTerceirizada() ||
-                    usuarioEhEmpresaTerceirizada()) && (
+                  {aguardandoVigencia && aguardandoVigencia.length > 0 && (
                     <div className="col-6">
                       <CardStatusDeSolicitacao
                         cardTitle={"Aguardando início da vigência"}
