@@ -397,10 +397,6 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
-export const usuarioEhDiretorEscola = () => {
-  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
-};
-
 export const usuarioEhAdmQualquerEmpresa = () => {
   return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
     localStorage.getItem("perfil")
@@ -409,6 +405,10 @@ export const usuarioEhAdmQualquerEmpresa = () => {
 
 export const usuarioEhQualquerUsuarioEmpresa = () => {
   return [PERFIL.USUARIO_EMPRESA].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDiretorUE = () => {
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEscolaEhGestaoMistaParceira = () => {
@@ -851,6 +851,7 @@ export const exibirGA = () => {
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
+    "GUAIANASES",
     "SAO MATEUS",
     "SAO MIGUEL"
   ];
@@ -941,4 +942,8 @@ export const fimDoCalendario = () => {
   return new Date().getMonth() === JS_DATE_DEZEMBRO
     ? new Date(new Date().getFullYear() + 1, 11, 31)
     : new Date(new Date().getFullYear(), 11, 31);
+};
+
+export const tiposAlimentacaoETEC = () => {
+  return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
 };

@@ -32,7 +32,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalErro from "./components/ModalErro";
-import { deepCopy, deepEqual } from "helpers/utilities";
+import { deepCopy, deepEqual, tiposAlimentacaoETEC } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
@@ -47,13 +47,16 @@ import {
   exibirTooltipKitLancheSolAlimentacoes,
   exibirTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
   exibirTooltipLancheEmergencialSolAlimentacoes,
+  exibirTooltipFrequenciaZeroTabelaEtec,
+  exibirTooltipLancheEmergTabelaEtec,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario,
   campoComSuspensaoAutorizadaESemObservacao,
   campoLancheComLPRAutorizadaESemObservacao,
   campoRefeicaoComRPLAutorizadaESemObservacao,
-  exibirTooltipSemAlimentacaoPreAutorizadaInformada
+  exibirTooltipSemAlimentacaoPreAutorizadaInformada,
+  validacoesTabelaEtecAlimentacao
 } from "./validacoes";
 import {
   desabilitarField,
@@ -61,6 +64,7 @@ import {
   formatarPayloadPeriodoLancamento,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
+  getSolicitacoesInclusoesEtecAutorizadasAsync,
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
   valorZeroFrequencia
@@ -102,8 +106,14 @@ export default () => {
     tabelaSolicitacoesAlimentacaoRows,
     setTabelaSolicitacoesAlimentacaoRows
   ] = useState([]);
+  const [tabelaEtecsAlimentacaoRows, setTabelaEtecAlimentacaoRows] = useState(
+    []
+  );
   const [categoriasDeMedicao, setCategoriasDeMedicao] = useState([]);
   const [inclusoesAutorizadas, setInclusoesAutorizadas] = useState(null);
+  const [inclusoesEtecAutorizadas, setInclusoesEtecAutorizadas] = useState(
+    null
+  );
   const [suspensoesAutorizadas, setSuspensoesAutorizadas] = useState(null);
   const [
     alteracoesAlimentacaoAutorizadas,
@@ -113,6 +123,10 @@ export default () => {
   const [
     dadosValoresInclusoesAutorizadasState,
     setDadosValoresInclusoesAutorizadasState
+  ] = useState(null);
+  const [
+    dadosValoresInclusoesEtecAutorizadasState,
+    setDadosValoresInclusoesEtecAutorizadasState
   ] = useState(null);
   const [valoresPeriodosLancamentos, setValoresPeriodosLancamentos] = useState(
     []
@@ -153,6 +167,8 @@ export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const ehGrupoSolicitacoesDeAlimentacaoUrlParam =
     urlParams.get("ehGrupoSolicitacoesDeAlimentacao") === "true" ? true : false;
+  const ehGrupoETECUrlParam =
+    urlParams.get("ehGrupoETEC") === "true" ? true : false;
 
   const getListaDiasSobremesaDoceAsync = async escola_uuid => {
     const params = {
@@ -355,11 +371,88 @@ export default () => {
 
       setTabelaSolicitacoesAlimentacaoRows(rowsSolicitacoesAlimentacao);
 
+      const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
+      const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
+      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec.map(
+        alimentacao => {
+          return {
+            nome: alimentacao,
+            name: alimentacao
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replaceAll(/ /g, "_"),
+            uuid: null
+          };
+        }
+      );
+
+      const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+        ali => ali.nome === "Refeição"
+      );
+      if (indexRefeicaoEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
+          "Refeição 1ª Oferta";
+        tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
+          nome: "Repet. Refeição",
+          name: "repeticao_refeicao",
+          uuid: null
+        });
+      }
+
+      const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+        ali => ali.nome === "Sobremesa"
+      );
+      if (indexSobremesaEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
+          "Sobremesa 1ª Ofe.";
+        tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
+          nome: "Repet. Sobremesa",
+          name: "repeticao_sobremesa",
+          uuid: null
+        });
+      }
+
+      const indexLancheEmergencialEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+        ali => ali.nome === "Lanche Emergencial"
+      );
+      if (indexLancheEmergencialEtec !== -1) {
+        tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
+          "Lanche Emergenc.";
+      }
+
+      tiposAlimentacaoEtecFormatadas.unshift(
+        {
+          nome: "Número de Alunos",
+          name: "numero_de_alunos",
+          uuid: null
+        },
+        {
+          nome: "Frequência",
+          name: "frequencia",
+          uuid: null
+        }
+      );
+
+      tiposAlimentacaoEtecFormatadas.push({
+        nome: "Observações",
+        name: "observacoes",
+        uuid: null
+      });
+
+      setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
+
       const response_categorias_medicao = await getCategoriasDeMedicao();
       if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
         setCategoriasDeMedicao(
           response_categorias_medicao.data.filter(categoria => {
             return categoria.nome.includes("SOLICITAÇÕES");
+          })
+        );
+      } else if (ehGrupoETECUrlParam) {
+        setCategoriasDeMedicao(
+          response_categorias_medicao.data.filter(categoria => {
+            return categoria.nome === "ALIMENTAÇÃO";
           })
         );
       } else {
@@ -374,7 +467,7 @@ export default () => {
         uuid_solicitacao_medicao: uuid,
         nome_grupo: location.state.grupo
       };
-      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
         params = {
           ...params,
           nome_periodo_escolar: periodo.periodo_escolar.nome
@@ -390,11 +483,12 @@ export default () => {
       let response_matriculados = [];
       let response_log_dietas_autorizadas = [];
       let response_inclusoes_autorizadas = [];
+      let response_inclusoes_etec_autorizadas = [];
       let response_kit_lanches_autorizadas = [];
       let response_suspensoes_autorizadas = [];
       let response_alteracoes_alimentacao_autorizadas = [];
 
-      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
+      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
         const params_matriculados = {
           escola_uuid: escola.uuid,
           mes: mes,
@@ -465,6 +559,15 @@ export default () => {
         );
       }
 
+      if (ehGrupoETECUrlParam) {
+        response_inclusoes_etec_autorizadas = await getSolicitacoesInclusoesEtecAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano
+        );
+        setInclusoesEtecAutorizadas(response_inclusoes_etec_autorizadas);
+      }
+
       const params_dias_calendario = {
         escola_uuid: escola.uuid,
         mes: mes,
@@ -487,7 +590,9 @@ export default () => {
         mesAnoSelecionado,
         rowsSolicitacoesAlimentacao,
         response_kit_lanches_autorizadas,
-        response_alteracoes_alimentacao_autorizadas
+        response_alteracoes_alimentacao_autorizadas,
+        response_inclusoes_etec_autorizadas,
+        tiposAlimentacaoEtecFormatadas
       );
       setLoading(false);
     };
@@ -508,13 +613,16 @@ export default () => {
     mesAno,
     rowsSolicitacoesAlimentacao,
     kitLanchesAutorizadas,
-    alteracoesAlimentacaoAutorizadas
+    alteracoesAlimentacaoAutorizadas,
+    inclusoesEtecAutorizadas,
+    tiposAlimentacaoEtecFormatadas
   ) => {
     let dadosValoresMedicoes = {};
     let dadosValoresMatriculados = {};
     let dadosValoresDietasAutorizadas = {};
     let dadosValoresKitLanchesAutorizadas = {};
     let dadosValoresAlteracoesAlimentacaoAutorizadas = {};
+    let dadosValoresEtecAlimentacaoAutorizadas = {};
     let dadosValoresForaDoMes = {};
     let periodoEscolar = "MANHA";
     if (location.state) {
@@ -536,6 +644,7 @@ export default () => {
       categoriasMedicao.forEach(categoria => {
         matriculados &&
           !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+          !ehGrupoETECUrlParam &&
           matriculados.forEach(obj => {
             dadosValoresMatriculados[
               `matriculados__dia_${obj.dia}__categoria_${categoria.id}`
@@ -564,6 +673,7 @@ export default () => {
 
         logQtdDietasAutorizadas &&
           !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+          !ehGrupoETECUrlParam &&
           logQtdDietasAutorizadas.forEach(log => {
             categoria.nome === "DIETA ESPECIAL - TIPO A" &&
               log.classificacao.toUpperCase() === "TIPO A" &&
@@ -596,6 +706,21 @@ export default () => {
                 }`
               ] = `${alteracao.numero_alunos}`);
           });
+
+        inclusoesEtecAutorizadas &&
+          ehGrupoETECUrlParam &&
+          inclusoesEtecAutorizadas.forEach(inclusao => {
+            categoria.nome === "ALIMENTAÇÃO" &&
+              (dadosValoresEtecAlimentacaoAutorizadas[
+                `numero_de_alunos__dia_${inclusao.dia}__categoria_${
+                  categoria.id
+                }`
+              ] = `${inclusao.numero_alunos}`);
+          });
+
+        setDadosValoresInclusoesEtecAutorizadasState(
+          dadosValoresEtecAlimentacaoAutorizadas
+        );
 
         tiposAlimentacaoFormatadas &&
           tiposAlimentacaoFormatadas.forEach(alimentacao => {
@@ -670,11 +795,14 @@ export default () => {
         }
 
         tiposAlimentacaoFormatadas &&
-          (rowsDietas || rowsSolicitacoesAlimentacao) &&
+          (rowsDietas ||
+            rowsSolicitacoesAlimentacao ||
+            tiposAlimentacaoEtecFormatadas) &&
           [
             tiposAlimentacaoFormatadas,
             rowsDietas,
-            rowsSolicitacoesAlimentacao
+            rowsSolicitacoesAlimentacao,
+            tiposAlimentacaoEtecFormatadas
           ].forEach(
             each =>
               each &&
@@ -726,6 +854,7 @@ export default () => {
       ...dadosValoresInclusoesAutorizadas,
       ...dadosValoresKitLanchesAutorizadas,
       ...dadosValoresAlteracoesAlimentacaoAutorizadas,
+      ...dadosValoresEtecAlimentacaoAutorizadas,
       ...dadosValoresMedicoes,
       ...dadosValoresMatriculados,
       ...dadosValoresDietasAutorizadas,
@@ -805,7 +934,9 @@ export default () => {
         mesAnoConsiderado,
         tabelaSolicitacoesAlimentacaoRows,
         kitLanchesAutorizadas,
-        alteracoesAlimentacaoAutorizadas
+        alteracoesAlimentacaoAutorizadas,
+        inclusoesEtecAutorizadas,
+        tabelaEtecsAlimentacaoRows
       );
     };
     semanaSelecionada && formatar();
@@ -862,6 +993,7 @@ export default () => {
     let qtdCamposComErro = 0;
     Object.entries(valuesMesmoDiaDaObservacao).forEach(([key, value]) => {
       if (
+        !ehGrupoETECUrlParam &&
         !(key.includes("observacoes") || key.includes("frequencia")) &&
         Number(value) >
           Number(
@@ -899,9 +1031,10 @@ export default () => {
         valor: ["<p></p>\n", ""].includes(v[1]) ? 0 : v[1],
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
-        tipo_alimentacao: !ehGrupoSolicitacoesDeAlimentacaoUrlParam
-          ? tipoAlimentacao.uuid
-          : ""
+        tipo_alimentacao:
+          !ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam
+            ? tipoAlimentacao.uuid
+            : ""
       });
     });
 
@@ -917,7 +1050,10 @@ export default () => {
     if (values["periodo_escolar"].includes(" - ")) {
       payload["grupo"] = values["periodo_escolar"].split(" - ")[0];
       payload["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
-    } else if (values["periodo_escolar"].includes("Solicitações")) {
+    } else if (
+      values["periodo_escolar"].includes("Solicitações") ||
+      values["periodo_escolar"] === "ETEC"
+    ) {
       payload["grupo"] = values["periodo_escolar"];
       delete values["periodo_escolar"];
     } else {
@@ -1002,7 +1138,8 @@ export default () => {
       tabelaDietaEnteralRows,
       dadosIniciaisFiltered,
       diasDaSemanaSelecionada,
-      ehGrupoSolicitacoesDeAlimentacaoUrlParam
+      ehGrupoSolicitacoesDeAlimentacaoUrlParam,
+      ehGrupoETECUrlParam
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -1051,7 +1188,9 @@ export default () => {
         mesAnoConsiderado,
         tabelaSolicitacoesAlimentacaoRows,
         kitLanchesAutorizadas,
-        alteracoesAlimentacaoAutorizadas
+        alteracoesAlimentacaoAutorizadas,
+        inclusoesEtecAutorizadas,
+        tabelaEtecsAlimentacaoRows
       );
     }
     setLoading(false);
@@ -1156,18 +1295,20 @@ export default () => {
     column,
     row
   ) => {
-    const ehZeroFrequencia = valorZeroFrequencia(
-      value,
-      rowName,
-      categoria,
-      dia,
-      form,
-      tabelaAlimentacaoRows,
-      tabelaDietaRows,
-      tabelaDietaEnteralRows,
-      dadosValoresInclusoesAutorizadasState,
-      validacaoDiaLetivo
-    );
+    const ehZeroFrequencia =
+      !ehGrupoETECUrlParam &&
+      valorZeroFrequencia(
+        value,
+        rowName,
+        categoria,
+        dia,
+        form,
+        tabelaAlimentacaoRows,
+        tabelaDietaRows,
+        tabelaDietaEnteralRows,
+        dadosValoresInclusoesAutorizadasState,
+        validacaoDiaLetivo
+      );
     if (deepEqual(values, dadosIniciais)) {
       setDisableBotaoSalvarLancamentos(true);
       desabilitaTooltip(values);
@@ -1309,7 +1450,17 @@ export default () => {
           )) &&
           !formValuesAtualizados[
             `observacoes__dia_${dia}__categoria_${categoria.id}`
-          ]))
+          ])) ||
+      (ehGrupoETECUrlParam &&
+        categoria.nome === "ALIMENTAÇÃO" &&
+        exibirTooltipLancheEmergTabelaEtec(
+          formValuesAtualizados,
+          row,
+          column,
+          categoria,
+          ehGrupoETECUrlParam,
+          inclusoesEtecAutorizadas
+        ))
     ) {
       setDisableBotaoSalvarLancamentos(true);
       setExibirTooltip(true);
@@ -1328,6 +1479,16 @@ export default () => {
   ) => (value, allValues) => {
     if (nomeCategoria.includes("SOLICITAÇÕES")) {
       return undefined;
+    } else if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
+      return validacoesTabelaEtecAlimentacao(
+        rowName,
+        dia,
+        idCategoria,
+        value,
+        allValues,
+        validacaoDiaLetivo,
+        validacaoSemana
+      );
     } else {
       return validacoesTabelaAlimentacao(
         rowName,
@@ -1631,6 +1792,8 @@ export default () => {
                                   })
                                 : (categoria.nome.includes("SOLICITAÇÕES")
                                     ? tabelaSolicitacoesAlimentacaoRows
+                                    : ehGrupoETECUrlParam
+                                    ? tabelaEtecsAlimentacaoRows
                                     : tabelaAlimentacaoRows
                                   ).map((row, index) => {
                                     return (
@@ -1681,7 +1844,8 @@ export default () => {
                                                         suspensoesAutorizadas,
                                                         alteracoesAlimentacaoAutorizadas,
                                                         kitLanchesAutorizadas,
-                                                        alteracoesAlimentacaoAutorizadas
+                                                        inclusoesEtecAutorizadas,
+                                                        ehGrupoETECUrlParam
                                                       )
                                                         ? BUTTON_STYLE.RED_OUTLINE
                                                         : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -1721,7 +1885,10 @@ export default () => {
                                                       mesAnoDefault,
                                                       dadosValoresInclusoesAutorizadasState,
                                                       validacaoDiaLetivo,
-                                                      validacaoSemana
+                                                      validacaoSemana,
+                                                      ehGrupoETECUrlParam,
+                                                      dadosValoresInclusoesEtecAutorizadasState,
+                                                      inclusoesEtecAutorizadas
                                                     )}
                                                     exibeTooltipDiaSobremesaDoce={
                                                       row.name ===
@@ -1837,6 +2004,24 @@ export default () => {
                                                       categoria,
                                                       alteracoesAlimentacaoAutorizadas
                                                     )}
+                                                    exibeTooltipFrequenciaZeroTabelaEtec={exibirTooltipFrequenciaZeroTabelaEtec(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      ehGrupoETECUrlParam
+                                                    )}
+                                                    exibeTooltipLancheEmergTabelaEtec={exibirTooltipLancheEmergTabelaEtec(
+                                                      formValuesAtualizados,
+                                                      row,
+                                                      column,
+                                                      categoria,
+                                                      ehGrupoETECUrlParam,
+                                                      inclusoesEtecAutorizadas
+                                                    )}
+                                                    ehGrupoETECUrlParam={
+                                                      ehGrupoETECUrlParam
+                                                    }
                                                     numeroDeInclusoesAutorizadas={
                                                       dadosValoresInclusoesAutorizadasState[
                                                         `${row.name}__dia_${

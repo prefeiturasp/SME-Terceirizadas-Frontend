@@ -840,11 +840,7 @@ class AlteracaoCardapio extends Component {
             opcoesSubstitutosLanche4h = opcoesSubstitutos.filter(
               ta => ta.nome === "Lanche 4h"
             );
-            if (
-              !escolaEhCei() &&
-              !escolaEhCEMEI() &&
-              periodo.nome === "NOITE"
-            ) {
+            if (!escolaEhCei() && !escolaEhCEMEI()) {
               opcoesSubstitutos = [
                 ...opcoesSubstitutosLanche,
                 ...opcoesSubstitutosLanche4h

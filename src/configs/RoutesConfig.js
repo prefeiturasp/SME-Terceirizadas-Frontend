@@ -115,7 +115,6 @@ import {
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
   usuarioEhCoordenadorCODAE,
-  usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
@@ -129,7 +128,8 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDilog,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
+  usuarioEhDiretorUE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -788,7 +788,7 @@ const routesConfig = [
     }`,
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
-    tipoUsuario: usuarioEhDiretorEscola()
+    tipoUsuario: usuarioEhDiretorUE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
@@ -1477,7 +1477,8 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1485,7 +1486,8 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
