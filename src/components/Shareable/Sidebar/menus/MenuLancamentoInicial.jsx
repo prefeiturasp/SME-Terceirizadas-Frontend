@@ -22,7 +22,8 @@ export default () => {
         icon="fas fa-pencil-alt"
         title={"Medição Inicial"}
       >
-        {usuarioEhEscolaTerceirizada() && (
+        {(usuarioEhEscolaTerceirizada() ||
+          usuarioEhEscolaTerceirizadaDiretor()) && (
           <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
             Lançamento Medição Inicial
           </LeafItem>
