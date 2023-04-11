@@ -22,9 +22,14 @@ import { usuarioEhNutricionistaSupervisao } from "helpers/utilities";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Field, reduxForm } from "redux-form";
-import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
+import {
+  getSolicitacoesRelatorioDietasEspeciais,
+  getUnidadesEducacionaisTercTotal
+} from "services/dietaEspecial.service";
 import { meusDados } from "services/perfil.service";
 import "./styles.scss";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import HTTP_STATUS from "http-status-codes";
 
 const BuscaDietasForm = ({
   setCarregando,
@@ -40,6 +45,8 @@ const BuscaDietasForm = ({
   setProtocolosSelecionados,
   diagnosticosSelecionados,
   setDiagnosticosSelecionados,
+  unidadesSelecionadas,
+  setUnidadesSelecionadas,
   terceirizadaUuid,
   setTerceirizadaUuid,
   nutriSupervisao,
@@ -66,6 +73,8 @@ const BuscaDietasForm = ({
   const [diagnosticoNoFiltro, setDiagnosticoNoFiltro] = useState([]);
   const [classificacoesInicio, setClassificacoesInicio] = useState([]);
   const [classificacoesNoFiltro, setClassificacoesNoFiltro] = useState([]);
+  const [ativaUnidadeEducaionais, setAtivaUnidadeEducaionais] = useState(true);
+  const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
 
   const getMeusDados = async () => {
     setCarregando(true);
@@ -85,8 +94,25 @@ const BuscaDietasForm = ({
     }
   };
 
+  const getUnidadesEducacionais = async values => {
+    let data = { lotes: values };
+    const response = await getUnidadesEducacionaisTercTotal(data);
+    if (response.status === HTTP_STATUS.OK) {
+      const unidades = response.data;
+      const unidadesOpcoes = unidades.map(unidade => ({
+        label: unidade.codigo_eol_escola,
+        value: unidade.codigo_eol
+      }));
+      setUnidadesEducacionais(unidadesOpcoes);
+      setAtivaUnidadeEducaionais(false);
+    } else {
+      toastError("Erro ao buscar unidades educacionais");
+    }
+  };
+
   useEffect(() => {
     getMeusDados();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -299,6 +325,7 @@ const BuscaDietasForm = ({
     setDiagnosticoNoFiltro(diagnosticosFiltrados);
     setClassificacoesNoFiltro(classificacoesFiltradas);
     setProtocolosNoFiltro(protocolosFiltrados);
+    getUnidadesEducacionais(values);
   };
 
   const renderizarLabelClassificacao = (selected, options) => {
@@ -514,6 +541,19 @@ const BuscaDietasForm = ({
     setLotesNoFiltro(lotesFiltrados);
   };
 
+  const renderizarLabelUnidades = (selected, options) => {
+    if (selected.length === 0) {
+      return "Selecione";
+    }
+    if (selected.length === options.length) {
+      return "Todas Unidades Educaionais foram selecionadas";
+    }
+    if (selected.length === 1) {
+      return `${selected.length} unidade educacional selecionada`;
+    }
+    return `${selected.length} unidades educacionais selecionadas`;
+  };
+
   const limparFiltros = () => {
     reset();
     setDataInicial(null);
@@ -527,6 +567,7 @@ const BuscaDietasForm = ({
     setDietasFiltradas([]);
     setStatusSelecionado(false);
     setFiltragemRealizada(false);
+    setUnidadesSelecionadas([]);
   };
 
   let dietasEspeciaisCopy = [...dietasEspeciais];
@@ -557,6 +598,11 @@ const BuscaDietasForm = ({
           diagnosticosSelecionados.includes(alergia_intolerancia.descricao)
         );
       });
+    }
+    if (unidadesSelecionadas.length) {
+      dietasEspeciaisCopy = dietasEspeciaisCopy.filter(dieta =>
+        unidadesSelecionadas.includes(dieta.codigo_eol_escola)
+      );
     }
     setDietasFiltradas(dietasEspeciaisCopy);
     if (dataInicial && dataFinal) {
@@ -712,7 +758,7 @@ const BuscaDietasForm = ({
                   )}
                 </div>
                 {!usuarioEhNutricionistaSupervisao() ? (
-                  <div className="col-4">
+                  <div className="col-6 mt-3">
                     <label className="label font-weight-normal pb-2 pt-2">
                       Protocolo padrão:
                     </label>
@@ -723,9 +769,9 @@ const BuscaDietasForm = ({
                         options={protocolosNoFiltro}
                         valueRenderer={renderizarLabelProtocolo}
                         selected={protocolosSelecionados}
-                        onSelectedChanged={value =>
-                          onChangeProtocolosSelecionados(value)
-                        }
+                        onSelectedChanged={value => {
+                          onChangeProtocolosSelecionados(value);
+                        }}
                         overrideStrings={{
                           search: "Busca",
                           selectSomeItems: "Selecione",
@@ -770,8 +816,30 @@ const BuscaDietasForm = ({
                     )}
                   </div>
                 )}
+                <div className="col-6 mt-3">
+                  <label className="label font-weight-normal pb-2 pt-2">
+                    Unidades Educacionais :
+                  </label>
+                  <Field
+                    component={StatefulMultiSelect}
+                    name="unidades_educacionais"
+                    options={unidadesEducacionais}
+                    valueRenderer={renderizarLabelUnidades}
+                    selected={unidadesSelecionadas}
+                    onSelectedChanged={value => {
+                      setUnidadesSelecionadas(value);
+                    }}
+                    overrideStrings={{
+                      search: "Busca",
+                      selectSomeItems: "Selecione",
+                      allItemsAreSelected:
+                        "Todos as unidades estão selecionadas",
+                      selectAll: "Todos"
+                    }}
+                    disabled={ativaUnidadeEducaionais}
+                  />
+                </div>
               </div>
-
               <div
                 className={
                   dietasFiltradas && dietasFiltradas.length > 0

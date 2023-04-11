@@ -54,7 +54,7 @@ const ListagemAlteracoesCronogramas = ({
                   <NavLink
                     className="float-left"
                     to={`/${constants.PRE_RECEBIMENTO}/${
-                      constants.ANALISE_CRONOGRAMA_DILOG
+                      constants.DETALHAR_ALTERACAO_CRONOGRAMA
                     }?uuid=${alteracaoCronograma.uuid}`}
                   >
                     <span className="link-acoes green">

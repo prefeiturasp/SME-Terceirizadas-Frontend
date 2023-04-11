@@ -2,7 +2,6 @@ import React from "react";
 import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   CONFIGURACOES,
-  PERMISSOES,
   MENSAGEM,
   GERENCIAMENTO_EMAILS,
   GESTAO_ACESSO_CODAE_DILOG,
@@ -17,10 +16,8 @@ import {
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhDiretorEscola,
   usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDRE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
@@ -28,17 +25,11 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhDiretorUE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
-  const exibirPermissoes =
-    usuarioEhCoordenadorNutriCODAE() ||
-    usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhDRE() ||
-    usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioEhEmpresaTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -60,10 +51,6 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
-      {exibirPermissoes && (
-        <LeafItem to={`/${CONFIGURACOES}/${PERMISSOES}`}>Permissões</LeafItem>
-      )}
-
       {exibirConfigEmail && (
         <>
           <LeafItem to={`/${CONFIGURACOES}`}>Disparo de E-mail</LeafItem>
@@ -110,7 +97,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </SubMenu>
       )}
 
-      {usuarioEhDiretorEscola() && (
+      {usuarioEhDiretorUE() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}

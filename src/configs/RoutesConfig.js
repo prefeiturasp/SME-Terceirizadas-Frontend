@@ -81,7 +81,6 @@ import {
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
-  permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosAlteracaoDeCardapioCEMEI,
@@ -116,7 +115,6 @@ import {
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
   usuarioEhCoordenadorCODAE,
-  usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
@@ -127,11 +125,11 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
-  usuarioEhDiretorUE,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhDilog,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
+  usuarioEhDiretorUE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -771,12 +769,6 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
-    path: `/configuracoes/permissoes`,
-    component: permissoes(),
-    exact: false,
-    tipoUsuario: constants.QUALQUER_USUARIO
-  },
-  {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
@@ -797,7 +789,7 @@ const routesConfig = [
     }`,
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
-    tipoUsuario: usuarioEhDiretorEscola()
+    tipoUsuario: usuarioEhDiretorUE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
@@ -1486,7 +1478,8 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1494,7 +1487,8 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
@@ -1502,7 +1496,10 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
@@ -1663,7 +1660,10 @@ const routesConfig = [
     }`,
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${
@@ -1686,10 +1686,15 @@ const routesConfig = [
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
   },
   {
-    path: `/${constants.PRE_RECEBIMENTO}/${constants.ANALISE_CRONOGRAMA_DILOG}`,
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.DETALHAR_ALTERACAO_CRONOGRAMA
+    }`,
     component: AnaliseDilogCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
   },
   {
     /*
