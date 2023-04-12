@@ -11,7 +11,7 @@ export default ({ aprovacaoDilog, setAprovacaoDilog }) => {
   return (
     <>
       <hr />
-      <p className="head-green">Análise da DILOG</p>
+      <p className="head-green">Análise DILOG</p>
       <Radio.Group
         size="large"
         onChange={onChangeCampos}

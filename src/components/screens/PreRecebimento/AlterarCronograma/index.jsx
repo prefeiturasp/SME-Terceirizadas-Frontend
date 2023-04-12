@@ -397,7 +397,7 @@ export default ({ analiseSolicitacao }) => {
                         />
                       </div>
                       <hr />
-                      <p className="head-green">Análise da DINUTRE</p>
+                      <p className="head-green">Análise DINUTRE</p>
                       {usuarioEhDinutreDiretoria() &&
                         solicitacaoAlteracaoCronograma.status ===
                           "Cronograma ciente" && (
