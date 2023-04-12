@@ -50,6 +50,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
   const [inativasTemporariamente, setInativasTemporariamente] = useState(null);
   const [listaLotes, setListaLotes] = useState(null);
   const [erro, setErro] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const LOADING =
     !instituicao ||
@@ -61,10 +62,11 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     !inativas ||
     !inativasTemporariamente;
 
-  const PODE_INCLUIR_DIETA_ESPECIAL =
+  const EXIBE_ATALHOS_SOLICITACOES =
     usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
 
   const getSolicitacoesAsync = async (params = null) => {
+    setLoading(true);
     const responsePendenteAutorizacao = await getDietaEspecialPendenteAutorizacao(
       instituicao.uuid,
       params
@@ -160,6 +162,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     } else {
       setAguardandoVigencia([]);
     }
+    setLoading(false);
   };
 
   const getMeusLotesAsync = async () => {
@@ -191,7 +194,21 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     }
   }, [meusDados]);
 
-  const onPesquisaChanged = () => {};
+  let typingTimeout = null;
+
+  const onPesquisaChanged = values => {
+    clearTimeout(typingTimeout);
+
+    typingTimeout = setTimeout(async () => {
+      const params = PARAMS;
+      if (values.titulo && values.titulo.length > 2) {
+        params["titulo"] = values.titulo;
+      }
+      params["lote"] = values.lote;
+      params["status"] = values.status;
+      await getSolicitacoesAsync(params);
+    }, 1000);
+  };
 
   const contadorDietas = (title, dietas) => {
     if (!usuarioEhCoordenadorNutriCODAE()) return title;
@@ -202,7 +219,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     <div>
       {erro && <div>{erro}</div>}
       {!erro && (
-        <Spin tip="Carregando..." spinning={LOADING}>
+        <Spin tip="Carregando..." spinning={LOADING || loading}>
           {!LOADING && (
             <div>
               <CardMatriculados
@@ -219,7 +236,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
                   { nome: "Conferida", uuid: "1" },
                   { nome: "Não Conferida", uuid: "0" }
                 ]}
-                loadingDietas={LOADING}
+                loadingDietas={LOADING || loading}
               >
                 <div className="row">
                   <div className="col-6">
@@ -310,7 +327,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
                   )}
                 </div>
               </CardBody>
-              {PODE_INCLUIR_DIETA_ESPECIAL && (
+              {EXIBE_ATALHOS_SOLICITACOES && (
                 <div className="row row-shortcuts">
                   <div className="col-3">
                     <CardAtalho

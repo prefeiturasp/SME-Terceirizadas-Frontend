@@ -99,47 +99,45 @@ const CardBody = props => {
                     </div>
                   )}
 
-                  {!ehEscola && (
-                    <div
-                      className={`${
-                        ehTerceirizada && props.listaStatus && props.listaLotes
-                          ? "offset-3 col-6"
-                          : exibirFiltrosDataEventoETipoSolicitacao
-                          ? "col-3"
-                          : ehDashboardGestaoProduto
-                          ? "col-4"
-                          : "offset-3 col-3"
-                      }`}
-                    >
-                      {loadingDietas && (
-                        <div>
-                          <Spin
-                            className="carregando-filtro"
-                            tip="Carregando Filtro..."
-                          />
-                        </div>
-                      )}
-                      <Field
-                        className={
-                          exibirFiltrosDataEventoETipoSolicitacao
-                            ? "input-com-filtros-adicionais"
-                            : ""
-                        }
-                        component={InputText}
-                        name="titulo"
-                        placeholder={loadingDietas ? "" : "Pesquisar"}
-                        disabled={loadingDietas || filtrosDesabilitados}
-                      />
-                      <div className="warning-num-charac">
-                        * mínimo de 3 caracteres
+                  <div
+                    className={`${
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "offset-3 col-6"
+                        : exibirFiltrosDataEventoETipoSolicitacao
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
+                        ? "col-4"
+                        : "offset-3 col-3"
+                    }`}
+                  >
+                    {loadingDietas && (
+                      <div>
+                        <Spin
+                          className="carregando-filtro"
+                          tip="Carregando Filtro..."
+                        />
                       </div>
-                      <OnChange name="titulo">
-                        {(value, previous) => {
-                          props.onChange(values, previous);
-                        }}
-                      </OnChange>
+                    )}
+                    <Field
+                      className={
+                        exibirFiltrosDataEventoETipoSolicitacao
+                          ? "input-com-filtros-adicionais"
+                          : ""
+                      }
+                      component={InputText}
+                      name="titulo"
+                      placeholder={loadingDietas ? "" : "Pesquisar"}
+                      disabled={loadingDietas || filtrosDesabilitados}
+                    />
+                    <div className="warning-num-charac">
+                      * mínimo de 3 caracteres
                     </div>
-                  )}
+                    <OnChange name="titulo">
+                      {(value, previous) => {
+                        props.onChange(values, previous);
+                      }}
+                    </OnChange>
+                  </div>
                   {exibirFiltrosDataEventoETipoSolicitacao &&
                     pathname === "/painel-gestao-produto" &&
                     ehTerceirizada && (

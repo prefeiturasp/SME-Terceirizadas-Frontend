@@ -1,7 +1,6 @@
 import axios from "./_base";
 import { API_URL } from "../constants/config";
 import authService from "./auth";
-import { fetchGet } from "./_fetch";
 import { ErrorHandlerFunction } from "./service-helpers";
 
 const authToken = {
@@ -165,269 +164,158 @@ export const getDietaEspecialInativasDRE = async (uuid, params) => {
 };
 
 // CODAE
-export const getDietaEspecialPendenteAutorizacaoCODAE = (
-  uuid,
-  sem_paginacao = false
+export const getDietaEspecialPendenteAutorizacaoCODAE = async (_, params) => {
+  const url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietaEspecialAutorizadasCODAE = async (_, params) => {
+  const url = `${API_URL}/codae-solicitacoes/autorizados-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietaEspecialNegadasCODAE = async (_, params) => {
+  const url = `${API_URL}/codae-solicitacoes/negados-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietaEspecialCanceladasCODAE = async (_, params) => {
+  const url = `${API_URL}/codae-solicitacoes/cancelados-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getDietaEspecialAutorizadasTemporariamenteCODAE = async (
+  _,
+  params
 ) => {
-  let url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/codae-solicitacoes/pendentes-autorizacao-dieta/?sem_paginacao=true`;
+  const url = `${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialAutorizadasCODAE = (
-  uuid,
-  sem_paginacao = false
+export const getDietaEspecialInativasTemporariamenteCODAE = async (
+  _,
+  params
 ) => {
-  let url = `${API_URL}/codae-solicitacoes/autorizados-dieta/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/codae-solicitacoes/autorizados-dieta/?sem_paginacao=true`;
+  const url = `${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialNegadasCODAE = (uuid, sem_paginacao = false) => {
-  let url = `${API_URL}/codae-solicitacoes/negados-dieta/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/codae-solicitacoes/negados-dieta/?sem_paginacao=true`;
+export const getDietaEspecialInativasCODAE = async (_, params) => {
+  const url = `${API_URL}/codae-solicitacoes/inativas-dieta/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDietaEspecialCanceladasCODAE = (
-  uuid,
-  sem_paginacao = false
-) => {
-  let url = `${API_URL}/codae-solicitacoes/cancelados-dieta/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/codae-solicitacoes/cancelados-dieta/?sem_paginacao=true`;
-  }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
-};
-
-export const getDietaEspecialAutorizadasTemporariamenteCODAE = (
-  uuid,
-  sem_paginacao = false
-) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/?sem_paginacao=true`
-    );
-  }
-  return fetchGet(
-    `${API_URL}/codae-solicitacoes/autorizadas-temporariamente-dieta/`
-  );
-};
-
-export const getDietaEspecialInativasTemporariamenteCODAE = (
-  uuid,
-  sem_paginacao = false
-) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/?sem_paginacao=true`
-    );
-  }
-  return fetchGet(
-    `${API_URL}/codae-solicitacoes/inativas-temporariamente-dieta/`
-  );
-};
-
-export const getDietaEspecialInativasCODAE = (uuid, sem_paginacao = false) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/codae-solicitacoes/inativas-dieta/?sem_paginacao=true`
-    );
-  }
-  return fetchGet(`${API_URL}/codae-solicitacoes/inativas-dieta/`);
 };
 
 // TERCEIRIZADA
-export const getDietaEspecialPendenteAutorizacaoTerceirizada = (
+export const getDietaEspecialPendenteAutorizacaoTerceirizada = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  let url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/?sem_paginacao=true`;
+  const url = `${API_URL}/terceirizada-solicitacoes/pendentes-autorizacao-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialAutorizadasTerceirizada = (
-  uuid,
-  sem_paginacao = false
-) => {
-  let url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/?sem_paginacao=true`;
+export const getDietaEspecialAutorizadasTerceirizada = async (uuid, params) => {
+  const url = `${API_URL}/terceirizada-solicitacoes/autorizados-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialNegadasTerceirizada = (
-  uuid,
-  sem_paginacao = false
-) => {
-  let url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/?sem_paginacao=true`;
+export const getDietaEspecialNegadasTerceirizada = async (uuid, params) => {
+  const url = `${API_URL}/terceirizada-solicitacoes/negados-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
-export const getDietaEspecialCanceladasTerceirizada = (
-  uuid,
-  sem_paginacao = false
-) => {
-  let url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/`;
-  if (sem_paginacao) {
-    url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/?sem_paginacao=true`;
+export const getDietaEspecialCanceladasTerceirizada = async (uuid, params) => {
+  const url = `${API_URL}/terceirizada-solicitacoes/cancelados-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-
-  const OBJ_REQUEST = {
-    headers: authToken,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
 };
 
 export const getDietaEspecialAutorizadasTemporariamenteTerceirizada = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return axios.get(
-      `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/?sem_paginacao=true/`
-    );
+  const url = `${API_URL}/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return axios.get(
-    `/terceirizada-solicitacoes/autorizadas-temporariamente-dieta/${uuid}/`
-  );
 };
 
 export const getDietaEspecialInativasTemporariamenteTerceirizada = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return axios.get(
-      `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/?sem_paginacao=true/`
-    );
+  const url = `${API_URL}/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return axios.get(
-    `/terceirizada-solicitacoes/inativas-temporariamente-dieta/${uuid}/`
-  );
 };
 
-export const getDietaEspecialInativasTerceirizada = async (
-  uuid,
-  sem_paginacao = false
-) => {
-  if (sem_paginacao) {
-    return axios.get(
-      `/terceirizada-solicitacoes/inativas-dieta/${uuid}/?sem_paginacao=true/`
-    );
+export const getDietaEspecialInativasTerceirizada = async (uuid, params) => {
+  const url = `${API_URL}/terceirizada-solicitacoes/inativas-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return axios.get(`/terceirizada-solicitacoes/inativas-dieta/${uuid}/`);
 };
 
 export const getDietaEspecialAguardandoVigenciaTerceirizada = async (
   uuid,
-  sem_paginacao = false
+  params
 ) => {
-  if (sem_paginacao) {
-    return fetchGet(
-      `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/?sem_paginacao=true/`
-    );
+  const url = `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
   }
-  return fetchGet(
-    `${API_URL}/terceirizada-solicitacoes/aguardando-vigencia-dieta/${uuid}/`
-  );
 };
 
 export const getPaginacaoSolicitacoesDietaEspecial = (
