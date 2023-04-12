@@ -9,14 +9,6 @@ const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
   fornecedor
 }) => {
-  const labelBotãoDetalhar = status => {
-    const labels = {
-      "Em análise": "Analisar",
-      "Cronograma ciente": "Detalhar"
-    };
-    return labels[status];
-  };
-
   return (
     <section className="resultado-cronograma-de-entrega">
       <header>Resultados da Pesquisa</header>
@@ -57,9 +49,7 @@ const ListagemAlteracoesCronogramas = ({
                       constants.DETALHAR_ALTERACAO_CRONOGRAMA
                     }?uuid=${alteracaoCronograma.uuid}`}
                   >
-                    <span className="link-acoes green">
-                      {labelBotãoDetalhar(alteracaoCronograma.status)}
-                    </span>
+                    <span className="link-acoes green">Detalhar</span>
                   </NavLink>
                 </div>
               </div>

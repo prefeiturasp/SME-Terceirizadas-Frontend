@@ -136,8 +136,12 @@ export default ({
                         <td className="borda-crono">{etapa.numero_empenho}</td>
                         <td className="borda-crono">{etapa.etapa}</td>
                         <td className="borda-crono">{etapa.parte}</td>
-                        <td className="borda-crono">{etapa.data_programada}</td>
-                        <td className="borda-crono">{etapa.quantidade}</td>
+                        <td className="borda-crono">
+                          {etapa.data_programada_atual}
+                        </td>
+                        <td className="borda-crono">
+                          {etapa.quantidade_atual}
+                        </td>
                         <td className="borda-crono">
                           {etapa.total_embalagens}
                         </td>
