@@ -8,13 +8,10 @@ import {
   SOLICITACAO_ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import AlterarCronograma from "components/screens/PreRecebimento/AlterarCronograma";
-import { usuarioEhDilogDiretoria } from "helpers/utilities";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}`,
-  titulo: usuarioEhDilogDiretoria()
-    ? "Analisar Solicitação de Alteração"
-    : "Detalhar Solicitação Alteração de Cronograma de Entrega"
+  titulo: "Detalhar Solicitação Alteração de Cronograma de Entrega"
 };
 
 const anteriores = [
