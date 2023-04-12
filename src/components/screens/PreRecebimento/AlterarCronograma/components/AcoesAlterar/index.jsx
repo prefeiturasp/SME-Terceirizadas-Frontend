@@ -50,7 +50,7 @@ export default ({
 
   return (
     <>
-      {usuarioEhEmpresaFornecedor() && (
+      {usuarioEhEmpresaFornecedor() && !solicitacaoAlteracaoCronograma && (
         <Botao
           texto="Enviar Solicitação"
           type={BUTTON_TYPE.BUTTON}
