@@ -111,7 +111,6 @@ export default ({ uuid }) => {
     if (carregando) {
       fetchData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editais]);
 
   return (

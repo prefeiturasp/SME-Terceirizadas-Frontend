@@ -183,8 +183,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     }
 
     setData(new Date(`${mesSolicitacao}/01/${anoSolicitacao}`));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showTabelaLancamentosPeriodo]);
 
   useEffect(() => {
@@ -229,8 +227,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       });
       setWeekColumns(week);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, semanaSelecionada]);
 
   const onClickVisualizarFechar = async periodoGrupo => {

@@ -26,18 +26,13 @@ const CardBody = props => {
   const pathname = window.location.pathname;
   useEffect(() => {
     (async () => {
-      try {
-        const listaEditais = await getNomesUnicosEditais();
-        let listaRsultados = listaEditais.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element, label: element };
-        });
-        setEditais(listaFormatada);
-      } catch (erro) {
-        throw erro;
-      }
+      const listaEditais = await getNomesUnicosEditais();
+      let listaRsultados = listaEditais.data.results;
+      let listaFormatada = listaRsultados.map(element => {
+        return { value: element, label: element };
+      });
+      setEditais(listaFormatada);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

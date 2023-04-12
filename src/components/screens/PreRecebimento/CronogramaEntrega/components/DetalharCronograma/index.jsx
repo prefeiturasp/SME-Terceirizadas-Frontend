@@ -40,8 +40,6 @@ export default () => {
 
   useEffect(() => {
     getDetalhes();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

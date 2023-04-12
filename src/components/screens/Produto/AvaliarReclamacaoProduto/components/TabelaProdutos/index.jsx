@@ -204,22 +204,19 @@ export default class TabelaProdutos extends Component {
     this.setState({ showModalAnalise: false });
   };
 
-  onModalJustificativaSubmit = formValues =>
-    new Promise(async (resolve, reject) => {
-      const { uuidReclamacao } = this.state;
-      const endpoint = this.defineEndpoint();
-      const response = await endpoint(uuidReclamacao, formValues);
-      if (response.status === 200) {
-        this.props.atualizar();
-        this.fechaModalJustificativa();
-        this.mostraToastSucesso();
-        resolve();
-      } else {
-        toastError(response.errors);
-        reject(response.errors);
-      }
-      this.props.setLoading(false);
-    });
+  onModalJustificativaSubmit = async formValues => {
+    const { uuidReclamacao } = this.state;
+    const endpoint = this.defineEndpoint();
+    const response = await endpoint(uuidReclamacao, formValues);
+    if (response.status === 200) {
+      this.props.atualizar();
+      this.fechaModalJustificativa();
+      this.mostraToastSucesso();
+    } else {
+      toastError(response.errors);
+    }
+    this.props.setLoading(false);
+  };
 
   render() {
     const {

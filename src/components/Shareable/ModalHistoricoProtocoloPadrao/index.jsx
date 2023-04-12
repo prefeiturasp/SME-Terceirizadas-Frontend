@@ -321,7 +321,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        {change.hasOwnProperty("tipo") ? (
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
+                                          "tipo"
+                                        ) ? (
                                           <tr
                                             key={`${index}_tipo`}
                                             className="table-body-alimentacao"
@@ -351,7 +354,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             </td>
                                           </tr>
                                         ) : null}
-                                        {change.hasOwnProperty("alimento") ? (
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
+                                          "alimento"
+                                        ) ? (
                                           <tr
                                             key={`${index}_alimento`}
                                             className="table-body-alimentacao"
@@ -377,7 +383,8 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             </td>
                                           </tr>
                                         ) : null}
-                                        {change.hasOwnProperty(
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
                                           "substitutos"
                                         ) ? (
                                           <tr

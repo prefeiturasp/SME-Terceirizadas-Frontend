@@ -88,7 +88,6 @@ export default ({
   useEffect(() => {
     setAllChecked(false);
     setSelecionados([]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [solicitacoes]);
 
   return (

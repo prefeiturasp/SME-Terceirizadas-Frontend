@@ -26,7 +26,6 @@ const ListagemDietas = ({ dietasFiltradas, ehNutriSupervisao, status }) => {
       currentPage * pageSize
     );
     setDietasFiltradasCopy(dietasFiltradasPagina);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const ehStatusCanceladas = () => {

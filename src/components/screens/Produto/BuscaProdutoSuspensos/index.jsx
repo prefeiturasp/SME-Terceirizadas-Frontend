@@ -74,7 +74,6 @@ const BuscaProdutoSuspensos = () => {
 
     if (!meusDados) getDadosUsuario();
     if (filtros) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros, meusDados]);
 
   const onSubmitForm = formValues => {

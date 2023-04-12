@@ -60,7 +60,6 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
 
   useEffect(() => {
     getVinculosAlimentacao();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return vinculosAlimentacao ? (

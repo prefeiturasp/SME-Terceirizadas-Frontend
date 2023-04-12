@@ -141,7 +141,6 @@ export const Container = () => {
     getMotivosInclusaoNormalAsync();
     getDiasUteisAsync();
     exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

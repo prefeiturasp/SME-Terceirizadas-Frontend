@@ -130,7 +130,6 @@ export default () => {
           new Date()
         ).toString()}`
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSolicitacaoMedInicial = async (periodo, escolaUuid) => {

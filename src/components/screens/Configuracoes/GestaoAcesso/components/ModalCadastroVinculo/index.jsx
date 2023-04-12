@@ -193,7 +193,7 @@ const ModalCadastroVinculo = ({
         <Form
           onSubmit={onSubmit}
           initialValues={valoresEdicao}
-          render={({ form, handleSubmit, values, errors }) => (
+          render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
                 <form onSubmit={handleSubmit} className="">

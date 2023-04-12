@@ -33,7 +33,6 @@ export default ({
     getSolicitacoesDietaEspecial(params).then(response => {
       setSolicitacoesVigentes(response.data.results);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getTipoSolicitacao = () => {

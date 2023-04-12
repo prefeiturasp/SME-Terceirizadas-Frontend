@@ -51,7 +51,7 @@ export default class CorpoRelatorio extends Component {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let { informacoesNutricionais, produto } = this.props;
     const { informacoes } = this.state;
 
