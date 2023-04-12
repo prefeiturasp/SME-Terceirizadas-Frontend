@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { useCallback } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { formValueSelector, reduxForm } from "redux-form";
 import { meusDados } from "../../../services/perfil.service";
@@ -42,97 +43,308 @@ import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import { getMeusLotes } from "services/lote.service";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
-export class StatusSolicitacoes extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      instituicao: null,
-      count: 0,
-      tipoSolicitacao: null,
-      solicitacoes: null,
-      listaSolicitacoesSemFiltro: null,
-      originalCount: null,
-      tipoCard: null,
-      icone: null,
-      titulo: null,
-      solicitacoesFiltrados: null,
-      urlPaginacao: null,
-      selecionarTodos: false,
-      listaLotes: null
-    };
-    this.selecionarTodos = this.selecionarTodos.bind(this);
-    this.onCheckClicked = this.onCheckClicked.bind(this);
-    this.onPesquisarChanged = this.onPesquisarChanged.bind(this);
-  }
+function StatusSolicitacoes(props) {
+  const [instituicao, setInstituicao] = useState(null);
+  const [count, setCount] = useState(0);
+  const [tipoSolicitacao, setTipoSolicitacao] = useState(null);
+  const [solicitacoes, setSolicitacoes] = useState(null);
+  const [listaSolicitacoesSemFiltro, setListaSolicitacoesSemFiltro] = useState(
+    null
+  );
+  const [originalCount, setOriginalCount] = useState(null);
+  const [tipoCard, setTipoCard] = useState(null);
+  const [icone, setIcone] = useState(null);
+  const [titulo, setTitulo] = useState(null);
+  const [solicitacoesFiltrados, setSolicitacoesFiltrados] = useState(null);
+  const [urlPaginacao, setUrlPaginacao] = useState(null);
+  const [selecionarTodos, setSelecionarTodos] = useState(false);
+  const [listaLotes, setListaLotes] = useState(null);
 
-  async componentDidMount() {
-    const url = window.location.href;
-    let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
-    this.setState({ tipoSolicitacao });
-    meusDados().then(response => {
-      this.setState({
-        instituicao: response.vinculo_atual.instituicao
-      });
-    });
-    if (usuarioEhEmpresaTerceirizada()) {
-      await getMeusLotes().then(response => {
-        this.setState({
-          listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
-            response.results
-          )
-        });
-      });
-    }
-  }
-
-  selecionarTodos(solicitacoes) {
-    const selecionarTodos = !this.state.selecionarTodos;
+  const selectTodos = solicitacoes => {
+    const novoEstadoSelecionarTodos = !selecionarTodos;
     solicitacoes.forEach((_, key) => {
-      this.props.change(`check_${key}`, selecionarTodos);
+      props.change(`check_${key}`, novoEstadoSelecionarTodos);
     });
-    this.props.change("selecionar_todos", selecionarTodos);
-    this.setState({ selecionarTodos });
-  }
+    props.change("selecionar_todos", novoEstadoSelecionarTodos);
+    setSelecionarTodos(novoEstadoSelecionarTodos);
+    return novoEstadoSelecionarTodos;
+  };
 
-  onCheckClicked(solicitacoes, key) {
+  const onCheckClicked = (solicitacoes, key, props) => {
     solicitacoes[key].checked = !solicitacoes[key].checked;
-    this.props.change(`check_${key}`, solicitacoes[key].checked);
-  }
+    props.change(`check_${key}`, solicitacoes[key].checked);
+  };
 
-  onPesquisarChanged(values) {
-    if (values.titulo === undefined) values.titulo = "";
-    let solicitacoesFiltrados = this.state.solicitacoes;
-    let listaSolicitacoesSemFiltro = this.state.listaSolicitacoesSemFiltro;
-    if (values.lote && values.lote.length > 0) {
-      solicitacoesFiltrados = this.filtrarLote(
-        solicitacoesFiltrados,
-        values.lote
-      );
-    }
-    if (values.status && values.status.length > 0) {
-      solicitacoesFiltrados = this.filtrarStatus(
-        solicitacoesFiltrados,
-        values.status
-      );
-    }
-    if (values.titulo && values.titulo.length > 0) {
-      solicitacoesFiltrados = this.filtrarNome(
-        listaSolicitacoesSemFiltro,
-        values.titulo
-      );
-      this.setState({
-        count: solicitacoesFiltrados.length
-      });
-    }
-    if (values.titulo === "") {
-      this.setState({
-        count: this.state.originalCount
-      });
-    }
-    this.setState({ solicitacoesFiltrados });
-  }
+  const onPesquisarChanged = useCallback(
+    values => {
+      let filtrados = listaSolicitacoesSemFiltro;
 
-  filtrarStatus(listaFiltro, value) {
+      if (values.titulo === undefined) values.titulo = "";
+
+      if (values.lote && values.lote.length > 0) {
+        filtrados = filtrarLote(filtrados, values.lote);
+      }
+
+      if (values.status && values.status.length > 0) {
+        filtrados = filtrarStatus(filtrados, values.status);
+      }
+
+      if (values.titulo && values.titulo.length > 0) {
+        filtrados = filtrarNome(filtrados, values.titulo);
+      }
+
+      filtrados && setCount(filtrados.length);
+
+      if (values.titulo === "") {
+        setCount(originalCount);
+      }
+
+      setSolicitacoesFiltrados(filtrados);
+    },
+    [listaSolicitacoesSemFiltro, originalCount]
+  );
+
+  const filtragemInicial = useCallback(() => {
+    const values = {
+      titulo: props.tituloDieta || "",
+      lote: props.loteDieta || "",
+      status: props.statusDieta || ""
+    };
+    onPesquisarChanged(values);
+  }, [
+    onPesquisarChanged,
+    props.loteDieta,
+    props.statusDieta,
+    props.tituloDieta
+  ]);
+
+  const {
+    visao,
+    getDietaEspecialPendenteAutorizacao,
+    getDietaEspecialNegadas,
+    getDietaEspecialAutorizadas,
+    getDietaEspecialCanceladas,
+    getDietaEspecialAutorizadasTemporariamente,
+    getDietaEspecialAguardandoVigencia,
+    getDietaEspecialInativasTemporariamente,
+    getDietaEspecialInativas
+  } = props;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = window.location.href;
+      let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
+      setTipoSolicitacao(tipoSolicitacao);
+      meusDados().then(response => {
+        setInstituicao(response.vinculo_atual.instituicao);
+      });
+      if (usuarioEhEmpresaTerceirizada()) {
+        const response = await getMeusLotes();
+        setListaLotes(
+          [{ nome: "Selecione um lote", uuid: "" }].concat(response.results)
+        );
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (tipoSolicitacao && instituicao && !solicitacoes) {
+      switch (tipoSolicitacao) {
+        case SOLICITACOES_PENDENTES:
+          getDietaEspecialPendenteAutorizacao(instituicao.uuid).then(
+            response => {
+              setSolicitacoes(
+                ajustarFormatoLog(response.results, "pendentes-aut")
+              );
+              setCount(response.count);
+              setOriginalCount(response.count);
+              setTipoCard(CARD_TYPE_ENUM.PENDENTE);
+              setIcone(ICON_CARD_TYPE_ENUM.PENDENTE);
+              setTitulo(getNomeCardAguardandoAutorizacao());
+              setUrlPaginacao(retornaUrlPaginacao(visao, PENDENTES_DIETA));
+            }
+          );
+          getDietaEspecialPendenteAutorizacao(instituicao.uuid, true).then(
+            response => {
+              setListaSolicitacoesSemFiltro(
+                ajustarFormatoLog(response.results, "pendentes-aut")
+              );
+            }
+          );
+          break;
+        case SOLICITACOES_NEGADAS:
+          getDietaEspecialNegadas(instituicao.uuid).then(response => {
+            setSolicitacoes(ajustarFormatoLog(response.results, "negadas"));
+            setCount(response.count);
+            setOriginalCount(response.count);
+            setTipoCard(CARD_TYPE_ENUM.NEGADO);
+            setIcone(ICON_CARD_TYPE_ENUM.NEGADO);
+            setTitulo("Negadas");
+            setUrlPaginacao(retornaUrlPaginacao(visao, NEGADOS_DIETA));
+          });
+          getDietaEspecialNegadas(instituicao.uuid, true).then(response => {
+            setListaSolicitacoesSemFiltro(
+              ajustarFormatoLog(response.results, "negadas")
+            );
+          });
+          break;
+        case SOLICITACOES_AUTORIZADAS:
+          getDietaEspecialAutorizadas(instituicao.uuid).then(response => {
+            setSolicitacoes(ajustarFormatoLog(response.results, "autorizadas"));
+            setCount(response.count);
+            setOriginalCount(response.count);
+            setTipoCard(CARD_TYPE_ENUM.AUTORIZADO);
+            setIcone(ICON_CARD_TYPE_ENUM.AUTORIZADO);
+            setTitulo("Autorizadas");
+            setUrlPaginacao(retornaUrlPaginacao(visao, AUTORIZADOS_DIETA));
+          });
+          getDietaEspecialAutorizadas(instituicao.uuid, true).then(response => {
+            setListaSolicitacoesSemFiltro(
+              ajustarFormatoLog(response.results, "autorizadas")
+            );
+          });
+          break;
+        case SOLICITACOES_CANCELADAS:
+          getDietaEspecialCanceladas(instituicao.uuid).then(response => {
+            setSolicitacoes(ajustarFormatoLog(response.results, "canceladas"));
+            setCount(response.count);
+            setOriginalCount(response.count);
+            setTipoCard(CARD_TYPE_ENUM.CANCELADO);
+            setIcone(ICON_CARD_TYPE_ENUM.CANCELADO);
+            setTitulo("Canceladas");
+            setUrlPaginacao(retornaUrlPaginacao(visao, CANCELADOS_DIETA));
+          });
+          getDietaEspecialCanceladas(instituicao.uuid, true).then(response => {
+            setListaSolicitacoesSemFiltro(
+              ajustarFormatoLog(response.results, "canceladas")
+            );
+          });
+          break;
+        case SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE:
+          getDietaEspecialAutorizadasTemporariamente(instituicao.uuid).then(
+            response => {
+              setSolicitacoes(
+                ajustarFormatoLog(response.data.results, "autorizadas-temp")
+              );
+              setCount(response.data.count);
+              setOriginalCount(response.data.count);
+              setTipoCard(CARD_TYPE_ENUM.AUTORIZADO);
+              setIcone(ICON_CARD_TYPE_ENUM.AUTORIZADO);
+              setTitulo("Autorizadas Temporariamente");
+              setUrlPaginacao(
+                retornaUrlPaginacao(visao, AUTORIZADAS_TEMPORARIAMENTE_DIETA)
+              );
+            }
+          );
+          getDietaEspecialAutorizadasTemporariamente(
+            instituicao.uuid,
+            true
+          ).then(response => {
+            setListaSolicitacoesSemFiltro(
+              ajustarFormatoLog(response.data.results, "autorizadas-temp")
+            );
+          });
+          break;
+        case SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA:
+          getDietaEspecialAguardandoVigencia(instituicao.uuid).then(
+            response => {
+              setSolicitacoes(
+                ajustarFormatoLog(
+                  response.data.results,
+                  "aguardando-inicio-vigencia"
+                )
+              );
+              setCount(response.data.count);
+              setOriginalCount(response.data.count);
+              setTipoCard(CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
+              setIcone(ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
+              setTitulo("Aguardando início da vigência");
+              setUrlPaginacao(
+                retornaUrlPaginacao(visao, AGUARDANDO_VIGENCIA_DIETA)
+              );
+            }
+          );
+          getDietaEspecialAguardandoVigencia(instituicao.uuid, true).then(
+            response => {
+              setListaSolicitacoesSemFiltro(
+                ajustarFormatoLog(
+                  response.data.results,
+                  "aguardando-inicio-vigencia"
+                )
+              );
+            }
+          );
+          break;
+        case SOLICITACOES_INATIVAS_TEMPORARIAMENTE:
+          getDietaEspecialInativasTemporariamente(instituicao.uuid).then(
+            response => {
+              setSolicitacoes(
+                ajustarFormatoLog(response.data.results, "inativas-temp")
+              );
+              setCount(response.data.count);
+              setOriginalCount(response.data.count);
+              setTipoCard(CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
+              setIcone(ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
+              setTitulo("Inativas Temporariamente");
+              setUrlPaginacao(
+                retornaUrlPaginacao(visao, INATIVAS_TEMPORARIAMENTE_DIETA)
+              );
+            }
+          );
+          getDietaEspecialInativasTemporariamente(instituicao.uuid, true).then(
+            response => {
+              setListaSolicitacoesSemFiltro(
+                ajustarFormatoLog(response.data.results, "inativas-temp")
+              );
+            }
+          );
+          break;
+        case SOLICITACOES_INATIVAS:
+          getDietaEspecialInativas(instituicao.uuid).then(response => {
+            setSolicitacoes(
+              ajustarFormatoLog(response.data.results, "inativas")
+            );
+            setCount(response.data.count);
+            setOriginalCount(response.data.count);
+            setTipoCard(CARD_TYPE_ENUM.CANCELADO);
+            setIcone(ICON_CARD_TYPE_ENUM.CANCELADO);
+            setTitulo("Inativas");
+            setUrlPaginacao(retornaUrlPaginacao(visao, INATIVAS_DIETA));
+          });
+          getDietaEspecialInativas(instituicao.uuid, true).then(response => {
+            setListaSolicitacoesSemFiltro(
+              ajustarFormatoLog(response.data.results, "inativas")
+            );
+          });
+          break;
+        default:
+          break;
+      }
+    }
+    if (!solicitacoesFiltrados && solicitacoes) {
+      setSolicitacoesFiltrados(solicitacoes);
+      filtragemInicial();
+    }
+  }, [
+    tipoSolicitacao,
+    instituicao,
+    solicitacoes,
+    solicitacoesFiltrados,
+    visao,
+    getDietaEspecialPendenteAutorizacao,
+    getDietaEspecialNegadas,
+    getDietaEspecialAutorizadas,
+    getDietaEspecialCanceladas,
+    getDietaEspecialAutorizadasTemporariamente,
+    getDietaEspecialAguardandoVigencia,
+    getDietaEspecialInativasTemporariamente,
+    getDietaEspecialInativas,
+    listaSolicitacoesSemFiltro,
+    filtragemInicial
+  ]);
+
+  const filtrarStatus = (listaFiltro, value) => {
     if (value === "1") {
       listaFiltro = listaFiltro.filter(item => item.conferido === true);
     }
@@ -140,22 +352,22 @@ export class StatusSolicitacoes extends Component {
       listaFiltro = listaFiltro.filter(item => item.conferido === false);
     }
     return listaFiltro;
-  }
+  };
 
-  filtrarLote(listaFiltro, value) {
+  const filtrarLote = (listaFiltro, value) => {
     listaFiltro = listaFiltro.filter(item => item.lote_uuid === value);
     return listaFiltro;
-  }
+  };
 
-  filtrarNome(listaFiltro, value) {
-    listaFiltro = listaFiltro.filter(function(item) {
+  const filtrarNome = (listaFiltro, value) => {
+    listaFiltro = listaFiltro.filter(item => {
       const wordToFilter = value.toLowerCase();
       return item.text.toLowerCase().search(wordToFilter) !== -1;
     });
     return listaFiltro;
-  }
+  };
 
-  retornaUrlPaginacao = (visao, statusDieta) => {
+  const retornaUrlPaginacao = (visao, statusDieta) => {
     switch (visao) {
       case ESCOLA:
         return `${DIETA_ESPECIAL_SOLICITACOES.ESCOLA}/${statusDieta}`;
@@ -170,16 +382,13 @@ export class StatusSolicitacoes extends Component {
     }
   };
 
-  navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
-    const { instituicao, urlPaginacao } = this.state;
+  const navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
-    if (this.props.visao === CODAE) {
+    if (visao === CODAE) {
       getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
         response => {
-          this.setState({
-            solicitacoesFiltrados: ajustarFormatoLog(response.results),
-            solicitacoes: ajustarFormatoLog(response.results)
-          });
+          setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
+          setSolicitacoes(ajustarFormatoLog(response.results));
         }
       );
     } else {
@@ -188,297 +397,39 @@ export class StatusSolicitacoes extends Component {
         instituicao.uuid,
         offSet
       ).then(response => {
-        this.setState({
-          solicitacoesFiltrados: ajustarFormatoLog(response.results),
-          solicitacoes: ajustarFormatoLog(response.results)
-        });
+        setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
+        setSolicitacoes(ajustarFormatoLog(response.results));
       });
     }
   };
 
-  componentDidUpdate() {
-    const visao = this.props.visao;
-    const {
-      solicitacoesFiltrados,
-      tipoSolicitacao,
-      instituicao,
-      solicitacoes
-    } = this.state;
-    if (tipoSolicitacao && instituicao && !solicitacoes) {
-      switch (tipoSolicitacao) {
-        case SOLICITACOES_PENDENTES:
-          this.props
-            .getDietaEspecialPendenteAutorizacao(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.results,
-                  "pendentes-aut"
-                ),
-                count: response.count,
-                originalCount: response.count,
-                tipoCard: CARD_TYPE_ENUM.PENDENTE,
-                icone: ICON_CARD_TYPE_ENUM.PENDENTE,
-                titulo: getNomeCardAguardandoAutorizacao(),
-                urlPaginacao: this.retornaUrlPaginacao(visao, PENDENTES_DIETA)
-              });
-            });
-          this.props
-            .getDietaEspecialPendenteAutorizacao(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
-                  "pendentes-aut"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_NEGADAS:
-          this.props
-            .getDietaEspecialNegadas(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(response.results, "negadas"),
-                count: response.count,
-                originalCount: response.count,
-                tipoCard: CARD_TYPE_ENUM.NEGADO,
-                icone: ICON_CARD_TYPE_ENUM.NEGADO,
-                titulo: "Negadas",
-                urlPaginacao: this.retornaUrlPaginacao(visao, NEGADOS_DIETA)
-              });
-            });
-          this.props
-            .getDietaEspecialNegadas(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
-                  "negadas"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_AUTORIZADAS:
-          this.props
-            .getDietaEspecialAutorizadas(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.results,
-                  "autorizadas"
-                ),
-                count: response.count,
-                originalCount: response.count,
-                tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
-                icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
-                titulo: "Autorizadas",
-                urlPaginacao: this.retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
-              });
-            });
-          this.props
-            .getDietaEspecialAutorizadas(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
-                  "autorizadas"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_CANCELADAS:
-          this.props
-            .getDietaEspecialCanceladas(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(response.results, "canceladas"),
-                count: response.count,
-                originalCount: response.count,
-                tipoCard: CARD_TYPE_ENUM.CANCELADO,
-                icone: ICON_CARD_TYPE_ENUM.CANCELADO,
-                titulo: "Canceladas",
-                urlPaginacao: this.retornaUrlPaginacao(visao, CANCELADOS_DIETA)
-              });
-            });
-          this.props
-            .getDietaEspecialCanceladas(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
-                  "canceladas"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE:
-          this.props
-            .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.data.results,
-                  "autorizadas-temp"
-                ),
-                count: response.data.count,
-                originalCount: response.data.count,
-                tipoCard: CARD_TYPE_ENUM.AUTORIZADO,
-                icone: ICON_CARD_TYPE_ENUM.AUTORIZADO,
-                titulo: "Autorizadas Temporariamente",
-                urlPaginacao: this.retornaUrlPaginacao(
-                  visao,
-                  AUTORIZADAS_TEMPORARIAMENTE_DIETA
-                )
-              });
-            });
-          this.props
-            .getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.data.results,
-                  "autorizadas-temp"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA:
-          this.props
-            .getDietaEspecialAguardandoVigencia(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.data.results,
-                  "aguardando-inicio-vigencia"
-                ),
-                count: response.data.count,
-                originalCount: response.data.count,
-                tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
-                icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
-                titulo: "Aguardando início da vigência",
-                urlPaginacao: this.retornaUrlPaginacao(
-                  visao,
-                  AGUARDANDO_VIGENCIA_DIETA
-                )
-              });
-            });
-          this.props
-            .getDietaEspecialAguardandoVigencia(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.data.results,
-                  "aguardando-inicio-vigencia"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_INATIVAS_TEMPORARIAMENTE:
-          this.props
-            .getDietaEspecialInativasTemporariamente(instituicao.uuid)
-            .then(response => {
-              this.setState({
-                solicitacoes: ajustarFormatoLog(
-                  response.data.results,
-                  "inativas-temp"
-                ),
-                count: response.data.count,
-                originalCount: response.data.count,
-                tipoCard: CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
-                icone: ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO,
-                titulo: "Inativas Temporariamente",
-                urlPaginacao: this.retornaUrlPaginacao(
-                  visao,
-                  INATIVAS_TEMPORARIAMENTE_DIETA
-                )
-              });
-            });
-          this.props
-            .getDietaEspecialInativasTemporariamente(instituicao.uuid, true)
-            .then(response => {
-              this.setState({
-                listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.data.results,
-                  "inativas-temp"
-                )
-              });
-            });
-          break;
-        case SOLICITACOES_INATIVAS:
-          this.props.getDietaEspecialInativas &&
-            this.props
-              .getDietaEspecialInativas(instituicao.uuid)
-              .then(response => {
-                this.setState({
-                  solicitacoes: ajustarFormatoLog(
-                    response.data.results,
-                    "inativas"
-                  ),
-                  count: response.data.count,
-                  originalCount: response.data.count,
-                  tipoCard: CARD_TYPE_ENUM.CANCELADO,
-                  icone: ICON_CARD_TYPE_ENUM.CANCELADO,
-                  titulo: "Inativas",
-                  urlPaginacao: this.retornaUrlPaginacao(visao, INATIVAS_DIETA)
-                });
-              }) &&
-            this.props
-              .getDietaEspecialInativas(instituicao.uuid, true)
-              .then(response => {
-                this.setState({
-                  listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                    response.data.results,
-                    "inativas"
-                  )
-                });
-              });
-          break;
-        default:
-          break;
-      }
-    }
-    if (!solicitacoesFiltrados && solicitacoes) {
-      this.setState({ solicitacoesFiltrados: solicitacoes });
-    }
-  }
-
-  render() {
-    const {
-      solicitacoesFiltrados,
-      titulo,
-      tipoCard,
-      icone,
-      count,
-      tipoSolicitacao,
-      listaLotes
-    } = this.state;
-
-    return (
-      <div className="card mt-3">
-        <div className="card-body">
-          <div className="pr-3">
-            <InputSearchPendencias
-              voltarLink={`/`}
-              filterList={this.onPesquisarChanged}
-              tipoSolicitacao={tipoSolicitacao}
-              listaLotes={listaLotes}
-            />
-          </div>
-          <div className="pb-3" />
-          <CardListarSolicitacoes
-            titulo={titulo}
-            solicitacoes={solicitacoesFiltrados ? solicitacoesFiltrados : []}
-            tipo={tipoCard}
-            icone={icone}
-            selecionarTodos={this.selecionarTodos}
-            onCheckClicked={this.onCheckClicked}
+  return (
+    <div className="card mt-3">
+      <div className="card-body">
+        <div className="pr-3">
+          <InputSearchPendencias
+            voltarLink={`/`}
+            filterList={onPesquisarChanged}
+            tipoSolicitacao={tipoSolicitacao}
+            listaLotes={listaLotes}
+            statusDieta={props.statusDieta}
+            loteDieta={props.loteDieta}
+            tituloDieta={props.tituloDieta}
           />
-          <Paginacao onChange={this.navegacaoPage} total={count} />
         </div>
+        <div className="pb-3" />
+        <CardListarSolicitacoes
+          titulo={titulo}
+          solicitacoes={solicitacoesFiltrados ? solicitacoesFiltrados : []}
+          tipo={tipoCard}
+          icone={icone}
+          selecionarTodos={selectTodos}
+          onCheckClicked={onCheckClicked}
+        />
+        <Paginacao onChange={navegacaoPage} total={count} />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 const StatusSolicitacoesDietaEspecialForm = reduxForm({
@@ -488,8 +439,14 @@ const StatusSolicitacoesDietaEspecialForm = reduxForm({
 
 const selector = formValueSelector("statusSolicitacoesDietaEspecialForm");
 const mapStateToProps = state => {
+  const statusDieta = state.filtersDieta.statusDieta;
+  const loteDieta = state.filtersDieta.loteDieta;
+  const tituloDieta = state.filtersDieta.tituloDieta;
   return {
-    selecionar_todos: selector(state, "selecionar_todos")
+    selecionar_todos: selector(state, "selecionar_todos"),
+    statusDieta: statusDieta,
+    loteDieta: loteDieta,
+    tituloDieta: tituloDieta
   };
 };
 
