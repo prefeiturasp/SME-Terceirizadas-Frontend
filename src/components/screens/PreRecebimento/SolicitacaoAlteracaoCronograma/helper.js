@@ -37,13 +37,6 @@ export const option_status_fornecedor = [
   }
 ];
 
-export const deParaStatus = status =>
-  ["Cronograma ciente", "Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
-    status
-  )
-    ? "Em análise"
-    : status;
-
 export const remove_filtros_nulos = filtros => {
   if (filtros["data_after"] === null) {
     delete filtros["data_after"];

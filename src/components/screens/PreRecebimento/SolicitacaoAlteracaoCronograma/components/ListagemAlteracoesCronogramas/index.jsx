@@ -3,7 +3,7 @@ import "antd/dist/antd.css";
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";
-import { deParaStatus } from "../../helper";
+import { deParaStatusAltCronograma } from "components/screens/helper";
 
 const ListagemAlteracoesCronogramas = ({
   alteracoesCronogramas,
@@ -38,7 +38,7 @@ const ListagemAlteracoesCronogramas = ({
                 {!fornecedor && <div>{alteracaoCronograma.fornecedor}</div>}
                 <div>
                   {fornecedor
-                    ? deParaStatus(alteracaoCronograma.status)
+                    ? deParaStatusAltCronograma(alteracaoCronograma.status)
                     : alteracaoCronograma.status}
                 </div>
                 <div>{alteracaoCronograma.criado_em.split(" ")[0]}</div>
