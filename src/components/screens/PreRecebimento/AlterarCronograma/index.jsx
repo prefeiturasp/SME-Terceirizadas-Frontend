@@ -416,7 +416,9 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       {exibirJustificativaDinutre() && (
                         <div className="mt-4">
-                          <p>{solicitacaoAlteracaoCronograma.status}</p>
+                          {analisadoPelaDinutre() && (
+                            <p>{solicitacaoAlteracaoCronograma.status}</p>
+                          )}
                           {(aprovacaoDinutre === false ||
                             solicitacaoAlteracaoCronograma.status ===
                               "Reprovado DINUTRE") && (
