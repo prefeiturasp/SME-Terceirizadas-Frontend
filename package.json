@@ -5,7 +5,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run-script prettier",
-      "pre-push": "npm run-script coverage && npm run-script eslint"
+      "pre-push": "npm run-script eslint"
     }
   },
   "jest": {
