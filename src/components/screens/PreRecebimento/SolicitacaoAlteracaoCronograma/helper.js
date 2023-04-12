@@ -1,14 +1,14 @@
 export const option_status = [
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Cronograma Ciente"
   },
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Aprovado DINUTRE"
   },
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Aprovado CODAE"
   },
   {
@@ -24,6 +24,25 @@ export const option_status = [
     label: "Negado CODAE"
   }
 ];
+
+export const option_status_fornecedor = [
+  {
+    value: [
+      "EM_ANALISE",
+      "CRONOGRAMA_CIENTE",
+      "APROVADO_DINUTRE",
+      "REPROVADO_DINUTRE"
+    ],
+    label: "Em Análise"
+  }
+];
+
+export const deParaStatus = status =>
+  ["Cronograma ciente", "Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+    status
+  )
+    ? "Em análise"
+    : status;
 
 export const remove_filtros_nulos = filtros => {
   if (filtros["data_after"] === null) {
