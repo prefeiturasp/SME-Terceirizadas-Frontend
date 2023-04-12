@@ -177,8 +177,8 @@ export class StatusSolicitacoes extends Component {
       getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
         response => {
           this.setState({
-            solicitacoesFiltrados: ajustarFormatoLog(response.results),
-            solicitacoes: ajustarFormatoLog(response.results)
+            solicitacoesFiltrados: ajustarFormatoLog(response.data.results),
+            solicitacoes: ajustarFormatoLog(response.data.results)
           });
         }
       );
@@ -189,8 +189,8 @@ export class StatusSolicitacoes extends Component {
         offSet
       ).then(response => {
         this.setState({
-          solicitacoesFiltrados: ajustarFormatoLog(response.results),
-          solicitacoes: ajustarFormatoLog(response.results)
+          solicitacoesFiltrados: ajustarFormatoLog(response.data.results),
+          solicitacoes: ajustarFormatoLog(response.data.results)
         });
       });
     }
@@ -212,7 +212,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "pendentes-aut"
                 ),
                 count: response.count,
@@ -228,7 +228,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "pendentes-aut"
                 )
               });
@@ -239,7 +239,10 @@ export class StatusSolicitacoes extends Component {
             .getDietaEspecialNegadas(instituicao.uuid)
             .then(response => {
               this.setState({
-                solicitacoes: ajustarFormatoLog(response.results, "negadas"),
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  "negadas"
+                ),
                 count: response.count,
                 originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.NEGADO,
@@ -253,7 +256,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "negadas"
                 )
               });
@@ -265,7 +268,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 solicitacoes: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "autorizadas"
                 ),
                 count: response.count,
@@ -281,7 +284,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "autorizadas"
                 )
               });
@@ -292,7 +295,10 @@ export class StatusSolicitacoes extends Component {
             .getDietaEspecialCanceladas(instituicao.uuid)
             .then(response => {
               this.setState({
-                solicitacoes: ajustarFormatoLog(response.results, "canceladas"),
+                solicitacoes: ajustarFormatoLog(
+                  response.data.results,
+                  "canceladas"
+                ),
                 count: response.count,
                 originalCount: response.count,
                 tipoCard: CARD_TYPE_ENUM.CANCELADO,
@@ -306,7 +312,7 @@ export class StatusSolicitacoes extends Component {
             .then(response => {
               this.setState({
                 listaSolicitacoesSemFiltro: ajustarFormatoLog(
-                  response.results,
+                  response.data.results,
                   "canceladas"
                 )
               });
