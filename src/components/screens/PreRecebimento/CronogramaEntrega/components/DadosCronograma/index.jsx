@@ -1,3 +1,5 @@
+import { deParaStatusAltCronograma } from "components/screens/helper";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import React from "react";
 
 export default ({
@@ -36,7 +38,11 @@ export default ({
               <b>Status:</b>
             </p>
             <p className="head-green">
-              {solicitacaoAlteracaoCronograma.status}
+              {usuarioEhEmpresaFornecedor()
+                ? deParaStatusAltCronograma(
+                    solicitacaoAlteracaoCronograma.status
+                  )
+                : solicitacaoAlteracaoCronograma.status}
             </p>
           </div>
         </div>
