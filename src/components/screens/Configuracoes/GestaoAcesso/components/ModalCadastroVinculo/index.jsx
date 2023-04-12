@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,

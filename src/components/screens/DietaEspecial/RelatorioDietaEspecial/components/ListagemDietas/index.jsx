@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import { Paginacao } from "components/Shareable/Paginacao";
 import { STATUS_DIETAS } from "constants/shared";

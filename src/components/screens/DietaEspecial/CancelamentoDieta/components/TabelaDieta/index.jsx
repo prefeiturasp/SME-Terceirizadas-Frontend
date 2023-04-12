@@ -4,7 +4,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import ModalCancelamento from "../ModalCancelamento";
 import { TIPO_SOLICITACAO_DIETA } from "../../../../../../constants/shared";
 import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
