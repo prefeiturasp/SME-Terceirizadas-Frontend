@@ -264,9 +264,9 @@ export const camposLancheEmergTabelaEtec = (
   ehGrupoETECUrlParam
 ) => {
   let erro = false;
-  const inclusaoEtec = inclusoesEtecAutorizadas.filter(
-    inc => inc.dia === column.dia
-  );
+  const inclusaoEtec = ehGrupoETECUrlParam
+    ? inclusoesEtecAutorizadas.filter(inc => inc.dia === column.dia)
+    : [];
   const refeicaoValue =
     formValuesAtualizados[
       `refeicao__dia_${column.dia}__categoria_${categoria.id}`
