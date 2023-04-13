@@ -46,26 +46,24 @@ export const LOG_PARA = {
   TERCEIRIZADA: 2
 };
 
-class StatusSolicitacoesBase extends React.Component {
-  render() {
-    const atual = {
-      href: "#",
-      titulo: "Status Solicitações"
-    };
-    const anteriores = [
-      {
-        href: `/painel-dieta-especial`,
-        titulo: "Painel Dieta Especial"
-      }
-    ];
-    return (
-      <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
-        <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
-        <StatusSolicitacoes {...this.props} />
-      </Page>
-    );
-  }
-}
+const StatusSolicitacoesBase = props => {
+  const atual = {
+    href: "#",
+    titulo: "Status Solicitações"
+  };
+  const anteriores = [
+    {
+      href: `/painel-dieta-especial`,
+      titulo: "Painel Dieta Especial"
+    }
+  ];
+  return (
+    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+      <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
+      <StatusSolicitacoes {...props} />
+    </Page>
+  );
+};
 
 // Escola
 export const SolicitacoesDietaEspecialEscola = () => (
