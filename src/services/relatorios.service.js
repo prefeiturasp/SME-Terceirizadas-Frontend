@@ -389,3 +389,14 @@ export const getSolicitacoesDetalhadas = async params => {
     return data;
   }
 };
+
+export const gerarPDFRelatorioAlunosMatriculados = async params => {
+  const url = `/relatorio-alunos-matriculados/gerar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
