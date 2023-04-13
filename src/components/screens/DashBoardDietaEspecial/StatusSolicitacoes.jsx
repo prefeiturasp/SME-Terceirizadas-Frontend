@@ -61,6 +61,7 @@ function StatusSolicitacoes(props) {
   const [selecionarTodos, setSelecionarTodos] = useState(false);
   const [listaLotes, setListaLotes] = useState(null);
   const [filtrouInicial, setFiltroInicial] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const selectTodos = solicitacoes => {
     const novoEstadoSelecionarTodos = !selecionarTodos;
@@ -142,173 +143,164 @@ function StatusSolicitacoes(props) {
     fetchData();
   }, []);
 
-  const getSolicitacoesAutorizadas = async () => {
-    const response = await getDietaEspecialAutorizadas(instituicao.uuid);
-    setSolicitacoes(ajustarFormatoLog(response.results, "autorizadas"));
+  const updateSolicitacoesState = (response, tipo, titulo, urlPaginacao) => {
+    setSolicitacoes(ajustarFormatoLog(response.results, tipo));
     setCount(response.count);
     setOriginalCount(response.count);
-    setTipoCard(CARD_TYPE_ENUM.AUTORIZADO);
-    setIcone(ICON_CARD_TYPE_ENUM.AUTORIZADO);
-    setTitulo("Autorizadas");
-    setUrlPaginacao(retornaUrlPaginacao(visao, AUTORIZADOS_DIETA));
+    setTipoCard(CARD_TYPE_ENUM[tipo.toUpperCase()]);
+    setIcone(ICON_CARD_TYPE_ENUM[tipo.toUpperCase()]);
+    setTitulo(titulo);
+    setUrlPaginacao(urlPaginacao);
+  };
+
+  const updateSolicitacoesSemFiltro = (response, tipo) => {
+    setListaSolicitacoesSemFiltro(ajustarFormatoLog(response.results, tipo));
+  };
+
+  const getSolicitacoesAutorizadas = async () => {
+    const response = await getDietaEspecialAutorizadas(instituicao.uuid);
+    updateSolicitacoesState(
+      response,
+      "autorizado",
+      "Autorizadas",
+      retornaUrlPaginacao(visao, AUTORIZADOS_DIETA)
+    );
     const responseNaoPaginado = await getDietaEspecialAutorizadas(
       instituicao.uuid,
       true
     );
-    setListaSolicitacoesSemFiltro(
-      ajustarFormatoLog(responseNaoPaginado.results, "autorizadas")
+    updateSolicitacoesSemFiltro(responseNaoPaginado, "autorizadas");
+  };
+
+  const getSolicitacoesNegadas = async () => {
+    const response = await getDietaEspecialNegadas(instituicao.uuid);
+    updateSolicitacoesState(
+      response,
+      "negado",
+      "Negadas",
+      retornaUrlPaginacao(visao, NEGADOS_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialNegadas(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado, "negadas");
+  };
+
+  const getSolicitacoesPendentesAutorizacao = async () => {
+    const response = await getDietaEspecialPendenteAutorizacao(
+      instituicao.uuid
+    );
+    updateSolicitacoesState(
+      response,
+      "pendente",
+      getNomeCardAguardandoAutorizacao(),
+      retornaUrlPaginacao(visao, PENDENTES_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialPendenteAutorizacao(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado, "pendentes-aut");
+  };
+
+  const getSolicitacoesCanceladas = async () => {
+    const response = await getDietaEspecialCanceladas(instituicao.uuid);
+    updateSolicitacoesState(
+      response,
+      "cancelado",
+      "Canceladas",
+      retornaUrlPaginacao(visao, CANCELADOS_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialCanceladas(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado, "canceladas");
+  };
+
+  const getSolicitacoesAutorizadasTemporariamente = async () => {
+    const response = await getDietaEspecialAutorizadasTemporariamente(
+      instituicao.uuid
+    );
+    updateSolicitacoesState(
+      response.data,
+      "autorizado",
+      "Autorizadas Temporariamente",
+      retornaUrlPaginacao(visao, AUTORIZADAS_TEMPORARIAMENTE_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialAutorizadasTemporariamente(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "autorizadas-temp");
+  };
+
+  const getSolicitacoesAguardandoInicioVigencia = async () => {
+    const response = await getDietaEspecialAguardandoVigencia(instituicao.uuid);
+    updateSolicitacoesState(
+      response.data,
+      "aguardando_analise_reclamacao",
+      "Aguardando início da vigência",
+      retornaUrlPaginacao(visao, AGUARDANDO_VIGENCIA_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialAguardandoVigencia(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(
+      responseNaoPaginado.data,
+      "aguardando-inicio-vigencia"
     );
   };
 
+  const getSolicitacoesInativasTemporariamente = async () => {
+    const response = await getDietaEspecialInativasTemporariamente(
+      instituicao.uuid
+    );
+    updateSolicitacoesState(
+      response.data,
+      "aguardando_analise_reclamacao",
+      "Inativas Temporariamente",
+      retornaUrlPaginacao(visao, INATIVAS_TEMPORARIAMENTE_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialInativasTemporariamente(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas-temp");
+  };
+
+  const getSolicitacoesInativas = async () => {
+    const response = await getDietaEspecialInativas(instituicao.uuid);
+    updateSolicitacoesState(
+      response.data,
+      "cancelado",
+      "Inativas",
+      retornaUrlPaginacao(visao, INATIVAS_DIETA)
+    );
+    const responseNaoPaginado = await getDietaEspecialInativas(
+      instituicao.uuid,
+      true
+    );
+    updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas");
+  };
+
+  const solicitacaoHandlers = {
+    [SOLICITACOES_PENDENTES]: getSolicitacoesPendentesAutorizacao,
+    [SOLICITACOES_NEGADAS]: getSolicitacoesNegadas,
+    [SOLICITACOES_AUTORIZADAS]: getSolicitacoesAutorizadas,
+    [SOLICITACOES_CANCELADAS]: getSolicitacoesCanceladas,
+    [SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE]: getSolicitacoesAutorizadasTemporariamente,
+    [SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA]: getSolicitacoesAguardandoInicioVigencia,
+    [SOLICITACOES_INATIVAS_TEMPORARIAMENTE]: getSolicitacoesInativasTemporariamente,
+    [SOLICITACOES_INATIVAS]: getSolicitacoesInativas
+  };
+
   const getSolicitacoesAsync = async () => {
-    switch (tipoSolicitacao) {
-      case SOLICITACOES_PENDENTES:
-        getDietaEspecialPendenteAutorizacao(instituicao.uuid).then(response => {
-          setSolicitacoes(ajustarFormatoLog(response.results, "pendentes-aut"));
-          setCount(response.count);
-          setOriginalCount(response.count);
-          setTipoCard(CARD_TYPE_ENUM.PENDENTE);
-          setIcone(ICON_CARD_TYPE_ENUM.PENDENTE);
-          setTitulo(getNomeCardAguardandoAutorizacao());
-          setUrlPaginacao(retornaUrlPaginacao(visao, PENDENTES_DIETA));
-        });
-        getDietaEspecialPendenteAutorizacao(instituicao.uuid, true).then(
-          response => {
-            setListaSolicitacoesSemFiltro(
-              ajustarFormatoLog(response.results, "pendentes-aut")
-            );
-          }
-        );
-        break;
-      case SOLICITACOES_NEGADAS:
-        getDietaEspecialNegadas(instituicao.uuid).then(response => {
-          setSolicitacoes(ajustarFormatoLog(response.results, "negadas"));
-          setCount(response.count);
-          setOriginalCount(response.count);
-          setTipoCard(CARD_TYPE_ENUM.NEGADO);
-          setIcone(ICON_CARD_TYPE_ENUM.NEGADO);
-          setTitulo("Negadas");
-          setUrlPaginacao(retornaUrlPaginacao(visao, NEGADOS_DIETA));
-        });
-        getDietaEspecialNegadas(instituicao.uuid, true).then(response => {
-          setListaSolicitacoesSemFiltro(
-            ajustarFormatoLog(response.results, "negadas")
-          );
-        });
-        break;
-      case SOLICITACOES_AUTORIZADAS:
-        getSolicitacoesAutorizadas();
-        break;
-      case SOLICITACOES_CANCELADAS:
-        getDietaEspecialCanceladas(instituicao.uuid).then(response => {
-          setSolicitacoes(ajustarFormatoLog(response.results, "canceladas"));
-          setCount(response.count);
-          setOriginalCount(response.count);
-          setTipoCard(CARD_TYPE_ENUM.CANCELADO);
-          setIcone(ICON_CARD_TYPE_ENUM.CANCELADO);
-          setTitulo("Canceladas");
-          setUrlPaginacao(retornaUrlPaginacao(visao, CANCELADOS_DIETA));
-        });
-        getDietaEspecialCanceladas(instituicao.uuid, true).then(response => {
-          setListaSolicitacoesSemFiltro(
-            ajustarFormatoLog(response.results, "canceladas")
-          );
-        });
-        break;
-      case SOLICITACOES_AUTORIZADAS_TEMPORARIAMENTE:
-        getDietaEspecialAutorizadasTemporariamente(instituicao.uuid).then(
-          response => {
-            setSolicitacoes(
-              ajustarFormatoLog(response.data.results, "autorizadas-temp")
-            );
-            setCount(response.data.count);
-            setOriginalCount(response.data.count);
-            setTipoCard(CARD_TYPE_ENUM.AUTORIZADO);
-            setIcone(ICON_CARD_TYPE_ENUM.AUTORIZADO);
-            setTitulo("Autorizadas Temporariamente");
-            setUrlPaginacao(
-              retornaUrlPaginacao(visao, AUTORIZADAS_TEMPORARIAMENTE_DIETA)
-            );
-          }
-        );
-        getDietaEspecialAutorizadasTemporariamente(instituicao.uuid, true).then(
-          response => {
-            setListaSolicitacoesSemFiltro(
-              ajustarFormatoLog(response.data.results, "autorizadas-temp")
-            );
-          }
-        );
-        break;
-      case SOLICITACOES_AGUARDANDO_INICIO_VIGENCIA:
-        getDietaEspecialAguardandoVigencia(instituicao.uuid).then(response => {
-          setSolicitacoes(
-            ajustarFormatoLog(
-              response.data.results,
-              "aguardando-inicio-vigencia"
-            )
-          );
-          setCount(response.data.count);
-          setOriginalCount(response.data.count);
-          setTipoCard(CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
-          setIcone(ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
-          setTitulo("Aguardando início da vigência");
-          setUrlPaginacao(
-            retornaUrlPaginacao(visao, AGUARDANDO_VIGENCIA_DIETA)
-          );
-        });
-        getDietaEspecialAguardandoVigencia(instituicao.uuid, true).then(
-          response => {
-            setListaSolicitacoesSemFiltro(
-              ajustarFormatoLog(
-                response.data.results,
-                "aguardando-inicio-vigencia"
-              )
-            );
-          }
-        );
-        break;
-      case SOLICITACOES_INATIVAS_TEMPORARIAMENTE:
-        getDietaEspecialInativasTemporariamente(instituicao.uuid).then(
-          response => {
-            setSolicitacoes(
-              ajustarFormatoLog(response.data.results, "inativas-temp")
-            );
-            setCount(response.data.count);
-            setOriginalCount(response.data.count);
-            setTipoCard(CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
-            setIcone(ICON_CARD_TYPE_ENUM.AGUARDANDO_ANALISE_RECLAMACAO);
-            setTitulo("Inativas Temporariamente");
-            setUrlPaginacao(
-              retornaUrlPaginacao(visao, INATIVAS_TEMPORARIAMENTE_DIETA)
-            );
-          }
-        );
-        getDietaEspecialInativasTemporariamente(instituicao.uuid, true).then(
-          response => {
-            setListaSolicitacoesSemFiltro(
-              ajustarFormatoLog(response.data.results, "inativas-temp")
-            );
-          }
-        );
-        break;
-      case SOLICITACOES_INATIVAS:
-        getDietaEspecialInativas(instituicao.uuid).then(response => {
-          setSolicitacoes(ajustarFormatoLog(response.data.results, "inativas"));
-          setCount(response.data.count);
-          setOriginalCount(response.data.count);
-          setTipoCard(CARD_TYPE_ENUM.CANCELADO);
-          setIcone(ICON_CARD_TYPE_ENUM.CANCELADO);
-          setTitulo("Inativas");
-          setUrlPaginacao(retornaUrlPaginacao(visao, INATIVAS_DIETA));
-        });
-        getDietaEspecialInativas(instituicao.uuid, true).then(response => {
-          setListaSolicitacoesSemFiltro(
-            ajustarFormatoLog(response.data.results, "inativas")
-          );
-        });
-        break;
-      default:
-        break;
+    const handler = solicitacaoHandlers[tipoSolicitacao];
+    if (handler) {
+      handler();
     }
   };
 
@@ -372,23 +364,24 @@ function StatusSolicitacoes(props) {
   };
 
   const navegacaoPage = (multiploQuantidade, quantidadePorPagina) => {
+    setLoading(true);
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
+    const handleResponse = response => {
+      setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
+      setSolicitacoes(ajustarFormatoLog(response.results));
+      setLoading(false);
+    };
+
     if (visao === CODAE) {
       getPaginacaoSolicitacoesDietaEspecialCODAE(urlPaginacao, offSet).then(
-        response => {
-          setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
-          setSolicitacoes(ajustarFormatoLog(response.results));
-        }
+        handleResponse
       );
     } else {
       getPaginacaoSolicitacoesDietaEspecial(
         urlPaginacao,
         instituicao.uuid,
         offSet
-      ).then(response => {
-        setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
-        setSolicitacoes(ajustarFormatoLog(response.results));
-      });
+      ).then(handleResponse);
     }
   };
 
@@ -407,7 +400,7 @@ function StatusSolicitacoes(props) {
           />
         </div>
         <div className="pb-3" />
-        <Spin tip="Carregando..." spinning={!solicitacoesFiltrados}>
+        <Spin tip="Carregando..." spinning={!solicitacoesFiltrados || loading}>
           {solicitacoesFiltrados && (
             <CardListarSolicitacoes
               titulo={titulo}
