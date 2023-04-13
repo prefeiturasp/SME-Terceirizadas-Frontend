@@ -31,7 +31,7 @@ export default () => (
   <Page
     botaoVoltar
     voltarPara={`/${PRE_RECEBIMENTO}/${
-      usuarioEhEmpresaFornecedor
+      usuarioEhEmpresaFornecedor()
         ? SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
         : SOLICITACAO_ALTERACAO_CRONOGRAMA
     }`}
