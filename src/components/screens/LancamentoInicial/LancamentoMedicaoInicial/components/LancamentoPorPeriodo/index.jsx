@@ -12,6 +12,7 @@ import {
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
@@ -46,6 +47,10 @@ export default ({
   const [
     solicitacoesInclusoesEtecAutorizadas,
     setSolicitacoesInclusoesEtecAutorizadas
+  ] = useState(undefined);
+  const [
+    quantidadeAlimentacoesLancadas,
+    setQuantidadeAlimentacoesLancadas
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
 
@@ -120,11 +125,26 @@ export default ({
     }
   };
 
+  const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
+    const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
+    const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
+      params
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setQuantidadeAlimentacoesLancadas(response.data.results);
+    } else {
+      toastError(
+        "Erro ao carregar quantidades de alimentações lançadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
+    getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodoSelecionado]);
 
@@ -181,7 +201,7 @@ export default ({
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
-      {!erroAPI && (
+      {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
           <div className="row pb-2">
             <div className="col">
@@ -195,11 +215,11 @@ export default ({
               key={index}
               textoCabecalho={periodo.periodo_escolar.nome}
               cor={CORES[index]}
-              totalAlimentacoes={0}
               tipos_alimentacao={periodo.tipos_alimentacao}
               periodoSelecionado={periodoSelecionado}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           ))}
           {periodosInclusaoContinua &&
@@ -217,11 +237,13 @@ export default ({
                   grupo="Programas e Projetos"
                   textoCabecalho={periodo}
                   cor={CORES[4]}
-                  totalAlimentacoes={0}
                   tipos_alimentacao={tiposAlimentacao}
                   periodoSelecionado={periodoSelecionado}
                   solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                   objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                  quantidadeAlimentacoesLancadas={
+                    quantidadeAlimentacoesLancadas
+                  }
                 />
               );
             })}
@@ -233,12 +255,12 @@ export default ({
             <CardLancamento
               grupo="Solicitações de Alimentação"
               cor={CORES[5]}
-              totalAlimentacoes={0}
-              tipos_alimentacao={["Kits Lanches", "Lanches Emergenciais"]}
+              tipos_alimentacao={["Kit Lanche", "Lanche Emergencial"]}
               periodoSelecionado={periodoSelecionado}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
               ehGrupoSolicitacoesDeAlimentacao={true}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           )}
           {solicitacoesInclusoesEtecAutorizadas &&
@@ -246,12 +268,12 @@ export default ({
               <CardLancamento
                 grupo="ETEC"
                 cor={CORES[6]}
-                totalAlimentacoes={0}
                 tipos_alimentacao={tiposAlimentacaoETEC()}
                 periodoSelecionado={periodoSelecionado}
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 ehGrupoETEC={true}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
               />
             )}
           <div className="row mt-4">
