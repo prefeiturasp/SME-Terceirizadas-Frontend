@@ -15,7 +15,7 @@ export const Container = () => {
     const response = await getMeusLotes();
     if (response.status === HTTP_STATUS.OK) {
       setListaLotes(
-        [{ nome: "Selecione um lote", uuid: "" }].concat(response.results)
+        [{ nome: "Selecione um lote", uuid: "" }].concat(response.data.results)
       );
     } else {
       setErro("Erro ao carregar lotes");
