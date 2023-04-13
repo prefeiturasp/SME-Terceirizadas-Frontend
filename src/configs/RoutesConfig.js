@@ -1694,7 +1694,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhCronograma() ||
       usuarioEhDinutreDiretoria() ||
-      usuarioEhDilogDiretoria()
+      usuarioEhDilogDiretoria() ||
+      usuarioEhEmpresaFornecedor()
   },
   {
     /*

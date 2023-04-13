@@ -51,6 +51,16 @@ export const analiseDinutreSolicitacaoAlteracaoCronograma = async (
   );
 };
 
+export const analiseDilogSolicitacaoAlteracaoCronograma = async (
+  uuid,
+  payload
+) => {
+  return await axios.patch(
+    `solicitacao-de-alteracao-de-cronograma/${uuid}/analise-dilog/`,
+    payload
+  );
+};
+
 export const getListagemSolicitacaoAlteracaoCronograma = async params => {
   const url = `/solicitacao-de-alteracao-de-cronograma/`;
   return await axios.get(url, { params });

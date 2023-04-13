@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import {
+  analiseDilogSolicitacaoAlteracaoCronograma,
   analiseDinutreSolicitacaoAlteracaoCronograma,
   cadastraSolicitacaoAlteracaoCronograma,
   getCronograma,
@@ -11,6 +12,7 @@ import { Form, Field } from "react-final-form";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import DadosCronograma from "../CronogramaEntrega/components/DadosCronograma";
 import TabelaEditarCronograma from "./components/TabelaEditarCronograma";
+import AnaliseDilogDiretoria from "./components/AnaliseDilogDiretoria";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import "./styles.scss";
 import AcoesAlterar from "./components/AcoesAlterar";
@@ -23,7 +25,10 @@ import {
 } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import { OnChange } from "react-final-form-listeners";
-import { usuarioEhDinutreDiretoria } from "helpers/utilities";
+import {
+  usuarioEhDilogDiretoria,
+  usuarioEhDinutreDiretoria
+} from "helpers/utilities";
 import { Radio } from "antd";
 
 const opcoesMotivos = [
@@ -48,6 +53,7 @@ export default ({ analiseSolicitacao }) => {
   const [etapas, setEtapas] = useState([{}]);
   const [cronograma, setCronograma] = useState(null);
   const [aprovacaoDinutre, setAprovacaoDinutre] = useState(null);
+  const [aprovacaoDilog, setAprovacaoDilog] = useState(null);
   const [
     solicitacaoAlteracaoCronograma,
     setSolicitacaoAlteracaoCronograma
@@ -58,6 +64,13 @@ export default ({ analiseSolicitacao }) => {
   const onChangeCampos = e => {
     setAprovacaoDinutre(e.target.value);
   };
+
+  const exibirJustificativaDinutre = () =>
+    aprovacaoDinutre === false ||
+    ((usuarioEhDilogDiretoria() || usuarioEhDinutreDiretoria) &&
+      ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+        solicitacaoAlteracaoCronograma.status
+      ));
 
   const checarQuantidadeInformada = values_ => {
     return !values_.includes("ALTERAR_QTD_ALIMENTO") || restante === 0;
@@ -119,6 +132,12 @@ export default ({ analiseSolicitacao }) => {
     }
   };
 
+  const analisadoPelaDinutre = () => {
+    return ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+      solicitacaoAlteracaoCronograma.status
+    );
+  };
+
   const verificarQuantidadesPreenchidas = values => {
     if (values.motivos.includes("ALTERAR_QTD_ALIMENTO")) {
       return etapas.every(
@@ -158,6 +177,25 @@ export default ({ analiseSolicitacao }) => {
       });
   };
 
+  const analiseDilog = async (values, aprovado) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const payload = {
+      aprovado: aprovado
+    };
+    if (!aprovado) {
+      payload.justificativa_dilog = values["justificativa_dilog"];
+    }
+    await analiseDilogSolicitacaoAlteracaoCronograma(uuid, payload)
+      .then(() => {
+        toastSuccess("Análise da alteração enviada com sucesso!");
+        history.push(`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`);
+      })
+      .catch(() => {
+        toastError("Ocorreu um erro ao salvar o Cronograma");
+      });
+  };
+
   const analiseDinutre = async (values, aprovado) => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -181,22 +219,33 @@ export default ({ analiseSolicitacao }) => {
     return aprovacaoDinutre !== true && !values.justificativa_dinutre;
   };
 
+  const disabledDilog = values => {
+    return aprovacaoDilog !== true && !values.justificativa_dilog;
+  };
+
   const defineSubmit = values => {
     if (usuarioEhDinutreDiretoria()) {
       analiseDinutre(values, aprovacaoDinutre);
+    } else if (usuarioEhDilogDiretoria()) {
+      analiseDilog(values, aprovacaoDilog);
     } else {
       cadastraAlteracao(values);
     }
   };
 
-  const buscaLogJustificativaCronograma = logs => {
+  const buscaLogJustificativaCronograma = (logs, autorJustificativa) => {
+    const dict_logs = {
+      cronograma: ["Cronograma ciente alteração cronograma"],
+      dinutre: [
+        "Alteração cronograma aprovada pela DINUTRE",
+        "Alteração cronograma reprovada pela DINUTRE"
+      ]
+    };
     let log_correto = logs.find(log => {
-      return (
-        log.status_evento_explicacao ===
-        "Cronograma ciente alteração cronograma"
+      return dict_logs[autorJustificativa].includes(
+        log.status_evento_explicacao
       );
     });
-
     return log_correto ? log_correto.justificativa : "";
   };
 
@@ -232,7 +281,12 @@ export default ({ analiseSolicitacao }) => {
                       : undefined,
                     justificativa: solicitacaoAlteracaoCronograma.justificativa,
                     justificativa_cronograma: buscaLogJustificativaCronograma(
-                      solicitacaoAlteracaoCronograma.logs
+                      solicitacaoAlteracaoCronograma.logs,
+                      "cronograma"
+                    ),
+                    justificativa_dinutre: buscaLogJustificativaCronograma(
+                      solicitacaoAlteracaoCronograma.logs,
+                      "dinutre"
                     )
                   };
                   solicitacaoAlteracaoCronograma.etapas.forEach(e => {
@@ -329,7 +383,8 @@ export default ({ analiseSolicitacao }) => {
                       }}
                     </OnChange>
                   </div>
-                  {usuarioEhDinutreDiretoria() && (
+                  {(usuarioEhDinutreDiretoria() ||
+                    (usuarioEhDilogDiretoria() && analisadoPelaDinutre())) && (
                     <>
                       <hr />
                       <p className="head-green">Análise Cronograma</p>
@@ -342,34 +397,55 @@ export default ({ analiseSolicitacao }) => {
                         />
                       </div>
                       <hr />
-                      <p className="head-green">Análise da DINUTRE</p>
-                      <Radio.Group
-                        size="large"
-                        onChange={onChangeCampos}
-                        value={aprovacaoDinutre}
-                      >
-                        <Radio className="radio-entrega-sim" value={true}>
-                          Analise Aprovada
-                        </Radio>
-                        <Radio className="radio-entrega-nao" value={false}>
-                          Analise Reprovada
-                        </Radio>
-                      </Radio.Group>
-                      {aprovacaoDinutre === false && (
+                      <p className="head-green">Análise DINUTRE</p>
+                      {usuarioEhDinutreDiretoria() &&
+                        solicitacaoAlteracaoCronograma.status ===
+                          "Cronograma ciente" && (
+                          <Radio.Group
+                            size="large"
+                            onChange={onChangeCampos}
+                            value={aprovacaoDinutre}
+                          >
+                            <Radio className="radio-entrega-sim" value={true}>
+                              Analise Aprovada
+                            </Radio>
+                            <Radio className="radio-entrega-nao" value={false}>
+                              Analise Reprovada
+                            </Radio>
+                          </Radio.Group>
+                        )}
+                      {exibirJustificativaDinutre() && (
                         <div className="mt-4">
-                          <label className="label font-weight-normal">
-                            <span>* </span>Justificativa
-                          </label>
-                          <Field
-                            component={TextArea}
-                            name="justificativa_dinutre"
-                            placeholder="Escreva as alterações necessárias"
-                            className="input-busca-produto"
-                          />
+                          {analisadoPelaDinutre() && (
+                            <p>{solicitacaoAlteracaoCronograma.status}</p>
+                          )}
+                          {(aprovacaoDinutre === false ||
+                            solicitacaoAlteracaoCronograma.status ===
+                              "Reprovado DINUTRE") && (
+                            <>
+                              <label className="label font-weight-normal">
+                                <span>* </span>Justificativa
+                              </label>
+                              <Field
+                                component={TextArea}
+                                disabled={analisadoPelaDinutre()}
+                                name="justificativa_dinutre"
+                                placeholder="Escreva as alterações necessárias"
+                                className="input-busca-produto"
+                              />
+                            </>
+                          )}
                         </div>
                       )}
                     </>
                   )}
+                  {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
+                    <AnaliseDilogDiretoria
+                      aprovacaoDilog={aprovacaoDilog}
+                      setAprovacaoDilog={setAprovacaoDilog}
+                    />
+                  )}
+
                   <div className="mt-4 mb-4">
                     <AcoesAlterar
                       cronograma={cronograma}
@@ -379,6 +455,7 @@ export default ({ analiseSolicitacao }) => {
                       handleSubmit={handleSubmit}
                       podeSubmeter={podeSubmeter}
                       disabledDinutre={disabledDinutre(values)}
+                      disabledDilog={disabledDilog(values)}
                     />
                   </div>
                 </form>
