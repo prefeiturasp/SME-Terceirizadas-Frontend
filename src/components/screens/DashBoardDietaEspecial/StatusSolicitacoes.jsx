@@ -136,7 +136,9 @@ function StatusSolicitacoes(props) {
       if (usuarioEhEmpresaTerceirizada()) {
         const response = await getMeusLotes();
         setListaLotes(
-          [{ nome: "Selecione um lote", uuid: "" }].concat(response.results)
+          [{ nome: "Selecione um lote", uuid: "" }].concat(
+            response.data.results
+          )
         );
       }
     };
@@ -144,7 +146,7 @@ function StatusSolicitacoes(props) {
   }, []);
 
   const updateSolicitacoesState = (response, tipo, titulo, urlPaginacao) => {
-    setSolicitacoes(ajustarFormatoLog(response.results, tipo));
+    setSolicitacoes(ajustarFormatoLog(response.data.results, tipo));
     setCount(response.count);
     setOriginalCount(response.count);
     setTipoCard(CARD_TYPE_ENUM[tipo.toUpperCase()]);
@@ -154,7 +156,9 @@ function StatusSolicitacoes(props) {
   };
 
   const updateSolicitacoesSemFiltro = (response, tipo) => {
-    setListaSolicitacoesSemFiltro(ajustarFormatoLog(response.results, tipo));
+    setListaSolicitacoesSemFiltro(
+      ajustarFormatoLog(response.data.results, tipo)
+    );
   };
 
   const getSolicitacoesAutorizadas = async () => {
@@ -167,7 +171,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAutorizadas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "autorizadas");
   };
@@ -182,7 +186,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialNegadas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "negadas");
   };
@@ -199,7 +203,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialPendenteAutorizacao(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "pendentes-aut");
   };
@@ -214,7 +218,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialCanceladas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "canceladas");
   };
@@ -231,7 +235,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAutorizadasTemporariamente(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "autorizadas-temp");
   };
@@ -246,7 +250,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAguardandoVigencia(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(
       responseNaoPaginado.data,
@@ -266,7 +270,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialInativasTemporariamente(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas-temp");
   };
@@ -281,7 +285,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialInativas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas");
   };
@@ -367,8 +371,8 @@ function StatusSolicitacoes(props) {
     setLoading(true);
     const offSet = quantidadePorPagina * (multiploQuantidade - 1);
     const handleResponse = response => {
-      setSolicitacoesFiltrados(ajustarFormatoLog(response.results));
-      setSolicitacoes(ajustarFormatoLog(response.results));
+      setSolicitacoesFiltrados(ajustarFormatoLog(response.data.results));
+      setSolicitacoes(ajustarFormatoLog(response.data.results));
       setLoading(false);
     };
 
