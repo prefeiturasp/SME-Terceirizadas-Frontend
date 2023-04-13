@@ -8,6 +8,7 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   usuarioEhCronograma,
+  usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
@@ -19,12 +20,14 @@ import {
   SOLICITACAO_ALTERACAO_CRONOGRAMA
 } from "configs/constants";
 import ModalAnaliseDinutre from "../Modals/ModalAnaliseDinutre";
+import ModalAnaliseDilog from "../Modals/ModalAnaliseDilog";
 
 export default ({
   handleSubmit,
   podeSubmeter,
   solicitacaoAlteracaoCronograma,
-  disabledDinutre
+  disabledDinutre,
+  disabledDilog
 }) => {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -47,7 +50,7 @@ export default ({
 
   return (
     <>
-      {usuarioEhEmpresaFornecedor() && (
+      {usuarioEhEmpresaFornecedor() && !solicitacaoAlteracaoCronograma && (
         <Botao
           texto="Enviar Solicitação"
           type={BUTTON_TYPE.BUTTON}
@@ -83,6 +86,20 @@ export default ({
             className="float-right ml-3"
             onClick={() => handleShow()}
             disabled={disabledDinutre}
+          />
+        )}
+
+      {usuarioEhDilogDiretoria() &&
+        ["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+          solicitacaoAlteracaoCronograma.status
+        ) && (
+          <Botao
+            texto="Enviar Fornecedor"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            className="float-right ml-3"
+            onClick={() => handleShow()}
+            disabled={disabledDilog}
           />
         )}
       <Botao
@@ -130,6 +147,14 @@ export default ({
       )}
       {usuarioEhDinutreDiretoria() && (
         <ModalAnaliseDinutre
+          show={show}
+          handleClose={handleClose}
+          loading={loading}
+          handleSim={handleSim}
+        />
+      )}
+      {usuarioEhDilogDiretoria() && (
+        <ModalAnaliseDilog
           show={show}
           handleClose={handleClose}
           loading={loading}
