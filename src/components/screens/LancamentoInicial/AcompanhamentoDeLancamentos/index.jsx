@@ -128,8 +128,6 @@ export const AcompanhamentoDeLancamentos = () => {
     getDashboardMedicaoInicialAsync();
     getMesesAnosSolicitacoesMedicaoinicialAsync();
     getTiposUnidadeEscolarAsync();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diretoriaRegional]);
 
   useEffect(() => {

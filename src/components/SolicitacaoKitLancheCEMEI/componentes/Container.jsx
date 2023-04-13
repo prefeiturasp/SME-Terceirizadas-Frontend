@@ -61,7 +61,6 @@ export const Container = () => {
     getDiasUteisAsync();
     getKitsAsync();
     getDietasAtivasInativasPorAlunoAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

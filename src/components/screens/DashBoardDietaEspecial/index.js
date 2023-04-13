@@ -185,7 +185,6 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       getSolicitacoesAsync(PARAMS);
       getMeusLotesAsync();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instituicao]);
 
   useEffect(() => {

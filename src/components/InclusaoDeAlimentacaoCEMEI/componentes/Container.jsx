@@ -132,7 +132,6 @@ export const Container = () => {
     getMotivosInclusaoNormalAsync();
     getMotivosInclusaoContinuaAsync();
     getDiasUteisAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

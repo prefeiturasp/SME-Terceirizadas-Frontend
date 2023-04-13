@@ -48,7 +48,6 @@ const InformacoesAluno = ({ aluno, status_solicitacao }) => {
 
   useEffect(() => {
     aluno.codigo_eol && getFoto();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const atualizarFoto = async files => {

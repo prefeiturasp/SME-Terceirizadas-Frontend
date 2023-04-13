@@ -166,7 +166,6 @@ export default ({ reposicao }) => {
     setValoresForm(valoresConf);
 
     if (reposicao) validaReposicao(valoresConf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const subtitulo = reposicao

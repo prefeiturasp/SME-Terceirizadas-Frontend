@@ -106,7 +106,6 @@ export class Cards extends Component {
                   style={checkStyle}
                   name={`${name}[${index}]`}
                   id={`checkbox-${index}`}
-                  index={index}
                   disabled={disabled}
                   checked={checked}
                   onChange={handleChange}

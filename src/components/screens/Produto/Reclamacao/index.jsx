@@ -29,7 +29,7 @@ class ReclamacaoProduto extends Component {
     };
     this.TAMANHO_PAGINA = 10;
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { history, reset } = this.props;
     if (history && history.action === "PUSH") {
       reset();
@@ -55,23 +55,18 @@ class ReclamacaoProduto extends Component {
     this.atualizaListaProdutos(this.state.formValues, page);
   };
 
-  atualizaListaProdutos = (formValues, page) => {
-    return new Promise(async (resolve, reject) => {
-      const response = await getProdutosPorParametros(
-        formValues,
-        page,
-        this.TAMANHO_PAGINA
-      );
-      this.setState({ loading: false });
-      if (response.status === 200) {
-        this.props.setIndiceProdutoAtivo(0);
-        this.props.setProdutos(response.data.results);
-        this.props.setProdutosCount(response.data.count);
-        resolve();
-      } else {
-        reject(response.errors);
-      }
-    });
+  atualizaListaProdutos = async (formValues, page) => {
+    const response = await getProdutosPorParametros(
+      formValues,
+      page,
+      this.TAMANHO_PAGINA
+    );
+    this.setState({ loading: false });
+    if (response.status === 200) {
+      this.props.setIndiceProdutoAtivo(0);
+      this.props.setProdutos(response.data.results);
+      this.props.setProdutosCount(response.data.count);
+    }
   };
 
   onSubmitFormBuscaProduto = formValues => {

@@ -64,7 +64,6 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
 
   useEffect(() => {
     getSolicitacoesAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let typingTimeout = null;

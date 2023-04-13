@@ -30,7 +30,7 @@ import {
   TIPO_SOLICITACAO_DIETA
 } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
@@ -141,7 +141,6 @@ const Relatorio = ({ visao }) => {
     tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       card === "pendentes-aut" &&
       initSocket(uuid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

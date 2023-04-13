@@ -98,7 +98,6 @@ export const AlunosMatriculados = () => {
   useEffect(() => {
     getOpcoesFiltros();
     getTodasFaixasEtarias();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

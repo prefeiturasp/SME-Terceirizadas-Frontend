@@ -74,7 +74,6 @@ export const Container = () => {
     getMeusDadosAsync();
     getMotivosAlteracaoCardapioAsync();
     getDiasUteisAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

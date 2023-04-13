@@ -48,7 +48,7 @@ export default class ModalReclamacaoProduto extends Component {
     };
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const meusDadosResposta = await meusDados();
     const escolasResposta = await getEscolasTrecTotal();
     this.setState({
@@ -106,21 +106,17 @@ export default class ModalReclamacaoProduto extends Component {
         escola => escola.label === values_.escola
       ).uuid;
     }
-    return new Promise(async (resolve, reject) => {
-      const response = await escolaOuNutriReclamaDoProduto(
-        this.props.produto.ultima_homologacao.uuid,
-        values_
-      );
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Reclamação de produto registrada com sucesso!");
-        resolve();
-        this.props.closeModal();
-        this.props.onAtualizarProduto();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError("Houve um erro ao registrar a reclamação de produto");
-        reject(response.data);
-      }
-    });
+    const response = await escolaOuNutriReclamaDoProduto(
+      this.props.produto.ultima_homologacao.uuid,
+      values_
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Reclamação de produto registrada com sucesso!");
+      this.props.closeModal();
+      this.props.onAtualizarProduto();
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Houve um erro ao registrar a reclamação de produto");
+    }
   };
 
   render() {

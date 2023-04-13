@@ -6,7 +6,7 @@ export const CleanCheckbox = props => {
   return (
     <div className="clean-checkbox-component">
       <label htmlFor="check" className="checkbox-label">
-        <input component={"input"} type="checkbox" name={name} />
+        <input type="checkbox" name={name} />
         <span onClick={onClick} className="checkbox-custom" />{" "}
         {texto || props.children}
       </label>
