@@ -1,3 +1,5 @@
+import { deParaStatusAltCronograma } from "components/screens/helper";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import React from "react";
 
 export default ({
@@ -36,7 +38,11 @@ export default ({
               <b>Status:</b>
             </p>
             <p className="head-green">
-              {solicitacaoAlteracaoCronograma.status}
+              {usuarioEhEmpresaFornecedor()
+                ? deParaStatusAltCronograma(
+                    solicitacaoAlteracaoCronograma.status
+                  )
+                : solicitacaoAlteracaoCronograma.status}
             </p>
           </div>
         </div>
@@ -136,8 +142,12 @@ export default ({
                         <td className="borda-crono">{etapa.numero_empenho}</td>
                         <td className="borda-crono">{etapa.etapa}</td>
                         <td className="borda-crono">{etapa.parte}</td>
-                        <td className="borda-crono">{etapa.data_programada}</td>
-                        <td className="borda-crono">{etapa.quantidade}</td>
+                        <td className="borda-crono">
+                          {etapa.data_programada_atual}
+                        </td>
+                        <td className="borda-crono">
+                          {etapa.quantidade_atual}
+                        </td>
                         <td className="borda-crono">
                           {etapa.total_embalagens}
                         </td>

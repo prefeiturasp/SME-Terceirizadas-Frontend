@@ -5,9 +5,11 @@ import Page from "components/Shareable/Page/Page";
 import {
   ALTERACAO_CRONOGRAMA,
   PRE_RECEBIMENTO,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA
+  SOLICITACAO_ALTERACAO_CRONOGRAMA,
+  SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
 } from "configs/constants";
 import AlterarCronograma from "components/screens/PreRecebimento/AlterarCronograma";
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 
 const atual = {
   href: `/${PRE_RECEBIMENTO}/${ALTERACAO_CRONOGRAMA}`,
@@ -28,7 +30,11 @@ const anteriores = [
 export default () => (
   <Page
     botaoVoltar
-    voltarPara={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
+    voltarPara={`/${PRE_RECEBIMENTO}/${
+      usuarioEhEmpresaFornecedor
+        ? SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
+        : SOLICITACAO_ALTERACAO_CRONOGRAMA
+    }`}
     titulo={atual.titulo}
   >
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
