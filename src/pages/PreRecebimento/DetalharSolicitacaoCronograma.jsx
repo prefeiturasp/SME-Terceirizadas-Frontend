@@ -26,11 +26,7 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page
-    botaoVoltar
-    voltarPara={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
-    titulo={atual.titulo}
-  >
+  <Page botaoVoltar titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <AlterarCronograma analiseSolicitacao={true} />
   </Page>
