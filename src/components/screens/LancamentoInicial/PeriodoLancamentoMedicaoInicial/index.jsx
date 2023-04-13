@@ -442,25 +442,28 @@ export default () => {
 
       setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
 
-      const response_categorias_medicao = await getCategoriasDeMedicao();
+      let response_categorias_medicao = await getCategoriasDeMedicao();
       if (ehGrupoSolicitacoesDeAlimentacaoUrlParam) {
-        setCategoriasDeMedicao(
-          response_categorias_medicao.data.filter(categoria => {
+        response_categorias_medicao = response_categorias_medicao.data.filter(
+          categoria => {
             return categoria.nome.includes("SOLICITAÇÕES");
-          })
+          }
         );
+        setCategoriasDeMedicao(response_categorias_medicao);
       } else if (ehGrupoETECUrlParam) {
-        setCategoriasDeMedicao(
-          response_categorias_medicao.data.filter(categoria => {
+        response_categorias_medicao = response_categorias_medicao.data.filter(
+          categoria => {
             return categoria.nome === "ALIMENTAÇÃO";
-          })
+          }
         );
+        setCategoriasDeMedicao(response_categorias_medicao);
       } else {
-        setCategoriasDeMedicao(
-          response_categorias_medicao.data.filter(categoria => {
+        response_categorias_medicao = response_categorias_medicao.data.filter(
+          categoria => {
             return !categoria.nome.includes("SOLICITAÇÕES");
-          })
+          }
         );
+        setCategoriasDeMedicao(response_categorias_medicao);
       }
 
       let params = {
@@ -581,7 +584,7 @@ export default () => {
       await formatarDadosValoresMedicao(
         mesAnoFormatado,
         response_valores_periodos.data,
-        response_categorias_medicao.data,
+        response_categorias_medicao,
         tiposAlimentacaoFormatadas,
         response_matriculados.data,
         rowsDietas,

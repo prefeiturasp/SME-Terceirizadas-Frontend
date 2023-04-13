@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
@@ -13,6 +14,11 @@ import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
 import { ASelect } from "./MakeField";
 import { getNomesUnicosEditais } from "services/produto.service";
+import {
+  updateStatusDieta,
+  updateTituloDieta,
+  updateLoteDieta
+} from "../../reducers/filtersDietaReducer";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
@@ -94,47 +100,46 @@ const CardBody = props => {
                     </div>
                   )}
 
-                  {!ehEscola && (
-                    <div
-                      className={`${
-                        ehTerceirizada && props.listaStatus && props.listaLotes
-                          ? "offset-3 col-6"
-                          : exibirFiltrosDataEventoETipoSolicitacao
-                          ? "col-3"
-                          : ehDashboardGestaoProduto
-                          ? "col-4"
-                          : "offset-3 col-3"
-                      }`}
-                    >
-                      {loadingDietas && (
-                        <div>
-                          <Spin
-                            className="carregando-filtro"
-                            tip="Carregando Filtro..."
-                          />
-                        </div>
-                      )}
-                      <Field
-                        className={
-                          exibirFiltrosDataEventoETipoSolicitacao
-                            ? "input-com-filtros-adicionais"
-                            : ""
-                        }
-                        component={InputText}
-                        name="titulo"
-                        placeholder={loadingDietas ? "" : "Pesquisar"}
-                        disabled={loadingDietas || filtrosDesabilitados}
-                      />
-                      <div className="warning-num-charac">
-                        * mínimo de 3 caracteres
+                  <div
+                    className={`${
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "offset-3 col-6"
+                        : exibirFiltrosDataEventoETipoSolicitacao
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
+                        ? "col-4"
+                        : "offset-3 col-3"
+                    }`}
+                  >
+                    {loadingDietas && (
+                      <div>
+                        <Spin
+                          className="carregando-filtro"
+                          tip="Carregando Filtro..."
+                        />
                       </div>
+                    )}
+                    <Field
+                      className={
+                        exibirFiltrosDataEventoETipoSolicitacao
+                          ? "input-com-filtros-adicionais"
+                          : ""
+                      }
+                      component={InputText}
+                      name="titulo"
+                      placeholder={loadingDietas ? "" : "Pesquisar"}
+                      disabled={loadingDietas || filtrosDesabilitados}
+                    />
+                    <div className="warning-num-charac">
+                      * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
+                          props.updateTituloDieta(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
                     </div>
-                  )}
+                  </div>
                   {exibirFiltrosDataEventoETipoSolicitacao &&
                     pathname === "/painel-gestao-produto" &&
                     ehTerceirizada && (
@@ -207,7 +212,8 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="status">
-                          {() => {
+                          {status => {
+                            props.updateStatusDieta(status);
                             props.onChange(values);
                           }}
                         </OnChange>
@@ -223,7 +229,8 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="lote">
-                          {() => {
+                          {lote => {
+                            props.updateLoteDieta(lote);
                             props.onChange(values);
                           }}
                         </OnChange>
@@ -271,4 +278,19 @@ const CardBody = props => {
   );
 };
 
-export default CardBody;
+const mapDispatchToProps = dispatch => ({
+  updateStatusDieta: statusDieta => {
+    dispatch(updateStatusDieta(statusDieta));
+  },
+  updateTituloDieta: tituloDieta => {
+    dispatch(updateTituloDieta(tituloDieta));
+  },
+  updateLoteDieta: loteDieta => {
+    dispatch(updateLoteDieta(loteDieta));
+  }
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CardBody);
