@@ -171,7 +171,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAutorizadas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "autorizadas");
   };
@@ -186,7 +186,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialNegadas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "negadas");
   };
@@ -203,7 +203,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialPendenteAutorizacao(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "pendentes-aut");
   };
@@ -218,7 +218,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialCanceladas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado, "canceladas");
   };
@@ -235,7 +235,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAutorizadasTemporariamente(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "autorizadas-temp");
   };
@@ -250,7 +250,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialAguardandoVigencia(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(
       responseNaoPaginado.data,
@@ -270,7 +270,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialInativasTemporariamente(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas-temp");
   };
@@ -285,7 +285,7 @@ function StatusSolicitacoes(props) {
     );
     const responseNaoPaginado = await getDietaEspecialInativas(
       instituicao.uuid,
-      true
+      { sem_paginacao: true }
     );
     updateSolicitacoesSemFiltro(responseNaoPaginado.data, "inativas");
   };
