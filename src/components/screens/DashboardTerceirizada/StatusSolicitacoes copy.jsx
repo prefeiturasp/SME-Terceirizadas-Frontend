@@ -18,10 +18,7 @@ import {
   TIPO_PERFIL
 } from "constants/shared";
 import { GESTAO_PRODUTO_CARDS } from "configs/constants";
-import {
-  getHomologacoesDeProdutoPorStatusTitulo,
-  getNomesUnicosEditais
-} from "services/produto.service";
+import { getHomologacoesDeProdutoPorStatusTitulo } from "services/produto.service";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -46,7 +43,6 @@ export class StatusSolicitacoes extends Component {
       tipoCard: "...",
       icone: "...",
       listaLotes: null,
-      editais: [],
       loading: true,
       erro: false,
       currentPage: 1,
@@ -158,41 +154,7 @@ export class StatusSolicitacoes extends Component {
         values.status
       );
     }
-    if (values.marcaProduto && values.marcaProduto.length > 0) {
-      solicitacoesFiltrados = this.filtrarMarca(
-        solicitacoesFiltrados,
-        values.marcaProduto
-      );
-    }
-
-    if (values.editalProduto && values.editalProduto.length > 0) {
-      solicitacoesFiltrados = this.filtrarEdital(
-        solicitacoesFiltrados,
-        values.editalProduto
-      );
-    }
-    if (values.nomeProduto && values.nomeProduto.length > 2) {
-      solicitacoesFiltrados = this.filtrarNome(
-        solicitacoesFiltrados,
-        values.nomeProduto
-      );
-    }
     this.setState({ solicitacoesFiltrados });
-  }
-
-  filtrarMarca(listaFiltro, value) {
-    return listaFiltro.filter(item =>
-      item.marca.toLowerCase().includes(value.toLowerCase())
-    );
-  }
-
-  filtrarEdital(listaFiltro, value) {
-    console.log(listaFiltro, "listaFiltro");
-    console.log(value, "value");
-    return listaFiltro.filter(
-      item =>
-        item.editais && item.editais.toLowerCase().includes(value.toLowerCase())
-    );
   }
 
   filtrarNome(listaFiltro, value) {
@@ -365,24 +327,6 @@ export class StatusSolicitacoes extends Component {
       solicitacoesFiltrados: solicitacoes,
       solicitacoesPaginaAtual: solicitacoes
     });
-    try {
-      const listaEditais = await getNomesUnicosEditais();
-      let listaRsultados = listaEditais.data.results;
-      let listaFormatada = listaRsultados.map(element => {
-        return { value: element, label: element };
-      });
-      this.setState({ editais: listaFormatada });
-    } catch (erro) {
-      throw erro;
-    }
-    const { marcaProduto, editalProduto, nomeProduto } = this.props;
-    if (marcaProduto || editalProduto || nomeProduto) {
-      this.onPesquisarChanged({
-        marcaProduto: marcaProduto || "",
-        editalProduto: editalProduto || "",
-        nomeProduto: nomeProduto || ""
-      });
-    }
   }
 
   cardResponderQuestionamentosCodae = solicitacoes => {
@@ -425,7 +369,6 @@ export class StatusSolicitacoes extends Component {
       erro,
       count,
       pageSize,
-      editais,
       currentPage
     } = this.state;
     const { titulo, tipoCard, icone } = this.props;
@@ -441,7 +384,6 @@ export class StatusSolicitacoes extends Component {
                     filterList={this.onPesquisarChanged}
                     tipoSolicitacao={tipoSolicitacao}
                     listaLotes={listaLotes}
-                    editais={editais}
                     disabled={loading}
                     marcaProduto={this.props.marcaProduto}
                     editalProduto={this.props.editalProduto}
