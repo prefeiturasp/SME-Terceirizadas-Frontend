@@ -198,7 +198,6 @@ const ResponderReclamacaoProduto = ({
       setCarregando(false);
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros, page]);
 
   const onSubmitForm = formValues => {

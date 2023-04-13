@@ -59,7 +59,7 @@ export const renderEmailPlus = ({ input, type }) => (
   </div>
 );
 
-export const renderEdital = ({ input, type, label }) => (
+export const renderEdital = ({ input, type }) => (
   <div>
     <label className="label">
       <span>* </span>Edital de Pregão n°

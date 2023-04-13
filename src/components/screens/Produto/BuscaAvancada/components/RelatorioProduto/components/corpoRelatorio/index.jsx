@@ -19,7 +19,7 @@ import { truncarString } from "helpers/utilities";
 
 import { getRelatorioProduto } from "services/relatorios";
 
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "../styles.scss";
 
 export default class CorpoRelatorio extends Component {
@@ -51,7 +51,7 @@ export default class CorpoRelatorio extends Component {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     let { informacoesNutricionais, produto } = this.props;
     const { informacoes } = this.state;
 

@@ -29,7 +29,7 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
     };
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const resposta = await meusDados();
     this.setState({
       meusDados: resposta
@@ -48,24 +48,18 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
   };
 
   onSubmit = async values => {
-    return new Promise(async (resolve, reject) => {
-      const endpoint =
-        this.props.acao === "ativação" ? ativarProduto : suspenderProduto;
-      const response = await endpoint(this.props.idHomologacao, values);
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess(
-          `${capitalizar(this.props.acao)} de produto enviada com sucesso.`
-        );
-        resolve();
-        this.props.atualizarDados();
-      } else {
-        toastError(
-          `Houve um erro ao registrar a ${this.props.acao} de produto`
-        );
-        reject(response.data);
-      }
-      this.props.closeModal();
-    });
+    const endpoint =
+      this.props.acao === "ativação" ? ativarProduto : suspenderProduto;
+    const response = await endpoint(this.props.idHomologacao, values);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(
+        `${capitalizar(this.props.acao)} de produto enviada com sucesso.`
+      );
+      this.props.atualizarDados();
+    } else {
+      toastError(`Houve um erro ao registrar a ${this.props.acao} de produto`);
+    }
+    this.props.closeModal();
   };
 
   opcoesEditais = () => {

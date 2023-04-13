@@ -73,7 +73,7 @@ export const ModalCancelarInclusaoAlimentacao = ({ ...props }) => {
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
       <Form onSubmit={onSubmit}>
-        {({ handleSubmit, form, submitting }) => (
+        {({ handleSubmit, submitting }) => (
           <form onSubmit={handleSubmit}>
             <Modal.Header closeButton>
               <Modal.Title>Cancelamento de Solicitação</Modal.Title>

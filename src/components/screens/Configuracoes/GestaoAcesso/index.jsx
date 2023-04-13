@@ -202,8 +202,6 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
   useEffect(() => {
     buscaFiltros();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -211,7 +209,6 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       buscarVinculos(1);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   return (

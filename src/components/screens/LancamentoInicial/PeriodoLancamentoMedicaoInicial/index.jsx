@@ -600,8 +600,6 @@ export default () => {
       setLoading(false);
     };
     fetch();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formatarDadosValoresMedicao = async (
@@ -947,8 +945,6 @@ export default () => {
     valoresPeriodosLancamentos.findIndex(
       valor => valor.nome_campo !== "observacoes"
     ) !== -1 && setDisableBotaoSalvarLancamentos(false);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     mesAnoConsiderado,
     semanaSelecionada,
@@ -971,7 +967,6 @@ export default () => {
     return () => {
       clearInterval(intervalCall);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formValuesAtualizados,
     dadosValoresInclusoesAutorizadasState,

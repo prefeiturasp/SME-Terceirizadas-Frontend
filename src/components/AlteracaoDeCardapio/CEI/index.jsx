@@ -509,10 +509,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                           data-cy={`checkbox-${
                                             getPeriodo(values, indice).nome
                                           }`}
-                                          validate={
-                                            getPeriodo(values, indice)
-                                              .checked && required
-                                          }
                                           required={
                                             getPeriodo(values, indice).checked
                                           }

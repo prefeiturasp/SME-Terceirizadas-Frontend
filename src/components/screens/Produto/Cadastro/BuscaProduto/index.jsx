@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import AutoCompleteFieldUnaccent from "components/Shareable/AutoCompleteField/unaccent";
 import "./style.scss";
 import { Form, Field } from "react-final-form";

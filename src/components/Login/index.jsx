@@ -632,7 +632,7 @@ export class Login extends Component {
           onSubmit={this.handleAtualizarSenhaPrimeiroAcesso}
           initialValues={{}}
           validate={() => {}}
-          render={({ form, handleSubmit, values }) => {
+          render={({ handleSubmit, values }) => {
             const letra = values.senha
               ? values.senha.match(/[a-zA-Z]/g)
               : false;

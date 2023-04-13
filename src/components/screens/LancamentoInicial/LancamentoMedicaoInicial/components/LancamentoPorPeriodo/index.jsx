@@ -145,7 +145,6 @@ export default ({
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
     getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodoSelecionado]);
 
   const getPathPlanilhaOcorr = () => {

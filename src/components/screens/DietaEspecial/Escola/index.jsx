@@ -287,7 +287,7 @@ class solicitacaoDietaEspecial extends Component {
     );
   };
 
-  onSubmit(payload) {
+  async onSubmit(payload) {
     const payload_ = deepCopy(payload);
     payload_.anexos = payload_.anexos.map(anexo => {
       return {
@@ -303,34 +303,29 @@ class solicitacaoDietaEspecial extends Component {
         "T"
       )[0];
     }
-    return new Promise(async (resolve, reject) => {
-      const response = await criaDietaEspecial(payload_);
-      if (response.status === HTTP_STATUS.CREATED) {
-        toastSuccess("Solicitação realizada com sucesso.");
-        this.setState({
-          submitted: !this.state.submitted,
-          resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
-            response.data.uuid
-          }`
-        });
-        this.props.loadSolicitacoesVigentes(null);
-        this.setState({
-          aluno_nao_matriculado: false,
-          fotoAlunoSrc: undefined,
-          criadoRf: null
-        });
-        this.resetForm();
-        resolve();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError(getError(response.data));
-        reject();
-      } else {
-        toastError(
-          `Erro ao solicitar dieta especial: ${getError(response.data)}`
-        );
-        reject();
-      }
-    });
+    const response = await criaDietaEspecial(payload_);
+    if (response.status === HTTP_STATUS.CREATED) {
+      toastSuccess("Solicitação realizada com sucesso.");
+      this.setState({
+        submitted: !this.state.submitted,
+        resumo: `/${ESCOLA}/${DIETA_ESPECIAL}/${RELATORIO}?uuid=${
+          response.data.uuid
+        }`
+      });
+      this.props.loadSolicitacoesVigentes(null);
+      this.setState({
+        aluno_nao_matriculado: false,
+        fotoAlunoSrc: undefined,
+        criadoRf: null
+      });
+      this.resetForm();
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(getError(response.data));
+    } else {
+      toastError(
+        `Erro ao solicitar dieta especial: ${getError(response.data)}`
+      );
+    }
   }
 
   resetForm() {

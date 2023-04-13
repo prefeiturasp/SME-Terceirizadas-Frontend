@@ -37,20 +37,16 @@ export default class ModalCancelarHomologacaoProduto extends Component {
   };
 
   onSubmit = async values => {
-    return new Promise(async (resolve, reject) => {
-      const response = await cancelaHomologacao(this.props.idHomologacao, {
-        justificativa: values.justificativa
-      });
-      if (response.status === HTTP_STATUS.OK) {
-        toastSuccess("Cancelamento enviado com sucesso.");
-        resolve();
-        this.props.closeModal();
-        this.props.onAtualizarHomologacao();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError("Houve um erro ao cancelar homologação.");
-        reject(response.data);
-      }
+    const response = await cancelaHomologacao(this.props.idHomologacao, {
+      justificativa: values.justificativa
     });
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Cancelamento enviado com sucesso.");
+      this.props.closeModal();
+      this.props.onAtualizarHomologacao();
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError("Houve um erro ao cancelar homologação.");
+    }
   };
 
   render() {

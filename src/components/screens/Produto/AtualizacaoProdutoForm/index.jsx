@@ -4,7 +4,7 @@ import { Select, Spin } from "antd";
 import Botao from "../../../Shareable/Botao";
 import ModalHistorico from "../../../Shareable/ModalHistorico";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../../Shareable/Botao/constants";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import {
   STATUS_CODAE_SUSPENDEU,

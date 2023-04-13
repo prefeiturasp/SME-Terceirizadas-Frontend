@@ -178,7 +178,6 @@ export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
   useEffect(() => {
     carregaResumoPendencias();
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

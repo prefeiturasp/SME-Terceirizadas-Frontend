@@ -312,7 +312,6 @@ function StatusSolicitacoes(props) {
     if (tipoSolicitacao && instituicao) {
       getSolicitacoesAsync();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tipoSolicitacao, instituicao]);
 
   useEffect(() => {
@@ -326,7 +325,6 @@ function StatusSolicitacoes(props) {
       setFiltroInicial(true);
       filtragemInicial();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [solicitacoesFiltrados, filtrouInicial]);
 
   const filtrarStatus = (listaFiltro, value) => {

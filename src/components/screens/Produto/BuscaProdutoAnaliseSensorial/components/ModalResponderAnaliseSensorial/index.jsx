@@ -18,7 +18,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { withRouter } from "react-router-dom";
 import { InputComData } from "components/Shareable/DatePicker";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import { formataData, DATA_MINIMA, DATA_MAXIMA } from "./helper";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";

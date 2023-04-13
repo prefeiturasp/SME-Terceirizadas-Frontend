@@ -39,7 +39,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
     this.pageSize = 10;
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { history, reset, homologacoes } = this.props;
     if (history && history.action === "PUSH") reset();
     if (homologacoes === undefined || history.action === "PUSH") this.refresh();

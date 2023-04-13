@@ -79,7 +79,6 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     const urlParams = new URLSearchParams(window.location.search);
     setUuid(urlParams.get("uuid"));
     getInclusaoCEMEIAsync(urlParams.get("uuid"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const EXIBIR_BOTAO_NAO_APROVAR =
