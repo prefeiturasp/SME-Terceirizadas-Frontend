@@ -232,7 +232,7 @@ const CardBody = props => {
                           component={Select}
                           options={props.listaLotes}
                           name="lote"
-                          placeholder="Selecione um Lote 333"
+                          placeholder="Selecione um Lote"
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="lote">
