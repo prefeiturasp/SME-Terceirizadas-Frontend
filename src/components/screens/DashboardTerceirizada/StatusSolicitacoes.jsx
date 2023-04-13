@@ -187,8 +187,6 @@ export class StatusSolicitacoes extends Component {
   }
 
   filtrarEdital(listaFiltro, value) {
-    console.log(listaFiltro, "listaFiltro");
-    console.log(value, "value");
     return listaFiltro.filter(
       item =>
         item.editais && item.editais.toLowerCase().includes(value.toLowerCase())

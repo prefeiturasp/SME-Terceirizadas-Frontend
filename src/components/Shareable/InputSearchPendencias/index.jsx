@@ -140,7 +140,6 @@ export const InputSearchPendencias = props => {
                 )}
               </>
             )}
-            {console.log("ehURLGestaoProduto", ehURLGestaoProduto())}
             {ehURLGestaoProduto() && (
               <>
                 <div className="col-4">

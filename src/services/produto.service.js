@@ -488,10 +488,8 @@ export const getHomologacoesDeProdutoPorStatusTitulo = async (
   const url = `/painel-gerencial-homologacoes-produtos/filtro-por-status/${status}/`;
   try {
     const response = await axios.get(url, { params });
-    console.log("Valores retornados:", response.data);
     return response;
   } catch (error) {
-    console.error("Erro ao buscar dados:", error);
     throw error;
   }
 };
