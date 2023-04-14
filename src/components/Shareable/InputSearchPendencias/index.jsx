@@ -89,7 +89,7 @@ export const InputSearchPendencias = props => {
                 name="titulo"
                 placeholder="Pesquisar"
                 disabled={props.disabled}
-                initialValue={props.tituloDieta || props.nomeProduto}
+                initialValue={props.propsDieta.tituloDieta || props.nomeProduto}
               />
               <OnChange name="titulo">
                 {() => {
@@ -112,7 +112,7 @@ export const InputSearchPendencias = props => {
                       name="status"
                       placeholder="Conferência Status"
                       naoDesabilitarPrimeiraOpcao
-                      initialValue={props.statusDieta}
+                      initialValue={props.propsDieta.statusDieta}
                     />
                     <OnChange name="status">
                       {() => {
@@ -129,7 +129,7 @@ export const InputSearchPendencias = props => {
                       name="lote"
                       placeholder="Selecione um Lote"
                       naoDesabilitarPrimeiraOpcao
-                      initialValue={props.loteDieta}
+                      initialValue={props.propsDieta.loteDieta}
                     />
                     <OnChange name="lote">
                       {() => {
