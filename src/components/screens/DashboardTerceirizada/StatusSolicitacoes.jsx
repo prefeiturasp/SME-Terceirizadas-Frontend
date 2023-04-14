@@ -363,16 +363,14 @@ export class StatusSolicitacoes extends Component {
       solicitacoesFiltrados: solicitacoes,
       solicitacoesPaginaAtual: solicitacoes
     });
-    try {
-      const listaEditais = await getNomesUnicosEditais();
-      let listaRsultados = listaEditais.data.results;
-      let listaFormatada = listaRsultados.map(element => {
-        return { value: element, label: element };
-      });
-      this.setState({ editais: listaFormatada });
-    } catch (erro) {
-      throw erro;
-    }
+
+    const listaEditais = await getNomesUnicosEditais();
+    let listaRsultados = listaEditais.data.results;
+    let listaFormatada = listaRsultados.map(element => {
+      return { value: element, label: element };
+    });
+    this.setState({ editais: listaFormatada });
+
     const { marcaProduto, editalProduto, nomeProduto } = this.props;
     if (marcaProduto || editalProduto || nomeProduto) {
       this.onPesquisarChanged({
