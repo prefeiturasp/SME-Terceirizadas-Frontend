@@ -107,7 +107,6 @@ export const InputSearchPendencias = props => {
                 </div>
               )}
             </div>
-            {console.log(props, "props em input search")}
             {ehTerceirizada && (
               <>
                 {listaStatus && verificaStatusFiltros() && (
