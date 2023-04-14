@@ -11,7 +11,10 @@ import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import {
+  medicaoInicialExportarOcorrenciasPDF,
+  relatorioMedicaoInicialPDF
+} from "services/relatorios";
 import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
@@ -24,7 +27,8 @@ export default ({
   onClickInfoBasicas,
   periodoSelecionado,
   mes,
-  ano
+  ano,
+  setLoadingSolicitacaoMedicaoInicial
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
@@ -167,6 +171,12 @@ export default ({
     }
   };
 
+  const gerarPDFMedicaoInicial = async () => {
+    setLoadingSolicitacaoMedicaoInicial(true);
+    await relatorioMedicaoInicialPDF(solicitacaoMedicaoInicial.uuid);
+    setLoadingSolicitacaoMedicaoInicial(false);
+  };
+
   const renderBotaoExportarPlanilha = () => {
     if (objSolicitacaoMIFinalizada.anexo) return true;
     if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.anexo) {
@@ -302,7 +312,7 @@ export default ({
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="float-right"
-                        onClick={() => {}}
+                        onClick={() => gerarPDFMedicaoInicial()}
                       />
                       <Botao
                         texto="Exportar Ocorrências"
