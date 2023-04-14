@@ -163,7 +163,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         usuarioEhCODAEGestaoAlimentacao() ||
         usuarioEhMedicao() ||
         usuarioEhCODAENutriManifestacao() ||
-        usuarioEhNutricionistaSupervisao()) && (
+        usuarioEhNutricionistaSupervisao() ||
+        usuarioEhCODAENutriManifestacao()) && (
         <SubMenu
           icon="fa-chevron-down"
           path="relatorios"
@@ -171,10 +172,7 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           title="Relatórios"
           activeMenu={activeMenu}
         >
-          {!(
-            usuarioEhCODAENutriManifestacao() ||
-            usuarioEhNutricionistaSupervisao()
-          ) && (
+          {!usuarioEhNutricionistaSupervisao() && (
             <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
               Solicitações de Alimentação
             </LeafItem>
