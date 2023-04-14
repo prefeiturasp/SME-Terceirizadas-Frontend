@@ -1,6 +1,6 @@
 import moment from "moment";
 import React, { Fragment } from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import FormPrevisaoCadastro from "../FormPrevisaoCadastro";
 import {

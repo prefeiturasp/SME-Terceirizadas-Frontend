@@ -32,7 +32,6 @@ export default () => {
 
   useEffect(() => {
     if (formValues) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues, page]);
 
   const onSubmit = async values => {

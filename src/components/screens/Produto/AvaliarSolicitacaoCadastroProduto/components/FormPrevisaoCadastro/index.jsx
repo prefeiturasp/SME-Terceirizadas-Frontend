@@ -33,7 +33,7 @@ export default ({ onUpdate, uuidSolicitacao }) => {
   return (
     <Form
       onSubmit={onSubmit}
-      render={({ form, handleSubmit, submitting }) => (
+      render={({ handleSubmit, submitting }) => (
         <form onSubmit={handleSubmit} className="form-previsao-cadastro">
           <Field
             component={InputComData}

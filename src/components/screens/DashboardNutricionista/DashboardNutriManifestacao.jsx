@@ -63,7 +63,6 @@ export const DashboardNutrimanifestacao = () => {
 
   useEffect(() => {
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPesquisaChanged = values => {

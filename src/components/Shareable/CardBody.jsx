@@ -37,18 +37,13 @@ const CardBody = props => {
   const pathname = window.location.pathname;
   useEffect(() => {
     (async () => {
-      try {
-        const listaEditais = await getNomesUnicosEditais();
-        let listaRsultados = listaEditais.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element, label: element };
-        });
-        setEditais(listaFormatada);
-      } catch (erro) {
-        throw erro;
-      }
+      const listaEditais = await getNomesUnicosEditais();
+      let listaRsultados = listaEditais.data.results;
+      let listaFormatada = listaRsultados.map(element => {
+        return { value: element, label: element };
+      });
+      setEditais(listaFormatada);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -111,40 +106,38 @@ const CardBody = props => {
                     </div>
                   )}
 
-                  {!ehEscola && (
-                    <div
-                      className={`${
-                        ehTerceirizada && props.listaStatus && props.listaLotes
-                          ? "offset-3 col-6"
-                          : exibirFiltrosDataEventoETipoSolicitacao
-                          ? "col-3"
-                          : ehDashboardGestaoProduto
-                          ? "col-4"
-                          : "offset-3 col-3"
-                      }`}
-                    >
-                      {loadingDietas && (
-                        <div>
-                          <Spin
-                            className="carregando-filtro"
-                            tip="Carregando Filtro..."
-                          />
-                        </div>
-                      )}
-                      <Field
-                        className={
-                          exibirFiltrosDataEventoETipoSolicitacao
-                            ? "input-com-filtros-adicionais"
-                            : ""
-                        }
-                        component={InputText}
-                        name="titulo"
-                        placeholder={loadingDietas ? "" : "Pesquisar"}
-                        disabled={loadingDietas || filtrosDesabilitados}
-                      />
-                      <div className="warning-num-charac">
-                        * mínimo de 3 caracteres
+                  <div
+                    className={`${
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "offset-3 col-6"
+                        : exibirFiltrosDataEventoETipoSolicitacao
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
+                        ? "col-4"
+                        : "offset-3 col-3"
+                    }`}
+                  >
+                    {loadingDietas && (
+                      <div>
+                        <Spin
+                          className="carregando-filtro"
+                          tip="Carregando Filtro..."
+                        />
                       </div>
+                    )}
+                    <Field
+                      className={
+                        exibirFiltrosDataEventoETipoSolicitacao
+                          ? "input-com-filtros-adicionais"
+                          : ""
+                      }
+                      component={InputText}
+                      name="titulo"
+                      placeholder={loadingDietas ? "" : "Pesquisar"}
+                      disabled={loadingDietas || filtrosDesabilitados}
+                    />
+                    <div className="warning-num-charac">
+                      * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
                           props.updateTituloDieta(value);
@@ -153,7 +146,7 @@ const CardBody = props => {
                         }}
                       </OnChange>
                     </div>
-                  )}
+                  </div>
                   {exibirFiltrosDataEventoETipoSolicitacao &&
                     pathname === "/painel-gestao-produto" &&
                     ehTerceirizada && (

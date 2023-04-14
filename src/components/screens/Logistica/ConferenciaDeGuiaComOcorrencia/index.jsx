@@ -446,7 +446,6 @@ export default () => {
         carregarGuia(param);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -457,7 +456,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit, values, errors }) => (
+            render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <span className="subtitulo">

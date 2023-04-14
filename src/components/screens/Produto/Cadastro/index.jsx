@@ -282,7 +282,7 @@ class cadastroProduto extends Component {
     this.setState({ payload, concluidoStep1: true });
   };
 
-  onSubmit = values => {
+  onSubmit = async values => {
     let erro = null;
     const { payload } = this.state;
     payload["nome"] = values.nome.split("+")[0];
@@ -314,37 +314,31 @@ class cadastroProduto extends Component {
       toastError(erro);
       return;
     }
-    return new Promise(async (resolve, reject) => {
-      const endpoint = payload.uuid ? updateProduto : submitProduto;
-      const response = await endpoint(payload);
-      if (
-        response.status === HTTP_STATUS.CREATED ||
-        response.status === HTTP_STATUS.OK
-      ) {
-        toastSuccess("Solicitação de homologação enviada com sucesso.");
-        this.setState({
-          payload: retornaPayloadDefault(),
-          renderizaFormDietaEspecial: false,
-          arrayErrosStep1: [],
-          concluidoStep1: false,
-          defaultNomeDeProdutosEditalStep1: null,
-          defaultMarcaStep1: null,
-          defaultFabricanteStep1: null,
-          renderBuscaProduto: true,
-          currentStep: 0
-        });
-        this.getRascunhos();
-        this.props.reset("cadastroProduto");
-
-        resolve();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError(getError(response.data));
-        reject();
-      } else {
-        toastError(`Erro ao criar produto: ${getError(response.data)}`);
-        reject();
-      }
-    });
+    const endpoint = payload.uuid ? updateProduto : submitProduto;
+    const response = await endpoint(payload);
+    if (
+      response.status === HTTP_STATUS.CREATED ||
+      response.status === HTTP_STATUS.OK
+    ) {
+      toastSuccess("Solicitação de homologação enviada com sucesso.");
+      this.setState({
+        payload: retornaPayloadDefault(),
+        renderizaFormDietaEspecial: false,
+        arrayErrosStep1: [],
+        concluidoStep1: false,
+        defaultNomeDeProdutosEditalStep1: null,
+        defaultMarcaStep1: null,
+        defaultFabricanteStep1: null,
+        renderBuscaProduto: true,
+        currentStep: 0
+      });
+      this.getRascunhos();
+      this.props.reset("cadastroProduto");
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(getError(response.data));
+    } else {
+      toastError(`Erro ao criar produto: ${getError(response.data)}`);
+    }
   };
 
   updateOrCreateProduto = async values => {
@@ -420,24 +414,17 @@ class cadastroProduto extends Component {
           }
         });
       } else {
-        return new Promise(async (resolve, reject) => {
-          const response = await updateProduto(payload);
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Rascunho atualizado com sucesso.");
-            resolve();
-            setTimeout(function() {
-              window.location.reload();
-            }, 2000);
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(getError(response.data));
-            reject();
-          } else {
-            toastError(
-              `Erro ao atualizar rascunho: ${getError(response.data)}`
-            );
-            reject();
-          }
-        });
+        const response = await updateProduto(payload);
+        if (response.status === HTTP_STATUS.OK) {
+          toastSuccess("Rascunho atualizado com sucesso.");
+          setTimeout(function() {
+            window.location.reload();
+          }, 2000);
+        } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+          toastError(getError(response.data));
+        } else {
+          toastError(`Erro ao atualizar rascunho: ${getError(response.data)}`);
+        }
       }
     }
   };

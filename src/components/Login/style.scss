@@ -1,4 +1,4 @@
-@import "../../styles/variables.scss";
+@import "styles/variables.scss";
 
 .modal-como-acessar {
   width: 55vw !important;
@@ -50,7 +50,7 @@
 }
 
 .login-bg {
-  background: url("/assets/image/bg.png");
+  background-image: url("bg.png");
   width: 50%;
   position: absolute;
   height: 100%;

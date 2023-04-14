@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import * as constants from "configs/constants";

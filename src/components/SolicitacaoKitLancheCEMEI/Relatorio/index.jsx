@@ -48,7 +48,6 @@ export const Relatorio = ({ ...props }) => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const solicitacao = solicitacaoAlimentacaoContext.solicitacaoAlimentacao;

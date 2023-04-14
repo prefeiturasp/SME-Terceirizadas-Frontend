@@ -97,7 +97,6 @@ export const DashboardNutrisupervisao = () => {
 
   useEffect(() => {
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const prepararParametros = values => {

@@ -113,7 +113,7 @@ const Reclamacao = ({ reclamacao }) => {
             />
           </div>
         </div>
-        {log.anexos.length > 0 && (
+        {log.anexos && log.anexos.length > 0 && (
           <div className="mb-3">
             <div key={1}>
               <p className="botao-reclamacao-title">Anexos da resposta</p>

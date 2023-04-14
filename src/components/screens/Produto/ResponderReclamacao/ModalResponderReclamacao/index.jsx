@@ -22,7 +22,7 @@ export default class ModalResponderReclamacao extends Component {
     this.state = {};
   }
 
-  componentWillMount = async () => {};
+  UNSAFE_componentWillMount = async () => {};
 
   onSubmit = async values => {
     try {

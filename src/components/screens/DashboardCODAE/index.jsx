@@ -201,7 +201,6 @@ export const DashboardCODAE = ({
   useEffect(() => {
     carregaResumoPendencias();
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

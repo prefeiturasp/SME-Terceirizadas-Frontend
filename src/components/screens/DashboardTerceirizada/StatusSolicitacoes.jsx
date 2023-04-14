@@ -353,7 +353,7 @@ export class StatusSolicitacoes extends Component {
       await getMeusLotes().then(response => {
         this.setState({
           listaLotes: [{ nome: "Selecione um lote", uuid: "" }].concat(
-            response.results
+            response.data.results
           )
         });
       });

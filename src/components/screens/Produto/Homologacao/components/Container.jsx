@@ -92,7 +92,6 @@ export const Container = () => {
     getNumerosEditaisAsync();
     getHomologacaoProdutoAsync();
     getNumeroProtocoloAnaliseSensorialAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

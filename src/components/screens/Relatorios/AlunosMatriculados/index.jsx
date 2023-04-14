@@ -13,6 +13,14 @@ import { deepCopy } from "helpers/utilities";
 import { Paginacao } from "components/Shareable/Paginacao";
 import { getFaixasEtarias } from "services/faixaEtaria.service";
 import { formataOpcoesDropdown } from "./helpers";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { gerarPDFRelatorioAlunosMatriculados } from "services/relatorios.service";
 import "./style.scss";
 
 export const AlunosMatriculados = () => {
@@ -29,6 +37,10 @@ export const AlunosMatriculados = () => {
   const [filtros, setFiltros] = useState(undefined);
   const [faixasEtarias, setFaixasEtarias] = useState(undefined);
   const [showPeridosFaixas, setShowPeriodosFaixas] = useState([]);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const getOpcoesFiltros = async () => {
     const response = await getFiltros();
@@ -72,10 +84,20 @@ export const AlunosMatriculados = () => {
     setFiltrando(false);
   };
 
+  const exportarPDF = async () => {
+    setFiltrando(true);
+    const response = await gerarPDFRelatorioAlunosMatriculados(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+    setFiltrando(false);
+  };
+
   useEffect(() => {
     getOpcoesFiltros();
     getTodasFaixasEtarias();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -111,6 +133,24 @@ export const AlunosMatriculados = () => {
                 pageSize={10}
                 current={page}
               />
+              <div className="row">
+                <div className="col-12 text-right">
+                  <Botao
+                    texto="Baixar PDF"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    icon={BUTTON_ICON.FILE_PDF}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={filtrando}
+                    onClick={() => exportarPDF()}
+                  />
+                  {exibirModalCentralDownloads && (
+                    <ModalSolicitacaoDownload
+                      show={exibirModalCentralDownloads}
+                      setShow={setExibirModalCentralDownloads}
+                    />
+                  )}
+                </div>
+              </div>
             </Fragment>
           )}
         </Spin>

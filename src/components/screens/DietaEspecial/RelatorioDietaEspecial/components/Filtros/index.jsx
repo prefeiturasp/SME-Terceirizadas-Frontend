@@ -112,8 +112,6 @@ const BuscaDietasForm = ({
 
   useEffect(() => {
     getMeusDados();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const lotesRelacionadosADietas = dietas => {

@@ -8,7 +8,7 @@ import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import { TreeSelect, Spin } from "antd";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
