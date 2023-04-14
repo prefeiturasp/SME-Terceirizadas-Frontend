@@ -19,6 +19,7 @@ import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoI
 import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { ENVIRONMENT } from "constants/config";
 
 export default ({
   escolaInstituicao,
@@ -313,6 +314,7 @@ export default ({
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="float-right"
                         onClick={() => gerarPDFMedicaoInicial()}
+                        disabled={ENVIRONMENT === "production"}
                       />
                       <Botao
                         texto="Exportar Ocorrências"
