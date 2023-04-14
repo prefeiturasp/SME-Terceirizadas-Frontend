@@ -70,7 +70,9 @@ export const InputSearchPendencias = props => {
                     showSearch
                     name="edital"
                     placeholder={"Número do Edital"}
-                    initialValue={props.editalProduto}
+                    initialValue={
+                      props.propsProduto && props.propsProduto.editalProduto
+                    }
                     options={[{ label: "Número do Edital", value: "" }].concat(
                       props.editais
                     )}
@@ -89,7 +91,10 @@ export const InputSearchPendencias = props => {
                 name="titulo"
                 placeholder="Pesquisar"
                 disabled={props.disabled}
-                initialValue={props.propsDieta.tituloDieta || props.nomeProduto}
+                initialValue={
+                  (props.propsDieta && props.propsDieta.tituloDieta) ||
+                  (props.propsProduto && props.propsProduto.nomeProduto)
+                }
               />
               <OnChange name="titulo">
                 {() => {
@@ -102,6 +107,7 @@ export const InputSearchPendencias = props => {
                 </div>
               )}
             </div>
+            {console.log(props, "props em input search")}
             {ehTerceirizada && (
               <>
                 {listaStatus && verificaStatusFiltros() && (
@@ -112,7 +118,9 @@ export const InputSearchPendencias = props => {
                       name="status"
                       placeholder="Conferência Status"
                       naoDesabilitarPrimeiraOpcao
-                      initialValue={props.propsDieta.statusDieta}
+                      initialValue={
+                        props.propsDieta && props.propsDieta.statusDieta
+                      }
                     />
                     <OnChange name="status">
                       {() => {
@@ -129,7 +137,9 @@ export const InputSearchPendencias = props => {
                       name="lote"
                       placeholder="Selecione um Lote"
                       naoDesabilitarPrimeiraOpcao
-                      initialValue={props.propsDieta.loteDieta}
+                      initialValue={
+                        props.propsDieta && props.propsDieta.loteDieta
+                      }
                     />
                     <OnChange name="lote">
                       {() => {
@@ -147,7 +157,9 @@ export const InputSearchPendencias = props => {
                     component={InputText}
                     name="marca"
                     placeholder="Busca da Marca"
-                    initialValue={props.marcaProduto}
+                    initialValue={
+                      props.propsProduto && props.propsProduto.marcaProduto
+                    }
                   />
                   <div className="warning-num-charac">
                     * mínimo de 3 caracteres

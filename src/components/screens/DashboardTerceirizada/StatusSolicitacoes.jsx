@@ -22,6 +22,7 @@ import {
   getHomologacoesDeProdutoPorStatusTitulo,
   getNomesUnicosEditais
 } from "services/produto.service";
+import { resetCamposProduto } from "reducers/filtersProdutoReducer";
 
 export class StatusSolicitacoes extends Component {
   constructor(props, context) {
@@ -76,7 +77,8 @@ export class StatusSolicitacoes extends Component {
           link: "..."
         }
       ],
-      originalCount: null
+      originalCount: null,
+      propsProdutoRedux: {}
     };
     this.typingTimeout = null;
 
@@ -88,12 +90,17 @@ export class StatusSolicitacoes extends Component {
     const data = {};
     let solicitacoes = [];
     let solicitacoesFiltrados = this.state.solicitacoesPaginaAtual;
-
     clearTimeout(this.typingTimeout);
     this.typingTimeout = setTimeout(async () => {
-      if (values.titulo && values.titulo.length > 2) {
+      if (
+        (values.titulo && values.titulo.length > 2) ||
+        (values.marca && values.marca.length > 2) ||
+        values.edital
+      ) {
         const listaStatus = Array.isArray(status) ? status : [status];
         data["titulo_produto"] = values.titulo;
+        data["nome_edital"] = values.edital;
+        data["nome_marca"] = values.marca;
         this.setState({
           loading: true
         });
@@ -189,7 +196,8 @@ export class StatusSolicitacoes extends Component {
   filtrarEdital(listaFiltro, value) {
     return listaFiltro.filter(
       item =>
-        item.editais && item.editais.toLowerCase().includes(value.toLowerCase())
+        item.produto_editais &&
+        item.produto_editais.toLowerCase().includes(value.toLowerCase())
     );
   }
 
@@ -301,43 +309,63 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
+
+    const listaStatus = Array.isArray(status) ? status : [status];
     const { erro, loading, currentPage } = this.state;
     const url = window.location.href;
     let tipoSolicitacao = extrairStatusDaSolicitacaoURL(url);
     this.setState({ tipoSolicitacao });
-    const listaStatus = Array.isArray(status) ? status : [status];
     const dadosMeus = await meusDados();
     this.setState({ dadosMeus });
+
     const terceirizadaUUID = dadosMeus.vinculo_atual.instituicao.uuid;
     let solicitacoes = [];
-    try {
-      const promises = listaStatus.map(status =>
-        endpointGetSolicitacoes(status || terceirizadaUUID, currentPage)
-      );
-      const retornos = await Promise.all(promises);
-      retornos.forEach(
-        retorno =>
-          (solicitacoes = solicitacoes.concat(
-            formatarDadosSolicitacao(
-              retorno.data ? retorno.data.results : retorno.results,
-              null,
-              this.props.titulo
-            )
-          ))
-      );
-      this.setState({
-        count: retornos[0].data.count,
-        pageSize: retornos[0].data.page_size,
-        nextPage: retornos[0].data.next,
-        originalCount: retornos[0].data.count,
-        loading: false
+    const { marcaProduto, editalProduto, nomeProduto } = this.props;
+    const propsProduto = {
+      marcaProduto: this.props.marcaProduto || "",
+      editalProduto: this.props.editalProduto || "",
+      nomeProduto: this.props.nomeProduto || ""
+    };
+    this.setState({ propsProdutoRedux: propsProduto });
+
+    if (marcaProduto || editalProduto || nomeProduto) {
+      this.onPesquisarChanged({
+        marca: propsProduto.marcaProduto || "",
+        edital: propsProduto.editalProduto || "",
+        titulo: propsProduto.nomeProduto || ""
       });
-    } catch (e) {
-      this.setState({
-        loading: false,
-        erro: true
-      });
+    } else {
+      try {
+        const promises = listaStatus.map(status =>
+          endpointGetSolicitacoes(status || terceirizadaUUID, currentPage)
+        );
+        const retornos = await Promise.all(promises);
+        retornos.forEach(
+          retorno =>
+            (solicitacoes = solicitacoes.concat(
+              formatarDadosSolicitacao(
+                retorno.data ? retorno.data.results : retorno.results,
+                null,
+                this.props.titulo
+              )
+            ))
+        );
+        this.setState({
+          count: retornos[0].data.count,
+          pageSize: retornos[0].data.page_size,
+          nextPage: retornos[0].data.next,
+          originalCount: retornos[0].data.count,
+          loading: false
+        });
+      } catch (e) {
+        this.setState({
+          loading: false,
+          erro: true
+        });
+      }
     }
+    this.props.resetCamposProduto();
+
     if (solicitacoes.length > 0 && !erro && loading) {
       this.setState({ loading: false });
     }
@@ -370,15 +398,6 @@ export class StatusSolicitacoes extends Component {
       return { value: element, label: element };
     });
     this.setState({ editais: listaFormatada });
-
-    const { marcaProduto, editalProduto, nomeProduto } = this.props;
-    if (marcaProduto || editalProduto || nomeProduto) {
-      this.onPesquisarChanged({
-        marcaProduto: marcaProduto || "",
-        editalProduto: editalProduto || "",
-        nomeProduto: nomeProduto || ""
-      });
-    }
   }
 
   cardResponderQuestionamentosCodae = solicitacoes => {
@@ -422,7 +441,8 @@ export class StatusSolicitacoes extends Component {
       count,
       pageSize,
       editais,
-      currentPage
+      currentPage,
+      propsProdutoRedux
     } = this.state;
     const { titulo, tipoCard, icone } = this.props;
     return (
@@ -439,9 +459,7 @@ export class StatusSolicitacoes extends Component {
                     listaLotes={listaLotes}
                     editais={editais}
                     disabled={loading}
-                    marcaProduto={this.props.marcaProduto}
-                    editalProduto={this.props.editalProduto}
-                    nomeProduto={this.props.nomeProduto}
+                    propsProduto={propsProdutoRedux}
                   />
                 </div>
                 <div className="pb-3" />
@@ -493,4 +511,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(StatusSolicitacoesForm);
+const mapDispatchToProps = dispatch => ({
+  resetCamposProduto: () => dispatch(resetCamposProduto())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StatusSolicitacoesForm);
