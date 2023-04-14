@@ -43,6 +43,7 @@ import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 import { getMeusLotes } from "services/lote.service";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import { Spin } from "antd";
+import { resetCamposDieta } from "../../../reducers/filtersDietaReducer";
 
 function StatusSolicitacoes(props) {
   const [instituicao, setInstituicao] = useState(null);
@@ -62,6 +63,7 @@ function StatusSolicitacoes(props) {
   const [listaLotes, setListaLotes] = useState(null);
   const [filtrouInicial, setFiltroInicial] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [propsDietaRedux, setPropsDietaRedux] = useState({});
 
   const selectTodos = solicitacoes => {
     const novoEstadoSelecionarTodos = !selecionarTodos;
@@ -72,7 +74,6 @@ function StatusSolicitacoes(props) {
     setSelecionarTodos(novoEstadoSelecionarTodos);
     return novoEstadoSelecionarTodos;
   };
-
   const onCheckClicked = (solicitacoes, key, props) => {
     solicitacoes[key].checked = !solicitacoes[key].checked;
     props.change(`check_${key}`, solicitacoes[key].checked);
@@ -105,11 +106,18 @@ function StatusSolicitacoes(props) {
   };
 
   const filtragemInicial = () => {
-    const values = {
-      titulo: props.tituloDieta || "",
-      lote: props.loteDieta || "",
-      status: props.statusDieta || ""
+    const propsDieta = {
+      tituloDieta: props.tituloDieta,
+      loteDieta: props.loteDieta,
+      statusDieta: props.statusDieta
     };
+    setPropsDietaRedux(propsDieta);
+    const values = {
+      titulo: propsDieta.tituloDieta || "",
+      lote: propsDieta.loteDieta || "",
+      status: propsDieta.statusDieta || ""
+    };
+    props.resetCamposDieta();
     onPesquisarChanged(values);
   };
 
@@ -396,9 +404,7 @@ function StatusSolicitacoes(props) {
             filterList={onPesquisarChanged}
             tipoSolicitacao={tipoSolicitacao}
             listaLotes={listaLotes}
-            statusDieta={props.statusDieta}
-            loteDieta={props.loteDieta}
-            tituloDieta={props.tituloDieta}
+            propsDieta={propsDietaRedux}
           />
         </div>
         <div className="pb-3" />
@@ -438,4 +444,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(StatusSolicitacoesDietaEspecialForm);
+const mapDispatchToProps = dispatch => ({
+  resetCamposDieta: () => dispatch(resetCamposDieta())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StatusSolicitacoesDietaEspecialForm);
