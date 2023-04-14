@@ -19,6 +19,11 @@ import {
   updateTituloDieta,
   updateLoteDieta
 } from "../../reducers/filtersDietaReducer";
+import {
+  updateMarcaProduto,
+  updateNomeProduto,
+  updateEditalProtudo
+} from "../../reducers/filtersProdutoReducer";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
@@ -93,7 +98,8 @@ const CardBody = props => {
                         }
                       />
                       <OnChange name="edital">
-                        {() => {
+                        {edital => {
+                          props.updateEditalProtudo(edital);
                           props.onChange(values);
                         }}
                       </OnChange>
@@ -135,6 +141,7 @@ const CardBody = props => {
                       <OnChange name="titulo">
                         {(value, previous) => {
                           props.updateTituloDieta(value);
+                          props.updateNomeProduto(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
@@ -193,7 +200,8 @@ const CardBody = props => {
                         * mínimo de 3 caracteres
                       </div>
                       <OnChange name="marca">
-                        {() => {
+                        {marca => {
+                          props.updateMarcaProduto(marca);
                           props.onChange(values);
                         }}
                       </OnChange>
@@ -287,6 +295,15 @@ const mapDispatchToProps = dispatch => ({
   },
   updateLoteDieta: loteDieta => {
     dispatch(updateLoteDieta(loteDieta));
+  },
+  updateMarcaProduto: marcaProduto => {
+    dispatch(updateMarcaProduto(marcaProduto));
+  },
+  updateNomeProduto: editalProduto => {
+    dispatch(updateNomeProduto(editalProduto));
+  },
+  updateEditalProtudo: editalProduto => {
+    dispatch(updateEditalProtudo(editalProduto));
   }
 });
 
