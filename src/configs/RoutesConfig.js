@@ -127,7 +127,6 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDilog,
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE
 } from "../helpers/utilities";
@@ -778,8 +777,7 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog() || usuarioEhDilog()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -812,9 +810,7 @@ const routesConfig = [
     component: CargasUsuariosPage,
     exact: true,
     tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhCoordenadorGpCODAE() ||
-      usuarioEhDilog()
+      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
