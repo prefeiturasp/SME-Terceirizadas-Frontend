@@ -35,15 +35,24 @@ const RelatorioDietaEspecial = () => {
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
   const [imprimindoPdf, setImprimindoPdf] = useState(false);
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
+  const [protocolos, setProtocolos] = useState([]);
+  const [unidades, setUnidades] = useState([]);
 
   const exportarXLSX = () => {
     const params = {
       status: mostrarFiltrosAutorizadas ? "AUTORIZADAS" : "CANCELADAS",
       lotes: lotesSelecionados.join(),
       classificacoes: classificacoesSelecionadas.join(),
-      protocolos: protocolosSelecionados.join(),
+      protocolos:
+        protocolos.length === protocolosSelecionados.length
+          ? null
+          : protocolosSelecionados.join(),
       terceirizada_uuid: terceirizadaUuid,
       alergias_intolerancias: diagnosticosSelecionados.join(),
+      unidades_educacionais:
+        unidades.length === unidadesSelecionadas.length
+          ? null
+          : unidadesSelecionadas.join(),
       data_inicial: dataInicial,
       data_final: dataFinal
     };
@@ -59,12 +68,20 @@ const RelatorioDietaEspecial = () => {
   };
 
   const exportarPDF = () => {
+    console.log(protocolosSelecionados.length);
     const params = {
       status: mostrarFiltrosAutorizadas ? "AUTORIZADAS" : "CANCELADAS",
       lotes: lotesSelecionados.join(),
       classificacoes: classificacoesSelecionadas.join(),
-      protocolos: protocolosSelecionados.join(),
+      protocolos:
+        protocolos.length === protocolosSelecionados.length
+          ? null
+          : protocolosSelecionados.join(),
       alergias_intolerancias: diagnosticosSelecionados.join(),
+      unidades_educacionais:
+        unidades.length === unidadesSelecionadas.length
+          ? null
+          : unidadesSelecionadas.join(),
       terceirizada_uuid: terceirizadaUuid,
       data_inicial: dataInicial,
       data_final: dataFinal
@@ -111,6 +128,8 @@ const RelatorioDietaEspecial = () => {
               setDataFinal={setDataFinal}
               mostrarFiltrosAutorizadas={mostrarFiltrosAutorizadas}
               setMostrarFiltrosAutorizadas={setMostrarFiltrosAutorizadas}
+              setProtocolos={setProtocolos}
+              setUnidades={setUnidades}
             />
             {dietasFiltradas.length > 0 && (
               <>

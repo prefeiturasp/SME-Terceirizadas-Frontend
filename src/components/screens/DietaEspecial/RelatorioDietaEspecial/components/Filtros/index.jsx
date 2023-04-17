@@ -51,7 +51,9 @@ const BuscaDietasForm = ({
   setMostrarFiltrosAutorizadas,
   mostrarFiltrosAutorizadas,
   dietasFiltradas,
-  reset
+  reset,
+  setProtocolos,
+  setUnidades
 }) => {
   const [dietasEspeciais, setDietasEspeciais] = useState([]);
   const [mostrarFiltrosCanceladas, setMostrarFiltrosCanceladas] = useState(
@@ -82,6 +84,23 @@ const BuscaDietasForm = ({
     ) {
       setNutriSupervisao(true);
       setCarregando(false);
+    }
+  };
+
+  const getUnidadesEducacionais = async values => {
+    let data = { lotes: values };
+    const response = await getUnidadesEducacionaisTercTotal(data);
+    if (response.status === HTTP_STATUS.OK) {
+      const unidades = response.data;
+      const unidadesOpcoes = unidades.map(unidade => ({
+        label: unidade.codigo_eol_escola,
+        value: unidade.codigo_eol
+      }));
+      setUnidadesEducacionais(unidadesOpcoes);
+      setUnidades(unidadesOpcoes);
+      setAtivaUnidadeEducaionais(false);
+    } else {
+      toastError("Erro ao buscar unidades educacionais");
     }
   };
 
@@ -141,6 +160,7 @@ const BuscaDietasForm = ({
     const protocolosFormatados = formataProtocolos(protocolosRelacionadas);
     setProtocolosInicio(protocolosFormatados);
     setProtocolosNoFiltro(protocolosFormatados);
+    setProtocolos(protocolosFormatados);
   };
 
   const diagnosticosRelacionadosADietas = dietas => {
