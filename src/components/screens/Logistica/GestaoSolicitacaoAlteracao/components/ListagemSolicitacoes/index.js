@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "react-bootstrap";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
 import Alterar from "../Alterar";

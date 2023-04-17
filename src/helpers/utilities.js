@@ -397,10 +397,6 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
-export const usuarioEhDiretorEscola = () => {
-  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
-};
-
 export const usuarioEhAdmQualquerEmpresa = () => {
   return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
     localStorage.getItem("perfil")
@@ -412,9 +408,7 @@ export const usuarioEhQualquerUsuarioEmpresa = () => {
 };
 
 export const usuarioEhDiretorUE = () => {
-  return [PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
-    localStorage.getItem("perfil")
-  );
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
 export const usuarioEscolaEhGestaoMistaParceira = () => {
@@ -850,7 +844,7 @@ export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
-  if (!["production"].includes(ENVIRONMENT)) return true;
+  if (!["development"].includes(ENVIRONMENT)) return true;
 
   const dresPermitidas = [
     "CAPELA DO SOCORRO",
@@ -862,7 +856,7 @@ export const exibirGA = () => {
     "SAO MIGUEL"
   ];
 
-  if (["production"].includes(ENVIRONMENT)) {
+  if (["development"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
       case `"diretoriaregional"`:
         return dresPermitidas.some(dre =>
@@ -948,4 +942,8 @@ export const fimDoCalendario = () => {
   return new Date().getMonth() === JS_DATE_DEZEMBRO
     ? new Date(new Date().getFullYear() + 1, 11, 31)
     : new Date(new Date().getFullYear(), 11, 31);
+};
+
+export const tiposAlimentacaoETEC = () => {
+  return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
 };

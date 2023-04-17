@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -193,7 +193,7 @@ const ModalCadastroVinculo = ({
         <Form
           onSubmit={onSubmit}
           initialValues={valoresEdicao}
-          render={({ form, handleSubmit, values, errors }) => (
+          render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
                 <form onSubmit={handleSubmit} className="">

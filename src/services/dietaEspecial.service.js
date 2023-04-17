@@ -368,6 +368,13 @@ export const getSolicitacoesRelatorioDietasEspeciais = async parametros => {
   );
 };
 
+export const getUnidadesEducacionaisTercTotal = async parametros => {
+  return await axios.post(
+    `/escolas-simplissima-com-eol/terc-total/`,
+    parametros
+  );
+};
+
 export const gerarExcelRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-xlsx/`;
   const { data } = await axios.get(url, { params, responseType: "blob" });

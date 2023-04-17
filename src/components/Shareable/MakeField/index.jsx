@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import React, { useState } from "react";
 import { Form, Select, AutoComplete, TimePicker, DatePicker } from "antd";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 
 const FormItem = Form.Item;

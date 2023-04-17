@@ -8,11 +8,18 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
-  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola
+  getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
+  getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import {
+  medicaoInicialExportarOcorrenciasPDF,
+  relatorioMedicaoInicialPDF
+} from "services/relatorios";
+import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
-import { PERFIL } from "constants/shared";
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { ENVIRONMENT } from "constants/config";
 
 export default ({
   escolaInstituicao,
@@ -21,7 +28,8 @@ export default ({
   onClickInfoBasicas,
   periodoSelecionado,
   mes,
-  ano
+  ano,
+  setLoadingSolicitacaoMedicaoInicial
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
@@ -40,6 +48,14 @@ export default ({
   const [
     solicitacoesAlteracaoLancheEmergencialAutorizadas,
     setSolicitacoesAlteracaoLancheEmergencialAutorizadas
+  ] = useState(undefined);
+  const [
+    solicitacoesInclusoesEtecAutorizadas,
+    setSolicitacoesInclusoesEtecAutorizadas
+  ] = useState(undefined);
+  const [
+    quantidadeAlimentacoesLancadas,
+    setQuantidadeAlimentacoesLancadas
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
 
@@ -96,11 +112,44 @@ export default ({
     }
   };
 
+  const getSolicitacoesInclusoesEtecAutorizadasAsync = async () => {
+    const escola_uuid = escolaInstituicao.uuid;
+    const tipo_solicitacao = "Inclusão de";
+    const response = await getSolicitacoesInclusoesEtecAutorizadasEscola({
+      escola_uuid,
+      mes,
+      ano,
+      tipo_solicitacao
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setSolicitacoesInclusoesEtecAutorizadas(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar Inclusões ETEC Autorizadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync = async () => {
+    const params = { uuid_solicitacao: solicitacaoMedicaoInicial.uuid };
+    const response = await getQuantidadeAlimentacoesLancadasPeriodoGrupo(
+      params
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setQuantidadeAlimentacoesLancadas(response.data.results);
+    } else {
+      toastError(
+        "Erro ao carregar quantidades de alimentações lançadas. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getSolicitacoesInclusoesEtecAutorizadasAsync();
+    getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
   }, [periodoSelecionado]);
 
   const getPathPlanilhaOcorr = () => {
@@ -121,6 +170,12 @@ export default ({
         toastError("Arquivo PDF de ocorrências não encontrado");
       }
     }
+  };
+
+  const gerarPDFMedicaoInicial = async () => {
+    setLoadingSolicitacaoMedicaoInicial(true);
+    await relatorioMedicaoInicialPDF(solicitacaoMedicaoInicial.uuid);
+    setLoadingSolicitacaoMedicaoInicial(false);
   };
 
   const renderBotaoExportarPlanilha = () => {
@@ -156,7 +211,7 @@ export default ({
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
-      {!erroAPI && (
+      {!erroAPI && quantidadeAlimentacoesLancadas && (
         <>
           <div className="row pb-2">
             <div className="col">
@@ -170,11 +225,11 @@ export default ({
               key={index}
               textoCabecalho={periodo.periodo_escolar.nome}
               cor={CORES[index]}
-              totalAlimentacoes={0}
               tipos_alimentacao={periodo.tipos_alimentacao}
               periodoSelecionado={periodoSelecionado}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           ))}
           {periodosInclusaoContinua &&
@@ -192,11 +247,13 @@ export default ({
                   grupo="Programas e Projetos"
                   textoCabecalho={periodo}
                   cor={CORES[4]}
-                  totalAlimentacoes={0}
                   tipos_alimentacao={tiposAlimentacao}
                   periodoSelecionado={periodoSelecionado}
                   solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                   objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                  quantidadeAlimentacoesLancadas={
+                    quantidadeAlimentacoesLancadas
+                  }
                 />
               );
             })}
@@ -208,14 +265,27 @@ export default ({
             <CardLancamento
               grupo="Solicitações de Alimentação"
               cor={CORES[5]}
-              totalAlimentacoes={0}
-              tipos_alimentacao={["Kits Lanches", "Lanches Emergenciais"]}
+              tipos_alimentacao={["Kit Lanche", "Lanche Emergencial"]}
               periodoSelecionado={periodoSelecionado}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
               ehGrupoSolicitacoesDeAlimentacao={true}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           )}
+          {solicitacoesInclusoesEtecAutorizadas &&
+            solicitacoesInclusoesEtecAutorizadas.length > 0 && (
+              <CardLancamento
+                grupo="ETEC"
+                cor={CORES[6]}
+                tipos_alimentacao={tiposAlimentacaoETEC()}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                ehGrupoETEC={true}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              />
+            )}
           <div className="row mt-4">
             <div className="col">
               {renderBotaoFinalizar() ? (
@@ -223,11 +293,7 @@ export default ({
                   texto="Finalizar"
                   style={BUTTON_STYLE.GREEN}
                   className="float-right"
-                  disabled={
-                    ![PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
-                      localStorage.getItem("perfil")
-                    )
-                  }
+                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
                   onClick={() => setShowModalFinalizarMedicao(true)}
                 />
               ) : (
@@ -247,7 +313,8 @@ export default ({
                         texto="Exportar PDF"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
                         className="float-right"
-                        onClick={() => {}}
+                        onClick={() => gerarPDFMedicaoInicial()}
+                        disabled={ENVIRONMENT === "production"}
                       />
                       <Botao
                         texto="Exportar Ocorrências"

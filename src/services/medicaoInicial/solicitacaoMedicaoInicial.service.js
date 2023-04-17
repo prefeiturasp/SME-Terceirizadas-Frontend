@@ -71,3 +71,12 @@ export const drePedeCorrecaMedicao = async (uuid, params) => {
     return data;
   }
 };
+
+export const getQuantidadeAlimentacoesLancadasPeriodoGrupo = async params => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/quantidades-alimentacoes-lancadas-periodo-grupo/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

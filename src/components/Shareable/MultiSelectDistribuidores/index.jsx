@@ -11,16 +11,12 @@ const MultiSelectDistribuidores = ({ name, label, className }) => {
 
   useEffect(() => {
     (async () => {
-      try {
-        const listaDistribuidores = await getNomesDistribuidores();
-        let listaRsultados = listaDistribuidores.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element.uuid, label: element.razao_social };
-        });
-        setDistribuidores(listaFormatada);
-      } catch (erro) {
-        throw erro;
-      }
+      const listaDistribuidores = await getNomesDistribuidores();
+      let listaRsultados = listaDistribuidores.data.results;
+      let listaFormatada = listaRsultados.map(element => {
+        return { value: element.uuid, label: element.razao_social };
+      });
+      setDistribuidores(listaFormatada);
     })();
   }, []);
 

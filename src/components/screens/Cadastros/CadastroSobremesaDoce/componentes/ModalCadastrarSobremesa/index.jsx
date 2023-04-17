@@ -35,7 +35,6 @@ export const ModalCadastrarSobremesa = ({ ...props }) => {
         )
         .map(diaSobremesa => diaSobremesa.tipo_unidade.uuid)
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event.start]);
 
   const onSubmit = async values => {

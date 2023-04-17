@@ -87,7 +87,8 @@ const PainelInicial = ({ history }) => {
           <CardLogo
             titulo={"Medição Inicial"}
             onClick={() => {
-              usuarioEhEscolaTerceirizada() &&
+              (usuarioEhEscolaTerceirizada() ||
+                usuarioEhEscolaTerceirizadaDiretor()) &&
                 history.push("/lancamento-inicial/lancamento-medicao-inicial");
               (usuarioEhDRE() || usuarioEhMedicao()) &&
                 history.push(

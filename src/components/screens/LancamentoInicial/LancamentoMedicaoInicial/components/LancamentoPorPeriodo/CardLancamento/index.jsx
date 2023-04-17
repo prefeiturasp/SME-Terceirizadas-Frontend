@@ -15,31 +15,71 @@ export default ({
   textoCabecalho = null,
   grupo,
   cor,
-  totalAlimentacoes = [],
   tipos_alimentacao,
   periodoSelecionado,
   solicitacaoMedicaoInicial,
-  ehGrupoSolicitacoesDeAlimentacao = false
+  ehGrupoSolicitacoesDeAlimentacao = false,
+  ehGrupoETEC = false,
+  quantidadeAlimentacoesLancadas
 }) => {
   const history = useHistory();
   let alimentacoesFormatadas = [];
-  if (!ehGrupoSolicitacoesDeAlimentacao) {
-    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
+
+  const nomePeriodoGrupo = () => {
+    let nome = "";
+    if (grupo) {
+      nome += `${grupo}${
+        ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
+      }`;
+    }
+    if (textoCabecalho) {
+      nome += textoCabecalho;
+    }
+    return nome.trim();
+  };
+
+  const qtdAlimentacaoPeriodoFiltrada = () => {
+    return quantidadeAlimentacoesLancadas.filter(
+      qtdAlimentacaoPeriodo =>
+        qtdAlimentacaoPeriodo.nome_periodo_grupo === nomePeriodoGrupo()
+    );
+  };
+
+  const quantidadeAlimentacao = nomeAlimentacao => {
+    const alimentacao = nomeAlimentacao
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replaceAll(/ /g, "_");
+    let quantidade = 0;
+    if (qtdAlimentacaoPeriodoFiltrada().length > 0) {
+      const qtdAlimentacaoFiltrada = qtdAlimentacaoPeriodoFiltrada()[0].valores.filter(
+        v => v.nome_campo === alimentacao
+      );
+      if (qtdAlimentacaoFiltrada.length > 0) {
+        quantidade = qtdAlimentacaoFiltrada[0].valor;
+      }
+    }
+    return quantidade;
+  };
+
+  if (ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC) {
+    alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
-          <b>0</b>
+          <b>{quantidadeAlimentacao(item)}</b>
         </span>
-        <span className="ml-1">- {alimentacao.nome}</span>
+        <span className="ml-1">- {item}</span>
         <br />
       </div>
     ));
   } else {
-    alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
+    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
-          <b>0</b>
+          <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
         </span>
-        <span className="ml-1">- {item}</span>
+        <span className="ml-1">- {alimentacao.nome}</span>
         <br />
       </div>
     ));
@@ -60,7 +100,7 @@ export default ({
       pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO}`,
       search: `uuid=${
         solicitacaoMedicaoInicial.uuid
-      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}`,
+      }&ehGrupoSolicitacoesDeAlimentacao=${ehGrupoSolicitacoesDeAlimentacao}&ehGrupoETEC=${ehGrupoETEC}`,
       state: {
         periodo: textoCabecalho,
         grupo,
@@ -81,7 +121,9 @@ export default ({
           <div className="row">
             <div className="col-10 pl-0 mb-2 periodo-cabecalho">
               {grupo &&
-                `${grupo} ${ehGrupoSolicitacoesDeAlimentacao ? "" : " - "} `}
+                `${grupo} ${
+                  ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
+                } `}
               {textoCabecalho}
             </div>
           </div>
@@ -90,7 +132,11 @@ export default ({
               className="col-2 total-alimentacoes p-2"
               style={{ backgroundColor: cor }}
             >
-              <span>{totalAlimentacoes || "0"}</span>
+              <span>
+                {qtdAlimentacaoPeriodoFiltrada().length > 0
+                  ? qtdAlimentacaoPeriodoFiltrada()[0].valor_total
+                  : 0}
+              </span>
               <span>ALIMENTAÇÕES</span>
             </div>
             <div className="col-9 alimentacoes-por-tipo">

@@ -6,7 +6,11 @@ import {
   getQuantidadeAlunosEscola
 } from "services/escola.service";
 import InclusaoDeAlimentacao from "..";
-import { dataParaUTC, escolaEhCei } from "helpers/utilities";
+import {
+  dataParaUTC,
+  escolaEhCei,
+  tiposAlimentacaoETEC
+} from "helpers/utilities";
 import { getDiasUteis } from "services/diasUteis.service";
 import {
   getMotivosInclusaoContinua,
@@ -123,9 +127,7 @@ export const Container = () => {
     ) {
       response.data.results[0].tipos_alimentacao = response.data.results[0].tipos_alimentacao.filter(
         tipo_alimentacao =>
-          ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"].includes(
-            tipo_alimentacao.nome
-          )
+          tiposAlimentacaoETEC().includes(tipo_alimentacao.nome)
       );
       setPeriodoNoite(formatarPeriodos(response.data.results));
     } else {
@@ -139,7 +141,6 @@ export const Container = () => {
     getMotivosInclusaoNormalAsync();
     getDiasUteisAsync();
     exibeMotivoETEC() && getBuscaPeriodosEscolaresAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const REQUISICOES_CONCLUIDAS =

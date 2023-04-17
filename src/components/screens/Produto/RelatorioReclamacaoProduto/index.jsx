@@ -8,7 +8,7 @@ import FormBuscaProduto from "./components/FormBuscaProduto";
 import ModalRelatorioReclamacao from "./components/ModalRelatorioReclamacao";
 
 import "./styles.scss";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 
 const RelatorioReclamacaoProduto = () => {
   const [carregando, setCarregando] = useState(false);
@@ -37,7 +37,6 @@ const RelatorioReclamacaoProduto = () => {
       setCarregando(false);
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   return (

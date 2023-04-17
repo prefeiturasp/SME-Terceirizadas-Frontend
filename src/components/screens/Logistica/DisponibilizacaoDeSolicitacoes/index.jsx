@@ -46,7 +46,6 @@ export const DisponibilizacaoDeSolicitacoes = props => {
           setLoading(false);
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const exibeToastPeloStatus = status => {

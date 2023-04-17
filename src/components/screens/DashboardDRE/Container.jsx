@@ -58,7 +58,6 @@ export const Container = () => {
     if (meusDados) {
       getLotesAsync();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meusDados]);
 
   return (

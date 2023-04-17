@@ -1,14 +1,14 @@
 export const option_status = [
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Cronograma Ciente"
   },
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Aprovado DINUTRE"
   },
   {
-    value: "ACEITA",
+    value: "CRONOGRAMA_CIENTE",
     label: "Aprovado CODAE"
   },
   {
@@ -22,6 +22,18 @@ export const option_status = [
   {
     value: "NEGADA",
     label: "Negado CODAE"
+  }
+];
+
+export const option_status_fornecedor = [
+  {
+    value: [
+      "EM_ANALISE",
+      "CRONOGRAMA_CIENTE",
+      "APROVADO_DINUTRE",
+      "REPROVADO_DINUTRE"
+    ],
+    label: "Em Análise"
   }
 ];
 

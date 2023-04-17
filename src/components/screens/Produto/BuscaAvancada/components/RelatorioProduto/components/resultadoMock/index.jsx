@@ -11,7 +11,7 @@ import {
   BUTTON_ICON
 } from "components/Shareable/Botao/constants";
 
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import { Modal } from "antd";
 
 export default class ResultadoMock extends Component {
