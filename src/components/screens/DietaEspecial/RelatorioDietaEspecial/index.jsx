@@ -69,7 +69,6 @@ const RelatorioDietaEspecial = () => {
   };
 
   const exportarPDF = () => {
-    console.log(protocolosSelecionados.length);
     const params = {
       status: mostrarFiltrosAutorizadas ? "AUTORIZADAS" : "CANCELADAS",
       lotes: lotesSelecionados.join(),
