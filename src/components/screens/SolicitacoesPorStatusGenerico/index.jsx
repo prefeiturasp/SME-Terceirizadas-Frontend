@@ -64,8 +64,9 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
 
   useEffect(() => {
     getSolicitacoesAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  let typingTimeout = null;
 
   return (
     <div className="card mt-3">
@@ -98,13 +99,16 @@ export const SolicitacoesPorStatusGenerico = ({ ...props }) => {
                         </div>
                         <OnChange name="titulo">
                           {value => {
-                            getSolicitacoesAsync({
-                              busca: value && value.length > 2 ? value : null,
-                              status: values.status,
-                              lote: values.lote,
-                              ...PARAMS
-                            });
-                            setCurrentPage(1);
+                            clearTimeout(typingTimeout);
+                            typingTimeout = setTimeout(async () => {
+                              getSolicitacoesAsync({
+                                busca: value && value.length > 2 ? value : null,
+                                status: values.status,
+                                lote: values.lote,
+                                ...PARAMS
+                              });
+                              setCurrentPage(1);
+                            }, 1000);
                           }}
                         </OnChange>
                       </div>

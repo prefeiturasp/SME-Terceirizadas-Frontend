@@ -318,7 +318,6 @@ export const CadastroEmpresa = () => {
       });
     }
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onSubmit = async values => {
     const dados = {
@@ -404,7 +403,7 @@ export const CadastroEmpresa = () => {
                 <Form
                   initialValues={initialValuesForm}
                   onSubmit={onSubmit}
-                  render={({ handleSubmit, form, values }) => (
+                  render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                       <DadosEmpresa ehDistribuidor={ehDistribuidor} />
                       <EnderecoEmpresa

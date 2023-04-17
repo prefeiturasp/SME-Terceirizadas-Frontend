@@ -60,7 +60,6 @@ export const Page = ({ ...props }) => {
     } else {
       this.setState({ nome: localStorage.getItem("nome") });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleBack = () => {

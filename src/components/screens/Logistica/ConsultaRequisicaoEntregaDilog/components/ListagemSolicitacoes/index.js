@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import { Checkbox } from "antd";
 import {
@@ -88,7 +88,6 @@ export default ({
   useEffect(() => {
     setAllChecked(false);
     setSelecionados([]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [solicitacoes]);
 
   return (

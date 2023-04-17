@@ -200,7 +200,7 @@ export class SolicitacaoDeKitLanche extends Component {
     this.props.reset();
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const resposta = await getDietasAtivasInativasPorAluno();
     if (resposta.status === 200) {
       this.setState({

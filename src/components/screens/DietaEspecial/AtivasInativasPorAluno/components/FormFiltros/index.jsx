@@ -72,7 +72,6 @@ const FormFiltros = ({
       setLoading(false);
     }
     fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async formValues => {

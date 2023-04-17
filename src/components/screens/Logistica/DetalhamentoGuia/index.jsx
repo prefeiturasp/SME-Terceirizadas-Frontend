@@ -157,7 +157,7 @@ export default () => {
             onSubmit={() => {}}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit }) => (
+            render={({ handleSubmit }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <div className="row">

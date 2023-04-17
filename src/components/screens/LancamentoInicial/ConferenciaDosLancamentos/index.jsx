@@ -95,7 +95,6 @@ export const ConferenciaDosLancamentos = () => {
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const downloadPdfOcorrencias = () => {

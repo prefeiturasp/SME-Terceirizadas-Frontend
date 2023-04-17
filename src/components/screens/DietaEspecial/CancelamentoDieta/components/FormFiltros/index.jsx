@@ -51,7 +51,6 @@ export default ({ setLoading, setFiltros }) => {
       getAlunos(dadosIniciais);
     }
     fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async formValues => {

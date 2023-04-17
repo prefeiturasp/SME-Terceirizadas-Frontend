@@ -26,6 +26,7 @@ import {
   formatarLinhasTabelaDietaEnteral,
   formatarLinhasTabelasDietas,
   formatarLinhasTabelaSolicitacoesAlimentacao,
+  formatarLinhasTabelaEtecAlimentacao,
   validacaoSemana
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
 import InputText from "components/Shareable/Input/InputText";
@@ -81,6 +82,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     tabelaSolicitacoesAlimentacaoRows,
     setTabelaSolicitacoesAlimentacaoRows
   ] = useState(null);
+  const [tabelaEtecAlimentacaoRows, setTabelaEtecAlimentacaoRows] = useState(
+    null
+  );
   const [valoresLancamentos, setValoresLancamentos] = useState(null);
   const [loading, setLoading] = useState(false);
   const [modoCorrecao, setModoCorrecao] = useState(false);
@@ -116,6 +120,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 cat.nome.includes("SOLICITAÇÕES")
               )
             );
+          } else if (periodoGrupo.nome_periodo_grupo === "ETEC") {
+            setCategoriasDeMedicao(
+              response_categorias_medicao.data.filter(
+                cat => cat.nome === "ALIMENTAÇÃO"
+              )
+            );
           } else {
             setCategoriasDeMedicao(
               response_categorias_medicao.data.filter(
@@ -142,7 +152,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       );
       setTabItems(items);
 
-      if (!periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
+      if (periodoGrupo.nome_periodo_grupo === "ETEC") {
+        const linhasTabelaEtecAlimentacao = formatarLinhasTabelaEtecAlimentacao();
+        setTabelaEtecAlimentacaoRows(linhasTabelaEtecAlimentacao);
+      } else if (!periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
         const periodo = periodosSimples.find(
           periodo => periodo.periodo_escolar.nome === periodoEscolar
         );
@@ -170,8 +183,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     }
 
     setData(new Date(`${mesSolicitacao}/01/${anoSolicitacao}`));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showTabelaLancamentosPeriodo]);
 
   useEffect(() => {
@@ -216,8 +227,6 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       });
       setWeekColumns(week);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, semanaSelecionada]);
 
   const onClickVisualizarFechar = async periodoGrupo => {
@@ -246,6 +255,11 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       return tabelaDietaRows;
     } else if (categoria.nome.includes("SOLICITAÇÕES")) {
       return tabelaSolicitacoesAlimentacaoRows;
+    } else if (
+      periodoGrupo.nome_periodo_grupo === "ETEC" &&
+      categoria.nome === "ALIMENTAÇÃO"
+    ) {
+      return tabelaEtecAlimentacaoRows;
     } else {
       return tabelaAlimentacaoRows;
     }
@@ -423,7 +437,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       </div>
       {showTabelaLancamentosPeriodo &&
       ((tabelaAlimentacaoRows && tabelaDietaRows && tabelaDietaEnteralRows) ||
-        tabelaSolicitacoesAlimentacaoRows) &&
+        tabelaSolicitacoesAlimentacaoRows ||
+        tabelaEtecAlimentacaoRows) &&
       valoresLancamentos ? (
         <>
           <p className="section-title-conf-lancamentos">Lançamentos da UE</p>

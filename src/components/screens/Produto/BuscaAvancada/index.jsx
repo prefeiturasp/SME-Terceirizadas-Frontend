@@ -22,7 +22,7 @@ import ListagemProdutos from "./components/ListagemProdutos";
 import { ordenaProdutos } from "./helpers";
 
 import "./style.scss";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 
 const BuscaAvancada = ({
   produtos,
@@ -61,7 +61,6 @@ const BuscaAvancada = ({
       if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros, page]);
 
   return (

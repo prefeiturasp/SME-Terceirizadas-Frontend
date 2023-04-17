@@ -286,3 +286,10 @@ export const gerarLinkDoItem = item => {
   };
   return mapeamentoItens[item.status.toLowerCase()];
 };
+
+export const deParaStatusAltCronograma = status =>
+  ["Cronograma ciente", "Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+    status
+  )
+    ? "Em análise"
+    : status;

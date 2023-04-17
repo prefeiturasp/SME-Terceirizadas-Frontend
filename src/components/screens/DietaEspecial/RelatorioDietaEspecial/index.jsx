@@ -33,6 +33,7 @@ const RelatorioDietaEspecial = () => {
   );
   const [protocolosSelecionados, setProtocolosSelecionados] = useState([]);
   const [diagnosticosSelecionados, setDiagnosticosSelecionados] = useState([]);
+  const [unidadesSelecionadas, setUnidadesSelecionadas] = useState([]);
   const [imprimindoPdf, setImprimindoPdf] = useState(false);
   const [imprimindoExcel, setImprimindoExcel] = useState(false);
   const [protocolos, setProtocolos] = useState([]);
@@ -118,6 +119,8 @@ const RelatorioDietaEspecial = () => {
               setProtocolosSelecionados={setProtocolosSelecionados}
               diagnosticosSelecionados={diagnosticosSelecionados}
               setDiagnosticosSelecionados={setDiagnosticosSelecionados}
+              unidadesSelecionadas={unidadesSelecionadas}
+              setUnidadesSelecionadas={setUnidadesSelecionadas}
               terceirizadaUuid={terceirizadaUuid}
               setTerceirizadaUuid={setTerceirizadaUuid}
               nutriSupervisao={nutriSupervisao}

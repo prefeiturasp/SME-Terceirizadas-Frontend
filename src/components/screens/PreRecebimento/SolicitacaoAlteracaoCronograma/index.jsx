@@ -6,7 +6,7 @@ import Filtros from "./components/Filtros/index.jsx";
 import ListagemAlteracoesCronogramas from "./components/ListagemAlteracoesCronogramas/index.jsx";
 import { remove_filtros_nulos } from "./helper.js";
 
-export default () => {
+export default ({ fornecedor }) => {
   const [carregando, setCarregando] = useState(false);
   const [alteracoesCronogramas, setAlteracoesCronogramas] = useState();
   const [filtros, setFiltros] = useState();
@@ -17,6 +17,7 @@ export default () => {
   const buscarSolicitacoesCronograma = async page => {
     setCarregando(true);
     setFiltros(remove_filtros_nulos(filtros));
+    if (filtros.status) filtros.status = filtros.status.flat();
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const response = await getListagemSolicitacaoAlteracaoCronograma(params);
     if (response.data.count) {
@@ -37,16 +38,11 @@ export default () => {
       buscarSolicitacoesCronograma(1);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
     buscarSolicitacoesCronograma(page);
     setPage(page);
-  };
-
-  const updatePage = () => {
-    buscarSolicitacoesCronograma(page);
   };
 
   return (
@@ -59,12 +55,13 @@ export default () => {
             setTotal={setTotal}
             alteracoesCronogramas={alteracoesCronogramas}
             page={page}
+            fornecedor={fornecedor}
           />
           {alteracoesCronogramas && (
             <>
               <ListagemAlteracoesCronogramas
                 alteracoesCronogramas={alteracoesCronogramas}
-                updatePage={updatePage}
+                fornecedor={fornecedor}
               />
               <div className="row">
                 <div className="col">

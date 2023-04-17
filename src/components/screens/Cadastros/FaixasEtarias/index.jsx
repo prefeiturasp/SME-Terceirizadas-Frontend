@@ -38,7 +38,7 @@ export default class FaixasEtarias extends Component {
     this.onRedefinir = this.onRedefinir.bind(this);
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const resposta = await getFaixasEtarias();
     if (resposta.status !== 200) {
       toastError(

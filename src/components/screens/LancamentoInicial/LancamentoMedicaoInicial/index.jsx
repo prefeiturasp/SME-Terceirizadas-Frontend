@@ -130,7 +130,6 @@ export default () => {
           new Date()
         ).toString()}`
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getSolicitacaoMedInicial = async (periodo, escolaUuid) => {
@@ -246,6 +245,9 @@ export default () => {
               periodosEscolaSimples={periodosEscolaSimples}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
+              setLoadingSolicitacaoMedicaoInicial={value =>
+                setLoadingSolicitacaoMedicaoInicial(value)
+              }
             />
           )}
       </div>

@@ -131,7 +131,6 @@ export const Relatorio = ({ ...props }) => {
     const urlParams = new URLSearchParams(window.location.search);
     setUuid(urlParams.get("uuid"));
     getSolicitacao(urlParams.get("uuid"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

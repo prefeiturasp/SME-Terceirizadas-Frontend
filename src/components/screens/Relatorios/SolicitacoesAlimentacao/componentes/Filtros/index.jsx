@@ -111,7 +111,6 @@ export const Filtros = ({ ...props }) => {
     getTiposUnidadeEscolarAsync();
     getEscolasSimplissimaComDREUnpaginatedAsync();
     getTerceirizadasAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filtroEscolas = (unidadesEducacionais, values) => {

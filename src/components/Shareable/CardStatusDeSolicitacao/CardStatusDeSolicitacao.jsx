@@ -71,7 +71,6 @@ export const CardStatusDeSolicitacao = props => {
     cardTitle.toString() === "Recebidas" &&
       tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       initSocket();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {

@@ -60,12 +60,10 @@ export default ({
         solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     getDefaultValueSelectTipoContagem();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [solicitacaoMedicaoInicial]);
 
   const opcoesContagem = tiposDeContagem

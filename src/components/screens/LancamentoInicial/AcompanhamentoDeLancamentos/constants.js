@@ -1,11 +1,12 @@
-import { usuarioEhDiretorUE } from "helpers/utilities";
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import React from "react";
 
 export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
   MEDICAO_ENVIADA_PELA_UE: {
     nome: (
       <div>
-        {usuarioEhDiretorUE() ? "Enviados" : "Recebidos"} <br /> para análise
+        {usuarioEhEscolaTerceirizadaDiretor() ? "Enviados" : "Recebidos"} <br />{" "}
+        para análise
       </div>
     ),
     cor: "azul-claro"
@@ -13,8 +14,11 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
   MEDICAO_CORRECAO_SOLICITADA: {
     nome: (
       <div>
-        {usuarioEhDiretorUE() ? "Devolvidos para" : "Devolvidos"} <br />{" "}
-        {usuarioEhDiretorUE() ? "ajustes DRE" : "para ajustes"}
+        {usuarioEhEscolaTerceirizadaDiretor()
+          ? "Devolvidos para"
+          : "Devolvidos"}{" "}
+        <br />{" "}
+        {usuarioEhEscolaTerceirizadaDiretor() ? "ajustes DRE" : "para ajustes"}
       </div>
     ),
     cor: "laranja"

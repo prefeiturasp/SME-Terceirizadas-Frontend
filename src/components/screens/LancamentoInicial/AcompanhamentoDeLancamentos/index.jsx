@@ -28,7 +28,7 @@ import { getEscolasTrecTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
-  usuarioEhDiretorUE,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhDRE,
   usuarioEhMedicao
 } from "helpers/utilities";
@@ -38,6 +38,7 @@ import {
   CONFERENCIA_DOS_LANCAMENTOS,
   MEDICAO_INICIAL
 } from "configs/constants";
+import { required } from "helpers/fieldValidators";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -77,7 +78,7 @@ export const AcompanhamentoDeLancamentos = () => {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
-        if (usuarioEhDiretorUE())
+        if (usuarioEhEscolaTerceirizadaDiretor())
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
@@ -127,8 +128,6 @@ export const AcompanhamentoDeLancamentos = () => {
     getDashboardMedicaoInicialAsync();
     getMesesAnosSolicitacoesMedicaoinicialAsync();
     getTiposUnidadeEscolarAsync();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [diretoriaRegional]);
 
   useEffect(() => {
@@ -210,6 +209,7 @@ export const AcompanhamentoDeLancamentos = () => {
       "diretoria_regional" || undefined
     );
     form.reset();
+    setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
   };
@@ -303,96 +303,101 @@ export const AcompanhamentoDeLancamentos = () => {
                         </span>
                       )}{" "}
                     </div>
-                    {statusSelecionado && !usuarioEhDiretorUE() && (
-                      <>
-                        <hr />
+                    {statusSelecionado &&
+                      !usuarioEhEscolaTerceirizadaDiretor() && (
+                        <>
+                          <hr />
 
-                        <div className="row">
-                          <div className="col-4">
-                            <Field
-                              component={Select}
-                              name="mes_ano"
-                              label="Mês de referência"
-                              options={[
-                                { nome: "Selecione o mês", uuid: "" }
-                              ].concat(
-                                mesesAnos.map(mesAno => ({
-                                  nome: `${MESES[parseInt(mesAno.mes) - 1]} - ${
-                                    mesAno.ano
-                                  }`,
-                                  uuid: `${mesAno.mes}_${mesAno.ano}`
-                                }))
-                              )}
-                              naoDesabilitarPrimeiraOpcao
-                            />
+                          <div className="row">
+                            <div className="col-4">
+                              <Field
+                                component={Select}
+                                name="mes_ano"
+                                label="Mês de referência"
+                                options={[
+                                  { nome: "Selecione o mês", uuid: "" }
+                                ].concat(
+                                  mesesAnos.map(mesAno => ({
+                                    nome: `${
+                                      MESES[parseInt(mesAno.mes) - 1]
+                                    } - ${mesAno.ano}`,
+                                    uuid: `${mesAno.mes}_${mesAno.ano}`
+                                  }))
+                                )}
+                                naoDesabilitarPrimeiraOpcao
+                                validate={required}
+                                required
+                              />
+                            </div>
+                            <div className="col-4">
+                              <label className="mb-2">Lote</label>
+                              <Field
+                                component={StatefulMultiSelect}
+                                name="lotes"
+                                selected={values.lotes_selecionados || []}
+                                options={lotes.map(lote => ({
+                                  label: lote.nome,
+                                  value: lote.uuid
+                                }))}
+                                onSelectedChanged={values_ => {
+                                  form.change(`lotes_selecionados`, values_);
+                                }}
+                                disableSearch={true}
+                                overrideStrings={{
+                                  selectSomeItems: "Selecione um ou mais lotes",
+                                  allItemsAreSelected:
+                                    "Todos os lotes estão selecionados",
+                                  selectAll: "Todos"
+                                }}
+                              />
+                            </div>
+                            <div className="col-4">
+                              <Field
+                                component={Select}
+                                name="tipo_unidade"
+                                label="Tipo de unidade"
+                                options={[
+                                  { nome: "Selecione o tipo de UE", uuid: "" }
+                                ].concat(
+                                  tiposUnidades.map(tipoUnidade => ({
+                                    nome: tipoUnidade.iniciais,
+                                    uuid: tipoUnidade.uuid
+                                  }))
+                                )}
+                                naoDesabilitarPrimeiraOpcao
+                              />
+                            </div>
                           </div>
-                          <div className="col-4">
-                            <label className="mb-2">Lote</label>
-                            <Field
-                              component={StatefulMultiSelect}
-                              name="lotes"
-                              selected={values.lotes_selecionados || []}
-                              options={lotes.map(lote => ({
-                                label: lote.nome,
-                                value: lote.uuid
-                              }))}
-                              onSelectedChanged={values_ => {
-                                form.change(`lotes_selecionados`, values_);
-                              }}
-                              disableSearch={true}
-                              overrideStrings={{
-                                selectSomeItems: "Selecione um ou mais lotes",
-                                allItemsAreSelected:
-                                  "Todos os lotes estão selecionados",
-                                selectAll: "Todos"
-                              }}
-                            />
+                          <div className="row">
+                            <div className="col-8">
+                              <Field
+                                dataSource={getNomesItemsFiltrado(
+                                  values.escola
+                                )}
+                                component={AutoCompleteField}
+                                name="escola"
+                                label="Unidade Educacional"
+                                placeholder={"Digite um nome"}
+                                className="input-busca-nome-item"
+                              />
+                            </div>
+                            <div className="col-4 mt-auto text-right">
+                              <Botao
+                                type={BUTTON_TYPE.BUTTON}
+                                onClick={() => resetForm(form)}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                texto="Limpar"
+                                className="mr-3"
+                              />
+                              <Botao
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN}
+                                texto="Filtrar"
+                              />
+                            </div>
                           </div>
-                          <div className="col-4">
-                            <Field
-                              component={Select}
-                              name="tipo_unidade"
-                              label="Tipo de unidade"
-                              options={[
-                                { nome: "Selecione o tipo de UE", uuid: "" }
-                              ].concat(
-                                tiposUnidades.map(tipoUnidade => ({
-                                  nome: tipoUnidade.iniciais,
-                                  uuid: tipoUnidade.uuid
-                                }))
-                              )}
-                              naoDesabilitarPrimeiraOpcao
-                            />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-8">
-                            <Field
-                              dataSource={getNomesItemsFiltrado(values.escola)}
-                              component={AutoCompleteField}
-                              name="escola"
-                              label="Unidade Educacional"
-                              placeholder={"Digite um nome"}
-                              className="input-busca-nome-item"
-                            />
-                          </div>
-                          <div className="col-4 mt-auto text-right">
-                            <Botao
-                              type={BUTTON_TYPE.BUTTON}
-                              onClick={() => resetForm(form)}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              texto="Limpar"
-                              className="mr-3"
-                            />
-                            <Botao
-                              type={BUTTON_TYPE.SUBMIT}
-                              style={BUTTON_STYLE.GREEN}
-                              texto="Filtrar"
-                            />
-                          </div>
-                        </div>
-                      </>
-                    )}
+                        </>
+                      )}
                     <Spin tip="Carregando..." spinning={loadingComFiltros}>
                       {resultados && (
                         <>
@@ -408,11 +413,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                 <thead>
                                   <tr className="row">
                                     <th className="col-5 pl-2">
-                                      {usuarioEhDiretorUE
+                                      {usuarioEhEscolaTerceirizadaDiretor()
                                         ? "Período do Lançamento"
                                         : "Nome da UE"}
                                     </th>
-                                    {!usuarioEhDiretorUE() && (
+                                    {!usuarioEhEscolaTerceirizadaDiretor() && (
                                       <th className="col-1 text-center">
                                         Tipo de UE
                                       </th>
@@ -431,11 +436,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                     return (
                                       <tr key={key} className="row">
                                         <td className="col-5 pl-2 pt-3">
-                                          {usuarioEhDiretorUE()
+                                          {usuarioEhEscolaTerceirizadaDiretor()
                                             ? dado.mes_ano
                                             : dado.escola}
                                         </td>
-                                        {!usuarioEhDiretorUE() && (
+                                        {!usuarioEhEscolaTerceirizadaDiretor() && (
                                           <td className="col-1 text-center pt-3">
                                             {dado.tipo_unidade}
                                           </td>
