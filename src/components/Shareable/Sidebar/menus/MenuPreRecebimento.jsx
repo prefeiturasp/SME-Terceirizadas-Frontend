@@ -4,7 +4,8 @@ import {
   PRE_RECEBIMENTO,
   CRONOGRAMA_ENTREGA,
   PAINEL_APROVACOES,
-  SOLICITACAO_ALTERACAO_CRONOGRAMA
+  SOLICITACAO_ALTERACAO_CRONOGRAMA,
+  SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
 } from "configs/constants";
 import {
   usuarioEhCronograma,
@@ -27,9 +28,18 @@ const MenuPreRecebimento = () => {
           Cronograma de Entrega
         </LeafItem>
       )}
-      {usuarioEhCronograma() && (
+      {(usuarioEhCronograma() ||
+        usuarioEhDinutreDiretoria() ||
+        usuarioEhDilogDiretoria()) && (
         <LeafItem
           to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA}`}
+        >
+          Alteração de Cronograma
+        </LeafItem>
+      )}
+      {usuarioEhEmpresaFornecedor() && (
+        <LeafItem
+          to={`/${PRE_RECEBIMENTO}/${SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR}`}
         >
           Alteração de Cronograma
         </LeafItem>

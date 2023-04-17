@@ -240,7 +240,7 @@ export default () => {
               }
               return errors;
             }}
-            render={({ form, handleSubmit, values }) => (
+            render={({ handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <Link

@@ -125,7 +125,7 @@ class WizardFormTerceiraPagina extends Component {
     });
   };
 
-  enviaDados = values => {
+  enviaDados = async values => {
     const { valoresSegundoForm, produto } = this.props;
     values["uuid"] = produto.uuid;
     values["cadastro_atualizado"] = true;
@@ -161,23 +161,18 @@ class WizardFormTerceiraPagina extends Component {
       values["tem_aditivos_alergenicos"] = false;
     }
 
-    return new Promise(async (resolve, reject) => {
-      const response = await updateProduto(values);
-      if (response.status === HTTP_STATUS.OK) {
-        if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
-          toastSuccess("Correção efetuada com sucesso.");
-        else toastSuccess("Nova homologação solicitada.");
-        this.props.history.push("/painel-gestao-produto");
-        resolve();
-      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-        toastError(getError(response.data));
-        reject();
-      } else {
-        toastError(`Erro ao atualizar homologação`);
-        reject();
-        this.props.history.push("/painel-gestao-produto");
-      }
-    });
+    const response = await updateProduto(values);
+    if (response.status === HTTP_STATUS.OK) {
+      if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
+        toastSuccess("Correção efetuada com sucesso.");
+      else toastSuccess("Nova homologação solicitada.");
+      this.props.history.push("/painel-gestao-produto");
+    } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+      toastError(getError(response.data));
+    } else {
+      toastError(`Erro ao atualizar homologação`);
+      this.props.history.push("/painel-gestao-produto");
+    }
   };
 
   removerAnexo = async (uuid, index) => {

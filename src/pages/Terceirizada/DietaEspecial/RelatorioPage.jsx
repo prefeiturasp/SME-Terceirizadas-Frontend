@@ -29,7 +29,7 @@ export default class RelatorioPage extends Component {
     );
   }
 
-  componentWillMount = async () => {
+  UNSAFE_componentWillMount = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     if (uuid) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tooltip } from "antd";
 import { FormOutlined, DeleteFilled } from "@ant-design/icons";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import { ModalEditarEmail } from "../ModalEditarEmail";
 import { ModalExcluirEmail } from "../ModalExcluirEmail";
 import {

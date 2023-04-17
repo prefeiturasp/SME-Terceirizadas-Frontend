@@ -83,7 +83,6 @@ export default ({ uuid }) => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function getInitialValues(protocolo) {

@@ -105,23 +105,13 @@ export const getLotes = payload => {
     });
 };
 
-export const getMeusLotes = () => {
+export const getMeusLotes = async () => {
   const url = `${API_URL}/lotes/meus-lotes-vinculados/`;
-  let status = 0;
-  return fetch(url, {
-    method: "GET",
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { ...data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getLotesSimples = async (params = null) => {

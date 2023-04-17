@@ -68,7 +68,6 @@ export default () => {
     if (usuarioEhEmpresaFornecedor()) {
       buscaArmazens();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const podeCadastrar = item => {

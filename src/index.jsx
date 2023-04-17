@@ -58,7 +58,7 @@ if (process.env.NODE_ENV === "development") {
 // foram aplicados 3 middlewares no createstore.
 // thunk: para que os actionCreators poderem chamar metodos (ideal para usar promises)
 // multi: para retornar uma lista de ações em vez de 1
-// promise: para poder usar o componentWillMount no componente
+// promise: para poder usar o UNSAFE_componentWillMount no componente
 
 const store = applyMiddleware(thunk, multi, promise)(createStore)(
   reducers,

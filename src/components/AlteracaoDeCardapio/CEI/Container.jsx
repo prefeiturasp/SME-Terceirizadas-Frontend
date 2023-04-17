@@ -72,7 +72,6 @@ export const Container = () => {
       getVinculosTipoAlimentacaoPorEscolaAsync(
         meusDados.vinculo_atual.instituicao.uuid
       );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meusDados]);
 
   const LOADING =

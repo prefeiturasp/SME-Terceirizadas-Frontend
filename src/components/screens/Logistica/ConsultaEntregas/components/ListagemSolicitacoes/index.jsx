@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.min.css";
 import "./styles.scss";
 import FiltrosExcel from "../FiltrosRelatorios";
 

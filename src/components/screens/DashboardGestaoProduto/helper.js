@@ -172,6 +172,7 @@ export const formataCards = (items, apontaParaEdicao, titulo) => {
     nome_usuario_log_de_reclamacao: item.nome_usuario_log_de_reclamacao,
     status: item.status,
     marca: item.marca_produto,
-    editais: item.editais
+    editais: item.editais,
+    produto_editais: item.produto_editais
   }));
 };

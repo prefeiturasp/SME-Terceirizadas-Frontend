@@ -361,3 +361,11 @@ export const medicaoInicialExportarOcorrenciasPDF = async url => {
   });
   saveAs(data, "ocorrencias_medicao_inicial.pdf");
 };
+
+export const relatorioMedicaoInicialPDF = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/relatorio-pdf/`;
+  const { data } = await axios
+    .get(url, { responseType: "blob" })
+    .catch(ErrorHandlerFunction);
+  saveAs(data, "relatorio_medicao_inicial.pdf");
+};
