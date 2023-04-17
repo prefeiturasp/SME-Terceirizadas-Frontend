@@ -22,7 +22,7 @@ export const totalAlunosInputPorPeriodo = (values, index) => {
 export const formataPayload = values => {
   const values_ = deepCopy(values);
   let filteredSubstituicoes = values_.substituicoes.filter(obj =>
-    Object.prototype.hasOwnProperty.call(obj, "tipo")
+    Object.prototype.hasOwnProperty.call(obj, "faixas")
   );
   values_.substituicoes = filteredSubstituicoes;
   values_.data = values_.data
