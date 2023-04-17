@@ -772,16 +772,14 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario:
+      usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog() || usuarioEhDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -807,16 +805,16 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
     component: GestaoAcessoGeralPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhCoordenadorGpCODAE() ||
-      usuarioEhCoordenadorNutriSupervisao()
+    tipoUsuario: usuarioEhCoordenadorNutriSupervisao()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario:
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE() ||
+      usuarioEhDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
