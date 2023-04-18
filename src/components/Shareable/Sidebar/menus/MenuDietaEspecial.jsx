@@ -38,7 +38,8 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhNutricionistaSupervisao() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
-    usuarioEhEscolaTerceirizada();
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhDRE();
   usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
