@@ -121,20 +121,26 @@ a.hyperlink {
       text-align: center;
       justify-content: center;
 
+      flex-direction: column;
+
       @media screen and (max-width: 768px) {
         padding-top: 3.5rem;
         padding-bottom: 0.5rem;
         img {
-          height: 95px;
-          width: auto;
+          object-fit: contain;
+          max-height: 95px;
+          width: 100%;
+          height: auto;
         }
       }
       @media screen and (min-width: 769px) {
         padding-top: 7rem;
         padding-bottom: 1rem;
         img {
-          height: 105px;
-          width: auto;
+          object-fit: contain;
+          max-height: 120px;
+          width: 100%;
+          height: auto;
         }
       }
 

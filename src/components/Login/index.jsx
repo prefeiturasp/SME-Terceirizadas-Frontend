@@ -109,9 +109,7 @@ export class Login extends Component {
       localStorage.removeItem("senhaAtual");
       this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
     } else {
-      toastError(
-        "Erro ao tentar atualizar a senha. Tente novamente mais tarde."
-      );
+      toastError(response.data.detail);
     }
   };
 
