@@ -3,7 +3,7 @@ import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import { HOME } from "../constants";
 import { CODAE, SOLICITACOES_AUTORIZADAS } from "configs/constants";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
@@ -11,23 +11,30 @@ import {
 import { getSolicitacoesAutorizadasCodae } from "services/painelCODAE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
+import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_AUTORIZADAS}`,
   titulo: "Solicitações Autorizadas"
 };
 
-export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
-    <Breadcrumb home={HOME} atual={atual} />
-    <SolicitacoesPorStatusGenerico
-      tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
-      icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-      titulo={"Autorizadas"}
-      getSolicitacoes={getSolicitacoesAutorizadasCodae}
-      Legendas={CardLegendas}
-      tipoPaginacao="OFFSET"
-      limit={PAGINACAO_DEFAULT}
-    />
-  </Page>
-);
+export default () => {
+  const location = useLocation();
+  const filtros = location.state;
+  console.log(filtros);
+
+  return (
+    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+      <Breadcrumb home={HOME} atual={atual} />
+      <SolicitacoesPorStatusGenerico
+        tipoCard={CARD_TYPE_ENUM.AUTORIZADO}
+        icone={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+        titulo={"Autorizadas"}
+        getSolicitacoes={getSolicitacoesAutorizadasCodae}
+        Legendas={CardLegendas}
+        tipoPaginacao="OFFSET"
+        limit={PAGINACAO_DEFAULT}
+      />
+    </Page>
+  );
+};

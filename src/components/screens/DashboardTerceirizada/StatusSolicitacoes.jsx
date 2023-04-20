@@ -448,6 +448,7 @@ export class StatusSolicitacoes extends Component {
     return (
       <form onSubmit={this.props.handleSubmit}>
         <div className="card mt-3">
+          {console.log(this.props, "props em produtos")}
           <div className="card-body">
             {!erro ? (
               <Spin tip="Carregando..." spinning={loading}>

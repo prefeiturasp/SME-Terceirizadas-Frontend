@@ -3,7 +3,7 @@ import { ESCOLA, SOLICITACOES_AUTORIZADAS } from "configs/constants";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 import { HOME } from "../constants";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
