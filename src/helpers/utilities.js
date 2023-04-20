@@ -397,6 +397,10 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
+export const usuarioEhEscolaTerceirizadaQualquerPerfil = () => {
+  return usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
+};
+
 export const usuarioEhAdmQualquerEmpresa = () => {
   return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
     localStorage.getItem("perfil")
