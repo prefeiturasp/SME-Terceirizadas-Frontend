@@ -11,7 +11,6 @@ import {
 import { getSolicitacoesAutorizadasCodae } from "services/painelCODAE.service";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
-import { useLocation } from "react-router-dom";
 
 const atual = {
   href: `/${CODAE}/${SOLICITACOES_AUTORIZADAS}`,
@@ -19,10 +18,6 @@ const atual = {
 };
 
 export default () => {
-  const location = useLocation();
-  const filtros = location.state;
-  console.log(filtros);
-
   return (
     <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
       <Breadcrumb home={HOME} atual={atual} />

@@ -4,6 +4,7 @@ export const UPDATE_LOTE = "UPDATE_LOTE";
 export const UPDATE_STATUS = "UPDATE_STATUS";
 export const UPDATE_TIPO_SOLICITACAO = "UPDATE_TIPO_SOLICITACAO";
 export const UPDATE_DATA_EVENTO = "UPDATE_DATA_EVENTO";
+export const UPDATE_DRE = "UPDATE_DRE";
 export const RESET_CAMPOS = "RESET_CAMPOS";
 
 export const updateTituloAlimentacao = titulo => ({
@@ -26,6 +27,11 @@ export const updateTipoSolicitacaoAlimentacao = tipo_solicitacao => ({
   payload: tipo_solicitacao
 });
 
+export const updateDREAlimentacao = diretoria_regional => ({
+  type: UPDATE_DRE,
+  payload: diretoria_regional
+});
+
 export const updateDataEventoAlimentacao = data_evento => ({
   type: UPDATE_DATA_EVENTO,
   payload: data_evento
@@ -42,41 +48,42 @@ const initialState = {
   statusAlimentacao: "",
   loteAlimentacao: "",
   tipoSolicitacaoAlimentacao: "",
-  dataEventoAlimentacao: ""
+  dataEventoAlimentacao: "",
+  dreAlimentacao: ""
 };
 
 //reducer
 export const filtersAlimentacaoReducer = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_STATUS:
-      console.log(action.payload, "filter status");
       return {
         ...state,
         statusAlimentacao: action.payload
       };
     case UPDATE_TITULO:
-      console.log(action.payload, "filter pesquisar");
       return {
         ...state,
         tituloAlimentacao: action.payload
       };
     case UPDATE_LOTE:
-      console.log(action.payload, "filter lote");
       return {
         ...state,
         loteAlimentacao: action.payload
       };
     case UPDATE_TIPO_SOLICITACAO:
-      console.log(action.payload, "filter solicitacao");
       return {
         ...state,
         tipoSolicitacaoAlimentacao: action.payload
       };
     case UPDATE_DATA_EVENTO:
-      console.log(action.payload, "filter data");
       return {
         ...state,
         dataEventoAlimentacao: action.payload
+      };
+    case UPDATE_DRE:
+      return {
+        ...state,
+        dreAlimentacao: action.payload
       };
     case RESET_CAMPOS:
       return {
@@ -85,7 +92,8 @@ export const filtersAlimentacaoReducer = (state = initialState, action) => {
         statusAlimentacao: "",
         loteAlimentacao: "",
         tipoSolicitacaoAlimentacao: "",
-        dataEventoAlimentacao: ""
+        dataEventoAlimentacao: "",
+        dreAlimentacao: ""
       };
     default:
       return state;

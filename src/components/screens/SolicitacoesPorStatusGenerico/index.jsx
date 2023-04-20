@@ -4,7 +4,9 @@ import {
   agregarDefault,
   converterDDMMYYYYparaYYYYMMDD,
   getError,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhDRE,
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhQualquerCODAE
 } from "helpers/utilities";
 import { Spin } from "antd";
 import CardListarSolicitacoes from "components/Shareable/CardListarSolicitacoes";
@@ -15,13 +17,13 @@ import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import Select from "components/Shareable/Select";
 import { connect } from "react-redux";
-
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { usuarioEhEscolaTerceirizada } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import { resetCamposAlimentacao } from "reducers/filtersAlimentacaoReducer";
-//import { resetCamposAlimentacao } from "reducers/filtersAlimentacaoReducer";
+import { getDiretoriaregionalSimplissimaAxios } from "services/diretoriaRegional.service";
+import { getLotesSimples } from "services/lote.service";
 
 function SolicitacoesPorStatusGenerico(props) {
   const {
@@ -43,10 +45,14 @@ function SolicitacoesPorStatusGenerico(props) {
   const [erro, setErro] = useState("");
   const [propsAlimentacaoRedux, setPropsAlimentacaoRedux] = useState({});
   const [filtroInicial, setFiltroInicial] = useState(false);
+  const [opcoesDRE, setOpcoesDRE] = useState(null);
+  const [opcoesLotes, setOpcoesLotes] = useState(null);
 
   const ehEscola =
     usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
+  const ehDRE = usuarioEhDRE();
+  const ehCODAE = usuarioEhQualquerCODAE();
 
   const PAGE_SIZE = limit || 100;
   const TIPO_PAGINACAO = tipoPaginacao || "OFFSET";
@@ -58,6 +64,10 @@ function SolicitacoesPorStatusGenerico(props) {
     if (params.data_evento) {
       params.data_evento = converterDDMMYYYYparaYYYYMMDD(params.data_evento);
     }
+    if (params.titulo) {
+      params.busca = params.titulo;
+    }
+    console.log("params 161616", params);
     const response = await getSolicitacoes(params || PARAMS);
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoes(ajustarFormatoLog(response.data.results));
@@ -90,11 +100,31 @@ function SolicitacoesPorStatusGenerico(props) {
     if (values.data_evento) {
       params["data_evento"] = converterDDMMYYYYparaYYYYMMDD(values.data_evento);
     }
-    console.log("params 333", params);
     setTimeout(async () => {
       await getSolicitacoesAsync(params);
       setCurrentPage(page);
     }, 500);
+  };
+
+  const getLotesAsync = async () => {
+    const response = await getLotesSimples();
+    if (response.status === HTTP_STATUS.OK) {
+      setOpcoesLotes(response.data.results);
+    } else {
+      setErro("Erro ao carregar lotes");
+    }
+  };
+
+  const getDiretoriasRegionaisAsync = async () => {
+    const response = await getDiretoriaregionalSimplissimaAxios();
+    if (response.status === HTTP_STATUS.OK) {
+      let resultados_dre = response.data.results;
+      const opcoesDRE = resultados_dre.slice();
+      opcoesDRE.unshift({ uuid: "", nome: "Filtrar por DRE" });
+      setOpcoesDRE(opcoesDRE);
+    } else {
+      setErro("Erro ao carregar DREs");
+    }
   };
 
   const filtragemInicial = () => {
@@ -103,7 +133,8 @@ function SolicitacoesPorStatusGenerico(props) {
       loteAlimentacao: props.loteAlimentacao,
       statusAlimentacao: props.statusAlimentacao,
       tipoSolicitacaoAlimentacao: props.tipoSolicitacaoAlimentacao,
-      dataEventoAlimentacao: props.dataEventoAlimentacao
+      dataEventoAlimentacao: props.dataEventoAlimentacao,
+      dreAlimentacao: props.dreAlimentacao
     };
     setPropsAlimentacaoRedux(propsAlimentacao);
     const values = {
@@ -111,13 +142,23 @@ function SolicitacoesPorStatusGenerico(props) {
       lote: propsAlimentacao.loteAlimentacao || "",
       status: propsAlimentacao.statusAlimentacao || "",
       tipo_solicitacao: propsAlimentacao.tipoSolicitacaoAlimentacao || "",
-      data_evento: propsAlimentacao.dataEventoAlimentacao || ""
+      data_evento: propsAlimentacao.dataEventoAlimentacao || "",
+      diretoria_regional: propsAlimentacao.dreAlimentacao || ""
     };
+    console.log("propsAlimentacao 1717", propsAlimentacao);
     props.resetCamposAlimentacao();
     getSolicitacoesAsync(values);
   };
 
   useEffect(() => {
+    if (ehCODAE) {
+      getDiretoriasRegionaisAsync();
+      getLotesAsync();
+    }
+    if (ehDRE) {
+      getLotesAsync();
+    }
+
     if (!filtroInicial) {
       setFiltroInicial(true);
       filtragemInicial();
@@ -144,7 +185,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           lotes && listaStatus
                             ? "offset-6 col-6 `"
                             : lotes || listaStatus
-                            ? "offset-6 col-3 `"
+                            ? "offset-9 col-3 `"
                             : "offset-9 col-3 `"
                         }`}
                       >
@@ -168,6 +209,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                 lote: values.lote,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
+                                diretoria_regional: values.diretoria_regional,
                                 ...PARAMS
                               });
                               setCurrentPage(1);
@@ -200,6 +242,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                     : null,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
+                                diretoria_regional: values.diretoria_regional,
                                 ...PARAMS
                               });
                               setCurrentPage(1);
@@ -207,20 +250,20 @@ function SolicitacoesPorStatusGenerico(props) {
                           </OnChange>
                         </div>
                       )}
-                      {lotes && (
+                      {ehCODAE && (
                         <div className="col-3 pl-0">
                           <Field
                             component={Select}
-                            options={agregarDefault(lotes)}
-                            name="lote"
-                            placeholder="Selecione um Lote"
-                            initialValue={propsAlimentacaoRedux.loteAlimentacao}
+                            options={opcoesDRE}
+                            name="diretoria_regional"
+                            placeholder="Filtrar por DRE"
+                            initialValue={propsAlimentacaoRedux.dreAlimentacao}
                             naoDesabilitarPrimeiraOpcao
                           />
-                          <OnChange name="lote">
+                          <OnChange name="diretoria_regional">
                             {value => {
                               getSolicitacoesAsync({
-                                lote: value,
+                                lote: values.lote,
                                 status: values.status,
                                 busca:
                                   values.titulo && values.titulo.length > 2
@@ -228,6 +271,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                     : null,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
+                                diretoria_regional: value,
                                 ...PARAMS
                               });
                               setCurrentPage(1);
@@ -235,6 +279,42 @@ function SolicitacoesPorStatusGenerico(props) {
                           </OnChange>
                         </div>
                       )}
+
+                      {(lotes || opcoesLotes) &&
+                        (ehDRE || ehCODAE || ehTerceirizada) && (
+                          <div className="col-3 pl-0">
+                            <Field
+                              component={Select}
+                              options={agregarDefault(
+                                lotes || opcoesLotes,
+                                "Lote"
+                              )}
+                              name="lote"
+                              placeholder="Selecione um Lote"
+                              initialValue={
+                                propsAlimentacaoRedux.loteAlimentacao
+                              }
+                              naoDesabilitarPrimeiraOpcao
+                            />
+                            <OnChange name="lote">
+                              {value => {
+                                getSolicitacoesAsync({
+                                  lote: value,
+                                  status: values.status,
+                                  busca:
+                                    values.titulo && values.titulo.length > 2
+                                      ? values.titulo
+                                      : null,
+                                  tipo_solicitacao: values.tipo_solicitacao,
+                                  data_evento: values.data_evento,
+                                  diretoria_regional: values.diretoria_regional,
+                                  ...PARAMS
+                                });
+                                setCurrentPage(1);
+                              }}
+                            </OnChange>
+                          </div>
+                        )}
 
                       {ehTerceirizada && (
                         <>
@@ -265,6 +345,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                     : null,
                                 tipo_solicitacao: value,
                                 data_evento: values.data_evento,
+                                diretoria_regional: values.diretoria_regional,
                                 ...PARAMS
                               });
                               setCurrentPage(1);
@@ -291,6 +372,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                       : null,
                                   tipo_solicitacao: values.tipo_solicitacao,
                                   data_evento: value,
+                                  diretoria_regional: values.diretoria_regional,
                                   ...PARAMS
                                 });
                                 setCurrentPage(1);
@@ -331,12 +413,14 @@ const mapStateToProps = state => {
   const tipoSolicitacaoAlimentacao =
     state.filtersAlimentacao.tipoSolicitacaoAlimentacao;
   const dataEventoAlimentacao = state.filtersAlimentacao.dataEventoAlimentacao;
+  const dreAlimentacao = state.filtersAlimentacao.dreAlimentacao;
   return {
     statusAlimentacao: statusAlimentacao,
     loteAlimentacao: loteAlimentacao,
     tituloAlimentacao: tituloAlimentacao,
     tipoSolicitacaoAlimentacao: tipoSolicitacaoAlimentacao,
-    dataEventoAlimentacao: dataEventoAlimentacao
+    dataEventoAlimentacao: dataEventoAlimentacao,
+    dreAlimentacao: dreAlimentacao
   };
 };
 

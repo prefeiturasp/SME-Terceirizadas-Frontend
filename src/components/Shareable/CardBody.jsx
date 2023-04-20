@@ -175,8 +175,6 @@ const CardBody = props => {
                         <OnChange name="tipo_solicitacao">
                           {tipo => {
                             props.updateTipoSolicitacaoAlimentacao(tipo);
-                            console.log("tipo  em cardbody", tipo);
-                            console.log("tipo  values em cardbody", values);
                             props.onChange(values);
                           }}
                         </OnChange>
@@ -190,8 +188,6 @@ const CardBody = props => {
                           <OnChange name="data_evento">
                             {data => {
                               props.updateDataEventoAlimentacao(data);
-                              console.log("data  em cardbody", data);
-                              console.log("data values em cardbody", values);
                               props.onChange(values);
                             }}
                           </OnChange>
@@ -272,8 +268,6 @@ const CardBody = props => {
                           <OnChange name="tipo_solicitacao">
                             {tipo => {
                               props.updateTipoSolicitacaoAlimentacao(tipo);
-                              console.log("tipo  em cardbody", tipo);
-                              console.log("tipo  values em cardbody", values);
                               props.onChange(values);
                             }}
                           </OnChange>
@@ -288,8 +282,6 @@ const CardBody = props => {
                           <OnChange name="data_evento">
                             {data => {
                               props.updateDataEventoAlimentacao(data);
-                              console.log("data  em cardbody", data);
-                              console.log("data values em cardbody", values);
                               props.onChange(values);
                             }}
                           </OnChange>
