@@ -28,9 +28,9 @@ import { getEscolasTrecTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
-  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhDRE,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhEscolaTerceirizadaQualquerPerfil
 } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
@@ -43,14 +43,15 @@ import { required } from "helpers/fieldValidators";
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
   const { meusDados } = useContext(MeusDadosContext);
+  const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
   const [dadosDashboard, setDadosDashboard] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(null);
   const [resultados, setResultados] = useState(null);
   const [mesesAnos, setMesesAnos] = useState(null);
-  const [lotes, setLotes] = useState(null);
-  const [tiposUnidades, setTiposUnidades] = useState(null);
-  const [nomesEscolas, setNomesEscolas] = useState(null);
+  const [lotes, setLotes] = useState(DEFAULT_STATE);
+  const [tiposUnidades, setTiposUnidades] = useState(DEFAULT_STATE);
+  const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
   const [diretoriaRegional, setDiretoriaRegional] = useState(null);
 
@@ -78,7 +79,7 @@ export const AcompanhamentoDeLancamentos = () => {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
-        if (usuarioEhEscolaTerceirizadaDiretor())
+        if (usuarioEhEscolaTerceirizadaQualquerPerfil())
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
@@ -124,41 +125,47 @@ export const AcompanhamentoDeLancamentos = () => {
         );
       }
     };
-    getDiretoriasRegionaisAsync();
+
     getDashboardMedicaoInicialAsync();
     getMesesAnosSolicitacoesMedicaoinicialAsync();
-    getTiposUnidadeEscolarAsync();
-  }, [diretoriaRegional]);
+
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      getDiretoriasRegionaisAsync();
+      getTiposUnidadeEscolarAsync();
+    }
+  }, []);
 
   useEffect(() => {
-    const uuid = usuarioEhDRE()
-      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
-      : diretoriaRegional;
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      const uuid = usuarioEhDRE()
+        ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+        : diretoriaRegional;
 
-    const getLotesAsync = async () => {
-      const response = await getLotesSimples({
-        diretoria_regional__uuid: uuid
-      });
-      if (response.status === HTTP_STATUS.OK) {
-        setLotes(response.data.results);
-      } else {
-        setErroAPI("Erro ao carregar lotes. Tente novamente mais tarde.");
-      }
-    };
+      const getLotesAsync = async () => {
+        const response = await getLotesSimples({
+          diretoria_regional__uuid: uuid
+        });
+        if (response.status === HTTP_STATUS.OK) {
+          setLotes(response.data.results);
+        } else {
+          setErroAPI("Erro ao carregar lotes. Tente novamente mais tarde.");
+        }
+      };
 
-    const getEscolasTrecTotalAsync = async () => {
-      const response = await getEscolasTrecTotal({ dre: uuid });
-      if (response.status === HTTP_STATUS.OK) {
-        setNomesEscolas(
-          response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
-        );
-      } else {
-        setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
-      }
-    };
+      const getEscolasTrecTotalAsync = async () => {
+        const response = await getEscolasTrecTotal({ dre: uuid });
+        if (response.status === HTTP_STATUS.OK) {
+          setNomesEscolas(
+            response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
+          );
+        } else {
+          setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
+        }
+      };
 
-    meusDados && getLotesAsync();
-    meusDados && getEscolasTrecTotalAsync();
+      meusDados && getLotesAsync();
+      meusDados && getEscolasTrecTotalAsync();
+    }
   }, [meusDados, diretoriaRegional]);
 
   const onPageChanged = async page => {
@@ -304,7 +311,7 @@ export const AcompanhamentoDeLancamentos = () => {
                       )}{" "}
                     </div>
                     {statusSelecionado &&
-                      !usuarioEhEscolaTerceirizadaDiretor() && (
+                      !usuarioEhEscolaTerceirizadaQualquerPerfil() && (
                         <>
                           <hr />
 
@@ -413,11 +420,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                 <thead>
                                   <tr className="row">
                                     <th className="col-5 pl-2">
-                                      {usuarioEhEscolaTerceirizadaDiretor()
+                                      {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                         ? "Período do Lançamento"
                                         : "Nome da UE"}
                                     </th>
-                                    {!usuarioEhEscolaTerceirizadaDiretor() && (
+                                    {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
                                       <th className="col-1 text-center">
                                         Tipo de UE
                                       </th>
@@ -436,11 +443,11 @@ export const AcompanhamentoDeLancamentos = () => {
                                     return (
                                       <tr key={key} className="row">
                                         <td className="col-5 pl-2 pt-3">
-                                          {usuarioEhEscolaTerceirizadaDiretor()
+                                          {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                             ? dado.mes_ano
                                             : dado.escola}
                                         </td>
-                                        {!usuarioEhEscolaTerceirizadaDiretor() && (
+                                        {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
                                           <td className="col-1 text-center pt-3">
                                             {dado.tipo_unidade}
                                           </td>
