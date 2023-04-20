@@ -743,7 +743,7 @@ export const comoTipo = obj => {
   if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
-  return obj.data_inicial && obj.data_inicial !== obj.data_final
+  return obj.motivo
     ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
     : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };
