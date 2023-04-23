@@ -36,14 +36,15 @@ import { dataAtual } from "../../../helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import "./style.scss";
+import {
+  updateDREAlimentacao,
+  updateLoteAlimentacao,
+  updateTituloAlimentacao
+} from "reducers/filtersAlimentacaoReducer";
+import { connect } from "react-redux";
 
-export const DashboardCODAE = ({
-  cards,
-  lotes,
-  diretoriasRegionais,
-  handleSubmit,
-  meusDados
-}) => {
+export const DashboardCODAE = props => {
+  const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
   const visao = FILTRO_VISAO.POR_TIPO_SOLICITACAO;
@@ -233,6 +234,7 @@ export const DashboardCODAE = ({
                         onChange={value => {
                           form.change(`diretoria_regional`, value || undefined);
                           onPesquisaChanged(form.getState().values);
+                          props.updateDREAlimentacao(value);
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -252,6 +254,7 @@ export const DashboardCODAE = ({
                         onChange={value => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
+                          props.updateLoteAlimentacao(value);
                         }}
                         name="lote"
                         filterOption={(inputValue, option) =>
@@ -306,7 +309,10 @@ export const DashboardCODAE = ({
               exibirFiltrosDataEventoETipoSolicitacao={false}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={() => onPesquisaChanged(values)}
+              onChange={value => {
+                onPesquisaChanged(values);
+                props.updateTituloAlimentacao(value.titulo);
+              }}
               values={values}
             >
               <div className="row pb-3">
@@ -368,4 +374,19 @@ export const DashboardCODAE = ({
   );
 };
 
-export default DashboardCODAE;
+const mapDispatchToProps = dispatch => ({
+  updateDREAlimentacao: dreAlimentacao => {
+    dispatch(updateDREAlimentacao(dreAlimentacao));
+  },
+  updateLoteAlimentacao: loteAlimentacao => {
+    dispatch(updateLoteAlimentacao(loteAlimentacao));
+  },
+  updateTituloAlimentacao: tituloAlimentacao => {
+    dispatch(updateTituloAlimentacao(tituloAlimentacao));
+  }
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(DashboardCODAE);

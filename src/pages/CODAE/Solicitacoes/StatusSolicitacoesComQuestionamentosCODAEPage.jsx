@@ -6,7 +6,7 @@ import {
   CODAE,
   SOLICITACOES_COM_QUESTIONAMENTO
 } from "../../../configs/constants";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import {
   CARD_TYPE_ENUM,
   ICON_CARD_TYPE_ENUM
