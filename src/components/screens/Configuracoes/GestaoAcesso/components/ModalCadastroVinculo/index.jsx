@@ -34,6 +34,7 @@ import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
 import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
+import { usuarioEhAdmQualquerEmpresa } from "helpers/utilities";
 
 const campoObrigatorio = {
   touched: true,
@@ -445,7 +446,11 @@ const ModalCadastroVinculo = ({
                               nome: perfil.nome
                             }))}
                             validate={required}
-                            disabled={valoresEdicao && !empresa}
+                            disabled={
+                              valoresEdicao &&
+                              !empresa &&
+                              !usuarioEhAdmQualquerEmpresa()
+                            }
                           />
                         </div>
                       </div>

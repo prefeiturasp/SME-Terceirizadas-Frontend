@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import "./styles.scss";
 import {
+  alterarVinculo,
   cadastrarVinculo,
   editarVinculo,
   finalizarVinculo,
   getVinculosAtivos
 } from "services/vinculos.service";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import {
+  gerarParametrosConsulta,
+  usuarioEhAdmQualquerEmpresa
+} from "helpers/utilities";
 import ListagemVinculos from "./components/ListagemVinculos";
 import Filtros from "./components/Filtros";
 import {
@@ -168,7 +172,13 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
-    let response = await editarVinculo(payload);
+    let response;
+    if (usuarioEhAdmQualquerEmpresa()) {
+      payload.perfil = values.perfil;
+      response = await alterarVinculo(payload);
+    } else {
+      response = await editarVinculo(payload);
+    }
 
     if (response.status === 200) {
       toastSuccess("Acesso editado com sucesso!");

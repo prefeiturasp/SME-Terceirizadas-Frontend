@@ -19,6 +19,12 @@ export const editarVinculo = async payload =>
     payload
   );
 
+export const alterarVinculo = async payload =>
+  await axios.patch(
+    `/cadastro-com-coresso/${payload.username}/alterar-vinculo/`,
+    payload
+  );
+
 export const finalizarVinculo = async username =>
   await axios.post(`/cadastro-com-coresso/${username}/finalizar-vinculo/`);
 
