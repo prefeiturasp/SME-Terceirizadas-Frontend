@@ -18,7 +18,8 @@ export const formatarPayloadPeriodoLancamento = (
   dadosIniciaisFiltered,
   diasDaSemanaSelecionada,
   ehGrupoSolicitacoesDeAlimentacaoUrlParam,
-  ehGrupoETECUrlParam
+  ehGrupoETECUrlParam,
+  grupoLocation
 ) => {
   if (values["periodo_escolar"].includes(" - ")) {
     values["grupo"] = values["periodo_escolar"].split(" - ")[0];
@@ -68,7 +69,9 @@ export const formatarPayloadPeriodoLancamento = (
       nome_campo: nome_campo,
       categoria_medicao: idCategoria,
       tipo_alimentacao:
-        !ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam
+        !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+        !ehGrupoETECUrlParam &&
+        grupoLocation !== "Programas e Projetos"
           ? tipoAlimentacao.uuid
           : ""
     });
@@ -191,7 +194,8 @@ export const desabilitarField = (
   validacaoSemana,
   ehGrupoETECUrlParam = false,
   dadosValoresInclusoesEtecAutorizadasState = null,
-  inclusoesEtecAutorizadas = null
+  inclusoesEtecAutorizadas = null,
+  grupoLocation = null
 ) => {
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
     locale: ptBR
@@ -252,6 +256,40 @@ export const desabilitarField = (
       );
     }
   }
+  if (
+    grupoLocation === "Programas e Projetos" &&
+    dadosValoresInclusoesAutorizadasState
+  ) {
+    if (nomeCategoria === "ALIMENTAÇÃO") {
+      if (rowName === "numero_de_alunos") {
+        return true;
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !validacaoDiaLetivo(dia) &&
+        ((rowName !== "frequencia" &&
+          !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+            key.includes(`${rowName}__dia_${dia}__categoria_${categoria}`)
+          )) ||
+          (rowName === "frequencia" &&
+            !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+              String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+            )))
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (rowName === "dietas_autorizadas") {
+        return true;
+      } else if (!validacaoDiaLetivo(dia) || validacaoSemana(dia)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
@@ -279,6 +317,7 @@ export const desabilitarField = (
       !validacaoDiaLetivo(dia) ||
       validacaoSemana(dia) ||
       rowName === "matriculados" ||
+      rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
       !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
       Number(
@@ -414,7 +453,10 @@ export const getSolicitacoesKitLanchesAutorizadasAsync = async (
   }
 };
 
-export const formatarLinhasTabelaAlimentacao = tipos_alimentacao => {
+export const formatarLinhasTabelaAlimentacao = (
+  tipos_alimentacao,
+  periodoGrupo
+) => {
   const tiposAlimentacaoFormatadas = tipos_alimentacao.map(alimentacao => {
     return {
       ...alimentacao,
@@ -457,18 +499,25 @@ export const formatarLinhasTabelaAlimentacao = tipos_alimentacao => {
       "Lanche Emergenc.";
   }
 
-  tiposAlimentacaoFormatadas.unshift(
-    {
-      nome: "Matriculados",
-      name: "matriculados",
-      uuid: null
-    },
-    {
-      nome: "Frequência",
-      name: "frequencia",
-      uuid: null
-    }
-  );
+  const matriculadosOuNumeroDeAlunos = () => {
+    return periodoGrupo.grupo === "Programas e Projetos"
+      ? {
+          nome: "Número de Alunos",
+          name: "numero_de_alunos",
+          uuid: null
+        }
+      : {
+          nome: "Matriculados",
+          name: "matriculados",
+          uuid: null
+        };
+  };
+
+  tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
+    nome: "Frequência",
+    name: "frequencia",
+    uuid: null
+  });
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
