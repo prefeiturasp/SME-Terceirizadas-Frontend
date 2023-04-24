@@ -361,11 +361,22 @@ export const consultaHistoricoProtocoloPadrao = async uuid => {
   return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
 };
 
-export const getSolicitacoesRelatorioDietasEspeciais = async parametros => {
-  return await axios.post(
-    `/solicitacoes-dieta-especial/relatorio-dieta-especial-terceirizada/`,
-    parametros
-  );
+export const getFiltrosRelatorioDietasEspeciais = async params => {
+  const url = `/solicitacoes-dieta-especial/filtros-relatorio-dieta-especial/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesRelatorioDietasEspeciais = async params => {
+  const url = `/solicitacoes-dieta-especial/relatorio-dieta-especial-terceirizada/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getUnidadesEducacionaisTercTotal = async parametros => {
