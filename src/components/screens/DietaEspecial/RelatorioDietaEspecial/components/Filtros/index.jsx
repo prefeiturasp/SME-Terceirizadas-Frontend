@@ -13,7 +13,7 @@ import { OPTIONS_STATUS_DIETA } from "constants/shared";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import HTTP_STATUS from "http-status-codes";
 import moment from "moment";
-import React, { useState } from "react";
+import React from "react";
 import { OnChange } from "react-final-form-listeners";
 import {
   getFiltrosRelatorioDietasEspeciais,
@@ -23,10 +23,18 @@ import "./styles.scss";
 import { Field } from "react-final-form";
 
 export const Filtros = ({ ...props }) => {
-  const [filtros, setFiltros] = useState(null);
-  const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
-
-  const { erroAPI, form, meusDados, setErroAPI, values } = props;
+  const {
+    erroAPI,
+    filtros,
+    form,
+    meusDados,
+    setDietasEspeciais,
+    setErroAPI,
+    setFiltros,
+    setUnidadesEducacionais,
+    unidadesEducacionais,
+    values
+  } = props;
 
   const getUnidadesEducacionaisAsync = async values => {
     setUnidadesEducacionais([]);
@@ -74,7 +82,7 @@ export const Filtros = ({ ...props }) => {
                 status_selecionado: value
               };
               if (usuarioEhEmpresaTerceirizada) {
-                params["terceirizada_uuid"] =
+                params["terceirizada"] =
                   meusDados.vinculo_atual.instituicao.uuid;
               }
               getFiltrosRelatorioDietasEspeciaisAsync(params);
@@ -277,7 +285,10 @@ export const Filtros = ({ ...props }) => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       type={BUTTON_TYPE.BUTTON}
                       icon={BUTTON_ICON.TIMES}
-                      onClick={() => form.reset()}
+                      onClick={() => {
+                        form.reset();
+                        setDietasEspeciais(null);
+                      }}
                     />
                     <Botao
                       texto="Filtrar"

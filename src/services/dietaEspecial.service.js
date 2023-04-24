@@ -5,7 +5,6 @@ import {
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
 } from "configs/constants";
-import { saveAs } from "file-saver";
 import { API_URL } from "../constants/config";
 import { ENDPOINT } from "../constants/shared";
 import authService from "./auth";
@@ -388,14 +387,24 @@ export const getUnidadesEducacionaisTercTotal = async parametros => {
 
 export const gerarExcelRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-xlsx/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_dieta_especial.xlsx");
+  const response = await axios
+    .get(url, { params, responseType: "blob" })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const gerarPdfRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-pdf/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_dieta_especial.pdf");
+  const response = await axios
+    .get(url, { params, responseType: "blob" })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const createSolicitacaoAberta = async payload => {
