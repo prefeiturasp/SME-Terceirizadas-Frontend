@@ -803,23 +803,22 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
     component: GestaoAcessoGeralPage,
     exact: true,
-    tipoUsuario: usuarioEhCoordenadorNutriSupervisao()
+    tipoUsuario:
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
     component: CargasUsuariosServidoresPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/configuracoes`,
