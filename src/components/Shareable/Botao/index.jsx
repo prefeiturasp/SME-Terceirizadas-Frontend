@@ -25,39 +25,39 @@ export const Botao = props => {
   } = props;
   const [exibeMensagem, setExibeMensagem] = useState(false);
   return (
-    <Tooltip title={tooltipExterno ? tooltipExterno : ""}>
-      <button
-        type={type}
-        title={titulo}
-        data-cy={texto}
-        className={`general-button ${style} ${className}`}
-        onClick={onClick}
-        onMouseOver={() => setExibeMensagem(true)}
-        onMouseOut={() => setExibeMensagem(false)}
-        disabled={disabled}
-        accept={accept}
-        tabIndex={tabindex}
+    <button
+      type={type}
+      title={titulo}
+      data-cy={texto}
+      className={`general-button ${style} ${className}`}
+      onClick={onClick}
+      onMouseOver={() => setExibeMensagem(true)}
+      onMouseOut={() => setExibeMensagem(false)}
+      disabled={disabled}
+      accept={accept}
+      tabIndex={tabindex}
+    >
+      {iconPosition !== "right" && icon && (
+        <i id={iconId} className={`${icon} ${texto && "text-and-icon-left"}`} />
+      )}
+      <Tooltip
+        open={exibeMensagem}
+        title={tooltipExterno ? tooltipExterno : ""}
       >
-        {iconPosition !== "right" && icon && (
-          <i
-            id={iconId}
-            className={`${icon} ${texto && "text-and-icon-left"}`}
-          />
-        )}
         {texto}
-        {iconPosition === "right" && icon && (
-          <i
-            id={iconId}
-            className={`${icon} ${texto && "text-and-icon-right"}`}
-          />
-        )}
-        {exibirTooltip && (
-          <Tooltip open={exibeMensagem} title={tooltipTitulo}>
-            <i className={`fas fa-info ${classTooltip}`} />
-          </Tooltip>
-        )}
-      </button>
-    </Tooltip>
+      </Tooltip>
+      {iconPosition === "right" && icon && (
+        <i
+          id={iconId}
+          className={`${icon} ${texto && "text-and-icon-right"}`}
+        />
+      )}
+      {exibirTooltip && (
+        <Tooltip open={exibeMensagem} title={tooltipTitulo}>
+          <i className={`fas fa-info ${classTooltip}`} />
+        </Tooltip>
+      )}
+    </button>
   );
 };
 
