@@ -34,7 +34,6 @@ import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
 import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
-import { usuarioEhAdmQualquerEmpresa } from "helpers/utilities";
 
 const campoObrigatorio = {
   touched: true,
@@ -441,16 +440,12 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={listaPerfis.map(perfil => ({
-                              uuid: perfil.nome,
-                              nome: perfil.nome
-                            }))}
-                            validate={required}
-                            disabled={
-                              valoresEdicao &&
-                              !empresa &&
-                              !usuarioEhAdmQualquerEmpresa()
+                            options={
+                              listaPerfis.some(perfil => perfil.visao)
+                                ? getPerfis("EMPRESA")
+                                : listaPerfis
                             }
+                            validate={required}
                           />
                         </div>
                       </div>

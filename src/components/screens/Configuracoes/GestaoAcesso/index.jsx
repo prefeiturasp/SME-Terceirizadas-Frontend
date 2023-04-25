@@ -43,7 +43,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
     let options_perfis = lista_perfis.map(perfil => ({
       uuid: perfil.nome,
-      nome: perfil.nome
+      nome: perfil.nome,
+      visao: perfil.visao
     }));
 
     let options_visoes = visoes.data.map(visao => ({
