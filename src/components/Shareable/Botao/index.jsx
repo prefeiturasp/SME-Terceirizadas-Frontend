@@ -41,7 +41,7 @@ export const Botao = props => {
         <i id={iconId} className={`${icon} ${texto && "text-and-icon-left"}`} />
       )}
       <Tooltip
-        open={exibeMensagem}
+        open={exibeMensagem && tooltipExterno}
         title={tooltipExterno ? tooltipExterno : ""}
       >
         {texto}
