@@ -5,7 +5,7 @@ import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
 
-import RelatorioDietaEspecial from "components/screens/DietaEspecial/RelatorioDietaEspecial";
+import { RelatorioDietaEspecial } from "components/screens/DietaEspecial/RelatorioDietaEspecial";
 import { DIETA_ESPECIAL, RELATORIO_DIETA_ESPECIAL } from "configs/constants";
 
 const atual = {
