@@ -52,6 +52,9 @@ export const DashboardDietaEspecial = ({ ...props }) => {
   const [erro, setErro] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [countRecebidas, setCountRecebidas] = useState(0);
+  const [countAutorizadas, setCountAutorizadas] = useState(0);
+
   const LOADING =
     !instituicao ||
     !aguardandoAutorizacao ||
@@ -75,6 +78,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       setAguardandoAutorizacao(
         ajustarFormatoLog(responsePendenteAutorizacao.data.results)
       );
+      setCountRecebidas(responsePendenteAutorizacao.data.count);
     } else {
       setErro("Erro ao carregar solicitações aguardando autorização.");
     }
@@ -85,6 +89,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     );
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
       setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
+      setCountAutorizadas(responseAutorizadas.data.count);
     } else {
       setErro("Erro ao carregar solicitações autorizadas.");
     }
@@ -209,9 +214,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     }, 1000);
   };
 
-  const contadorDietas = (title, dietas) => {
+  const contadorDietas = title => {
     if (!usuarioEhCoordenadorNutriCODAE()) return title;
-    return `${title}${dietas && " (" + dietas.length + ")"}`;
+    const count = title === "Autorizadas" ? countAutorizadas : countRecebidas;
+    return `${title}${` (${count}) `}`;
   };
 
   return (
