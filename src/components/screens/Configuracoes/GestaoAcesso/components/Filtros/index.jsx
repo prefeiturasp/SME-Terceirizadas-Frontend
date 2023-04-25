@@ -92,8 +92,11 @@ export default ({
                 className="float-left"
                 onClick={() => setShowCadastro(true)}
                 disabled={desabilitaCadastro}
-                exibirTooltip={desabilitaCadastro}
-                tooltipTitulo="É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
+                tooltipExterno={
+                  desabilitaCadastro
+                    ? "É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
+                    : ""
+                }
               />
 
               <Botao
