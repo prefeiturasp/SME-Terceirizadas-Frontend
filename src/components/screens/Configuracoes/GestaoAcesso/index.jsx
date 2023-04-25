@@ -168,9 +168,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
-    let response;
     payload.perfil = values.perfil;
-    response = await alterarVinculo(payload);
+    const response = await alterarVinculo(payload);
 
     if (response.status === 200) {
       toastSuccess("Acesso editado com sucesso!");
