@@ -1,5 +1,4 @@
 import { Spin } from "antd";
-import { saveAs } from "file-saver";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import MeusDadosContext from "context/MeusDadosContext";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
@@ -99,7 +98,7 @@ export const RelatorioDietaEspecial = () => {
       ajustaParams(values)
     );
     if (response.status === HTTP_STATUS.OK) {
-      saveAs(response.data, "relatorio_dieta_especial.xlsx");
+      setExibirModalCentralDownloads(true);
     } else {
       toastError("Erro ao baixar XLSX. Tente novamente mais tarde");
     }
