@@ -38,8 +38,14 @@ import { Select as SelectAntd } from "antd";
 import Botao from "../../Shareable/Botao";
 import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
 import "./style.scss";
+import {
+  updateLoteAlimentacao,
+  updateTituloAlimentacao
+} from "reducers/filtersAlimentacaoReducer";
+import { connect } from "react-redux";
 
-export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
+export const DashboardDRE = props => {
+  const { cards, lotes, handleSubmit, meusDados } = props;
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
   const filtroPorVencimento = FILTRO.SEM_FILTRO;
   const visao = FILTRO_VISAO.POR_TIPO_SOLICITACAO;
@@ -210,6 +216,7 @@ export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
                         onChange={value => {
                           form.change(`lote`, value || undefined);
                           onPesquisaChanged(form.getState().values);
+                          props.updateLoteAlimentacao(value);
                         }}
                         name="lote"
                         filterOption={(inputValue, option) =>
@@ -264,7 +271,10 @@ export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
               exibirFiltrosDataEventoETipoSolicitacao={false}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={() => onPesquisaChanged(values)}
+              onChange={value => {
+                onPesquisaChanged(values);
+                props.updateTituloAlimentacao(value.titulo);
+              }}
               values={values}
             >
               <div className="row pb-3">
@@ -343,4 +353,16 @@ export const DashboardDRE = ({ cards, lotes, handleSubmit, meusDados }) => {
   );
 };
 
-export default DashboardDRE;
+const mapDispatchToProps = dispatch => ({
+  updateLoteAlimentacao: loteAlimentacao => {
+    dispatch(updateLoteAlimentacao(loteAlimentacao));
+  },
+  updateTituloAlimentacao: tituloAlimentacao => {
+    dispatch(updateTituloAlimentacao(tituloAlimentacao));
+  }
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(DashboardDRE);
