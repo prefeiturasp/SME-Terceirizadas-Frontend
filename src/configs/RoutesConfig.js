@@ -1450,6 +1450,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhMedicao() ||
       usuarioEhEmpresaTerceirizada()
   },

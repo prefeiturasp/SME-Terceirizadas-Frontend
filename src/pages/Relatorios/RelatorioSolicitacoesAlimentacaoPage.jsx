@@ -7,7 +7,8 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhDRE,
   usuarioEhMedicao,
-  usuarioEhEmpresaTerceirizada
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhCODAENutriManifestacao
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -40,7 +41,11 @@ const anteriores = [
 const endpointPorPerfil = () => {
   if (usuarioEhDRE()) {
     return filtrarSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
+  } else if (
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAENutriManifestacao()
+  ) {
     return filtrarSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
     return filtrarSolicitacoesAlimentacaoTerceirizadas;
@@ -52,7 +57,11 @@ const endpointPorPerfil = () => {
 const endpointGerarExcel = () => {
   if (usuarioEhDRE()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
+  } else if (
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAENutriManifestacao()
+  ) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas;
@@ -64,7 +73,11 @@ const endpointGerarExcel = () => {
 const endpointGerarPDF = () => {
   if (usuarioEhDRE()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoDRE;
-  } else if (usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()) {
+  } else if (
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhMedicao() ||
+    usuarioEhCODAENutriManifestacao()
+  ) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoCODAE;
   } else if (usuarioEhEmpresaTerceirizada()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas;
