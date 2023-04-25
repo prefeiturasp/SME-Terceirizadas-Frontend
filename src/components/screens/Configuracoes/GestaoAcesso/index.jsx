@@ -4,14 +4,10 @@ import "./styles.scss";
 import {
   alterarVinculo,
   cadastrarVinculo,
-  editarVinculo,
   finalizarVinculo,
   getVinculosAtivos
 } from "services/vinculos.service";
-import {
-  gerarParametrosConsulta,
-  usuarioEhAdmQualquerEmpresa
-} from "helpers/utilities";
+import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemVinculos from "./components/ListagemVinculos";
 import Filtros from "./components/Filtros";
 import {
@@ -173,12 +169,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
     let response;
-    if (usuarioEhAdmQualquerEmpresa()) {
-      payload.perfil = values.perfil;
-      response = await alterarVinculo(payload);
-    } else {
-      response = await editarVinculo(payload);
-    }
+    payload.perfil = values.perfil;
+    response = await alterarVinculo(payload);
 
     if (response.status === 200) {
       toastSuccess("Acesso editado com sucesso!");
