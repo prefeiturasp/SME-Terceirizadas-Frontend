@@ -58,7 +58,9 @@ export const ListagemDietas = ({ ...props }) => {
               ? "Protocolo padrão"
               : "Relação por Diagnóstico"}
           </div>
-          {values.status === "CANCELADAS" && <div>Data de cancelamento</div>}
+          {values.status_selecionado === "CANCELADAS" && (
+            <div>Data de cancelamento</div>
+          )}
         </div>
         {dietasEspeciais.results.map((dietaEspecial, index) => {
           return (
@@ -83,7 +85,7 @@ export const ListagemDietas = ({ ...props }) => {
                         dietaEspecial.protocolo_padrao.nome) ||
                       dietaEspecial.nome_protocolo}
                 </div>
-                {values.status === "CANCELADAS" && (
+                {values.status_selecionado === "CANCELADAS" && (
                   <div>{dietaEspecial.data_ultimo_log}</div>
                 )}
               </div>

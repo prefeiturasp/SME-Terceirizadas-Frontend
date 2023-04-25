@@ -81,7 +81,7 @@ export const Filtros = ({ ...props }) => {
               const params = {
                 status_selecionado: value
               };
-              if (usuarioEhEmpresaTerceirizada) {
+              if (usuarioEhEmpresaTerceirizada()) {
                 params["terceirizada"] =
                   meusDados.vinculo_atual.instituicao.uuid;
               }
@@ -147,6 +147,10 @@ export const Filtros = ({ ...props }) => {
                       {value => {
                         if (value && value.length === 0) {
                           setUnidadesEducacionais([]);
+                          form.change(
+                            "unidades_educacionais_selecionadas",
+                            undefined
+                          );
                         } else {
                           getUnidadesEducacionaisAsync(value);
                         }
@@ -194,11 +198,11 @@ export const Filtros = ({ ...props }) => {
                           })
                         )}
                         selected={
-                          values.alergias_intolerancias_selecionados || []
+                          values.alergias_intolerancias_selecionadas || []
                         }
                         onSelectedChanged={value =>
                           form.change(
-                            "alergias_intolerancias_selecionados",
+                            "alergias_intolerancias_selecionadas",
                             value
                           )
                         }
