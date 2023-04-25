@@ -18,6 +18,10 @@ export const RequisitosSenha = ({ letra, numero, tamanho }) => {
           Mínimo 8 caracteres
           <i className={`fas fa-${tamanho ? "check" : "times"} fa-lg`} />
         </div>
+        <div className={`accepted`}>
+          A nova senha não pode ser igual as últimas 5 anteriores.
+          <i className={`fas fa-check`} />
+        </div>
       </div>
     </div>
   );

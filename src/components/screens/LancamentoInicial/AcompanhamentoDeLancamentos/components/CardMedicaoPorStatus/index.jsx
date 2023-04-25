@@ -1,3 +1,4 @@
+import { usuarioEhEscolaTerceirizadaQualquerPerfil } from "helpers/utilities";
 import React from "react";
 
 export const CardMedicaoPorStatus = ({ ...props }) => {
@@ -19,8 +20,12 @@ export const CardMedicaoPorStatus = ({ ...props }) => {
     <div
       onClick={() => {
         if (total) {
-          setResultados(statusSelecionado === dados.status ? null : dados);
-          resetForm(form);
+          if (usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+            setResultados(dados);
+          } else {
+            setResultados(statusSelecionado === dados.status ? null : dados);
+            resetForm(form);
+          }
           setStatusSelecionado(
             statusSelecionado === dados.status ? null : dados.status
           );

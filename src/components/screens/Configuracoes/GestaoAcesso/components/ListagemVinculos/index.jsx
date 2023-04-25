@@ -1,6 +1,7 @@
 import React from "react";
 import "antd/dist/antd.min.css";
 import "./styles.scss";
+import { Tooltip } from "antd";
 
 const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
   return (
@@ -23,19 +24,23 @@ const ListagemVinculos = ({ vinculos, toggleEdicao, toggleExclusao }) => {
               <div>{vinculo.nome_perfil}</div>
               <div className="flex-container">
                 {vinculo.visao_perfil !== "EMPRESA" ? (
-                  <button
-                    className="verde"
-                    onClick={() => toggleExclusao(true, vinculo)}
-                  >
-                    <i className="fas fa-trash" />
-                  </button>
+                  <Tooltip title="Excluir">
+                    <button
+                      className="verde"
+                      onClick={() => toggleExclusao(true, vinculo)}
+                    >
+                      <i className="fas fa-trash" />
+                    </button>
+                  </Tooltip>
                 ) : (
-                  <button
-                    className="verde"
-                    onClick={() => toggleEdicao(true, vinculo)}
-                  >
-                    <i className="fas fa-edit" />
-                  </button>
+                  <Tooltip title="Editar">
+                    <button
+                      className="verde"
+                      onClick={() => toggleEdicao(true, vinculo)}
+                    >
+                      <i className="fas fa-edit" />
+                    </button>
+                  </Tooltip>
                 )}
               </div>
             </div>

@@ -66,8 +66,8 @@ export const dataPrioritaria = (
   );
 };
 
-export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: "" }].concat(lista);
+export const agregarDefault = (lista, valor = "") => {
+  return [{ nome: `Selecione ${valor}`, uuid: "" }].concat(lista);
 };
 
 export const formatarParaMultiselect = lista => {
@@ -395,6 +395,10 @@ export const usuarioEhEscolaTerceirizada = () => {
     localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_UE &&
     localStorage.getItem("modulo_gestao") === MODULO_GESTAO.TERCEIRIZADA
   );
+};
+
+export const usuarioEhEscolaTerceirizadaQualquerPerfil = () => {
+  return usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
 };
 
 export const usuarioEhAdmQualquerEmpresa = () => {
@@ -743,7 +747,7 @@ export const comoTipo = obj => {
   if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
-  return obj.data_inicial && obj.data_inicial !== obj.data_final
+  return obj.motivo
     ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
     : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };

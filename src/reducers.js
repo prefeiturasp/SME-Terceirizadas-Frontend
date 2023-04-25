@@ -22,6 +22,8 @@ import responderReclamacaoProdutoReducer from "./reducers/responderReclamacaoPro
 import incluirDietaEspecialReducer from "./reducers/incluirDietaEspecialReducer";
 import dietasAtivasInativasPorAlunoReducer from "./reducers/dietasAtivasInativasPorAlunoReducer";
 import { filtersDietaReducer } from "./reducers/filtersDietaReducer";
+import { filtersProdutoReducer } from "./reducers/filtersProdutoReducer";
+import { filtersAlimentacaoReducer } from "./reducers/filtersAlimentacaoReducer";
 
 // Junta todos os reducers do sistema! Vai pra store
 const rootReducer = combineReducers({
@@ -47,7 +49,9 @@ const rootReducer = combineReducers({
   responderReclamacaoProduto: responderReclamacaoProdutoReducer,
   incluirDietaEspecial: incluirDietaEspecialReducer,
   dietasAtivasInativasPorAluno: dietasAtivasInativasPorAlunoReducer,
-  filtersDieta: filtersDietaReducer
+  filtersDieta: filtersDietaReducer,
+  filtersProduto: filtersProdutoReducer,
+  filtersAlimentacao: filtersAlimentacaoReducer
 });
 
 export default rootReducer;

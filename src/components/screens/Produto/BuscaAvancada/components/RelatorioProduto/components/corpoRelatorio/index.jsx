@@ -364,6 +364,34 @@ export default class CorpoRelatorio extends Component {
             <div className="value-relatorio">{produto.prazo_validade}</div>
           </div>
 
+          <p>Informações referentes ao volume e unidade de medida</p>
+          <table className="table table-ficha-identificacao-produto">
+            <thead>
+              <tr>
+                <th className="col-4">Volume</th>
+                <th className="col-4">Unidade de Medida</th>
+                <th className="col-4">Embalagem</th>
+              </tr>
+            </thead>
+            <tbody>
+              {produto.especificacoes.map(
+                (especificacao, especificacaoIndice) => {
+                  return (
+                    <tr key={especificacaoIndice}>
+                      <td className="col-4">{especificacao.volume}</td>
+                      <td className="col-4">
+                        {especificacao.unidade_de_medida.nome}
+                      </td>
+                      <td className="col-4">
+                        {especificacao.embalagem_produto.nome}
+                      </td>
+                    </tr>
+                  );
+                }
+              )}
+            </tbody>
+          </table>
+
           <div className="info-sem-grid">
             <div className="label-relatorio">
               Condições de armazenamento, conservação e prazo máximo para

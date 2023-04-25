@@ -1,4 +1,4 @@
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,

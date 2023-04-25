@@ -245,6 +245,9 @@ export default () => {
               periodosEscolaSimples={periodosEscolaSimples}
               solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
               onClickInfoBasicas={onClickInfoBasicas}
+              setLoadingSolicitacaoMedicaoInicial={value =>
+                setLoadingSolicitacaoMedicaoInicial(value)
+              }
             />
           )}
       </div>

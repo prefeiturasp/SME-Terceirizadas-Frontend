@@ -25,7 +25,6 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
-  usuarioEhDilog,
   usuarioEhDiretorUE
 } from "helpers/utilities";
 
@@ -39,10 +38,8 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCoordenadorGpCODAE();
 
-  const exibirGestaoUsuarioCODAE =
-    usuarioEhCodaeDilog() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhAdministradorRepresentanteCodae();
+  const exibirGestaoUsuarioMaster =
+    usuarioEhCodaeDilog() || usuarioEhCoordenadorCODAE();
 
   const exibirGestaoAcesso =
     usuarioEhCoordenadorNutriCODAE() ||
@@ -65,7 +62,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {usuarioEhDilog() && (
+      {exibirGestaoUsuarioMaster && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
@@ -81,7 +78,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </SubMenu>
       )}
 
-      {exibirGestaoUsuarioCODAE && (
+      {usuarioEhAdministradorRepresentanteCodae() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}

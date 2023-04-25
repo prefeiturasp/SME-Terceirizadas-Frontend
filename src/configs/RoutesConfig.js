@@ -127,7 +127,6 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDilog,
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE
 } from "../helpers/utilities";
@@ -772,16 +771,13 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -808,24 +804,21 @@ const routesConfig = [
     component: GestaoAcessoGeralPage,
     exact: true,
     tipoUsuario:
+      usuarioEhCoordenadorNutriSupervisao() ||
       usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhCoordenadorGpCODAE() ||
-      usuarioEhCoordenadorNutriSupervisao()
+      usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
     component: CargasUsuariosServidoresPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/configuracoes`,
