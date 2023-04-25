@@ -356,10 +356,6 @@ export const editaProtocoloPadraoDietaEspecial = async payload => {
   );
 };
 
-export const consultaHistoricoProtocoloPadrao = async uuid => {
-  return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
-};
-
 export const getFiltrosRelatorioDietasEspeciais = async params => {
   const url = `/solicitacoes-dieta-especial/filtros-relatorio-dieta-especial/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
