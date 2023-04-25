@@ -248,6 +248,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             visaoUnica={visaoUnica}
+            desabilitaCadastro={diretor_escola && totalVinculos >= 4}
           />
           {vinculos && (
             <>

@@ -20,38 +20,44 @@ export const Botao = props => {
     exibirTooltip,
     tooltipTitulo,
     classTooltip,
+    tooltipExterno,
     tabindex
   } = props;
   const [exibeMensagem, setExibeMensagem] = useState(false);
   return (
-    <button
-      type={type}
-      title={titulo}
-      data-cy={texto}
-      className={`general-button ${style} ${className}`}
-      onClick={onClick}
-      onMouseOver={() => setExibeMensagem(true)}
-      onMouseOut={() => setExibeMensagem(false)}
-      disabled={disabled}
-      accept={accept}
-      tabIndex={tabindex}
-    >
-      {iconPosition !== "right" && icon && (
-        <i id={iconId} className={`${icon} ${texto && "text-and-icon-left"}`} />
-      )}
-      {texto}
-      {iconPosition === "right" && icon && (
-        <i
-          id={iconId}
-          className={`${icon} ${texto && "text-and-icon-right"}`}
-        />
-      )}
-      {exibirTooltip && (
-        <Tooltip open={exibeMensagem} title={tooltipTitulo}>
-          <i className={`fas fa-info ${classTooltip}`} />
-        </Tooltip>
-      )}
-    </button>
+    <Tooltip title={tooltipExterno ? tooltipExterno : ""}>
+      <button
+        type={type}
+        title={titulo}
+        data-cy={texto}
+        className={`general-button ${style} ${className}`}
+        onClick={onClick}
+        onMouseOver={() => setExibeMensagem(true)}
+        onMouseOut={() => setExibeMensagem(false)}
+        disabled={disabled}
+        accept={accept}
+        tabIndex={tabindex}
+      >
+        {iconPosition !== "right" && icon && (
+          <i
+            id={iconId}
+            className={`${icon} ${texto && "text-and-icon-left"}`}
+          />
+        )}
+        {texto}
+        {iconPosition === "right" && icon && (
+          <i
+            id={iconId}
+            className={`${icon} ${texto && "text-and-icon-right"}`}
+          />
+        )}
+        {exibirTooltip && (
+          <Tooltip open={exibeMensagem} title={tooltipTitulo}>
+            <i className={`fas fa-info ${classTooltip}`} />
+          </Tooltip>
+        )}
+      </button>
+    </Tooltip>
   );
 };
 
