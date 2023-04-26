@@ -88,7 +88,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        111,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -115,7 +114,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        222,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -144,7 +142,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        333,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -172,7 +169,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        444,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -210,7 +206,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        555,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -279,7 +274,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        666,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -308,7 +302,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        777,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
