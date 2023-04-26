@@ -797,7 +797,9 @@ const BuscaDietasForm = ({
                       <Field
                         component={StatefulMultiSelect}
                         name="diagnostico"
-                        options={diagnosticoNoFiltro}
+                        options={diagnosticoNoFiltro.filter(
+                          d => typeof d.label === "string"
+                        )}
                         valueRenderer={renderizarLabelDiagnostico}
                         selected={diagnosticosSelecionados}
                         onSelectedChanged={value =>
