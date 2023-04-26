@@ -53,10 +53,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }));
 
     if (codae) {
-      setVisoes(options_visoes.filter(visao => visao.uuid !== "EMPRESA"));
+      setVisoes(options_visoes.filter(visao => visao.uuid === "CODAE"));
       setPerfis(
         lista_perfis
-          .filter(perfil => perfil.visao && perfil.visao !== "EMPRESA")
+          .filter(perfil => perfil.visao && perfil.visao === "CODAE")
           .map(visao => ({
             uuid: visao.id,
             nome: visao.nome
@@ -114,6 +114,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
     if (cogestor) {
       filtros.perfil = "COGESTOR_DRE";
+    }
+
+    if (codae) {
+      filtros.visao = "CODAE";
     }
 
     let payload = gerarParametrosConsulta({ page, ...filtros });
