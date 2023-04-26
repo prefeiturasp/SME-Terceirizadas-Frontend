@@ -88,6 +88,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        111,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -114,6 +115,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        222,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -142,6 +144,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        333,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -169,6 +172,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        444,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -187,6 +191,7 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
+      dietaEspecial.protocolo_padrao &&
       ([
         "autorizadas",
         "autorizadas-temp",
@@ -200,10 +205,59 @@ const CorpoRelatorio = ({
           "TERMINADA_AUTOMATICAMENTE_SISTEMA",
           "CODAE_AUTORIZADO",
           "CODAE_AUTORIZOU_INATIVACAO"
-        ].includes(dietaEspecial.status_solicitacao))
+        ].includes(dietaEspecial.status_solicitacao)) &&
+      !editar
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        555,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
+        <OrientacoesLeitura
+          orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+          key={3}
+        />,
+        <SubstituicoesTable
+          substituicoes={dietaEspecial.substituicoes}
+          key={4}
+        />,
+        dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+          <PeriodoVigencia key={5} />
+        ),
+        <InformacoesAdicionaisLeitura
+          informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+          key={6}
+        />,
+        <IdentificacaoNutricionista key={7} />,
+
+        dietaEspecial.anexos.length > 0 && (
+          <div className="mt-0" key={4}>
+            <p className="mt-1 mb-2">Anexos</p>
+            <div className="row">{anexos}</div>
+          </div>
+        )
+      ];
+    } else if (
+      dietaEspecial.eh_importado === true &&
+      ([
+        "autorizadas",
+        "autorizadas-temp",
+        "pendentes-aut",
+        "inativas",
+        "inativas-temp",
+        "canceladas",
+        "aguardando-vigencia"
+      ].includes(card) ||
+        [
+          "TERMINADA_AUTOMATICAMENTE_SISTEMA",
+          "CODAE_AUTORIZADO",
+          "CODAE_AUTORIZOU_INATIVACAO"
+        ].includes(dietaEspecial.status_solicitacao)) &&
+      !editar
+    ) {
+      return [
+        <DiagnosticosLeitura key={0} />,
+        555,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
@@ -225,6 +279,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        666,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
@@ -253,6 +308,7 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
+        777,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         <OrientacoesLeitura
