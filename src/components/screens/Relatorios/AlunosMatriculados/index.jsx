@@ -151,7 +151,7 @@ export const AlunosMatriculados = () => {
                 <div className="col-12 text-right">
                   <Botao
                     className="mr-2"
-                    texto="Baixar XLS"
+                    texto="Baixar XLSX"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     icon={BUTTON_ICON.FILE_EXCEL}
                     type={BUTTON_TYPE.BUTTON}
