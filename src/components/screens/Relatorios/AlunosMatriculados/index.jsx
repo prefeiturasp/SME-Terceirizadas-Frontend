@@ -20,7 +20,10 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
-import { gerarPDFRelatorioAlunosMatriculados } from "services/relatorios.service";
+import {
+  gerarPDFRelatorioAlunosMatriculados,
+  gerarXLSRelatorioAlunosMatriculados
+} from "services/relatorios.service";
 import "./style.scss";
 
 export const AlunosMatriculados = () => {
@@ -95,6 +98,17 @@ export const AlunosMatriculados = () => {
     setFiltrando(false);
   };
 
+  const exportarXLS = async () => {
+    setFiltrando(true);
+    const response = await gerarXLSRelatorioAlunosMatriculados(filtros);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar xls. Tente novamente mais tarde.");
+    }
+    setFiltrando(false);
+  };
+
   useEffect(() => {
     getOpcoesFiltros();
     getTodasFaixasEtarias();
@@ -135,6 +149,15 @@ export const AlunosMatriculados = () => {
               />
               <div className="row">
                 <div className="col-12 text-right">
+                  <Botao
+                    className="mr-2"
+                    texto="Baixar XLS"
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    icon={BUTTON_ICON.FILE_EXCEL}
+                    type={BUTTON_TYPE.BUTTON}
+                    disabled={filtrando}
+                    onClick={() => exportarXLS()}
+                  />
                   <Botao
                     texto="Baixar PDF"
                     style={BUTTON_STYLE.GREEN_OUTLINE}
