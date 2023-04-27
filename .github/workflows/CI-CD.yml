@@ -29,35 +29,6 @@ jobs:
              docker build . --tag ${{ secrets.REGISTRY_HOST }}/${GITHUB_REF##*/}/sigpae-frontend
              docker push ${{ secrets.REGISTRY_HOST }}/${GITHUB_REF##*/}/sigpae-frontend
              
-      - name: send failure message
-        if: ${{ failure() }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -571051431
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            💥 Failed in ${{ github.ref_name	}}!
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}            
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
-      - name: send message asking for aprove
-        if: ${{ ( github.ref == 'refs/heads/master') && ( success() ) }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -752736369
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            😍 Por favor me aprove!!!!!
-            branch: ${{ github.ref_name	}}
-            ${{ github.actor }} created commit:
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            🚀🚀🚀
-            To aprove: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-             
   deploy-hom:
   
     runs-on: self-hosted
@@ -94,34 +65,6 @@ jobs:
           NAMESPACE: sme-sigpae-hom2
           WORKLOAD: sigpae-frontend
           
-      - name: send failure message
-        if: ${{ failure() }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -571051431
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            💥 Failed in ${{ github.ref_name	}}!
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}            
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
-      - name: send success message
-        if: ${{ success() }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -571051431
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            🚀 Success in ${{ github.ref_name	}}!
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}            
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
   deploy-prod:
   
     runs-on: self-hosted
@@ -138,31 +81,3 @@ jobs:
           RANCHER_TOKEN: ${{ secrets.RANCHER_TOKEN }}
           NAMESPACE: sme-sigpae
           WORKLOAD: sigpae-frontend
-          
-      - name: send failure message
-        if: ${{ failure() }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -571051431
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            💥 Failed in ${{ github.ref_name	}}!
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}            
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            
-      - name: send success message
-        if: ${{ success() }}
-        uses: appleboy/telegram-action@master
-        with:
-          to: -571051431
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            🚀 Success in ${{ github.ref_name	}}!
-            ${{ github.actor }} created commit:
-            Commit message: ${{ github.event.commits[0].message }}            
-            Repository: ${{ github.repository }}            
-            See changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
-            Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
