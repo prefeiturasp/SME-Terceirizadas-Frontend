@@ -1,7 +1,13 @@
 import { Spin } from "antd";
+import { isEqual } from "lodash";
 import React, { useEffect, useState } from "react";
 import CardCronograma from "components/Shareable/CardCronograma/CardCronograma";
-import { cards_dinutre, cards_dilog, cards_alteracao } from "./constants";
+import {
+  cards_dinutre,
+  cards_dilog,
+  cards_alteracao_dinutre,
+  cards_alteracao_dilog
+} from "./constants";
 import {
   getDashboardCronograma,
   getDashboardCronogramaComFiltros,
@@ -25,15 +31,17 @@ const cardsCronogramaInicial = usuarioEhDilogDiretoria()
   ? cards_dilog
   : cards_dinutre;
 
+const cardsAlteracaoInicial = usuarioEhDilogDiretoria()
+  ? cards_alteracao_dilog
+  : cards_alteracao_dinutre;
+
 export default () => {
   const [carregando, setCarregando] = useState(false);
   const [filtrado, setFiltrado] = useState(false);
   const [cardsCronograma, setCardsCronograma] = useState(
     cardsCronogramaInicial
   );
-  const [cardsAlteracao, setCardsAlteracao] = useState(cards_alteracao);
-
-  const dinutre = usuarioEhDilogDiretoria() ? false : true;
+  const [cardsAlteracao, setCardsAlteracao] = useState(cardsAlteracaoInicial);
 
   const ordenaPorLogMaisRecente = (a, b) => {
     let data_a = parseDataHoraBrToMoment(a.log_mais_recente);
@@ -89,9 +97,10 @@ export default () => {
     }
 
     let cards = [];
-    cards_alteracao.forEach(card => {
+    cardsAlteracao.forEach(card => {
       dadosDashboard.data.results.forEach(data => {
-        if (card.incluir_status.includes(data.status)) {
+        let status = data.status.replace(/[[\]'\s]+/g, "").split(`,`);
+        if (isEqual(card.incluir_status, status)) {
           card.items = data.dados;
           cards.push(card);
         }
@@ -103,8 +112,8 @@ export default () => {
 
   useEffect(() => {
     buscaCronogramas();
-    if (dinutre) buscaSolicitacoes();
-  }, [buscaCronogramas, buscaSolicitacoes, dinutre]);
+    buscaSolicitacoes();
+  }, [buscaCronogramas, buscaSolicitacoes]);
 
   const formataCardsCronograma = items => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
@@ -230,68 +239,67 @@ export default () => {
           </div>
         </div>
       </div>
-      {dinutre && (
-        <div className="card mt-3 card-painel-cronograma">
-          <div className="card-body painel-cronograma">
-            <div className="card-title">
-              <div className="row">
-                <div className="col-5">Alterações de Cronogramas</div>
-                <div className="col-7">
-                  <Form
-                    initialValues={{
-                      nome_fornecedor: "",
-                      numero_cronograma: ""
-                    }}
-                    onSubmit={() => {}}
-                  >
-                    {({ values }) => (
-                      <div className="row text-right">
-                        <div className="col-6">
-                          <Field
-                            component={InputText}
-                            name="numero_cronograma"
-                            placeholder="N° do Cronograma"
-                          />
 
-                          <OnChange name="numero_cronograma">
-                            {value => filtrarSolicitacao(value, values)}
-                          </OnChange>
-                        </div>
-                        <div className="col-6">
-                          <Field
-                            component={InputText}
-                            name="nome_fornecedor"
-                            placeholder="Nome do Fornecedor"
-                          />
+      <div className="card mt-3 card-painel-cronograma">
+        <div className="card-body painel-cronograma">
+          <div className="card-title">
+            <div className="row">
+              <div className="col-5">Alterações de Cronogramas</div>
+              <div className="col-7">
+                <Form
+                  initialValues={{
+                    nome_fornecedor: "",
+                    numero_cronograma: ""
+                  }}
+                  onSubmit={() => {}}
+                >
+                  {({ values }) => (
+                    <div className="row text-right">
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          name="numero_cronograma"
+                          placeholder="N° do Cronograma"
+                        />
 
-                          <OnChange name="nome_fornecedor">
-                            {value => filtrarSolicitacao(value, values)}
-                          </OnChange>
-                        </div>
+                        <OnChange name="numero_cronograma">
+                          {value => filtrarSolicitacao(value, values)}
+                        </OnChange>
                       </div>
-                    )}
-                  </Form>
-                </div>
+                      <div className="col-6">
+                        <Field
+                          component={InputText}
+                          name="nome_fornecedor"
+                          placeholder="Nome do Fornecedor"
+                        />
+
+                        <OnChange name="nome_fornecedor">
+                          {value => filtrarSolicitacao(value, values)}
+                        </OnChange>
+                      </div>
+                    </div>
+                  )}
+                </Form>
               </div>
             </div>
-            <div className="row">
-              {cardsAlteracao.map((card, index) => (
-                <div className="col-6 mb-4" key={index}>
-                  <CardCronograma
-                    cardTitle={card.titulo}
-                    cardType={card.style}
-                    solicitations={formataCardsAlteracao(
-                      card.items ? card.items : []
-                    )}
-                    icon={card.icon}
-                    href={card.href}
-                  />
-                </div>
-              ))}
-            </div>
+          </div>
+          <div className="row">
+            {cardsAlteracao.map((card, index) => (
+              <div className="col-6 mb-4" key={index}>
+                <CardCronograma
+                  cardTitle={card.titulo}
+                  cardType={card.style}
+                  solicitations={formataCardsAlteracao(
+                    card.items ? card.items : []
+                  )}
+                  icon={card.icon}
+                  href={card.href}
+                />
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
     </Spin>
   );
 };
