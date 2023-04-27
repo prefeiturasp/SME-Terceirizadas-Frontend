@@ -509,7 +509,7 @@ export default class CorpoRelatorio extends Component {
                           <div>{this.retornaIniciais(logSelecionado)}</div>
                         </div>
                         <div className="nome-fantasia-empresa">
-                          {logSelecionado.empresa}
+                          {logSelecionado.usuario.nome}
                         </div>
                         <div>
                           <div>{logSelecionado.criado_em.split(" ")[0]}</div>
