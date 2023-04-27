@@ -248,7 +248,6 @@ const CorpoRelatorio = ({
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
-        555,
         <ClassificacaoDaDietaLeitura key={1} />,
         <ProtocoloLeitura key={2} />,
         dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
