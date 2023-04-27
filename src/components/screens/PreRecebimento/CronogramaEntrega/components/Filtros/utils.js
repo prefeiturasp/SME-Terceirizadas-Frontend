@@ -41,4 +41,7 @@ export const options_status_fornecedor = [
 ];
 
 export const deParaStatusCronograma = status =>
-  ["Assinado Dinutre"].includes(status) ? "Aguardando CODAE" : status;
+  ["Assinado Fornecedor", "Assinado Dinutre"].includes(status) &&
+  usuarioEhEmpresaFornecedor()
+    ? "Aguardando CODAE"
+    : status;
