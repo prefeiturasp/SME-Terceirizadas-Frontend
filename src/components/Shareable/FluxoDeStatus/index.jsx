@@ -11,7 +11,6 @@ export const FluxoDeStatus = props => {
   const {
     listaDeStatus,
     fluxo,
-    eh_importado = false,
     eh_gestao_alimentacao = false,
     eh_medicao_inicial = false
   } = props;
@@ -77,6 +76,14 @@ export const FluxoDeStatus = props => {
     }
   };
 
+  const RFouCPF = (key, novoStatus) => {
+    return cloneListaDeStatus[key].usuario.tipo_usuario === "terceirizada"
+      ? `CPF: ${novoStatus.usuario.cpf}`
+      : novoStatus.usuario.registro_funcional
+      ? `RF: ${novoStatus.usuario.registro_funcional || "sem RF"}`
+      : "";
+  };
+
   return (
     <div className="w-100">
       <ul className={`progressbar-titles fluxos`}>
@@ -109,25 +116,9 @@ export const FluxoDeStatus = props => {
               <br />
               {novoStatus.usuario && (
                 <span>
-                  {!eh_importado &&
-                  novoStatus.usuario.registro_funcional !== undefined &&
-                  cloneListaDeStatus[key].usuario.tipo_usuario ===
-                    "terceirizada"
-                    ? `CPF: ${novoStatus.usuario.cpf}`
-                    : status.status_evento_explicacao !==
-                        "Cancelamento por alteração de unidade educacional" &&
-                      status.status_evento_explicacao !==
-                        "Cancelamento para aluno não matriculado na rede municipal" &&
-                      !eh_importado &&
-                      `RF: ${novoStatus.usuario.registro_funcional ||
-                        "sem RF"}`}
-                  {!eh_importado && <br />}
-                  {novoStatus.usuario &&
-                    (status.status_evento_explicacao !==
-                      "Cancelamento por alteração de unidade educacional" &&
-                      status.status_evento_explicacao !==
-                        "Cancelamento para aluno não matriculado na rede municipal") &&
-                    novoStatus.usuario.nome}
+                  {RFouCPF(key, novoStatus)}
+                  {RFouCPF(key, novoStatus) && <br />}
+                  {novoStatus.usuario && novoStatus.usuario.nome}
                 </span>
               )}
             </li>
