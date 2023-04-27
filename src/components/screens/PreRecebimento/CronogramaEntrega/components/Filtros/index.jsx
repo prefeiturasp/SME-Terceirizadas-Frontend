@@ -12,105 +12,9 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import {
-  usuarioEhCronograma,
-  usuarioEhDinutreDiretoria
-} from "helpers/utilities";
+import { montarOptionsStatus } from "./utils";
 
 const FORM_NAME = "buscaCronogramaDeEntrega";
-
-const options_status = usuarioEhEmpresaFornecedor()
-  ? [
-      {
-        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
-        label: "Recebido"
-      },
-      {
-        value: "ALTERACAO_FORNECEDOR",
-        label: "Alteração Fornecedor"
-      },
-      {
-        value: "ASSINADO_FORNECEDOR",
-        label: "Assinado Fornecedor"
-      },
-      {
-        value: "SOLICITADO_ALTERACAO",
-        label: "Solicitado Alteração"
-      },
-      {
-        value: "ASSINADO_CODAE",
-        label: "Assinado CODAE"
-      }
-    ]
-  : usuarioEhCronograma()
-  ? [
-      {
-        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
-        label: "Enviado ao Fornecedor"
-      },
-      {
-        value: "ALTERACAO_CODAE",
-        label: "Alteração CODAE"
-      },
-      { value: "APROVADO", label: "Aprovado" },
-      { value: "REPROVADO", label: "Reprovado" },
-      {
-        value: "ALTERACAO_FORNECEDOR",
-        label: "Alteração Fornecedor"
-      },
-      {
-        value: "ASSINADO_FORNECEDOR",
-        label: "Assinado Fornecedor"
-      },
-      { value: "RASCUNHO", label: "Rascunho" }
-    ]
-  : usuarioEhDinutreDiretoria()
-  ? [
-      {
-        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
-        label: "Enviado ao Fornecedor"
-      },
-      {
-        value: "ALTERACAO_CODAE",
-        label: "Alteração CODAE"
-      },
-      { value: "APROVADO", label: "Aprovado" },
-      { value: "REPROVADO", label: "Reprovado" },
-      {
-        value: "ALTERACAO_FORNECEDOR",
-        label: "Alteração Fornecedor"
-      },
-      {
-        value: "ASSINADO_FORNECEDOR",
-        label: "Assinado Fornecedor"
-      },
-      { value: "RASCUNHO", label: "Rascunho" },
-      {
-        value: "ASSINADO_DINUTRE",
-        label: "Assinado Dinutre"
-      }
-    ]
-  : [
-      {
-        value: "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
-        label: "Enviado ao Fornecedor"
-      },
-      {
-        value: "ALTERACAO_CODAE",
-        label: "Alteração CODAE"
-      },
-      { value: "APROVADO", label: "Aprovado" },
-      { value: "REPROVADO", label: "Reprovado" },
-      {
-        value: "ALTERACAO_FORNECEDOR",
-        label: "Alteração Fornecedor"
-      },
-      {
-        value: "ASSINADO_FORNECEDOR",
-        label: "Assinado Fornecedor"
-      },
-      { value: "RASCUNHO", label: "Rascunho" }
-    ];
 
 export default ({
   setFiltros,
@@ -121,6 +25,7 @@ export default ({
 }) => {
   const onSubmit = async values => {
     const filtros = { ...values };
+    if (filtros.status) filtros.status = filtros.status.flat();
     if (filtros.motivos) {
       filtros.motivos = filtros.motivos.toString();
     }
@@ -192,7 +97,7 @@ export default ({
                   multiple
                   nomeDoItemNoPlural="status"
                   pluralFeminino
-                  options={options_status}
+                  options={montarOptionsStatus()}
                 />
               </div>
 
