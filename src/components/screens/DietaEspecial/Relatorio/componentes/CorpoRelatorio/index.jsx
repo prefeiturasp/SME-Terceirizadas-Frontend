@@ -188,7 +188,16 @@ const CorpoRelatorio = ({
     } else if (
       dietaEspecial.eh_importado === true &&
       dietaEspecial.protocolo_padrao &&
-      ["autorizadas", "canceladas"].includes(card) &&
+      [
+        "CODAE_AUTORIZADO",
+        "TERCEIRIZADA_TOMOU_CIENCIA",
+        "CODAE_AUTORIZOU_INATIVACAO",
+        "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO",
+        "INFORMADO",
+        "ESCOLA_CANCELOU",
+        "CANCELADO_ALUNO_MUDOU_ESCOLA",
+        "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+      ].includes(dietaEspecial.status_solicitacao) &&
       !editar
     ) {
       return [
