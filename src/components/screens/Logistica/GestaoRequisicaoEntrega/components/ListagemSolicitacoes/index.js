@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Button } from "react-bootstrap";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { Spin } from "antd";
 import Confirmar from "../Confirmar";

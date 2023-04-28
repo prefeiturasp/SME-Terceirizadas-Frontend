@@ -1,7 +1,6 @@
 import { Modal } from "antd";
 import React, { Component } from "react";
 
-import "antd/dist/antd.min.css";
 import moment from "moment";
 
 export default class ModalHistoricoProtocoloPadrao extends Component {
