@@ -54,7 +54,7 @@ export const conferidaClass = (solicitation, cardTitle) => {
   let conferida = "";
   if (
     tipoPerfil === TIPO_PERFIL.TERCEIRIZADA &&
-    ["Autorizadas", "Canceladas"].includes(cardTitle)
+    ["Autorizadas", "Canceladas", "Negadas"].includes(cardTitle)
   ) {
     conferida = solicitation.conferido ? "conferida" : "";
   }
