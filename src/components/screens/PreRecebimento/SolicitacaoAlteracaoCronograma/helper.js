@@ -25,11 +25,11 @@ export const option_status = [
   },
   {
     value: "APROVADO_DILOG",
-    label: "Aprovado CODAE"
+    label: "Aprovado DILOG"
   },
   {
     value: "REPROVADO_DILOG",
-    label: "Reprovado CODAE"
+    label: "Reprovado DILOG"
   }
 ];
 
@@ -45,11 +45,11 @@ export const option_status_fornecedor = [
   },
   {
     value: "APROVADO_DILOG",
-    label: "Aprovado CODAE"
+    label: "Aprovado DILOG"
   },
   {
     value: "REPROVADO_DILOG",
-    label: "Reprovado CODAE"
+    label: "Reprovado DILOG"
   }
 ];
 
