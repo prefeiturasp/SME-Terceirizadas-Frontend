@@ -67,7 +67,6 @@ function SolicitacoesPorStatusGenerico(props) {
     if (params.titulo) {
       params.busca = params.titulo;
     }
-    console.log("params 161616", params);
     const response = await getSolicitacoes(params || PARAMS);
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoes(ajustarFormatoLog(response.data.results));
@@ -145,7 +144,6 @@ function SolicitacoesPorStatusGenerico(props) {
       data_evento: propsAlimentacao.dataEventoAlimentacao || "",
       diretoria_regional: propsAlimentacao.dreAlimentacao || ""
     };
-    console.log("propsAlimentacao 1717", propsAlimentacao);
     props.resetCamposAlimentacao();
     getSolicitacoesAsync(values);
   };

@@ -35,6 +35,11 @@ export const StatusSolicitacoesCanceladasTerceirizadaPage = () => {
           lotes={formatarLotesParaVisao(
             meusDados.vinculo_atual.instituicao.lotes
           )}
+          listaStatus={[
+            { nome: "Conferência Status", uuid: "" },
+            { nome: "Conferida", uuid: "1" },
+            { nome: "Não Conferida", uuid: "0" }
+          ]}
         />
       )}
     </Page>
