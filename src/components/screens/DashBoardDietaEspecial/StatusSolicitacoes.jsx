@@ -340,7 +340,9 @@ function StatusSolicitacoes(props) {
       listaFiltro = listaFiltro.filter(item => item.conferido === true);
     }
     if (value === "0") {
-      listaFiltro = listaFiltro.filter(item => item.conferido === false);
+      listaFiltro = listaFiltro.filter(
+        item => item.conferido === false || item.conferido === null
+      );
     }
     return listaFiltro;
   };
