@@ -153,7 +153,7 @@ const Relatorio = ({ visao }) => {
   }, [dadosDietaAberta]);
 
   const gerarProtocolo = async (uuid, eh_importado) => {
-    if (eh_importado === true) {
+    if (eh_importado === true && !dietaEspecial.protocolo_padrao) {
       setShowModalAviso(true);
     } else {
       setCarregando(true);
