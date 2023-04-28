@@ -22,7 +22,6 @@ import ListagemProdutos from "./components/ListagemProdutos";
 import { ordenaProdutos } from "./helpers";
 
 import "./style.scss";
-import "antd/dist/antd.min.css";
 
 const BuscaAvancada = ({
   produtos,

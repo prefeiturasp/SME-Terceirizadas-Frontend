@@ -400,3 +400,14 @@ export const gerarPDFRelatorioAlunosMatriculados = async params => {
     return data;
   }
 };
+
+export const gerarXLSRelatorioAlunosMatriculados = async params => {
+  const url = `/relatorio-alunos-matriculados/gerar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

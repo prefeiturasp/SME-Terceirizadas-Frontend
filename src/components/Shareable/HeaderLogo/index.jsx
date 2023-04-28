@@ -5,7 +5,7 @@ export class HeaderLogo extends Component {
   render() {
     return (
       <div className="header-logo">
-        <img src="/assets/image/logo-sigpae-light.png" alt="" />
+        <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
       </div>
     );
   }

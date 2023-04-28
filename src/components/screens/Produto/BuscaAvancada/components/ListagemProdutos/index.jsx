@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { retornaStatusFormatado } from "./helpers";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Spin } from "antd";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import Botao from "components/Shareable/Botao";
 import {
