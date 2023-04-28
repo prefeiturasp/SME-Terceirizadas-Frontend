@@ -419,7 +419,9 @@ const Relatorio = ({ visao }) => {
             ]}
           {dietaEspecial &&
             visao === TERCEIRIZADA &&
-            (status === statusEnum.CODAE_AUTORIZADO || dietaCancelada) && (
+            (status === statusEnum.CODAE_AUTORIZADO ||
+              dietaCancelada ||
+              status === statusEnum.CODAE_NEGOU_PEDIDO) && (
               <div className="form-group float-right mt-4">
                 {dietaEspecial.conferido ? (
                   <label className="ml-3 conferido">

@@ -25,7 +25,9 @@ export const Container = () => {
   };
 
   const getDietasAtivasInativasPorAlunoAsync = async () => {
-    const response = await getDietasAtivasInativasPorAluno();
+    const response = await getDietasAtivasInativasPorAluno({
+      incluir_alteracao_ue: true
+    });
     if (response.status === HTTP_STATUS.OK) {
       setAlunosComDietaEspecial(response.data.solicitacoes);
     } else {

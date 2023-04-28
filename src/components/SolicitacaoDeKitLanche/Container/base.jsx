@@ -201,7 +201,9 @@ export class SolicitacaoDeKitLanche extends Component {
   }
 
   UNSAFE_componentWillMount = async () => {
-    const resposta = await getDietasAtivasInativasPorAluno();
+    const resposta = await getDietasAtivasInativasPorAluno({
+      incluir_alteracao_ue: true
+    });
     if (resposta.status === 200) {
       this.setState({
         alunosComDietaEspecial: resposta.data.solicitacoes.filter(
