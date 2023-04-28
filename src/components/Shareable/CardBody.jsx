@@ -313,8 +313,8 @@ const mapDispatchToProps = dispatch => ({
   updateMarcaProduto: marcaProduto => {
     dispatch(updateMarcaProduto(marcaProduto));
   },
-  updateNomeProduto: editalProduto => {
-    dispatch(updateNomeProduto(editalProduto));
+  updateNomeProduto: tituloProduto => {
+    dispatch(updateNomeProduto(tituloProduto));
   },
   updateEditalProtudo: editalProduto => {
     dispatch(updateEditalProtudo(editalProduto));
