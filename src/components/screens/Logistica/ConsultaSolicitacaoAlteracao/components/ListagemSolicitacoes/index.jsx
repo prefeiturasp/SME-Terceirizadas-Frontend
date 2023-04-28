@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import AlimentosConsolidado from "../AlimentosConsolidado";
 

@@ -4,7 +4,7 @@ import { Paginacao } from "components/Shareable/Paginacao";
 import { formataAlergias } from "components/screens/DietaEspecial/Relatorio/componentes/FormAutorizaDietaEspecial/helper";
 import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
