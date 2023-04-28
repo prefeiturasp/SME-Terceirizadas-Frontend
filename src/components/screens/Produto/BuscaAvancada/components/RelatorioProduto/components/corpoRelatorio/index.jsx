@@ -19,7 +19,6 @@ import { truncarString } from "helpers/utilities";
 
 import { getRelatorioProduto } from "services/relatorios";
 
-import "antd/dist/antd.min.css";
 import "../styles.scss";
 
 export default class CorpoRelatorio extends Component {

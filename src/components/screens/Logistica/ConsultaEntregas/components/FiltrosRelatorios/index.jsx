@@ -12,7 +12,7 @@ import {
   imprimirGuiasDaSolicitacao
 } from "services/logistica.service.js";
 import { Switch, Checkbox } from "antd";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { STATUS_GUIA } from "../../../../const.js";
 import { toastError } from "components/Shareable/Toast/dialogs";
