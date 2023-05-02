@@ -770,7 +770,8 @@ export default () => {
               incFiltradasPorDia.length &&
               !valoresMedicao[
                 `numero_de_alunos__dia_${dia}__categoria_${categoria.id}`
-              ]
+              ] &&
+              categoria.nome === "ALIMENTAÇÃO"
             ) {
               dadosValoresAlunos[
                 `numero_de_alunos__dia_${dia}__categoria_${categoria.id}`
@@ -1101,7 +1102,9 @@ export default () => {
         nome_campo: nome_campo,
         categoria_medicao: idCategoria,
         tipo_alimentacao:
-          !ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam
+          !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+          !ehGrupoETECUrlParam &&
+          grupoLocation !== "Programas e Projetos"
             ? tipoAlimentacao.uuid
             : ""
       });
