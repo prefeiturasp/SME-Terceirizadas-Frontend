@@ -20,6 +20,7 @@ export const Botao = props => {
     exibirTooltip,
     tooltipTitulo,
     classTooltip,
+    tooltipExterno,
     tabindex
   } = props;
   const [exibeMensagem, setExibeMensagem] = useState(false);
@@ -39,7 +40,12 @@ export const Botao = props => {
       {iconPosition !== "right" && icon && (
         <i id={iconId} className={`${icon} ${texto && "text-and-icon-left"}`} />
       )}
-      {texto}
+      <Tooltip
+        open={exibeMensagem && tooltipExterno}
+        title={tooltipExterno ? tooltipExterno : ""}
+      >
+        {texto}
+      </Tooltip>
       {iconPosition === "right" && icon && (
         <i
           id={iconId}

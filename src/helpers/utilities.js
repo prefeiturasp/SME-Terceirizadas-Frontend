@@ -66,8 +66,8 @@ export const dataPrioritaria = (
   );
 };
 
-export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: "" }].concat(lista);
+export const agregarDefault = (lista, valor = "") => {
+  return [{ nome: `Selecione ${valor}`, uuid: "" }].concat(lista);
 };
 
 export const formatarParaMultiselect = lista => {
@@ -397,6 +397,10 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
+export const usuarioEhEscolaTerceirizadaQualquerPerfil = () => {
+  return usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
+};
+
 export const usuarioEhAdmQualquerEmpresa = () => {
   return [PERFIL.ADMINISTRADOR_EMPRESA].includes(
     localStorage.getItem("perfil")
@@ -636,12 +640,6 @@ export const obtemIdentificacaoNutricionista = () =>
   `Elaborado por ${localStorage.getItem("nome")} - RF ${localStorage.getItem(
     "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
-
-export const obtemIdentificacaoNutricionistaDieta = usuario =>
-  `Elaborado por ${usuario.nome} - RF ${usuario.registro_funcional}`.replace(
-    /[^\w\s-]/g,
-    ""
-  );
 
 export const getKey = obj => {
   return Object.keys(obj)[0];

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
 import "./styles.scss";
 import {
+  alterarVinculo,
   cadastrarVinculo,
-  editarVinculo,
   finalizarVinculo,
   getVinculosAtivos
 } from "services/vinculos.service";
@@ -43,7 +43,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
 
     let options_perfis = lista_perfis.map(perfil => ({
       uuid: perfil.nome,
-      nome: perfil.nome
+      nome: perfil.nome,
+      visao: perfil.visao
     }));
 
     let options_visoes = visoes.data.map(visao => ({
@@ -52,10 +53,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }));
 
     if (codae) {
-      setVisoes(options_visoes.filter(visao => visao.uuid !== "EMPRESA"));
+      setVisoes(options_visoes.filter(visao => visao.uuid === "CODAE"));
       setPerfis(
         lista_perfis
-          .filter(perfil => perfil.visao && perfil.visao !== "EMPRESA")
+          .filter(perfil => perfil.visao && perfil.visao === "CODAE")
           .map(visao => ({
             uuid: visao.id,
             nome: visao.nome
@@ -115,6 +116,10 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       filtros.perfil = "COGESTOR_DRE";
     }
 
+    if (codae) {
+      filtros.visao = "CODAE";
+    }
+
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getVinculosAtivos(payload);
 
@@ -168,7 +173,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
-    let response = await editarVinculo(payload);
+    payload.perfil = values.perfil;
+    const response = await alterarVinculo(payload);
 
     if (response.status === 200) {
       toastSuccess("Acesso editado com sucesso!");
@@ -248,6 +254,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             visaoUnica={visaoUnica}
+            desabilitaCadastro={diretor_escola && totalVinculos >= 4}
           />
           {vinculos && (
             <>

@@ -1,4 +1,4 @@
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import React from "react";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";

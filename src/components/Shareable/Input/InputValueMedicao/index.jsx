@@ -115,9 +115,11 @@ export const InputText = props => {
       {exibeTooltipAlimentacoesAutorizadas &&
         !["Mês anterior", "Mês posterior"].includes(input.value) && (
           <Tooltip
-            title={`Foi autorizada a inclusão de ${numeroDeInclusoesAutorizadas} alimentações neste dia`}
+            title={
+              "Existe autorização para o Lançamento de Programas e Projetos para o dia. Justifique a ausência do apontamento!"
+            }
           >
-            <i className="fas fa-info icone-info-success" />
+            <i className="fas fa-info icone-info-warning" />
           </Tooltip>
         )}
       {exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() && (
@@ -263,7 +265,9 @@ export const InputText = props => {
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipLancheEmergencialSolAlimentacoes ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
-            exibeTooltipLancheEmergTabelaEtec)
+            exibeTooltipLancheEmergTabelaEtec ||
+            (exibeTooltipAlimentacoesAutorizadas &&
+              !["Mês anterior", "Mês posterior"].includes(input.value)))
             ? "border-warning"
             : ""
         }`}

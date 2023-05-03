@@ -8,7 +8,7 @@ import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitaca
 import { getSolicitacoesCanceladasTerceirizada } from "services/painelTerceirizada.service";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { formatarLotesParaVisao } from "helpers/utilities";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import MeusDadosContext from "context/MeusDadosContext";
 
@@ -35,6 +35,11 @@ export const StatusSolicitacoesCanceladasTerceirizadaPage = () => {
           lotes={formatarLotesParaVisao(
             meusDados.vinculo_atual.instituicao.lotes
           )}
+          listaStatus={[
+            { nome: "Conferência Status", uuid: "" },
+            { nome: "Conferida", uuid: "1" },
+            { nome: "Não Conferida", uuid: "0" }
+          ]}
         />
       )}
     </Page>

@@ -10,6 +10,7 @@ import {
 } from "configs/constants";
 import "./style.scss";
 import { ASelect } from "../MakeField";
+import { SOLICITACOES_NEGADAS } from "configs/constants";
 
 export const InputSearchPendencias = props => {
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
@@ -33,9 +34,11 @@ export const InputSearchPendencias = props => {
   };
 
   const verificaStatusFiltros = () => {
-    return [SOLICITACOES_AUTORIZADAS, SOLICITACOES_CANCELADAS].includes(
-      props.tipoSolicitacao
-    );
+    return [
+      SOLICITACOES_AUTORIZADAS,
+      SOLICITACOES_CANCELADAS,
+      SOLICITACOES_NEGADAS
+    ].includes(props.tipoSolicitacao);
   };
 
   const defineColunas = () => {

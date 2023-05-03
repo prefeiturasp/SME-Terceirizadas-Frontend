@@ -1,4 +1,3 @@
-import "antd/dist/antd.min.css";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import React, { useEffect, useState } from "react";

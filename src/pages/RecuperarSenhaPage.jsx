@@ -17,16 +17,28 @@ import {
 import { required } from "../helpers/fieldValidators";
 import { atualizarSenha } from "../services/perfil.service";
 import "./style.scss";
-import { getError } from "../helpers/utilities";
+import RequisitosSenha from "components/Shareable/RequisitosSenha";
 
 class RecuperarSenhaPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      mensagem: ""
+      numero: false,
+      tamanho: false,
+      letra: false
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  onSenhaChanged(value) {
+    const numbers = /[0-9]/g;
+    const letters = /[a-zA-Z]/g;
+    this.setState({
+      numero: value.match(numbers),
+      tamanho: value.length >= 8,
+      letra: value.match(letters)
+    });
   }
 
   handleSubmit(payLoad) {
@@ -35,22 +47,20 @@ class RecuperarSenhaPage extends Component {
     const confirmationKey = urlParams.get("confirmationKey");
     atualizarSenha(uuid, confirmationKey, payLoad).then(response => {
       if (response.status === HTTP_STATUS.OK) {
-        this.setState({ mensagem: "Senha atualizada com sucesso!" });
         this.props.reset();
         toastSuccess("Senha atualizada com sucesso!");
         setTimeout(function() {
           window.location.href = "/";
         }, 1000);
       } else {
-        this.setState({ mensagem: response.data.detail });
-        toastError(`Erro: ${getError(response.data)}`);
+        toastError(response.data.detail);
       }
     });
   }
 
   render() {
     const { senha1, senha2, pristine, handleSubmit } = this.props;
-    const { mensagem } = this.state;
+    const { letra, numero, tamanho } = this.state;
     const urlParams = new URLSearchParams(window.location.search);
     const visao_perfil = urlParams.get("visao");
     return (
@@ -60,10 +70,7 @@ class RecuperarSenhaPage extends Component {
           <div className="card">
             <div className="card-body alinha-centro">
               <div className="">
-                <div className="card-title font-weight-bold">
-                  Troca de senha
-                </div>
-                {mensagem}
+                <div className="card-title font-weight-bold">Alterar Senha</div>
                 <Field
                   component={InputText}
                   label="Senha:"
@@ -71,6 +78,7 @@ class RecuperarSenhaPage extends Component {
                   name="senha1"
                   type="password"
                   validate={[required]}
+                  onChange={event => this.onSenhaChanged(event.target.value)}
                   maxlength={20}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
@@ -91,6 +99,11 @@ class RecuperarSenhaPage extends Component {
                 {visao_perfil && visao_perfil !== "EMPRESA" && (
                   <InfoSenhaServidorMunicipal />
                 )}
+                <RequisitosSenha
+                  letra={letra}
+                  numero={numero}
+                  tamanho={tamanho}
+                />
                 <div className="pt-3 text-center">
                   <Botao
                     texto="Confirmar senha"

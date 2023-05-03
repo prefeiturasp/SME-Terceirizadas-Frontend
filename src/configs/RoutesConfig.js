@@ -127,7 +127,6 @@ import {
   usuarioEhDinutreDiretoria,
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDilog,
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE
 } from "../helpers/utilities";
@@ -215,12 +214,17 @@ import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
 import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
-import StatusSolicitacoesAlteracoes from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoes";
+import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
 import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
 import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
 import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
 import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
+import StatusSolicitacoesAlteracoesAprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDinutre";
+import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDinutre";
+import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
+import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
+import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
 
 const routesConfig = [
   {
@@ -772,16 +776,13 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
     component: GestaoAcessoMasterPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -808,24 +809,21 @@ const routesConfig = [
     component: GestaoAcessoGeralPage,
     exact: true,
     tipoUsuario:
+      usuarioEhCoordenadorNutriSupervisao() ||
       usuarioEhCoordenadorNutriCODAE() ||
-      usuarioEhCoordenadorGpCODAE() ||
-      usuarioEhCoordenadorNutriSupervisao()
+      usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilog()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
     component: CargasUsuariosServidoresPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhCodaeDilog() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
   },
   {
     path: `/configuracoes`,
@@ -1457,6 +1455,7 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhDRE() ||
       usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
       usuarioEhMedicao() ||
       usuarioEhEmpresaTerceirizada()
   },
@@ -1747,9 +1746,39 @@ const routesConfig = [
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
-    component: StatusSolicitacoesAlteracoes,
+    component: StatusSolicitacoesAlteracoesDinutre,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
   }
 ];
 

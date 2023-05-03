@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import "antd/dist/antd.min.css";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -440,12 +440,12 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={listaPerfis.map(perfil => ({
-                              uuid: perfil.nome,
-                              nome: perfil.nome
-                            }))}
+                            options={
+                              listaPerfis.some(perfil => perfil.visao)
+                                ? getPerfis("EMPRESA")
+                                : listaPerfis
+                            }
                             validate={required}
-                            disabled={valoresEdicao && !empresa}
                           />
                         </div>
                       </div>

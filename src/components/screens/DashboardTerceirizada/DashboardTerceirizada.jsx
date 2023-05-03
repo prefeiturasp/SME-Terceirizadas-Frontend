@@ -99,6 +99,13 @@ class DashboardTerceirizada extends Component {
     });
   }
 
+  resetParams() {
+    const newParams = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
+    this.setState({ loadingFiltro: true }, () => {
+      this.getSolicitacoesAsync(newParams);
+    });
+  }
+
   async componentDidMount() {
     if (
       this.props.location &&
@@ -109,7 +116,7 @@ class DashboardTerceirizada extends Component {
         secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO
       });
     }
-    this.getSolicitacoesAsync(PARAMS);
+    this.resetParams();
   }
 
   onPesquisaChanged(values, previous) {

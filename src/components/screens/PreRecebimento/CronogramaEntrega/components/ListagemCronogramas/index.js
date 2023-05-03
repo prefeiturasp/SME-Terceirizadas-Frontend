@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import {
@@ -13,6 +13,7 @@ import {
   usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
+import { deParaStatusCronograma } from "../Filtros/utils";
 
 const ListagemCronogramas = ({ cronogramas, ativos }) => {
   const statusValue = status => {
@@ -60,7 +61,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                       : undefined}
                   </div>
                   <div className={`${bordas}`}>
-                    {statusValue(cronograma.status)}
+                    {deParaStatusCronograma(statusValue(cronograma.status))}
                   </div>
 
                   <div className={`${bordas}`}>
