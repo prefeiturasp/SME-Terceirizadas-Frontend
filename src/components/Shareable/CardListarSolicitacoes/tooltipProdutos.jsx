@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Tooltip } from "antd"; // Exemplo de importação do componente Tooltip
+import { Tooltip } from "antd";
 import { conferidaClass } from "helpers/terceirizadas";
 
 const TooltipProdutos = ({ solicitacao, cardTitulo }) => {
@@ -14,11 +14,7 @@ const TooltipProdutos = ({ solicitacao, cardTitulo }) => {
     );
 
     return (
-      <NavLink
-        to={solicitation.link}
-        //key={key}
-        //data-cy={`${cardType}-${key}`}
-      >
+      <NavLink to={solicitation.link}>
         <p className={`data ${conferida}`}>
           <Tooltip
             color="#42474a"
