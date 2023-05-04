@@ -3,7 +3,7 @@ import { Spin, Pagination } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import {
-  getNomesProtudosEdital,
+  getNomesProdutosEdital,
   getCadastroProdutosEdital
 } from "services/produto.service";
 import Filtros from "./componentes/Filtros";
@@ -21,7 +21,7 @@ export default () => {
   const [page, setPage] = useState(1);
 
   async function fetchData() {
-    const respNomes = await getNomesProtudosEdital();
+    const respNomes = await getNomesProdutosEdital();
     const respProdutos = await getCadastroProdutosEdital({});
     setNomes(respNomes.data.results);
     setStatus(tipoStatus);

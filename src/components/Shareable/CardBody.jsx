@@ -22,7 +22,7 @@ import {
 import {
   updateMarcaProduto,
   updateNomeProduto,
-  updateEditalProtudo
+  updateEditalProduto
 } from "../../reducers/filtersProdutoReducer";
 import {
   updateDataEventoAlimentacao,
@@ -106,7 +106,7 @@ const CardBody = props => {
                       />
                       <OnChange name="edital">
                         {edital => {
-                          props.updateEditalProtudo(edital);
+                          props.updateEditalProduto(edital);
                           props.onChange(values);
                         }}
                       </OnChange>
@@ -316,8 +316,8 @@ const mapDispatchToProps = dispatch => ({
   updateNomeProduto: tituloProduto => {
     dispatch(updateNomeProduto(tituloProduto));
   },
-  updateEditalProtudo: editalProduto => {
-    dispatch(updateEditalProtudo(editalProduto));
+  updateEditalProduto: editalProduto => {
+    dispatch(updateEditalProduto(editalProduto));
   },
   updateTituloAlimentacao: tituloAlimentacao => {
     dispatch(updateTituloAlimentacao(tituloAlimentacao));
