@@ -232,6 +232,11 @@ export const prefeituraEmail = value =>
     ? undefined
     : "Somente emails da prefeitura de São Paulo";
 
+export const SMEPrefeituraEmail = value =>
+  value && /.+@sme.prefeitura.sp.gov.br/.test(value)
+    ? undefined
+    : "Digite o E-mail @sme.prefeitura.sp.gov.br";
+
 export const peloMenosUmNumeroEUmaLetra = value =>
   value && /^(?=.*[0-9])(?=.*[a-zA-Z])/i.test(value)
     ? undefined
