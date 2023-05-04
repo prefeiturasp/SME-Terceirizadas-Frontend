@@ -14,7 +14,7 @@ export const updateNomeProduto = nome => ({
   payload: nome
 });
 
-export const updateEditalProtudo = edital => ({
+export const updateEditalProduto = edital => ({
   type: UPDATE_EDITAL,
   payload: edital
 });
