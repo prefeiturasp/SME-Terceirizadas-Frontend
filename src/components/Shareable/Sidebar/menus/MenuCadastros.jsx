@@ -22,7 +22,8 @@ import {
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhEscolaTerceirizada,
   usuarioEhLogistica,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhCodaeDilog
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -81,11 +82,12 @@ const MenuCadastros = () => {
           Sobremesa Doce
         </LeafItem>
       )}
-      {usuarioEhCronograma() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
-          Produtos
-        </LeafItem>
-      )}
+      {usuarioEhCronograma() ||
+        (usuarioEhCodaeDilog() && (
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
+            Produtos
+          </LeafItem>
+        ))}
     </Menu>
   );
 };
