@@ -171,7 +171,7 @@ export default () => {
                       style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="float-right ml-3"
                       onClick={() => {
-                        form.reset({});
+                        form.restart({});
                         setRfBuscado(false);
                       }}
                     />
