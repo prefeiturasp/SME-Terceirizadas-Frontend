@@ -743,7 +743,7 @@ const routesConfig = [
     }`,
     component: CadastroProdutosCronograma,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog()
   },
 
   {
