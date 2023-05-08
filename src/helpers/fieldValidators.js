@@ -89,6 +89,14 @@ export const maxLength = max => value =>
     ? `Deve ter ${max} caracteres(s) ou menos`
     : undefined;
 
+export const maxLengthSemTags = max => value => {
+  if (value && strip_tags(value).length > max) {
+    return `Deve ter ${max} caracteres(s) ou menos`;
+  } else {
+    return undefined;
+  }
+};
+
 export const maxLengthProduto = max => value =>
   value && value.length > max
     ? `Limite máximo de ${max} caracteres`
