@@ -14,9 +14,13 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { peloMenosUmCaractere } from "helpers/fieldValidators";
+import {
+  maxLengthSemTags,
+  peloMenosUmCaractere
+} from "helpers/fieldValidators";
 import { deleteObservacaoValoresPeriodosLancamentos } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import "./styles.scss";
+import strip_tags from "locutus/php/strings/strip_tags";
 
 export default ({
   closeModal,
@@ -161,13 +165,14 @@ export default ({
       )[0];
     if (value) {
       setDesabilitarBotaoSalvar(
-        (!["<p></p>\n", null, ""].includes(
+        ((!["<p></p>\n", null, ""].includes(
           values[`${rowName}__dia_${dia}__categoria_${categoria}`]
         ) ||
           !!peloMenosUmCaractere(
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           )) &&
-          (valorFiltered && valorFiltered.valor === value)
+          (valorFiltered && valorFiltered.valor === value)) ||
+          strip_tags(value).length > 250
       );
 
       setShowBotaoExcluir(
@@ -206,6 +211,7 @@ export default ({
               component={CKEditorField}
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
               ehModal={true}
+              validate={maxLengthSemTags(250)}
             />
             <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
               {value => onChangeTextAreaField(value)}
