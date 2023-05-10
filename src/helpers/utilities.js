@@ -893,7 +893,7 @@ export const exibirGA = () => {
 
 export const exibirModuloMedicaoInicial = () => {
   return (
-    !["treinamento", "production"].includes(ENVIRONMENT) &&
+    !["production"].includes(ENVIRONMENT) &&
     (usuarioEhDRE() ||
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
