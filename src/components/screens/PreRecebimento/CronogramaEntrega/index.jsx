@@ -123,6 +123,7 @@ export default () => {
                 ativos={ativos}
                 setAtivos={setAtivos}
                 updatePage={updatePage}
+                setCarregando={setCarregando}
               />
               <div className="row">
                 <div className="col">

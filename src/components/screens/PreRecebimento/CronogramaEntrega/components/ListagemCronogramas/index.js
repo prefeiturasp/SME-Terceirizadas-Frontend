@@ -16,8 +16,10 @@ import {
 import { deParaStatusCronograma } from "../Filtros/utils";
 import { Tooltip } from "antd";
 import { formataNome } from "./helpers";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { imprimirCronograma } from "services/cronograma.service";
 
-const ListagemCronogramas = ({ cronogramas, ativos }) => {
+const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
   const statusValue = status => {
     if (
       status === "Assinado e Enviado ao Fornecedor" &&
@@ -27,6 +29,20 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
     } else {
       return status;
     }
+  };
+
+  const baixarPDFCronograma = cronograma => {
+    setCarregando(true);
+    let uuid = cronograma.uuid;
+    let numero = cronograma.numero;
+    imprimirCronograma(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setCarregando(false);
+      });
   };
 
   return (
@@ -103,6 +119,18 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
+
+                          {cronograma.status === "Assinado CODAE" && (
+                            <>
+                              <span className="ml-1">| </span>
+                              <span
+                                className="float-left ml-1 link-acoes green"
+                                onClick={() => baixarPDFCronograma(cronograma)}
+                              >
+                                Imprimir
+                              </span>
+                            </>
+                          )}
                           {cronograma.status === "Assinado CODAE" &&
                             usuarioEhEmpresaFornecedor() && (
                               <>
