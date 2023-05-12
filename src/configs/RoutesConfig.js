@@ -1464,7 +1464,9 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhMedicao() ||
-      usuarioEhEmpresaTerceirizada()
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,

@@ -8,7 +8,9 @@ import {
   usuarioEhDRE,
   usuarioEhMedicao,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhCODAENutriManifestacao
+  usuarioEhCODAENutriManifestacao,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import {
   filtrarSolicitacoesAlimentacaoCODAE,
@@ -19,7 +21,10 @@ import {
   gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas,
   gerarPDFRelatorioSolicitacoesAlimentacaoDRE,
   gerarPDFRelatorioSolicitacoesAlimentacaoCODAE,
-  gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas
+  gerarPDFRelatorioSolicitacoesAlimentacaoTerceirizadas,
+  filtrarSolicitacoesAlimentacaoEscola,
+  gerarExcelRelatorioSolicitacoesAlimentacaoEscola,
+  gerarPDFRelatorioSolicitacoesAlimentacaoEscola
 } from "services/relatorios.service";
 
 const atual = {
@@ -47,6 +52,11 @@ const endpointPorPerfil = () => {
     usuarioEhCODAENutriManifestacao()
   ) {
     return filtrarSolicitacoesAlimentacaoCODAE;
+  } else if (
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor()
+  ) {
+    return filtrarSolicitacoesAlimentacaoEscola;
   } else if (usuarioEhEmpresaTerceirizada()) {
     return filtrarSolicitacoesAlimentacaoTerceirizadas;
   } else {
@@ -57,6 +67,11 @@ const endpointPorPerfil = () => {
 const endpointGerarExcel = () => {
   if (usuarioEhDRE()) {
     return gerarExcelRelatorioSolicitacoesAlimentacaoDRE;
+  } else if (
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor()
+  ) {
+    return gerarExcelRelatorioSolicitacoesAlimentacaoEscola;
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
@@ -73,6 +88,11 @@ const endpointGerarExcel = () => {
 const endpointGerarPDF = () => {
   if (usuarioEhDRE()) {
     return gerarPDFRelatorioSolicitacoesAlimentacaoDRE;
+  } else if (
+    usuarioEhEscolaTerceirizada() ||
+    usuarioEhEscolaTerceirizadaDiretor()
+  ) {
+    return gerarPDFRelatorioSolicitacoesAlimentacaoEscola;
   } else if (
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhMedicao() ||
