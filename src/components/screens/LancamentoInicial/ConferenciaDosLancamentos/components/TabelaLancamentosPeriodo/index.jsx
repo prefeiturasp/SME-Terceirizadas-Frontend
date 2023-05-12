@@ -62,7 +62,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     form,
     aprovarPeriodo,
     values,
-    getPeriodosGruposMedicaoAsync
+    getPeriodosGruposMedicaoAsync,
+    setOcorrenciaExpandida
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -235,6 +236,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
     setPeriodoEscolar(periodoGrupo.periodo_escolar);
     if (!showTabelaLancamentosPeriodo) {
+      setOcorrenciaExpandida();
       const params = {
         uuid_medicao_periodo_grupo: periodoGrupo.uuid_medicao_periodo_grupo
       };
