@@ -51,9 +51,15 @@ export const ModalSolicitarCorrecaoOcorrencia = ({ ...props }) => {
             <Modal.Body>
               <div className="form-row row-ativacao mt-3">
                 <div className="col-12">
+                  <p>
+                    Informe quais os pontos necessários de correção no
+                    Formulário de Ocorrências
+                  </p>
+                </div>
+                <div className="col-12">
                   <Field
                     component={CKEditorField}
-                    label="Justificativa"
+                    label="Descrição da Correção"
                     name="justificativa"
                     required
                     validate={value => {
