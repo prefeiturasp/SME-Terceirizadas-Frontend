@@ -164,6 +164,8 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
         usuarioEhMedicao() ||
         usuarioEhCODAENutriManifestacao() ||
         usuarioEhNutricionistaSupervisao() ||
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor() ||
         usuarioEhCODAENutriManifestacao()) && (
         <SubMenu
           icon="fa-chevron-down"
@@ -177,9 +179,12 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
               Solicitações de Alimentação
             </LeafItem>
           )}
-          <LeafItem to={`/relatorio/alunos-matriculados`}>
-            Alunos Matriculados
-          </LeafItem>
+          {!usuarioEhEscolaTerceirizada() ||
+            (!usuarioEhEscolaTerceirizadaDiretor() && (
+              <LeafItem to={`/relatorio/alunos-matriculados`}>
+                Alunos Matriculados
+              </LeafItem>
+            ))}
         </SubMenu>
       )}
     </Menu>
