@@ -13,7 +13,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { drePedeCorrecaoOcorrencia } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const ModalSolicitarCorrecaoOcorrencia = ({ ...props }) => {
-  const { showModal, setShowModal, ocorrencia, getSolMedInicialAsync } = props;
+  const { showModal, setShowModal, ocorrencia, atualizarDados } = props;
 
   const onSubmit = async values => {
     const response = await drePedeCorrecaoOcorrencia(ocorrencia.uuid, values);
@@ -22,7 +22,7 @@ export const ModalSolicitarCorrecaoOcorrencia = ({ ...props }) => {
       toastSuccess(
         `Solicitação de correção no Formulário de Ocorrências salva com sucesso!`
       );
-      getSolMedInicialAsync();
+      atualizarDados();
     } else {
       toastError(
         `Houve um erro ao salvar correção no Formulário de Ocorrências!`

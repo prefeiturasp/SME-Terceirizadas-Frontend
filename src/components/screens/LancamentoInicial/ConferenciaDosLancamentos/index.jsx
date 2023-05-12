@@ -215,13 +215,9 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                       {solicitacao.com_ocorrencias ? (
                         <Fragment>
-                          <div
-                            className={`${
-                              ocorrenciaExpandida ? "" : "offset-1"
-                            } col-3`}
-                          >
-                            <div className="status-ocorrencia text-center">
-                              <div
+                          <div className="col-6 text-right">
+                            <span className="status-ocorrencia text-center mr-2 p-1">
+                              <b
                                 className={
                                   ocorrencia.status ===
                                   "MEDICAO_CORRECAO_SOLICITADA"
@@ -234,17 +230,11 @@ export const ConferenciaDosLancamentos = () => {
                                 ] &&
                                   MEDICAO_STATUS_DE_PROGRESSO[ocorrencia.status]
                                     .nome}
-                              </div>
-                            </div>
-                          </div>
-                          <div
-                            className={`${
-                              ocorrenciaExpandida ? "col-3" : "col-2"
-                            }  text-right`}
-                          >
+                              </b>
+                            </span>
                             {ocorrencia ? (
                               ocorrenciaExpandida ? (
-                                <div
+                                <span
                                   className="download-ocorrencias"
                                   onClick={() =>
                                     medicaoInicialExportarOcorrenciasPDF(
@@ -256,7 +246,7 @@ export const ConferenciaDosLancamentos = () => {
                                     className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
                                   />
                                   Download de Ocorrências
-                                </div>
+                                </span>
                               ) : (
                                 <label
                                   className="green"
