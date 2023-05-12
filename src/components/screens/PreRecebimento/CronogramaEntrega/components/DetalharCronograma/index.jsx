@@ -62,7 +62,7 @@ export default () => {
   const botaoImprimir = cronograma &&
     cronograma.status === "Assinado CODAE" && (
       <Botao
-        texto="Imprimir"
+        texto="Baixar PDF Cronograma"
         type={BUTTON_TYPE.BUTTON}
         style={BUTTON_STYLE.GREEN_OUTLINE}
         className="float-right ml-3"
