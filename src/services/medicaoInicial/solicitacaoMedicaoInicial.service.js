@@ -80,3 +80,12 @@ export const getQuantidadeAlimentacoesLancadasPeriodoGrupo = async params => {
     return data;
   }
 };
+
+export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/dre-pede-correcao-ocorrencia/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
