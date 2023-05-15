@@ -83,10 +83,6 @@ export const AcompanhamentoDeLancamentos = () => {
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
-        else
-          NovoDashboardResults = NovoDashboardResults.filter(
-            medicoes => medicoes.status !== "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-          );
         setDadosDashboard(NovoDashboardResults);
       }
       if (statusSelecionado) {
@@ -266,7 +262,7 @@ export const AcompanhamentoDeLancamentos = () => {
                     </div>
                   )}
                   <div className="card-body">
-                    <div className="d-flex">
+                    <div className="d-flex row row-cols-1">
                       {dadosDashboard &&
                         dadosDashboard.map((dadosPorStatus, key) => {
                           return (
