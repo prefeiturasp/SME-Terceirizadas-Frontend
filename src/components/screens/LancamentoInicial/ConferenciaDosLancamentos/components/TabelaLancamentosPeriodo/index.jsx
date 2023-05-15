@@ -39,7 +39,7 @@ import {
 import {
   diasSemana,
   initialStateWeekColumns,
-  MEDICAO_STATUS_DE_PROGRESSO
+  PERIODO_STATUS_DE_PROGRESSO
 } from "../../constants";
 import { deepCopy } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
@@ -427,8 +427,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
             }`}
           >
-            {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
-              MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
+            {PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
+              PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
           </div>
           <p
             className="visualizar-lancamento mb-0"

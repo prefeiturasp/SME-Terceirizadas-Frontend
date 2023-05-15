@@ -22,7 +22,10 @@ import {
   retrieveSolicitacaoMedicaoInicial,
   dreAprovaMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
+import {
+  MEDICAO_STATUS_DE_PROGRESSO,
+  OCORRENCIA_STATUS_DE_PROGRESSO
+} from "./constants";
 import "./style.scss";
 
 export const ConferenciaDosLancamentos = () => {
@@ -225,11 +228,12 @@ export const ConferenciaDosLancamentos = () => {
                                     : ""
                                 }
                               >
-                                {MEDICAO_STATUS_DE_PROGRESSO[
+                                {OCORRENCIA_STATUS_DE_PROGRESSO[
                                   ocorrencia.status
                                 ] &&
-                                  MEDICAO_STATUS_DE_PROGRESSO[ocorrencia.status]
-                                    .nome}
+                                  OCORRENCIA_STATUS_DE_PROGRESSO[
+                                    ocorrencia.status
+                                  ].nome}
                               </b>
                             </span>
                             {ocorrencia ? (
