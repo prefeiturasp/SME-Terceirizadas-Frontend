@@ -39,7 +39,7 @@ import {
 import {
   diasSemana,
   initialStateWeekColumns,
-  MEDICAO_STATUS_DE_PROGRESSO
+  PERIODO_STATUS_DE_PROGRESSO
 } from "../../constants";
 import { deepCopy } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
@@ -62,7 +62,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     form,
     aprovarPeriodo,
     values,
-    getPeriodosGruposMedicaoAsync
+    getPeriodosGruposMedicaoAsync,
+    setOcorrenciaExpandida
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -235,6 +236,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     setShowTabelaLancamentosPeriodo(!showTabelaLancamentosPeriodo);
     setPeriodoEscolar(periodoGrupo.periodo_escolar);
     if (!showTabelaLancamentosPeriodo) {
+      setOcorrenciaExpandida();
       const params = {
         uuid_medicao_periodo_grupo: periodoGrupo.uuid_medicao_periodo_grupo
       };
@@ -425,8 +427,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
             }`}
           >
-            {MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
-              MEDICAO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
+            {PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
+              PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status].nome}
           </div>
           <p
             className="visualizar-lancamento mb-0"

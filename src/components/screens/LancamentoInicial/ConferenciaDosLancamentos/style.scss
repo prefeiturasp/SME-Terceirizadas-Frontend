@@ -69,6 +69,23 @@ div.conferencia-dos-lancamentos {
       font-weight: 700;
       cursor: pointer;
     }
+
+    .status-ocorrencia {
+      border: 1px solid #bcd7cb;
+      background-color: #bcd7cb;
+      color: #42474a;
+      font-family: "Roboto";
+      font-style: normal;
+      font-weight: 400;
+      border-radius: 24px;
+
+      .red {
+        color: $red;
+      }
+
+      .green {
+      }
+    }
   }
 
   .content-section-acompanhamento-lancamento {
