@@ -15,10 +15,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
     nome: (
       <div>
         Devolvido para
-        <br />{" "}
-        {usuarioEhEscolaTerceirizadaDiretor()
-          ? "ajustes DRE"
-          : "ajustes pela DRE"}
+        <br /> ajustes pela DRE
       </div>
     ),
     cor: "laranja"
@@ -27,7 +24,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
     nome: (
       <div>
         Devolvido para
-        <br /> ajustes CODAE
+        <br /> ajustes pela CODAE
       </div>
     ),
     cor: "vermelho"
@@ -64,5 +61,9 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
       </div>
     ),
     cor: "vermelho"
+  },
+  MEDICAO_CORRIGIDA: {
+    nome: <div>Corrigido</div>,
+    cor: "azul-escuro"
   }
 };
