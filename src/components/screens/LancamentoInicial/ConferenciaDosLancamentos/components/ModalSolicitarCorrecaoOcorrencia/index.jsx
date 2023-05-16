@@ -76,7 +76,7 @@ export const ModalSolicitarCorrecaoOcorrencia = ({ ...props }) => {
               <div className="row mt-4">
                 <div className="col-12">
                   <Botao
-                    texto="Voltar"
+                    texto="Cancelar"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => setShowModal(false)}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
