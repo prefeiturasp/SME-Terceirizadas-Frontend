@@ -1422,6 +1422,7 @@ const routesConfig = [
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhAdministradorNutriCODAE() ||
       usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhAdministradorNutriCODAE() ||
       usuarioEhMedicao()
   },
   {
