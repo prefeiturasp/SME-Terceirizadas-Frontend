@@ -17,7 +17,8 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhAdministradorNutriCODAE,
-  usuarioEhCoordenadorNutriSupervisao
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhCoordenadorNutriCODAE
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -53,6 +54,7 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhAdministradorNutriCODAE() ||
     usuarioEhCoordenadorNutriSupervisao() ||
     usuarioEhAdministradorNutriCODAE() ||
+    usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhMedicao();
 
   return (
