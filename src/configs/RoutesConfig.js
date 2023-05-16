@@ -128,7 +128,8 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCogestorDRE,
-  usuarioEhDiretorUE
+  usuarioEhDiretorUE,
+  usuarioEhAdministradorNutriCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1414,7 +1415,14 @@ const routesConfig = [
     component: RelatorioDietaEspecial,
     exact: true,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao()
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
