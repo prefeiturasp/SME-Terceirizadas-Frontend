@@ -52,6 +52,7 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAENutriManifestacao() ||
     usuarioEhAdministradorNutriCODAE() ||
     usuarioEhCoordenadorNutriSupervisao() ||
+    usuarioEhAdministradorNutriCODAE() ||
     usuarioEhMedicao();
 
   return (
