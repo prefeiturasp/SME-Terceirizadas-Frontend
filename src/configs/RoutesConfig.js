@@ -1515,7 +1515,11 @@ const routesConfig = [
     }`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${
