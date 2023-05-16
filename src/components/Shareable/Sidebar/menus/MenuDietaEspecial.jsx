@@ -15,7 +15,9 @@ import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAENutriManifestacao,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhAdministradorNutriCODAE,
+  usuarioEhCoordenadorNutriSupervisao
 } from "helpers/utilities";
 import { getNomeCardAguardandoAutorizacao } from "helpers/dietaEspecial";
 
@@ -43,7 +45,14 @@ const MenuDietaEspecial = ({ activeMenu, onSubmenuClick }) => {
   usuarioEhMedicao() || usuarioEhCODAEDietaEspecial() || usuarioEhDRE();
   const exibeAtivasInativas = usuarioEhCODAEDietaEspecial();
   const exibeRelatorioDietasEspeciais =
-    usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao();
+    usuarioEhEmpresaTerceirizada() ||
+    usuarioEhNutricionistaSupervisao() ||
+    usuarioEhDRE() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhAdministradorNutriCODAE() ||
+    usuarioEhCoordenadorNutriSupervisao() ||
+    usuarioEhMedicao();
 
   return (
     <Menu id="DietaEspecial" icon="fa-apple-alt" title={"Dieta Especial"}>
