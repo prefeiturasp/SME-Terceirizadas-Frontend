@@ -1,6 +1,10 @@
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+
 export const MEDICAO_STATUS_DE_PROGRESSO = {
   MEDICAO_ENVIADA_PELA_UE: {
-    nome: "Recebido para análise"
+    nome: usuarioEhEscolaTerceirizadaDiretor()
+      ? "Enviado para análise"
+      : "Recebido para análise"
   },
   MEDICAO_CORRECAO_SOLICITADA: {
     nome: "Devolvido para ajustes pela DRE"

@@ -425,8 +425,16 @@ export const AcompanhamentoDeLancamentos = () => {
                                         Tipo de UE
                                       </th>
                                     )}
-                                    <th className="col-2 text-center">
-                                      Status do lançamento
+                                    <th
+                                      className={`${
+                                        !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                          ? "col-2"
+                                          : "col-3"
+                                      } text-center`}
+                                    >
+                                      {usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                        ? "Status"
+                                        : "Status do lançamento"}
                                     </th>
                                     <th className="col-2 text-center">
                                       Última atualização
@@ -448,7 +456,13 @@ export const AcompanhamentoDeLancamentos = () => {
                                             {dado.tipo_unidade}
                                           </td>
                                         )}
-                                        <td className="col-2 text-center pt-3">
+                                        <td
+                                          className={`${
+                                            !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                              ? "col-2"
+                                              : "col-3"
+                                          } text-center pt-3`}
+                                        >
                                           {dado.status}
                                         </td>
                                         <td className="col-2 text-center pt-3">
