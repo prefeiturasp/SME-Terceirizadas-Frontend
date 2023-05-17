@@ -127,6 +127,13 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
     setRepoTotal(e.target.checked);
   };
 
+  const totalGuiasConferidas =
+    solicitacao.guias_parciais +
+    solicitacao.guias_recebidas +
+    solicitacao.guias_nao_recebidas +
+    solicitacao.guias_reposicao_parcial +
+    solicitacao.guias_reposicao_total;
+
   useEffect(() => {
     if (!conferidas) {
       desligaConferidas();
@@ -161,18 +168,25 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
           </Modal.Header>
           <Modal.Body>
             <div className="switch-container">
-              <div className="switch-box">
-                <div className="switch-label">Guias Conferidas</div>
-                <Switch onChange={() => setConferidas(!conferidas)} />
-              </div>
-              <div className="switch-box">
-                <div className="switch-label">Guias Insucesso</div>
-                <Switch onChange={() => setInsucesso(!insucesso)} />
-              </div>
-              <div className="switch-box">
-                <div className="switch-label">Guias Pendentes</div>
-                <Switch onChange={() => setPendentes(!pendentes)} />
-              </div>
+              {totalGuiasConferidas > 0 && (
+                <div className="switch-box">
+                  <div className="switch-label">Guias Conferidas</div>
+                  <Switch onChange={() => setConferidas(!conferidas)} />
+                </div>
+              )}
+              {solicitacao.guias_insucesso > 0 && (
+                <div className="switch-box">
+                  <div className="switch-label">Guias Insucesso</div>
+                  <Switch onChange={() => setInsucesso(!insucesso)} />
+                </div>
+              )}
+
+              {solicitacao.guias_pendentes > 0 && (
+                <div className="switch-box">
+                  <div className="switch-label">Guias Pendentes</div>
+                  <Switch onChange={() => setPendentes(!pendentes)} />
+                </div>
+              )}
             </div>
 
             {conferidas && (
@@ -186,36 +200,46 @@ export default ({ solicitacao, excel, pdf, showModal }) => {
                 >
                   Todas
                 </Checkbox>
-                <Checkbox
-                  checked={recebidas}
-                  onChange={() => setRecebidas(!recebidas)}
-                >
-                  Recebidas
-                </Checkbox>
-                <Checkbox
-                  checked={parciais}
-                  onChange={() => setParciais(!parciais)}
-                >
-                  Parciais
-                </Checkbox>
-                <Checkbox
-                  checked={naoRecebidas}
-                  onChange={() => setNaoRecebidas(!naoRecebidas)}
-                >
-                  Não Recebidas
-                </Checkbox>
-                <Checkbox
-                  checked={repoParcial}
-                  onChange={() => setRepoParcial(!repoParcial)}
-                >
-                  Reposição Parcial
-                </Checkbox>
-                <Checkbox
-                  checked={repoTotal}
-                  onChange={() => setRepoTotal(!repoTotal)}
-                >
-                  Reposição Total
-                </Checkbox>
+                {solicitacao.guias_recebidas > 0 && (
+                  <Checkbox
+                    checked={recebidas}
+                    onChange={() => setRecebidas(!recebidas)}
+                  >
+                    Recebidas
+                  </Checkbox>
+                )}
+                {solicitacao.guias_parciais > 0 && (
+                  <Checkbox
+                    checked={parciais}
+                    onChange={() => setParciais(!parciais)}
+                  >
+                    Parciais
+                  </Checkbox>
+                )}
+                {solicitacao.guias_nao_recebidas > 0 && (
+                  <Checkbox
+                    checked={naoRecebidas}
+                    onChange={() => setNaoRecebidas(!naoRecebidas)}
+                  >
+                    Não Recebidas
+                  </Checkbox>
+                )}
+                {solicitacao.guias_reposicao_parcial > 0 && (
+                  <Checkbox
+                    checked={repoParcial}
+                    onChange={() => setRepoParcial(!repoParcial)}
+                  >
+                    Reposição Parcial
+                  </Checkbox>
+                )}
+                {solicitacao.guias_reposicao_total > 0 && (
+                  <Checkbox
+                    checked={repoTotal}
+                    onChange={() => setRepoTotal(!repoTotal)}
+                  >
+                    Reposição Total
+                  </Checkbox>
+                )}
               </div>
             )}
           </Modal.Body>
