@@ -118,12 +118,12 @@ export default () => {
           )}
           {cronogramas && (
             <>
-              <br /> <br /> <br />
               <ListagemCronogramas
                 cronogramas={cronogramas}
                 ativos={ativos}
                 setAtivos={setAtivos}
                 updatePage={updatePage}
+                setCarregando={setCarregando}
               />
               <div className="row">
                 <div className="col">

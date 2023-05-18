@@ -197,6 +197,7 @@ export const GESTAO_ACESSO_COGESTOR = "gestao-cogestor";
 export const GESTAO_ACESSO_GERAL = "gestao-acesso";
 export const CARGAS_USUARIOS = "cargas-usuarios";
 export const CARGAS_USUARIOS_SERVIDORES = "cargas-usuarios-servidores";
+export const ATUALIZACAO_EMAIL_EOL = "atualizacao-email-eol";
 
 export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";

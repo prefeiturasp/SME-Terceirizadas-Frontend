@@ -83,10 +83,6 @@ export const AcompanhamentoDeLancamentos = () => {
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
-        else
-          NovoDashboardResults = NovoDashboardResults.filter(
-            medicoes => medicoes.status !== "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-          );
         setDadosDashboard(NovoDashboardResults);
       }
       if (statusSelecionado) {
@@ -266,7 +262,7 @@ export const AcompanhamentoDeLancamentos = () => {
                     </div>
                   )}
                   <div className="card-body">
-                    <div className="d-flex">
+                    <div className="d-flex row row-cols-1">
                       {dadosDashboard &&
                         dadosDashboard.map((dadosPorStatus, key) => {
                           return (
@@ -429,8 +425,16 @@ export const AcompanhamentoDeLancamentos = () => {
                                         Tipo de UE
                                       </th>
                                     )}
-                                    <th className="col-2 text-center">
-                                      Status do lançamento
+                                    <th
+                                      className={`${
+                                        !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                          ? "col-2"
+                                          : "col-3"
+                                      } text-center`}
+                                    >
+                                      {usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                        ? "Status"
+                                        : "Status do lançamento"}
                                     </th>
                                     <th className="col-2 text-center">
                                       Última atualização
@@ -452,7 +456,13 @@ export const AcompanhamentoDeLancamentos = () => {
                                             {dado.tipo_unidade}
                                           </td>
                                         )}
-                                        <td className="col-2 text-center pt-3">
+                                        <td
+                                          className={`${
+                                            !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                              ? "col-2"
+                                              : "col-3"
+                                          } text-center pt-3`}
+                                        >
                                           {dado.status}
                                         </td>
                                         <td className="col-2 text-center pt-3">

@@ -1,4 +1,5 @@
 import axios from "./_base";
+import { saveAs } from "file-saver";
 
 export const getEtapas = async () =>
   await axios.get("/cronogramas/opcoes-etapas/");
@@ -112,3 +113,9 @@ export const getDashboardSolicitacoesAlteracaoComFiltros = async (
       params
     }
   );
+
+export const imprimirCronograma = async (uuid, numero) => {
+  const url = `/cronogramas/${uuid}/gerar-pdf-cronograma/`;
+  const { data } = await axios.get(url, { responseType: "blob" });
+  saveAs(data, "cronograma_" + numero + ".pdf");
+};

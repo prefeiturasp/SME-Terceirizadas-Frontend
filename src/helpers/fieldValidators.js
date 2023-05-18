@@ -89,6 +89,14 @@ export const maxLength = max => value =>
     ? `Deve ter ${max} caracteres(s) ou menos`
     : undefined;
 
+export const maxLengthSemTags = max => value => {
+  if (value && strip_tags(value).length > max) {
+    return `Deve ter ${max} caracteres(s) ou menos`;
+  } else {
+    return undefined;
+  }
+};
+
 export const maxLengthProduto = max => value =>
   value && value.length > max
     ? `Limite máximo de ${max} caracteres`
@@ -231,6 +239,11 @@ export const prefeituraEmail = value =>
   value && /.+@\prefeitura.sp.gov.br/.test(value)
     ? undefined
     : "Somente emails da prefeitura de São Paulo";
+
+export const SMEPrefeituraEmail = value =>
+  value && /.+@sme.prefeitura.sp.gov.br/.test(value)
+    ? undefined
+    : "Digite o E-mail @sme.prefeitura.sp.gov.br";
 
 export const peloMenosUmNumeroEUmaLetra = value =>
   value && /^(?=.*[0-9])(?=.*[a-zA-Z])/i.test(value)

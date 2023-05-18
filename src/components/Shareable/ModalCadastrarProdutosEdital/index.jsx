@@ -132,7 +132,7 @@ export default ({ closeModal, showModal, produto, changePage }) => {
                       texto="Cancelar"
                       type={BUTTON_TYPE.BUTTON}
                       onClick={closeModal}
-                      style={BUTTON_STYLE.DARK_OUTLINE}
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
                       className="ml-3"
                     />
                     <Botao

@@ -11,7 +11,8 @@ import {
   GESTAO_ACESSO_GERAL,
   GESTAO_ACESSO_COGESTOR,
   GESTAO_ACESSO_MASTER,
-  CARGAS_USUARIOS_SERVIDORES
+  CARGAS_USUARIOS_SERVIDORES,
+  ATUALIZACAO_EMAIL_EOL
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -74,6 +75,9 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           </LeafItem>
           <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
             Cargas de Usuários
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${ATUALIZACAO_EMAIL_EOL}/`}>
+            Atualização de E-mail do EOL
           </LeafItem>
         </SubMenu>
       )}

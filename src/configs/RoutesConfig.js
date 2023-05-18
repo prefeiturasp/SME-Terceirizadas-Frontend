@@ -128,7 +128,8 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCogestorDRE,
-  usuarioEhDiretorUE
+  usuarioEhDiretorUE,
+  usuarioEhAdministradorNutriCODAE
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -225,6 +226,7 @@ import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicit
 import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
 import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
 import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
+import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
 
 const routesConfig = [
   {
@@ -743,7 +745,7 @@ const routesConfig = [
     }`,
     component: CadastroProdutosCronograma,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog()
   },
 
   {
@@ -824,6 +826,12 @@ const routesConfig = [
     component: CargasUsuariosServidoresPage,
     exact: true,
     tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
+    component: AtualizacaoEmailEOLPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/configuracoes`,
@@ -1407,7 +1415,16 @@ const routesConfig = [
     component: RelatorioDietaEspecial,
     exact: true,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao()
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
@@ -1457,7 +1474,9 @@ const routesConfig = [
       usuarioEhCODAEGestaoAlimentacao() ||
       usuarioEhCODAENutriManifestacao() ||
       usuarioEhMedicao() ||
-      usuarioEhEmpresaTerceirizada()
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
@@ -1506,7 +1525,11 @@ const routesConfig = [
     }`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${

@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from "react";
 import { NavLink } from "react-router-dom";
 import "./style.scss";
-import { RELATORIO } from "../../../configs/constants";
+import { GESTAO_PRODUTO_CARDS, RELATORIO } from "../../../configs/constants";
 import { caminhoURL } from "../CardStatusDeSolicitacao/helper";
 import { conferidaClass } from "helpers/terceirizadas";
+import TooltipProdutos from "./tooltipProdutos";
 
 export class CardListarSolicitacoes extends Component {
   constructor(props) {
@@ -42,8 +43,18 @@ export class CardListarSolicitacoes extends Component {
                         }
                       >
                         <p className={`data ml-4 ${conferida}`}>
-                          {value.text ||
-                            `${value.descricao} / ${value.escola_nome}`}
+                          {[
+                            GESTAO_PRODUTO_CARDS.HOMOLOGADOS,
+                            GESTAO_PRODUTO_CARDS.PRODUTOS_SUSPENSOS
+                          ].includes(titulo) ? (
+                            <TooltipProdutos
+                              cardTitulo={titulo}
+                              solicitacao={value}
+                            />
+                          ) : (
+                            value.text ||
+                            `${value.descricao} / ${value.escola_nome}`
+                          )}
                         </p>
                       </NavLink>
                     </div>
