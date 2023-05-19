@@ -49,7 +49,7 @@ export class Login extends Component {
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
       tab: TABS.ESCOLA,
-      showModal: true
+      showModal: false
     };
     this.emailInput = React.createRef();
   }
