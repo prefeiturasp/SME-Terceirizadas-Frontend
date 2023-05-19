@@ -100,11 +100,13 @@ export const ConferenciaDosLancamentos = () => {
         );
         setOcorrencia(arquivosOcorrencia);
         setLogCorrecaoOcorrencia(logOcorrencia);
-        setTextoOcorrencia(
-          logOcorrencia.status_evento_explicacao === "Correção solicitada"
-            ? "Solicitação de correção no Formulário de Ocorrências realizada em"
-            : "Formulário de Ocorrências aprovado em"
-        );
+        if (logOcorrencia) {
+          setTextoOcorrencia(
+            logOcorrencia.status_evento_explicacao === "Correção solicitada"
+              ? "Solicitação de correção no Formulário de Ocorrências realizada em"
+              : "Formulário de Ocorrências aprovado em"
+          );
+        }
       }
     } else {
       setErroAPI("Erro ao carregar Medição Inicial.");
