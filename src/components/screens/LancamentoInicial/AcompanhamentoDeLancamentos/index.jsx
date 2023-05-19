@@ -39,6 +39,9 @@ import {
   MEDICAO_INICIAL
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
@@ -54,11 +57,16 @@ export const AcompanhamentoDeLancamentos = () => {
   const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
   const [diretoriaRegional, setDiretoriaRegional] = useState(null);
+  const [mudancaDre, setMudancaDre] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadingComFiltros, setLoadingComFiltros] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const PAGE_SIZE = 10;
   const LOADING =
@@ -97,6 +105,7 @@ export const AcompanhamentoDeLancamentos = () => {
     }
     setLoading(false);
     setLoadingComFiltros(false);
+    setMudancaDre(false);
   };
 
   useEffect(() => {
@@ -161,6 +170,9 @@ export const AcompanhamentoDeLancamentos = () => {
 
       meusDados && getLotesAsync();
       meusDados && getEscolasTrecTotalAsync();
+    }
+    if (diretoriaRegional) {
+      getDashboardMedicaoInicialAsync();
     }
   }, [meusDados, diretoriaRegional]);
 
@@ -227,6 +239,22 @@ export const AcompanhamentoDeLancamentos = () => {
     });
   };
 
+  const handleClickDownload = async uuidSolicitacaoMedicao => {
+    const response = await relatorioMedicaoInicialPDF(uuidSolicitacaoMedicao);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+  };
+
+  const exibirDashboard = () => {
+    if (usuarioEhMedicao() && loadingComFiltros) {
+      return !mudancaDre;
+    }
+    return true;
+  };
+
   return (
     <div className="acompanhamento-de-lancamentos">
       {erroAPI && <div>{erroAPI}</div>}
@@ -247,6 +275,7 @@ export const AcompanhamentoDeLancamentos = () => {
                           setDiretoriaRegional(value || undefined);
                           setStatusSelecionado(null);
                           setResultados(null);
+                          setMudancaDre(true);
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -263,7 +292,8 @@ export const AcompanhamentoDeLancamentos = () => {
                   )}
                   <div className="card-body">
                     <div className="d-flex row row-cols-1">
-                      {dadosDashboard &&
+                      {exibirDashboard() &&
+                        dadosDashboard &&
                         dadosDashboard.map((dadosPorStatus, key) => {
                           return (
                             <CardMedicaoPorStatus
@@ -371,7 +401,9 @@ export const AcompanhamentoDeLancamentos = () => {
                               />
                             </div>
                           </div>
-                          <div className="row">
+                          <div
+                            className={`row ${resultados ? "" : "ue-botoes"}`}
+                          >
                             <div className="col-8">
                               <Field
                                 dataSource={getNomesItemsFiltrado(
@@ -488,6 +520,9 @@ export const AcompanhamentoDeLancamentos = () => {
                                               BUTTON_STYLE.GREEN_OUTLINE
                                             } no-border`}
                                             icon={BUTTON_ICON.DOWNLOAD}
+                                            onClick={() =>
+                                              handleClickDownload(dado.uuid)
+                                            }
                                           />
                                         </td>
                                       </tr>
@@ -500,6 +535,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 total={resultados.total}
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}
+                              />
+                              <ModalSolicitacaoDownload
+                                show={exibirModalCentralDownloads}
+                                setShow={setExibirModalCentralDownloads}
                               />
                             </>
                           )}

@@ -20,6 +20,7 @@ import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default ({
   escolaInstituicao,
@@ -28,8 +29,7 @@ export default ({
   onClickInfoBasicas,
   periodoSelecionado,
   mes,
-  ano,
-  setLoadingSolicitacaoMedicaoInicial
+  ano
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
@@ -58,6 +58,10 @@ export default ({
     setQuantidadeAlimentacoesLancadas
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -173,9 +177,14 @@ export default ({
   };
 
   const gerarPDFMedicaoInicial = async () => {
-    setLoadingSolicitacaoMedicaoInicial(true);
-    await relatorioMedicaoInicialPDF(solicitacaoMedicaoInicial.uuid);
-    setLoadingSolicitacaoMedicaoInicial(false);
+    const response = await relatorioMedicaoInicialPDF(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
   };
 
   const renderBotaoExportarPlanilha = () => {
@@ -339,6 +348,10 @@ export default ({
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+          />
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
           />
         </>
       )}
