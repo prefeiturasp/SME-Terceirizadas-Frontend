@@ -68,7 +68,7 @@ export const CardStatusDeSolicitacao = props => {
   };
 
   useEffect(() => {
-    cardTitle.toString() === "Recebidas" &&
+    cardTitle.toString().includes("Recebidas") &&
       tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       initSocket();
   }, []);
@@ -158,7 +158,7 @@ export const CardStatusDeSolicitacao = props => {
                       solicitation
                     ) > 9 && "qtd-dois-digitos"}`}
                   >
-                    {cardTitle.toString() === "Recebidas" &&
+                    {cardTitle.toString().includes("Recebidas") &&
                       `${qtdDietasAbertas(solicitation)}`}
                   </span>
                 </Tooltip>

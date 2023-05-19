@@ -9,6 +9,14 @@ div.acompanhamento-de-lancamentos {
     color: $gray;
   }
 
+  div.card-body {
+    padding-bottom: 50px !important;
+
+    div.ue-botoes {
+      padding-bottom: 80px !important;
+    }
+  }
+
   div.card-medicao-por-status {
     height: 130px;
     width: 148px;
