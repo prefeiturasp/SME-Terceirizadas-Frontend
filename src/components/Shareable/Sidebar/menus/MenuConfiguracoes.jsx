@@ -11,7 +11,8 @@ import {
   GESTAO_ACESSO_GERAL,
   GESTAO_ACESSO_COGESTOR,
   GESTAO_ACESSO_MASTER,
-  CARGAS_USUARIOS_SERVIDORES
+  CARGAS_USUARIOS_SERVIDORES,
+  ATUALIZACAO_EMAIL_EOL
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -25,7 +26,6 @@ import {
   usuarioEhAdmQualquerEmpresa,
   usuarioEhCogestorDRE,
   usuarioEhCodaeDilog,
-  usuarioEhDilog,
   usuarioEhDiretorUE
 } from "helpers/utilities";
 
@@ -39,10 +39,8 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCoordenadorGpCODAE();
 
-  const exibirGestaoUsuarioCODAE =
-    usuarioEhCodaeDilog() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhAdministradorRepresentanteCodae();
+  const exibirGestaoUsuarioMaster =
+    usuarioEhCodaeDilog() || usuarioEhCoordenadorCODAE();
 
   const exibirGestaoAcesso =
     usuarioEhCoordenadorNutriCODAE() ||
@@ -65,7 +63,7 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {usuarioEhDilog() && (
+      {exibirGestaoUsuarioMaster && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
@@ -78,10 +76,13 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
             Cargas de Usuários
           </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${ATUALIZACAO_EMAIL_EOL}/`}>
+            Atualização de E-mail do EOL
+          </LeafItem>
         </SubMenu>
       )}
 
-      {exibirGestaoUsuarioCODAE && (
+      {usuarioEhAdministradorRepresentanteCodae() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}

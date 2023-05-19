@@ -5,7 +5,7 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
   MEDICAO_ENVIADA_PELA_UE: {
     nome: (
       <div>
-        {usuarioEhEscolaTerceirizadaDiretor() ? "Enviados" : "Recebidos"} <br />{" "}
+        {usuarioEhEscolaTerceirizadaDiretor() ? "Enviado" : "Recebido"} <br />{" "}
         para análise
       </div>
     ),
@@ -14,11 +14,8 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
   MEDICAO_CORRECAO_SOLICITADA: {
     nome: (
       <div>
-        {usuarioEhEscolaTerceirizadaDiretor()
-          ? "Devolvidos para"
-          : "Devolvidos"}{" "}
-        <br />{" "}
-        {usuarioEhEscolaTerceirizadaDiretor() ? "ajustes DRE" : "para ajustes"}
+        Devolvido para
+        <br /> ajustes pela DRE
       </div>
     ),
     cor: "laranja"
@@ -26,28 +23,33 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
   MEDICAO_CORRECAO_SOLICITADA_CODAE: {
     nome: (
       <div>
-        Devolvidos para
-        <br /> ajustes CODAE
+        Devolvido para
+        <br /> ajustes pela CODAE
       </div>
     ),
-    cor: "Vermelho"
+    cor: "vermelho"
   },
   MEDICAO_CORRIGIDA_PELA_UE: {
-    nome: <div>Corrigidos</div>,
+    nome: <div>Corrigido para DRE</div>,
+    cor: "azul-escuro"
+  },
+  MEDICAO_CORRIGIDA_PARA_CODAE: {
+    nome: (
+      <div>
+        Corrigido para
+        <br /> CODAE
+      </div>
+    ),
     cor: "azul-escuro"
   },
   MEDICAO_APROVADA_PELA_DRE: {
-    nome: (
-      <div>
-        Aprovados <br /> pela DRE
-      </div>
-    ),
+    nome: <div>Aprovado pela DRE</div>,
     cor: "verde-claro"
   },
   MEDICAO_APROVADA_PELA_CODAE: {
     nome: (
       <div>
-        Aprovados <br /> pela CODAE
+        Aprovado pela <br /> CODAE
       </div>
     ),
     cor: "verde-escuro"
@@ -59,5 +61,9 @@ export const MEDICAO_CARD_NOME_POR_STATUS_DRE = {
       </div>
     ),
     cor: "vermelho"
+  },
+  MEDICAO_CORRIGIDA: {
+    nome: <div>Corrigido</div>,
+    cor: "azul-escuro"
   }
 };

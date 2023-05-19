@@ -57,8 +57,10 @@ const TabelaResultado = ({
                   );
                   let log_suspensao = produto.ultima_homologacao.logs.filter(
                     log =>
-                      log.status_evento_explicacao ===
-                      "CODAE suspendeu o produto"
+                      [
+                        "CODAE suspendeu o produto",
+                        "Suspenso em alguns editais"
+                      ].includes(log.status_evento_explicacao)
                   );
                   let editais_vinculados = "";
                   if (bloquearEdital) {

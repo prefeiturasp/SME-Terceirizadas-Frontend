@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { NavLink } from "react-router-dom";
 import {
@@ -13,8 +13,13 @@ import {
   usuarioEhCronogramaCriacaoEdicao,
   usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
+import { deParaStatusCronograma } from "../Filtros/utils";
+import { Tooltip } from "antd";
+import { formataNome } from "./helpers";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { imprimirCronograma } from "services/cronograma.service";
 
-const ListagemCronogramas = ({ cronogramas, ativos }) => {
+const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
   const statusValue = status => {
     if (
       status === "Assinado e Enviado ao Fornecedor" &&
@@ -26,9 +31,37 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
     }
   };
 
+  const baixarPDFCronograma = cronograma => {
+    setCarregando(true);
+    let uuid = cronograma.uuid;
+    let numero = cronograma.numero;
+    imprimirCronograma(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setCarregando(false);
+      });
+  };
+
   return (
     <section className="resultado-cronograma-de-entrega">
-      <header>Resultados da Pesquisa</header>
+      <header>
+        <div className="row">
+          <div className="col-5">
+            <p className="titulo-grid-alunos-matriculados">
+              Resultados da Pesquisa
+            </p>
+          </div>
+          <div className="col-7 text-right">
+            <p className="helper-grid-alunos-matriculados">
+              <i className="fa fa-info-circle mr-2" />
+              Veja a descrição do produto passando o mouse sobre o nome.
+            </p>
+          </div>
+        </div>
+      </header>
       <article>
         <div className="grid-table header-table">
           <div>N° do Cronograma</div>
@@ -49,7 +82,18 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                 <div className="grid-table body-table">
                   <div className={`${bordas}`}>{cronograma.numero}</div>
                   <div className={`${bordas}`}>
-                    {cronograma.produto && cronograma.produto.nome}
+                    <Tooltip
+                      color="#42474a"
+                      overlayStyle={{
+                        maxWidth: "320px",
+                        fontSize: "12px",
+                        fontWeight: "700"
+                      }}
+                      title={cronograma.produto && cronograma.produto.nome}
+                    >
+                      {cronograma.produto &&
+                        formataNome(cronograma.produto.nome)}
+                    </Tooltip>
                   </div>
                   <div className={`${bordas}`}>
                     {cronograma.qtd_total_programada}
@@ -60,7 +104,7 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                       : undefined}
                   </div>
                   <div className={`${bordas}`}>
-                    {statusValue(cronograma.status)}
+                    {deParaStatusCronograma(statusValue(cronograma.status))}
                   </div>
 
                   <div className={`${bordas}`}>
@@ -75,6 +119,18 @@ const ListagemCronogramas = ({ cronogramas, ativos }) => {
                           >
                             <span className="link-acoes green">Detalhar</span>
                           </NavLink>
+
+                          {cronograma.status === "Assinado CODAE" && (
+                            <>
+                              <span className="ml-1">| </span>
+                              <span
+                                className="float-left ml-1 link-acoes green"
+                                onClick={() => baixarPDFCronograma(cronograma)}
+                              >
+                                Imprimir
+                              </span>
+                            </>
+                          )}
                           {cronograma.status === "Assinado CODAE" &&
                             usuarioEhEmpresaFornecedor() && (
                               <>

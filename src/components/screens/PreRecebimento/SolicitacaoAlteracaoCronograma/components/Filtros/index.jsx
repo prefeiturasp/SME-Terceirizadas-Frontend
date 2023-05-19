@@ -11,7 +11,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { option_status, option_status_fornecedor } from "../../helper";
+import { montarMenuOptionStatus } from "../../helper";
 
 const FORM_NAME = "buscaSolicitacaoAlteracaoCronograma";
 
@@ -98,9 +98,7 @@ export default ({
                   multiple
                   nomeDoItemNoPlural="status"
                   pluralFeminino
-                  options={
-                    fornecedor ? option_status_fornecedor : option_status
-                  }
+                  options={montarMenuOptionStatus()}
                 />
               </div>
             </div>

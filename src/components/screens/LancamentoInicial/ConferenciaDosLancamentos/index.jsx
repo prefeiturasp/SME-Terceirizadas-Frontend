@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
@@ -6,7 +6,13 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { ModalSolicitarCorrecaoOcorrencia } from "./components/ModalSolicitarCorrecaoOcorrencia";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
@@ -16,7 +22,10 @@ import {
   retrieveSolicitacaoMedicaoInicial,
   dreAprovaMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
+import {
+  MEDICAO_STATUS_DE_PROGRESSO,
+  OCORRENCIA_STATUS_DE_PROGRESSO
+} from "./constants";
 import "./style.scss";
 
 export const ConferenciaDosLancamentos = () => {
@@ -30,6 +39,12 @@ export const ConferenciaDosLancamentos = () => {
   const [periodosGruposMedicao, setPeriodosGruposMedicao] = useState(null);
   const [mesSolicitacao, setMesSolicitacao] = useState(null);
   const [anoSolicitacao, setAnoSolicitacao] = useState(null);
+  const [ocorrencia, setOcorrencia] = useState(null);
+  const [ocorrenciaExpandida, setOcorrenciaExpandida] = useState(false);
+  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
+    false
+  );
+  const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
 
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,6 +85,17 @@ export const ConferenciaDosLancamentos = () => {
       setSolicitacao(response.data);
       setMesSolicitacao(mes);
       setAnoSolicitacao(ano);
+      if (response.data.com_ocorrencias) {
+        const arquivosOcorrencia = response.data.anexos.find(
+          anexo => anexo.extensao === ".pdf"
+        );
+        setOcorrencia(arquivosOcorrencia);
+        setLogCorrecaoOcorrencia(
+          arquivosOcorrencia.logs.find(
+            log => log.status_evento_explicacao === "Correção solicitada"
+          )
+        );
+      }
     } else {
       setErroAPI("Erro ao carregar Medição Inicial.");
     }
@@ -96,19 +122,6 @@ export const ConferenciaDosLancamentos = () => {
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
   }, []);
-
-  const downloadPdfOcorrencias = () => {
-    if (solicitacao.anexos) {
-      const pdfAnexo = solicitacao.anexos.find(anexo =>
-        anexo.arquivo.includes(".pdf")
-      );
-      if (pdfAnexo) {
-        medicaoInicialExportarOcorrenciasPDF(pdfAnexo.arquivo);
-      } else {
-        toastError("Arquivo PDF de ocorrências não encontrado");
-      }
-    }
-  };
 
   const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
     setLoading(true);
@@ -160,23 +173,34 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Progresso de validação de refeições informadas
-                      </p>
-                      <p>
-                        Status de progresso:{" "}
-                        <b>
-                          {MEDICAO_STATUS_DE_PROGRESSO[solicitacao.status].nome}
-                        </b>
-                      </p>
+                    <div className="row">
+                      <div className="col-12">
+                        <p className="section-title-conf-lancamentos">
+                          Progresso de validação de refeições informadas
+                        </p>
+                      </div>
+                      <div className="col-12">
+                        <p>
+                          Status de progresso:{" "}
+                          <b>
+                            {
+                              MEDICAO_STATUS_DE_PROGRESSO[solicitacao.status]
+                                .nome
+                            }
+                          </b>
+                        </p>
+                      </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Ocorrências
-                      </p>
-                      <div className="content-section-ocorrencias">
+                    <div className="row">
+                      <div className="col-12">
+                        <p className="section-title-conf-lancamentos">
+                          Ocorrências
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row content-section-ocorrencias">
+                      <div className="col-6">
                         <p className="mb-0">
                           Avaliação do Serviço:{" "}
                           <b
@@ -191,16 +215,82 @@ export const ConferenciaDosLancamentos = () => {
                               : "SEM OCORRÊNCIAS"}
                           </b>
                         </p>
-                        {solicitacao.com_ocorrencias ? (
-                          <div
-                            className="download-ocorrencias"
-                            onClick={() => downloadPdfOcorrencias()}
-                          >
-                            <i className={`${BUTTON_ICON.DOWNLOAD} mr-2`} />
-                            Download de Ocorrências
-                          </div>
-                        ) : null}
                       </div>
+                      {solicitacao.com_ocorrencias ? (
+                        <Fragment>
+                          <div className="col-6 text-right">
+                            <span className="status-ocorrencia text-center mr-2 p-1">
+                              <b
+                                className={
+                                  ocorrencia.status ===
+                                  "MEDICAO_CORRECAO_SOLICITADA"
+                                    ? "red"
+                                    : ""
+                                }
+                              >
+                                {OCORRENCIA_STATUS_DE_PROGRESSO[
+                                  ocorrencia.status
+                                ] &&
+                                  OCORRENCIA_STATUS_DE_PROGRESSO[
+                                    ocorrencia.status
+                                  ].nome}
+                              </b>
+                            </span>
+                            {ocorrencia ? (
+                              ocorrenciaExpandida ? (
+                                <span
+                                  className="download-ocorrencias"
+                                  onClick={() =>
+                                    medicaoInicialExportarOcorrenciasPDF(
+                                      ocorrencia.arquivo
+                                    )
+                                  }
+                                >
+                                  <i
+                                    className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
+                                  />
+                                  Download de Ocorrências
+                                </span>
+                              ) : (
+                                <label
+                                  className="green"
+                                  onClick={() => setOcorrenciaExpandida(true)}
+                                >
+                                  <b>VISUALIZAR</b>
+                                </label>
+                              )
+                            ) : null}
+                          </div>
+                        </Fragment>
+                      ) : (
+                        <div className="col-6" />
+                      )}
+                      {ocorrenciaExpandida && ocorrencia && (
+                        <Fragment>
+                          <div className="col-5 mt-3 ">
+                            {logCorrecaoOcorrencia &&
+                              `Solicitação de correção no Formulário de Ocorrências realizada em ${
+                                logCorrecaoOcorrencia.criado_em
+                              }`}
+                          </div>
+                          <div className="col-7 text-right mt-3">
+                            <Botao
+                              className="mr-3"
+                              texto="Solicitar correção no formulário"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                              disabled={false}
+                              onClick={() => setShowModalSalvarOcorrencia(true)}
+                            />
+                            <Botao
+                              texto="Aprovar formulário"
+                              type={BUTTON_TYPE.BUTTON}
+                              style={BUTTON_STYLE.GREEN}
+                              disabled={false}
+                            />
+                          </div>
+                        </Fragment>
+                      )}
                     </div>
                     <hr />
                     <div>
@@ -226,6 +316,9 @@ export const ConferenciaDosLancamentos = () => {
                             getPeriodosGruposMedicaoAsync={() =>
                               getPeriodosGruposMedicaoAsync()
                             }
+                            setOcorrenciaExpandida={() =>
+                              setOcorrenciaExpandida(false)
+                            }
                           />
                         );
                       })}
@@ -236,6 +329,12 @@ export const ConferenciaDosLancamentos = () => {
             )}
           />
         )}
+        <ModalSolicitarCorrecaoOcorrencia
+          showModal={showModalSalvarOcorrencia}
+          setShowModal={value => setShowModalSalvarOcorrencia(value)}
+          ocorrencia={ocorrencia}
+          atualizarDados={() => getSolMedInicialAsync()}
+        />
       </Spin>
     </div>
   );

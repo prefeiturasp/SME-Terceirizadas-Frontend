@@ -22,19 +22,20 @@ export class ModalCadastroEmpresa extends Component {
         <Modal.Header closeButton>
           <Modal.Title>{titulo}</Modal.Title>
         </Modal.Header>
+        <Modal.Body>Você confirma o cadastro desta Empresa?</Modal.Body>
         <Modal.Footer>
           <Botao
             texto="Não"
             type={BUTTON_TYPE.BUTTON}
             onClick={closeModal}
-            style={BUTTON_STYLE.BLUE_OUTLINE}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
             className="ml-3"
           />
           <Botao
             texto="Sim"
             type={BUTTON_TYPE.BUTTON}
             onClick={() => this.onSubmit(values)}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             className="ml-3"
           />
         </Modal.Footer>

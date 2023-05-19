@@ -22,8 +22,15 @@ import {
 import {
   updateMarcaProduto,
   updateNomeProduto,
-  updateEditalProtudo
+  updateEditalProduto
 } from "../../reducers/filtersProdutoReducer";
+import {
+  updateDataEventoAlimentacao,
+  updateLoteAlimentacao,
+  updateStatusAlimentacao,
+  updateTipoSolicitacaoAlimentacao,
+  updateTituloAlimentacao
+} from "reducers/filtersAlimentacaoReducer";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
@@ -99,7 +106,7 @@ const CardBody = props => {
                       />
                       <OnChange name="edital">
                         {edital => {
-                          props.updateEditalProtudo(edital);
+                          props.updateEditalProduto(edital);
                           props.onChange(values);
                         }}
                       </OnChange>
@@ -142,6 +149,7 @@ const CardBody = props => {
                         {(value, previous) => {
                           props.updateTituloDieta(value);
                           props.updateNomeProduto(value);
+                          props.updateTituloAlimentacao(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
@@ -165,7 +173,8 @@ const CardBody = props => {
                           />
                         </div>
                         <OnChange name="tipo_solicitacao">
-                          {() => {
+                          {tipo => {
+                            props.updateTipoSolicitacaoAlimentacao(tipo);
                             props.onChange(values);
                           }}
                         </OnChange>
@@ -177,7 +186,8 @@ const CardBody = props => {
                             placeholder="Data do evento"
                           />
                           <OnChange name="data_evento">
-                            {() => {
+                            {data => {
+                              props.updateDataEventoAlimentacao(data);
                               props.onChange(values);
                             }}
                           </OnChange>
@@ -221,6 +231,7 @@ const CardBody = props => {
                         />
                         <OnChange name="status">
                           {status => {
+                            props.updateStatusAlimentacao(status);
                             props.updateStatusDieta(status);
                             props.onChange(values);
                           }}
@@ -238,6 +249,7 @@ const CardBody = props => {
                         />
                         <OnChange name="lote">
                           {lote => {
+                            props.updateLoteAlimentacao(lote);
                             props.updateLoteDieta(lote);
                             props.onChange(values);
                           }}
@@ -254,7 +266,8 @@ const CardBody = props => {
                             naoDesabilitarPrimeiraOpcao
                           />
                           <OnChange name="tipo_solicitacao">
-                            {() => {
+                            {tipo => {
+                              props.updateTipoSolicitacaoAlimentacao(tipo);
                               props.onChange(values);
                             }}
                           </OnChange>
@@ -267,7 +280,8 @@ const CardBody = props => {
                             placeholder="Data do evento"
                           />
                           <OnChange name="data_evento">
-                            {() => {
+                            {data => {
+                              props.updateDataEventoAlimentacao(data);
                               props.onChange(values);
                             }}
                           </OnChange>
@@ -299,11 +313,26 @@ const mapDispatchToProps = dispatch => ({
   updateMarcaProduto: marcaProduto => {
     dispatch(updateMarcaProduto(marcaProduto));
   },
-  updateNomeProduto: editalProduto => {
-    dispatch(updateNomeProduto(editalProduto));
+  updateNomeProduto: tituloProduto => {
+    dispatch(updateNomeProduto(tituloProduto));
   },
-  updateEditalProtudo: editalProduto => {
-    dispatch(updateEditalProtudo(editalProduto));
+  updateEditalProduto: editalProduto => {
+    dispatch(updateEditalProduto(editalProduto));
+  },
+  updateTituloAlimentacao: tituloAlimentacao => {
+    dispatch(updateTituloAlimentacao(tituloAlimentacao));
+  },
+  updateLoteAlimentacao: loteAlimentacao => {
+    dispatch(updateLoteAlimentacao(loteAlimentacao));
+  },
+  updateStatusAlimentacao: statusAlimentacao => {
+    dispatch(updateStatusAlimentacao(statusAlimentacao));
+  },
+  updateTipoSolicitacaoAlimentacao: tipoSolicitacaoAlimentacao => {
+    dispatch(updateTipoSolicitacaoAlimentacao(tipoSolicitacaoAlimentacao));
+  },
+  updateDataEventoAlimentacao: dataEventoAlimentacao => {
+    dispatch(updateDataEventoAlimentacao(dataEventoAlimentacao));
   }
 });
 

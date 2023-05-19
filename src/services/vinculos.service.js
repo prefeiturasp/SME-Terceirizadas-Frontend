@@ -13,9 +13,15 @@ export const cadastrarVinculo = async payload =>
     .post("/cadastro-com-coresso/", payload)
     .catch(ErrorHandlerFunction);
 
-export const editarVinculo = async payload =>
+export const alterarEmailCore = async payload =>
   await axios.patch(
     `/cadastro-com-coresso/${payload.username}/alterar-email/`,
+    payload
+  );
+
+export const alterarVinculo = async payload =>
+  await axios.patch(
+    `/cadastro-com-coresso/${payload.username}/alterar-vinculo/`,
     payload
   );
 

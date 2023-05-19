@@ -49,7 +49,7 @@ export class Login extends Component {
       width: null,
       componenteAtivo: this.COMPONENTE.LOGIN,
       tab: TABS.ESCOLA,
-      showModal: true
+      showModal: false
     };
     this.emailInput = React.createRef();
   }
@@ -105,13 +105,11 @@ export class Login extends Component {
     values_["senha_atual"] = localStorage.getItem("senhaAtual");
     const response = await atualizarSenhaLogado(values_);
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("senha atualizada com sucesso!");
+      toastSuccess("Senha atualizada com sucesso!");
       localStorage.removeItem("senhaAtual");
       this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
     } else {
-      toastError(
-        "Erro ao tentar atualizar a senha. Tente novamente mais tarde."
-      );
+      toastError(response.data.detail);
     }
   };
 

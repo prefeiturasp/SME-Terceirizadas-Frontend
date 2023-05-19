@@ -293,3 +293,17 @@ export const deParaStatusAltCronograma = status =>
   )
     ? "Em análise"
     : status;
+
+export const formatarPara4Digitos = numero => {
+  let numeroFormatado = numero.toString();
+  if (numeroFormatado.length === 1) {
+    numeroFormatado = "000" + numeroFormatado;
+  } else if (numeroFormatado.length === 2) {
+    numeroFormatado = "00" + numeroFormatado;
+  } else if (numeroFormatado.length === 3) {
+    numeroFormatado = "0" + numeroFormatado;
+  } else {
+    numeroFormatado = numero;
+  }
+  return numeroFormatado;
+};

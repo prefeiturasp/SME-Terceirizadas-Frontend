@@ -103,9 +103,7 @@ export const CadastroEmpresa = () => {
   ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
-  const [tituloModal, setTituloModal] = useState(
-    "Confirma cadastro de Empresa?"
-  );
+  const [tituloModal, setTituloModal] = useState("Cadastro Empresa");
   const [exibirModal, setExibirModal] = useState(false);
   const [contatosPessoaEmpresa, setContatosPessoaEmpresa] = useState([
     {

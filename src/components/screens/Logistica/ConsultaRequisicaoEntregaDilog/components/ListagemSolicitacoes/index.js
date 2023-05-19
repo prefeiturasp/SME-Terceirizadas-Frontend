@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button } from "react-bootstrap";
-import "antd/dist/antd.min.css";
+
 import "./styles.scss";
 import { Checkbox } from "antd";
 import {

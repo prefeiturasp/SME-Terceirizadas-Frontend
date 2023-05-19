@@ -290,6 +290,16 @@ export const filtrarSolicitacoesAlimentacaoDRE = async params => {
   }
 };
 
+export const filtrarSolicitacoesAlimentacaoEscola = async params => {
+  const response = await axios
+    .get(`${API_URL}/escola-solicitacoes/filtrar-solicitacoes-ga/`, { params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const filtrarSolicitacoesAlimentacaoCODAE = async params => {
   const response = await axios
     .get(`${API_URL}/codae-solicitacoes/filtrar-solicitacoes-ga/`, { params })
@@ -323,6 +333,17 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoDRE = async params => {
   }
 };
 
+export const gerarExcelRelatorioSolicitacoesAlimentacaoEscola = async params => {
+  const url = `/escola-solicitacoes/exportar-xlsx/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const gerarExcelRelatorioSolicitacoesAlimentacaoCODAE = async params => {
   const url = `/codae-solicitacoes/exportar-xlsx/`;
   const response = await axios
@@ -347,6 +368,17 @@ export const gerarExcelRelatorioSolicitacoesAlimentacaoTerceirizadas = async par
 
 export const gerarPDFRelatorioSolicitacoesAlimentacaoDRE = async params => {
   const url = `/diretoria-regional-solicitacoes/exportar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const gerarPDFRelatorioSolicitacoesAlimentacaoEscola = async params => {
+  const url = `/escola-solicitacoes/exportar-pdf/`;
   const response = await axios
     .get(url, { params: params })
     .catch(ErrorHandlerFunction);
@@ -392,6 +424,17 @@ export const getSolicitacoesDetalhadas = async params => {
 
 export const gerarPDFRelatorioAlunosMatriculados = async params => {
   const url = `/relatorio-alunos-matriculados/gerar-pdf/`;
+  const response = await axios
+    .get(url, { params: params })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const gerarXLSRelatorioAlunosMatriculados = async params => {
+  const url = `/relatorio-alunos-matriculados/gerar-xlsx/`;
   const response = await axios
     .get(url, { params: params })
     .catch(ErrorHandlerFunction);

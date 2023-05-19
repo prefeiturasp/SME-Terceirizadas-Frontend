@@ -35,6 +35,7 @@ export const NUTRISUPERVISAO = "nutrisupervisao";
 export const NUTRIMANIFESTACAO = "nutrimanifestacao";
 export const MEDICAO = "medicao";
 export const DINUTRE = "dinutre";
+export const DILOG = "dilog";
 
 export const SOLICITACOES_PENDENTES = "solicitacoes-pendentes";
 export const SOLICITACOES_NEGADAS = "solicitacoes-negadas";
@@ -196,6 +197,7 @@ export const GESTAO_ACESSO_COGESTOR = "gestao-cogestor";
 export const GESTAO_ACESSO_GERAL = "gestao-acesso";
 export const CARGAS_USUARIOS = "cargas-usuarios";
 export const CARGAS_USUARIOS_SERVIDORES = "cargas-usuarios-servidores";
+export const ATUALIZACAO_EMAIL_EOL = "atualizacao-email-eol";
 
 export const PRE_RECEBIMENTO = "pre-recebimento";
 export const CRONOGRAMA_ENTREGA = "cronograma-entrega";
@@ -214,6 +216,8 @@ export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
 export const PRODUTOS = "produtos";
 export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
+export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
+export const ALTERACOES_REPROVADAS = "alteracoes-reprovadas";
 
 export const AGUARDANDO_DILOG = "aguardando-dilog";
 export const ASSINADO_CODAE = "assinado-codae";

@@ -1,0 +1,24 @@
+@import "styles/variables.scss";
+
+.card-atualizacao-email {
+  margin-bottom: 15em !important;
+  color: #42474a;
+
+  .atualizacao-email {
+    .botao-rf {
+      margin-top: 30px;
+      height: 35px;
+    }
+  }
+
+  .subtitulo {
+    color: $green;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .texto {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+}

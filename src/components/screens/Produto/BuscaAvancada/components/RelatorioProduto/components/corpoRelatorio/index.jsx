@@ -19,7 +19,6 @@ import { truncarString } from "helpers/utilities";
 
 import { getRelatorioProduto } from "services/relatorios";
 
-import "antd/dist/antd.min.css";
 import "../styles.scss";
 
 export default class CorpoRelatorio extends Component {
@@ -509,7 +508,7 @@ export default class CorpoRelatorio extends Component {
                           <div>{this.retornaIniciais(logSelecionado)}</div>
                         </div>
                         <div className="nome-fantasia-empresa">
-                          {logSelecionado.empresa}
+                          {logSelecionado.usuario.nome}
                         </div>
                         <div>
                           <div>{logSelecionado.criado_em.split(" ")[0]}</div>

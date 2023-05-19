@@ -19,9 +19,6 @@ import InformacoesAdicionaisLeitura from "../FormAutorizaDietaEspecial/component
 import IdentificacaoNutricionista from "../FormAutorizaDietaEspecial/componentes/IdentificacaoNutricionista";
 import PeriodoVigencia from "../FormAutorizaDietaEspecial/componentes/PeriodoVigencia";
 import { formataAlergias } from "../FormAutorizaDietaEspecial/helper";
-
-import { obtemIdentificacaoNutricionistaDieta } from "helpers/utilities";
-
 import { ehCanceladaSegundoStep } from "../../helpers";
 import "./styles.scss";
 import JustificativaNegacao from "./JustificativaNegacao";
@@ -187,6 +184,49 @@ const CorpoRelatorio = ({
       ];
     } else if (
       dietaEspecial.eh_importado === true &&
+      dietaEspecial.protocolo_padrao &&
+      [
+        "CODAE_AUTORIZADO",
+        "TERCEIRIZADA_TOMOU_CIENCIA",
+        "CODAE_AUTORIZOU_INATIVACAO",
+        "TERCEIRIZADA_TOMOU_CIENCIA_INATIVACAO",
+        "INFORMADO",
+        "ESCOLA_CANCELOU",
+        "CANCELADO_ALUNO_MUDOU_ESCOLA",
+        "CANCELADO_ALUNO_NAO_PERTENCE_REDE"
+      ].includes(dietaEspecial.status_solicitacao) &&
+      !editar
+    ) {
+      return [
+        <DiagnosticosLeitura key={0} />,
+        <ClassificacaoDaDietaLeitura key={1} />,
+        <ProtocoloLeitura key={2} />,
+        <OrientacoesLeitura
+          orientacoes_gerais={dietaEspecial.orientacoes_gerais}
+          key={3}
+        />,
+        <SubstituicoesTable
+          substituicoes={dietaEspecial.substituicoes}
+          key={4}
+        />,
+        dietaEspecial.tipo_solicitacao === "ALTERACAO_UE" && (
+          <PeriodoVigencia key={5} />
+        ),
+        <InformacoesAdicionaisLeitura
+          informacoes_adicionais={dietaEspecial.informacoes_adicionais}
+          key={6}
+        />,
+        <IdentificacaoNutricionista key={7} />,
+
+        dietaEspecial.anexos.length > 0 && (
+          <div className="mt-0" key={4}>
+            <p className="mt-1 mb-2">Anexos</p>
+            <div className="row">{anexos}</div>
+          </div>
+        )
+      ];
+    } else if (
+      dietaEspecial.eh_importado === true &&
       ([
         "autorizadas",
         "autorizadas-temp",
@@ -200,7 +240,8 @@ const CorpoRelatorio = ({
           "TERMINADA_AUTOMATICAMENTE_SISTEMA",
           "CODAE_AUTORIZADO",
           "CODAE_AUTORIZOU_INATIVACAO"
-        ].includes(dietaEspecial.status_solicitacao))
+        ].includes(dietaEspecial.status_solicitacao)) &&
+      !editar
     ) {
       return [
         <DiagnosticosLeitura key={0} />,
@@ -276,10 +317,6 @@ const CorpoRelatorio = ({
   };
 
   const initialValues = () => {
-    let logs = [...dietaEspecial.logs];
-    dietaEspecial.registro_funcional_nutricionista = obtemIdentificacaoNutricionistaDieta(
-      logs.pop().usuario
-    );
     if (![undefined, null].includes(dietaEspecial.alergias_intolerancias)) {
       dietaEspecial.relacao_diagnosticos = formataAlergias(dietaEspecial)
         .map(a => a.nome)
