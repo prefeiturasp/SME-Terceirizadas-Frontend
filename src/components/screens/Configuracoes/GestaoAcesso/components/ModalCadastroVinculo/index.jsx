@@ -65,6 +65,8 @@ const ModalCadastroVinculo = ({
   const { meusDados } = useContext(MeusDadosContext);
   const handleClose = () => {
     setRfBuscado(false);
+    setDesabilitaEmail(true);
+    setTipoUsuario("");
     toggleShow(false, null);
   };
 
