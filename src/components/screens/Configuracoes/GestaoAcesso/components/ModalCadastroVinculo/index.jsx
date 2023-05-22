@@ -15,7 +15,8 @@ import {
   email,
   required,
   tamanhoCnpj,
-  validaCPF
+  validaCPF,
+  SMEPrefeituraEmail
 } from "helpers/fieldValidators";
 import {
   composeValidators,
@@ -59,6 +60,7 @@ const ModalCadastroVinculo = ({
   const [showExclusao, setShowExclusao] = useState(false);
   const [valoresEdicao, setValoresEdicao] = useState();
   const [rfBuscado, setRfBuscado] = useState(false);
+  const [desabilitaEmail, setDesabilitaEmail] = useState(true);
 
   const { meusDados } = useContext(MeusDadosContext);
   const handleClose = () => {
@@ -114,7 +116,9 @@ const ModalCadastroVinculo = ({
       }
       values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
       values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
-      values.email_servidor = usuarioEOL.email ? usuarioEOL.email : undefined;
+      values.email_servidor = usuarioEOL.email
+        ? usuarioEOL.email
+        : setDesabilitaEmail(false);
       values.cpf = usuarioEOL.cpf;
       values.cpf_servidor = usuarioEOL.cpf
         ? formataCPFCensurado(usuarioEOL.cpf)
@@ -280,8 +284,8 @@ const ModalCadastroVinculo = ({
                             label="E-mail"
                             name="email_servidor"
                             className="input-busca-produto"
-                            disabled={true}
-                            validate={required}
+                            disabled={desabilitaEmail}
+                            validate={SMEPrefeituraEmail}
                             required
                           />
                           {rfBuscado && !values.email_servidor && (
@@ -479,6 +483,9 @@ const ModalCadastroVinculo = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
                       onSubmit(values, tipoUsuario, valoresEdicao);
+                      setRfBuscado(false);
+                      setDesabilitaEmail(true);
+                      setTipoUsuario("");
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}
