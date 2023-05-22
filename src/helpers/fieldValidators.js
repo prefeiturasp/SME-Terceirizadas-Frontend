@@ -21,7 +21,9 @@ export const requiredSearchSelectUnidEducDietas = escolas => value => {
     return undefined;
   }
   return value_ === undefined ||
-    escolas.find(escola => escola.label === value_.split("- ")[1])
+    escolas.find(
+      escola => escola.label === value_.substring(value_.indexOf("- ") + 2)
+    )
     ? undefined
     : "Selecione uma opção válida";
 };
