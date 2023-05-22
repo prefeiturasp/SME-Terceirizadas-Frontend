@@ -447,7 +447,6 @@ export const CODAECancelaSoliticaoCorrecao = (uuid, justificativa) => {
     });
 };
 
-
 export const CODAEPedeCorrecao = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-questiona-pedido/`;
   let status = 0;

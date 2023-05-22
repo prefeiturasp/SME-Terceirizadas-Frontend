@@ -73,19 +73,18 @@ export const BotoesGPCODAE = ({
         });
         break;
 
-        case "cancelar":
-          setPropsModal({
-            toastSuccessMessage:
-              "Cancelamento enviado com sucesso.",
-            modalTitle: "Envio de Cancelamento da Solicitação de Correção",
-            endpoint: CODAECancelaSoliticaoCorrecao,
-            labelJustificativa: "Justificativa",
-            helpText: undefined,
-            eAnalise: false,
-            tipoModal: tipoModal,
-            cancelaSolicitacao: homologacao
-          });
-          break;  
+      case "cancelar":
+        setPropsModal({
+          toastSuccessMessage: "Cancelamento enviado com sucesso.",
+          modalTitle: "Envio de Cancelamento da Solicitação de Correção",
+          endpoint: CODAECancelaSoliticaoCorrecao,
+          labelJustificativa: "Justificativa",
+          helpText: undefined,
+          eAnalise: false,
+          tipoModal: tipoModal,
+          cancelaSolicitacao: homologacao
+        });
+        break;
 
       default:
         setPropsModal({});
@@ -129,18 +128,17 @@ export const BotoesGPCODAE = ({
         cancelaAnaliseSensorial={propsModal.cancelaSolicitacao}
       />
       <div className="col-12">
-        {homologacao.status === "CODAE_QUESTIONADO" 
-        ? (
-          <>        
+        {homologacao.status === "CODAE_QUESTIONADO" ? (
+          <>
             <Botao
-            texto="Cancelar Solicitação"
-            className="float-right"
-            type={BUTTON_TYPE.BUTTON}
-            onClick={() => setPropsModalPadrao("cancelar")}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-          />
-        </>
-        ):(
+              texto="Cancelar Solicitação"
+              className="float-right"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => setPropsModalPadrao("cancelar")}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+            />
+          </>
+        ) : (
           <>
             <Botao
               texto="Homologar"

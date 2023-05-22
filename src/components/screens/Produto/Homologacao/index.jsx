@@ -97,8 +97,8 @@ export const Homologacao = ({
               <FotosProduto homologacao={homologacao} />
               <DocumentosProduto homologacao={homologacao} />
               {usuarioEhCODAEGestaoProduto() &&
-                (homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" || 
-                homologacao.status === "CODAE_QUESTIONADO") && (
+                (homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" ||
+                  homologacao.status === "CODAE_QUESTIONADO") && (
                   <>
                     {homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" && (
                       <AnaliseSensorial />
