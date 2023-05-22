@@ -142,6 +142,7 @@ export const tipoDeStatus = status => {
     case "Cancelamento por alteração de unidade educacional":
     case "Cancelamento para aluno não matriculado na rede municipal":
     case "CODAE cancelou análise sensorial":
+    case "GPCODAE cancelou solicitação de correção":
       return "cancelado";
 
     case "DRE não validou":

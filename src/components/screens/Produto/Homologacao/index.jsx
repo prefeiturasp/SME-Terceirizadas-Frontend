@@ -96,11 +96,13 @@ export const Homologacao = ({
               <InformacoesProduto homologacao={homologacao} />
               <FotosProduto homologacao={homologacao} />
               <DocumentosProduto homologacao={homologacao} />
-
               {usuarioEhCODAEGestaoProduto() &&
-                homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" && (
+                (homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" || 
+                homologacao.status === "CODAE_QUESTIONADO") && (
                   <>
-                    <AnaliseSensorial />
+                    {homologacao.status === "CODAE_PENDENTE_HOMOLOGACAO" && (
+                      <AnaliseSensorial />
+                    )}
                     <BotoesGPCODAE
                       homologacao={homologacao}
                       terceirizadas={terceirizadas}

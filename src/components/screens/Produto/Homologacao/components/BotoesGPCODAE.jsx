@@ -7,6 +7,7 @@ import {
 import { ModalPadrao } from "components/Shareable/ModalPadrao";
 import { ModalVincularEditais } from "./ModelVincularEditais";
 import {
+  CODAECancelaSoliticaoCorrecao,
   CODAENaoHomologaProduto,
   CODAEPedeAnaliseSensorialProduto,
   CODAEPedeCorrecao
@@ -72,6 +73,20 @@ export const BotoesGPCODAE = ({
         });
         break;
 
+        case "cancelar":
+          setPropsModal({
+            toastSuccessMessage:
+              "Cancelamento enviado com sucesso.",
+            modalTitle: "Envio de Cancelamento da Solicitação de Correção",
+            endpoint: CODAECancelaSoliticaoCorrecao,
+            labelJustificativa: "Justificativa",
+            helpText: undefined,
+            eAnalise: false,
+            tipoModal: tipoModal,
+            cancelaSolicitacao: homologacao
+          });
+          break;  
+
       default:
         setPropsModal({});
         break;
@@ -111,40 +126,56 @@ export const BotoesGPCODAE = ({
         status={homologacao.status}
         terceirizada={homologacao.rastro_terceirizada}
         tipoModal={tipoModal}
+        cancelaAnaliseSensorial={propsModal.cancelaSolicitacao}
       />
       <div className="col-12">
-        <Botao
-          texto="Homologar"
-          className="float-right"
-          type={BUTTON_TYPE.BUTTON}
-          onClick={() => setShowModalHomologar(true)}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          disabled={values.necessita_analise_sensorial === "1"}
-        />
-        <Botao
-          texto="Não homologar"
-          className="mr-3 float-right"
-          onClick={() => setPropsModalPadrao("nao-homologar")}
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          disabled={values.necessita_analise_sensorial === "1"}
-        />
-        <Botao
-          texto="Corrigir"
-          className="mr-3 float-right"
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          onClick={() => setPropsModalPadrao("corrigir")}
-          disabled={values.necessita_analise_sensorial === "0"}
-        />
-        <Botao
-          texto="Solicitar análise sensorial"
-          className="mr-3 float-right"
-          type={BUTTON_TYPE.BUTTON}
-          onClick={() => setPropsModalPadrao("analise")}
-          style={BUTTON_STYLE.GREEN}
-          disabled={values.necessita_analise_sensorial === "0"}
-        />
+        {homologacao.status === "CODAE_QUESTIONADO" 
+        ? (
+          <>        
+            <Botao
+            texto="Cancelar Solicitação"
+            className="float-right"
+            type={BUTTON_TYPE.BUTTON}
+            onClick={() => setPropsModalPadrao("cancelar")}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+          />
+        </>
+        ):(
+          <>
+            <Botao
+              texto="Homologar"
+              className="float-right"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => setShowModalHomologar(true)}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              disabled={values.necessita_analise_sensorial === "1"}
+            />
+            <Botao
+              texto="Não homologar"
+              className="mr-3 float-right"
+              onClick={() => setPropsModalPadrao("nao-homologar")}
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              disabled={values.necessita_analise_sensorial === "1"}
+            />
+            <Botao
+              texto="Corrigir"
+              className="mr-3 float-right"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => setPropsModalPadrao("corrigir")}
+              disabled={values.necessita_analise_sensorial === "0"}
+            />
+            <Botao
+              texto="Solicitar análise sensorial"
+              className="mr-3 float-right"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => setPropsModalPadrao("analise")}
+              style={BUTTON_STYLE.GREEN}
+              disabled={values.necessita_analise_sensorial === "0"}
+            />
+          </>
+        )}
       </div>
       <div className="col-12">
         <hr />

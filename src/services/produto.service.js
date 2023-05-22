@@ -427,6 +427,27 @@ export const CODAENaoHomologaProduto = (uuid, justificativa) => {
     });
 };
 
+export const CODAECancelaSoliticaoCorrecao = (uuid, justificativa) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-cancela-solicitacao-correcao/`;
+  let status = 0;
+  return fetch(url, {
+    method: "PATCH",
+    headers: authToken,
+    body: JSON.stringify({ justificativa })
+  })
+    .then(res => {
+      status = res.status;
+      return res.json();
+    })
+    .then(data => {
+      return { data: data, status: status };
+    })
+    .catch(error => {
+      return error;
+    });
+};
+
+
 export const CODAEPedeCorrecao = (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-questiona-pedido/`;
   let status = 0;
