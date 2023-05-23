@@ -317,7 +317,11 @@ export const ConferenciaDosLancamentos = () => {
                               texto="Aprovar formulário"
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN}
-                              disabled={false}
+                              disabled={
+                                logCorrecaoOcorrencia &&
+                                logCorrecaoOcorrencia.status_evento_explicacao ===
+                                  "Aprovado pela DRE"
+                              }
                               onClick={() =>
                                 setShowModalAprovarOcorrencia(true)
                               }
