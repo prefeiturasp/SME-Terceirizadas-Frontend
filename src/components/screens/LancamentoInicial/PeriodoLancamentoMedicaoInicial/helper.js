@@ -457,16 +457,18 @@ export const formatarLinhasTabelaAlimentacao = (
   tipos_alimentacao,
   periodoGrupo
 ) => {
-  const tiposAlimentacaoFormatadas = tipos_alimentacao.map(alimentacao => {
-    return {
-      ...alimentacao,
-      name: alimentacao.nome
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replaceAll(/ /g, "_")
-    };
-  });
+  const tiposAlimentacaoFormatadas = tipos_alimentacao
+    .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+    .map(alimentacao => {
+      return {
+        ...alimentacao,
+        name: alimentacao.nome
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replaceAll(/ /g, "_")
+      };
+    });
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
     ali => ali.nome === "Refeição"
   );
@@ -489,14 +491,6 @@ export const formatarLinhasTabelaAlimentacao = (
       name: "repeticao_sobremesa",
       uuid: null
     });
-  }
-
-  const indexLancheEmergencial = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Lanche Emergencial"
-  );
-  if (indexLancheEmergencial !== -1) {
-    tiposAlimentacaoFormatadas[indexLancheEmergencial].nome =
-      "Lanche Emergenc.";
   }
 
   const matriculadosOuNumeroDeAlunos = () => {
@@ -621,8 +615,9 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
 
 export const formatarLinhasTabelaEtecAlimentacao = () => {
   const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
-  const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec.map(
-    alimentacao => {
+  const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec
+    .filter(alimentacao => alimentacao !== "Lanche Emergencial")
+    .map(alimentacao => {
       return {
         nome: alimentacao,
         name: alimentacao
@@ -632,8 +627,7 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
           .replaceAll(/ /g, "_"),
         uuid: null
       };
-    }
-  );
+    });
 
   const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
     ali => ali.nome === "Refeição"
@@ -659,14 +653,6 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
       name: "repeticao_sobremesa",
       uuid: null
     });
-  }
-
-  const indexLancheEmergencialEtec = tiposAlimentacaoEtecFormatadas.findIndex(
-    ali => ali.nome === "Lanche Emergencial"
-  );
-  if (indexLancheEmergencialEtec !== -1) {
-    tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
-      "Lanche Emergenc.";
   }
 
   tiposAlimentacaoEtecFormatadas.unshift(
