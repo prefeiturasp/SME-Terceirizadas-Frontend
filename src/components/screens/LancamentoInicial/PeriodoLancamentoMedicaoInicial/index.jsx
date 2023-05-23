@@ -228,8 +228,9 @@ export default () => {
         ) || periodos_escolares[0];
       const tipos_alimentacao = periodo.tipos_alimentacao;
       const cloneTiposAlimentacao = deepCopy(tipos_alimentacao);
-      const tiposAlimentacaoFormatadas = cloneTiposAlimentacao.map(
-        alimentacao => {
+      const tiposAlimentacaoFormatadas = cloneTiposAlimentacao
+        .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+        .map(alimentacao => {
           return {
             ...alimentacao,
             name: alimentacao.nome
@@ -238,8 +239,7 @@ export default () => {
               .toLowerCase()
               .replaceAll(/ /g, "_")
           };
-        }
-      );
+        });
 
       const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
         ali => ali.nome === "Refeição"
@@ -263,14 +263,6 @@ export default () => {
           name: "repeticao_sobremesa",
           uuid: null
         });
-      }
-
-      const indexLancheEmergencial = tiposAlimentacaoFormatadas.findIndex(
-        ali => ali.nome === "Lanche Emergencial"
-      );
-      if (indexLancheEmergencial !== -1) {
-        tiposAlimentacaoFormatadas[indexLancheEmergencial].nome =
-          "Lanche Emergenc.";
       }
 
       const tiposAlimentacaoProgramasProjetos = deepCopy(
@@ -405,8 +397,9 @@ export default () => {
 
       const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
       const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
-      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec.map(
-        alimentacao => {
+      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
+        .filter(alimentacao => alimentacao !== "Lanche Emergencial")
+        .map(alimentacao => {
           return {
             nome: alimentacao,
             name: alimentacao
@@ -416,8 +409,7 @@ export default () => {
               .replaceAll(/ /g, "_"),
             uuid: null
           };
-        }
-      );
+        });
 
       const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
         ali => ali.nome === "Refeição"
@@ -1619,6 +1611,7 @@ export default () => {
   };
 
   const linhasTabelaAlimentacao = categoria => {
+    //
     if (categoria.nome.includes("SOLICITAÇÕES")) {
       return tabelaSolicitacoesAlimentacaoRows;
     } else if (ehGrupoETECUrlParam) {
