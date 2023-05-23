@@ -6,16 +6,19 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
-import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { ModalSolicitarCorrecaoOcorrencia } from "./components/ModalSolicitarCorrecaoOcorrencia";
+import { ModalOcorrencia } from "./components/ModalOcorrencia";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
-import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import {
+  medicaoInicialExportarOcorrenciasPDF,
+  relatorioMedicaoInicialPDF
+} from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
   getPeriodosGruposMedicao,
@@ -27,6 +30,7 @@ import {
   OCORRENCIA_STATUS_DE_PROGRESSO
 } from "./constants";
 import "./style.scss";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -44,7 +48,15 @@ export const ConferenciaDosLancamentos = () => {
   const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
     false
   );
+  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] = useState(
+    false
+  );
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
+  const [textoOcorrencia, setTextoOcorrencia] = useState("");
 
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -89,12 +101,20 @@ export const ConferenciaDosLancamentos = () => {
         const arquivosOcorrencia = response.data.anexos.find(
           anexo => anexo.extensao === ".pdf"
         );
-        setOcorrencia(arquivosOcorrencia);
-        setLogCorrecaoOcorrencia(
-          arquivosOcorrencia.logs.find(
-            log => log.status_evento_explicacao === "Correção solicitada"
+        const logOcorrencia = arquivosOcorrencia.logs.find(log =>
+          ["Correção solicitada", "Aprovado pela DRE"].includes(
+            log.status_evento_explicacao
           )
         );
+        setOcorrencia(arquivosOcorrencia);
+        setLogCorrecaoOcorrencia(logOcorrencia);
+        if (logOcorrencia) {
+          setTextoOcorrencia(
+            logOcorrencia.status_evento_explicacao === "Correção solicitada"
+              ? "Solicitação de correção no Formulário de Ocorrências realizada em"
+              : "Formulário de Ocorrências aprovado em"
+          );
+        }
       }
     } else {
       setErroAPI("Erro ao carregar Medição Inicial.");
@@ -138,6 +158,17 @@ export const ConferenciaDosLancamentos = () => {
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
+  };
+
+  const handleClickDownload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuidSolicitacaoMedicao = urlParams.get("uuid");
+    const response = await relatorioMedicaoInicialPDF(uuidSolicitacaoMedicao);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
   };
 
   return (
@@ -269,7 +300,7 @@ export const ConferenciaDosLancamentos = () => {
                         <Fragment>
                           <div className="col-5 mt-3 ">
                             {logCorrecaoOcorrencia &&
-                              `Solicitação de correção no Formulário de Ocorrências realizada em ${
+                              `${textoOcorrencia} ${
                                 logCorrecaoOcorrencia.criado_em
                               }`}
                           </div>
@@ -286,7 +317,14 @@ export const ConferenciaDosLancamentos = () => {
                               texto="Aprovar formulário"
                               type={BUTTON_TYPE.BUTTON}
                               style={BUTTON_STYLE.GREEN}
-                              disabled={false}
+                              disabled={
+                                logCorrecaoOcorrencia &&
+                                logCorrecaoOcorrencia.status_evento_explicacao ===
+                                  "Aprovado pela DRE"
+                              }
+                              onClick={() =>
+                                setShowModalAprovarOcorrencia(true)
+                              }
                             />
                           </div>
                         </Fragment>
@@ -323,17 +361,46 @@ export const ConferenciaDosLancamentos = () => {
                         );
                       })}
                     </div>
+                    <div className="float-right">
+                      <Botao
+                        texto="Exportar PDF"
+                        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                        onClick={() => handleClickDownload()}
+                      />
+                    </div>
                   </div>
                 </div>
               </form>
             )}
           />
         )}
-        <ModalSolicitarCorrecaoOcorrencia
+        <ModalOcorrencia
           showModal={showModalSalvarOcorrencia}
           setShowModal={value => setShowModalSalvarOcorrencia(value)}
           ocorrencia={ocorrencia}
           atualizarDados={() => getSolMedInicialAsync()}
+          titulo={"Solicitar correção no formulário de ocorrências"}
+          descricao={
+            "Informe quais os pontos necessários de correção no Formulário de Ocorrências"
+          }
+          temJustificativa={true}
+          ehCorrecao={true}
+          tituloBotoes={["Cancelar", "Salvar"]}
+        />
+        <ModalOcorrencia
+          showModal={showModalAprovarOcorrencia}
+          setShowModal={value => setShowModalAprovarOcorrencia(value)}
+          ocorrencia={ocorrencia}
+          atualizarDados={() => getSolMedInicialAsync()}
+          titulo={"Aprovar Formulário de Ocorrências"}
+          descricao={"Deseja aprovar o Formulário de Ocorrências?"}
+          temJustificativa={false}
+          ehCorrecao={false}
+          tituloBotoes={["Não", "Sim"]}
+        />
+        <ModalSolicitacaoDownload
+          show={exibirModalCentralDownloads}
+          setShow={setExibirModalCentralDownloads}
         />
       </Spin>
     </div>

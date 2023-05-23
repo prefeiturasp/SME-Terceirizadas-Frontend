@@ -58,7 +58,7 @@ const AtivasInativasPorAluno = ({
         escola_ = escola_[0];
       }
       filtros.escola = escolas.find(
-        escola => escola.label === escola_.split("- ")[1]
+        escola => escola.label === escola_.substring(escola_.indexOf("- ") + 2)
       ).value;
     }
     delete filtros.escolas;
