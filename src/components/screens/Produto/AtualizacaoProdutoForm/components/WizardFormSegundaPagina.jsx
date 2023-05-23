@@ -9,15 +9,19 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
+import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
+import { meusDados } from "services/perfil.service";
 
 class WizardFormSegundaPagina extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      meusDados: null,
       informacoes: [],
       valuesForm: {},
       verificado: false,
-      temCamposPreenchidos: false
+      temCamposPreenchidos: false,
+      status_codae_questionado: false
     };
   }
 
@@ -46,8 +50,21 @@ class WizardFormSegundaPagina extends React.Component {
   };
 
   componentDidMount() {
+    meusDados().then(response => {
+      this.setState({
+        meusDados: response
+      });
+    });
+
     let { informacoes, valuesForm } = this.state;
     const { produto, change, segundoStep, valoresSegundoForm } = this.props;
+
+    if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
+      this.setState({
+        status_codae_questionado: true
+      });
+    }
+
     const { verificado } = this.state;
     if (
       this.props.informacoes !== this.state.informacoes &&
@@ -250,7 +267,12 @@ class WizardFormSegundaPagina extends React.Component {
 
   render() {
     const { handleSubmit, previousPage, valuesForm } = this.props;
-    const { informacoes, temCamposPreenchidos } = this.state;
+    const {
+      informacoes,
+      temCamposPreenchidos,
+      status_codae_questionado,
+      meusDados
+    } = this.state;
     return (
       <form onSubmit={handleSubmit} className="segundo-formulario">
         <header>Informações Nutricionais</header>
@@ -352,6 +374,20 @@ class WizardFormSegundaPagina extends React.Component {
               previousPage();
             }}
           />
+          {status_codae_questionado &&
+            (meusDados &&
+              meusDados.vinculo_atual.instituicao.uuid ===
+                this.props.produto.homologacao.rastro_terceirizada.uuid) && (
+              <Botao
+                texto={"Cancelar"}
+                type={BUTTON_TYPE.BUTTON}
+                className="ml-3"
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={() => {
+                  this.props.showModal(true);
+                }}
+              />
+            )}
           {temCamposPreenchidos && (
             <Botao
               texto={"Próximo"}

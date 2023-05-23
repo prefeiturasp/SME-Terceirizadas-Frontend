@@ -153,9 +153,14 @@ export default class ModalHistorico extends Component {
                         <article>
                           {logSelecionado.justificativa !== "" && (
                             <>
-                              {logSelecionado.status_evento_explicacao !==
-                              "Vínculo do Edital ao Produto" ? (
-                                <div>Justificativa:</div>
+                              {logSelecionado.status_evento_explicacao ===
+                                "CODAE cancelou solicitação de correção" ||
+                              logSelecionado.status_evento_explicacao ===
+                                "Terceirizada cancelou solicitação de correção" ? (
+                                <div>Nome do Produto: </div>
+                              ) : logSelecionado.status_evento_explicacao !==
+                                "Vínculo do Edital ao Produto" ? (
+                                <div>Justificativa: </div>
                               ) : null}
                               <div
                                 dangerouslySetInnerHTML={{
