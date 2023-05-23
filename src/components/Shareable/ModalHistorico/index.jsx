@@ -167,7 +167,6 @@ export default class ModalHistorico extends Component {
                                   __html: logSelecionado.justificativa
                                 }}
                               />
-                              {console.log(logSelecionado, "logSelecionado")}
                             </>
                           )}
                         </article>
