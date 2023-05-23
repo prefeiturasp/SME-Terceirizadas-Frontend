@@ -36,6 +36,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
 import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
 
+const ENTER = 13;
+
 const campoObrigatorio = {
   touched: true,
   error: "Informação não localizada"
@@ -128,6 +130,7 @@ const ModalCadastroVinculo = ({
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
 
       let t = document.getElementById("inputRF");
+      t.blur();
       t.focus();
       setRfBuscado(true);
     } else {
@@ -142,6 +145,12 @@ const ModalCadastroVinculo = ({
   const abreDeletar = () => {
     toggleExclusao(true, vinculo);
     toggleShow(false, vinculo);
+  };
+
+  const onKeyPress = (event, values) => {
+    if (event.which === ENTER) {
+      buscaEOL(values);
+    }
   };
 
   const getVinculoEmpresaAsync = async () => {
@@ -202,7 +211,11 @@ const ModalCadastroVinculo = ({
           render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
-                <form onSubmit={handleSubmit} className="">
+                <form
+                  onSubmit={handleSubmit}
+                  className=""
+                  onKeyPress={event => onKeyPress(event, values)}
+                >
                   {diretor_escola ||
                     empresa ||
                     visaoUnica !== undefined ||
