@@ -427,24 +427,41 @@ export const CODAENaoHomologaProduto = (uuid, justificativa) => {
     });
 };
 
-export const CODAECancelaSoliticaoCorrecao = (uuid, justificativa) => {
+export const CODAECancelaSoliticaoCorrecao = async (uuid, justificativa) => {
   const url = `${API_URL}/homologacoes-produtos/${uuid}/codae-cancela-solicitacao-correcao/`;
   let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
+  try {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: authToken,
+      body: JSON.stringify({ justificativa })
     });
+    status = res.status;
+    const data = await res.json();
+    return { data: data, status: status };
+  } catch (error) {
+    return error;
+  }
+};
+
+export const TerceirizadaCancelaSoliticaoCorrecao = async (
+  uuid,
+  justificativa
+) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/terceirizada-cancela-solicitacao-correcao/`;
+  let status = 0;
+  try {
+    const res = await fetch(url, {
+      method: "PATCH",
+      headers: authToken,
+      body: JSON.stringify({ justificativa })
+    });
+    status = res.status;
+    const data = await res.json();
+    return { data: data, status: status };
+  } catch (error) {
+    return error;
+  }
 };
 
 export const CODAEPedeCorrecao = (uuid, justificativa) => {
