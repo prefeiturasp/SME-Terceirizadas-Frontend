@@ -64,25 +64,32 @@ export default ({
   };
 
   if (ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC) {
-    alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
+    if (ehGrupoETEC) {
+      tipos_alimentacao = tipos_alimentacao.filter(
+        alimentacao => alimentacao !== "Lanche Emergencial"
+      );
+    }
+    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
-          <b>{quantidadeAlimentacao(item)}</b>
+          <b>{quantidadeAlimentacao(alimentacao)}</b>
         </span>
-        <span className="ml-1">- {item}</span>
+        <span className="ml-1">- {alimentacao}</span>
         <br />
       </div>
     ));
   } else {
-    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
-        </span>
-        <span className="ml-1">- {alimentacao.nome}</span>
-        <br />
-      </div>
-    ));
+    alimentacoesFormatadas = tipos_alimentacao
+      .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+      .map((alimentacao, key) => (
+        <div key={key} className="mb-2">
+          <span style={{ color: cor }}>
+            <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
+          </span>
+          <span className="ml-1">- {alimentacao.nome}</span>
+          <br />
+        </div>
+      ));
   }
 
   const desabilitarBotaoEditar = () => {
