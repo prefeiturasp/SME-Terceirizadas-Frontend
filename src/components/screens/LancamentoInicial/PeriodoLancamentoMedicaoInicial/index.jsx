@@ -1611,7 +1611,6 @@ export default () => {
   };
 
   const linhasTabelaAlimentacao = categoria => {
-    //
     if (categoria.nome.includes("SOLICITAÇÕES")) {
       return tabelaSolicitacoesAlimentacaoRows;
     } else if (ehGrupoETECUrlParam) {
