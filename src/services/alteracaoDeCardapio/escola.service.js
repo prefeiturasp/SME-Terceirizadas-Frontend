@@ -175,6 +175,15 @@ export const getAlunosPorFaixaEtariaNumaData = async (
   }
 };
 
+export const getSomatorioFaixas = async (escola_id, dataReferencia) => {
+  const url = `/escola-quantidade-alunos-por-periodo-e-faixa-etaria/${escola_id}/somatorio-faixas-etarias/${dataReferencia}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getEscolaPeriodoEscolares = async () => {
   const url = `/${ENDPOINT.QUANTIDADE_ALUNOS_POR_PERIODO}/`;
   return axios.get(url);
