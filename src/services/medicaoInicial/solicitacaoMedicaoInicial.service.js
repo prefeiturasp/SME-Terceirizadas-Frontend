@@ -98,3 +98,12 @@ export const drePedeAprovacaoOcorrencia = async uuid => {
     return data;
   }
 };
+
+export const dreAprovaSolicitacaoMedicao = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/dre-aprova-solicitacao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
