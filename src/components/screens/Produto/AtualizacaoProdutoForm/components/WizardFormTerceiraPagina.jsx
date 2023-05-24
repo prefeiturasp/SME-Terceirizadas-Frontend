@@ -26,13 +26,11 @@ import {
   getUnidadesDeMedidaProduto,
   getEmbalagensProduto
 } from "services/produto.service";
-import { meusDados } from "services/perfil.service";
 
 class WizardFormTerceiraPagina extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: null,
       produto: null,
       arquivos: [],
       unidades_de_medida: null,
@@ -56,12 +54,6 @@ class WizardFormTerceiraPagina extends Component {
   };
 
   componentDidMount = async () => {
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
-    });
-
     if (this.props.produto !== this.state.produto) {
       this.setState({ produto: this.props.produto });
     }
@@ -215,7 +207,7 @@ class WizardFormTerceiraPagina extends Component {
       submitting,
       valuesForm
     } = this.props;
-    const { mostraModalConfimacao, meusDados } = this.state;
+    const { mostraModalConfimacao } = this.state;
     return (
       <form onSubmit={handleSubmit} className="cadastro-produto-step3">
         <ModalConfirmacaoSimNao
@@ -335,20 +327,17 @@ class WizardFormTerceiraPagina extends Component {
               this.props.passouTerceiroStep(valuesForm);
             }}
           />
-          {this.state.status_codae_questionado &&
-            (meusDados &&
-              meusDados.vinculo_atual.instituicao.uuid ===
-                this.props.produto.homologacao.rastro_terceirizada.uuid) && (
-              <Botao
-                texto={"Cancelar"}
-                type={BUTTON_TYPE.BUTTON}
-                className="ml-3"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  this.props.showModal(true);
-                }}
-              />
-            )}
+          {this.state.status_codae_questionado && (
+            <Botao
+              texto={"Cancelar"}
+              type={BUTTON_TYPE.BUTTON}
+              className="ml-3"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                this.props.showModal(true);
+              }}
+            />
+          )}
           <Botao
             texto={"Enviar"}
             className="ml-3"

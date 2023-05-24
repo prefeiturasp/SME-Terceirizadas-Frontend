@@ -24,7 +24,6 @@ import {
   STATUS_ESCOLA_OU_NUTRICIONISTA_RECLAMOU,
   STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO
 } from "configs/constants";
-import { meusDados } from "services/perfil.service";
 
 const maxLength5000 = maxLengthProduto(5000);
 const { Option } = Select;
@@ -33,7 +32,6 @@ class WizardFormPrimeiraPagina extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: null,
       retificou: false,
       checkDieta: false,
       produtoForm: null,
@@ -54,12 +52,6 @@ class WizardFormPrimeiraPagina extends React.Component {
   }
 
   componentDidMount() {
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
-    });
-
     const { produto } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
 
@@ -320,8 +312,7 @@ class WizardFormPrimeiraPagina extends React.Component {
       fabricantesArray,
       desabilitarNomeDoProdutoField,
       desabilitarEhParaAlunosComDietaField,
-      status_codae_questionado,
-      meusDados
+      status_codae_questionado
     } = this.state;
 
     return (
@@ -561,20 +552,17 @@ class WizardFormPrimeiraPagina extends React.Component {
         </section>
 
         <section className="rodape-botoes-acao">
-          {status_codae_questionado &&
-            (meusDados &&
-              meusDados.vinculo_atual.instituicao.uuid ===
-                this.props.produto.homologacao.rastro_terceirizada.uuid) && (
-              <Botao
-                texto={"Cancelar"}
-                type={BUTTON_TYPE.BUTTON}
-                className="ml-3"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  this.props.showModal(true);
-                }}
-              />
-            )}
+          {status_codae_questionado && (
+            <Botao
+              texto={"Cancelar"}
+              type={BUTTON_TYPE.BUTTON}
+              className="ml-3"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                this.props.showModal(true);
+              }}
+            />
+          )}
           <Botao
             texto={"Próximo"}
             type={BUTTON_TYPE.SUBMIT}
