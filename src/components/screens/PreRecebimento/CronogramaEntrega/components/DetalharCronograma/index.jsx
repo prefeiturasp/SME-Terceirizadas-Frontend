@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Spin } from "antd";
-import { getCronograma, imprimirCronograma } from "services/cronograma.service";
+import {
+  getCronogramaDetalhar,
+  imprimirCronograma
+} from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
@@ -21,6 +24,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -30,7 +34,7 @@ export default () => {
 
   const getDetalhes = async () => {
     if (uuid) {
-      const responseCronograma = await getCronograma(uuid);
+      const responseCronograma = await getCronogramaDetalhar(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
         setCronograma(responseCronograma.data);
       }
@@ -80,6 +84,15 @@ export default () => {
         <div className="card-body">
           {cronograma && (
             <>
+              {cronograma.logs && !usuarioEhEmpresaFornecedor() && (
+                <div className="row pb-3">
+                  <FluxoDeStatusCronograma
+                    listaDeStatus={cronograma.logs}
+                    fluxo={{}}
+                    eh_gestao_alimentacao={true}
+                  />
+                </div>
+              )}
               <DadosCronograma cronograma={cronograma} />
               <hr className="hr-detalhar" />
               <p className="head-green mt-3">Dados do Recebimento</p>

@@ -7,6 +7,9 @@ export const getEtapas = async () =>
 export const getCronograma = async uuid =>
   await axios.get(`/cronogramas/${uuid}/`);
 
+export const getCronogramaDetalhar = async uuid =>
+  await axios.get(`/cronogramas/${uuid}/detalhar-com-log/`);
+
 export const cadastraCronograma = async payload =>
   await axios.post("/cronogramas/", payload);
 
