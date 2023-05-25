@@ -17,7 +17,7 @@ const atual = {
 };
 
 export default () => (
-  <Page botaoVoltar voltarPara="/" titulo={"Lançamento Medição Inicial"}>
+  <Page botaoVoltar titulo={"Lançamento Medição Inicial"}>
     <Breadcrumb home={HOME} atual={atual} />
     <LancamentoMedicaoInicial />
   </Page>

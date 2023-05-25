@@ -30,12 +30,16 @@ import {
   formatarOpcoesDRE,
   usuarioEhDRE,
   usuarioEhMedicao,
-  usuarioEhEscolaTerceirizadaQualquerPerfil
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import {
   CONFERENCIA_DOS_LANCAMENTOS,
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
   MEDICAO_INICIAL
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
@@ -229,14 +233,26 @@ export const AcompanhamentoDeLancamentos = () => {
       form.change("diretoria_regional", diretoria_regional.value);
   };
 
-  const handleClickVisualizar = (uuidSolicitacaoMedicao, escolaUuid) => {
-    history.push({
-      pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
-      search: `uuid=${uuidSolicitacaoMedicao}`,
-      state: {
-        escolaUuid: escolaUuid
-      }
-    });
+  const handleClickVisualizar = (
+    uuidSolicitacaoMedicao,
+    escolaUuid,
+    mes,
+    ano
+  ) => {
+    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
+      history.push({
+        pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
+        search: `mes=${mes}&ano=${ano}`
+      });
+    } else {
+      history.push({
+        pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+        search: `uuid=${uuidSolicitacaoMedicao}`,
+        state: {
+          escolaUuid: escolaUuid
+        }
+      });
+    }
   };
 
   const handleClickDownload = async uuidSolicitacaoMedicao => {
@@ -510,7 +526,9 @@ export const AcompanhamentoDeLancamentos = () => {
                                             onClick={() =>
                                               handleClickVisualizar(
                                                 dado.uuid,
-                                                dado.escola_uuid
+                                                dado.escola_uuid,
+                                                dado.mes,
+                                                dado.ano
                                               )
                                             }
                                           />
