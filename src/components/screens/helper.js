@@ -1,3 +1,4 @@
+import React from "react";
 import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
@@ -307,3 +308,10 @@ export const formatarPara4Digitos = numero => {
   }
   return numeroFormatado;
 };
+
+export const MSG_SENHA_INVALIDA = () => (
+  <>
+    <strong>Senha Inválida:</strong> Em caso de esquecimento de senha, solicite
+    a recuperação e tente novamente.
+  </>
+);
