@@ -23,7 +23,8 @@ import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimen
 import {
   getPeriodosGruposMedicao,
   retrieveSolicitacaoMedicaoInicial,
-  dreAprovaMedicao
+  dreAprovaMedicao,
+  dreAprovaSolicitacaoMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -31,6 +32,7 @@ import {
 } from "./constants";
 import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalEnviarParaCodae } from "./components/ModalEnviarParaCodae";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -51,12 +53,22 @@ export const ConferenciaDosLancamentos = () => {
   const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] = useState(
     false
   );
+  const [showModalEnviarParaCodae, setShowModalEnviarParaCodae] = useState(
+    false
+  );
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
   const [
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads
   ] = useState(false);
   const [textoOcorrencia, setTextoOcorrencia] = useState("");
+  const [desabilitarEnviarParaCodae, setDesabilitarEnviarParaCodae] = useState(
+    true
+  );
+  const [
+    desabilitarSolicitarCorrecao,
+    setDesabilitarSolicitarCorrecao
+  ] = useState(true);
 
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -98,15 +110,15 @@ export const ConferenciaDosLancamentos = () => {
       setMesSolicitacao(mes);
       setAnoSolicitacao(ano);
       if (response.data.com_ocorrencias) {
-        const arquivosOcorrencia = response.data.anexos.find(
+        const arquivoPdfOcorrencia = response.data.anexos.find(
           anexo => anexo.extensao === ".pdf"
         );
-        const logOcorrencia = arquivosOcorrencia.logs.find(log =>
+        const logOcorrencia = arquivoPdfOcorrencia.logs.find(log =>
           ["Correção solicitada", "Aprovado pela DRE"].includes(
             log.status_evento_explicacao
           )
         );
-        setOcorrencia(arquivosOcorrencia);
+        setOcorrencia(arquivoPdfOcorrencia);
         setLogCorrecaoOcorrencia(logOcorrencia);
         if (logOcorrencia) {
           setTextoOcorrencia(
@@ -143,6 +155,37 @@ export const ConferenciaDosLancamentos = () => {
     getPeriodosGruposMedicaoAsync();
   }, []);
 
+  useEffect(() => {
+    if (solicitacao && periodosGruposMedicao) {
+      if (
+        solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" &&
+        solicitacao.com_ocorrencias &&
+        ocorrencia &&
+        ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+        !periodosGruposMedicao.some(
+          periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
+        )
+      ) {
+        setDesabilitarEnviarParaCodae(false);
+      } else {
+        setDesabilitarEnviarParaCodae(true);
+      }
+      if (
+        solicitacao.com_ocorrencias &&
+        ocorrencia &&
+        (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+          periodosGruposMedicao.some(
+            periodoGrupo =>
+              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+          ))
+      ) {
+        setDesabilitarSolicitarCorrecao(false);
+      } else {
+        setDesabilitarSolicitarCorrecao(true);
+      }
+    }
+  }, [ocorrencia, solicitacao, periodosGruposMedicao]);
+
   const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
     setLoading(true);
     const response = await dreAprovaMedicao(
@@ -154,6 +197,19 @@ export const ConferenciaDosLancamentos = () => {
       setErroAPI(
         `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
       );
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const aprovarSolicitacaoMedicao = async () => {
+    setLoading(true);
+    const response = await dreAprovaSolicitacaoMedicao(solicitacao.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Medição aprovada pela DRE e enviada para análise de CODAE");
+    } else {
+      setErroAPI("Erro ao aprovar Medição. Tente novamente mais tarde.");
     }
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
@@ -230,105 +286,124 @@ export const ConferenciaDosLancamentos = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="row content-section-ocorrencias">
-                      <div className="col-6">
-                        <p className="mb-0">
-                          Avaliação do Serviço:{" "}
-                          <b
-                            className={`${
-                              solicitacao.com_ocorrencias
-                                ? "value-avaliacao-servico-red"
-                                : "value-avaliacao-servico-green"
-                            }`}
-                          >
-                            {solicitacao.com_ocorrencias
-                              ? "COM OCORRÊNCIAS"
-                              : "SEM OCORRÊNCIAS"}
-                          </b>
-                        </p>
-                      </div>
-                      {solicitacao.com_ocorrencias ? (
-                        <Fragment>
-                          <div className="col-6 text-right">
-                            <span className="status-ocorrencia text-center mr-2 p-1">
-                              <b
-                                className={
-                                  ocorrencia.status ===
-                                  "MEDICAO_CORRECAO_SOLICITADA"
-                                    ? "red"
-                                    : ""
-                                }
-                              >
-                                {OCORRENCIA_STATUS_DE_PROGRESSO[
-                                  ocorrencia.status
-                                ] &&
-                                  OCORRENCIA_STATUS_DE_PROGRESSO[
-                                    ocorrencia.status
-                                  ].nome}
-                              </b>
-                            </span>
-                            {ocorrencia ? (
-                              ocorrenciaExpandida ? (
-                                <span
-                                  className="download-ocorrencias"
-                                  onClick={() =>
-                                    medicaoInicialExportarOcorrenciasPDF(
-                                      ocorrencia.arquivo
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="content-section-ocorrencias">
+                          <div className="row">
+                            <div className="col-6">
+                              <p className="mb-0">
+                                Avaliação do Serviço:{" "}
+                                <b
+                                  className={`${
+                                    solicitacao.com_ocorrencias
+                                      ? "value-avaliacao-servico-red"
+                                      : "value-avaliacao-servico-green"
+                                  }`}
+                                >
+                                  {solicitacao.com_ocorrencias
+                                    ? "COM OCORRÊNCIAS"
+                                    : "SEM OCORRÊNCIAS"}
+                                </b>
+                              </p>
+                            </div>
+                            {solicitacao.com_ocorrencias ? (
+                              <Fragment>
+                                <div className="col-6 text-right">
+                                  <span className="status-ocorrencia text-center mr-3">
+                                    <b
+                                      className={
+                                        ocorrencia.status ===
+                                        "MEDICAO_CORRECAO_SOLICITADA"
+                                          ? "red"
+                                          : ""
+                                      }
+                                    >
+                                      {OCORRENCIA_STATUS_DE_PROGRESSO[
+                                        ocorrencia.status
+                                      ] &&
+                                        OCORRENCIA_STATUS_DE_PROGRESSO[
+                                          ocorrencia.status
+                                        ].nome}
+                                    </b>
+                                  </span>
+                                  {ocorrencia ? (
+                                    ocorrenciaExpandida ? (
+                                      <span
+                                        className="download-ocorrencias"
+                                        onClick={() =>
+                                          medicaoInicialExportarOcorrenciasPDF(
+                                            ocorrencia.arquivo
+                                          )
+                                        }
+                                      >
+                                        <i
+                                          className={`${
+                                            BUTTON_ICON.DOWNLOAD
+                                          } mr-2`}
+                                        />
+                                        Download de Ocorrências
+                                      </span>
+                                    ) : (
+                                      <label
+                                        className="green visualizar-ocorrencias"
+                                        onClick={() =>
+                                          setOcorrenciaExpandida(true)
+                                        }
+                                      >
+                                        <b>VISUALIZAR</b>
+                                      </label>
                                     )
-                                  }
-                                >
-                                  <i
-                                    className={`${BUTTON_ICON.DOWNLOAD} mr-2`}
+                                  ) : null}
+                                </div>
+                              </Fragment>
+                            ) : (
+                              <div className="col-6" />
+                            )}
+                          </div>
+                          <div className="row">
+                            {ocorrenciaExpandida && ocorrencia && (
+                              <Fragment>
+                                <div className="col-5 mt-3">
+                                  {logCorrecaoOcorrencia &&
+                                    `${textoOcorrencia} ${
+                                      logCorrecaoOcorrencia.criado_em
+                                    }`}
+                                </div>
+                                <div className="col-7 text-right mt-3">
+                                  <Botao
+                                    className="mr-3"
+                                    texto="Solicitar correção no formulário"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                                    disabled={
+                                      solicitacao.status ===
+                                      "MEDICAO_APROVADA_PELA_DRE"
+                                    }
+                                    onClick={() =>
+                                      setShowModalSalvarOcorrencia(true)
+                                    }
                                   />
-                                  Download de Ocorrências
-                                </span>
-                              ) : (
-                                <label
-                                  className="green"
-                                  onClick={() => setOcorrenciaExpandida(true)}
-                                >
-                                  <b>VISUALIZAR</b>
-                                </label>
-                              )
-                            ) : null}
+                                  <Botao
+                                    texto="Aprovar formulário"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN}
+                                    disabled={
+                                      (logCorrecaoOcorrencia &&
+                                        logCorrecaoOcorrencia.status_evento_explicacao ===
+                                          "Aprovado pela DRE") ||
+                                      solicitacao.status ===
+                                        "MEDICAO_APROVADA_PELA_DRE"
+                                    }
+                                    onClick={() =>
+                                      setShowModalAprovarOcorrencia(true)
+                                    }
+                                  />
+                                </div>
+                              </Fragment>
+                            )}
                           </div>
-                        </Fragment>
-                      ) : (
-                        <div className="col-6" />
-                      )}
-                      {ocorrenciaExpandida && ocorrencia && (
-                        <Fragment>
-                          <div className="col-5 mt-3 ">
-                            {logCorrecaoOcorrencia &&
-                              `${textoOcorrencia} ${
-                                logCorrecaoOcorrencia.criado_em
-                              }`}
-                          </div>
-                          <div className="col-7 text-right mt-3">
-                            <Botao
-                              className="mr-3"
-                              texto="Solicitar correção no formulário"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                              disabled={false}
-                              onClick={() => setShowModalSalvarOcorrencia(true)}
-                            />
-                            <Botao
-                              texto="Aprovar formulário"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN}
-                              disabled={
-                                logCorrecaoOcorrencia &&
-                                logCorrecaoOcorrencia.status_evento_explicacao ===
-                                  "Aprovado pela DRE"
-                              }
-                              onClick={() =>
-                                setShowModalAprovarOcorrencia(true)
-                              }
-                            />
-                          </div>
-                        </Fragment>
-                      )}
+                        </div>
+                      </div>
                     </div>
                     <hr />
                     <div>
@@ -367,6 +442,24 @@ export const ConferenciaDosLancamentos = () => {
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
                       />
+                      {solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" && (
+                        <>
+                          <Botao
+                            className="ml-3"
+                            texto="Solicitar Correção"
+                            style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                            onClick={() => {}}
+                            disabled={desabilitarSolicitarCorrecao}
+                          />
+                          <Botao
+                            className="ml-3"
+                            texto="Enviar para CODAE"
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() => setShowModalEnviarParaCodae(true)}
+                            disabled={desabilitarEnviarParaCodae}
+                          />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -401,6 +494,13 @@ export const ConferenciaDosLancamentos = () => {
         <ModalSolicitacaoDownload
           show={exibirModalCentralDownloads}
           setShow={setExibirModalCentralDownloads}
+        />
+        <ModalEnviarParaCodae
+          showModal={showModalEnviarParaCodae}
+          setShowModal={value => setShowModalEnviarParaCodae(value)}
+          aprovarSolicitacaoMedicao={() => {
+            aprovarSolicitacaoMedicao();
+          }}
         />
       </Spin>
     </div>
