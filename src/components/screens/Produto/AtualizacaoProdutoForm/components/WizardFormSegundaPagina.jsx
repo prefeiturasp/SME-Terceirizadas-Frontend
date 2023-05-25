@@ -10,13 +10,11 @@ import {
 } from "components/Shareable/Botao/constants";
 import { ToggleExpandir } from "components/Shareable/ToggleExpandir";
 import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
-import { meusDados } from "services/perfil.service";
 
 class WizardFormSegundaPagina extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      meusDados: null,
       informacoes: [],
       valuesForm: {},
       verificado: false,
@@ -50,12 +48,6 @@ class WizardFormSegundaPagina extends React.Component {
   };
 
   componentDidMount() {
-    meusDados().then(response => {
-      this.setState({
-        meusDados: response
-      });
-    });
-
     let { informacoes, valuesForm } = this.state;
     const { produto, change, segundoStep, valoresSegundoForm } = this.props;
 
@@ -270,8 +262,7 @@ class WizardFormSegundaPagina extends React.Component {
     const {
       informacoes,
       temCamposPreenchidos,
-      status_codae_questionado,
-      meusDados
+      status_codae_questionado
     } = this.state;
     return (
       <form onSubmit={handleSubmit} className="segundo-formulario">
@@ -374,20 +365,17 @@ class WizardFormSegundaPagina extends React.Component {
               previousPage();
             }}
           />
-          {status_codae_questionado &&
-            (meusDados &&
-              meusDados.vinculo_atual.instituicao.uuid ===
-                this.props.produto.homologacao.rastro_terceirizada.uuid) && (
-              <Botao
-                texto={"Cancelar"}
-                type={BUTTON_TYPE.BUTTON}
-                className="ml-3"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                onClick={() => {
-                  this.props.showModal(true);
-                }}
-              />
-            )}
+          {status_codae_questionado && (
+            <Botao
+              texto={"Cancelar"}
+              type={BUTTON_TYPE.BUTTON}
+              className="ml-3"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                this.props.showModal(true);
+              }}
+            />
+          )}
           {temCamposPreenchidos && (
             <Botao
               texto={"Próximo"}
