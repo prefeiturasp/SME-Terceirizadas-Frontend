@@ -63,7 +63,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     aprovarPeriodo,
     values,
     getPeriodosGruposMedicaoAsync,
-    setOcorrenciaExpandida
+    setOcorrenciaExpandida,
+    solicitacao
   } = props;
 
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
@@ -104,10 +105,21 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const statusPermitidosParaAprovacao = [
     "MEDICAO_ENVIADA_PELA_UE",
+    "MEDICAO_CORRIGIDA_PELA_UE",
+    "MEDICAO_CORRECAO_SOLICITADA"
+  ];
+
+  const solicitacaoPermitidosCorrecao = [
+    "MEDICAO_ENVIADA_PELA_UE",
     "MEDICAO_CORRIGIDA_PELA_UE"
   ];
+
   const logPeriodoAprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Aprovado pela DRE"
+  );
+
+  const logPeriodoReprovado = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Correção solicitada"
   );
 
   useEffect(() => {
@@ -633,6 +645,17 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               </div>
             )}
+            {logPeriodoReprovado && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  devolvido para ajustes pela DRE em ${
+                    logPeriodoReprovado.criado_em
+                  }`}</p>
+                </div>
+              </div>
+            )}
             {modoCorrecao && (
               <>
                 <div className="red">
@@ -661,64 +684,66 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               </>
             )}
-            {!logPeriodoAprovado && (
-              <div className="periodo-final-tabela-lancamento mb-4">
-                <div className={`col-${modoCorrecao ? 6 : 8} pl-0 pr-4`}>
-                  <p className="section-title-conf-lancamentos periodo mb-0">
-                    {periodoGrupo.nome_periodo_grupo}
-                  </p>
-                  <hr className="my-0" />
-                </div>
-                {modoCorrecao ? (
-                  <div className="botoes col-6 px-0">
-                    <Botao
-                      texto="Cancelar"
-                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="col-3 mr-4"
-                      onClick={() => setShowModalCancelarSolicitacao(true)}
-                    />
-                    <Botao
-                      texto="Salvar Solicitação de Correção para UE"
-                      style={BUTTON_STYLE.GREEN}
-                      className="col-8"
-                      disabled={
-                        !values[
-                          `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
-                            0,
-                            5
-                          )}`
-                        ]
-                      }
-                      onClick={() => setShowModalSalvarSolicitacao(true)}
-                    />
-                  </div>
-                ) : (
-                  <div className="botoes col-4 px-0">
-                    <Botao
-                      texto="Solicitar Correção"
-                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                      className="col-6 mr-3"
-                      onClick={() => setModoCorrecao(true)}
-                      disabled={[
-                        "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_CORRECAO_SOLICITADA"
-                      ].includes(periodoGrupo.status)}
-                    />
-                    <Botao
-                      texto="Aprovar Período"
-                      style={BUTTON_STYLE.GREEN}
-                      className="col-5"
-                      onClick={() => setShowModalAprovarPeriodo(true)}
-                      disabled={
-                        !statusPermitidosParaAprovacao.includes(
-                          periodoGrupo.status
-                        )
-                      }
-                    />
-                  </div>
-                )}
+            <div className="periodo-final-tabela-lancamento mb-4">
+              <div className={`col-${modoCorrecao ? 6 : 8} pl-0 pr-4`}>
+                <p className="section-title-conf-lancamentos periodo mb-0">
+                  {periodoGrupo.nome_periodo_grupo}
+                </p>
+                <hr className="my-0" />
               </div>
-            )}
+              {modoCorrecao ? (
+                <div className="botoes col-6 px-0">
+                  <Botao
+                    texto="Cancelar"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="col-3 mr-4"
+                    onClick={() => setShowModalCancelarSolicitacao(true)}
+                  />
+                  <Botao
+                    texto="Salvar Solicitação de Correção para UE"
+                    style={BUTTON_STYLE.GREEN}
+                    className="col-8"
+                    disabled={
+                      !values[
+                        `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
+                          0,
+                          5
+                        )}`
+                      ]
+                    }
+                    onClick={() => setShowModalSalvarSolicitacao(true)}
+                  />
+                </div>
+              ) : (
+                <div className="botoes col-4 px-0">
+                  <Botao
+                    texto="Solicitar Correção"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="col-6 mr-3"
+                    onClick={() => setModoCorrecao(true)}
+                    disabled={
+                      !solicitacaoPermitidosCorrecao.includes(
+                        solicitacao.status
+                      )
+                    }
+                  />
+                  <Botao
+                    texto="Aprovar Período"
+                    style={BUTTON_STYLE.GREEN}
+                    className="col-5"
+                    onClick={() => setShowModalAprovarPeriodo(true)}
+                    disabled={
+                      !statusPermitidosParaAprovacao.includes(
+                        periodoGrupo.status
+                      ) ||
+                      !solicitacaoPermitidosCorrecao.includes(
+                        solicitacao.status
+                      )
+                    }
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <ModalAprovarPeriodo
             showModal={showModalAprovarPeriodo}
