@@ -120,6 +120,11 @@ export default ({ analiseSolicitacao }) => {
         uuid
       );
       const responseCronograma = responseSolicitacaoCronograma.data.cronograma;
+      if (usuarioEhEmpresaFornecedor()) {
+        responseSolicitacaoCronograma.data.logs = montarFluxoStatusFornecedor(
+          responseSolicitacaoCronograma.data.logs
+        );
+      }
       setSolicitacaoAlteracaoCronograma(responseSolicitacaoCronograma.data);
       setCronograma(responseCronograma);
       setEtapas(responseCronograma.etapas);
@@ -255,6 +260,26 @@ export default ({ analiseSolicitacao }) => {
     return log_correto ? log_correto.justificativa : "";
   };
 
+  const montarFluxoStatusFornecedor = logs => {
+    const logsFiltrados = logs.filter(
+      log =>
+        !["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+          log.status_evento_explicacao
+        )
+    );
+    logsFiltrados[0].status_evento_explicacao = "Em Análise";
+    const logsNomesAtualizados = logsFiltrados.map(log => {
+      if (log.status_evento_explicacao === "Aprovado DILOG") {
+        log.status_evento_explicacao = "Aprovado CODAE";
+      } else if (log.status_evento_explicacao === "Reprovado DILOG") {
+        log.status_evento_explicacao = "Reprovado CODAE";
+      }
+      return log;
+    });
+
+    return logsNomesAtualizados;
+  };
+
   useEffect(() => {
     getDetalhes();
     // eslint-disable-next-line
@@ -264,7 +289,7 @@ export default ({ analiseSolicitacao }) => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3">
         <div className="card-body alterar-cronograma">
-          {solicitacaoAlteracaoCronograma && !usuarioEhEmpresaFornecedor() && (
+          {solicitacaoAlteracaoCronograma && (
             <div className="row pb-3">
               <FluxoDeStatusCronograma
                 listaDeStatus={solicitacaoAlteracaoCronograma.logs}
