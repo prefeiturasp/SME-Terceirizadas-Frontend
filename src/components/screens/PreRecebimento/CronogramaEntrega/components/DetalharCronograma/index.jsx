@@ -32,10 +32,21 @@ export default () => {
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
 
+  const esconderLogFornecedor = logs => {
+    return logs.filter(
+      log => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
+    );
+  };
+
   const getDetalhes = async () => {
     if (uuid) {
-      const responseCronograma = await getCronogramaDetalhar(uuid);
+      let responseCronograma = await getCronogramaDetalhar(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
+        if (usuarioEhEmpresaFornecedor()) {
+          responseCronograma.data.logs = esconderLogFornecedor(
+            responseCronograma.data.logs
+          );
+        }
         setCronograma(responseCronograma.data);
       }
     }
@@ -84,7 +95,7 @@ export default () => {
         <div className="card-body">
           {cronograma && (
             <>
-              {cronograma.logs && !usuarioEhEmpresaFornecedor() && (
+              {cronograma.logs && (
                 <div className="row pb-3">
                   <FluxoDeStatusCronograma
                     listaDeStatus={cronograma.logs}
