@@ -7,7 +7,7 @@ import { NavLink } from "react-router-dom";
 import { tipoDeStatusClasse } from "./helper";
 import "./style.scss";
 
-export const FluxoDeStatusCronograma = ({ listaDeStatus }) => {
+export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
   const item = status => (
     <li
       className={`${tipoDeStatusClasse(status)}`}
@@ -29,7 +29,7 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus }) => {
       <ul className="progressbar">
         {listaDeStatus.map((status, key) => {
           console.log(status);
-          return status.justificativa ? (
+          return !solicitacao && status.justificativa ? (
             <NavLink
               className=""
               to={`/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${

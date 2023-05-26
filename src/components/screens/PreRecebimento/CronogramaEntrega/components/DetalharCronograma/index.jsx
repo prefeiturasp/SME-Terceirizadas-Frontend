@@ -86,11 +86,7 @@ export default () => {
             <>
               {cronograma.logs && !usuarioEhEmpresaFornecedor() && (
                 <div className="row pb-3">
-                  <FluxoDeStatusCronograma
-                    listaDeStatus={cronograma.logs}
-                    fluxo={{}}
-                    eh_gestao_alimentacao={true}
-                  />
+                  <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
                 </div>
               )}
               <DadosCronograma cronograma={cronograma} />
