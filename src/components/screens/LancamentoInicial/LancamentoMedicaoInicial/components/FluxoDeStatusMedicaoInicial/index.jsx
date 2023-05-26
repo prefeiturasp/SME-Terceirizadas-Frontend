@@ -4,9 +4,18 @@ import { fluxoMedicaoInicial } from "components/Shareable/FluxoDeStatus/helper";
 
 export default ({ solicitacaoMedicaoInicial }) => {
   const logs = () => {
-    if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.logs.length)
+    if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.logs.length) {
+      if (
+        solicitacaoMedicaoInicial.logs.find(
+          log => log.status_evento_explicacao === "Aprovado pela DRE"
+        )
+      ) {
+        return solicitacaoMedicaoInicial.logs.slice(1);
+      }
       return solicitacaoMedicaoInicial.logs;
-    else return fluxoMedicaoInicial;
+    } else {
+      return fluxoMedicaoInicial;
+    }
   };
 
   return (
