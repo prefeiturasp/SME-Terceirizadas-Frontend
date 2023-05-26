@@ -7,7 +7,7 @@ export const tipoDeStatus = status => {
     case "Assinado CODAE":
       return "aprovado";
 
-    case "Alteração Fornecedor":
+    case "Solicitada Alteração":
       return "alterado";
 
     default:
