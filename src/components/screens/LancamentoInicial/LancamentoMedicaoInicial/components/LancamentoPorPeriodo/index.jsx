@@ -11,10 +11,7 @@ import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import {
-  medicaoInicialExportarOcorrenciasPDF,
-  relatorioMedicaoInicialPDF
-} from "services/relatorios";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
@@ -163,19 +160,6 @@ export default ({
       return solicitacaoMedicaoInicial.anexo.arquivo;
   };
 
-  const pdfOcorrenciasMedicaoFinalizada = () => {
-    if (solicitacaoMedicaoInicial.anexos) {
-      const pdfAnexo = solicitacaoMedicaoInicial.anexos.find(anexo =>
-        anexo.arquivo.includes(".pdf")
-      );
-      if (pdfAnexo) {
-        medicaoInicialExportarOcorrenciasPDF(pdfAnexo.arquivo);
-      } else {
-        toastError("Arquivo PDF de ocorrências não encontrado");
-      }
-    }
-  };
-
   const gerarPDFMedicaoInicial = async () => {
     const response = await relatorioMedicaoInicialPDF(
       solicitacaoMedicaoInicial.uuid
@@ -224,9 +208,7 @@ export default ({
         <>
           <div className="row pb-2">
             <div className="col">
-              <b className="section-title">
-                Selecione período para lançamento da Medição
-              </b>
+              <b className="section-title">Períodos</b>
             </div>
           </div>
           {periodosEscolaSimples.map((periodo, index) => (
@@ -324,16 +306,6 @@ export default ({
                         className="float-right"
                         onClick={() => gerarPDFMedicaoInicial()}
                         disabled={ENVIRONMENT === "production"}
-                      />
-                      <Botao
-                        texto="Exportar Ocorrências"
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right mr-2"
-                        onClick={() => pdfOcorrenciasMedicaoFinalizada()}
-                        disabled={
-                          !solicitacaoMedicaoInicial.anexos ||
-                          solicitacaoMedicaoInicial.anexos.length === 0
-                        }
                       />
                     </>
                   )}

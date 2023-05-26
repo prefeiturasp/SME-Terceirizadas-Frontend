@@ -3,13 +3,13 @@ import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   PERIODO_LANCAMENTO
 } from "configs/constants";
 import "./styles.scss";
+import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 
 export default ({
   textoCabecalho = null,
@@ -117,6 +117,17 @@ export default ({
     });
   };
 
+  const statusPeriodo = () => {
+    const obj = quantidadeAlimentacoesLancadas.find(
+      each => each.nome_periodo_grupo === nomePeriodoGrupo()
+    );
+    if (obj) {
+      return obj.status;
+    } else {
+      return solicitacaoMedicaoInicial.status;
+    }
+  };
+
   return (
     <Form
       onSubmit={() => {}}
@@ -126,12 +137,18 @@ export default ({
           style={{ color: cor }}
         >
           <div className="row">
-            <div className="col-10 pl-0 mb-2 periodo-cabecalho">
+            <div className="col-9 pl-0 mb-2 periodo-cabecalho">
               {grupo &&
                 `${grupo} ${
                   ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
                 } `}
               {textoCabecalho}
+            </div>
+            <div className="col-3 pr-0">
+              <div className="float-right status-card-periodo-grupo">
+                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()] &&
+                  PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome}
+              </div>
             </div>
           </div>
           <div className="row">
@@ -146,7 +163,7 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-9 alimentacoes-por-tipo">
+            <div className="col-8 alimentacoes-por-tipo">
               <div className="row">
                 <div className="col-4">
                   {alimentacoesFormatadas.slice(0, 3)}
@@ -159,14 +176,24 @@ export default ({
                 </div>
               </div>
             </div>
-            <div className="col-1 pr-0">
-              <Botao
-                texto="Editar"
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3 button-editar-card"
-                onClick={() => handleClickEditar()}
-                disabled={desabilitarBotaoEditar()}
-              />
+            <div className="col-2 pr-0">
+              {solicitacaoMedicaoInicial.status ===
+              "MEDICAO_APROVADA_PELA_DRE" ? (
+                <Botao
+                  texto="Visualizar"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="float-right ml-3 botao-editar-visualizar-card"
+                  onClick={() => {}}
+                />
+              ) : (
+                <Botao
+                  texto="Editar"
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="float-right ml-3 botao-editar-visualizar-card"
+                  onClick={() => handleClickEditar()}
+                  disabled={desabilitarBotaoEditar()}
+                />
+              )}
             </div>
           </div>
         </div>
