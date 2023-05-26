@@ -432,6 +432,7 @@ export const ConferenciaDosLancamentos = () => {
                             setOcorrenciaExpandida={() =>
                               setOcorrenciaExpandida(false)
                             }
+                            solicitacao={solicitacao}
                           />
                         );
                       })}
