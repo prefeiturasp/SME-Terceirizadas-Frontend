@@ -48,48 +48,6 @@ div.conferencia-dos-lancamentos {
     }
   }
 
-  .content-section-ocorrencias {
-    border: 1px solid $grayDisabled;
-    border-radius: 4px;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    .value-avaliacao-servico-red {
-      color: $red;
-    }
-
-    .value-avaliacao-servico-green {
-      color: $green;
-    }
-
-    .download-ocorrencias {
-      color: $green;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .status-ocorrencia {
-      border: 1px solid #bcd7cb;
-      background-color: #bcd7cb;
-      color: #42474a;
-      font-family: "Roboto";
-      font-style: normal;
-      font-weight: 400;
-      border-radius: 24px;
-      padding: 5px 12px;
-
-      .red {
-        color: $red;
-      }
-    }
-
-    .visualizar-ocorrencias {
-      cursor: pointer;
-    }
-  }
-
   .content-section-acompanhamento-lancamento {
     border-radius: 4px;
     padding: 10px 14px;
@@ -130,5 +88,49 @@ div.conferencia-dos-lancamentos {
   .periodo-aprovado {
     color: #42474a;
     font-weight: 700;
+  }
+}
+
+.content-section-ocorrencias {
+  border: 1px solid $grayDisabled;
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .value-avaliacao-servico-red {
+    color: $red;
+  }
+
+  .value-avaliacao-servico-green {
+    color: $green;
+  }
+
+  .download-ocorrencias {
+    color: $green;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .status-ocorrencia {
+    border: 1px solid #bcd7cb;
+    background-color: #bcd7cb;
+    color: #42474a;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    border-radius: 24px;
+    padding: 5px 12px;
+
+    .red {
+      color: $red;
+    }
+  }
+
+  .visualizar-ocorrencias {
+    cursor: pointer;
   }
 }
