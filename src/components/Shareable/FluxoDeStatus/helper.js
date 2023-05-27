@@ -123,6 +123,7 @@ export const tipoDeStatus = status => {
     case "CODAE suspendeu o produto":
     case "Em aberto para preenchimento pela UE":
     case "Enviado pela UE":
+    case "Aprovado pela DRE":
     case "CODAE homologou":
     case "CODAE Atualizou o protocolo":
       return "prosseguiu";
