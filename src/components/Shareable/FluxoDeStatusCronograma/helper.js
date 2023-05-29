@@ -3,7 +3,7 @@ export const tipoDeStatus = status => {
     case "Cronograma Criado":
     case "Assinado e Enviado ao Fornecedor":
     case "Assinado Fornecedor":
-    case "Assinado Dinutre":
+    case "Assinado DINUTRE":
     case "Assinado CODAE":
     case "Em Análise":
     case "Cronograma Ciente":
