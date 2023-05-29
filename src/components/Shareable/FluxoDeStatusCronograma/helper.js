@@ -5,10 +5,20 @@ export const tipoDeStatus = status => {
     case "Assinado Fornecedor":
     case "Assinado Dinutre":
     case "Assinado CODAE":
+    case "Em Análise":
+    case "Cronograma Ciente":
+    case "Aprovado DINUTRE":
+    case "Aprovado DILOG":
+    case "Aprovado CODAE":
       return "aprovado";
 
     case "Solicitada Alteração":
+    case "Reprovado DILOG":
       return "alterado";
+
+    case "Reprovado DINUTRE":
+    case "Reprovado CODAE":
+      return "reprovado";
 
     default:
       return "";
