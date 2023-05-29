@@ -176,14 +176,21 @@ export const ConferenciaDosLancamentos = () => {
       } else {
         setDesabilitarEnviarParaCodae(true);
       }
+
+      const statusPermitidosSolicitarCorrecao = [
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_APROVADA_PELA_DRE"
+      ];
+
       if (
-        solicitacao.com_ocorrencias &&
-        ocorrencia &&
-        (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
-          periodosGruposMedicao.some(
-            periodoGrupo =>
-              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
-          ))
+        !statusPermitidosSolicitarCorrecao.includes(solicitacao.status) &&
+        (solicitacao.com_ocorrencias &&
+          ocorrencia &&
+          (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+            periodosGruposMedicao.some(
+              periodoGrupo =>
+                periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+            )))
       ) {
         setDesabilitarSolicitarCorrecao(false);
       } else {
