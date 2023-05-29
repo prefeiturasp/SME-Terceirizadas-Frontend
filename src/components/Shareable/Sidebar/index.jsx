@@ -32,7 +32,6 @@ export const Sidebar = ({ ...props }) => {
         id="accordionSidebar"
       >
         <div className="sidebar-divider my-0" />
-        {/* Somente para testar o sidebar enquanto ainda não há perfil/permissões */}
         <p onClick={() => toggle()} className="text-right c-pointer">
           <i
             className={
