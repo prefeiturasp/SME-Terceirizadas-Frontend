@@ -24,7 +24,8 @@ import {
   getPeriodosGruposMedicao,
   retrieveSolicitacaoMedicaoInicial,
   dreAprovaMedicao,
-  dreAprovaSolicitacaoMedicao
+  dreAprovaSolicitacaoMedicao,
+  dreSolicitaCorrecaoUE
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -33,6 +34,7 @@ import {
 import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodae } from "./components/ModalEnviarParaCodae";
+import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -56,6 +58,10 @@ export const ConferenciaDosLancamentos = () => {
   const [showModalEnviarParaCodae, setShowModalEnviarParaCodae] = useState(
     false
   );
+  const [
+    showModalSolicitarCorrecaoUE,
+    setShowModalSolicitarCorrecaoUE
+  ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
   const [
     exibirModalCentralDownloads,
@@ -210,6 +216,23 @@ export const ConferenciaDosLancamentos = () => {
       toastSuccess("Medição aprovada pela DRE e enviada para análise de CODAE");
     } else {
       setErroAPI("Erro ao aprovar Medição. Tente novamente mais tarde.");
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const dreSolicitaCorrecaoMedicao = async () => {
+    setLoading(true);
+    const response = await dreSolicitaCorrecaoUE(solicitacao.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(
+        "Solicitação de correção enviada para a unidade com sucesso"
+      );
+    } else {
+      setErroAPI(
+        "Erro ao solicitar correção da Medição. Tente novamente mais tarde."
+      );
     }
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
@@ -449,7 +472,9 @@ export const ConferenciaDosLancamentos = () => {
                             className="ml-3"
                             texto="Solicitar Correção"
                             style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                            onClick={() => {}}
+                            onClick={() =>
+                              setShowModalSolicitarCorrecaoUE(true)
+                            }
                             disabled={desabilitarSolicitarCorrecao}
                           />
                           <Botao
@@ -501,6 +526,13 @@ export const ConferenciaDosLancamentos = () => {
           setShowModal={value => setShowModalEnviarParaCodae(value)}
           aprovarSolicitacaoMedicao={() => {
             aprovarSolicitacaoMedicao();
+          }}
+        />
+        <ModalSolicitarCorrecaoUE
+          showModal={showModalSolicitarCorrecaoUE}
+          setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
+          endpoint={() => {
+            dreSolicitaCorrecaoMedicao();
           }}
         />
       </Spin>
