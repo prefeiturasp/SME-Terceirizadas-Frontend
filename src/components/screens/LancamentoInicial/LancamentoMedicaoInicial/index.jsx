@@ -1,23 +1,22 @@
-import { addMonths, getYear, format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
+import { addMonths, getYear, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Select, Skeleton } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
 import FluxoDeStatusMedicaoInicial from "./components/FluxoDeStatusMedicaoInicial";
-import { CaretDownOutlined } from "@ant-design/icons";
+import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
+import Ocorrencias from "./components/Ocorrencias";
 
 import * as perfilService from "services/perfil.service";
-import { getPanoramaEscola } from "services/dietaEspecial.service";
-import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 import { getEscolaSimples } from "services/escola.service";
-
-import { Select, Skeleton } from "antd";
-import "./styles.scss";
+import { getPanoramaEscola } from "services/dietaEspecial.service";
 import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import "./styles.scss";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -232,6 +231,16 @@ export default () => {
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         />
         <hr className="linha-form mt-4 mb-4" />
+        {solicitacaoMedicaoInicial &&
+          solicitacaoMedicaoInicial.status !==
+            "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE" && (
+            <>
+              <Ocorrencias
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              />
+              <hr className="linha-form mt-4 mb-4" />
+            </>
+          )}
         {mes &&
           ano &&
           periodosEscolaSimples &&
