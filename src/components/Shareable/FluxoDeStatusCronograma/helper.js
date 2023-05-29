@@ -9,6 +9,7 @@ export const tipoDeStatus = status => {
     case "Cronograma Ciente":
     case "Aprovado DINUTRE":
     case "Aprovado DILOG":
+    case "Aprovado CODAE":
       return "aprovado";
 
     case "Solicitada Alteração":
@@ -16,6 +17,7 @@ export const tipoDeStatus = status => {
       return "alterado";
 
     case "Reprovado DINUTRE":
+    case "Reprovado CODAE":
       return "reprovado";
 
     default:
