@@ -405,10 +405,10 @@ export const ConferenciaDosLancamentos = () => {
                                     texto="Solicitar correção no formulário"
                                     type={BUTTON_TYPE.BUTTON}
                                     style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                                    disabled={
-                                      solicitacao.status ===
-                                      "MEDICAO_APROVADA_PELA_DRE"
-                                    }
+                                    disabled={[
+                                      "MEDICAO_APROVADA_PELA_DRE",
+                                      "MEDICAO_CORRECAO_SOLICITADA"
+                                    ].includes(solicitacao.status)}
                                     onClick={() =>
                                       setShowModalSalvarOcorrencia(true)
                                     }
@@ -421,8 +421,10 @@ export const ConferenciaDosLancamentos = () => {
                                       (logCorrecaoOcorrencia &&
                                         logCorrecaoOcorrencia.status_evento_explicacao ===
                                           "Aprovado pela DRE") ||
-                                      solicitacao.status ===
-                                        "MEDICAO_APROVADA_PELA_DRE"
+                                      [
+                                        "MEDICAO_APROVADA_PELA_DRE",
+                                        "MEDICAO_CORRECAO_SOLICITADA"
+                                      ].includes(solicitacao.status)
                                     }
                                     onClick={() =>
                                       setShowModalAprovarOcorrencia(true)
