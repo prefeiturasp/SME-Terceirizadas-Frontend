@@ -24,7 +24,8 @@ import {
   getPeriodosGruposMedicao,
   retrieveSolicitacaoMedicaoInicial,
   dreAprovaMedicao,
-  dreAprovaSolicitacaoMedicao
+  dreAprovaSolicitacaoMedicao,
+  dreSolicitaCorrecaoUE
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -33,6 +34,7 @@ import {
 import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodae } from "./components/ModalEnviarParaCodae";
+import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -56,6 +58,10 @@ export const ConferenciaDosLancamentos = () => {
   const [showModalEnviarParaCodae, setShowModalEnviarParaCodae] = useState(
     false
   );
+  const [
+    showModalSolicitarCorrecaoUE,
+    setShowModalSolicitarCorrecaoUE
+  ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
   const [
     exibirModalCentralDownloads,
@@ -157,29 +163,51 @@ export const ConferenciaDosLancamentos = () => {
 
   useEffect(() => {
     if (solicitacao && periodosGruposMedicao) {
-      if (
-        solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" &&
-        solicitacao.com_ocorrencias &&
-        ocorrencia &&
-        ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
-        !periodosGruposMedicao.some(
-          periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
-        )
-      ) {
-        setDesabilitarEnviarParaCodae(false);
+      const todosPeriodosGruposAprovados = !periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
+      );
+      if (solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE") {
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+            todosPeriodosGruposAprovados
+          ) {
+            setDesabilitarEnviarParaCodae(false);
+          } else {
+            setDesabilitarEnviarParaCodae(true);
+          }
+        } else if (todosPeriodosGruposAprovados) {
+          setDesabilitarEnviarParaCodae(false);
+        } else {
+          setDesabilitarEnviarParaCodae(true);
+        }
       } else {
         setDesabilitarEnviarParaCodae(true);
       }
-      if (
-        solicitacao.com_ocorrencias &&
-        ocorrencia &&
-        (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
-          periodosGruposMedicao.some(
-            periodoGrupo =>
-              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
-          ))
-      ) {
-        setDesabilitarSolicitarCorrecao(false);
+
+      const statusPermitidosSolicitarCorrecao = [
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_APROVADA_PELA_DRE"
+      ];
+      const algumPeriodoGrupoParaCorrigir = periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+      );
+
+      if (!statusPermitidosSolicitarCorrecao.includes(solicitacao.status)) {
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+              algumPeriodoGrupoParaCorrigir)
+          ) {
+            setDesabilitarSolicitarCorrecao(false);
+          }
+        } else if (algumPeriodoGrupoParaCorrigir) {
+          setDesabilitarSolicitarCorrecao(false);
+        } else {
+          setDesabilitarSolicitarCorrecao(true);
+        }
       } else {
         setDesabilitarSolicitarCorrecao(true);
       }
@@ -210,6 +238,23 @@ export const ConferenciaDosLancamentos = () => {
       toastSuccess("Medição aprovada pela DRE e enviada para análise de CODAE");
     } else {
       setErroAPI("Erro ao aprovar Medição. Tente novamente mais tarde.");
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const dreSolicitaCorrecaoMedicao = async () => {
+    setLoading(true);
+    const response = await dreSolicitaCorrecaoUE(solicitacao.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(
+        "Solicitação de correção enviada para a unidade com sucesso"
+      );
+    } else {
+      setErroAPI(
+        "Erro ao solicitar correção da Medição. Tente novamente mais tarde."
+      );
     }
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
@@ -375,10 +420,10 @@ export const ConferenciaDosLancamentos = () => {
                                     texto="Solicitar correção no formulário"
                                     type={BUTTON_TYPE.BUTTON}
                                     style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                                    disabled={
-                                      solicitacao.status ===
-                                      "MEDICAO_APROVADA_PELA_DRE"
-                                    }
+                                    disabled={[
+                                      "MEDICAO_APROVADA_PELA_DRE",
+                                      "MEDICAO_CORRECAO_SOLICITADA"
+                                    ].includes(solicitacao.status)}
                                     onClick={() =>
                                       setShowModalSalvarOcorrencia(true)
                                     }
@@ -391,8 +436,10 @@ export const ConferenciaDosLancamentos = () => {
                                       (logCorrecaoOcorrencia &&
                                         logCorrecaoOcorrencia.status_evento_explicacao ===
                                           "Aprovado pela DRE") ||
-                                      solicitacao.status ===
-                                        "MEDICAO_APROVADA_PELA_DRE"
+                                      [
+                                        "MEDICAO_APROVADA_PELA_DRE",
+                                        "MEDICAO_CORRECAO_SOLICITADA"
+                                      ].includes(solicitacao.status)
                                     }
                                     onClick={() =>
                                       setShowModalAprovarOcorrencia(true)
@@ -443,13 +490,18 @@ export const ConferenciaDosLancamentos = () => {
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
                       />
-                      {solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" && (
+                      {![
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_CORRECAO_SOLICITADA"
+                      ].includes(solicitacao.status) && (
                         <>
                           <Botao
                             className="ml-3"
                             texto="Solicitar Correção"
                             style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                            onClick={() => {}}
+                            onClick={() =>
+                              setShowModalSolicitarCorrecaoUE(true)
+                            }
                             disabled={desabilitarSolicitarCorrecao}
                           />
                           <Botao
@@ -501,6 +553,13 @@ export const ConferenciaDosLancamentos = () => {
           setShowModal={value => setShowModalEnviarParaCodae(value)}
           aprovarSolicitacaoMedicao={() => {
             aprovarSolicitacaoMedicao();
+          }}
+        />
+        <ModalSolicitarCorrecaoUE
+          showModal={showModalSolicitarCorrecaoUE}
+          setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
+          endpoint={() => {
+            dreSolicitaCorrecaoMedicao();
           }}
         />
       </Spin>
