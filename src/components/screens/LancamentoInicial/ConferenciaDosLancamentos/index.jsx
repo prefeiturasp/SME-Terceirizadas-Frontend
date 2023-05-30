@@ -202,6 +202,8 @@ export const ConferenciaDosLancamentos = () => {
               algumPeriodoGrupoParaCorrigir)
           ) {
             setDesabilitarSolicitarCorrecao(false);
+          } else {
+            setDesabilitarSolicitarCorrecao(true);
           }
         } else if (algumPeriodoGrupoParaCorrigir) {
           setDesabilitarSolicitarCorrecao(false);
