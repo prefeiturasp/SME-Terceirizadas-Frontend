@@ -237,12 +237,17 @@ export const AcompanhamentoDeLancamentos = () => {
     uuidSolicitacaoMedicao,
     escolaUuid,
     mes,
-    ano
+    ano,
+    status
   ) => {
     if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
       history.push({
         pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
-        search: `mes=${mes}&ano=${ano}`
+        search: `mes=${mes}&ano=${ano}`,
+        state: {
+          veioDoAcompanhamentoDeLancamentos: true,
+          status
+        }
       });
     } else {
       history.push({
@@ -528,7 +533,8 @@ export const AcompanhamentoDeLancamentos = () => {
                                                 dado.uuid,
                                                 dado.escola_uuid,
                                                 dado.mes,
-                                                dado.ano
+                                                dado.ano,
+                                                dado.status
                                               )
                                             }
                                           />

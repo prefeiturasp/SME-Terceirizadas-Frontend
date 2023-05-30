@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
 import { Collapse, Input, Select } from "antd";
@@ -43,6 +44,8 @@ export default ({
   const [emEdicao, setEmEdicao] = useState(false);
   const { Option } = Select;
   const { Panel } = Collapse;
+
+  const location = useLocation();
 
   useEffect(() => {
     async function fetch() {
@@ -267,23 +270,26 @@ export default ({
                   <label className="asterisk-label">*</label>
                 </div>
                 {renderDadosResponsaveis()}
-                <div className="mt-3 pr-2">
-                  <Botao
-                    texto="Salvar"
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
-                    onClick={() => handleClickSalvar()}
-                    disabled={!emEdicao}
-                  />
-                  <Botao
-                    texto="Editar"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.PEN}
-                    className="float-right ml-3"
-                    onClick={() => handleClickEditar()}
-                    disabled={emEdicao}
-                  />
-                </div>
+                {(!location.state ||
+                  location.state.status !== "Aprovado pela DRE") && (
+                  <div className="mt-3 pr-2">
+                    <Botao
+                      texto="Salvar"
+                      style={BUTTON_STYLE.GREEN}
+                      className="float-right ml-3"
+                      onClick={() => handleClickSalvar()}
+                      disabled={!emEdicao}
+                    />
+                    <Botao
+                      texto="Editar"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      icon={BUTTON_ICON.PEN}
+                      className="float-right ml-3"
+                      onClick={() => handleClickEditar()}
+                      disabled={emEdicao}
+                    />
+                  </div>
+                )}
               </div>
             </Panel>
           </Collapse>
