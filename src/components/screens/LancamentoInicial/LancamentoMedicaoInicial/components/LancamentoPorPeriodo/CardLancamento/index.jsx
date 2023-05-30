@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
@@ -23,6 +23,8 @@ export default ({
   quantidadeAlimentacoesLancadas
 }) => {
   const history = useHistory();
+  const location = useLocation();
+
   let alimentacoesFormatadas = [];
 
   const nomePeriodoGrupo = () => {
@@ -95,6 +97,10 @@ export default ({
   const desabilitarBotaoEditar = () => {
     if (!solicitacaoMedicaoInicial) {
       return true;
+    } else if (
+      solicitacaoMedicaoInicial.status === "MEDICAO_APROVADA_PELA_DRE"
+    ) {
+      return false;
     }
     return (
       solicitacaoMedicaoInicial.status !==
@@ -112,7 +118,8 @@ export default ({
         periodo: textoCabecalho,
         grupo,
         mesAnoSelecionado: periodoSelecionado,
-        tipos_alimentacao: tipos_alimentacao
+        tipos_alimentacao: tipos_alimentacao,
+        ...location.state
       }
     });
   };
@@ -177,23 +184,18 @@ export default ({
               </div>
             </div>
             <div className="col-2 pr-0">
-              {solicitacaoMedicaoInicial.status ===
-              "MEDICAO_APROVADA_PELA_DRE" ? (
-                <Botao
-                  texto="Visualizar"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3 botao-editar-visualizar-card"
-                  onClick={() => {}}
-                />
-              ) : (
-                <Botao
-                  texto="Editar"
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right ml-3 botao-editar-visualizar-card"
-                  onClick={() => handleClickEditar()}
-                  disabled={desabilitarBotaoEditar()}
-                />
-              )}
+              <Botao
+                texto={
+                  solicitacaoMedicaoInicial.status ===
+                  "MEDICAO_APROVADA_PELA_DRE"
+                    ? "Visualizar"
+                    : "Editar"
+                }
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                className="float-right ml-3 botao-editar-visualizar-card"
+                onClick={() => handleClickEditar()}
+                disabled={desabilitarBotaoEditar()}
+              />
             </div>
           </div>
         </div>

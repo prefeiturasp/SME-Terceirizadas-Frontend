@@ -192,11 +192,16 @@ export const desabilitarField = (
   dadosValoresInclusoesAutorizadasState,
   validacaoDiaLetivo,
   validacaoSemana,
+  location,
   ehGrupoETECUrlParam = false,
   dadosValoresInclusoesEtecAutorizadasState = null,
   inclusoesEtecAutorizadas = null,
   grupoLocation = null
 ) => {
+  if (location.state && location.state.status === "Aprovado pela DRE") {
+    return true;
+  }
+
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
     locale: ptBR
   }).toString();

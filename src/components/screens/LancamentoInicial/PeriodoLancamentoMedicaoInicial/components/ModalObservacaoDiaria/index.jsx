@@ -36,7 +36,8 @@ export default ({
   dadosIniciais,
   setExibirTooltip,
   errors,
-  valoresObservacoes
+  valoresObservacoes,
+  location
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -211,6 +212,9 @@ export default ({
               component={CKEditorField}
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
               ehModal={true}
+              disabled={
+                location.state && location.state.status === "Aprovado pela DRE"
+              }
               validate={maxLengthSemTags(250)}
             />
             <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
@@ -232,6 +236,9 @@ export default ({
             <Botao
               className="ml-3 float-left"
               texto="Excluir"
+              disabled={
+                location.state && location.state.status === "Aprovado pela DRE"
+              }
               type={BUTTON_TYPE.BUTTON}
               icon={BUTTON_ICON.TRASH}
               onClick={() => onClickExcluir()}
