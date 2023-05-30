@@ -163,16 +163,25 @@ export const ConferenciaDosLancamentos = () => {
 
   useEffect(() => {
     if (solicitacao && periodosGruposMedicao) {
-      if (
-        solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" &&
-        solicitacao.com_ocorrencias &&
-        ocorrencia &&
-        ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
-        !periodosGruposMedicao.some(
-          periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
-        )
-      ) {
-        setDesabilitarEnviarParaCodae(false);
+      const todosPeriodosGruposAprovados = !periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
+      );
+      if (solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE") {
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+            todosPeriodosGruposAprovados
+          ) {
+            setDesabilitarEnviarParaCodae(false);
+          } else {
+            setDesabilitarEnviarParaCodae(true);
+          }
+        } else if (todosPeriodosGruposAprovados) {
+          setDesabilitarEnviarParaCodae(false);
+        } else {
+          setDesabilitarEnviarParaCodae(true);
+        }
       } else {
         setDesabilitarEnviarParaCodae(true);
       }
@@ -181,18 +190,24 @@ export const ConferenciaDosLancamentos = () => {
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_APROVADA_PELA_DRE"
       ];
+      const algumPeriodoGrupoParaCorrigir = periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+      );
 
-      if (
-        !statusPermitidosSolicitarCorrecao.includes(solicitacao.status) &&
-        (solicitacao.com_ocorrencias &&
-          ocorrencia &&
-          (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
-            periodosGruposMedicao.some(
-              periodoGrupo =>
-                periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
-            )))
-      ) {
-        setDesabilitarSolicitarCorrecao(false);
+      if (!statusPermitidosSolicitarCorrecao.includes(solicitacao.status)) {
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+              algumPeriodoGrupoParaCorrigir)
+          ) {
+            setDesabilitarSolicitarCorrecao(false);
+          }
+        } else if (algumPeriodoGrupoParaCorrigir) {
+          setDesabilitarSolicitarCorrecao(false);
+        } else {
+          setDesabilitarSolicitarCorrecao(true);
+        }
       } else {
         setDesabilitarSolicitarCorrecao(true);
       }
@@ -475,7 +490,10 @@ export const ConferenciaDosLancamentos = () => {
                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
                         onClick={() => handleClickDownload()}
                       />
-                      {solicitacao.status !== "MEDICAO_APROVADA_PELA_DRE" && (
+                      {![
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_CORRECAO_SOLICITADA"
+                      ].includes(solicitacao.status) && (
                         <>
                           <Botao
                             className="ml-3"
