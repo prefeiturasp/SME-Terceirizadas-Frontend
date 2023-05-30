@@ -1772,6 +1772,20 @@ export default () => {
                                                         }`
                                                       ]
                                                     )}
+                                                    disabled={
+                                                      location.state &&
+                                                      location.state
+                                                        .veioDoAcompanhamentoDeLancamentos &&
+                                                      textoBotaoObservacao(
+                                                        formValuesAtualizados[
+                                                          `${row.name}__dia_${
+                                                            column.dia
+                                                          }__categoria_${
+                                                            categoria.id
+                                                          }`
+                                                        ]
+                                                      ) === "Adicionar"
+                                                    }
                                                     type={BUTTON_TYPE.BUTTON}
                                                     style={
                                                       botaoAdicionarObrigatorio(
@@ -1825,6 +1839,7 @@ export default () => {
                                                       dadosValoresInclusoesAutorizadasState,
                                                       validacaoDiaLetivo,
                                                       validacaoSemana,
+                                                      location,
                                                       ehGrupoETECUrlParam,
                                                       dadosValoresInclusoesEtecAutorizadasState,
                                                       inclusoesEtecAutorizadas,
@@ -1906,6 +1921,20 @@ export default () => {
                                                           }`
                                                         ]
                                                       )}
+                                                      disabled={
+                                                        location.state &&
+                                                        location.state
+                                                          .veioDoAcompanhamentoDeLancamentos &&
+                                                        textoBotaoObservacao(
+                                                          formValuesAtualizados[
+                                                            `${row.name}__dia_${
+                                                              column.dia
+                                                            }__categoria_${
+                                                              categoria.id
+                                                            }`
+                                                          ]
+                                                        ) === "Adicionar"
+                                                      }
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
                                                         botaoAdicionarObrigatorioTabelaAlimentacao(
@@ -1963,6 +1992,7 @@ export default () => {
                                                         dadosValoresInclusoesAutorizadasState,
                                                         validacaoDiaLetivo,
                                                         validacaoSemana,
+                                                        location,
                                                         ehGrupoETECUrlParam,
                                                         dadosValoresInclusoesEtecAutorizadasState,
                                                         inclusoesEtecAutorizadas,
@@ -2164,6 +2194,7 @@ export default () => {
                       mesAnoConsiderado={mesAnoConsiderado}
                       calendarioMesConsiderado={calendarioMesConsiderado}
                       form={form}
+                      location={location}
                       values={formValuesAtualizados}
                       rowName={"observacoes"}
                       valoresPeriodosLancamentos={valoresPeriodosLancamentos}
@@ -2192,7 +2223,11 @@ export default () => {
                         dadosValoresInclusoesAutorizadasState
                       )
                     }
-                    disabled={disableBotaoSalvarLancamentos}
+                    disabled={
+                      (location.state &&
+                        location.state.status === "Aprovado pela DRE") ||
+                      disableBotaoSalvarLancamentos
+                    }
                     exibirTooltip={exibirTooltip}
                     tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
                     classTooltip="icone-info-invalid"

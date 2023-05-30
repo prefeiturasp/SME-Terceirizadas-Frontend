@@ -186,10 +186,8 @@ export default () => {
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <div className="row pb-2">
-          <div className="col">
-            <b>Período de Lançamento</b>
-          </div>
+        <div className="pb-2">
+          <b>Período de Lançamento</b>
         </div>
         <div className="row periodo-info-ue collapse-adjustments">
           <div className="col-4 periodo-lancamento">
@@ -197,6 +195,10 @@ export default () => {
               {objectoPeriodos.length > 0 ? (
                 <Select
                   suffixIcon={<CaretDownOutlined />}
+                  disabled={
+                    location.state &&
+                    location.state.status === "Aprovado pela DRE"
+                  }
                   name="periodo_lancamento"
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo
