@@ -57,7 +57,7 @@ export default class ModalHistorico extends Component {
     const { logs, logSelecionado } = this.state;
     return (
       <Modal
-        title="Histórico"
+        title={this.props.titulo ? this.props.titulo : "Histórico"}
         open={visible}
         onOk={onOk}
         okText={"Fechar"}

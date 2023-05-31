@@ -1,7 +1,14 @@
-import React from "react";
-import { BUTTON_ICON } from "components/Shareable/Botao/constants";
+import React, { useState } from "react";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import { OCORRENCIA_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import Botao from "components/Shareable/Botao";
+import "./styles.scss";
+import ModalHistorico from "components/Shareable/ModalHistorico";
 
 export default ({ solicitacaoMedicaoInicial }) => {
   const anexoPdfOcorrencia = solicitacaoMedicaoInicial => {
@@ -10,8 +17,22 @@ export default ({ solicitacaoMedicaoInicial }) => {
     );
   };
 
+  const [showModal, setShowModal] = useState(false);
+
+  const visualizarModal = () => {
+    setShowModal(true);
+  };
+  console.log(solicitacaoMedicaoInicial);
+
   return (
     <>
+      <ModalHistorico
+        visible={showModal}
+        onOk={() => setShowModal(false)}
+        onCancel={() => setShowModal(false)}
+        logs={solicitacaoMedicaoInicial.logs}
+        titulo="Histórico do Formulário de Ocorrências"
+      />
       <div className="row mb-3">
         <div className="col-12">
           <b className="section-title">Ocorrências</b>
@@ -72,6 +93,15 @@ export default ({ solicitacaoMedicaoInicial }) => {
                 ) : (
                   <div className="col-6" />
                 )}
+              </div>
+              <div className="row ocorrencias-rodape">
+                <Botao
+                  texto="Histórico"
+                  type={BUTTON_TYPE.BUTTON}
+                  style={BUTTON_STYLE.GREEN_OUTLINE}
+                  className="float-right m-3"
+                  onClick={visualizarModal}
+                />
               </div>
             </div>
           </div>
