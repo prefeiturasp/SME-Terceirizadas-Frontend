@@ -158,16 +158,30 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
 
     let response = await cadastrarVinculo(payload);
+    console.log(response);
     if (response.status === 201) {
       toastSuccess("Acesso adicionado com sucesso!");
       setShowCadastro(false);
       buscarVinculos(page);
     } else {
-      toastError(
-        "Erro ao adicionar acesso ao usuário, procure o administrador do SIGPAE na sua Unidade!"
-      );
+      if (
+        response.data &&
+        response.data.length &&
+        ehErroEmail(response.data[0])
+      ) {
+        toastError(
+          "Erro ao adicionar acesso ao usuário: já existe um usuário com este e-mail cadastrado!"
+        );
+      } else {
+        toastError(
+          "Erro ao adicionar acesso ao usuário, procure o administrador do SIGPAE na sua Unidade!"
+        );
+      }
     }
   };
+
+  const ehErroEmail = erro =>
+    erro.includes("(email)") && erro.includes("already exists");
 
   const editarAcesso = async values => {
     let payload = {};
