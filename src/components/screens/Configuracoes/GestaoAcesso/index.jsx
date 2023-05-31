@@ -158,7 +158,6 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
 
     let response = await cadastrarVinculo(payload);
-    console.log(response);
     if (response.status === 201) {
       toastSuccess("Acesso adicionado com sucesso!");
       setShowCadastro(false);
