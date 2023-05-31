@@ -1,17 +1,24 @@
 import React, { Fragment, useState } from "react";
+import { Field, Form } from "react-final-form";
+import { Modal } from "react-bootstrap";
+import { Radio } from "antd";
 import HTTP_STATUS from "http-status-codes";
+import { OnChange } from "react-final-form-listeners";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { Modal } from "react-bootstrap";
-import { Radio } from "antd";
 import { OPCOES_AVALIACAO_A_CONTENTO } from "../LancamentoPorPeriodo/helpers";
-import { updateOcorrenciaSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import InputFile from "components/Shareable/Input/InputFile";
-import { Field, Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import CKEditorField from "components/Shareable/CKEditorField";
+import {
+  peloMenosUmCaractere,
+  textAreaRequired
+} from "helpers/fieldValidators";
+import { composeValidators } from "helpers/utilities";
+import { updateOcorrenciaSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const ModalAtualizarOcorrencia = ({ ...props }) => {
   const {
@@ -29,6 +36,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
   );
   const [arquivo, setArquivo] = useState([]);
   const [validationFile, setValidationFile] = useState({ touched: false });
+  const [justificativa, setJustificativa] = useState(null);
 
   const isValidFiles = files => {
     let validation = { touched: true };
@@ -47,7 +55,11 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
         };
       }
     });
-    if (validation.xls && validation.pdf) {
+    if (
+      validation.xls &&
+      validation.pdf &&
+      !["", undefined, "<p></p>", null].includes(justificativa)
+    ) {
       setDisableFinalizarMedicao(false);
     } else {
       setDisableFinalizarMedicao(true);
@@ -60,7 +72,8 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
       setArquivo([]);
     }
     if (
-      event.target.value === OPCOES_AVALIACAO_A_CONTENTO.SIM_SEM_OCORRENCIAS
+      event.target.value === OPCOES_AVALIACAO_A_CONTENTO.SIM_SEM_OCORRENCIAS &&
+      !["", undefined, "<p></p>", null].includes(justificativa)
     ) {
       setDisableFinalizarMedicao(false);
       setShowButtonAnexarPlanilha(false);
@@ -96,6 +109,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
   const handleFinalizarMedicao = async () => {
     let data = new FormData();
     data.append("com_ocorrencias", String(!opcaoSelecionada));
+    data.append("justificativa", justificativa);
 
     if (!opcaoSelecionada) {
       let payloadAnexos = [];
@@ -154,12 +168,55 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
             </Radio>
           </Radio.Group>
         </div>
-        <div className="row pl-2">
-          {showButtonAnexarPlanilha && (
-            <Form
-              onSubmit={() => {}}
-              render={() => (
-                <Fragment>
+        <Form
+          onSubmit={() => {}}
+          render={({ form }) => (
+            <Fragment>
+              {opcaoSelecionada !== null ? (
+                <div className="col-12 mt-3">
+                  <p className="mb-0">
+                    Justificativa <span className="red">*</span>
+                  </p>
+                  <Field
+                    component={CKEditorField}
+                    name={"justificativa"}
+                    placeholder="Justificativa"
+                    required
+                    validate={composeValidators(
+                      textAreaRequired,
+                      peloMenosUmCaractere
+                    )}
+                  />
+                  <OnChange name="justificativa">
+                    {async value => {
+                      form.change("justificativa", value);
+                      setJustificativa(value);
+                      if (
+                        opcaoSelecionada ===
+                        OPCOES_AVALIACAO_A_CONTENTO.SIM_SEM_OCORRENCIAS
+                      ) {
+                        if (!["", undefined, "<p></p>", null].includes(value)) {
+                          setDisableFinalizarMedicao(false);
+                        } else {
+                          setDisableFinalizarMedicao(true);
+                        }
+                      } else {
+                        if (
+                          !["", undefined, "<p></p>", null].includes(value) &&
+                          Object.keys(validationFile).includes("pdf") &&
+                          Object.keys(validationFile).includes("xls")
+                        ) {
+                          setDisableFinalizarMedicao(false);
+                        } else {
+                          setDisableFinalizarMedicao(true);
+                        }
+                      }
+                    }}
+                  </OnChange>
+                </div>
+              ) : null}
+              <div className="row pl-2">
+                {showButtonAnexarPlanilha && (
                   <div className="col-12">
                     <Field
                       component={InputFile}
@@ -180,11 +237,11 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
                       customHelpTextClassName="custom-style-help-text"
                     />
                   </div>
-                </Fragment>
-              )}
-            />
+                )}
+              </div>
+            </Fragment>
           )}
-        </div>
+        />
       </Modal.Body>
       <Modal.Footer>
         <div className="row">
