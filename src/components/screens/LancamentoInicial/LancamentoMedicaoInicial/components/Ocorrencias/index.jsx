@@ -1,14 +1,17 @@
-import React from "react";
+import React, { Fragment, useState } from "react";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { OCORRENCIA_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import Botao from "components/Shareable/Botao";
+import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import { ModalAtualizarOcorrencia } from "../ModalAtualizarOcorrencia";
 
-export default ({ solicitacaoMedicaoInicial }) => {
-  const anexoPdfOcorrencia = solicitacaoMedicaoInicial => {
-    return solicitacaoMedicaoInicial.anexos.find(
-      anexo => anexo.extensao === ".pdf"
-    );
-  };
+export default ({
+  solicitacaoMedicaoInicial,
+  onClickInfoBasicas,
+  setObjSolicitacaoMIFinalizada
+}) => {
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <>
@@ -43,17 +46,17 @@ export default ({ solicitacaoMedicaoInicial }) => {
                     <span className="status-ocorrencia text-center mr-3">
                       <b
                         className={
-                          anexoPdfOcorrencia(solicitacaoMedicaoInicial)
-                            .status === "MEDICAO_CORRECAO_SOLICITADA"
+                          solicitacaoMedicaoInicial.ocorrencia.status ===
+                          "MEDICAO_CORRECAO_SOLICITADA"
                             ? "red"
                             : ""
                         }
                       >
                         {OCORRENCIA_STATUS_DE_PROGRESSO[
-                          anexoPdfOcorrencia(solicitacaoMedicaoInicial).status
+                          solicitacaoMedicaoInicial.ocorrencia.status
                         ] &&
                           OCORRENCIA_STATUS_DE_PROGRESSO[
-                            anexoPdfOcorrencia(solicitacaoMedicaoInicial).status
+                            solicitacaoMedicaoInicial.ocorrencia.status
                           ].nome}
                       </b>
                     </span>
@@ -61,7 +64,7 @@ export default ({ solicitacaoMedicaoInicial }) => {
                       className="download-ocorrencias"
                       onClick={() =>
                         medicaoInicialExportarOcorrenciasPDF(
-                          anexoPdfOcorrencia(solicitacaoMedicaoInicial).arquivo
+                          solicitacaoMedicaoInicial.ocorrencia.ultimo_arquivo
                         )
                       }
                     >
@@ -72,11 +75,55 @@ export default ({ solicitacaoMedicaoInicial }) => {
                 ) : (
                   <div className="col-6" />
                 )}
+                {solicitacaoMedicaoInicial.status ===
+                  "MEDICAO_CORRECAO_SOLICITADA" && (
+                  <Fragment>
+                    <div className="col-12 mt-4">
+                      <p>Correções Solicitadas:</p>
+                      <div className="justificativa-ocorrencia-medicao">
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
+                              log =>
+                                log.status_evento_explicacao ===
+                                "Correção solicitada"
+                            ).justificativa
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12 mt-4">
+                      <div className="float-right">
+                        <Botao
+                          className="ml-3"
+                          texto="Histórico"
+                          style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                          onClick={() => {}}
+                        />
+                        <Botao
+                          className="ml-3"
+                          texto="Atualizar Formulário de Ocorrências"
+                          style={BUTTON_STYLE.GREEN}
+                          onClick={() => setShowModal(true)}
+                        />
+                      </div>
+                    </div>
+                  </Fragment>
+                )}
               </div>
             </div>
           </div>
         </div>
       )}
+      <ModalAtualizarOcorrencia
+        showModal={showModal}
+        closeModal={() => setShowModal(false)}
+        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+        onClickInfoBasicas={onClickInfoBasicas}
+        setObjSolicitacaoMIFinalizada={value =>
+          setObjSolicitacaoMIFinalizada(value)
+        }
+      />
     </>
   );
 };

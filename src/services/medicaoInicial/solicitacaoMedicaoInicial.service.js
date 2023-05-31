@@ -36,6 +36,23 @@ export const updateSolicitacaoMedicaoInicial = async (uuid, params) => {
   }
 };
 
+export const updateOcorrenciaSolicitacaoMedicaoInicial = async (
+  uuid,
+  params
+) => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/ue-atualiza-ocorrencia/`;
+  const headers = { "content-type": "multipart/form-data" };
+  const response = await axios
+    .patch(url, params, {
+      headers: headers
+    })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const retrieveSolicitacaoMedicaoInicial = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
