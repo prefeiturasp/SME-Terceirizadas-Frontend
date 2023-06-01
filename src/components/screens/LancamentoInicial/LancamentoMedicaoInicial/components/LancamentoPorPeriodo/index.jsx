@@ -26,15 +26,13 @@ export default ({
   onClickInfoBasicas,
   periodoSelecionado,
   mes,
-  ano
+  ano,
+  objSolicitacaoMIFinalizada,
+  setObjSolicitacaoMIFinalizada
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
   );
-  const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
-    anexo: null,
-    status: null
-  });
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
     undefined
   );
