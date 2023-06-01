@@ -6,8 +6,10 @@ export default ({ solicitacaoMedicaoInicial }) => {
   const logs = () => {
     if (solicitacaoMedicaoInicial && solicitacaoMedicaoInicial.logs.length) {
       if (
-        solicitacaoMedicaoInicial.logs.find(
-          log => log.status_evento_explicacao === "Aprovado pela DRE"
+        solicitacaoMedicaoInicial.logs.find(log =>
+          ["Aprovado pela DRE", "Correção solicitada"].includes(
+            log.status_evento_explicacao
+          )
         )
       ) {
         return solicitacaoMedicaoInicial.logs.slice(1);
