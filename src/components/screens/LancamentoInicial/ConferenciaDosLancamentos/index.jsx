@@ -116,9 +116,7 @@ export const ConferenciaDosLancamentos = () => {
       setMesSolicitacao(mes);
       setAnoSolicitacao(ano);
       if (response.data.com_ocorrencias) {
-        const arquivoPdfOcorrencia = response.data.anexos.find(
-          anexo => anexo.extensao === ".pdf"
-        );
+        const arquivoPdfOcorrencia = response.data.ocorrencia;
         const logOcorrencia = arquivoPdfOcorrencia.logs.find(log =>
           ["Correção solicitada", "Aprovado pela DRE"].includes(
             log.status_evento_explicacao

@@ -36,6 +36,10 @@ export default () => {
     loadingSolicitacaoMedInicial,
     setLoadingSolicitacaoMedicaoInicial
   ] = useState(true);
+  const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
+    anexo: null,
+    status: null
+  });
   const history = useHistory();
   const location = useLocation();
 
@@ -239,6 +243,10 @@ export default () => {
             <>
               <Ocorrencias
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                onClickInfoBasicas={onClickInfoBasicas}
+                setObjSolicitacaoMIFinalizada={value =>
+                  setObjSolicitacaoMIFinalizada(value)
+                }
               />
               <hr className="linha-form mt-4 mb-4" />
             </>
@@ -258,6 +266,10 @@ export default () => {
               onClickInfoBasicas={onClickInfoBasicas}
               setLoadingSolicitacaoMedicaoInicial={value =>
                 setLoadingSolicitacaoMedicaoInicial(value)
+              }
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              setObjSolicitacaoMIFinalizada={value =>
+                setObjSolicitacaoMIFinalizada(value)
               }
             />
           )}
