@@ -22,7 +22,7 @@ const ModalCestasBasicas = () => {
           <div className="row">
             <div className="col-2">
               <div className="text-center">
-                <i className="fas fa-calendar-alt green" />
+                <img src="/assets/image/alimentos.svg" alt="Alimentos" />
               </div>
             </div>
             <div className="col-10">

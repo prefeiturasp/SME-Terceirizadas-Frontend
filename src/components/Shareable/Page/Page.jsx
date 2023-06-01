@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { ENVIRONMENT } from "constants/config";
 import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import BotaoVoltar from "./BotaoVoltar";
@@ -78,7 +79,9 @@ export const Page = ({ ...props }) => {
     let dataFinal = new Date("2023-07-03T00:00:00");
     let now = new Date();
 
-    if (!usuarioEhEscola()) {
+    if (ENVIRONMENT !== "production") {
+      return false;
+    } else if (!usuarioEhEscola()) {
       return false;
     } else if (dataInicial.getTime() > now.getTime()) {
       return false;
