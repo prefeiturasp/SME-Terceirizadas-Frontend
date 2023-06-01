@@ -102,10 +102,14 @@ export default ({
     }
 
     if (response.results.length) {
-      setDadosIniciais({
-        ...values,
-        nome_escola: response.results[0].nome
-      });
+      if (response.results[0].tipo_gestao === "TERC TOTAL") {
+        setDadosIniciais({
+          ...values,
+          nome_escola: response.results[0].nome
+        });
+      } else {
+        toastError("Escola não possui gestão Terceirizada Total.");
+      }
     } else {
       toastError("Escola não encontrada no EOL.");
       setDadosIniciais({ ...values, nome_escola: undefined });
