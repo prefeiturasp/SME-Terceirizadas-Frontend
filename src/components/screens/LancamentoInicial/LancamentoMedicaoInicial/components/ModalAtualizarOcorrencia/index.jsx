@@ -71,16 +71,25 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
     if (opcaoSelecionada === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS) {
       setArquivo([]);
     }
+
     if (
       event.target.value === OPCOES_AVALIACAO_A_CONTENTO.SIM_SEM_OCORRENCIAS &&
       !["", undefined, "<p></p>", null].includes(justificativa)
     ) {
       setDisableFinalizarMedicao(false);
       setShowButtonAnexarPlanilha(false);
+    }
+
+    if (arquivo.length === 0) {
+      setDisableFinalizarMedicao(true);
+    }
+
+    if (
+      event.target.value === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS
+    ) {
+      setShowButtonAnexarPlanilha(true);
     } else {
-      arquivo.length === 0 && setDisableFinalizarMedicao(true);
-      event.target.value === OPCOES_AVALIACAO_A_CONTENTO.NAO_COM_OCORRENCIAS &&
-        setShowButtonAnexarPlanilha(true);
+      setShowButtonAnexarPlanilha(false);
     }
     setOpcaoSelecionada(event.target.value);
   };
