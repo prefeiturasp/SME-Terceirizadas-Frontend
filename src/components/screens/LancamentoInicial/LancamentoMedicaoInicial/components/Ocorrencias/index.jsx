@@ -41,7 +41,7 @@ export default ({
                     </b>
                   </p>
                 </div>
-                {solicitacaoMedicaoInicial.com_ocorrencias ? (
+                {solicitacaoMedicaoInicial.ocorrencia ? (
                   <div className="col-8 text-right">
                     <span className="status-ocorrencia text-center mr-3">
                       <b
