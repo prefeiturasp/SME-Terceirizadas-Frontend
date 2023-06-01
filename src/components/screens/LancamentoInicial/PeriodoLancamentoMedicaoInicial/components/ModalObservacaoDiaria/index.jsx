@@ -213,7 +213,8 @@ export default ({
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
               ehModal={true}
               disabled={
-                location.state && location.state.status === "Aprovado pela DRE"
+                location.state &&
+                location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE"
               }
               validate={maxLengthSemTags(250)}
             />

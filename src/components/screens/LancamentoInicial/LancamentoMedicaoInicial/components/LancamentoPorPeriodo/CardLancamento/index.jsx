@@ -119,6 +119,7 @@ export default ({
         grupo,
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao,
+        status_periodo: statusPeriodo(),
         ...location.state
       }
     });
