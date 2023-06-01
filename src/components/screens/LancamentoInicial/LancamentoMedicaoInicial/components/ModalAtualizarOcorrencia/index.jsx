@@ -145,7 +145,11 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
   };
 
   return (
-    <Modal dialogClassName="modal-50w" show={showModal}>
+    <Modal
+      dialogClassName="modal-50w"
+      show={showModal}
+      onHide={() => handleHideModal()}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Atualização do Formulário de Ocorrências</Modal.Title>
       </Modal.Header>
