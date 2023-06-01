@@ -71,6 +71,9 @@ export const FluxoDeStatus = props => {
         ) {
           return "CODAE autorizou cancelamento";
         }
+        if (log.status_evento_explicacao === "Correção solicitada") {
+          return "Devolvido para ajustes pela DRE";
+        }
         return log.status_evento_explicacao;
       }
     }
