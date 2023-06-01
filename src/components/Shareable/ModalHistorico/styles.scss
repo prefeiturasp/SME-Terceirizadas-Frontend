@@ -5,3 +5,19 @@
   color: $green;
   border-color: $green;
 }
+.container-historico {
+  position: relative;
+}
+
+.footer-historico {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+.download-ocorrencias {
+  color: $green;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}

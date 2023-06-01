@@ -287,10 +287,10 @@ export const ConferenciaDosLancamentos = () => {
           onOk={() => setShowModal(false)}
           onCancel={() => setShowModal(false)}
           logs={solicitacao.logs}
+          solicitacaoMedicaoInicial={solicitacao}
           titulo="Histórico do Formulário de Ocorrências"
         />
       )}
-      {console.log("solicitacao", solicitacao)}
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={loading}>
         {!erroAPI && dadosIniciais && periodosGruposMedicao && (

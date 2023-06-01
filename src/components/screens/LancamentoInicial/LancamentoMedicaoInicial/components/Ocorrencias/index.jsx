@@ -22,7 +22,6 @@ export default ({ solicitacaoMedicaoInicial }) => {
   const visualizarModal = () => {
     setShowModal(true);
   };
-  console.log(solicitacaoMedicaoInicial);
 
   return (
     <>
@@ -31,6 +30,7 @@ export default ({ solicitacaoMedicaoInicial }) => {
         onOk={() => setShowModal(false)}
         onCancel={() => setShowModal(false)}
         logs={solicitacaoMedicaoInicial.logs}
+        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         titulo="Histórico do Formulário de Ocorrências"
       />
       <div className="row mb-3">

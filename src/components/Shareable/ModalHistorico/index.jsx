@@ -3,15 +3,25 @@ import React, { Component } from "react";
 import { truncarString } from "helpers/utilities";
 
 import "./styles.scss";
+import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import { BUTTON_STYLE } from "../Botao/constants";
+import Botao from "../Botao";
 
 export default class ModalHistorico extends Component {
   constructor(props) {
     super(props);
     this.state = {
       logs: [],
-      logSelecionado: null
+      logSelecionado: null,
+      solicitacaoMedicaoInicial: null
     };
   }
+
+  anexoPdfOcorrencia = solicitacaoMedicaoInicial => {
+    return solicitacaoMedicaoInicial.anexos.find(
+      anexo => anexo.extensao === ".pdf"
+    );
+  };
 
   itemLogAtivo = (index, ativo) => {
     let { logs, logSelecionado } = this.state;
@@ -116,7 +126,7 @@ export default class ModalHistorico extends Component {
           <article className="detail-log">
             <div />
 
-            <div>
+            <div className="container-historico">
               <header>
                 <div />
                 {logSelecionado !== null ? (
@@ -177,6 +187,30 @@ export default class ModalHistorico extends Component {
                   <div />
                 )}
               </header>
+              {logSelecionado !== null &&
+                (logSelecionado.status_evento_explicacao ===
+                  "Enviado pela UE" ||
+                  logSelecionado.status_evento_explicacao ===
+                    "Correção solicitada") && (
+                  <footer className="footer-historico">
+                    {this.props.solicitacaoMedicaoInicial && (
+                      <article>
+                        <Botao
+                          className="download-ocorrencias"
+                          style={BUTTON_STYLE.GREEN}
+                          texto="Download do formulário"
+                          onClick={() =>
+                            medicaoInicialExportarOcorrenciasPDF(
+                              this.anexoPdfOcorrencia(
+                                this.props.solicitacaoMedicaoInicial
+                              ).arquivo
+                            )
+                          }
+                        />
+                      </article>
+                    )}
+                  </footer>
+                )}
             </div>
           </article>
         </section>
