@@ -415,6 +415,12 @@ export const usuarioEhDiretorUE = () => {
   return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhEscola = () => {
+  return [PERFIL.DIRETOR_UE, PERFIL.ADMINISTRADOR_UE].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const usuarioEscolaEhGestaoMistaParceira = () => {
   return [TIPO_GESTAO.MISTA, TIPO_GESTAO.PARCEIRA].includes(
     localStorage.getItem("tipo_gestao")
