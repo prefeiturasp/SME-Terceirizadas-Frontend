@@ -135,6 +135,7 @@ export const tipoDeStatus = status => {
     case "Suspenso em alguns editais":
     case "Ativo em alguns editais":
     case "Vínculo do Edital ao Produto":
+    case "Correção solicitada":
       return "questionado";
 
     case "Escola cancelou":

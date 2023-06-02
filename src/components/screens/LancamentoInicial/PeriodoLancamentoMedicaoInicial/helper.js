@@ -198,7 +198,10 @@ export const desabilitarField = (
   inclusoesEtecAutorizadas = null,
   grupoLocation = null
 ) => {
-  if (location.state && location.state.status === "Aprovado pela DRE") {
+  if (
+    location.state &&
+    location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE"
+  ) {
     return true;
   }
 

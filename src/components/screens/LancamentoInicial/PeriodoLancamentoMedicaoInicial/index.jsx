@@ -1775,7 +1775,8 @@ export default () => {
                                                     disabled={
                                                       location.state &&
                                                       location.state
-                                                        .veioDoAcompanhamentoDeLancamentos &&
+                                                        .status_periodo ===
+                                                        "MEDICAO_APROVADA_PELA_DRE" &&
                                                       textoBotaoObservacao(
                                                         formValuesAtualizados[
                                                           `${row.name}__dia_${
@@ -1924,7 +1925,8 @@ export default () => {
                                                       disabled={
                                                         location.state &&
                                                         location.state
-                                                          .veioDoAcompanhamentoDeLancamentos &&
+                                                          .status_periodo ===
+                                                          "MEDICAO_APROVADA_PELA_DRE" &&
                                                         textoBotaoObservacao(
                                                           formValuesAtualizados[
                                                             `${row.name}__dia_${
@@ -2225,7 +2227,8 @@ export default () => {
                     }
                     disabled={
                       (location.state &&
-                        location.state.status === "Aprovado pela DRE") ||
+                        location.state.status_periodo ===
+                          "MEDICAO_APROVADA_PELA_DRE") ||
                       disableBotaoSalvarLancamentos
                     }
                     exibirTooltip={exibirTooltip}

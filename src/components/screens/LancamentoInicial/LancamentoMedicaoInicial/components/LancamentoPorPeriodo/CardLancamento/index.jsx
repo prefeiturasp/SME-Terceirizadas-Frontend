@@ -98,7 +98,10 @@ export default ({
     if (!solicitacaoMedicaoInicial) {
       return true;
     } else if (
-      solicitacaoMedicaoInicial.status === "MEDICAO_APROVADA_PELA_DRE"
+      ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
+        solicitacaoMedicaoInicial.status
+      ) ||
+      statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
     ) {
       return false;
     }
@@ -119,6 +122,7 @@ export default ({
         grupo,
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao,
+        status_periodo: statusPeriodo(),
         ...location.state
       }
     });
@@ -187,8 +191,12 @@ export default ({
               <Botao
                 texto={
                   solicitacaoMedicaoInicial.status ===
-                  "MEDICAO_APROVADA_PELA_DRE"
+                    "MEDICAO_APROVADA_PELA_DRE" ||
+                  statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
                     ? "Visualizar"
+                    : solicitacaoMedicaoInicial.status ===
+                      "MEDICAO_CORRECAO_SOLICITADA"
+                    ? "Corrigir"
                     : "Editar"
                 }
                 style={BUTTON_STYLE.GREEN_OUTLINE}
