@@ -3,8 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import CardLancamento from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
@@ -12,9 +15,16 @@ import {
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
-import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  escolaEnviaCorrecaoMedicaoInicialDRE,
+  getQuantidadeAlimentacoesLancadasPeriodoGrupo
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
-import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+import {
+  getError,
+  usuarioEhDiretorUE,
+  usuarioEhEscolaTerceirizadaDiretor
+} from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
@@ -199,6 +209,25 @@ export default ({
     );
   };
 
+  const renderBotaoEnviarCorrecao = () => {
+    return (
+      solicitacaoMedicaoInicial &&
+      solicitacaoMedicaoInicial.status === "MEDICAO_CORRECAO_SOLICITADA" &&
+      usuarioEhDiretorUE()
+    );
+  };
+
+  const escolaEnviaCorrecaoDRE = async () => {
+    const response = await escolaEnviaCorrecaoMedicaoInicialDRE(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Correção da Medição Inicial enviada com sucesso!");
+    } else {
+      toastError(getError(response.data));
+    }
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -275,41 +304,48 @@ export default ({
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
               />
             )}
-          <div className="row mt-4">
-            <div className="col">
-              {renderBotaoFinalizar() ? (
-                <Botao
-                  texto="Finalizar"
-                  style={BUTTON_STYLE.GREEN}
-                  className="float-right"
-                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
-                  onClick={() => setShowModalFinalizarMedicao(true)}
-                />
-              ) : (
-                <>
+          <div className="mt-4">
+            {renderBotaoFinalizar() ? (
+              <Botao
+                texto="Finalizar"
+                style={BUTTON_STYLE.GREEN}
+                className="float-right"
+                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                onClick={() => setShowModalFinalizarMedicao(true)}
+              />
+            ) : (
+              <div className="row">
+                <div className="col-12 text-right">
                   {renderBotaoExportarPlanilha() && (
                     <a href={getPathPlanilhaOcorr()}>
                       <Botao
                         texto="Exportar Planilha de Ocorrências"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right ml-4"
+                        className="mr-3"
                       />
                     </a>
                   )}
                   {renderBotaoExportarPDF() && (
-                    <>
-                      <Botao
-                        texto="Exportar PDF"
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right"
-                        onClick={() => gerarPDFMedicaoInicial()}
-                        disabled={ENVIRONMENT === "production"}
-                      />
-                    </>
+                    <Botao
+                      texto="Exportar PDF"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="mr-3"
+                      onClick={() => gerarPDFMedicaoInicial()}
+                      disabled={ENVIRONMENT === "production"}
+                    />
                   )}
-                </>
-              )}
-            </div>
+                  {renderBotaoEnviarCorrecao() && (
+                    <Botao
+                      texto="Enviar correção"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="mr-3"
+                      onClick={() => escolaEnviaCorrecaoDRE()}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <ModalFinalizarMedicao
             showModal={showModalFinalizarMedicao}
