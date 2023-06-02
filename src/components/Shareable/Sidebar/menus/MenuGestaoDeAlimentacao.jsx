@@ -30,7 +30,8 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEscolaEhGestaoDireta,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhEscolaTerceirizadaQualquerPerfil
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -179,12 +180,12 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
               Solicitações de Alimentação
             </LeafItem>
           )}
-          {!usuarioEhEscolaTerceirizada() ||
-            (!usuarioEhEscolaTerceirizadaDiretor() && (
-              <LeafItem to={`/relatorio/alunos-matriculados`}>
-                Alunos Matriculados
-              </LeafItem>
-            ))}
+
+          {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+            <LeafItem to={`/relatorio/alunos-matriculados`}>
+              Alunos Matriculados
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>
