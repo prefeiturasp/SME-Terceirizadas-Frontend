@@ -1,0 +1,167 @@
+@import "../../../styles/variables.scss";
+
+.progressbar-main-title {
+  font-size: 10px;
+  color: #353535;
+  margin-right: -15%;
+  margin-left: 2%;
+}
+
+.progressbar-titles {
+  color: $grayPlaceholder;
+  display: inline-flex;
+  font-size: 9px;
+  font-weight: bold;
+  list-style-type: none;
+  margin-bottom: 0;
+  text-align: center;
+  width: 100%;
+  li {
+    width: 33.3%;
+  }
+}
+
+.fluxos {
+  display: flex;
+  justify-content: space-around;
+}
+
+.progressbar {
+  a {
+    color: #858796;
+
+    :hover {
+      color: #858796;
+    }
+  }
+  li {
+    list-style-type: none;
+    font-weight: bold;
+    font-size: 9px;
+    float: left;
+    position: relative;
+    text-align: center;
+    z-index: 0;
+    &.active {
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        font-size: 18px;
+        content: "\f00c";
+        font-weight: 900;
+        background-color: $green !important;
+        color: #fff;
+        border-color: $green !important;
+      }
+      &:after {
+        background-color: $green !important;
+      }
+      + li.disapproved:after {
+        background-color: $red !important;
+      }
+      + li.cancelled:after {
+        background-color: $black !important;
+      }
+      + li.questioned:after {
+        background-color: $yellow !important;
+      }
+    }
+    &:first-child:after {
+      content: none;
+    }
+    &:before {
+      content: "";
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      display: block;
+      font-weight: 900;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      border-radius: 50%;
+      background-color: #a4a4a4;
+    }
+    &.pending {
+      &:before {
+        color: $white;
+        content: "\f04d";
+        font-family: "Font Awesome 5 Free";
+        font-size: 10px;
+      }
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      margin-left: 14px;
+      width: 100%;
+      height: 5px;
+      background-color: #a4a4a4;
+      top: 15px;
+      left: -50%;
+      z-index: -1;
+    }
+    &.disapproved {
+      color: $red;
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        font-size: 18px;
+        content: "\f05e";
+        font-weight: 900;
+        background-color: $red;
+        color: #fff;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        margin-left: 14px;
+        width: 100%;
+        height: 5px;
+        background-color: $red;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
+      }
+    }
+    &.cancelled {
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        font-size: 18px;
+        content: "\f057";
+        font-weight: 900;
+        background-color: #000;
+        color: #fff;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        margin-left: 14px;
+        width: 100%;
+        height: 5px;
+        background-color: $black;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
+      }
+    }
+    &.questioned {
+      &:before {
+        font-family: "Font Awesome 5 Free";
+        font-size: 18px;
+        content: "\f12a";
+        font-weight: 900;
+        background-color: $yellow;
+        color: #000;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        margin-left: 14px;
+        width: 100%;
+        height: 5px;
+        background-color: $yellow;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
+      }
+    }
+  }
+}

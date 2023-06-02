@@ -1,15 +1,15 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL,
   PERIODO_LANCAMENTO
 } from "configs/constants";
 import "./styles.scss";
+import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 
 export default ({
   textoCabecalho = null,
@@ -23,6 +23,8 @@ export default ({
   quantidadeAlimentacoesLancadas
 }) => {
   const history = useHistory();
+  const location = useLocation();
+
   let alimentacoesFormatadas = [];
 
   const nomePeriodoGrupo = () => {
@@ -64,30 +66,44 @@ export default ({
   };
 
   if (ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC) {
-    alimentacoesFormatadas = tipos_alimentacao.map((item, key) => (
+    if (ehGrupoETEC) {
+      tipos_alimentacao = tipos_alimentacao.filter(
+        alimentacao => alimentacao !== "Lanche Emergencial"
+      );
+    }
+    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
       <div key={key} className="mb-2">
         <span style={{ color: cor }}>
-          <b>{quantidadeAlimentacao(item)}</b>
+          <b>{quantidadeAlimentacao(alimentacao)}</b>
         </span>
-        <span className="ml-1">- {item}</span>
+        <span className="ml-1">- {alimentacao}</span>
         <br />
       </div>
     ));
   } else {
-    alimentacoesFormatadas = tipos_alimentacao.map((alimentacao, key) => (
-      <div key={key} className="mb-2">
-        <span style={{ color: cor }}>
-          <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
-        </span>
-        <span className="ml-1">- {alimentacao.nome}</span>
-        <br />
-      </div>
-    ));
+    alimentacoesFormatadas = tipos_alimentacao
+      .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+      .map((alimentacao, key) => (
+        <div key={key} className="mb-2">
+          <span style={{ color: cor }}>
+            <b>{quantidadeAlimentacao(alimentacao.nome)}</b>
+          </span>
+          <span className="ml-1">- {alimentacao.nome}</span>
+          <br />
+        </div>
+      ));
   }
 
   const desabilitarBotaoEditar = () => {
     if (!solicitacaoMedicaoInicial) {
       return true;
+    } else if (
+      ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
+        solicitacaoMedicaoInicial.status
+      ) ||
+      statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
+    ) {
+      return false;
     }
     return (
       solicitacaoMedicaoInicial.status !==
@@ -105,9 +121,22 @@ export default ({
         periodo: textoCabecalho,
         grupo,
         mesAnoSelecionado: periodoSelecionado,
-        tipos_alimentacao: tipos_alimentacao
+        tipos_alimentacao: tipos_alimentacao,
+        status_periodo: statusPeriodo(),
+        ...location.state
       }
     });
+  };
+
+  const statusPeriodo = () => {
+    const obj = quantidadeAlimentacoesLancadas.find(
+      each => each.nome_periodo_grupo === nomePeriodoGrupo()
+    );
+    if (obj) {
+      return obj.status;
+    } else {
+      return solicitacaoMedicaoInicial.status;
+    }
   };
 
   return (
@@ -119,12 +148,18 @@ export default ({
           style={{ color: cor }}
         >
           <div className="row">
-            <div className="col-10 pl-0 mb-2 periodo-cabecalho">
+            <div className="col-9 pl-0 mb-2 periodo-cabecalho">
               {grupo &&
                 `${grupo} ${
                   ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
                 } `}
               {textoCabecalho}
+            </div>
+            <div className="col-3 pr-0">
+              <div className="float-right status-card-periodo-grupo">
+                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()] &&
+                  PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome}
+              </div>
             </div>
           </div>
           <div className="row">
@@ -139,7 +174,7 @@ export default ({
               </span>
               <span>ALIMENTAÇÕES</span>
             </div>
-            <div className="col-9 alimentacoes-por-tipo">
+            <div className="col-8 alimentacoes-por-tipo">
               <div className="row">
                 <div className="col-4">
                   {alimentacoesFormatadas.slice(0, 3)}
@@ -152,11 +187,20 @@ export default ({
                 </div>
               </div>
             </div>
-            <div className="col-1 pr-0">
+            <div className="col-2 pr-0">
               <Botao
-                texto="Editar"
+                texto={
+                  solicitacaoMedicaoInicial.status ===
+                    "MEDICAO_APROVADA_PELA_DRE" ||
+                  statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
+                    ? "Visualizar"
+                    : solicitacaoMedicaoInicial.status ===
+                      "MEDICAO_CORRECAO_SOLICITADA"
+                    ? "Corrigir"
+                    : "Editar"
+                }
                 style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="float-right ml-3 button-editar-card"
+                className="float-right ml-3 botao-editar-visualizar-card"
                 onClick={() => handleClickEditar()}
                 disabled={desabilitarBotaoEditar()}
               />

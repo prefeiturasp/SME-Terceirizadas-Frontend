@@ -11,15 +11,13 @@ import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import {
-  medicaoInicialExportarOcorrenciasPDF,
-  relatorioMedicaoInicialPDF
-} from "services/relatorios";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 
 export default ({
   escolaInstituicao,
@@ -29,15 +27,12 @@ export default ({
   periodoSelecionado,
   mes,
   ano,
-  setLoadingSolicitacaoMedicaoInicial
+  objSolicitacaoMIFinalizada,
+  setObjSolicitacaoMIFinalizada
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
   );
-  const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
-    anexo: null,
-    status: null
-  });
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
     undefined
   );
@@ -58,6 +53,10 @@ export default ({
     setQuantidadeAlimentacoesLancadas
   ] = useState(undefined);
   const [erroAPI, setErroAPI] = useState("");
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const getPeriodosInclusaoContinuaAsync = async () => {
     const response = await getPeriodosInclusaoContinua({
@@ -159,23 +158,15 @@ export default ({
       return solicitacaoMedicaoInicial.anexo.arquivo;
   };
 
-  const pdfOcorrenciasMedicaoFinalizada = () => {
-    if (solicitacaoMedicaoInicial.anexos) {
-      const pdfAnexo = solicitacaoMedicaoInicial.anexos.find(anexo =>
-        anexo.arquivo.includes(".pdf")
-      );
-      if (pdfAnexo) {
-        medicaoInicialExportarOcorrenciasPDF(pdfAnexo.arquivo);
-      } else {
-        toastError("Arquivo PDF de ocorrências não encontrado");
-      }
-    }
-  };
-
   const gerarPDFMedicaoInicial = async () => {
-    setLoadingSolicitacaoMedicaoInicial(true);
-    await relatorioMedicaoInicialPDF(solicitacaoMedicaoInicial.uuid);
-    setLoadingSolicitacaoMedicaoInicial(false);
+    const response = await relatorioMedicaoInicialPDF(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
   };
 
   const renderBotaoExportarPlanilha = () => {
@@ -215,9 +206,7 @@ export default ({
         <>
           <div className="row pb-2">
             <div className="col">
-              <b className="section-title">
-                Selecione período para lançamento da Medição
-              </b>
+              <b className="section-title">Períodos</b>
             </div>
           </div>
           {periodosEscolaSimples.map((periodo, index) => (
@@ -316,16 +305,6 @@ export default ({
                         onClick={() => gerarPDFMedicaoInicial()}
                         disabled={ENVIRONMENT === "production"}
                       />
-                      <Botao
-                        texto="Exportar Ocorrências"
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right mr-2"
-                        onClick={() => pdfOcorrenciasMedicaoFinalizada()}
-                        disabled={
-                          !solicitacaoMedicaoInicial.anexos ||
-                          solicitacaoMedicaoInicial.anexos.length === 0
-                        }
-                      />
                     </>
                   )}
                 </>
@@ -339,6 +318,10 @@ export default ({
             escolaInstituicao={escolaInstituicao}
             solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
             onClickInfoBasicas={onClickInfoBasicas}
+          />
+          <ModalSolicitacaoDownload
+            show={exibirModalCentralDownloads}
+            setShow={setExibirModalCentralDownloads}
           />
         </>
       )}

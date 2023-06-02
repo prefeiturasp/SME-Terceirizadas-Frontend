@@ -228,8 +228,9 @@ export default () => {
         ) || periodos_escolares[0];
       const tipos_alimentacao = periodo.tipos_alimentacao;
       const cloneTiposAlimentacao = deepCopy(tipos_alimentacao);
-      const tiposAlimentacaoFormatadas = cloneTiposAlimentacao.map(
-        alimentacao => {
+      const tiposAlimentacaoFormatadas = cloneTiposAlimentacao
+        .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+        .map(alimentacao => {
           return {
             ...alimentacao,
             name: alimentacao.nome
@@ -238,8 +239,7 @@ export default () => {
               .toLowerCase()
               .replaceAll(/ /g, "_")
           };
-        }
-      );
+        });
 
       const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
         ali => ali.nome === "Refeição"
@@ -263,14 +263,6 @@ export default () => {
           name: "repeticao_sobremesa",
           uuid: null
         });
-      }
-
-      const indexLancheEmergencial = tiposAlimentacaoFormatadas.findIndex(
-        ali => ali.nome === "Lanche Emergencial"
-      );
-      if (indexLancheEmergencial !== -1) {
-        tiposAlimentacaoFormatadas[indexLancheEmergencial].nome =
-          "Lanche Emergenc.";
       }
 
       const tiposAlimentacaoProgramasProjetos = deepCopy(
@@ -405,8 +397,9 @@ export default () => {
 
       const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
       const cloneTiposAlimentacaoEtec = deepCopy(tiposAlimentacaoEtec);
-      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec.map(
-        alimentacao => {
+      const tiposAlimentacaoEtecFormatadas = cloneTiposAlimentacaoEtec
+        .filter(alimentacao => alimentacao !== "Lanche Emergencial")
+        .map(alimentacao => {
           return {
             nome: alimentacao,
             name: alimentacao
@@ -416,8 +409,7 @@ export default () => {
               .replaceAll(/ /g, "_"),
             uuid: null
           };
-        }
-      );
+        });
 
       const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
         ali => ali.nome === "Refeição"
@@ -1780,6 +1772,21 @@ export default () => {
                                                         }`
                                                       ]
                                                     )}
+                                                    disabled={
+                                                      location.state &&
+                                                      location.state
+                                                        .status_periodo ===
+                                                        "MEDICAO_APROVADA_PELA_DRE" &&
+                                                      textoBotaoObservacao(
+                                                        formValuesAtualizados[
+                                                          `${row.name}__dia_${
+                                                            column.dia
+                                                          }__categoria_${
+                                                            categoria.id
+                                                          }`
+                                                        ]
+                                                      ) === "Adicionar"
+                                                    }
                                                     type={BUTTON_TYPE.BUTTON}
                                                     style={
                                                       botaoAdicionarObrigatorio(
@@ -1833,6 +1840,7 @@ export default () => {
                                                       dadosValoresInclusoesAutorizadasState,
                                                       validacaoDiaLetivo,
                                                       validacaoSemana,
+                                                      location,
                                                       ehGrupoETECUrlParam,
                                                       dadosValoresInclusoesEtecAutorizadasState,
                                                       inclusoesEtecAutorizadas,
@@ -1914,6 +1922,21 @@ export default () => {
                                                           }`
                                                         ]
                                                       )}
+                                                      disabled={
+                                                        location.state &&
+                                                        location.state
+                                                          .status_periodo ===
+                                                          "MEDICAO_APROVADA_PELA_DRE" &&
+                                                        textoBotaoObservacao(
+                                                          formValuesAtualizados[
+                                                            `${row.name}__dia_${
+                                                              column.dia
+                                                            }__categoria_${
+                                                              categoria.id
+                                                            }`
+                                                          ]
+                                                        ) === "Adicionar"
+                                                      }
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
                                                         botaoAdicionarObrigatorioTabelaAlimentacao(
@@ -1971,6 +1994,7 @@ export default () => {
                                                         dadosValoresInclusoesAutorizadasState,
                                                         validacaoDiaLetivo,
                                                         validacaoSemana,
+                                                        location,
                                                         ehGrupoETECUrlParam,
                                                         dadosValoresInclusoesEtecAutorizadasState,
                                                         inclusoesEtecAutorizadas,
@@ -2172,6 +2196,7 @@ export default () => {
                       mesAnoConsiderado={mesAnoConsiderado}
                       calendarioMesConsiderado={calendarioMesConsiderado}
                       form={form}
+                      location={location}
                       values={formValuesAtualizados}
                       rowName={"observacoes"}
                       valoresPeriodosLancamentos={valoresPeriodosLancamentos}
@@ -2200,7 +2225,12 @@ export default () => {
                         dadosValoresInclusoesAutorizadasState
                       )
                     }
-                    disabled={disableBotaoSalvarLancamentos}
+                    disabled={
+                      (location.state &&
+                        location.state.status_periodo ===
+                          "MEDICAO_APROVADA_PELA_DRE") ||
+                      disableBotaoSalvarLancamentos
+                    }
                     exibirTooltip={exibirTooltip}
                     tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
                     classTooltip="icone-info-invalid"

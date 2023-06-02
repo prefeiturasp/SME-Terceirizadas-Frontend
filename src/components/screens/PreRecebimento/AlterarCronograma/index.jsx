@@ -27,9 +27,11 @@ import { useHistory } from "react-router-dom";
 import { OnChange } from "react-final-form-listeners";
 import {
   usuarioEhDilogDiretoria,
-  usuarioEhDinutreDiretoria
+  usuarioEhDinutreDiretoria,
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
-import { Radio } from "antd";
+import { Radio, Spin } from "antd";
+import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 
 const opcoesMotivos = [
   { value: "ALTERAR_DATA_ENTREGA", label: "Data de Entrega" },
@@ -59,6 +61,7 @@ export default ({ analiseSolicitacao }) => {
     setSolicitacaoAlteracaoCronograma
   ] = useState(null);
   const [podeSubmeter, setpodeSubmeter] = useState(false);
+  const [carregando, setCarregando] = useState(false);
   const history = useHistory();
 
   const onChangeCampos = e => {
@@ -111,15 +114,22 @@ export default ({ analiseSolicitacao }) => {
   };
 
   const getDetalhes = async () => {
+    setCarregando(true);
     if (analiseSolicitacao) {
       const responseSolicitacaoCronograma = await getSolicitacaoAlteracaoCronograma(
         uuid
       );
       const responseCronograma = responseSolicitacaoCronograma.data.cronograma;
+      if (usuarioEhEmpresaFornecedor()) {
+        responseSolicitacaoCronograma.data.logs = montarFluxoStatusFornecedor(
+          responseSolicitacaoCronograma.data.logs
+        );
+      }
       setSolicitacaoAlteracaoCronograma(responseSolicitacaoCronograma.data);
       setCronograma(responseCronograma);
       setEtapas(responseCronograma.etapas);
       setRestante(responseCronograma.qtd_total_programada);
+      setCarregando(false);
     } else {
       if (uuid) {
         const responseCronograma = await getCronograma(uuid);
@@ -127,6 +137,7 @@ export default ({ analiseSolicitacao }) => {
           setCronograma(responseCronograma.data);
           setEtapas(responseCronograma.data.etapas);
           setRestante(responseCronograma.data.qtd_total_programada);
+          setCarregando(false);
         }
       }
     }
@@ -249,221 +260,258 @@ export default ({ analiseSolicitacao }) => {
     return log_correto ? log_correto.justificativa : "";
   };
 
+  const montarFluxoStatusFornecedor = logs => {
+    const logsFiltrados = logs.filter(
+      log =>
+        !["Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+          log.status_evento_explicacao
+        )
+    );
+    logsFiltrados[0].status_evento_explicacao = "Em Análise";
+    const logsNomesAtualizados = logsFiltrados.map(log => {
+      if (log.status_evento_explicacao === "Aprovado DILOG") {
+        log.status_evento_explicacao = "Aprovado CODAE";
+      } else if (log.status_evento_explicacao === "Reprovado DILOG") {
+        log.status_evento_explicacao = "Reprovado CODAE";
+      }
+      return log;
+    });
+
+    return logsNomesAtualizados;
+  };
+
   useEffect(() => {
     getDetalhes();
     // eslint-disable-next-line
   }, [uuid]);
 
   return (
-    <div className="card mt-3">
-      <div className="card-body alterar-cronograma">
-        {cronograma && (
-          <>
-            {!solicitacaoAlteracaoCronograma ? (
-              <DadosCronograma
-                cronograma={cronograma}
-                esconderInformacoesAdicionais={true}
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3">
+        <div className="card-body alterar-cronograma">
+          {solicitacaoAlteracaoCronograma && (
+            <div className="row pb-3">
+              <FluxoDeStatusCronograma
+                listaDeStatus={solicitacaoAlteracaoCronograma.logs}
+                solicitacao={true}
               />
-            ) : (
-              <DadosCronograma
-                cronograma={cronograma}
-                solicitacaoAlteracaoCronograma={solicitacaoAlteracaoCronograma}
-                esconderInformacoesAdicionais={false}
-              />
-            )}
-            <Form
-              onSubmit={defineSubmit}
-              initialValues={values => {
-                if (solicitacaoAlteracaoCronograma) {
-                  let dados_iniciais = {
-                    motivos: solicitacaoAlteracaoCronograma
-                      ? solicitacaoAlteracaoCronograma.motivo
-                      : undefined,
-                    justificativa: solicitacaoAlteracaoCronograma.justificativa,
-                    justificativa_cronograma: buscaLogJustificativaCronograma(
-                      solicitacaoAlteracaoCronograma.logs,
-                      "cronograma"
-                    ),
-                    justificativa_dinutre: buscaLogJustificativaCronograma(
-                      solicitacaoAlteracaoCronograma.logs,
-                      "dinutre"
-                    )
-                  };
-                  solicitacaoAlteracaoCronograma.etapas.forEach(e => {
-                    dados_iniciais[`quantidade_total_${e.etapa}`] =
-                      e.nova_quantidade;
-                    dados_iniciais[`data_programada_${e.etapa}`] =
-                      e.nova_data_programada;
-                  });
-                  return dados_iniciais;
-                } else {
-                  return values;
-                }
-              }}
-              render={({ handleSubmit, form, values }) => (
-                <form onSubmit={handleSubmit}>
-                  {!solicitacaoAlteracaoCronograma ? (
-                    <div>
+            </div>
+          )}
+          {cronograma && (
+            <>
+              {!solicitacaoAlteracaoCronograma ? (
+                <DadosCronograma
+                  cronograma={cronograma}
+                  esconderInformacoesAdicionais={true}
+                />
+              ) : (
+                <DadosCronograma
+                  cronograma={cronograma}
+                  solicitacaoAlteracaoCronograma={
+                    solicitacaoAlteracaoCronograma
+                  }
+                  esconderInformacoesAdicionais={false}
+                />
+              )}
+              <Form
+                onSubmit={defineSubmit}
+                initialValues={values => {
+                  if (solicitacaoAlteracaoCronograma) {
+                    let dados_iniciais = {
+                      motivos: solicitacaoAlteracaoCronograma
+                        ? solicitacaoAlteracaoCronograma.motivo
+                        : undefined,
+                      justificativa:
+                        solicitacaoAlteracaoCronograma.justificativa,
+                      justificativa_cronograma: buscaLogJustificativaCronograma(
+                        solicitacaoAlteracaoCronograma.logs,
+                        "cronograma"
+                      ),
+                      justificativa_dinutre: buscaLogJustificativaCronograma(
+                        solicitacaoAlteracaoCronograma.logs,
+                        "dinutre"
+                      )
+                    };
+                    solicitacaoAlteracaoCronograma.etapas.forEach(e => {
+                      dados_iniciais[`quantidade_total_${e.etapa}`] =
+                        e.nova_quantidade;
+                      dados_iniciais[`data_programada_${e.etapa}`] =
+                        e.nova_data_programada;
+                    });
+                    return dados_iniciais;
+                  } else {
+                    return values;
+                  }
+                }}
+                render={({ handleSubmit, form, values }) => (
+                  <form onSubmit={handleSubmit}>
+                    {!solicitacaoAlteracaoCronograma ? (
+                      <div>
+                        <label className="label font-weight-normal">
+                          <span>* </span>Motivo da Solicitação de Alteração
+                        </label>
+                        <Field
+                          component={StatefulMultiSelect}
+                          name="motivos"
+                          disableSearch={true}
+                          hasSelectAll={false}
+                          options={opcoesMotivos}
+                          selected={values.motivos || []}
+                          onSelectedChanged={values_ =>
+                            handleMotivosChange(values_, values, form)
+                          }
+                          overrideStrings={{
+                            search: "Busca",
+                            selectSomeItems: "Selecione o(s) Motivo(s)",
+                            allItemsAreSelected:
+                              "Todos os itens estão selecionados",
+                            selectAll: "Todos"
+                          }}
+                          required
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <hr />
+                        <p className="head-green">Solicitação de Alteração</p>
+                        <p>
+                          <span className="green">Motivo: </span>{" "}
+                          {labelDeMotivos(values.motivos)}
+                        </p>
+                      </>
+                    )}
+                    {values.motivos &&
+                    (values.motivos.includes("ALTERAR_DATA_ENTREGA") ||
+                      values.motivos.includes("ALTERAR_QTD_ALIMENTO")) ? (
+                      <div>
+                        <TabelaEditarCronograma
+                          etapas={etapas}
+                          solicitacaoAlteracaoCronograma={
+                            solicitacaoAlteracaoCronograma
+                          }
+                          motivos={values.motivos}
+                          cronograma={cronograma}
+                          values={values}
+                          verificarQuantidadesPreenchidas={
+                            verificarQuantidadesPreenchidas
+                          }
+                          setpodeSubmeter={setpodeSubmeter}
+                          restante={restante}
+                          setRestante={setRestante}
+                        />
+                      </div>
+                    ) : null}
+                    <div className="mt-4">
                       <label className="label font-weight-normal">
-                        <span>* </span>Motivo da Solicitação de Alteração
+                        <span>* </span>Justificativa
                       </label>
                       <Field
-                        component={StatefulMultiSelect}
-                        name="motivos"
-                        disableSearch={true}
-                        hasSelectAll={false}
-                        options={opcoesMotivos}
-                        selected={values.motivos || []}
-                        onSelectedChanged={values_ =>
-                          handleMotivosChange(values_, values, form)
-                        }
-                        overrideStrings={{
-                          search: "Busca",
-                          selectSomeItems: "Selecione o(s) Motivo(s)",
-                          allItemsAreSelected:
-                            "Todos os itens estão selecionados",
-                          selectAll: "Todos"
-                        }}
-                        required
+                        component={TextArea}
+                        name="justificativa"
+                        placeholder="Escreva o motivo da solicitação de alteração"
+                        className="input-busca-produto"
+                        disabled={solicitacaoAlteracaoCronograma !== null}
                       />
+                      <OnChange name="justificativa">
+                        {value => {
+                          if (value && values.motivos) {
+                            setpodeSubmeter(
+                              checarQuantidadeInformada(values.motivos) &&
+                                checarDatasInformadas(values.motivos, values) &&
+                                verificarQuantidadesPreenchidas(values)
+                            );
+                          } else {
+                            setpodeSubmeter(false);
+                          }
+                        }}
+                      </OnChange>
                     </div>
-                  ) : (
-                    <>
-                      <hr />
-                      <p className="head-green">Solicitação de Alteração</p>
-                      <p>
-                        <span className="green">Motivo: </span>{" "}
-                        {labelDeMotivos(values.motivos)}
-                      </p>
-                    </>
-                  )}
-                  {values.motivos &&
-                  (values.motivos.includes("ALTERAR_DATA_ENTREGA") ||
-                    values.motivos.includes("ALTERAR_QTD_ALIMENTO")) ? (
-                    <div>
-                      <TabelaEditarCronograma
-                        etapas={etapas}
+                    {(usuarioEhDinutreDiretoria() ||
+                      (usuarioEhDilogDiretoria() &&
+                        analisadoPelaDinutre())) && (
+                      <>
+                        <hr />
+                        <p className="head-green">Análise Cronograma</p>
+                        <div className="mt-4">
+                          <Field
+                            component={TextArea}
+                            name="justificativa_cronograma"
+                            className="input-busca-produto"
+                            disabled={true}
+                          />
+                        </div>
+                        <hr />
+                        <p className="head-green">Análise DINUTRE</p>
+                        {usuarioEhDinutreDiretoria() &&
+                          solicitacaoAlteracaoCronograma.status ===
+                            "Cronograma ciente" && (
+                            <Radio.Group
+                              size="large"
+                              onChange={onChangeCampos}
+                              value={aprovacaoDinutre}
+                            >
+                              <Radio className="radio-entrega-sim" value={true}>
+                                Analise Aprovada
+                              </Radio>
+                              <Radio
+                                className="radio-entrega-nao"
+                                value={false}
+                              >
+                                Analise Reprovada
+                              </Radio>
+                            </Radio.Group>
+                          )}
+                        {exibirJustificativaDinutre() && (
+                          <div className="mt-4">
+                            {analisadoPelaDinutre() && (
+                              <p>{solicitacaoAlteracaoCronograma.status}</p>
+                            )}
+                            {(aprovacaoDinutre === false ||
+                              solicitacaoAlteracaoCronograma.status ===
+                                "Reprovado DINUTRE") && (
+                              <>
+                                <label className="label font-weight-normal">
+                                  <span>* </span>Justificativa
+                                </label>
+                                <Field
+                                  component={TextArea}
+                                  disabled={analisadoPelaDinutre()}
+                                  name="justificativa_dinutre"
+                                  placeholder="Escreva as alterações necessárias"
+                                  className="input-busca-produto"
+                                />
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </>
+                    )}
+                    {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
+                      <AnaliseDilogDiretoria
+                        aprovacaoDilog={aprovacaoDilog}
+                        setAprovacaoDilog={setAprovacaoDilog}
+                      />
+                    )}
+
+                    <div className="mt-4 mb-4">
+                      <AcoesAlterar
+                        cronograma={cronograma}
                         solicitacaoAlteracaoCronograma={
                           solicitacaoAlteracaoCronograma
                         }
-                        motivos={values.motivos}
-                        cronograma={cronograma}
-                        values={values}
-                        verificarQuantidadesPreenchidas={
-                          verificarQuantidadesPreenchidas
-                        }
-                        setpodeSubmeter={setpodeSubmeter}
-                        restante={restante}
-                        setRestante={setRestante}
+                        handleSubmit={handleSubmit}
+                        podeSubmeter={podeSubmeter}
+                        disabledDinutre={disabledDinutre(values)}
+                        disabledDilog={disabledDilog(values)}
                       />
                     </div>
-                  ) : null}
-                  <div className="mt-4">
-                    <label className="label font-weight-normal">
-                      <span>* </span>Justificativa
-                    </label>
-                    <Field
-                      component={TextArea}
-                      name="justificativa"
-                      placeholder="Escreva o motivo da solicitação de alteração"
-                      className="input-busca-produto"
-                      disabled={solicitacaoAlteracaoCronograma !== null}
-                    />
-                    <OnChange name="justificativa">
-                      {value => {
-                        if (value && values.motivos) {
-                          setpodeSubmeter(
-                            checarQuantidadeInformada(values.motivos) &&
-                              checarDatasInformadas(values.motivos, values) &&
-                              verificarQuantidadesPreenchidas(values)
-                          );
-                        } else {
-                          setpodeSubmeter(false);
-                        }
-                      }}
-                    </OnChange>
-                  </div>
-                  {(usuarioEhDinutreDiretoria() ||
-                    (usuarioEhDilogDiretoria() && analisadoPelaDinutre())) && (
-                    <>
-                      <hr />
-                      <p className="head-green">Análise Cronograma</p>
-                      <div className="mt-4">
-                        <Field
-                          component={TextArea}
-                          name="justificativa_cronograma"
-                          className="input-busca-produto"
-                          disabled={true}
-                        />
-                      </div>
-                      <hr />
-                      <p className="head-green">Análise DINUTRE</p>
-                      {usuarioEhDinutreDiretoria() &&
-                        solicitacaoAlteracaoCronograma.status ===
-                          "Cronograma ciente" && (
-                          <Radio.Group
-                            size="large"
-                            onChange={onChangeCampos}
-                            value={aprovacaoDinutre}
-                          >
-                            <Radio className="radio-entrega-sim" value={true}>
-                              Analise Aprovada
-                            </Radio>
-                            <Radio className="radio-entrega-nao" value={false}>
-                              Analise Reprovada
-                            </Radio>
-                          </Radio.Group>
-                        )}
-                      {exibirJustificativaDinutre() && (
-                        <div className="mt-4">
-                          {analisadoPelaDinutre() && (
-                            <p>{solicitacaoAlteracaoCronograma.status}</p>
-                          )}
-                          {(aprovacaoDinutre === false ||
-                            solicitacaoAlteracaoCronograma.status ===
-                              "Reprovado DINUTRE") && (
-                            <>
-                              <label className="label font-weight-normal">
-                                <span>* </span>Justificativa
-                              </label>
-                              <Field
-                                component={TextArea}
-                                disabled={analisadoPelaDinutre()}
-                                name="justificativa_dinutre"
-                                placeholder="Escreva as alterações necessárias"
-                                className="input-busca-produto"
-                              />
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </>
-                  )}
-                  {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
-                    <AnaliseDilogDiretoria
-                      aprovacaoDilog={aprovacaoDilog}
-                      setAprovacaoDilog={setAprovacaoDilog}
-                    />
-                  )}
-
-                  <div className="mt-4 mb-4">
-                    <AcoesAlterar
-                      cronograma={cronograma}
-                      solicitacaoAlteracaoCronograma={
-                        solicitacaoAlteracaoCronograma
-                      }
-                      handleSubmit={handleSubmit}
-                      podeSubmeter={podeSubmeter}
-                      disabledDinutre={disabledDinutre(values)}
-                      disabledDilog={disabledDilog(values)}
-                    />
-                  </div>
-                </form>
-              )}
-            />
-          </>
-        )}
+                  </form>
+                )}
+              />
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </Spin>
   );
 };

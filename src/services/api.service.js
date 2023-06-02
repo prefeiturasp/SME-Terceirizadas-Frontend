@@ -1,21 +1,11 @@
-import { API_URL } from "constants/config";
+import axios from "./_base";
+import { ErrorHandlerFunction } from "./service-helpers";
 
-const authHeader = {
-  "Content-Type": "application/json"
-};
-
-export const getAPIVersion = () => {
-  const url = `${API_URL}/api-version/`;
-
-  const OBJ_REQUEST = {
-    headers: authHeader,
-    method: "GET"
-  };
-  return fetch(url, OBJ_REQUEST)
-    .then(result => {
-      return result.json();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+export const getAPIVersion = async () => {
+  const url = `/api-version/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };

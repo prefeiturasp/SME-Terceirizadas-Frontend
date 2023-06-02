@@ -36,6 +36,23 @@ export const updateSolicitacaoMedicaoInicial = async (uuid, params) => {
   }
 };
 
+export const updateOcorrenciaSolicitacaoMedicaoInicial = async (
+  uuid,
+  params
+) => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/ue-atualiza-ocorrencia/`;
+  const headers = { "content-type": "multipart/form-data" };
+  const response = await axios
+    .patch(url, params, {
+      headers: headers
+    })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const retrieveSolicitacaoMedicaoInicial = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
@@ -84,6 +101,33 @@ export const getQuantidadeAlimentacoesLancadasPeriodoGrupo = async params => {
 export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
   const url = `medicao-inicial/ocorrencia/${uuid}/dre-pede-correcao-ocorrencia/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const drePedeAprovacaoOcorrencia = async uuid => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/dre-aprova-ocorrencia/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const dreAprovaSolicitacaoMedicao = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/dre-aprova-solicitacao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const dreSolicitaCorrecaoUE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/dre-solicita-correcao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

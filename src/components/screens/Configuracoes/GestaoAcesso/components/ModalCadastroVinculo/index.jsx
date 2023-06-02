@@ -15,7 +15,8 @@ import {
   email,
   required,
   tamanhoCnpj,
-  validaCPF
+  validaCPF,
+  SMEPrefeituraEmail
 } from "helpers/fieldValidators";
 import {
   composeValidators,
@@ -34,6 +35,8 @@ import ModalExclusaoVinculo from "../ModalExclusaoVinculo";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
 import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
+
+const ENTER = 13;
 
 const campoObrigatorio = {
   touched: true,
@@ -59,10 +62,13 @@ const ModalCadastroVinculo = ({
   const [showExclusao, setShowExclusao] = useState(false);
   const [valoresEdicao, setValoresEdicao] = useState();
   const [rfBuscado, setRfBuscado] = useState(false);
+  const [desabilitaEmail, setDesabilitaEmail] = useState(true);
 
   const { meusDados } = useContext(MeusDadosContext);
   const handleClose = () => {
     setRfBuscado(false);
+    setDesabilitaEmail(true);
+    setTipoUsuario("");
     toggleShow(false, null);
   };
 
@@ -114,7 +120,9 @@ const ModalCadastroVinculo = ({
       }
       values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
       values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
-      values.email_servidor = usuarioEOL.email ? usuarioEOL.email : undefined;
+      values.email_servidor = usuarioEOL.email
+        ? usuarioEOL.email
+        : setDesabilitaEmail(false);
       values.cpf = usuarioEOL.cpf;
       values.cpf_servidor = usuarioEOL.cpf
         ? formataCPFCensurado(usuarioEOL.cpf)
@@ -122,6 +130,7 @@ const ModalCadastroVinculo = ({
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
 
       let t = document.getElementById("inputRF");
+      t.blur();
       t.focus();
       setRfBuscado(true);
     } else {
@@ -136,6 +145,12 @@ const ModalCadastroVinculo = ({
   const abreDeletar = () => {
     toggleExclusao(true, vinculo);
     toggleShow(false, vinculo);
+  };
+
+  const onKeyPress = (event, values) => {
+    if (event.which === ENTER) {
+      buscaEOL(values);
+    }
   };
 
   const getVinculoEmpresaAsync = async () => {
@@ -196,7 +211,11 @@ const ModalCadastroVinculo = ({
           render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
-                <form onSubmit={handleSubmit} className="">
+                <form
+                  onSubmit={handleSubmit}
+                  className=""
+                  onKeyPress={event => onKeyPress(event, values)}
+                >
                   {diretor_escola ||
                     empresa ||
                     visaoUnica !== undefined ||
@@ -280,8 +299,8 @@ const ModalCadastroVinculo = ({
                             label="E-mail"
                             name="email_servidor"
                             className="input-busca-produto"
-                            disabled={true}
-                            validate={required}
+                            disabled={desabilitaEmail}
+                            validate={SMEPrefeituraEmail}
                             required
                           />
                           {rfBuscado && !values.email_servidor && (
@@ -479,6 +498,9 @@ const ModalCadastroVinculo = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
                       onSubmit(values, tipoUsuario, valoresEdicao);
+                      setRfBuscado(false);
+                      setDesabilitaEmail(true);
+                      setTipoUsuario("");
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}

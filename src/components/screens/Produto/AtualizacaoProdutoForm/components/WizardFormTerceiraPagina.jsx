@@ -37,7 +37,8 @@ class WizardFormTerceiraPagina extends Component {
       embalagens: null,
       mostraModalConfimacao: false,
       formValues: undefined,
-      especificacoesIniciais: this.props.produto.especificacoes
+      especificacoesIniciais: this.props.produto.especificacoes,
+      status_codae_questionado: false
     };
     this.setFiles = this.setFiles.bind(this);
     this.removeFile = this.removeFile.bind(this);
@@ -56,7 +57,11 @@ class WizardFormTerceiraPagina extends Component {
     if (this.props.produto !== this.state.produto) {
       this.setState({ produto: this.props.produto });
     }
-
+    if (this.props.produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
+      this.setState({
+        status_codae_questionado: true
+      });
+    }
     await this.updateOpcoesItensCadastrados();
 
     const { change, produto, terceiroStep, valoresterceiroForm } = this.props;
@@ -322,6 +327,17 @@ class WizardFormTerceiraPagina extends Component {
               this.props.passouTerceiroStep(valuesForm);
             }}
           />
+          {this.state.status_codae_questionado && (
+            <Botao
+              texto={"Cancelar"}
+              type={BUTTON_TYPE.BUTTON}
+              className="ml-3"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                this.props.showModal(true);
+              }}
+            />
+          )}
           <Botao
             texto={"Enviar"}
             className="ml-3"

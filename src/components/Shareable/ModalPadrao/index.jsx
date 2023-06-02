@@ -11,6 +11,8 @@ import { toastError, toastSuccess } from "../Toast/dialogs";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../../helpers/fieldValidators";
 import "./style.scss";
 import InputText from "../Input/InputText";
+import { PAINEL_GESTAO_PRODUTO } from "configs/constants";
+import { useHistory } from "react-router-dom";
 
 export const ModalPadrao = ({ ...props }) => {
   const {
@@ -33,6 +35,9 @@ export const ModalPadrao = ({ ...props }) => {
     ...textAreaProps
   } = props;
 
+  const history = useHistory();
+  const painelProdutos = history => history.push(`/${PAINEL_GESTAO_PRODUTO}`);
+
   const enviarJustificativa = async formValues => {
     const { justificativa } = formValues;
     let resp = undefined;
@@ -46,7 +51,11 @@ export const ModalPadrao = ({ ...props }) => {
     }
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
-      loadSolicitacao(uuid);
+      if (loadSolicitacao) {
+        loadSolicitacao(uuid);
+      } else {
+        painelProdutos(history);
+      }
       toastSuccess(toastSuccessMessage);
     } else {
       toastError(resp.data.detail);

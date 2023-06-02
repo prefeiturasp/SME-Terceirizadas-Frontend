@@ -76,7 +76,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     );
     if (responsePendenteAutorizacao.status === HTTP_STATUS.OK) {
       setAguardandoAutorizacao(
-        ajustarFormatoLog(responsePendenteAutorizacao.data.results)
+        ajustarFormatoLog(
+          responsePendenteAutorizacao.data.results,
+          "pendentes-aut"
+        )
       );
       setCountRecebidas(responsePendenteAutorizacao.data.count);
     } else {
@@ -88,7 +91,9 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseAutorizadas.status === HTTP_STATUS.OK) {
-      setAutorizadas(ajustarFormatoLog(responseAutorizadas.data.results));
+      setAutorizadas(
+        ajustarFormatoLog(responseAutorizadas.data.results, "autorizadas")
+      );
       setCountAutorizadas(responseAutorizadas.data.count);
     } else {
       setErro("Erro ao carregar solicitações autorizadas.");
@@ -99,7 +104,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseNegadas.status === HTTP_STATUS.OK) {
-      setNegadas(ajustarFormatoLog(responseNegadas.data.results));
+      setNegadas(ajustarFormatoLog(responseNegadas.data.results, "negadas"));
     } else {
       setErro("Erro ao carregar solicitações negadas.");
     }
@@ -109,7 +114,9 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseCanceladas.status === HTTP_STATUS.OK) {
-      setCanceladas(ajustarFormatoLog(responseCanceladas.data.results));
+      setCanceladas(
+        ajustarFormatoLog(responseCanceladas.data.results, "canceladas")
+      );
     } else {
       setErro("Erro ao carregar solicitações canceladas.");
     }
@@ -119,7 +126,7 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       params
     );
     if (responseInativas.status === HTTP_STATUS.OK) {
-      setInativas(ajustarFormatoLog(responseInativas.data.results));
+      setInativas(ajustarFormatoLog(responseInativas.data.results, "inativas"));
     } else {
       setErro("Erro ao carregar solicitações inativas.");
     }
@@ -130,7 +137,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     );
     if (responseInativasTemporariamente.status === HTTP_STATUS.OK) {
       setInativasTemporariamente(
-        ajustarFormatoLog(responseInativasTemporariamente.data.results)
+        ajustarFormatoLog(
+          responseInativasTemporariamente.data.results,
+          "inativas-temp"
+        )
       );
     } else {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
@@ -142,7 +152,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
     );
     if (responseAutorizadasTemporariamente.status === HTTP_STATUS.OK) {
       setAutorizadasTemporariamente(
-        ajustarFormatoLog(responseAutorizadasTemporariamente.data.results)
+        ajustarFormatoLog(
+          responseAutorizadasTemporariamente.data.results,
+          "autorizadas-temp"
+        )
       );
     } else {
       setErro("Erro ao carregar solicitações inativas temporariamente.");
@@ -159,7 +172,10 @@ export const DashboardDietaEspecial = ({ ...props }) => {
       );
       if (responseAguardandoVigencia.status === HTTP_STATUS.OK) {
         setAguardandoVigencia(
-          ajustarFormatoLog(responseAguardandoVigencia.data.results)
+          ajustarFormatoLog(
+            responseAguardandoVigencia.data.results,
+            "aguardando-inicio-vigencia"
+          )
         );
       } else {
         setErro("Erro ao carregar solicitações inativas temporariamente.");

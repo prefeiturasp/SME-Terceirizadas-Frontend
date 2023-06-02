@@ -35,6 +35,7 @@ import {
   getUnidadesDeMedidaProduto
 } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -236,7 +237,7 @@ export default () => {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        toastError("Senha inválida.");
+        toastError(MSG_SENHA_INVALIDA);
         setCarregando(false);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
