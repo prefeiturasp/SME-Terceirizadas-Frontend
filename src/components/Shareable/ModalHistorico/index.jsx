@@ -201,9 +201,8 @@ export default class ModalHistorico extends Component {
                           texto="Download do formulário"
                           onClick={() =>
                             medicaoInicialExportarOcorrenciasPDF(
-                              this.anexoPdfOcorrencia(
-                                this.props.solicitacaoMedicaoInicial
-                              ).arquivo
+                              this.props.solicitacaoMedicaoInicial
+                                .ultimo_arquivo
                             )
                           }
                         />

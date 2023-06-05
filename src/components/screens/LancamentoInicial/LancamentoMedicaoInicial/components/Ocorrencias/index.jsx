@@ -29,9 +29,10 @@ export default ({
         visible={showModalHistorico}
         onOk={() => setShowModalHistorico(false)}
         onCancel={() => setShowModalHistorico(false)}
-        logs={solicitacaoMedicaoInicial.logs}
-        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-        titulo="Histórico do Formulário de Ocorrências"
+        logs={solicitacaoMedicaoInicial.ocorrencia.logs}
+        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
+        titulo="Histórico do Formulário de Ocorrências xxx"
+        getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
       />
       <div className="row mb-3">
         <div className="col-12">
@@ -93,14 +94,10 @@ export default ({
                 ) : (
                   <div className="col-6" />
                 )}
-                {console.log(
-                  solicitacaoMedicaoInicial,
-                  "solicitacaoMedicaoInicial"
-                )}
-                {solicitacaoMedicaoInicial.status ===
-                  "MEDICAO_CORRECAO_SOLICITADA" &&
-                  solicitacaoMedicaoInicial.ocorrencia && (
-                    <Fragment>
+                {solicitacaoMedicaoInicial.ocorrencia && (
+                  <Fragment>
+                    {solicitacaoMedicaoInicial.status ===
+                      "MEDICAO_CORRECAO_SOLICITADA" && (
                       <div className="col-12 mt-4">
                         <p>Correções Solicitadas:</p>
                         <div className="justificativa-ocorrencia-medicao">
@@ -115,34 +112,40 @@ export default ({
                           />
                         </div>
                       </div>
-                      <div className="col-12 mt-4">
-                        <div className="float-right">
-                          <Botao
-                            className="ml-3"
-                            texto="Histórico"
-                            style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                            onClick={() => {}}
-                          />
+                    )}
+
+                    <div className="col-12 mt-4">
+                      <div className="float-right">
+                        <Botao
+                          texto="Histórico"
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
+                          className="float-right"
+                          onClick={visualizarModalHistorico}
+                        />
+                        {solicitacaoMedicaoInicial.status ===
+                          "MEDICAO_CORRECAO_SOLICITADA" && (
                           <Botao
                             className="ml-3"
                             texto="Atualizar Formulário de Ocorrências"
                             style={BUTTON_STYLE.GREEN}
                             onClick={() => setShowModal(true)}
                           />
-                        </div>
+                        )}
                       </div>
-                    </Fragment>
-                  )}
+                    </div>
+                  </Fragment>
+                )}
               </div>
-              <div className="row ocorrencias-rodape">
+              {/* <div className="row ocorrencias-rodape">
                 <Botao
-                  texto="Histórico"
+                  texto="Histórico xxx"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN_OUTLINE}
                   className="float-right m-3"
                   onClick={visualizarModalHistorico}
                 />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
