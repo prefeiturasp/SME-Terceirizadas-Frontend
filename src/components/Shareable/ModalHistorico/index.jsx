@@ -160,7 +160,7 @@ export default class ModalHistorico extends Component {
                             <div>{logSelecionado.criado_em.split(" ")[0]}</div>
                           </div>
                         </article>
-                        <article>
+                        <article className="preenchimento">
                           {logSelecionado.justificativa !== "" && (
                             <>
                               {logSelecionado.status_evento_explicacao ===

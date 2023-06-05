@@ -7,7 +7,6 @@ import {
 import { OCORRENCIA_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import Botao from "components/Shareable/Botao";
-import "./styles.scss";
 import ModalHistorico from "components/Shareable/ModalHistorico";
 import { ModalAtualizarOcorrencia } from "../ModalAtualizarOcorrencia";
 
@@ -31,7 +30,7 @@ export default ({
         onCancel={() => setShowModalHistorico(false)}
         logs={solicitacaoMedicaoInicial.ocorrencia.logs}
         solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
-        titulo="Histórico do Formulário de Ocorrências xxx"
+        titulo="Histórico do Formulário de Ocorrências"
         getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
       />
       <div className="row mb-3">
@@ -137,15 +136,6 @@ export default ({
                   </Fragment>
                 )}
               </div>
-              {/* <div className="row ocorrencias-rodape">
-                <Botao
-                  texto="Histórico xxx"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN_OUTLINE}
-                  className="float-right m-3"
-                  onClick={visualizarModalHistorico}
-                />
-              </div> */}
             </div>
           </div>
         </div>
