@@ -17,7 +17,8 @@ import {
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialDRE,
-  getQuantidadeAlimentacoesLancadasPeriodoGrupo
+  getQuantidadeAlimentacoesLancadasPeriodoGrupo,
+  getSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES } from "./helpers";
 import {
@@ -28,6 +29,7 @@ import {
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 
 export default ({
   escolaInstituicao,
@@ -38,11 +40,14 @@ export default ({
   mes,
   ano,
   objSolicitacaoMIFinalizada,
-  setObjSolicitacaoMIFinalizada
+  setObjSolicitacaoMIFinalizada,
+  setSolicitacaoMedicaoInicial
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
   );
+  const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
+  const [desabilitaSim, setDesabilitaSim] = useState(false);
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
     undefined
   );
@@ -188,6 +193,17 @@ export default ({
     }
   };
 
+  const getSolicitacaoMedicalInicial = async () => {
+    const payload = {
+      escola: escolaInstituicao.uuid,
+      mes: mes,
+      ano: ano
+    };
+
+    const solicitacao = await getSolicitacaoMedicaoInicial(payload);
+    setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+  };
+
   const renderBotaoExportarPDF = () => {
     if (solicitacaoMedicaoInicial) {
       return true;
@@ -218,14 +234,28 @@ export default ({
   };
 
   const escolaEnviaCorrecaoDRE = async () => {
+    setDesabilitaSim(true);
     const response = await escolaEnviaCorrecaoMedicaoInicialDRE(
       solicitacaoMedicaoInicial.uuid
     );
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Correção da Medição Inicial enviada com sucesso!");
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+      getSolicitacaoMedicalInicial();
+      setShowModalEnviarCorrecao(false);
     } else {
       toastError(getError(response.data));
     }
+    setDesabilitaSim(false);
+  };
+
+  const verificaSeEnviarCorrecaoDisabled = () => {
+    return quantidadeAlimentacoesLancadas.some(
+      periodo =>
+        !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+          periodo.status
+        )
+    );
   };
 
   return (
@@ -340,7 +370,8 @@ export default ({
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
                       className="mr-3"
-                      onClick={() => escolaEnviaCorrecaoDRE()}
+                      onClick={() => setShowModalEnviarCorrecao(true)}
+                      disabled={verificaSeEnviarCorrecaoDisabled()}
                     />
                   )}
                 </div>
@@ -358,6 +389,14 @@ export default ({
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}
             setShow={setExibirModalCentralDownloads}
+          />
+          <ModalPadraoSimNao
+            showModal={showModalEnviarCorrecao}
+            closeModal={() => setShowModalEnviarCorrecao(false)}
+            tituloModal="Enviar Correção para DRE"
+            descricaoModal={<p>Deseja enviar a correção para DRE?</p>}
+            funcaoSim={escolaEnviaCorrecaoDRE}
+            desabilitaSim={desabilitaSim}
           />
         </>
       )}
