@@ -91,6 +91,34 @@ export const formatarPayloadPeriodoLancamento = (
   return { ...values, valores_medicao: valoresMedicao };
 };
 
+export const formatarPayloadParaCorrecao = (
+  valoresPeriodosLancamentos,
+  payload
+) => {
+  let payloadParaCorrecao = [];
+  valoresPeriodosLancamentos
+    .filter(
+      valor =>
+        valor.habilitado_correcao &&
+        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+          valor.nome_campo
+        )
+    )
+    .forEach(valor_lancamento => {
+      payloadParaCorrecao.push(
+        payload.valores_medicao.filter(
+          valor_medicao =>
+            String(valor_lancamento.categoria_medicao) ===
+              valor_medicao.categoria_medicao &&
+            valor_lancamento.dia === valor_medicao.dia &&
+            valor_lancamento.nome_campo === valor_medicao.nome_campo
+        )[0]
+      );
+    });
+
+  return payloadParaCorrecao;
+};
+
 export const deveExistirObservacao = (
   categoria,
   values,
@@ -196,11 +224,22 @@ export const desabilitarField = (
   ehGrupoETECUrlParam = false,
   dadosValoresInclusoesEtecAutorizadasState = null,
   inclusoesEtecAutorizadas = null,
-  grupoLocation = null
+  grupoLocation = null,
+  valoresPeriodosLancamentos
 ) => {
+  const valorField = valoresPeriodosLancamentos
+    .filter(valor => valor.nome_campo === rowName)
+    .filter(valor => String(valor.dia) === String(dia))
+    .filter(valor => String(valor.categoria_medicao) === String(categoria))
+    .filter(valor => valor.habilitado_correcao === true)[0];
   if (
     location.state &&
-    location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE"
+    (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+        location.state.status_periodo
+      ) &&
+        !valorField))
   ) {
     return true;
   }
@@ -722,4 +761,78 @@ export const defaultValue = (
   }
 
   return result;
+};
+
+export const ehDiaParaCorrigir = (
+  dia,
+  categoria,
+  valoresPeriodosLancamentos
+) => {
+  const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
+    .filter(
+      valor =>
+        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+          valor.nome_campo
+        )
+    )
+    .filter(valor => String(valor.dia) === String(dia))
+    .filter(valor => String(valor.categoria_medicao) === String(categoria))
+    .filter(valor => valor.habilitado_correcao === true)[0];
+
+  return existeAlgumCampoParaCorrigir;
+};
+
+export const textoBotaoObservacao = value => {
+  let text = "Adicionar";
+  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    text = "Visualizar";
+  }
+  return text;
+};
+
+export const desabilitarBotaoColunaObservacoes = (
+  location,
+  valoresPeriodosLancamentos,
+  column,
+  categoria,
+  formValuesAtualizados,
+  row
+) => {
+  const botaoEhAdicionar =
+    textoBotaoObservacao(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ]
+    ) === "Adicionar";
+
+  return (
+    location.state &&
+    (((location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+        location.state.status_periodo
+      ) &&
+        !valoresPeriodosLancamentos
+          .filter(valor => valor.nome_campo === "observacoes")
+          .filter(valor => String(valor.dia) === String(column.dia))
+          .filter(
+            valor => String(valor.categoria_medicao) === String(categoria.id)
+          )[0])) &&
+      botaoEhAdicionar &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos
+      )) ||
+      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" &&
+        botaoEhAdicionar) ||
+      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+        location.state.status_periodo
+      ) &&
+        !ehDiaParaCorrigir(
+          column.dia,
+          categoria.id,
+          valoresPeriodosLancamentos
+        )))
+  );
 };
