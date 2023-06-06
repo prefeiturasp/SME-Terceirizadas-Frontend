@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import CKEditor from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { HelpText } from "../HelpText";
@@ -22,7 +22,7 @@ const CKEditorField = props => {
 
   const config = {
     placeholder: placeholder,
-    removePlugins: ["Heading", "Link", "BlockQuote"],
+    removePlugins: ["Heading", "BlockQuote", "CKFinder", "Link"],
     toolbar: [
       "bold",
       "italic",
