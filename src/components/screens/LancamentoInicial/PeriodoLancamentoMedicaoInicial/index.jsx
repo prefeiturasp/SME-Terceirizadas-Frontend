@@ -17,7 +17,6 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin, Tabs } from "antd";
-import strip_tags from "locutus/php/strings/strip_tags";
 
 import InputText from "components/Shareable/Input/InputText";
 import InputValueMedicao from "components/Shareable/Input/InputValueMedicao";
@@ -34,7 +33,7 @@ import {
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalErro from "./components/ModalErro";
 import ModalSalvarCorrecoes from "./components/ModalSalvarCorrecoes";
-import { TextArea } from "components/Shareable/TextArea/TextArea";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { deepCopy, deepEqual, tiposAlimentacaoETEC } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
@@ -669,7 +668,7 @@ export default () => {
     let periodoEscolar = "MANHA";
     let justificativaPeriodo = "";
     if (location.state) {
-      justificativaPeriodo = strip_tags(location.state.justificativa_periodo);
+      justificativaPeriodo = location.state.justificativa_periodo;
       if (location.state.grupo && location.state.periodo) {
         periodoEscolar = `${location.state.grupo} - ${location.state.periodo}`;
       } else if (location.state.grupo) {
@@ -1703,7 +1702,7 @@ export default () => {
                           Correções solicitadas pela DRE:
                         </b>
                         <Field
-                          component={TextArea}
+                          component={CKEditorField}
                           name="justificativa_periodo"
                           disabled={true}
                         />
