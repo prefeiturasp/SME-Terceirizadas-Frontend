@@ -17,16 +17,12 @@ export const ModalPadraoSimNao = ({ ...props }) => {
   } = props;
 
   return (
-    <Modal
-      dialogClassName="modal-editar-sobremesa modal-50w"
-      show={showModal}
-      onHide={closeModal}
-    >
+    <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
       <Modal.Header closeButton>
         <Modal.Title>{tituloModal}</Modal.Title>
       </Modal.Header>
       <Modal.Body>{descricaoModal}</Modal.Body>
-      <div className="footer">
+      <Modal.Footer className="float-right">
         <Botao
           texto="Não"
           type={BUTTON_TYPE.BUTTON}
@@ -48,7 +44,7 @@ export const ModalPadraoSimNao = ({ ...props }) => {
           disabled={desabilitaSim}
           className="ml-3"
         />
-      </div>
+      </Modal.Footer>
     </Modal>
   );
 };

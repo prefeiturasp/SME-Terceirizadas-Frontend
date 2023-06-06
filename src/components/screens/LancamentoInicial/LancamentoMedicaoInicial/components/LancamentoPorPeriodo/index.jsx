@@ -250,11 +250,17 @@ export default ({
   };
 
   const verificaSeEnviarCorrecaoDisabled = () => {
-    return quantidadeAlimentacoesLancadas.some(
-      periodo =>
+    return (
+      quantidadeAlimentacoesLancadas.some(
+        periodo =>
+          !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+            periodo.status
+          )
+      ) ||
+      (solicitacaoMedicaoInicial.com_ocorrencias &&
         !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
-          periodo.status
-        )
+          solicitacaoMedicaoInicial.ocorrencia.status
+        ))
     );
   };
 
@@ -366,7 +372,7 @@ export default ({
                   )}
                   {renderBotaoEnviarCorrecao() && (
                     <Botao
-                      texto="Enviar correção"
+                      texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
                       className="mr-3"
@@ -394,7 +400,11 @@ export default ({
             showModal={showModalEnviarCorrecao}
             closeModal={() => setShowModalEnviarCorrecao(false)}
             tituloModal="Enviar Correção para DRE"
-            descricaoModal={<p>Deseja enviar a correção para DRE?</p>}
+            descricaoModal={
+              <p className="col-12 my-3 p-0">
+                Deseja enviar a correção para DRE?
+              </p>
+            }
             funcaoSim={escolaEnviaCorrecaoDRE}
             desabilitaSim={desabilitaSim}
           />
