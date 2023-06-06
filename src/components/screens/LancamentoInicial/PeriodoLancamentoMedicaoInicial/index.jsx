@@ -2212,6 +2212,7 @@ export default () => {
                       setExibirTooltip={value => setExibirTooltip(value)}
                       errors={errors}
                       valoresObservacoes={valoresObservacoes}
+                      setFormValuesAtualizados={setFormValuesAtualizados}
                     />
                   )}
                   <Botao
