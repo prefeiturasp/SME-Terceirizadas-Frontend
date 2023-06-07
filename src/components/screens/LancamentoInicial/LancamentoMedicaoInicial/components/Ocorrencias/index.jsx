@@ -76,40 +76,41 @@ export default ({
                   <div className="col-6" />
                 )}
                 {solicitacaoMedicaoInicial.status ===
-                  "MEDICAO_CORRECAO_SOLICITADA" && (
-                  <Fragment>
-                    <div className="col-12 mt-4">
-                      <p>Correções Solicitadas:</p>
-                      <div className="justificativa-ocorrencia-medicao">
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
-                              log =>
-                                log.status_evento_explicacao ===
-                                "Correção solicitada"
-                            ).justificativa
-                          }}
-                        />
+                  "MEDICAO_CORRECAO_SOLICITADA" &&
+                  solicitacaoMedicaoInicial.ocorrencia && (
+                    <Fragment>
+                      <div className="col-12 mt-4">
+                        <p>Correções Solicitadas:</p>
+                        <div className="justificativa-ocorrencia-medicao">
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
+                                log =>
+                                  log.status_evento_explicacao ===
+                                  "Correção solicitada"
+                              ).justificativa
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div className="col-12 mt-4">
-                      <div className="float-right">
-                        <Botao
-                          className="ml-3"
-                          texto="Histórico"
-                          style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                          onClick={() => {}}
-                        />
-                        <Botao
-                          className="ml-3"
-                          texto="Atualizar Formulário de Ocorrências"
-                          style={BUTTON_STYLE.GREEN}
-                          onClick={() => setShowModal(true)}
-                        />
+                      <div className="col-12 mt-4">
+                        <div className="float-right">
+                          <Botao
+                            className="ml-3"
+                            texto="Histórico"
+                            style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                            onClick={() => {}}
+                          />
+                          <Botao
+                            className="ml-3"
+                            texto="Atualizar Formulário de Ocorrências"
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() => setShowModal(true)}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </Fragment>
-                )}
+                    </Fragment>
+                  )}
               </div>
             </div>
           </div>

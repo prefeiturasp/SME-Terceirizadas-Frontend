@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import arrayMutators from "final-form-arrays";
@@ -32,6 +32,8 @@ import {
 } from "components/Shareable/Botao/constants";
 import ModalObservacaoDiaria from "./components/ModalObservacaoDiaria";
 import ModalErro from "./components/ModalErro";
+import ModalSalvarCorrecoes from "./components/ModalSalvarCorrecoes";
+import CKEditorField from "components/Shareable/CKEditorField";
 import { deepCopy, deepEqual, tiposAlimentacaoETEC } from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
@@ -60,14 +62,17 @@ import {
   validacoesTabelaEtecAlimentacao
 } from "./validacoes";
 import {
+  desabilitarBotaoColunaObservacoes,
   desabilitarField,
   deveExistirObservacao,
+  formatarPayloadParaCorrecao,
   formatarPayloadPeriodoLancamento,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync,
   getSolicitacoesInclusaoAutorizadasAsync,
   getSolicitacoesInclusoesEtecAutorizadasAsync,
   getSolicitacoesKitLanchesAutorizadasAsync,
   getSolicitacoesSuspensoesAutorizadasAsync,
+  textoBotaoObservacao,
   valorZeroFrequencia
 } from "./helper";
 import {
@@ -82,7 +87,12 @@ import {
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
+import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import "./styles.scss";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL
+} from "configs/constants";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -145,6 +155,9 @@ export default () => {
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
   );
+  const [showModalSalvarCorrecoes, setShowModalSalvarCorrecoes] = useState(
+    false
+  );
   const [
     disableBotaoSalvarLancamentos,
     setDisableBotaoSalvarLancamentos
@@ -163,7 +176,9 @@ export default () => {
   );
   const [showModalErro, setShowModalErro] = useState(false);
   const [valoresObservacoes, setValoresObservacoes] = useState([]);
+  const [periodoGrupo, setPeriodoGrupo] = useState(null);
 
+  const history = useHistory();
   const location = useLocation();
   let mesAnoDefault = new Date();
 
@@ -651,7 +666,9 @@ export default () => {
     let dadosValoresEtecAlimentacaoAutorizadas = {};
     let dadosValoresForaDoMes = {};
     let periodoEscolar = "MANHA";
+    let justificativaPeriodo = "";
     if (location.state) {
+      justificativaPeriodo = location.state.justificativa_periodo;
       if (location.state.grupo && location.state.periodo) {
         periodoEscolar = `${location.state.grupo} - ${location.state.periodo}`;
       } else if (location.state.grupo) {
@@ -660,9 +677,11 @@ export default () => {
         periodoEscolar = `${location.state.periodo}`;
       }
     }
+    setPeriodoGrupo(periodoEscolar);
     const dadosMesPeriodo = {
       mes_lancamento: mesAnoFormatado,
-      periodo_escolar: periodoEscolar
+      periodo_escolar: periodoEscolar,
+      justificativa_periodo: justificativaPeriodo
     };
     let dadosValoresInclusoesAutorizadas = {};
 
@@ -1157,7 +1176,8 @@ export default () => {
     values,
     dadosValoresInclusoesAutorizadasState,
     ehSalvamentoAutomático = false,
-    chamarFuncaoFormatar = true
+    chamarFuncaoFormatar = true,
+    ehCorrecao = false
   ) => {
     const erro = validarFormulario(
       values,
@@ -1210,6 +1230,29 @@ export default () => {
       return (
         !ehSalvamentoAutomático && toastWarn("Não há valores para serem salvos")
       );
+
+    if (ehCorrecao) {
+      const payloadParaCorrecao = formatarPayloadParaCorrecao(
+        valoresPeriodosLancamentos,
+        payload
+      );
+      const response = await escolaCorrigeMedicao(
+        valoresPeriodosLancamentos[0].medicao_uuid,
+        payloadParaCorrecao
+      );
+      if (response.status === HTTP_STATUS.OK) {
+        let mes = new Date(location.state.mesAnoSelecionado).getMonth() + 1;
+        const ano = new Date(location.state.mesAnoSelecionado).getFullYear();
+        mes = String(mes).length === 1 ? "0" + String(mes) : String(mes);
+        history.push(
+          `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}?mes=${mes}&ano=${ano}`
+        );
+        return toastSuccess("Correções salvas com sucesso!");
+      } else {
+        return toastError("Erro ao salvar correções.");
+      }
+    }
+
     let valores_medicao_response = [];
     if (valoresPeriodosLancamentos.length) {
       setLoading(true);
@@ -1271,6 +1314,7 @@ export default () => {
         formValuesAtualizados,
         dadosValoresInclusoesAutorizadasState,
         true,
+        false,
         false
       );
       return (values["week"] = Number(key));
@@ -1314,17 +1358,6 @@ export default () => {
     setShowModalObservacaoDiaria(true);
     setDiaObservacaoDiaria(dia);
     setCategoriaObservacaoDiaria(categoria);
-  };
-
-  const textoBotaoObservacao = value => {
-    let text = "Adicionar";
-    if (
-      value &&
-      !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)
-    ) {
-      text = "Visualizar";
-    }
-    return text;
   };
 
   const onClickBotaoObservacao = (dia, categoria) => {
@@ -1662,6 +1695,20 @@ export default () => {
                       />
                     </div>
                   </div>
+                  {location.state && location.state.justificativa_periodo && (
+                    <div className="row py-2">
+                      <div className="col">
+                        <b className="pb-2 mb-2">
+                          Correções solicitadas pela DRE:
+                        </b>
+                        <Field
+                          component={CKEditorField}
+                          name="justificativa_periodo"
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="row pb-2 pt-4">
                     <div className="col">
                       <b className="section-title">
@@ -1673,7 +1720,8 @@ export default () => {
                     <Tabs
                       activeKey={semanaSelecionada}
                       onChange={key => {
-                        onChangeSemana(formValuesAtualizados, key);
+                        calendarioMesConsiderado &&
+                          onChangeSemana(formValuesAtualizados, key);
                       }}
                       type="card"
                       className={`${
@@ -1772,21 +1820,14 @@ export default () => {
                                                         }`
                                                       ]
                                                     )}
-                                                    disabled={
-                                                      location.state &&
-                                                      location.state
-                                                        .status_periodo ===
-                                                        "MEDICAO_APROVADA_PELA_DRE" &&
-                                                      textoBotaoObservacao(
-                                                        formValuesAtualizados[
-                                                          `${row.name}__dia_${
-                                                            column.dia
-                                                          }__categoria_${
-                                                            categoria.id
-                                                          }`
-                                                        ]
-                                                      ) === "Adicionar"
-                                                    }
+                                                    disabled={desabilitarBotaoColunaObservacoes(
+                                                      location,
+                                                      valoresPeriodosLancamentos,
+                                                      column,
+                                                      categoria,
+                                                      formValuesAtualizados,
+                                                      row
+                                                    )}
                                                     type={BUTTON_TYPE.BUTTON}
                                                     style={
                                                       botaoAdicionarObrigatorio(
@@ -1844,7 +1885,8 @@ export default () => {
                                                       ehGrupoETECUrlParam,
                                                       dadosValoresInclusoesEtecAutorizadasState,
                                                       inclusoesEtecAutorizadas,
-                                                      grupoLocation
+                                                      grupoLocation,
+                                                      valoresPeriodosLancamentos
                                                     )}
                                                     dia={column.dia}
                                                     defaultValue={defaultValue(
@@ -1922,21 +1964,14 @@ export default () => {
                                                           }`
                                                         ]
                                                       )}
-                                                      disabled={
-                                                        location.state &&
-                                                        location.state
-                                                          .status_periodo ===
-                                                          "MEDICAO_APROVADA_PELA_DRE" &&
-                                                        textoBotaoObservacao(
-                                                          formValuesAtualizados[
-                                                            `${row.name}__dia_${
-                                                              column.dia
-                                                            }__categoria_${
-                                                              categoria.id
-                                                            }`
-                                                          ]
-                                                        ) === "Adicionar"
-                                                      }
+                                                      disabled={desabilitarBotaoColunaObservacoes(
+                                                        location,
+                                                        valoresPeriodosLancamentos,
+                                                        column,
+                                                        categoria,
+                                                        formValuesAtualizados,
+                                                        row
+                                                      )}
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
                                                         botaoAdicionarObrigatorioTabelaAlimentacao(
@@ -1998,7 +2033,8 @@ export default () => {
                                                         ehGrupoETECUrlParam,
                                                         dadosValoresInclusoesEtecAutorizadasState,
                                                         inclusoesEtecAutorizadas,
-                                                        grupoLocation
+                                                        grupoLocation,
+                                                        valoresPeriodosLancamentos
                                                       )}
                                                       exibeTooltipDiaSobremesaDoce={
                                                         row.name ===
@@ -2187,59 +2223,93 @@ export default () => {
                         </section>
                       </div>
                     ))}
-                  {mesAnoConsiderado && (
-                    <ModalObservacaoDiaria
-                      closeModal={() => setShowModalObservacaoDiaria(false)}
-                      categoria={showCategoriaObservacaoDiaria}
-                      showModal={showModalObservacaoDiaria}
-                      dia={showDiaObservacaoDiaria}
-                      mesAnoConsiderado={mesAnoConsiderado}
-                      calendarioMesConsiderado={calendarioMesConsiderado}
-                      form={form}
-                      location={location}
-                      values={formValuesAtualizados}
-                      rowName={"observacoes"}
-                      valoresPeriodosLancamentos={valoresPeriodosLancamentos}
-                      onSubmit={() =>
-                        onSubmitObservacao(
+                  {[
+                    "MEDICAO_CORRECAO_SOLICITADA",
+                    "MEDICAO_CORRIGIDA_PELA_UE"
+                  ].includes(location.state.status_periodo) &&
+                  location.state.status_solicitacao ===
+                    "MEDICAO_CORRECAO_SOLICITADA" ? (
+                    <Botao
+                      className="float-right"
+                      texto="Salvar Correções"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={`${BUTTON_STYLE.GREEN}`}
+                      onClick={() => setShowModalSalvarCorrecoes(true)}
+                      disabled={!calendarioMesConsiderado}
+                    />
+                  ) : (
+                    <Botao
+                      className="float-right"
+                      texto="Salvar Lançamentos"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={`${BUTTON_STYLE.GREEN}`}
+                      onClick={() =>
+                        onSubmit(
                           formValuesAtualizados,
-                          showDiaObservacaoDiaria,
-                          showCategoriaObservacaoDiaria,
-                          errors
+                          dadosValoresInclusoesAutorizadasState,
+                          false,
+                          true,
+                          false
                         )
                       }
-                      dadosIniciais={dadosIniciais}
-                      setExibirTooltip={value => setExibirTooltip(value)}
-                      errors={errors}
-                      valoresObservacoes={valoresObservacoes}
-                      setFormValuesAtualizados={setFormValuesAtualizados}
+                      disabled={
+                        (location.state &&
+                          location.state.status_periodo ===
+                            "MEDICAO_APROVADA_PELA_DRE") ||
+                        disableBotaoSalvarLancamentos ||
+                        !calendarioMesConsiderado
+                      }
+                      exibirTooltip={exibirTooltip}
+                      tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
+                      classTooltip="icone-info-invalid"
                     />
                   )}
-                  <Botao
-                    className="float-right"
-                    texto="Salvar Lançamentos"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={`${BUTTON_STYLE.GREEN}`}
-                    onClick={() =>
-                      onSubmit(
+                </div>
+                {mesAnoConsiderado && (
+                  <ModalObservacaoDiaria
+                    closeModal={() => setShowModalObservacaoDiaria(false)}
+                    categoria={showCategoriaObservacaoDiaria}
+                    showModal={showModalObservacaoDiaria}
+                    dia={showDiaObservacaoDiaria}
+                    mesAnoConsiderado={mesAnoConsiderado}
+                    calendarioMesConsiderado={calendarioMesConsiderado}
+                    form={form}
+                    location={location}
+                    values={formValuesAtualizados}
+                    rowName={"observacoes"}
+                    valoresPeriodosLancamentos={valoresPeriodosLancamentos}
+                    onSubmit={() =>
+                      onSubmitObservacao(
                         formValuesAtualizados,
-                        dadosValoresInclusoesAutorizadasState
+                        showDiaObservacaoDiaria,
+                        showCategoriaObservacaoDiaria,
+                        errors
                       )
                     }
-                    disabled={
-                      (location.state &&
-                        location.state.status_periodo ===
-                          "MEDICAO_APROVADA_PELA_DRE") ||
-                      disableBotaoSalvarLancamentos
-                    }
-                    exibirTooltip={exibirTooltip}
-                    tooltipTitulo="Existem campos a serem corrigidos. Realize as correções para salvar."
-                    classTooltip="icone-info-invalid"
+                    dadosIniciais={dadosIniciais}
+                    setExibirTooltip={value => setExibirTooltip(value)}
+                    errors={errors}
+                    valoresObservacoes={valoresObservacoes}
+                    setFormValuesAtualizados={setFormValuesAtualizados}
                   />
-                </div>
+                )}
                 <ModalErro
                   showModalErro={showModalErro}
                   setShowModalErro={setShowModalErro}
+                />
+                <ModalSalvarCorrecoes
+                  closeModal={() => setShowModalSalvarCorrecoes(false)}
+                  showModal={showModalSalvarCorrecoes}
+                  periodoGrupo={periodoGrupo}
+                  onSubmit={() =>
+                    onSubmit(
+                      formValuesAtualizados,
+                      dadosValoresInclusoesAutorizadasState,
+                      false,
+                      true,
+                      true
+                    )
+                  }
                 />
               </div>
             </form>
