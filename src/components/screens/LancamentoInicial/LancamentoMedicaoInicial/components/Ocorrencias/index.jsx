@@ -140,6 +140,7 @@ export default ({
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
           titulo="Histórico do Formulário de Ocorrências"
           getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
+          getOcorrencia={() => solicitacaoMedicaoInicial.ocorrencia}
         />
       )}
       <ModalAtualizarOcorrencia

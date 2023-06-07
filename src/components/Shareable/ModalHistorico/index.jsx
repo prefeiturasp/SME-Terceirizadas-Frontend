@@ -14,15 +14,9 @@ export default class ModalHistorico extends Component {
       logs: [],
       logSelecionado: null,
       solicitacaoMedicaoInicial: null,
-      statusValidos: ["Enviado pela UE", "Corrigido para DRE"]
+      statusValidosDownload: ["Enviado pela UE", "Corrigido para DRE"]
     };
   }
-
-  anexoPdfOcorrencia = solicitacaoMedicaoInicial => {
-    return solicitacaoMedicaoInicial.anexos.find(
-      anexo => anexo.extensao === ".pdf"
-    );
-  };
 
   itemLogAtivo = (index, ativo) => {
     let { logs, logSelecionado } = this.state;
@@ -58,14 +52,19 @@ export default class ModalHistorico extends Component {
   componentDidUpdate = async () => {
     const { getHistorico } = this.props;
 
-    if (this.state.logs.length < getHistorico().length) {
-      this.setState({ logs: getHistorico() });
+    if (
+      this.state.logs.length < getHistorico().length ||
+      this.state.logs[0].criado_em !== getHistorico()[0].criado_em
+    ) {
+      this.setState({ logs: getHistorico(), logSelecionado: null });
     }
   };
 
   getPdfUrl = log => {
     let urlArquivoPDF = "";
-    if (this.state.statusValidos.includes(log.status_evento_explicacao)) {
+    if (
+      this.state.statusValidosDownload.includes(log.status_evento_explicacao)
+    ) {
       log.anexos.forEach(anexo => {
         if (anexo.nome.includes("pdf")) {
           urlArquivoPDF = anexo.arquivo_url;
@@ -201,25 +200,21 @@ export default class ModalHistorico extends Component {
                 )}
               </header>
               {logSelecionado !== null &&
-                this.state.statusValidos.includes(
+                this.state.statusValidosDownload.includes(
                   logSelecionado.status_evento_explicacao
                 ) && (
                   <footer className="footer-historico">
-                    {this.props.solicitacaoMedicaoInicial && (
-                      <article>
-                        <Botao
-                          className="download-ocorrencias"
-                          style={BUTTON_STYLE.GREEN}
-                          texto="Download do formulário"
-                          onClick={() => {
-                            const urlArquivoPDF = this.getPdfUrl(
-                              logSelecionado
-                            );
-                            medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
-                          }}
-                        />
-                      </article>
-                    )}
+                    <article>
+                      <Botao
+                        className="download-ocorrencias"
+                        style={BUTTON_STYLE.GREEN}
+                        texto="Download do formulário"
+                        onClick={() => {
+                          const urlArquivoPDF = this.getPdfUrl(logSelecionado);
+                          medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
+                        }}
+                      />
+                    </article>
                   </footer>
                 )}
             </div>
