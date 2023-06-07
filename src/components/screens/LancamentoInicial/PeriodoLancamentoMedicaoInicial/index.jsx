@@ -1168,7 +1168,6 @@ export default () => {
         valor => valor.nome_campo === "observacoes"
       )
     );
-    setDisableBotaoSalvarLancamentos(true);
     setExibirTooltip(false);
   };
 
