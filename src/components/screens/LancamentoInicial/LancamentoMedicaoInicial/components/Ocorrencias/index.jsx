@@ -24,15 +24,6 @@ export default ({
 
   return (
     <>
-      <ModalHistorico
-        visible={showModalHistorico}
-        onOk={() => setShowModalHistorico(false)}
-        onCancel={() => setShowModalHistorico(false)}
-        logs={solicitacaoMedicaoInicial.ocorrencia.logs}
-        solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
-        titulo="Histórico do Formulário de Ocorrências"
-        getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
-      />
       <div className="row mb-3">
         <div className="col-12">
           <b className="section-title">Ocorrências</b>
@@ -119,13 +110,13 @@ export default ({
                           texto="Histórico"
                           type={BUTTON_TYPE.BUTTON}
                           style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-right"
+                          className="ml-3"
                           onClick={visualizarModalHistorico}
                         />
                         {solicitacaoMedicaoInicial.status ===
                           "MEDICAO_CORRECAO_SOLICITADA" && (
                           <Botao
-                            className="ml-3"
+                            className="float-right ml-3"
                             texto="Atualizar Formulário de Ocorrências"
                             style={BUTTON_STYLE.GREEN}
                             onClick={() => setShowModal(true)}
@@ -139,6 +130,17 @@ export default ({
             </div>
           </div>
         </div>
+      )}
+      {solicitacaoMedicaoInicial.ocorrencia && (
+        <ModalHistorico
+          visible={showModalHistorico}
+          onOk={() => setShowModalHistorico(false)}
+          onCancel={() => setShowModalHistorico(false)}
+          logs={solicitacaoMedicaoInicial.ocorrencia.logs}
+          solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
+          titulo="Histórico do Formulário de Ocorrências"
+          getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
+        />
       )}
       <ModalAtualizarOcorrencia
         showModal={showModal}

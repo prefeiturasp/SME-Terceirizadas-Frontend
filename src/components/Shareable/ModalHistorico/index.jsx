@@ -13,7 +13,8 @@ export default class ModalHistorico extends Component {
     this.state = {
       logs: [],
       logSelecionado: null,
-      solicitacaoMedicaoInicial: null
+      solicitacaoMedicaoInicial: null,
+      statusValidos: ["Enviado pela UE", "Corrigido para DRE"]
     };
   }
 
@@ -60,6 +61,18 @@ export default class ModalHistorico extends Component {
     if (this.state.logs.length < getHistorico().length) {
       this.setState({ logs: getHistorico() });
     }
+  };
+
+  getPdfUrl = log => {
+    let urlArquivoPDF = "";
+    if (this.state.statusValidos.includes(log.status_evento_explicacao)) {
+      log.anexos.forEach(anexo => {
+        if (anexo.nome.includes("pdf")) {
+          urlArquivoPDF = anexo.arquivo_url;
+        }
+      });
+    }
+    return urlArquivoPDF;
   };
 
   render() {
@@ -188,10 +201,9 @@ export default class ModalHistorico extends Component {
                 )}
               </header>
               {logSelecionado !== null &&
-                (logSelecionado.status_evento_explicacao ===
-                  "Enviado pela UE" ||
-                  logSelecionado.status_evento_explicacao ===
-                    "Correção solicitada") && (
+                this.state.statusValidos.includes(
+                  logSelecionado.status_evento_explicacao
+                ) && (
                   <footer className="footer-historico">
                     {this.props.solicitacaoMedicaoInicial && (
                       <article>
@@ -199,12 +211,12 @@ export default class ModalHistorico extends Component {
                           className="download-ocorrencias"
                           style={BUTTON_STYLE.GREEN}
                           texto="Download do formulário"
-                          onClick={() =>
-                            medicaoInicialExportarOcorrenciasPDF(
-                              this.props.solicitacaoMedicaoInicial
-                                .ultimo_arquivo
-                            )
-                          }
+                          onClick={() => {
+                            const urlArquivoPDF = this.getPdfUrl(
+                              logSelecionado
+                            );
+                            medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
+                          }}
                         />
                       </article>
                     )}

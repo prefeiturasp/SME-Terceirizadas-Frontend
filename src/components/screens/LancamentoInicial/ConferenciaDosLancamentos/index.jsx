@@ -279,14 +279,14 @@ export const ConferenciaDosLancamentos = () => {
 
   return (
     <div className="conferencia-dos-lancamentos">
-      {solicitacao && (
+      {solicitacao && solicitacao.ocorrencia && (
         <ModalHistorico
           visible={showModal}
           onOk={() => setShowModal(false)}
           onCancel={() => setShowModal(false)}
           logs={solicitacao.ocorrencia.logs}
           solicitacaoMedicaoInicial={solicitacao.ocorrencia}
-          titulo="Histórico do Formulário de Ocorrências yyy"
+          titulo="Histórico do Formulário de Ocorrências"
           getHistorico={() => solicitacao.ocorrencia.logs}
         />
       )}
