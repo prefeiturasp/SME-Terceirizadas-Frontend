@@ -181,7 +181,6 @@ export default ({
             String(valor.dia) === String(dia) &&
             String(valor.categoria_medicao) === String(categoria)
         ).valor;
-        console.log(updateObs);
         setFormValuesAtualizados({ ...values, ...updateObs });
         form.change(
           `${rowName}__dia_${dia}__categoria_${categoria}`,
