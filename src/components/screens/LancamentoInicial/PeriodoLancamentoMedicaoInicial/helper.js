@@ -782,9 +782,23 @@ export const ehDiaParaCorrigir = (
   return existeAlgumCampoParaCorrigir;
 };
 
-export const textoBotaoObservacao = value => {
+export const textoBotaoObservacao = (
+  value,
+  valoresObservacoes,
+  dia,
+  categoria
+) => {
   let text = "Adicionar";
   if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    text = "Visualizar";
+  } else if (
+    valoresObservacoes &&
+    valoresObservacoes.find(
+      valor =>
+        String(valor.dia) === String(dia) &&
+        String(valor.categoria_medicao) === String(categoria)
+    )
+  ) {
     text = "Visualizar";
   }
   return text;
@@ -796,13 +810,18 @@ export const desabilitarBotaoColunaObservacoes = (
   column,
   categoria,
   formValuesAtualizados,
-  row
+  row,
+  valoresObservacoes,
+  dia
 ) => {
   const botaoEhAdicionar =
     textoBotaoObservacao(
       formValuesAtualizados[
         `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-      ]
+      ],
+      valoresObservacoes,
+      dia,
+      categoria.id
     ) === "Adicionar";
 
   return (
