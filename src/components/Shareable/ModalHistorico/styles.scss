@@ -5,3 +5,24 @@
   color: $green;
   border-color: $green;
 }
+.container-historico {
+  position: relative;
+}
+
+.footer-historico {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  margin-left: 240px;
+  margin-bottom: 10px;
+}
+.download-ocorrencias {
+  color: $green;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.preenchimento {
+  min-height: 14.5vh;
+}
