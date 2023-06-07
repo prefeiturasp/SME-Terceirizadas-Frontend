@@ -1818,7 +1818,10 @@ export default () => {
                                                         }__categoria_${
                                                           categoria.id
                                                         }`
-                                                      ]
+                                                      ],
+                                                      valoresObservacoes,
+                                                      column.dia,
+                                                      categoria.id
                                                     )}
                                                     disabled={desabilitarBotaoColunaObservacoes(
                                                       location,
@@ -1826,7 +1829,9 @@ export default () => {
                                                       column,
                                                       categoria,
                                                       formValuesAtualizados,
-                                                      row
+                                                      row,
+                                                      valoresObservacoes,
+                                                      column.dia
                                                     )}
                                                     type={BUTTON_TYPE.BUTTON}
                                                     style={
@@ -1962,7 +1967,10 @@ export default () => {
                                                           }__categoria_${
                                                             categoria.id
                                                           }`
-                                                        ]
+                                                        ],
+                                                        valoresObservacoes,
+                                                        column.dia,
+                                                        categoria.id
                                                       )}
                                                       disabled={desabilitarBotaoColunaObservacoes(
                                                         location,
@@ -1970,7 +1978,9 @@ export default () => {
                                                         column,
                                                         categoria,
                                                         formValuesAtualizados,
-                                                        row
+                                                        row,
+                                                        valoresObservacoes,
+                                                        column.dia
                                                       )}
                                                       type={BUTTON_TYPE.BUTTON}
                                                       style={
@@ -2291,6 +2301,7 @@ export default () => {
                     errors={errors}
                     valoresObservacoes={valoresObservacoes}
                     setFormValuesAtualizados={setFormValuesAtualizados}
+                    setValoresObservacoes={setValoresObservacoes}
                   />
                 )}
                 <ModalErro

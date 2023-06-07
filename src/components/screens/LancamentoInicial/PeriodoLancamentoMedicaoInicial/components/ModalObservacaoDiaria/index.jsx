@@ -38,7 +38,8 @@ export default ({
   errors,
   valoresObservacoes,
   location,
-  setFormValuesAtualizados
+  setFormValuesAtualizados,
+  setValoresObservacoes
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -71,6 +72,9 @@ export default ({
       );
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+        setValoresObservacoes(
+          valoresObservacoes.filter(v => v.uuid !== uuidValor)
+        );
         valoresPeriodosLancamentos.splice(
           valoresPeriodosLancamentos.findIndex(
             valor => valor.uuid === uuidValor
@@ -160,16 +164,6 @@ export default ({
 
   const setUpModal = () => {
     if (dia && categoria) {
-      /*console.log(dia);
-      console.log(categoria);
-      console.log(values[`${rowName}__dia_${dia}__categoria_${categoria}`]);
-      console.log(
-        valoresObservacoes.find(
-          valor =>
-            String(valor.dia) === String(dia) &&
-            String(valor.categoria_medicao) === String(categoria)
-        )
-      );*/
       if (
         !values[`${rowName}__dia_${dia}__categoria_${categoria}`] &&
         valoresObservacoes &&
@@ -197,7 +191,6 @@ export default ({
               String(valor.categoria_medicao) === String(categoria)
           ).valor
         );
-        console.log(values);
       }
     }
   };
