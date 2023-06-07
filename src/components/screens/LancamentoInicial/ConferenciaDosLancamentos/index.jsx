@@ -35,6 +35,7 @@ import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodae } from "./components/ModalEnviarParaCodae";
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
+import ModalHistorico from "components/Shareable/ModalHistorico";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -75,7 +76,11 @@ export const ConferenciaDosLancamentos = () => {
     desabilitarSolicitarCorrecao,
     setDesabilitarSolicitarCorrecao
   ] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
+  const visualizarModal = () => {
+    setShowModal(true);
+  };
   const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
@@ -274,6 +279,17 @@ export const ConferenciaDosLancamentos = () => {
 
   return (
     <div className="conferencia-dos-lancamentos">
+      {solicitacao && solicitacao.ocorrencia && (
+        <ModalHistorico
+          visible={showModal}
+          onOk={() => setShowModal(false)}
+          onCancel={() => setShowModal(false)}
+          logs={solicitacao.ocorrencia.logs}
+          solicitacaoMedicaoInicial={solicitacao.ocorrencia}
+          titulo="Histórico do Formulário de Ocorrências"
+          getHistorico={() => solicitacao.ocorrencia.logs}
+        />
+      )}
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={loading}>
         {!erroAPI && dadosIniciais && periodosGruposMedicao && (
@@ -415,6 +431,13 @@ export const ConferenciaDosLancamentos = () => {
                                     }`}
                                 </div>
                                 <div className="col-7 text-right mt-3">
+                                  <Botao
+                                    texto="Histórico"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    className="mr-3"
+                                    onClick={visualizarModal}
+                                  />
                                   <Botao
                                     className="mr-3"
                                     texto="Solicitar correção no formulário"
