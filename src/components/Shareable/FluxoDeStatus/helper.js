@@ -126,6 +126,7 @@ export const tipoDeStatus = status => {
     case "Aprovado pela DRE":
     case "CODAE homologou":
     case "CODAE Atualizou o protocolo":
+    case "Corrigido para DRE":
       return "prosseguiu";
 
     case "CODAE pediu correção":
