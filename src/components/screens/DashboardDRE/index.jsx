@@ -43,6 +43,7 @@ import {
   updateTituloAlimentacao
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
+import { Spin } from "antd";
 
 export const DashboardDRE = props => {
   const { cards, lotes, handleSubmit, meusDados } = props;
@@ -73,6 +74,10 @@ export const DashboardDRE = props => {
   const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
     false
   );
+  const [
+    loadingAcompanhamentoSolicitacoes,
+    setLoadingAcompanhamentoSolicitacoes
+  ] = useState(false);
 
   const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
     pendentes: [],
@@ -88,6 +93,8 @@ export const DashboardDRE = props => {
     let negadasListSolicitacao = [];
     let autorizadasListSolicitacao = [];
     let aguardandoCodaeListSolicitacao = [];
+
+    setLoadingAcompanhamentoSolicitacoes(true);
 
     await getSolicitacoesPendentesDRE(params).then(response => {
       pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
@@ -118,6 +125,7 @@ export const DashboardDRE = props => {
       negadas: negadasListSolicitacao,
       canceladas: canceladasListSolicitacao
     });
+    setLoadingAcompanhamentoSolicitacoes(false);
   };
 
   const carregaResumoPendencias = async (values = {}) => {
@@ -185,6 +193,8 @@ export const DashboardDRE = props => {
     carregaResumoPendencias();
     getSolicitacoesAsync(PARAMS);
   }, []);
+
+  let typingTimeout = null;
 
   return (
     <div>
@@ -268,68 +278,76 @@ export const DashboardDRE = props => {
               </div>
             </div>
             <CardBodySemRedux
-              exibirFiltrosDataEventoETipoSolicitacao={false}
+              exibirFiltrosDataEventoETipoSolicitacao
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={value => {
-                onPesquisaChanged(values);
-                props.updateTituloAlimentacao(value.titulo);
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(async () => {
+                  onPesquisaChanged(values);
+                  props.updateTituloAlimentacao(value.titulo);
+                }, 1000);
               }}
               values={values}
             >
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Validação da DRE"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={solicitacoesFiltradas.pendentes}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
-                  />
-                </div>
-                <div className="col-6">
-                  {solicitacoesFiltradas.aguardandoCodae && (
+              <Spin
+                tip="Carregando..."
+                spinning={loadingAcompanhamentoSolicitacoes}
+              >
+                <div className="row pb-3">
+                  <div className="col-6">
                     <CardStatusDeSolicitacao
-                      cardTitle={"Aguardando Retorno de CODAE"}
-                      cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
-                      solicitations={solicitacoesFiltradas.aguardandoCodae}
-                      icon={"fa-history"}
-                      href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                      cardTitle={"Aguardando Validação da DRE"}
+                      cardType={CARD_TYPE_ENUM.PENDENTE}
+                      solicitations={solicitacoesFiltradas.pendentes}
+                      icon={"fa-exclamation-triangle"}
+                      href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                     />
-                  )}
+                  </div>
+                  <div className="col-6">
+                    {solicitacoesFiltradas.aguardandoCodae && (
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Aguardando Retorno de CODAE"}
+                        cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
+                        solicitations={solicitacoesFiltradas.aguardandoCodae}
+                        icon={"fa-history"}
+                        href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={solicitacoesFiltradas.autorizadas}
-                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
-                  />
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Autorizadas"}
+                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                      solicitations={solicitacoesFiltradas.autorizadas}
+                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                      href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Negadas"}
+                      cardType={CARD_TYPE_ENUM.NEGADO}
+                      solicitations={solicitacoesFiltradas.negadas}
+                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                      href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={solicitacoesFiltradas.negadas}
-                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      solicitations={solicitacoesFiltradas.canceladas}
+                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={solicitacoesFiltradas.canceladas}
-                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-                  />
-                </div>
-              </div>
+              </Spin>
             </CardBodySemRedux>
             <div className="card card-shortcut-to-form mt-3">
               <div className="card-body">
