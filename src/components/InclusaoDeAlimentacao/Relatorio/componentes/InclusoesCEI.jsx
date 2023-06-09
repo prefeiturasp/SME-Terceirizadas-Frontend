@@ -58,16 +58,22 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
     }
   };
 
+  const alimentosFormatados = nome_periodo => {
+    const vinculo = vinculosAlimentacao.find(
+      v => v.periodo_escolar.nome === nome_periodo
+    );
+
+    return vinculo
+      ? vinculo.tipos_alimentacao.map(ta => ta.nome).join(", ")
+      : "Nenhum tipo de alimentação definido";
+  };
+
   useEffect(() => {
     getVinculosAlimentacao();
   }, []);
 
   return vinculosAlimentacao ? (
     faixasEtariasPorPeriodo.map((faixa_por_periodo, fp_key) => {
-      const alimentosFormatados = vinculosAlimentacao
-        .find(v => v.periodo_escolar.nome === faixa_por_periodo.nome)
-        .tipos_alimentacao.map(ta => ta.nome)
-        .join(", ");
       return (
         <Fragment key={fp_key}>
           <div className="row" key={`${fp_key}-0`}>
@@ -112,9 +118,11 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                     <div className="col-12 mt-3">
                       <div className="container-fluid pr-0">
                         <span>
-                          Tipos de alimentação no período{" "}
+                          Tipos xxx de alimentação no período{" "}
                           {periodo_interno.periodo.nome.toLowerCase()}:{" "}
-                          <b>{alimentosFormatados}</b>
+                          <b>
+                            {alimentosFormatados(periodo_interno.periodo.nome)}
+                          </b>
                         </span>
                       </div>
                     </div>
@@ -136,7 +144,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                 <span>
                   Tipos de alimentação no período{" "}
                   {faixa_por_periodo.nome.toLowerCase()}:{" "}
-                  <b>{alimentosFormatados}</b>
+                  <b>{alimentosFormatados(faixa_por_periodo.nome)}</b>
                 </span>
               </div>
               <div className="col-12">
