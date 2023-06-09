@@ -118,7 +118,7 @@ export const InclusoesCEI = ({ inclusaoDeAlimentacao }) => {
                     <div className="col-12 mt-3">
                       <div className="container-fluid pr-0">
                         <span>
-                          Tipos xxx de alimentação no período{" "}
+                          Tipos de alimentação no período{" "}
                           {periodo_interno.periodo.nome.toLowerCase()}:{" "}
                           <b>
                             {alimentosFormatados(periodo_interno.periodo.nome)}
