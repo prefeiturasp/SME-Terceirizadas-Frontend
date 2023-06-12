@@ -99,7 +99,7 @@ export default ({
               <div className="col-3">
                 <Field
                   component={InputComData}
-                  label="Selecionar Período de Entrega"
+                  label="Período de Entrega"
                   name="data_inicial"
                   className="data-inicial"
                   placeholder="De"

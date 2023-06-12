@@ -17,6 +17,7 @@ import {
 } from "components/Shareable/Botao/constants";
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
+import "./styles.scss";
 
 export default () => {
   const history = useHistory();
@@ -51,7 +52,7 @@ export default () => {
         setTotal(response.data.count);
       } else {
         setTotal(response.data.count);
-        setGuias();
+        setGuias([]);
       }
     } else {
       setGuias(guiasVinculadas.slice((page - 1) * 10, page * 10));
@@ -102,8 +103,8 @@ export default () => {
         handleClose={() => setModal(false)}
         handleSim={desvincularGuia}
       />
-      <div className="card mt-3 card-cronograma-entrega">
-        <div className="card-body cronograma-entrega">
+      <div className="card mt-3 card-guias-notificacoes">
+        <div className="card-body guias-notificacoes">
           <Filtros
             setFiltros={setFiltros}
             setGuias={setGuias}
@@ -121,6 +122,13 @@ export default () => {
                   setModal(guia);
                 }}
               />
+              <div className="row">
+                <div className="col-12 pb-3">
+                  <span className="green-dot mr-1" />
+                  {guiasVinculadas.length} Guia(s) já vinculada(s) a
+                  notificação.
+                </div>
+              </div>
               <div className="row">
                 <div className="col">
                   <Pagination

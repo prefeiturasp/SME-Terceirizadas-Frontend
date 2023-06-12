@@ -1,10 +1,9 @@
-.card-guias-notificacoes {
-  min-height: 600px;
-  margin-bottom: 18em !important;
-}
-
 .guias-notificacoes {
-  .menu-inferior {
-    font-size: 14px !important;
+  .green-dot {
+    height: 10px;
+    width: 10px;
+    background-color: #d4edda;
+    border-radius: 50%;
+    display: inline-block;
   }
 }
