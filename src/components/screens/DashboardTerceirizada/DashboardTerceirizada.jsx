@@ -183,8 +183,6 @@ class DashboardTerceirizada extends Component {
       !negadasListSolicitacao ||
       !autorizadasListSolicitacao;
 
-    console.log(loadingAcompanhamentoSolicitacoes);
-
     return (
       <div>
         <form onSubmit={handleSubmit(this.props.handleSubmit)}>
