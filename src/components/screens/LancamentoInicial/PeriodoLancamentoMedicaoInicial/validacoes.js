@@ -34,7 +34,7 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   ) {
     if (
       Number(values[`frequencia__dia_${dia}__categoria_${categoria.id}`]) ===
-        0 &&
+        0 ||
       !validacaoDiaLetivo(dia)
     ) {
       return true;
@@ -314,81 +314,89 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   alteracoesAlimentacaoAutorizadas,
   kitLanchesAutorizadas,
   inclusoesEtecAutorizadas,
-  ehGrupoETECUrlParam = false
+  ehGrupoETECUrlParam = false,
+  feriadosNoMes
 ) => {
-  return (
-    botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-      formValuesAtualizados,
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      validacaoDiaLetivo
-    ) ||
-    repeticaoSobremesaDoceComValorESemObservacao(
-      formValuesAtualizados,
-      dia,
-      categoria,
-      diasSobremesaDoce,
-      location
-    ) ||
-    campoComInclusaoContinuaValor0ESemObservacao(
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      formValuesAtualizados
-    ) ||
-    campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      formValuesAtualizados
-    ) ||
-    campoFrequenciaValor0ESemObservacao(
-      dia,
-      categoria,
-      formValuesAtualizados
-    ) ||
-    campoComSuspensaoAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      suspensoesAutorizadas
-    ) ||
-    campoRefeicaoComRPLAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    campoLancheComLPRAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    camposKitLancheSolicitacoesAlimentacaoESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      kitLanchesAutorizadas
-    ) ||
-    camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    camposLancheEmergTabelaEtec(
-      formValuesAtualizados,
-      column,
-      categoria,
-      inclusoesEtecAutorizadas,
-      ehGrupoETECUrlParam
-    ) ||
-    Object.keys(dadosValoresInclusoesAutorizadasState)
-      .filter(key => key.includes(`dia_${dia}`))
-      .some(key => !formValuesAtualizados[key])
-  );
+  if (
+    location.state.grupo === "Programas e Projetos" &&
+    feriadosNoMes.includes(dia)
+  ) {
+    return false;
+  } else {
+    return (
+      botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
+        formValuesAtualizados,
+        dia,
+        categoria,
+        dadosValoresInclusoesAutorizadasState,
+        validacaoDiaLetivo
+      ) ||
+      repeticaoSobremesaDoceComValorESemObservacao(
+        formValuesAtualizados,
+        dia,
+        categoria,
+        diasSobremesaDoce,
+        location
+      ) ||
+      campoComInclusaoContinuaValor0ESemObservacao(
+        dia,
+        categoria,
+        dadosValoresInclusoesAutorizadasState,
+        formValuesAtualizados
+      ) ||
+      campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
+        dia,
+        categoria,
+        dadosValoresInclusoesAutorizadasState,
+        formValuesAtualizados
+      ) ||
+      campoFrequenciaValor0ESemObservacao(
+        dia,
+        categoria,
+        formValuesAtualizados
+      ) ||
+      campoComSuspensaoAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        suspensoesAutorizadas
+      ) ||
+      campoRefeicaoComRPLAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      campoLancheComLPRAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      camposKitLancheSolicitacoesAlimentacaoESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        kitLanchesAutorizadas
+      ) ||
+      camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      camposLancheEmergTabelaEtec(
+        formValuesAtualizados,
+        column,
+        categoria,
+        inclusoesEtecAutorizadas,
+        ehGrupoETECUrlParam
+      ) ||
+      Object.keys(dadosValoresInclusoesAutorizadasState)
+        .filter(key => key.includes(`dia_${dia}`))
+        .some(key => !formValuesAtualizados[key])
+    );
+  }
 };
 
 export const botaoAdicionarObrigatorio = (
@@ -415,7 +423,8 @@ export const validarFormulario = (
   location,
   categoriasDeMedicao,
   dadosValoresInclusoesAutorizadasState,
-  weekColumns
+  weekColumns,
+  feriadosNoMes
 ) => {
   const categoriaAlimentacao = categoriasDeMedicao.find(categoria =>
     categoria.nome.includes("ALIMENTAÇÃO")
@@ -472,7 +481,8 @@ export const validarFormulario = (
             categoria,
             dadosValoresInclusoesAutorizadasState,
             values_
-          )
+          ) &&
+          !feriadosNoMes.includes(dia)
         ) {
           erro = `Dia ${dia} está com valor 0 em uma alimentação. Justifique nas observações`;
         }
@@ -492,7 +502,8 @@ export const validarFormulario = (
           !values[inclusao] &&
           !values[
             `observacoes__dia_${dia}__categoria_${categoriaAlimentacao.id}`
-          ]
+          ] &&
+          !feriadosNoMes.includes(dia)
         ) {
           erro = `Existe autorização para o Lançamento de Programas e Projetos para o dia ${dia}. Justifique a ausência do apontamento!`;
         }
@@ -519,7 +530,10 @@ export const validarFormulario = (
   let diasComFrequenciaVaziasEInclusoesAutorizadas = [];
   arrayDiasInclusoesAutorizadasEmValues.forEach(dia => {
     if (
-      !values_[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
+      !values_[
+        `frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`
+      ] &&
+      !feriadosNoMes.includes(dia)
     ) {
       diasComFrequenciaVaziasEInclusoesAutorizadas.push(dia);
     }
@@ -543,7 +557,8 @@ export const validacoesTabelaAlimentacao = (
   suspensoesAutorizadas,
   alteracoesAlimentacaoAutorizadas,
   validacaoDiaLetivo,
-  location
+  location,
+  feriadosNoMes
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -551,6 +566,9 @@ export const validacoesTabelaAlimentacao = (
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
   if (location.state && location.state.grupo === "Programas e Projetos") {
+    if (feriadosNoMes.includes(dia)) {
+      return undefined;
+    }
     if (
       value &&
       !["Mês anterior", "Mês posterior"].includes(value) &&
@@ -833,9 +851,11 @@ export const exibirTooltipSemAlimentacaoPreAutorizadaInformada = (
   row,
   column,
   categoria,
-  dadosValoresInclusoesAutorizadasState
+  dadosValoresInclusoesAutorizadasState,
+  feriadosNoMes
 ) => {
   return (
+    !feriadosNoMes.includes(column.dia) &&
     `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
       dadosValoresInclusoesAutorizadasState &&
     Number(
@@ -854,9 +874,11 @@ export const exibirTooltipAlimentacoesAutorizadas = (
   row,
   column,
   categoria,
-  dadosValoresInclusoesAutorizadasState
+  dadosValoresInclusoesAutorizadasState,
+  feriadosNoMes
 ) => {
   return (
+    !feriadosNoMes.includes(column.dia) &&
     `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
       dadosValoresInclusoesAutorizadasState &&
     !formValuesAtualizados[
@@ -871,10 +893,12 @@ export const exibirTooltipFrequenciaDiaNaoLetivo = (
   column,
   categoria,
   dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
+  validacaoDiaLetivo,
+  feriadosNoMes
 ) => {
   return (
     !validacaoDiaLetivo(column.dia) &&
+    !feriadosNoMes.includes(column.dia) &&
     row.name === "frequencia" &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
       String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
