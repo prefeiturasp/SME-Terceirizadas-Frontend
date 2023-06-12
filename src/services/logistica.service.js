@@ -181,3 +181,13 @@ export const confirmaCancelamento = async payload => {
   const url = `/solicitacao-remessa/confirmar-cancelamento/`;
   return await axios.post(url, payload);
 };
+
+export const getGuiasNaoNotificadas = async params => {
+  const url = `/guias-da-requisicao/guias-com-ocorrencias-sem-notificacao/`;
+  return await axios.get(url, { params });
+};
+
+export const criarNotificacao = async payload => {
+  const url = `/notificacao-guias-com-ocorrencias/`;
+  return await axios.post(url, payload);
+};

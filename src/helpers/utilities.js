@@ -472,6 +472,12 @@ export const usuarioEhOutrosDilog = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
+export const usuarioEhDilogJuridico = () => {
+  return [PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO].includes(
+    localStorage.getItem("perfil")
+  );
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
