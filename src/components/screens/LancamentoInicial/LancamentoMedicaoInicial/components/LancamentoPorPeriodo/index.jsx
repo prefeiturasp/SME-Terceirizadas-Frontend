@@ -20,7 +20,7 @@ import {
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { CORES } from "./helpers";
+import { CORES, removeObjetosDuplicados } from "./helpers";
 import {
   getError,
   usuarioEhDiretorUE,
@@ -264,6 +264,18 @@ export default ({
     );
   };
 
+  const tiposAlimentacaoProgramasEProjetos = () => {
+    let tiposAlimentacao = [];
+    Object.keys(periodosInclusaoContinua).forEach(periodo => {
+      const tipos = periodosEscolaSimples.find(
+        p => p.periodo_escolar.nome === periodo
+      ).tipos_alimentacao;
+      tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+    });
+
+    return removeObjetosDuplicados(tiposAlimentacao, "nome");
+  };
+
   return (
     <div>
       {erroAPI && <div>{erroAPI}</div>}
@@ -286,31 +298,18 @@ export default ({
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           ))}
-          {periodosInclusaoContinua &&
-            Object.keys(periodosInclusaoContinua).map((periodo, index) => {
-              const vinculosDoPeriodo = periodosEscolaSimples.find(
-                p => p.periodo_escolar.nome === periodo
-              );
-              const tiposAlimentacao = vinculosDoPeriodo
-                ? vinculosDoPeriodo.tipos_alimentacao
-                : [];
-
-              return (
-                <CardLancamento
-                  key={index}
-                  grupo="Programas e Projetos"
-                  textoCabecalho={periodo}
-                  cor={CORES[4]}
-                  tipos_alimentacao={tiposAlimentacao}
-                  periodoSelecionado={periodoSelecionado}
-                  solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-                  objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-                  quantidadeAlimentacoesLancadas={
-                    quantidadeAlimentacoesLancadas
-                  }
-                />
-              );
-            })}
+          {periodosInclusaoContinua && (
+            <CardLancamento
+              grupo="Programas e Projetos"
+              cor={CORES[4]}
+              tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
+              periodoSelecionado={periodoSelecionado}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              periodosInclusaoContinua={periodosInclusaoContinua}
+            />
+          )}
           {((solicitacoesKitLanchesAutorizadas &&
             solicitacoesKitLanchesAutorizadas.length > 0) ||
             (solicitacoesAlteracaoLancheEmergencialAutorizadas &&

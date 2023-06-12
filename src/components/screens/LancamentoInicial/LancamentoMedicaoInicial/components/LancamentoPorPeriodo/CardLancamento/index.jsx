@@ -20,7 +20,8 @@ export default ({
   solicitacaoMedicaoInicial,
   ehGrupoSolicitacoesDeAlimentacao = false,
   ehGrupoETEC = false,
-  quantidadeAlimentacoesLancadas
+  quantidadeAlimentacoesLancadas,
+  periodosInclusaoContinua = null
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -30,9 +31,7 @@ export default ({
   const nomePeriodoGrupo = () => {
     let nome = "";
     if (grupo) {
-      nome += `${grupo}${
-        ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
-      }`;
+      nome += grupo;
     }
     if (textoCabecalho) {
       nome += textoCabecalho;
@@ -128,6 +127,7 @@ export default ({
         status_periodo: statusPeriodo(),
         status_solicitacao: solicitacaoMedicaoInicial.status,
         justificativa_periodo: justificativaPeriodo(),
+        periodosInclusaoContinua: periodosInclusaoContinua,
         ...location.state
       }
     });
@@ -170,10 +170,7 @@ export default ({
         >
           <div className="row">
             <div className="col-9 pl-0 mb-2 periodo-cabecalho">
-              {grupo &&
-                `${grupo} ${
-                  ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
-                } `}
+              {grupo && grupo}
               {textoCabecalho}
             </div>
             <div className="col-3 pr-0">
