@@ -164,7 +164,7 @@ export const SidebarContent = () => {
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
     exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
-    exibirMenuLogistica && <MenuLogistica key={7} />,
+    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />

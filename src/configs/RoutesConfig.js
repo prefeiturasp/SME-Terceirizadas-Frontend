@@ -129,7 +129,8 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE,
-  usuarioEhAdministradorNutriCODAE
+  usuarioEhAdministradorNutriCODAE,
+  usuarioEhDilogJuridico
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -227,6 +228,8 @@ import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/Status
 import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
 import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
 import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
+import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
+import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
 
 const routesConfig = [
   {
@@ -1657,6 +1660,18 @@ const routesConfig = [
     component: EntregasDrePage,
     exact: true,
     tipoUsuario: usuarioEhDRE()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO}`,
+    component: GuiasNotificacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
+    component: CadastroNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
   },
   {
     path: `/${constants.NOTIFICACOES}`,
