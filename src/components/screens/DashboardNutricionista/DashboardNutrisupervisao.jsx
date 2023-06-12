@@ -36,6 +36,10 @@ export const DashboardNutrisupervisao = () => {
   const [aguardandoRespostaEmpresa, setAguardandoRespostaEmpresa] = useState(
     null
   );
+  const [
+    loadingAcompanhamentoSolicitacoes,
+    setLoadingAcompanhamentoSolicitacoes
+  ] = useState(false);
   const [erro, setErro] = useState("");
 
   const { meusDados } = useContext(MeusDadosContext);
@@ -49,6 +53,8 @@ export const DashboardNutrisupervisao = () => {
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
   const getSolicitacoesAsync = async (params = null) => {
+    setLoadingAcompanhamentoSolicitacoes(true);
+
     const response = await getSolicitacoesCanceladasNutrisupervisao(params);
     if (response.status === HTTP_STATUS.OK) {
       setCanceladas(ajustarFormatoLog(response.data.results));
@@ -93,6 +99,8 @@ export const DashboardNutrisupervisao = () => {
     } else {
       setErro("Erro ao carregar solicitações aguardando resposta da empresa");
     }
+
+    setLoadingAcompanhamentoSolicitacoes(false);
   };
 
   useEffect(() => {
@@ -122,6 +130,8 @@ export const DashboardNutrisupervisao = () => {
     }
   };
 
+  let typingTimeout = null;
+
   return (
     <div>
       {erro && <div>{erro}</div>}
@@ -140,59 +150,69 @@ export const DashboardNutrisupervisao = () => {
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={onPesquisaChanged}
+              onChange={values => {
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(async () => {
+                  onPesquisaChanged(values);
+                }, 1000);
+              }}
             >
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Autorização"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={aguardandoAutorizacao}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_PENDENTES}`}
-                  />
+              <Spin
+                tip="Carregando..."
+                spinning={loadingAcompanhamentoSolicitacoes}
+              >
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Aguardando Autorização"}
+                      cardType={CARD_TYPE_ENUM.PENDENTE}
+                      solicitations={aguardandoAutorizacao}
+                      icon={"fa-exclamation-triangle"}
+                      href={`/${NUTRISUPERVISAO}/${SOLICITACOES_PENDENTES}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Aguardando Resposta da Empresa"}
+                      cardType={CARD_TYPE_ENUM.PENDENTE}
+                      solicitations={aguardandoRespostaEmpresa}
+                      icon={"fa-exclamation-triangle"}
+                      href={`/${NUTRISUPERVISAO}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Resposta da Empresa"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={aguardandoRespostaEmpresa}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
-                  />
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Autorizadas"}
+                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                      solicitations={autorizadas}
+                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                      href={`/${NUTRISUPERVISAO}/${SOLICITACOES_AUTORIZADAS}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Negadas"}
+                      cardType={CARD_TYPE_ENUM.NEGADO}
+                      solicitations={negadas}
+                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                      href={`/${NUTRISUPERVISAO}/${SOLICITACOES_NEGADAS}`}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={autorizadas}
-                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_AUTORIZADAS}`}
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      solicitations={canceladas}
+                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      href={`/${NUTRISUPERVISAO}/${SOLICITACOES_CANCELADAS}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={negadas}
-                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_NEGADAS}`}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={canceladas}
-                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${NUTRISUPERVISAO}/${SOLICITACOES_CANCELADAS}`}
-                  />
-                </div>
-              </div>
+              </Spin>
             </CardBody>
           )}
         </Spin>
