@@ -1,23 +1,22 @@
-import { addMonths, getYear, format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
+import { addMonths, getYear, format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { Select, Skeleton } from "antd";
+import { CaretDownOutlined } from "@ant-design/icons";
 
 import InformacoesEscola from "./components/InformacoesEscola";
 import InformacoesMedicaoInicial from "./components/InformacoesMedicaoInicial";
 import FluxoDeStatusMedicaoInicial from "./components/FluxoDeStatusMedicaoInicial";
-import { CaretDownOutlined } from "@ant-design/icons";
+import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
+import Ocorrencias from "./components/Ocorrencias";
 
 import * as perfilService from "services/perfil.service";
-import { getPanoramaEscola } from "services/dietaEspecial.service";
-import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 import { getEscolaSimples } from "services/escola.service";
-
-import { Select, Skeleton } from "antd";
-import "./styles.scss";
+import { getPanoramaEscola } from "services/dietaEspecial.service";
 import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import "./styles.scss";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -37,6 +36,10 @@ export default () => {
     loadingSolicitacaoMedInicial,
     setLoadingSolicitacaoMedicaoInicial
   ] = useState(true);
+  const [objSolicitacaoMIFinalizada, setObjSolicitacaoMIFinalizada] = useState({
+    anexo: null,
+    status: null
+  });
   const history = useHistory();
   const location = useLocation();
 
@@ -187,10 +190,8 @@ export default () => {
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <div className="row pb-2">
-          <div className="col">
-            <b>Período de Lançamento</b>
-          </div>
+        <div className="pb-2">
+          <b>Período de Lançamento</b>
         </div>
         <div className="row periodo-info-ue collapse-adjustments">
           <div className="col-4 periodo-lancamento">
@@ -198,6 +199,10 @@ export default () => {
               {objectoPeriodos.length > 0 ? (
                 <Select
                   suffixIcon={<CaretDownOutlined />}
+                  disabled={
+                    location.state &&
+                    location.state.status === "Aprovado pela DRE"
+                  }
                   name="periodo_lancamento"
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo
@@ -232,6 +237,20 @@ export default () => {
           solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
         />
         <hr className="linha-form mt-4 mb-4" />
+        {solicitacaoMedicaoInicial &&
+          solicitacaoMedicaoInicial.status !==
+            "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE" && (
+            <>
+              <Ocorrencias
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                onClickInfoBasicas={onClickInfoBasicas}
+                setObjSolicitacaoMIFinalizada={value =>
+                  setObjSolicitacaoMIFinalizada(value)
+                }
+              />
+              <hr className="linha-form mt-4 mb-4" />
+            </>
+          )}
         {mes &&
           ano &&
           periodosEscolaSimples &&
@@ -247,6 +266,10 @@ export default () => {
               onClickInfoBasicas={onClickInfoBasicas}
               setLoadingSolicitacaoMedicaoInicial={value =>
                 setLoadingSolicitacaoMedicaoInicial(value)
+              }
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              setObjSolicitacaoMIFinalizada={value =>
+                setObjSolicitacaoMIFinalizada(value)
               }
             />
           )}

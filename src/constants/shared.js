@@ -436,6 +436,49 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
   { nome: "Suspensão de Alimentação", uuid: "Suspensão" }
 ];
 
+export const TIPOS_OCORRENCIAS_OPTIONS = [
+  {
+    value: "QTD_MENOR",
+    label: "Quantidade menor que a prevista"
+  },
+  {
+    value: "PROBLEMA_QUALIDADE",
+    label: "Problema de qualidade do produto"
+  },
+  {
+    value: "ALIMENTO_DIFERENTE",
+    label: "Alimento diferente do previsto"
+  },
+  {
+    value: "EMBALAGEM_DANIFICADA",
+    label: "Embalagem danificada"
+  },
+  {
+    value: "EMBALAGEM_VIOLADA",
+    label: "Embalagem violada"
+  },
+  {
+    value: "VALIDADE_EXPIRADA",
+    label: "Prazo de validade expirado"
+  },
+  {
+    value: "ATRASO_ENTREGA",
+    label: "Atraso na entrega"
+  },
+  {
+    value: "AUSENCIA_PRODUTO",
+    label: "Ausência do produto"
+  },
+  {
+    value: "FALTA_URBANIDADE",
+    label: "Falta de urbanidade na entrega"
+  },
+  {
+    value: "FALTA_ESPACO_ARMAZENAMENTO",
+    label: "Falta de espaço no freezer para armazenamento"
+  }
+];
+
 export const cnpjMask = [
   /\d/,
   /\d/,

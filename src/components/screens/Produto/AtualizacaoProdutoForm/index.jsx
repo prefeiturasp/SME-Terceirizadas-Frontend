@@ -23,13 +23,15 @@ import {
   getHomologacao,
   getMarcasProdutos,
   getFabricantesProdutos,
-  getInformacoesGrupo
+  getInformacoesGrupo,
+  TerceirizadaCancelaSoliticaoCorrecao
 } from "../../../../services/produto.service";
 import { connect } from "react-redux";
 import { getFormValues } from "redux-form";
 import MotivoHomologacao from "components/Shareable/MotivoHomologacao";
 import MotivoSuspensao from "components/Shareable/MotivoSuspensao";
 import InformativoReclamacao from "components/Shareable/InformativoReclamacao";
+import { ModalPadrao } from "components/Shareable/ModalPadrao";
 
 const { Option } = Select;
 
@@ -48,6 +50,7 @@ class AtualizacaoProdutoForm extends Component {
       uuid: null,
       loading: true,
       produto: null,
+      homologacao: null,
       logs: [],
       informacoesNutricionais: null,
       erro: false,
@@ -60,6 +63,7 @@ class AtualizacaoProdutoForm extends Component {
       reclamacaoProduto: null,
       verificado: false,
       visible: false,
+      showModal: false,
       wizardSteps: [
         {
           step: {
@@ -138,15 +142,28 @@ class AtualizacaoProdutoForm extends Component {
     });
   };
 
+  showModal = () => {
+    this.setState({
+      showModal: true
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      showModal: false
+    });
+  };
+
   componentDidMount = async () => {
-    let { produto, informacoesNutricionais, logs } = this.state;
-    let homologacao = null;
+    let { produto, homologacao, informacoesNutricionais, logs } = this.state;
+    let homologacao_dados = null;
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
     try {
-      homologacao = await getHomologacao(uuid);
-      produto = homologacao.data.produto;
-      logs = homologacao.data.logs;
+      homologacao_dados = await getHomologacao(uuid);
+      produto = homologacao_dados.data.produto;
+      homologacao = homologacao_dados.data;
+      logs = homologacao_dados.data.logs;
     } catch {
       this.setState({
         loading: false,
@@ -166,6 +183,7 @@ class AtualizacaoProdutoForm extends Component {
       arrayMarcas,
       arrayFabricantes,
       produto,
+      homologacao,
       logs,
       informacoesNutricionais
     });
@@ -210,6 +228,7 @@ class AtualizacaoProdutoForm extends Component {
       loading,
       erro,
       produto,
+      homologacao,
       arrayMarcas,
       arrayFabricantes,
       primeiroStep,
@@ -280,6 +299,21 @@ class AtualizacaoProdutoForm extends Component {
                 logs={logs}
                 getHistorico={this.getHistorico}
               />
+              <ModalPadrao
+                showModal={this.state.showModal}
+                closeModal={this.closeModal}
+                toastSuccessMessage="Cancelamento enviado com sucesso."
+                modalTitle="Envio de Cancelamento da Solicitação de Correção"
+                endpoint={TerceirizadaCancelaSoliticaoCorrecao}
+                uuid={produto.homologacao.uuid}
+                justificativa={produto.homologacao.justificativa}
+                labelJustificativa="Justificativa"
+                helpText={undefined}
+                eAnalise={false}
+                status={produto.homologacao.status}
+                terceirizada={produto.homologacao.rastro_terceirizada}
+                cancelaAnaliseSensorial={homologacao}
+              />
               <Wizard
                 arrayOfObjects={wizardSteps}
                 currentStep={page}
@@ -297,6 +331,7 @@ class AtualizacaoProdutoForm extends Component {
                   primeiroStep={primeiroStep}
                   valoresPrimeiroForm={valoresPrimeiroForm}
                   valuesForm={values}
+                  showModal={this.showModal}
                 />
               )}
               {page === 1 && (
@@ -309,6 +344,7 @@ class AtualizacaoProdutoForm extends Component {
                   valoresSegundoForm={valoresSegundoForm}
                   segundoStep={segundoStep}
                   passouSegundoStep={this.passouSegundoStep}
+                  showModal={this.showModal}
                 />
               )}
               {page === 2 && (
@@ -321,6 +357,7 @@ class AtualizacaoProdutoForm extends Component {
                   valoresterceiroForm={valoresterceiroForm}
                   terceiroStep={terceiroStep}
                   passouTerceiroStep={this.passouTerceiroStep}
+                  showModal={this.showModal}
                 />
               )}
             </Fragment>

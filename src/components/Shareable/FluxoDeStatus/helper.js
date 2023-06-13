@@ -123,6 +123,7 @@ export const tipoDeStatus = status => {
     case "CODAE suspendeu o produto":
     case "Em aberto para preenchimento pela UE":
     case "Enviado pela UE":
+    case "Aprovado pela DRE":
     case "CODAE homologou":
     case "CODAE Atualizou o protocolo":
       return "prosseguiu";
@@ -134,6 +135,7 @@ export const tipoDeStatus = status => {
     case "Suspenso em alguns editais":
     case "Ativo em alguns editais":
     case "Vínculo do Edital ao Produto":
+    case "Correção solicitada":
       return "questionado";
 
     case "Escola cancelou":
@@ -142,6 +144,8 @@ export const tipoDeStatus = status => {
     case "Cancelamento por alteração de unidade educacional":
     case "Cancelamento para aluno não matriculado na rede municipal":
     case "CODAE cancelou análise sensorial":
+    case "CODAE cancelou solicitação de correção":
+    case "Terceirizada cancelou solicitação de correção":
       return "cancelado";
 
     case "DRE não validou":

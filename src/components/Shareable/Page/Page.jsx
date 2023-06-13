@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { ENVIRONMENT } from "constants/config";
 import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import BotaoVoltar from "./BotaoVoltar";
@@ -6,12 +7,14 @@ import { meusDados as getMeusDados } from "../../../services/perfil.service";
 import "./style.scss";
 import {
   usuarioEhLogistica,
-  usuarioEhEmpresaDistribuidora
+  usuarioEhEmpresaDistribuidora,
+  usuarioEhEscola
 } from "helpers/utilities";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import MeusDadosContext from "context/MeusDadosContext";
 import ModalVoltar from "./ModalVoltar";
+import ModalCestasBasicas from "../ModalCestasBasicas";
 
 export const Page = ({ ...props }) => {
   const history = useHistory();
@@ -26,7 +29,9 @@ export const Page = ({ ...props }) => {
   } = props;
 
   const [nome, setNome] = useState(null);
-  const [nomeEscola, setNomeEscola] = useState(null);
+  const [nomeEscolaOuTerceirizada, setNomeEscolaOuTerceirizada] = useState(
+    null
+  );
   const [toggled, setToggled] = useState(false);
   const [modalVoltar, setModalVoltar] = useState(false);
 
@@ -48,11 +53,11 @@ export const Page = ({ ...props }) => {
           );
         }
         if (
-          meusDados.tipo_usuario === "escola" &&
+          ["escola", "terceirizada"].includes(meusDados.tipo_usuario) &&
           meusDados.vinculo_atual &&
           meusDados.vinculo_atual.instituicao
         ) {
-          setNomeEscola(meusDados.vinculo_atual.instituicao.nome);
+          setNomeEscolaOuTerceirizada(meusDados.vinculo_atual.instituicao.nome);
         }
         setNome(meusDados.nome);
       });
@@ -69,15 +74,32 @@ export const Page = ({ ...props }) => {
     }
   };
 
+  const mostrarModalCestaBasica = () => {
+    let dataInicial = new Date("2023-06-09T00:00:00");
+    let dataFinal = new Date("2023-07-03T00:00:00");
+    let now = new Date();
+
+    if (ENVIRONMENT !== "production") {
+      return false;
+    } else if (!usuarioEhEscola()) {
+      return false;
+    } else if (dataInicial.getTime() > now.getTime()) {
+      return false;
+    } else if (dataFinal.getTime() < now.getTime()) {
+      return false;
+    } else return true;
+  };
+
   return (
     <div id="wrapper">
       <Header toggled={toggled} />
       <Sidebar
         nome={nome}
-        nomeEscola={nomeEscola}
+        nomeEscolaOuTerceirizada={nomeEscolaOuTerceirizada}
         toggle={() => setToggled(!toggled)}
         toggled={toggled}
       />
+      {mostrarModalCestaBasica() && <ModalCestasBasicas />}
       <div id="content-wrapper" className="pt-5">
         <div
           className={`content-wrapper-div ${toggled &&

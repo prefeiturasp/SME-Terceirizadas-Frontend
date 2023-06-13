@@ -12,6 +12,7 @@ import {
   PRE_RECEBIMENTO
 } from "../../../../../../configs/constants";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
 export default ({ cronograma }) => {
   const [show, setShow] = useState(false);
@@ -38,7 +39,7 @@ export default ({ cronograma }) => {
       })
       .catch(e => {
         if (e.response && e.response.status === 401) {
-          toastError("Senha inválida.");
+          toastError(MSG_SENHA_INVALIDA);
         } else {
           toastError(e.response.data.detail);
         }

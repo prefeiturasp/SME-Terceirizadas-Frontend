@@ -1,0 +1,25 @@
+.modal-cestas {
+  max-width: 60% !important;
+  color: #42474a;
+
+  .fas {
+    font-size: 80px;
+  }
+
+  .row {
+    padding: 12px;
+  }
+
+  .gray-bg,
+  .modal-header {
+    background-color: #f3f3f3;
+  }
+}
+
+p.observacao {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 24px;
+}
