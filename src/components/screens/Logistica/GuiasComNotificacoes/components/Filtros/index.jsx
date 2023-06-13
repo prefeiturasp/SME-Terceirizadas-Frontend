@@ -56,7 +56,7 @@ export default ({ setFiltros, setNotificacoes }) => {
                   component={InputText}
                   label="Nº da Notificação"
                   name="numero"
-                  placeholder="Digite o Nº da Notificacao"
+                  placeholder="Digite o Nº da Notificação"
                   className="input-numero-notificacao"
                 />
               </div>
