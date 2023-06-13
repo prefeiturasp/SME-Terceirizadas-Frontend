@@ -68,7 +68,7 @@ export default ({
                   label="Empresa"
                   name="empresa"
                   required
-                  placeholder={"Selecione a Empresa"}
+                  placeholder={"Selecione uma Empresa"}
                   disabled={travaEmpresa}
                 />
               </div>

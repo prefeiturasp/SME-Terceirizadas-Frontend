@@ -1,0 +1,22 @@
+.data_inicio {
+  label {
+    font-weight: 500 !important;
+    color: #686868 !important;
+  }
+}
+
+.filtros-guias-notificacoes {
+  padding-bottom: 40px;
+
+  .input-numero-notificacao {
+    height: 40px;
+  }
+
+  .data-inicial {
+    height: 40px !important;
+  }
+
+  .data-final {
+    height: 40px !important;
+  }
+}
