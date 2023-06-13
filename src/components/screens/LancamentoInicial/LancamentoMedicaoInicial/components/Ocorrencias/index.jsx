@@ -86,7 +86,7 @@ export default ({
                 )}
                 {solicitacaoMedicaoInicial.ocorrencia && (
                   <Fragment>
-                    {solicitacaoMedicaoInicial.status ===
+                    {solicitacaoMedicaoInicial.ocorrencia.status ===
                       "MEDICAO_CORRECAO_SOLICITADA" && (
                       <div className="col-12 mt-4">
                         <p>Correções Solicitadas:</p>

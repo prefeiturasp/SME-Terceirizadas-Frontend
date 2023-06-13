@@ -29,6 +29,7 @@ import {
   formatarLinhasTabelaEtecAlimentacao,
   validacaoSemana
 } from "components/screens/LancamentoInicial/PeriodoLancamentoMedicaoInicial/helper";
+import { removeObjetosDuplicados } from "components/screens/LancamentoInicial/LancamentoMedicaoInicial/components/LancamentoPorPeriodo/helpers";
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
 import {
@@ -48,6 +49,7 @@ import { ModalSalvarCorrecao } from "../ModalSalvarCorrecao";
 import { formatarNomePeriodo } from "../../helper";
 import {
   getCategoriasDeMedicao,
+  getPeriodosInclusaoContinua,
   getValoresPeriodosLancamentos
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { drePedeCorrecaMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
@@ -169,25 +171,71 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         const linhasTabelaEtecAlimentacao = formatarLinhasTabelaEtecAlimentacao();
         setTabelaEtecAlimentacaoRows(linhasTabelaEtecAlimentacao);
       } else if (!periodoGrupo.nome_periodo_grupo.includes("Solicitações")) {
-        const periodo = periodosSimples.find(
-          periodo => periodo.periodo_escolar.nome === periodoEscolar
-        );
-        const tipos_alimentacao = periodo.tipos_alimentacao;
-        const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
-          tipos_alimentacao,
-          periodoGrupo
-        );
-        setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
-        const linhasTabelasDietas = formatarLinhasTabelasDietas(
-          tipos_alimentacao
-        );
-        setTabelaDietaRows(linhasTabelasDietas);
-        const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
-        const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
-          tipos_alimentacao,
-          cloneLinhasTabelasDietas
-        );
-        setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+        if (periodoGrupo.nome_periodo_grupo === "Programas e Projetos") {
+          let periodos;
+          let tiposAlimentacao = [];
+          const getPeriodosInclusaoContinuaAsync = async () => {
+            const response = await getPeriodosInclusaoContinua({
+              mes: mesSolicitacao,
+              ano: anoSolicitacao,
+              escola: solicitacao.escola_uuid
+            });
+            if (response.status === HTTP_STATUS.OK) {
+              periodos = response.data.periodos;
+            } else {
+              toastError(
+                "Erro ao carregar períodos de inclusão contínua. Tente novamente mais tarde."
+              );
+              periodos = periodosSimples[0];
+            }
+            Object.keys(periodos).forEach(periodo => {
+              const tipos = periodosSimples.find(
+                p => p.periodo_escolar.nome === periodo
+              ).tipos_alimentacao;
+              tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+            });
+            const tipos_alimentacao = removeObjetosDuplicados(
+              tiposAlimentacao,
+              "nome"
+            );
+            const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
+              tipos_alimentacao,
+              periodoGrupo
+            );
+            setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+            const linhasTabelasDietas = formatarLinhasTabelasDietas(
+              tipos_alimentacao
+            );
+            setTabelaDietaRows(linhasTabelasDietas);
+            const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
+            const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
+              tipos_alimentacao,
+              cloneLinhasTabelasDietas
+            );
+            setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+          };
+          getPeriodosInclusaoContinuaAsync();
+        } else {
+          const periodo = periodosSimples.find(
+            periodo => periodo.periodo_escolar.nome === periodoEscolar
+          );
+          const tipos_alimentacao = periodo.tipos_alimentacao;
+          const tiposAlimentacaoFormatadas = formatarLinhasTabelaAlimentacao(
+            tipos_alimentacao,
+            periodoGrupo
+          );
+          setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
+          const linhasTabelasDietas = formatarLinhasTabelasDietas(
+            tipos_alimentacao
+          );
+          setTabelaDietaRows(linhasTabelasDietas);
+          const cloneLinhasTabelasDietas = deepCopy(linhasTabelasDietas);
+          const linhasTabelaDietaEnteral = formatarLinhasTabelaDietaEnteral(
+            tipos_alimentacao,
+            cloneLinhasTabelasDietas
+          );
+          setTabelaDietaEnteralRows(linhasTabelaDietaEnteral);
+        }
       } else {
         const linhasTabelaSolicitacoesAlimentacao = formatarLinhasTabelaSolicitacoesAlimentacao();
         setTabelaSolicitacoesAlimentacaoRows(

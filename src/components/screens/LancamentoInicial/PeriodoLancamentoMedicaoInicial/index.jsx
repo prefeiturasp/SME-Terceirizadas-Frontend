@@ -82,17 +82,18 @@ import {
   getLogDietasAutorizadasPeriodo,
   getValoresPeriodosLancamentos,
   setPeriodoLancamento,
-  updateValoresPeriodosLancamentos
+  updateValoresPeriodosLancamentos,
+  getFeriadosNoMes
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import "./styles.scss";
 import {
   LANCAMENTO_INICIAL,
   LANCAMENTO_MEDICAO_INICIAL
 } from "configs/constants";
+import "./styles.scss";
 
 export default () => {
   const initialStateWeekColumns = [
@@ -151,6 +152,7 @@ export default () => {
   const [calendarioMesConsiderado, setCalendarioMesConsiderado] = useState(
     null
   );
+  const [feriadosNoMes, setFeriadosNoMes] = useState(null);
   const [diasSobremesaDoce, setDiasSobremesaDoce] = useState(null);
   const [showModalObservacaoDiaria, setShowModalObservacaoDiaria] = useState(
     false
@@ -509,7 +511,11 @@ export default () => {
         uuid_solicitacao_medicao: uuid,
         nome_grupo: location.state.grupo
       };
-      if (!ehGrupoSolicitacoesDeAlimentacaoUrlParam && !ehGrupoETECUrlParam) {
+      if (
+        !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+        !ehGrupoETECUrlParam &&
+        location.state.grupo !== "Programas e Projetos"
+      ) {
         params = {
           ...params,
           nome_periodo_escolar: periodo.periodo_escolar.nome
@@ -553,14 +559,23 @@ export default () => {
         );
         setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
 
-        response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
-          escola.uuid,
-          mes,
-          ano,
-          periodo.periodo_escolar.nome,
-          location
-        );
-        setInclusoesAutorizadas(response_inclusoes_autorizadas);
+        if (
+          location &&
+          location.state &&
+          location.state.periodosInclusaoContinua
+        ) {
+          const periodos_escolares = Object.keys(
+            location.state.periodosInclusaoContinua
+          );
+          response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+            escola.uuid,
+            mes,
+            ano,
+            periodos_escolares,
+            location
+          );
+          setInclusoesAutorizadas(response_inclusoes_autorizadas);
+        }
 
         response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
           escola.uuid,
@@ -619,6 +634,15 @@ export default () => {
         params_dias_calendario
       );
       setCalendarioMesConsiderado(response_dias_calendario.data);
+
+      const params_feriados_no_mes = {
+        mes: mes,
+        ano: ano
+      };
+      const response_feriados_no_mes = await getFeriadosNoMes(
+        params_feriados_no_mes
+      );
+      setFeriadosNoMes(response_feriados_no_mes.data.results);
 
       await formatarDadosValoresMedicao(
         mesAnoFormatado,
@@ -1130,12 +1154,10 @@ export default () => {
       valores_medicao: valoresMedicao,
       eh_observacao: true
     };
-    if (values["periodo_escolar"].includes(" - ")) {
-      payload["grupo"] = values["periodo_escolar"].split(" - ")[0];
-      payload["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
-    } else if (
+    if (
       values["periodo_escolar"].includes("Solicitações") ||
-      values["periodo_escolar"] === "ETEC"
+      values["periodo_escolar"] === "ETEC" ||
+      values["periodo_escolar"] === "Programas e Projetos"
     ) {
       payload["grupo"] = values["periodo_escolar"];
       delete values["periodo_escolar"];
@@ -1184,7 +1206,8 @@ export default () => {
       location,
       categoriasDeMedicao,
       dadosValoresInclusoesAutorizadasState,
-      weekColumns
+      weekColumns,
+      feriadosNoMes
     );
     if (erro) {
       !ehSalvamentoAutomático && toastError(erro);
@@ -1372,7 +1395,8 @@ export default () => {
       location,
       categoriasDeMedicao,
       dadosValoresInclusoesAutorizadasState,
-      weekColumns
+      weekColumns,
+      feriadosNoMes
     );
     if (erro) {
       setDisableBotaoSalvarLancamentos(true);
@@ -1465,7 +1489,8 @@ export default () => {
           String(key).includes(dia)
         ) &&
         !validacaoDiaLetivo(Number(dia)) &&
-        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`]
+        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`] &&
+        !feriadosNoMes.includes(dia)
       ) {
         setDisableBotaoSalvarLancamentos(true);
       }
@@ -1597,7 +1622,8 @@ export default () => {
         suspensoesAutorizadas,
         alteracoesAlimentacaoAutorizadas,
         validacaoDiaLetivo,
-        location
+        location,
+        feriadosNoMes
       );
     }
   };
@@ -1618,8 +1644,6 @@ export default () => {
 
   const classNameFieldTabelaAlimentacao = (row, column, categoria) => {
     if (
-      `${row.name}__dia_${column.dia}__categoria_${categoria.id}` ===
-        `frequencia__dia_${column.dia}__categoria_${categoria.id}` &&
       Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
         String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
       )
@@ -1720,6 +1744,7 @@ export default () => {
                       activeKey={semanaSelecionada}
                       onChange={key => {
                         calendarioMesConsiderado &&
+                          feriadosNoMes &&
                           onChangeSemana(formValuesAtualizados, key);
                       }}
                       type="card"
@@ -1780,6 +1805,7 @@ export default () => {
                             </div>
                             {semanaSelecionada &&
                               calendarioMesConsiderado &&
+                              feriadosNoMes &&
                               (tabelaDietaRows || tabelaDietaEnteralRows) &&
                               (categoria.nome.includes("DIETA")
                                 ? (categoria.nome.includes("ENTERAL")
@@ -1890,7 +1916,8 @@ export default () => {
                                                       dadosValoresInclusoesEtecAutorizadasState,
                                                       inclusoesEtecAutorizadas,
                                                       grupoLocation,
-                                                      valoresPeriodosLancamentos
+                                                      valoresPeriodosLancamentos,
+                                                      feriadosNoMes
                                                     )}
                                                     dia={column.dia}
                                                     defaultValue={defaultValue(
@@ -1997,7 +2024,8 @@ export default () => {
                                                           alteracoesAlimentacaoAutorizadas,
                                                           kitLanchesAutorizadas,
                                                           inclusoesEtecAutorizadas,
-                                                          ehGrupoETECUrlParam
+                                                          ehGrupoETECUrlParam,
+                                                          feriadosNoMes
                                                         )
                                                           ? BUTTON_STYLE.RED_OUTLINE
                                                           : BUTTON_STYLE.GREEN_OUTLINE_WHITE
@@ -2043,7 +2071,8 @@ export default () => {
                                                         dadosValoresInclusoesEtecAutorizadasState,
                                                         inclusoesEtecAutorizadas,
                                                         grupoLocation,
-                                                        valoresPeriodosLancamentos
+                                                        valoresPeriodosLancamentos,
+                                                        feriadosNoMes
                                                       )}
                                                       exibeTooltipDiaSobremesaDoce={
                                                         row.name ===
@@ -2068,14 +2097,16 @@ export default () => {
                                                         row,
                                                         column,
                                                         categoria,
-                                                        dadosValoresInclusoesAutorizadasState
+                                                        dadosValoresInclusoesAutorizadasState,
+                                                        feriadosNoMes
                                                       )}
                                                       exibeTooltipSemAlimentacaoPreAutorizadaInformada={exibirTooltipSemAlimentacaoPreAutorizadaInformada(
                                                         formValuesAtualizados,
                                                         row,
                                                         column,
                                                         categoria,
-                                                        dadosValoresInclusoesAutorizadasState
+                                                        dadosValoresInclusoesAutorizadasState,
+                                                        feriadosNoMes
                                                       )}
                                                       exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                         `${row.name}__dia_${
@@ -2101,7 +2132,8 @@ export default () => {
                                                         column,
                                                         categoria,
                                                         dadosValoresInclusoesAutorizadasState,
-                                                        validacaoDiaLetivo
+                                                        validacaoDiaLetivo,
+                                                        feriadosNoMes
                                                       )}
                                                       exibeTooltipErroQtdMaiorQueAutorizado={exibirTooltipErroQtdMaiorQueAutorizado(
                                                         formValuesAtualizados,

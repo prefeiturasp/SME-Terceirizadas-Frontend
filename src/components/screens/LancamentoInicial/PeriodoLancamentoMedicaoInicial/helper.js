@@ -21,13 +21,10 @@ export const formatarPayloadPeriodoLancamento = (
   ehGrupoETECUrlParam,
   grupoLocation
 ) => {
-  if (values["periodo_escolar"].includes(" - ")) {
-    values["grupo"] = values["periodo_escolar"].split(" - ")[0];
-    values["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
-  }
   if (
     values["periodo_escolar"].includes("Solicitações") ||
-    values["periodo_escolar"] === "ETEC"
+    values["periodo_escolar"] === "ETEC" ||
+    values["periodo_escolar"] === "Programas e Projetos"
   ) {
     values["grupo"] = values["periodo_escolar"];
     delete values["periodo_escolar"];
@@ -225,7 +222,8 @@ export const desabilitarField = (
   dadosValoresInclusoesEtecAutorizadasState = null,
   inclusoesEtecAutorizadas = null,
   grupoLocation = null,
-  valoresPeriodosLancamentos
+  valoresPeriodosLancamentos,
+  feriadosNoMes
 ) => {
   const valorField = valoresPeriodosLancamentos
     .filter(valor => valor.nome_campo === rowName)
@@ -308,20 +306,16 @@ export const desabilitarField = (
     dadosValoresInclusoesAutorizadasState
   ) {
     if (nomeCategoria === "ALIMENTAÇÃO") {
-      if (rowName === "numero_de_alunos") {
+      if (feriadosNoMes.includes(dia)) {
+        return true;
+      } else if (rowName === "numero_de_alunos") {
         return true;
       } else if (validacaoSemana(dia)) {
         return true;
       } else if (
-        !validacaoDiaLetivo(dia) &&
-        ((rowName !== "frequencia" &&
-          !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-            key.includes(`${rowName}__dia_${dia}__categoria_${categoria}`)
-          )) ||
-          (rowName === "frequencia" &&
-            !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-              String(key).includes(`__dia_${dia}__categoria_${categoria}`)
-            )))
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+          key.includes(`__dia_${dia}`)
+        )
       ) {
         return true;
       } else {
@@ -380,7 +374,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   escolaUuuid,
   mes,
   ano,
-  nome_periodo_escolar,
+  periodos_escolares,
   location
 ) => {
   const params = {};
@@ -388,7 +382,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Inclusão de";
   params["mes"] = mes;
   params["ano"] = ano;
-  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  params["periodos_escolares"] = periodos_escolares;
   if (
     location.state.grupo &&
     location.state.grupo.includes("Programas e Projetos")
