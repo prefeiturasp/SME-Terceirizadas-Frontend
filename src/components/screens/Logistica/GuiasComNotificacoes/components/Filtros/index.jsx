@@ -67,7 +67,6 @@ export default ({ setFiltros, setNotificacoes }) => {
                   options={distribuidores}
                   label="Empresa"
                   name="empresa"
-                  required
                   placeholder={"Selecione uma Empresa"}
                 />
               </div>
