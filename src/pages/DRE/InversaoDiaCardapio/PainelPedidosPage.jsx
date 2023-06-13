@@ -16,7 +16,7 @@ export default () => {
   const filtros = location.state && location.state.filtros;
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       <Container filtros={filtros} />
     </Page>
