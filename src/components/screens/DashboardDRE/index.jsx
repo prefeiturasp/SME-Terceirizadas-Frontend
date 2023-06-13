@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
+//import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
@@ -44,6 +44,7 @@ import {
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
 import { Spin } from "antd";
+import CardBody from "components/Shareable/CardBody";
 
 export const DashboardDRE = props => {
   const { cards, lotes, handleSubmit, meusDados } = props;
@@ -277,14 +278,14 @@ export const DashboardDRE = props => {
                 </div>
               </div>
             </div>
-            <CardBodySemRedux
+            <CardBody
               exibirFiltrosDataEventoETipoSolicitacao
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={value => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
-                  onPesquisaChanged(values);
+                  onPesquisaChanged(value);
                   props.updateTituloAlimentacao(value.titulo);
                 }, 1000);
               }}
@@ -348,7 +349,7 @@ export const DashboardDRE = props => {
                   </div>
                 </div>
               </Spin>
-            </CardBodySemRedux>
+            </CardBody>
             <div className="card card-shortcut-to-form mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold">

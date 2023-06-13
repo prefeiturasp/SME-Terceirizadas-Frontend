@@ -3,7 +3,7 @@ import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
+//import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
@@ -40,6 +40,7 @@ import {
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
 import { Spin } from "antd";
+import CardBody from "components/Shareable/CardBody";
 
 export const DashboardCODAE = props => {
   const { cards, lotes, diretoriasRegionais, handleSubmit, meusDados } = props;
@@ -313,14 +314,14 @@ export const DashboardCODAE = props => {
                 </div>
               </div>
             </div>
-            <CardBodySemRedux
+            <CardBody
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={value => {
                 clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(async () => {
-                  onPesquisaChanged(values);
+                  onPesquisaChanged(value);
                   props.updateTituloAlimentacao(value.titulo);
                 }, 1000);
               }}
@@ -382,7 +383,7 @@ export const DashboardCODAE = props => {
                   </div>
                 </div>
               </Spin>
-            </CardBodySemRedux>
+            </CardBody>
           </form>
         )}
       />
