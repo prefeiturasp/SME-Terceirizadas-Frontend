@@ -43,7 +43,6 @@ import {
   exibirTooltipLPRAutorizadas,
   exibirTooltipRPLAutorizadas,
   exibirTooltipErroQtdMaiorQueAutorizado,
-  exibirTooltipFrequenciaDiaNaoLetivo,
   exibirTooltipSuspensoesAutorizadas,
   exibirTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
   exibirTooltipKitLancheSolAlimentacoes,
@@ -57,8 +56,6 @@ import {
   campoComSuspensaoAutorizadaESemObservacao,
   campoLancheComLPRAutorizadaESemObservacao,
   campoRefeicaoComRPLAutorizadaESemObservacao,
-  exibirTooltipSemAlimentacaoPreAutorizadaInformada,
-  exibirTooltipAlimentacoesAutorizadas,
   validacoesTabelaEtecAlimentacao
 } from "./validacoes";
 import {
@@ -1482,19 +1479,6 @@ export default () => {
         arrayDiasComFrequenciaZero.push(dia);
       }
     }
-    arrayDiasComFrequenciaZero.forEach(dia => {
-      if (
-        categoria.nome.includes("ALIMENTAÇÃO") &&
-        Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-          String(key).includes(dia)
-        ) &&
-        !validacaoDiaLetivo(Number(dia)) &&
-        !values[`observacoes__dia_${dia}__categoria_${categoria.id}`] &&
-        !feriadosNoMes.includes(dia)
-      ) {
-        setDisableBotaoSalvarLancamentos(true);
-      }
-    });
     desabilitaTooltip(values);
 
     if (
@@ -2092,22 +2076,6 @@ export default () => {
                                                             )}-${column.dia}`
                                                         )
                                                       }
-                                                      exibeTooltipAlimentacoesAutorizadas={exibirTooltipAlimentacoesAutorizadas(
-                                                        formValuesAtualizados,
-                                                        row,
-                                                        column,
-                                                        categoria,
-                                                        dadosValoresInclusoesAutorizadasState,
-                                                        feriadosNoMes
-                                                      )}
-                                                      exibeTooltipSemAlimentacaoPreAutorizadaInformada={exibirTooltipSemAlimentacaoPreAutorizadaInformada(
-                                                        formValuesAtualizados,
-                                                        row,
-                                                        column,
-                                                        categoria,
-                                                        dadosValoresInclusoesAutorizadasState,
-                                                        feriadosNoMes
-                                                      )}
                                                       exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                         `${row.name}__dia_${
                                                           column.dia
@@ -2126,15 +2094,6 @@ export default () => {
                                                           }`
                                                         ]
                                                       }
-                                                      exibeTooltipFrequenciaDiaNaoLetivo={exibirTooltipFrequenciaDiaNaoLetivo(
-                                                        formValuesAtualizados,
-                                                        row,
-                                                        column,
-                                                        categoria,
-                                                        dadosValoresInclusoesAutorizadasState,
-                                                        validacaoDiaLetivo,
-                                                        feriadosNoMes
-                                                      )}
                                                       exibeTooltipErroQtdMaiorQueAutorizado={exibirTooltipErroQtdMaiorQueAutorizado(
                                                         formValuesAtualizados,
                                                         row,
@@ -2208,6 +2167,10 @@ export default () => {
                                                       )}
                                                       ehGrupoETECUrlParam={
                                                         ehGrupoETECUrlParam
+                                                      }
+                                                      ehProgramasEProjetos={
+                                                        location.state.grupo ===
+                                                        "Programas e Projetos"
                                                       }
                                                       numeroDeInclusoesAutorizadas={
                                                         dadosValoresInclusoesAutorizadasState[
