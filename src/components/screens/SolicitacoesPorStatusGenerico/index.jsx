@@ -125,8 +125,6 @@ function SolicitacoesPorStatusGenerico(props) {
     }
   };
 
-  console.log(propsAlimentacaoRedux);
-
   const filtragemInicial = () => {
     const propsAlimentacao = {
       tituloAlimentacao: props.tituloAlimentacao,
