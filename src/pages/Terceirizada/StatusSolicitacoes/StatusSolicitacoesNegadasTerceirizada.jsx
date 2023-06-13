@@ -21,7 +21,7 @@ export const StatusSolicitacoesNegadasTerceirizadaPage = () => {
   const { meusDados } = useContext(MeusDadosContext);
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       {meusDados && (
         <SolicitacoesPorStatusGenerico

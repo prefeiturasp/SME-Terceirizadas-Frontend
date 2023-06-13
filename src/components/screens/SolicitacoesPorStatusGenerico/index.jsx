@@ -4,8 +4,11 @@ import {
   agregarDefault,
   converterDDMMYYYYparaYYYYMMDD,
   getError,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
   usuarioEhEmpresaTerceirizada,
+  usuarioEhEscola,
+  usuarioEhNutricionistaSupervisao,
   usuarioEhQualquerCODAE
 } from "helpers/utilities";
 import { Spin } from "antd";
@@ -18,8 +21,6 @@ import { OnChange } from "react-final-form-listeners";
 import Select from "components/Shareable/Select";
 import { connect } from "react-redux";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
-import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
-import { usuarioEhEscolaTerceirizada } from "helpers/utilities";
 import { InputComData } from "components/Shareable/DatePicker";
 import { resetCamposAlimentacao } from "reducers/filtersAlimentacaoReducer";
 import { getDiretoriaregionalSimplissimaAxios } from "services/diretoriaRegional.service";
@@ -48,8 +49,6 @@ function SolicitacoesPorStatusGenerico(props) {
   const [opcoesDRE, setOpcoesDRE] = useState(null);
   const [opcoesLotes, setOpcoesLotes] = useState(null);
 
-  const ehEscola =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
   const ehDRE = usuarioEhDRE();
   const ehCODAE = usuarioEhQualquerCODAE();
@@ -180,12 +179,13 @@ function SolicitacoesPorStatusGenerico(props) {
                     <div className="row">
                       <div
                         className={`${
-                          lotes && listaStatus
-                            ? "offset-6 col-6 `"
-                            : lotes || listaStatus
-                            ? "offset-9 col-3 `"
-                            : "offset-9 col-3 `"
-                        }`}
+                          usuarioEhEscola() ||
+                          ehCODAE ||
+                          usuarioEhCODAENutriManifestacao() ||
+                          usuarioEhNutricionistaSupervisao()
+                            ? "offset-3"
+                            : ""
+                        } col-3`}
                       >
                         <Field
                           component={InputText}
@@ -215,8 +215,6 @@ function SolicitacoesPorStatusGenerico(props) {
                           }}
                         </OnChange>
                       </div>
-                    </div>
-                    <div className="row">
                       {listaStatus && (
                         <div className="col-3">
                           <Field
@@ -248,8 +246,67 @@ function SolicitacoesPorStatusGenerico(props) {
                           </OnChange>
                         </div>
                       )}
+
+                      <div className="col-3">
+                        <Field
+                          component={Select}
+                          name="tipo_solicitacao"
+                          naoDesabilitarPrimeiraOpcao
+                          placeholder="Tipo de Solicitação"
+                          initialValue={
+                            propsAlimentacaoRedux.tipoSolicitacaoAlimentacao
+                          }
+                          options={TIPOS_SOLICITACOES_OPTIONS}
+                        />
+                        <OnChange name="tipo_solicitacao">
+                          {value => {
+                            getSolicitacoesAsync({
+                              lote: values.lote,
+                              status: values.status,
+                              busca:
+                                values.titulo && values.titulo.length > 2
+                                  ? values.titulo
+                                  : null,
+                              tipo_solicitacao: value,
+                              data_evento: values.data_evento,
+                              diretoria_regional: values.diretoria_regional,
+                              ...PARAMS
+                            });
+                            setCurrentPage(1);
+                          }}
+                        </OnChange>
+                      </div>
+
+                      <div className="col-3">
+                        <Field
+                          name="data_evento"
+                          minDate={null}
+                          component={InputComData}
+                          initialValue={
+                            propsAlimentacaoRedux.dataEventoAlimentacao
+                          }
+                          placeholder="Data do evento"
+                        />
+                        <OnChange name="data_evento">
+                          {value => {
+                            getSolicitacoesAsync({
+                              lote: values.lote,
+                              status: values.status,
+                              busca:
+                                values.titulo && values.titulo.length > 2
+                                  ? values.titulo
+                                  : null,
+                              tipo_solicitacao: values.tipo_solicitacao,
+                              data_evento: value,
+                              diretoria_regional: values.diretoria_regional,
+                              ...PARAMS
+                            });
+                            setCurrentPage(1);
+                          }}
+                        </OnChange>
+                      </div>
                       {ehCODAE && (
-                        <div className="col-3 pl-0">
+                        <div className="offset-6 col-3">
                           <Field
                             component={Select}
                             options={opcoesDRE}
@@ -280,7 +337,7 @@ function SolicitacoesPorStatusGenerico(props) {
 
                       {(lotes || opcoesLotes) &&
                         (ehDRE || ehCODAE || ehTerceirizada) && (
-                          <div className="col-3 pl-0">
+                          <div className="col-3">
                             <Field
                               component={Select}
                               options={agregarDefault(
@@ -313,72 +370,6 @@ function SolicitacoesPorStatusGenerico(props) {
                             </OnChange>
                           </div>
                         )}
-
-                      {ehTerceirizada && (
-                        <>
-                          <div
-                            className={`${
-                              ehEscola ? "offset-3 col-3 pl-0" : "col-3"
-                            }`}
-                          >
-                            <Field
-                              component={Select}
-                              name="tipo_solicitacao"
-                              naoDesabilitarPrimeiraOpcao
-                              placeholder="Tipo de Solicitação"
-                              initialValue={
-                                propsAlimentacaoRedux.tipoSolicitacaoAlimentacao
-                              }
-                              options={TIPOS_SOLICITACOES_OPTIONS}
-                            />
-                          </div>
-                          <OnChange name="tipo_solicitacao">
-                            {value => {
-                              getSolicitacoesAsync({
-                                lote: values.lote,
-                                status: values.status,
-                                busca:
-                                  values.titulo && values.titulo.length > 2
-                                    ? values.titulo
-                                    : null,
-                                tipo_solicitacao: value,
-                                data_evento: values.data_evento,
-                                diretoria_regional: values.diretoria_regional,
-                                ...PARAMS
-                              });
-                              setCurrentPage(1);
-                            }}
-                          </OnChange>
-                          <div className="col-3 pl-0">
-                            <Field
-                              name="data_evento"
-                              minDate={null}
-                              component={InputComData}
-                              initialValue={
-                                propsAlimentacaoRedux.dataEventoAlimentacao
-                              }
-                              placeholder="Data do evento"
-                            />
-                            <OnChange name="data_evento">
-                              {value => {
-                                getSolicitacoesAsync({
-                                  lote: values.lote,
-                                  status: values.status,
-                                  busca:
-                                    values.titulo && values.titulo.length > 2
-                                      ? values.titulo
-                                      : null,
-                                  tipo_solicitacao: values.tipo_solicitacao,
-                                  data_evento: value,
-                                  diretoria_regional: values.diretoria_regional,
-                                  ...PARAMS
-                                });
-                                setCurrentPage(1);
-                              }}
-                            </OnChange>
-                          </div>
-                        </>
-                      )}
                     </div>
                     <CardListarSolicitacoes
                       titulo={titulo}
