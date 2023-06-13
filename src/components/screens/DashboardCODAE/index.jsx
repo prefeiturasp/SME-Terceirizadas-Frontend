@@ -3,7 +3,6 @@ import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
 import CardMatriculados from "../../Shareable/CardMatriculados";
 import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-//import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
