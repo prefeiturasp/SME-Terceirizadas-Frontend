@@ -191,3 +191,8 @@ export const criarNotificacao = async payload => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.post(url, payload);
 };
+
+export const getNotificacoesOcorrencia = async params => {
+  const url = `/notificacao-guias-com-ocorrencias/`;
+  return await axios.get(url, { params });
+};

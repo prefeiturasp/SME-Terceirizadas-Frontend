@@ -12,10 +12,7 @@ export default ({ guia, handleClose, handleSim }) => {
         <Modal.Title> Excluir Vínculo </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>
-          Deseja realmente excluir o vínculo da Guia Nº {guia.numero_guia} com a
-          Notificação?
-        </p>
+        <p>Deseja realmente excluir o vínculo da Guia Nº {guia.numero_guia}?</p>
       </Modal.Body>
       <Modal.Footer>
         <Botao
