@@ -80,10 +80,6 @@ export default () => {
     setModal(false);
   };
 
-  const onChangeVinculadas = event => {
-    setShowVinculadas(event.target.checked);
-  };
-
   const salvarNotificacao = async () => {
     const payload = {
       empresa,
@@ -91,7 +87,7 @@ export default () => {
     };
     const response = await criarNotificacao(payload);
     if (response.status === 201) {
-      toastSuccess("Notificacao criada com sucesso");
+      toastSuccess("Notificação criada com sucesso");
       history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
     }
   };
@@ -110,7 +106,7 @@ export default () => {
             setGuias={setGuias}
             travaEmpresa={guiasVinculadas.length > 0}
             showVinculadas={showVinculadas}
-            onChangeVinculadas={onChangeVinculadas}
+            setShowVinculadas={setShowVinculadas}
           />
           {guias && (
             <>

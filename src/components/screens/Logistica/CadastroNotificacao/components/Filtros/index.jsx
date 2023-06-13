@@ -25,7 +25,7 @@ export default ({
   setGuias,
   travaEmpresa,
   showVinculadas,
-  onChangeVinculadas
+  setShowVinculadas
 }) => {
   const [distribuidores, setDistribuidores] = useState([]);
 
@@ -34,6 +34,10 @@ export default ({
   const onSubmit = async values => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
+  };
+
+  const onChangeVinculadas = event => {
+    setShowVinculadas(event.target.checked);
   };
 
   useEffect(() => {
@@ -158,6 +162,7 @@ export default ({
                   className="float-right ml-3"
                   onClick={() => {
                     form.reset({});
+                    setShowVinculadas(false);
                     setGuias(undefined);
                   }}
                 />
