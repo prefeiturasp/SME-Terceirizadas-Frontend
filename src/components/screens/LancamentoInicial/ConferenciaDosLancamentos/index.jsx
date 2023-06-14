@@ -48,6 +48,7 @@ export const ConferenciaDosLancamentos = () => {
   const [periodosGruposMedicao, setPeriodosGruposMedicao] = useState(null);
   const [mesSolicitacao, setMesSolicitacao] = useState(null);
   const [anoSolicitacao, setAnoSolicitacao] = useState(null);
+  const [historico, setHistorico] = useState([]);
   const [ocorrencia, setOcorrencia] = useState(null);
   const [ocorrenciaExpandida, setOcorrenciaExpandida] = useState(false);
   const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
@@ -118,6 +119,7 @@ export const ConferenciaDosLancamentos = () => {
         unidade_educacional: escola
       };
       setSolicitacao(response.data);
+      setHistorico(response.data.ocorrencia && response.data.ocorrencia.logs);
       setMesSolicitacao(mes);
       setAnoSolicitacao(ano);
       if (response.data.com_ocorrencias) {
@@ -156,6 +158,10 @@ export const ConferenciaDosLancamentos = () => {
         "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
     }
+  };
+
+  const getHistorico = () => {
+    return historico;
   };
 
   useEffect(() => {
@@ -287,7 +293,7 @@ export const ConferenciaDosLancamentos = () => {
           logs={solicitacao.ocorrencia.logs}
           solicitacaoMedicaoInicial={solicitacao.ocorrencia}
           titulo="Histórico do Formulário de Ocorrências"
-          getHistorico={() => solicitacao.ocorrencia.logs}
+          getHistorico={getHistorico}
         />
       )}
       {erroAPI && <div>{erroAPI}</div>}
