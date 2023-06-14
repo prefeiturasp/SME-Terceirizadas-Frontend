@@ -149,7 +149,7 @@ export const InputText = props => {
       {exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas && (
         <Tooltip
           title={
-            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -158,7 +158,7 @@ export const InputText = props => {
       {exibeTooltipKitLancheSolAlimentacoes && (
         <Tooltip
           title={
-            "Não há autorização para oferta de Kit Lanche. Justifique na Observação."
+            "Não há autorização para oferta de Kit Lanche. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -167,7 +167,7 @@ export const InputText = props => {
       {exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas && (
         <Tooltip
           title={
-            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -176,7 +176,7 @@ export const InputText = props => {
       {exibeTooltipLancheEmergencialSolAlimentacoes && (
         <Tooltip
           title={
-            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação."
+            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
