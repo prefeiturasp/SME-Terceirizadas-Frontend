@@ -74,6 +74,15 @@ export default class ModalHistorico extends Component {
     return urlArquivoPDF;
   };
 
+  getTitulo = log => {
+    if (log) {
+      if (log.status_evento_explicacao === "Correção solicitada") {
+        return "Devolvido para ajustes pela DRE";
+      }
+      return log.status_evento_explicacao;
+    }
+  };
+
   render() {
     const { visible, onOk, onCancel } = this.props;
     const { logs, logSelecionado } = this.state;
@@ -100,10 +109,8 @@ export default class ModalHistorico extends Component {
               {logs.map((log, index) => {
                 const { ativo } = log;
                 const iniciais = this.retornaIniciais(log);
-                const tipoUsuario =
-                  log.usuario.tipo_usuario === "terceirizada"
-                    ? "TERCEIRIZADA"
-                    : "CODAE";
+                const tipoUsuario = (log.usuario.tipo_usuario =
+                  log.usuario.nome);
 
                 return (
                   <div
@@ -121,7 +128,7 @@ export default class ModalHistorico extends Component {
                         className="descicao-titulo"
                         title={log.status_evento_explicacao}
                       >
-                        {truncarString(log.status_evento_explicacao, 19)}
+                        {truncarString(this.getTitulo(log), 19)}
                       </div>
                       <div className="break-column" />
                       <div className="descicao-entidade">{tipoUsuario}</div>
@@ -156,7 +163,7 @@ export default class ModalHistorico extends Component {
                       </div>
                     </div>
                     <div className="body-log-item">
-                      <header>{logSelecionado.status_evento_explicacao}</header>
+                      <header>{this.getTitulo(logSelecionado)}</header>
                       <section>
                         <article>
                           {logSelecionado.usuario.tipo_usuario ===
