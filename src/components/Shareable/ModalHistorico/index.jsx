@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 import React, { Component } from "react";
-import { truncarString } from "helpers/utilities";
+import { truncarString, usuarioEhCogestorDRE } from "helpers/utilities";
 
 import "./styles.scss";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
@@ -51,10 +51,11 @@ export default class ModalHistorico extends Component {
 
   componentDidUpdate = async () => {
     const { getHistorico } = this.props;
-
     if (
       this.state.logs.length < getHistorico().length ||
-      this.state.logs[0].criado_em !== getHistorico()[0].criado_em
+      this.state.logs[0].criado_em !== getHistorico()[0].criado_em ||
+      this.state.logs[this.state.logs.length - 1].criado_em !==
+        getHistorico()[getHistorico().length - 1].criado_em
     ) {
       this.setState({ logs: getHistorico(), logSelecionado: null });
     }
@@ -78,6 +79,11 @@ export default class ModalHistorico extends Component {
     if (log) {
       if (log.status_evento_explicacao === "Correção solicitada") {
         return "Devolvido para ajustes pela DRE";
+      }
+      if (usuarioEhCogestorDRE()) {
+        if (log.status_evento_explicacao === "Enviado pela UE") {
+          return "Recebido para análise";
+        }
       }
       return log.status_evento_explicacao;
     }
