@@ -8,28 +8,31 @@ import {
   required,
   rfOuCpfOuCodOperador,
   semCaracteresEspeciais
-} from "../../helpers/fieldValidators";
-import authService from "../../services/auth";
+} from "helpers/fieldValidators";
+import authService from "services/auth";
 import {
   atualizarSenhaLogado,
   recuperaSenha,
   setUsuario
-} from "../../services/perfil.service";
-import { Botao } from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { InputText } from "../Shareable/Input/InputText";
-import { InputPassword } from "../Shareable/Input/InputPassword";
-import Select from "../Shareable/Select";
-import RequisitosSenha from "../Shareable/RequisitosSenha";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+} from "services/perfil.service";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { InputText } from "components/Shareable/Input/InputText";
+import { InputPassword } from "components/Shareable/Input/InputPassword";
+import Select from "components/Shareable/Select";
+import RequisitosSenha from "components/Shareable/RequisitosSenha";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
 import { validarForm } from "./validar";
 import {
   fieldCnpj,
   fieldCpf
-} from "../screens/Cadastros/CadastroEmpresa/helper";
-import { deepCopy } from "helpers/utilities";
+} from "components/screens/Cadastros/CadastroEmpresa/helper";
+import { composeValidators, deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
@@ -580,10 +583,15 @@ export class Login extends Component {
                 <form className="login mt-3">
                   <FieldFF
                     component={InputText}
+                    className="input-login"
+                    esconderAsterisco
                     label="Usuário"
                     name="recuperar_login"
-                    placeholder="Digite seu RF, CPF ou Código Operador"
-                    validate={required}
+                    placeholder={"Digite seu RF ou CPF ou Código Operador"}
+                    required
+                    type="number"
+                    maxlength="11"
+                    validate={composeValidators(required, rfOuCpfOuCodOperador)}
                   />
                 </form>
 
@@ -603,7 +611,11 @@ export class Login extends Component {
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}
                     onClick={() => this.handleRecuperaSenha(values)}
-                    disabled={!values.recuperar_login}
+                    disabled={
+                      !values.recuperar_login ||
+                      (values.recuperar_login.length !== 7 &&
+                        values.recuperar_login.length !== 11)
+                    }
                   />
                 </div>
               </>
