@@ -23,7 +23,7 @@ export default () => {
   const { meusDados } = useContext(MeusDadosContext);
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       <SolicitacoesPorStatusGenerico
         tipoCard={CARD_TYPE_ENUM.AUTORIZADO}

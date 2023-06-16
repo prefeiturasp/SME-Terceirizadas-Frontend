@@ -20,7 +20,8 @@ export default ({
   solicitacaoMedicaoInicial,
   ehGrupoSolicitacoesDeAlimentacao = false,
   ehGrupoETEC = false,
-  quantidadeAlimentacoesLancadas
+  quantidadeAlimentacoesLancadas,
+  periodosInclusaoContinua = null
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -30,9 +31,7 @@ export default ({
   const nomePeriodoGrupo = () => {
     let nome = "";
     if (grupo) {
-      nome += `${grupo}${
-        ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
-      }`;
+      nome += grupo;
     }
     if (textoCabecalho) {
       nome += textoCabecalho;
@@ -95,7 +94,10 @@ export default ({
   }
 
   const desabilitarBotaoEditar = () => {
-    if (!solicitacaoMedicaoInicial) {
+    if (
+      !solicitacaoMedicaoInicial ||
+      ["Não Preenchido", "MEDICAO_ENVIADA_PELA_UE"].includes(statusPeriodo())
+    ) {
       return true;
     } else if (
       ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
@@ -123,6 +125,9 @@ export default ({
         mesAnoSelecionado: periodoSelecionado,
         tipos_alimentacao: tipos_alimentacao,
         status_periodo: statusPeriodo(),
+        status_solicitacao: solicitacaoMedicaoInicial.status,
+        justificativa_periodo: justificativaPeriodo(),
+        periodosInclusaoContinua: periodosInclusaoContinua,
         ...location.state
       }
     });
@@ -134,8 +139,24 @@ export default ({
     );
     if (obj) {
       return obj.status;
-    } else {
+    } else if (
+      solicitacaoMedicaoInicial.status ===
+      "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
+    ) {
       return solicitacaoMedicaoInicial.status;
+    } else {
+      return "Não Preenchido";
+    }
+  };
+
+  const justificativaPeriodo = () => {
+    const obj = quantidadeAlimentacoesLancadas.find(
+      each => each.nome_periodo_grupo === nomePeriodoGrupo()
+    );
+    if (obj) {
+      return obj.justificativa;
+    } else {
+      return null;
     }
   };
 
@@ -149,16 +170,22 @@ export default ({
         >
           <div className="row">
             <div className="col-9 pl-0 mb-2 periodo-cabecalho">
-              {grupo &&
-                `${grupo} ${
-                  ehGrupoSolicitacoesDeAlimentacao || ehGrupoETEC ? "" : " - "
-                } `}
+              {grupo && grupo}
               {textoCabecalho}
             </div>
             <div className="col-3 pr-0">
-              <div className="float-right status-card-periodo-grupo">
-                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()] &&
-                  PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome}
+              <div
+                className={`float-right status-card-periodo-grupo ${
+                  statusPeriodo() === "MEDICAO_CORRECAO_SOLICITADA"
+                    ? "red"
+                    : statusPeriodo() === "MEDICAO_CORRIGIDA_PELA_UE"
+                    ? "blue"
+                    : ""
+                }`}
+              >
+                {PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()]
+                  ? PERIODO_STATUS_DE_PROGRESSO[statusPeriodo()].nome
+                  : "Não Preenchido"}
               </div>
             </div>
           </div>
@@ -195,7 +222,11 @@ export default ({
                   statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
                     ? "Visualizar"
                     : solicitacaoMedicaoInicial.status ===
-                      "MEDICAO_CORRECAO_SOLICITADA"
+                        "MEDICAO_CORRECAO_SOLICITADA" &&
+                      [
+                        "MEDICAO_CORRECAO_SOLICITADA",
+                        "MEDICAO_CORRIGIDA_PELA_UE"
+                      ].includes(statusPeriodo())
                     ? "Corrigir"
                     : "Editar"
                 }

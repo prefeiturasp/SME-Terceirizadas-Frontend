@@ -220,3 +220,7 @@ export const OPCOES_AVALIACAO_A_CONTENTO = {
   SIM_SEM_OCORRENCIAS: 1,
   NAO_COM_OCORRENCIAS: 0
 };
+
+export const removeObjetosDuplicados = (arr, key) => {
+  return [...new Map(arr.map(obj => [obj[key], obj])).values()];
+};

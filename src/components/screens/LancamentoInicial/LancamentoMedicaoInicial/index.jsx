@@ -271,6 +271,7 @@ export default () => {
               setObjSolicitacaoMIFinalizada={value =>
                 setObjSolicitacaoMIFinalizada(value)
               }
+              setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
             />
           )}
       </div>

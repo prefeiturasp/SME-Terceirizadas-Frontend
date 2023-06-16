@@ -58,7 +58,7 @@ const StatusSolicitacoesBase = props => {
     }
   ];
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
       <StatusSolicitacoes {...props} />
     </Page>

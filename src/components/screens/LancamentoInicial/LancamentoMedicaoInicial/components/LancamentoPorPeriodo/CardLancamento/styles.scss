@@ -78,11 +78,16 @@
     font-size: 14px;
     border-radius: 24px;
     padding: 5px 12px;
-
-    .red {
-      color: $red;
-    }
   }
+
+  .red {
+    color: $red;
+  }
+
+  .blue {
+    color: $blue;
+  }
+
   .col-form-label {
     font-size: 14px;
     span {

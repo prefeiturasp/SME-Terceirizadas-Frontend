@@ -37,7 +37,9 @@ export default ({
   setExibirTooltip,
   errors,
   valoresObservacoes,
-  location
+  location,
+  setFormValuesAtualizados,
+  setValoresObservacoes
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -70,6 +72,9 @@ export default ({
       );
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+        setValoresObservacoes(
+          valoresObservacoes.filter(v => v.uuid !== uuidValor)
+        );
         valoresPeriodosLancamentos.splice(
           valoresPeriodosLancamentos.findIndex(
             valor => valor.uuid === uuidValor
@@ -157,6 +162,38 @@ export default ({
     closeModal();
   };
 
+  const setUpModal = () => {
+    if (dia && categoria) {
+      if (
+        !values[`${rowName}__dia_${dia}__categoria_${categoria}`] &&
+        valoresObservacoes &&
+        valoresObservacoes.find(
+          valor =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        )
+      ) {
+        const updateObs = {};
+        updateObs[
+          `${rowName}__dia_${dia}__categoria_${categoria}`
+        ] = valoresObservacoes.find(
+          valor =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        ).valor;
+        setFormValuesAtualizados({ ...values, ...updateObs });
+        form.change(
+          `${rowName}__dia_${dia}__categoria_${categoria}`,
+          valoresObservacoes.find(
+            valor =>
+              String(valor.dia) === String(dia) &&
+              String(valor.categoria_medicao) === String(categoria)
+          ).valor
+        );
+      }
+    }
+  };
+
   const onChangeTextAreaField = value => {
     const valorFiltered = valoresPeriodosLancamentos
       .filter(valor => valor.nome_campo === rowName)
@@ -190,7 +227,12 @@ export default ({
   };
 
   return (
-    <Modal dialogClassName="modal-50w" show={showModal} onHide={onHideModal}>
+    <Modal
+      onEntered={() => setUpModal()}
+      dialogClassName="modal-50w"
+      show={showModal}
+      onHide={onHideModal}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Observação Diária</Modal.Title>
       </Modal.Header>
@@ -230,6 +272,11 @@ export default ({
           ) &&
           valoresPeriodosLancamentos.length > 0 &&
           (showBotaoExcluir ||
+            valoresObservacoes.find(
+              valor =>
+                String(valor.dia) === String(dia) &&
+                String(valor.categoria_medicao) === String(categoria)
+            ) ||
             (!!dadosIniciais[
               `observacoes__dia_${dia}__categoria_${categoria}`
             ] &&

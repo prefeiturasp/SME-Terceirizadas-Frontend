@@ -34,7 +34,7 @@ export const botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada = (
   ) {
     if (
       Number(values[`frequencia__dia_${dia}__categoria_${categoria.id}`]) ===
-        0 &&
+        0 ||
       !validacaoDiaLetivo(dia)
     ) {
       return true;
@@ -314,81 +314,73 @@ export const botaoAdicionarObrigatorioTabelaAlimentacao = (
   alteracoesAlimentacaoAutorizadas,
   kitLanchesAutorizadas,
   inclusoesEtecAutorizadas,
-  ehGrupoETECUrlParam = false
+  ehGrupoETECUrlParam = false,
+  feriadosNoMes
 ) => {
-  return (
-    botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada(
-      formValuesAtualizados,
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      validacaoDiaLetivo
-    ) ||
-    repeticaoSobremesaDoceComValorESemObservacao(
-      formValuesAtualizados,
-      dia,
-      categoria,
-      diasSobremesaDoce,
-      location
-    ) ||
-    campoComInclusaoContinuaValor0ESemObservacao(
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      formValuesAtualizados
-    ) ||
-    campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
-      dia,
-      categoria,
-      dadosValoresInclusoesAutorizadasState,
-      formValuesAtualizados
-    ) ||
-    campoFrequenciaValor0ESemObservacao(
-      dia,
-      categoria,
-      formValuesAtualizados
-    ) ||
-    campoComSuspensaoAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      suspensoesAutorizadas
-    ) ||
-    campoRefeicaoComRPLAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    campoLancheComLPRAutorizadaESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    camposKitLancheSolicitacoesAlimentacaoESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      kitLanchesAutorizadas
-    ) ||
-    camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
-      formValuesAtualizados,
-      column,
-      categoria,
-      alteracoesAlimentacaoAutorizadas
-    ) ||
-    camposLancheEmergTabelaEtec(
-      formValuesAtualizados,
-      column,
-      categoria,
-      inclusoesEtecAutorizadas,
-      ehGrupoETECUrlParam
-    ) ||
-    Object.keys(dadosValoresInclusoesAutorizadasState)
-      .filter(key => key.includes(`dia_${dia}`))
-      .some(key => !formValuesAtualizados[key])
-  );
+  if (
+    location.state.grupo === "Programas e Projetos" &&
+    feriadosNoMes.includes(dia)
+  ) {
+    return false;
+  } else {
+    return (
+      repeticaoSobremesaDoceComValorESemObservacao(
+        formValuesAtualizados,
+        dia,
+        categoria,
+        diasSobremesaDoce,
+        location
+      ) ||
+      campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
+        dia,
+        categoria,
+        dadosValoresInclusoesAutorizadasState,
+        formValuesAtualizados
+      ) ||
+      campoFrequenciaValor0ESemObservacao(
+        dia,
+        categoria,
+        formValuesAtualizados
+      ) ||
+      campoComSuspensaoAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        suspensoesAutorizadas
+      ) ||
+      campoRefeicaoComRPLAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      campoLancheComLPRAutorizadaESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      camposKitLancheSolicitacoesAlimentacaoESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        kitLanchesAutorizadas
+      ) ||
+      camposLancheEmergencialSolicitacoesAlimentacaoESemObservacao(
+        formValuesAtualizados,
+        column,
+        categoria,
+        alteracoesAlimentacaoAutorizadas
+      ) ||
+      camposLancheEmergTabelaEtec(
+        formValuesAtualizados,
+        column,
+        categoria,
+        inclusoesEtecAutorizadas,
+        ehGrupoETECUrlParam
+      )
+    );
+  }
 };
 
 export const botaoAdicionarObrigatorio = (
@@ -439,13 +431,6 @@ export const validarFormulario = (
   let dias = [];
   weekColumns.forEach(c => dias.push(c.dia));
 
-  const validacaoSemana = (dia, semana) => {
-    return (
-      (Number(semana) === 1 && Number(dia) > 20) ||
-      ([4, 5, 6].includes(Number(semana)) && Number(dia) < 10)
-    );
-  };
-
   categoriasDeMedicao.forEach(categoria => {
     diasSobremesaDoce.forEach(dia => {
       if (
@@ -467,16 +452,6 @@ export const validarFormulario = (
       Object.keys(dadosValoresInclusoesAutorizadasState).forEach(inclusao => {
         const dia = inclusao.split("__dia_")[1].split("__categoria")[0];
         if (
-          campoComInclusaoContinuaValor0ESemObservacao(
-            dia,
-            categoria,
-            dadosValoresInclusoesAutorizadasState,
-            values_
-          )
-        ) {
-          erro = `Dia ${dia} está com valor 0 em uma alimentação. Justifique nas observações`;
-        }
-        if (
           campoComInclusaoContinuaValorMaiorQueAutorizadoESemObservacao(
             dia,
             categoria,
@@ -485,16 +460,6 @@ export const validarFormulario = (
           )
         ) {
           erro = `Dia ${dia} está com valor maior que o autorizado. Justifique nas observações`;
-        }
-        if (
-          !validacaoSemana(dia, values["week"]) &&
-          dias.some(dia => inclusao.includes(dia)) &&
-          !values[inclusao] &&
-          !values[
-            `observacoes__dia_${dia}__categoria_${categoriaAlimentacao.id}`
-          ]
-        ) {
-          erro = `Existe autorização para o Lançamento de Programas e Projetos para o dia ${dia}. Justifique a ausência do apontamento!`;
         }
       });
   });
@@ -516,20 +481,6 @@ export const validarFormulario = (
     ...new Set(arrayDiasInclusoesAutorizadasEmValues)
   ];
 
-  let diasComFrequenciaVaziasEInclusoesAutorizadas = [];
-  arrayDiasInclusoesAutorizadasEmValues.forEach(dia => {
-    if (
-      !values_[`frequencia__dia_${dia}__categoria_${categoriaAlimentacao.id}`]
-    ) {
-      diasComFrequenciaVaziasEInclusoesAutorizadas.push(dia);
-    }
-  });
-
-  if (diasComFrequenciaVaziasEInclusoesAutorizadas.length) {
-    erro = `Realizar preenchimento da(s) frequência(s) para o(s) dia(s): ${diasComFrequenciaVaziasEInclusoesAutorizadas.join(
-      ", "
-    )}.`;
-  }
   return erro;
 };
 
@@ -543,7 +494,8 @@ export const validacoesTabelaAlimentacao = (
   suspensoesAutorizadas,
   alteracoesAlimentacaoAutorizadas,
   validacaoDiaLetivo,
-  location
+  location,
+  feriadosNoMes
 ) => {
   const maxFrequencia = Number(
     allValues[`frequencia__dia_${dia}__categoria_${categoria}`]
@@ -551,6 +503,9 @@ export const validacoesTabelaAlimentacao = (
   const inputName = `${rowName}__dia_${dia}__categoria_${categoria}`;
 
   if (location.state && location.state.grupo === "Programas e Projetos") {
+    if (feriadosNoMes.includes(dia)) {
+      return undefined;
+    }
     if (
       value &&
       !["Mês anterior", "Mês posterior"].includes(value) &&
@@ -567,19 +522,6 @@ export const validacoesTabelaAlimentacao = (
       Number(allValues[inputName]) > Number(maxFrequencia)
     ) {
       return `Número apontado de alimentação é maior que número de alunos frequentes. Ajuste o apontamento. `;
-    }
-    if (
-      `${rowName}__dia_${dia}__categoria_${categoria}` ===
-        `frequencia__dia_${dia}__categoria_${categoria}` &&
-      allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`] &&
-      !(
-        ["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0
-      ) &&
-      validacaoDiaLetivo(dia)
-    ) {
-      if (!(Number(value) === 0)) {
-        return `Há solicitação de alimentação contínua autorizada para esta data. Insira o número de frequentes e alimentações`;
-      }
     }
   }
 
@@ -602,13 +544,21 @@ export const validacoesTabelaAlimentacao = (
     allValues[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]
   );
 
+  const alimentacoesDoDia = Object.keys(allValues).filter(
+    key =>
+      String(key).includes(`dia_${dia}__categoria_${categoria}`) &&
+      !String(key).includes("numero_de_alunos") &&
+      !String(key).includes("frequencia")
+  );
+
   if (
     `${rowName}__dia_${dia}__categoria_${categoria}` ===
       `frequencia__dia_${dia}__categoria_${categoria}` &&
     Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
       String(key).includes(`__dia_${dia}__categoria_${categoria}`)
     ) &&
-    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0)
+    !(["Mês anterior", "Mês posterior"].includes(value) || Number(value) > 0) &&
+    alimentacoesDoDia.some(ali => allValues[ali])
   ) {
     if (!value || (value && Number(value) !== 0 && validacaoDiaLetivo(dia))) {
       return `Foi autorizada inclusão de alimentação ${
@@ -826,65 +776,6 @@ export const validacoesTabelaEtecAlimentacao = (
     return "A quantidade não pode ser maior do que a quantidade inserida em Frequência.";
   }
   return undefined;
-};
-
-export const exibirTooltipSemAlimentacaoPreAutorizadaInformada = (
-  formValuesAtualizados,
-  row,
-  column,
-  categoria,
-  dadosValoresInclusoesAutorizadasState
-) => {
-  return (
-    `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
-      dadosValoresInclusoesAutorizadasState &&
-    Number(
-      formValuesAtualizados[
-        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-      ]
-    ) === 0 &&
-    !formValuesAtualizados[
-      `observacoes__dia_${column.dia}__categoria_${categoria.id}`
-    ]
-  );
-};
-
-export const exibirTooltipAlimentacoesAutorizadas = (
-  formValuesAtualizados,
-  row,
-  column,
-  categoria,
-  dadosValoresInclusoesAutorizadasState
-) => {
-  return (
-    `${row.name}__dia_${column.dia}__categoria_${categoria.id}` in
-      dadosValoresInclusoesAutorizadasState &&
-    !formValuesAtualizados[
-      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
-    ]
-  );
-};
-
-export const exibirTooltipFrequenciaDiaNaoLetivo = (
-  formValuesAtualizados,
-  row,
-  column,
-  categoria,
-  dadosValoresInclusoesAutorizadasState,
-  validacaoDiaLetivo
-) => {
-  return (
-    !validacaoDiaLetivo(column.dia) &&
-    row.name === "frequencia" &&
-    Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
-      String(key).includes(`__dia_${column.dia}__categoria_${categoria.id}`)
-    ) &&
-    Number(
-      formValuesAtualizados[
-        `frequencia__dia_${column.dia}__categoria_${categoria.id}`
-      ]
-    ) === 0
-  );
 };
 
 export const exibirTooltipErroQtdMaiorQueAutorizado = (
