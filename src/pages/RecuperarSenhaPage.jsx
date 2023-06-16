@@ -6,18 +6,15 @@ import { Botao } from "../components/Shareable/Botao";
 import {
   BUTTON_STYLE,
   BUTTON_TYPE
-} from "../components/Shareable/Botao/constants";
-import { HeaderLogo } from "../components/Shareable/HeaderLogo";
-import InputText from "../components/Shareable/Input/InputText";
-import { InfoSenhaServidorMunicipal } from "../components/Shareable/InfoSenhaServidorMunicipal";
-import {
-  toastError,
-  toastSuccess
-} from "../components/Shareable/Toast/dialogs";
-import { required } from "../helpers/fieldValidators";
-import { atualizarSenha } from "../services/perfil.service";
+} from "components/Shareable/Botao/constants";
+import { HeaderLogo } from "components/Shareable/HeaderLogo";
+import { InfoSenhaServidorMunicipal } from "components/Shareable/InfoSenhaServidorMunicipal";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { required } from "helpers/fieldValidators";
+import { atualizarSenha } from "services/perfil.service";
 import "./style.scss";
 import RequisitosSenha from "components/Shareable/RequisitosSenha";
+import InputPassword from "components/Shareable/Input/InputPassword";
 
 class RecuperarSenhaPage extends Component {
   constructor(props) {
@@ -72,29 +69,34 @@ class RecuperarSenhaPage extends Component {
               <div className="">
                 <div className="card-title font-weight-bold">Alterar Senha</div>
                 <Field
-                  component={InputText}
-                  label="Senha:"
-                  required
+                  component={InputPassword}
+                  className="input-login"
+                  esconderAsterisco
+                  label="Senha"
                   name="senha1"
-                  type="password"
-                  validate={[required]}
+                  placeholder={"Digite sua Senha"}
                   onChange={event => this.onSenhaChanged(event.target.value)}
                   maxlength={20}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
                   helpText="Pelo menos 8 caracteres, uma letra e um número"
+                  required
+                  validate={required}
                 />
                 <Field
-                  component={InputText}
-                  label="Repetir senha:"
-                  required
+                  component={InputPassword}
+                  className="input-login"
+                  esconderAsterisco
+                  label="Repetir Senha"
                   name="senha2"
-                  type="password"
-                  validate={required}
+                  placeholder={"Digite sua Senha"}
+                  onChange={event => this.onSenhaChanged(event.target.value)}
                   maxlength={20}
-                  helpText={"As senhas devem ser iguais"}
                   pattern="(?=.*\d)(?=.*[a-z]).{8,}"
                   title="Pelo menos 8 caracteres, uma letra e um número"
+                  helpText="Pelo menos 8 caracteres, uma letra e um número"
+                  required
+                  validate={required}
                 />
                 {visao_perfil && visao_perfil !== "EMPRESA" && (
                   <InfoSenhaServidorMunicipal />
