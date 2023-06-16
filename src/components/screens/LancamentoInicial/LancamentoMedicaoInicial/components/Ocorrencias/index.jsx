@@ -1,9 +1,13 @@
 import React, { Fragment, useState } from "react";
-import { BUTTON_ICON } from "components/Shareable/Botao/constants";
+import {
+  BUTTON_ICON,
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import { OCORRENCIA_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
 import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
+import ModalHistorico from "components/Shareable/ModalHistorico";
 import { ModalAtualizarOcorrencia } from "../ModalAtualizarOcorrencia";
 
 export default ({
@@ -12,6 +16,11 @@ export default ({
   setObjSolicitacaoMIFinalizada
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalHistorico, setShowModalHistorico] = useState(false);
+
+  const visualizarModalHistorico = () => {
+    setShowModalHistorico(true);
+  };
 
   return (
     <>
@@ -75,37 +84,44 @@ export default ({
                 ) : (
                   <div className="col-6" />
                 )}
-                {solicitacaoMedicaoInicial.status ===
-                  "MEDICAO_CORRECAO_SOLICITADA" && (
+                {solicitacaoMedicaoInicial.ocorrencia && (
                   <Fragment>
-                    <div className="col-12 mt-4">
-                      <p>Correções Solicitadas:</p>
-                      <div className="justificativa-ocorrencia-medicao">
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
-                              log =>
-                                log.status_evento_explicacao ===
-                                "Correção solicitada"
-                            ).justificativa
-                          }}
-                        />
+                    {solicitacaoMedicaoInicial.ocorrencia.status ===
+                      "MEDICAO_CORRECAO_SOLICITADA" && (
+                      <div className="col-12 mt-4">
+                        <p>Correções Solicitadas:</p>
+                        <div className="justificativa-ocorrencia-medicao">
+                          <p
+                            dangerouslySetInnerHTML={{
+                              __html: solicitacaoMedicaoInicial.ocorrencia.logs.find(
+                                log =>
+                                  log.status_evento_explicacao ===
+                                  "Correção solicitada"
+                              ).justificativa
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
+
                     <div className="col-12 mt-4">
                       <div className="float-right">
                         <Botao
-                          className="ml-3"
                           texto="Histórico"
-                          style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                          onClick={() => {}}
-                        />
-                        <Botao
+                          type={BUTTON_TYPE.BUTTON}
+                          style={BUTTON_STYLE.GREEN_OUTLINE}
                           className="ml-3"
-                          texto="Atualizar Formulário de Ocorrências"
-                          style={BUTTON_STYLE.GREEN}
-                          onClick={() => setShowModal(true)}
+                          onClick={visualizarModalHistorico}
                         />
+                        {solicitacaoMedicaoInicial.status ===
+                          "MEDICAO_CORRECAO_SOLICITADA" && (
+                          <Botao
+                            className="float-right ml-3"
+                            texto="Atualizar Formulário de Ocorrências"
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() => setShowModal(true)}
+                          />
+                        )}
                       </div>
                     </div>
                   </Fragment>
@@ -114,6 +130,18 @@ export default ({
             </div>
           </div>
         </div>
+      )}
+      {solicitacaoMedicaoInicial.ocorrencia && (
+        <ModalHistorico
+          visible={showModalHistorico}
+          onOk={() => setShowModalHistorico(false)}
+          onCancel={() => setShowModalHistorico(false)}
+          logs={solicitacaoMedicaoInicial.ocorrencia.logs}
+          solicitacaoMedicaoInicial={solicitacaoMedicaoInicial.ocorrencia}
+          titulo="Histórico do Formulário de Ocorrências"
+          getHistorico={() => solicitacaoMedicaoInicial.ocorrencia.logs}
+          getOcorrencia={() => solicitacaoMedicaoInicial.ocorrencia}
+        />
       )}
       <ModalAtualizarOcorrencia
         showModal={showModal}

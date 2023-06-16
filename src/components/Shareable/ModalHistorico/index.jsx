@@ -1,15 +1,20 @@
 import { Modal } from "antd";
 import React, { Component } from "react";
-import { truncarString } from "helpers/utilities";
+import { truncarString, usuarioEhCogestorDRE } from "helpers/utilities";
 
 import "./styles.scss";
+import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import { BUTTON_STYLE } from "../Botao/constants";
+import Botao from "../Botao";
 
 export default class ModalHistorico extends Component {
   constructor(props) {
     super(props);
     this.state = {
       logs: [],
-      logSelecionado: null
+      logSelecionado: null,
+      solicitacaoMedicaoInicial: null,
+      statusValidosDownload: ["Enviado pela UE", "Corrigido para DRE"]
     };
   }
 
@@ -46,9 +51,41 @@ export default class ModalHistorico extends Component {
 
   componentDidUpdate = async () => {
     const { getHistorico } = this.props;
+    if (
+      this.state.logs.length < getHistorico().length ||
+      this.state.logs[0].criado_em !== getHistorico()[0].criado_em ||
+      this.state.logs[this.state.logs.length - 1].criado_em !==
+        getHistorico()[getHistorico().length - 1].criado_em
+    ) {
+      this.setState({ logs: getHistorico(), logSelecionado: null });
+    }
+  };
 
-    if (this.state.logs.length < getHistorico().length) {
-      this.setState({ logs: getHistorico() });
+  getPdfUrl = log => {
+    let urlArquivoPDF = "";
+    if (
+      this.state.statusValidosDownload.includes(log.status_evento_explicacao)
+    ) {
+      log.anexos.forEach(anexo => {
+        if (anexo.nome.includes("pdf")) {
+          urlArquivoPDF = anexo.arquivo_url;
+        }
+      });
+    }
+    return urlArquivoPDF;
+  };
+
+  getTitulo = log => {
+    if (log) {
+      if (log.status_evento_explicacao === "Correção solicitada") {
+        return "Devolvido para ajustes pela DRE";
+      }
+      if (usuarioEhCogestorDRE()) {
+        if (log.status_evento_explicacao === "Enviado pela UE") {
+          return "Recebido para análise";
+        }
+      }
+      return log.status_evento_explicacao;
     }
   };
 
@@ -57,7 +94,7 @@ export default class ModalHistorico extends Component {
     const { logs, logSelecionado } = this.state;
     return (
       <Modal
-        title="Histórico"
+        title={this.props.titulo ? this.props.titulo : "Histórico"}
         open={visible}
         onOk={onOk}
         okText={"Fechar"}
@@ -78,10 +115,8 @@ export default class ModalHistorico extends Component {
               {logs.map((log, index) => {
                 const { ativo } = log;
                 const iniciais = this.retornaIniciais(log);
-                const tipoUsuario =
-                  log.usuario.tipo_usuario === "terceirizada"
-                    ? "TERCEIRIZADA"
-                    : "CODAE";
+                const tipoUsuario = (log.usuario.tipo_usuario =
+                  log.usuario.nome);
 
                 return (
                   <div
@@ -99,7 +134,7 @@ export default class ModalHistorico extends Component {
                         className="descicao-titulo"
                         title={log.status_evento_explicacao}
                       >
-                        {truncarString(log.status_evento_explicacao, 19)}
+                        {truncarString(this.getTitulo(log), 19)}
                       </div>
                       <div className="break-column" />
                       <div className="descicao-entidade">{tipoUsuario}</div>
@@ -116,7 +151,7 @@ export default class ModalHistorico extends Component {
           <article className="detail-log">
             <div />
 
-            <div>
+            <div className="container-historico">
               <header>
                 <div />
                 {logSelecionado !== null ? (
@@ -134,7 +169,7 @@ export default class ModalHistorico extends Component {
                       </div>
                     </div>
                     <div className="body-log-item">
-                      <header>{logSelecionado.status_evento_explicacao}</header>
+                      <header>{this.getTitulo(logSelecionado)}</header>
                       <section>
                         <article>
                           {logSelecionado.usuario.tipo_usuario ===
@@ -150,7 +185,7 @@ export default class ModalHistorico extends Component {
                             <div>{logSelecionado.criado_em.split(" ")[0]}</div>
                           </div>
                         </article>
-                        <article>
+                        <article className="preenchimento">
                           {logSelecionado.justificativa !== "" && (
                             <>
                               {logSelecionado.status_evento_explicacao ===
@@ -177,6 +212,24 @@ export default class ModalHistorico extends Component {
                   <div />
                 )}
               </header>
+              {logSelecionado !== null &&
+                this.state.statusValidosDownload.includes(
+                  logSelecionado.status_evento_explicacao
+                ) && (
+                  <footer className="footer-historico">
+                    <article>
+                      <Botao
+                        className="download-ocorrencias"
+                        style={BUTTON_STYLE.GREEN}
+                        texto="Download do formulário"
+                        onClick={() => {
+                          const urlArquivoPDF = this.getPdfUrl(logSelecionado);
+                          medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
+                        }}
+                      />
+                    </article>
+                  </footer>
+                )}
             </div>
           </article>
         </section>

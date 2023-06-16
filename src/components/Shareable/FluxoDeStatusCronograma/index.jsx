@@ -28,7 +28,6 @@ export const FluxoDeStatusCronograma = ({ listaDeStatus, solicitacao }) => {
       </ul>
       <ul className="progressbar">
         {listaDeStatus.map((status, key) => {
-          console.log(status);
           return !solicitacao && status.justificativa ? (
             <NavLink
               className=""

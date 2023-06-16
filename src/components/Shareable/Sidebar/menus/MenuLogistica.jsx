@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
   LOGISTICA,
@@ -11,7 +11,8 @@ import {
   INSUCESSO_ENTREGA,
   ENTREGAS_DILOG,
   ENTREGAS_DRE,
-  ENTREGAS_DISTRIBUIDOR
+  ENTREGAS_DISTRIBUIDOR,
+  GUIAS_NOTIFICACAO
 } from "configs/constants";
 import {
   usuarioEhEmpresaDistribuidora,
@@ -21,10 +22,11 @@ import {
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCodaeDilog,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
+  usuarioEhDilogJuridico
 } from "helpers/utilities";
 
-const MenuLogistica = () => {
+const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
       {/* <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
@@ -86,6 +88,19 @@ const MenuLogistica = () => {
         <LeafItem to={`/${LOGISTICA}/${CONFERIR_ENTREGA}`}>
           Conferir Entrega
         </LeafItem>
+      )}
+
+      {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Ocorrências"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
+            Guias com Notificações
+          </LeafItem>
+        </SubMenu>
       )}
     </Menu>
   );

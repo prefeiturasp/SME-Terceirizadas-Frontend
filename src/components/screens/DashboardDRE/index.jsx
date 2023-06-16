@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Form, Field } from "react-final-form";
 import { Link } from "react-router-dom";
-import CardMatriculados from "../../Shareable/CardMatriculados";
-import CardPendencia from "../../Shareable/CardPendencia/CardPendencia";
-import CardBodySemRedux from "../../Shareable/CardBodySemRedux";
+import CardMatriculados from "components/Shareable/CardMatriculados";
+import CardPendencia from "components/Shareable/CardPendencia/CardPendencia";
 import CardStatusDeSolicitacao, {
   ICON_CARD_TYPE_ENUM,
   CARD_TYPE_ENUM
-} from "../../Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import {
-  FILTRO_VISAO,
-  PAGINACAO_DASHBOARD_DEFAULT
-} from "../../../constants/shared";
+} from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
+import { FILTRO_VISAO, PAGINACAO_DASHBOARD_DEFAULT } from "constants/shared";
 import { FILTRO } from "../const";
 import {
   DRE,
@@ -20,7 +16,7 @@ import {
   SOLICITACOES_NEGADAS,
   SOLICITACOES_CANCELADAS,
   SOLICITACOES_AGUARDADAS
-} from "../../../configs/constants";
+} from "configs/constants";
 import { ajustarFormatoLog } from "../helper";
 import {
   getSolicitacoesPendentesValidacaoDRE,
@@ -29,20 +25,25 @@ import {
   getSolicitacoesCanceladasDRE,
   getSolicitacoesAutorizadasDRE,
   getSolicitacoesAguardandoCODAE
-} from "../../../services/painelDRE.service";
-import corrigeResumo from "../../../helpers/corrigeDadosDoDashboard";
-import { toastError } from "../../Shareable/Toast/dialogs";
-import { dataAtual } from "../../../helpers/utilities";
+} from "services/painelDRE.service";
+import corrigeResumo from "helpers/corrigeDadosDoDashboard";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import { dataAtual } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
-import Botao from "../../Shareable/Botao";
-import { BUTTON_TYPE, BUTTON_STYLE } from "../../Shareable/Botao/constants";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_TYPE,
+  BUTTON_STYLE
+} from "components/Shareable/Botao/constants";
 import "./style.scss";
 import {
   updateLoteAlimentacao,
   updateTituloAlimentacao
 } from "reducers/filtersAlimentacaoReducer";
 import { connect } from "react-redux";
+import { Spin } from "antd";
+import CardBody from "components/Shareable/CardBody";
 
 export const DashboardDRE = props => {
   const { cards, lotes, handleSubmit, meusDados } = props;
@@ -73,6 +74,10 @@ export const DashboardDRE = props => {
   const [loadingPainelSolicitacoes, setLoadingPainelSolicitacoes] = useState(
     false
   );
+  const [
+    loadingAcompanhamentoSolicitacoes,
+    setLoadingAcompanhamentoSolicitacoes
+  ] = useState(false);
 
   const [solicitacoesFiltradas, setSolicitacoesFiltradas] = useState({
     pendentes: [],
@@ -88,6 +93,8 @@ export const DashboardDRE = props => {
     let negadasListSolicitacao = [];
     let autorizadasListSolicitacao = [];
     let aguardandoCodaeListSolicitacao = [];
+
+    setLoadingAcompanhamentoSolicitacoes(true);
 
     await getSolicitacoesPendentesDRE(params).then(response => {
       pendentesAutorizacaoListSolicitacao = ajustarFormatoLog(
@@ -118,6 +125,7 @@ export const DashboardDRE = props => {
       negadas: negadasListSolicitacao,
       canceladas: canceladasListSolicitacao
     });
+    setLoadingAcompanhamentoSolicitacoes(false);
   };
 
   const carregaResumoPendencias = async (values = {}) => {
@@ -185,6 +193,8 @@ export const DashboardDRE = props => {
     carregaResumoPendencias();
     getSolicitacoesAsync(PARAMS);
   }, []);
+
+  let typingTimeout = null;
 
   return (
     <div>
@@ -267,70 +277,78 @@ export const DashboardDRE = props => {
                 </div>
               </div>
             </div>
-            <CardBodySemRedux
-              exibirFiltrosDataEventoETipoSolicitacao={false}
+            <CardBody
+              exibirFiltrosDataEventoETipoSolicitacao
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
               onChange={value => {
-                onPesquisaChanged(values);
-                props.updateTituloAlimentacao(value.titulo);
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(async () => {
+                  onPesquisaChanged(value);
+                  props.updateTituloAlimentacao(value.titulo);
+                }, 1000);
               }}
               values={values}
             >
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Aguardando Validação da DRE"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={solicitacoesFiltradas.pendentes}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
-                  />
-                </div>
-                <div className="col-6">
-                  {solicitacoesFiltradas.aguardandoCodae && (
+              <Spin
+                tip="Carregando..."
+                spinning={loadingAcompanhamentoSolicitacoes}
+              >
+                <div className="row pb-3">
+                  <div className="col-6">
                     <CardStatusDeSolicitacao
-                      cardTitle={"Aguardando Retorno de CODAE"}
-                      cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
-                      solicitations={solicitacoesFiltradas.aguardandoCodae}
-                      icon={"fa-history"}
-                      href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                      cardTitle={"Aguardando Validação da DRE"}
+                      cardType={CARD_TYPE_ENUM.PENDENTE}
+                      solicitations={solicitacoesFiltradas.pendentes}
+                      icon={"fa-exclamation-triangle"}
+                      href={`/${DRE}/${SOLICITACOES_PENDENTES}`}
                     />
-                  )}
+                  </div>
+                  <div className="col-6">
+                    {solicitacoesFiltradas.aguardandoCodae && (
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Aguardando Retorno de CODAE"}
+                        cardType={CARD_TYPE_ENUM.AGUARDANDO_CODAE}
+                        solicitations={solicitacoesFiltradas.aguardandoCodae}
+                        icon={"fa-history"}
+                        href={`/${DRE}/${SOLICITACOES_AGUARDADAS}`}
+                      />
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={solicitacoesFiltradas.autorizadas}
-                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
-                  />
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Autorizadas"}
+                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                      solicitations={solicitacoesFiltradas.autorizadas}
+                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                      href={`/${DRE}/${SOLICITACOES_AUTORIZADAS}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Negadas"}
+                      cardType={CARD_TYPE_ENUM.NEGADO}
+                      solicitations={solicitacoesFiltradas.negadas}
+                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                      href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={solicitacoesFiltradas.negadas}
-                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${DRE}/${SOLICITACOES_NEGADAS}`}
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      solicitations={solicitacoesFiltradas.canceladas}
+                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={solicitacoesFiltradas.canceladas}
-                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${DRE}/${SOLICITACOES_CANCELADAS}`}
-                  />
-                </div>
-              </div>
-            </CardBodySemRedux>
+              </Spin>
+            </CardBody>
             <div className="card card-shortcut-to-form mt-3">
               <div className="card-body">
                 <div className="card-title font-weight-bold">

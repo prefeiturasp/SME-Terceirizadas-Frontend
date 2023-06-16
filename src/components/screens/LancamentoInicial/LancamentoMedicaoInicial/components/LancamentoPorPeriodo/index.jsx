@@ -3,8 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { ModalFinalizarMedicao } from "../ModalFinalizarMedicao";
 import CardLancamento from "./CardLancamento";
 import Botao from "components/Shareable/Botao";
-import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
@@ -12,12 +15,21 @@ import {
   getSolicitacoesInclusoesEtecAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
-import { getQuantidadeAlimentacoesLancadasPeriodoGrupo } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { CORES } from "./helpers";
-import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+import {
+  escolaEnviaCorrecaoMedicaoInicialDRE,
+  getQuantidadeAlimentacoesLancadasPeriodoGrupo,
+  getSolicitacaoMedicaoInicial
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { CORES, removeObjetosDuplicados } from "./helpers";
+import {
+  getError,
+  usuarioEhDiretorUE,
+  usuarioEhEscolaTerceirizadaDiretor
+} from "helpers/utilities";
 import { tiposAlimentacaoETEC } from "helpers/utilities";
 import { ENVIRONMENT } from "constants/config";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalPadraoSimNao } from "components/Shareable/ModalPadraoSimNao";
 
 export default ({
   escolaInstituicao,
@@ -28,11 +40,14 @@ export default ({
   mes,
   ano,
   objSolicitacaoMIFinalizada,
-  setObjSolicitacaoMIFinalizada
+  setObjSolicitacaoMIFinalizada,
+  setSolicitacaoMedicaoInicial
 }) => {
   const [showModalFinalizarMedicao, setShowModalFinalizarMedicao] = useState(
     false
   );
+  const [showModalEnviarCorrecao, setShowModalEnviarCorrecao] = useState(false);
+  const [desabilitaSim, setDesabilitaSim] = useState(false);
   const [periodosInclusaoContinua, setPeriodosInclusaoContinua] = useState(
     undefined
   );
@@ -178,6 +193,17 @@ export default ({
     }
   };
 
+  const getSolicitacaoMedicalInicial = async () => {
+    const payload = {
+      escola: escolaInstituicao.uuid,
+      mes: mes,
+      ano: ano
+    };
+
+    const solicitacao = await getSolicitacaoMedicaoInicial(payload);
+    setSolicitacaoMedicaoInicial(solicitacao.data[0]);
+  };
+
   const renderBotaoExportarPDF = () => {
     if (solicitacaoMedicaoInicial) {
       return true;
@@ -197,6 +223,57 @@ export default ({
       solicitacaoMedicaoInicial.status ===
       "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE"
     );
+  };
+
+  const renderBotaoEnviarCorrecao = () => {
+    return (
+      solicitacaoMedicaoInicial &&
+      solicitacaoMedicaoInicial.status === "MEDICAO_CORRECAO_SOLICITADA" &&
+      usuarioEhDiretorUE()
+    );
+  };
+
+  const escolaEnviaCorrecaoDRE = async () => {
+    setDesabilitaSim(true);
+    const response = await escolaEnviaCorrecaoMedicaoInicialDRE(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Correção da Medição Inicial enviada com sucesso!");
+      getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+      getSolicitacaoMedicalInicial();
+      setShowModalEnviarCorrecao(false);
+    } else {
+      toastError(getError(response.data));
+    }
+    setDesabilitaSim(false);
+  };
+
+  const verificaSeEnviarCorrecaoDisabled = () => {
+    return (
+      quantidadeAlimentacoesLancadas.some(
+        periodo =>
+          !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+            periodo.status
+          )
+      ) ||
+      (solicitacaoMedicaoInicial.com_ocorrencias &&
+        !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+          solicitacaoMedicaoInicial.ocorrencia.status
+        ))
+    );
+  };
+
+  const tiposAlimentacaoProgramasEProjetos = () => {
+    let tiposAlimentacao = [];
+    Object.keys(periodosInclusaoContinua).forEach(periodo => {
+      const tipos = periodosEscolaSimples.find(
+        p => p.periodo_escolar.nome === periodo
+      ).tipos_alimentacao;
+      tiposAlimentacao = [...tiposAlimentacao, ...tipos];
+    });
+
+    return removeObjetosDuplicados(tiposAlimentacao, "nome");
   };
 
   return (
@@ -221,31 +298,18 @@ export default ({
               quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
             />
           ))}
-          {periodosInclusaoContinua &&
-            Object.keys(periodosInclusaoContinua).map((periodo, index) => {
-              const vinculosDoPeriodo = periodosEscolaSimples.find(
-                p => p.periodo_escolar.nome === periodo
-              );
-              const tiposAlimentacao = vinculosDoPeriodo
-                ? vinculosDoPeriodo.tipos_alimentacao
-                : [];
-
-              return (
-                <CardLancamento
-                  key={index}
-                  grupo="Programas e Projetos"
-                  textoCabecalho={periodo}
-                  cor={CORES[4]}
-                  tipos_alimentacao={tiposAlimentacao}
-                  periodoSelecionado={periodoSelecionado}
-                  solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-                  objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-                  quantidadeAlimentacoesLancadas={
-                    quantidadeAlimentacoesLancadas
-                  }
-                />
-              );
-            })}
+          {periodosInclusaoContinua && (
+            <CardLancamento
+              grupo="Programas e Projetos"
+              cor={CORES[4]}
+              tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
+              periodoSelecionado={periodoSelecionado}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              periodosInclusaoContinua={periodosInclusaoContinua}
+            />
+          )}
           {((solicitacoesKitLanchesAutorizadas &&
             solicitacoesKitLanchesAutorizadas.length > 0) ||
             (solicitacoesAlteracaoLancheEmergencialAutorizadas &&
@@ -275,41 +339,49 @@ export default ({
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
               />
             )}
-          <div className="row mt-4">
-            <div className="col">
-              {renderBotaoFinalizar() ? (
-                <Botao
-                  texto="Finalizar"
-                  style={BUTTON_STYLE.GREEN}
-                  className="float-right"
-                  disabled={!usuarioEhEscolaTerceirizadaDiretor()}
-                  onClick={() => setShowModalFinalizarMedicao(true)}
-                />
-              ) : (
-                <>
+          <div className="mt-4">
+            {renderBotaoFinalizar() ? (
+              <Botao
+                texto="Finalizar"
+                style={BUTTON_STYLE.GREEN}
+                className="float-right"
+                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+                onClick={() => setShowModalFinalizarMedicao(true)}
+              />
+            ) : (
+              <div className="row">
+                <div className="col-12 text-right">
                   {renderBotaoExportarPlanilha() && (
                     <a href={getPathPlanilhaOcorr()}>
                       <Botao
                         texto="Exportar Planilha de Ocorrências"
                         style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right ml-4"
+                        className="mr-3"
                       />
                     </a>
                   )}
                   {renderBotaoExportarPDF() && (
-                    <>
-                      <Botao
-                        texto="Exportar PDF"
-                        style={BUTTON_STYLE.GREEN_OUTLINE}
-                        className="float-right"
-                        onClick={() => gerarPDFMedicaoInicial()}
-                        disabled={ENVIRONMENT === "production"}
-                      />
-                    </>
+                    <Botao
+                      texto="Exportar PDF"
+                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                      className="mr-3"
+                      onClick={() => gerarPDFMedicaoInicial()}
+                      disabled={ENVIRONMENT === "production"}
+                    />
                   )}
-                </>
-              )}
-            </div>
+                  {renderBotaoEnviarCorrecao() && (
+                    <Botao
+                      texto="Enviar Correção"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="mr-3"
+                      onClick={() => setShowModalEnviarCorrecao(true)}
+                      disabled={verificaSeEnviarCorrecaoDisabled()}
+                    />
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <ModalFinalizarMedicao
             showModal={showModalFinalizarMedicao}
@@ -322,6 +394,18 @@ export default ({
           <ModalSolicitacaoDownload
             show={exibirModalCentralDownloads}
             setShow={setExibirModalCentralDownloads}
+          />
+          <ModalPadraoSimNao
+            showModal={showModalEnviarCorrecao}
+            closeModal={() => setShowModalEnviarCorrecao(false)}
+            tituloModal="Enviar Correção para DRE"
+            descricaoModal={
+              <p className="col-12 my-3 p-0">
+                Deseja enviar a correção para DRE?
+              </p>
+            }
+            funcaoSim={escolaEnviaCorrecaoDRE}
+            desabilitaSim={desabilitaSim}
           />
         </>
       )}

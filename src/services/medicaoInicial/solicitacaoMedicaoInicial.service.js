@@ -89,6 +89,15 @@ export const drePedeCorrecaMedicao = async (uuid, params) => {
   }
 };
 
+export const escolaCorrigeMedicao = async (uuid, params) => {
+  const url = `medicao-inicial/medicao/${uuid}/escola-corrige-medicao/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getQuantidadeAlimentacoesLancadasPeriodoGrupo = async params => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/quantidades-alimentacoes-lancadas-periodo-grupo/`;
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
@@ -127,6 +136,15 @@ export const dreAprovaSolicitacaoMedicao = async uuid => {
 
 export const dreSolicitaCorrecaoUE = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/dre-solicita-correcao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const escolaEnviaCorrecaoMedicaoInicialDRE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/escola-corrige-medicao-para-dre/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

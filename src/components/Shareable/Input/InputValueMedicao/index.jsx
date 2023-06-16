@@ -27,12 +27,9 @@ export const InputText = props => {
     toUppercaseActive,
     apenasNumeros,
     exibeTooltipDiaSobremesaDoce,
-    exibeTooltipAlimentacoesAutorizadas,
     exibeTooltipErroQtdMaiorQueAutorizado,
-    exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
-    exibeTooltipFrequenciaDiaNaoLetivo,
     exibeTooltipSuspensoesAutorizadas,
     exibeTooltipRPLAutorizadas,
     exibeTooltipLPRAutorizadas,
@@ -42,7 +39,8 @@ export const InputText = props => {
     exibeTooltipLancheEmergencialSolAlimentacoes,
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
-    ehGrupoETECUrlParam
+    ehGrupoETECUrlParam,
+    ehProgramasEProjetos
   } = props;
 
   let msgTooltip = "";
@@ -65,7 +63,7 @@ export const InputText = props => {
       (input.name.includes("refeicao") ||
         input.name.includes("sobremesa") ||
         input.name.includes("lanche"));
-    if (!ehGrupoETECUrlParam) {
+    if (!ehGrupoETECUrlParam && !ehProgramasEProjetos) {
       validacao =
         validacaoMeta() &&
         (input.name.includes("refeicao") ||
@@ -112,38 +110,10 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-success" />
         </Tooltip>
       )}
-      {exibeTooltipAlimentacoesAutorizadas &&
-        !["Mês anterior", "Mês posterior"].includes(input.value) && (
-          <Tooltip
-            title={
-              "Existe autorização para o Lançamento de Programas e Projetos para o dia. Justifique a ausência do apontamento!"
-            }
-          >
-            <i className="fas fa-info icone-info-warning" />
-          </Tooltip>
-        )}
       {exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() && (
         <Tooltip
           title={
             "Número apontado de alimentações maior do que o autorizado. Justifique na Observação."
-          }
-        >
-          <i className="fas fa-info icone-info-warning" />
-        </Tooltip>
-      )}
-      {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
-        <Tooltip
-          title={
-            "Nenhuma alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
-          }
-        >
-          <i className="fas fa-info icone-info-warning" />
-        </Tooltip>
-      )}
-      {exibeTooltipFrequenciaDiaNaoLetivo && (
-        <Tooltip
-          title={
-            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -179,7 +149,7 @@ export const InputText = props => {
       {exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas && (
         <Tooltip
           title={
-            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -188,7 +158,7 @@ export const InputText = props => {
       {exibeTooltipKitLancheSolAlimentacoes && (
         <Tooltip
           title={
-            "Não há autorização para oferta de Kit Lanche. Justifique na Observação."
+            "Não há autorização para oferta de Kit Lanche. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -197,7 +167,7 @@ export const InputText = props => {
       {exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas && (
         <Tooltip
           title={
-            "Quantidade lançada diferente da autorizada. Justifique na Observação."
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -206,7 +176,7 @@ export const InputText = props => {
       {exibeTooltipLancheEmergencialSolAlimentacoes && (
         <Tooltip
           title={
-            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação."
+            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação para análise de CODAE."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -254,8 +224,6 @@ export const InputText = props => {
         } ${
           !meta.error &&
           (exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-            exibeTooltipFrequenciaDiaNaoLetivo ||
-            exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
             exibeTooltipErroQtdMaiorQueAutorizado ||
             exibeTooltipSuspensoesAutorizadas ||
             exibeTooltipRPLAutorizadas ||
@@ -265,9 +233,7 @@ export const InputText = props => {
             exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
             exibeTooltipLancheEmergencialSolAlimentacoes ||
             exibeTooltipFrequenciaZeroTabelaEtec ||
-            exibeTooltipLancheEmergTabelaEtec ||
-            (exibeTooltipAlimentacoesAutorizadas &&
-              !["Mês anterior", "Mês posterior"].includes(input.value)))
+            exibeTooltipLancheEmergTabelaEtec)
             ? "border-warning"
             : ""
         }`}

@@ -4,11 +4,7 @@ import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import {
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEmpresaTerceirizada
-} from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
@@ -18,12 +14,12 @@ import {
   updateStatusDieta,
   updateTituloDieta,
   updateLoteDieta
-} from "../../reducers/filtersDietaReducer";
+} from "reducers/filtersDietaReducer";
 import {
   updateMarcaProduto,
   updateNomeProduto,
   updateEditalProduto
-} from "../../reducers/filtersProdutoReducer";
+} from "reducers/filtersProdutoReducer";
 import {
   updateDataEventoAlimentacao,
   updateLoteAlimentacao,
@@ -35,8 +31,6 @@ import {
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
-  const ehEscola =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
@@ -155,45 +149,39 @@ const CardBody = props => {
                       </OnChange>
                     </div>
                   </div>
-                  {exibirFiltrosDataEventoETipoSolicitacao &&
-                    pathname === "/painel-gestao-produto" &&
-                    ehTerceirizada && (
-                      <>
-                        <div
-                          className={`${
-                            ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
-                          }`}
-                        >
-                          <Field
-                            component={Select}
-                            name="tipo_solicitacao"
-                            naoDesabilitarPrimeiraOpcao
-                            placeholder="Tipo de Solicitação"
-                            options={TIPOS_SOLICITACOES_OPTIONS}
-                          />
-                        </div>
-                        <OnChange name="tipo_solicitacao">
-                          {tipo => {
-                            props.updateTipoSolicitacaoAlimentacao(tipo);
+                  {exibirFiltrosDataEventoETipoSolicitacao && (
+                    <>
+                      <div className={"col-3 pl-0"}>
+                        <Field
+                          component={Select}
+                          name="tipo_solicitacao"
+                          naoDesabilitarPrimeiraOpcao
+                          placeholder="Tipo de Solicitação"
+                          options={TIPOS_SOLICITACOES_OPTIONS}
+                        />
+                      </div>
+                      <OnChange name="tipo_solicitacao">
+                        {tipo => {
+                          props.updateTipoSolicitacaoAlimentacao(tipo);
+                          props.onChange(values);
+                        }}
+                      </OnChange>
+                      <div className="col-3 pl-0">
+                        <Field
+                          name="data_evento"
+                          minDate={null}
+                          component={InputComData}
+                          placeholder="Data do evento"
+                        />
+                        <OnChange name="data_evento">
+                          {data => {
+                            props.updateDataEventoAlimentacao(data);
                             props.onChange(values);
                           }}
                         </OnChange>
-                        <div className="col-3 pl-0">
-                          <Field
-                            name="data_evento"
-                            minDate={null}
-                            component={InputComData}
-                            placeholder="Data do evento"
-                          />
-                          <OnChange name="data_evento">
-                            {data => {
-                              props.updateDataEventoAlimentacao(data);
-                              props.onChange(values);
-                            }}
-                          </OnChange>
-                        </div>
-                      </>
-                    )}
+                      </div>
+                    </>
+                  )}
                   {ehDashboardGestaoProduto && (
                     <div
                       className={`${
