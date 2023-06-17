@@ -42,6 +42,7 @@ export default ({
     }
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const { Option } = Select;
   const { Panel } = Collapse;
 
@@ -67,6 +68,12 @@ export default ({
 
   useEffect(() => {
     getDefaultValueSelectTipoContagem();
+  }, []);
+
+  useEffect(() => {
+    if (solicitacaoMedicaoInicial) {
+      setIsOpen(false);
+    }
   }, [solicitacaoMedicaoInicial]);
 
   const opcoesContagem = tiposDeContagem
@@ -231,8 +238,8 @@ export default ({
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
-          <Collapse expandIconPosition="end">
-            <Panel header="Informações Básicas da Medição Inicial">
+          <Collapse expandIconPosition="end" activeKey={isOpen ? ["1"] : []}>
+            <Panel header="Informações Básicas da Medição Inicial" key="1">
               <div className="row">
                 <div className="col-5 info-label select-medicao-inicial">
                   <b className="mb-2">
