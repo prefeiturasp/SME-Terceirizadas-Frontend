@@ -882,8 +882,8 @@ export const exibirGA = () => {
           [
             `"Anga"`,
             `"ANGA"`,
-            `"CONVIDA"`,
-            `"Convida"`,
+            `"VERDE MAIS"`,
+            `"Verde Mais"`,
             `"Apetece"`,
             `"APETECE"`
           ].includes(localStorage.getItem("nome_instituicao")) ||
