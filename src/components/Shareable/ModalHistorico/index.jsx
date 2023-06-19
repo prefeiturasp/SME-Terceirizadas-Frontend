@@ -4,7 +4,7 @@ import { truncarString, usuarioEhCogestorDRE } from "helpers/utilities";
 
 import "./styles.scss";
 import {
-  documentoAnaliseSensorialPDF,
+  documentoAnaliseSensorial,
   medicaoInicialExportarOcorrenciasPDF
 } from "services/relatorios";
 import { BUTTON_STYLE } from "../Botao/constants";
@@ -69,16 +69,45 @@ const ModalHistorico = ({
     return iniciais;
   };
 
-  const getPdfUrl = log => {
-    let urlArquivoPDF = "";
+  // const getPdfUrl = log => {
+  //   let urlArquivoPDF = "";
+  //   if (statusValidosDownload.includes(log.status_evento_explicacao)) {
+  //     log.anexos.forEach(anexo => {
+  //       if (anexo.nome.includes("pdf")) {
+  //         urlArquivoPDF = anexo.arquivo_url;
+  //       }
+  //     });
+  //   }
+  //   return urlArquivoPDF;
+  // };
+
+  const getArquivoUrl = log => {
+    let urlArquivo = "";
+
     if (statusValidosDownload.includes(log.status_evento_explicacao)) {
-      log.anexos.forEach(anexo => {
-        if (anexo.nome.includes("pdf")) {
-          urlArquivoPDF = anexo.arquivo_url;
+      const tipoSolicitacao = log.tipo_solicitacao_explicacao;
+
+      switch (tipoSolicitacao) {
+        case "Solicitação de medição inicial": {
+          const anexoPDF = log.anexos.find(anexo => anexo.nome.includes("pdf"));
+          if (anexoPDF) {
+            urlArquivo = anexoPDF.arquivo_url;
+          }
+          break;
         }
-      });
+
+        case "Homologação de Produto":
+          if (log.anexos.length > 0) {
+            urlArquivo = log.anexos[0].arquivo_url;
+          }
+          break;
+
+        default:
+          break;
+      }
     }
-    return urlArquivoPDF;
+
+    return urlArquivo;
   };
 
   const getTitulo = log => {
@@ -233,8 +262,8 @@ const ModalHistorico = ({
                         style={BUTTON_STYLE.GREEN}
                         texto="Download do documento de entrega"
                         onClick={() => {
-                          const urlArquivoPDF = getPdfUrl(logSelecionado);
-                          documentoAnaliseSensorialPDF(urlArquivoPDF);
+                          const urlArquivoPDF = getArquivoUrl(logSelecionado);
+                          documentoAnaliseSensorial(urlArquivoPDF);
                         }}
                       />
                     ) : (
@@ -243,7 +272,7 @@ const ModalHistorico = ({
                         style={BUTTON_STYLE.GREEN}
                         texto="Download do formulário"
                         onClick={() => {
-                          const urlArquivoPDF = getPdfUrl(logSelecionado);
+                          const urlArquivoPDF = getArquivoUrl(logSelecionado);
                           medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
                         }}
                       />
