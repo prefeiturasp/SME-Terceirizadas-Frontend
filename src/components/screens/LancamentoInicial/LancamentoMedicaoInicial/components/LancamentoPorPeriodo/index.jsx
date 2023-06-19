@@ -164,7 +164,7 @@ export default ({
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
     getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
-  }, [periodoSelecionado]);
+  }, [periodoSelecionado, solicitacaoMedicaoInicial]);
 
   const getPathPlanilhaOcorr = () => {
     if (objSolicitacaoMIFinalizada.anexo)
