@@ -6,7 +6,8 @@ const ListagemSolicitacoes = ({
   guias,
   vincularGuia,
   guiasVinculadas,
-  desvincularGuia
+  desvincularGuia,
+  buscarDetalheGuia
 }) => {
   const guiaVinculada = guia =>
     guiasVinculadas.map(guia => guia.numero_guia).includes(guia.numero_guia);
@@ -36,7 +37,10 @@ const ListagemSolicitacoes = ({
                 <div>{guia.data_entrega}</div>
                 <div>{guia.status}</div>
                 <div className="opcoes-entregas">
-                  <span className="link-acoes px-2">
+                  <span
+                    className="link-acoes px-2"
+                    onClick={() => buscarDetalheGuia(guia)}
+                  >
                     <i className="fas fa-eye green" />
                   </span>
                   {guiaVinculada(guia) ? (
