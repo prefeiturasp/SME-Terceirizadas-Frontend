@@ -6,9 +6,10 @@ import { useEffect } from "react";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   criarNotificacao,
+  getGuiaDetalhe,
   getGuiasNaoNotificadas
 } from "services/logistica.service";
-import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalDesvincular from "./components/ModalDesvincular";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,6 +19,7 @@ import {
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import "./styles.scss";
+import ModalDetalharGuia from "./components/ModalDetalharGuia";
 
 export default () => {
   const history = useHistory();
@@ -30,6 +32,7 @@ export default () => {
   const [guiasVinculadas, setGuiasVinculadas] = useState([]);
   const [showVinculadas, setShowVinculadas] = useState(false);
   const [empresa, setEmpresa] = useState(null);
+  const [guiaModal, setGuiaModal] = useState();
 
   useEffect(() => {
     if (filtros) {
@@ -80,6 +83,19 @@ export default () => {
     setModal(false);
   };
 
+  const buscarDetalheGuia = async guia => {
+    let response;
+    try {
+      setCarregando(true);
+      response = await getGuiaDetalhe(guia.uuid);
+      setGuiaModal(response.data);
+      setCarregando(false);
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
+  };
+
   const salvarNotificacao = async () => {
     const payload = {
       empresa,
@@ -92,8 +108,37 @@ export default () => {
     }
   };
 
+  const botaoAcao = guia => {
+    if (guiasVinculadas.includes(guia)) {
+      return (
+        <Botao
+          texto="Excluir Vínculo"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => setModal(guia)}
+        />
+      );
+    } else {
+      return (
+        <Botao
+          texto="Vincular Guia"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => vincularGuia(guia)}
+        />
+      );
+    }
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalDetalharGuia
+        guia={guiaModal}
+        handleClose={() => setGuiaModal(false)}
+        botaoAcao={botaoAcao}
+      />
       <ModalDesvincular
         guia={modal}
         handleClose={() => setModal(false)}
@@ -117,6 +162,7 @@ export default () => {
                 desvincularGuia={guia => {
                   setModal(guia);
                 }}
+                buscarDetalheGuia={buscarDetalheGuia}
               />
               <div className="row">
                 <div className="col-12 pb-3">
