@@ -53,7 +53,6 @@ export default ({ guia }) => {
             "Cancelada"
           ].includes(guia.status) && (
             <>
-              <hr />
               <div className="titulo-secao">
                 Alimentos pendentes de conferência:
               </div>

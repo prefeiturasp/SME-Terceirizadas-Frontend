@@ -155,6 +155,7 @@ export default () => {
                     />
                   </div>
                 </div>
+                <hr />
 
                 <DetalheGuiaRemessa guia={guia} />
 
