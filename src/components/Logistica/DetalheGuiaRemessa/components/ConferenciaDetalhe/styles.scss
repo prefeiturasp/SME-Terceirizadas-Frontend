@@ -71,7 +71,11 @@
       font-size: 16px;
     }
 
-    .titulo-recebimento,
+    .titulo-recebimento {
+      color: $green;
+      font-weight: bold;
+    }
+
     .dado-conferencia {
       font-weight: bold;
     }

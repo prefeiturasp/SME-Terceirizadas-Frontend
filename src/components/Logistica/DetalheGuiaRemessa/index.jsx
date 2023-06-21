@@ -73,14 +73,18 @@ export default ({ guia }) => {
 
         {conferencia && (
           <>
-            <ConferenciaDetalhe conferencia={conferencia} />
+            <ConferenciaDetalhe conferencia={conferencia} guia={guia} />
           </>
         )}
 
         {reposicao && (
           <>
             <hr />
-            <ConferenciaDetalhe conferencia={reposicao} reposicaoFlag={true} />
+            <ConferenciaDetalhe
+              conferencia={reposicao}
+              reposicaoFlag={true}
+              guia={guia}
+            />
           </>
         )}
       </div>
