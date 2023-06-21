@@ -109,7 +109,7 @@ export default () => {
   };
 
   const botaoAcao = guia => {
-    if (guiasVinculadas.includes(guia)) {
+    if (guia && guiasVinculadas.find(g => g.uuid === guia.uuid)) {
       return (
         <Botao
           texto="Excluir Vínculo"
@@ -126,7 +126,10 @@ export default () => {
           type={BUTTON_TYPE.BUTTON}
           style={BUTTON_STYLE.GREEN}
           className="ml-3"
-          onClick={() => vincularGuia(guia)}
+          onClick={() => {
+            setGuiaModal(false);
+            vincularGuia(guia);
+          }}
         />
       );
     }
