@@ -854,7 +854,7 @@ export const retornaDuplicadasArray = arr =>
   arr.filter((item, index) => arr.indexOf(item) !== index);
 
 export const exibirGA = () => {
-  if (!["development"].includes(ENVIRONMENT)) return true;
+  if (!["production"].includes(ENVIRONMENT)) return true;
 
   const dresPermitidas = [
     "CAPELA DO SOCORRO",
@@ -867,7 +867,7 @@ export const exibirGA = () => {
     "JACANA/TREMEMBE"
   ];
 
-  if (["development"].includes(ENVIRONMENT)) {
+  if (["production"].includes(ENVIRONMENT)) {
     switch (localStorage.getItem("tipo_perfil")) {
       case `"diretoriaregional"`:
         return dresPermitidas.some(dre =>
