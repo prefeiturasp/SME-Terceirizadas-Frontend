@@ -5,6 +5,12 @@ export const InclusaoBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
+  const ehDiaCancelado = inclusao => {
+    return inclusao.cancelado || solicitacao.status === "ESCOLA_CANCELOU"
+      ? "dia-cancelado"
+      : "";
+  };
+
   return [
     <tr className="table-body-items" key={index}>
       <td>
@@ -59,12 +65,16 @@ export const InclusaoBody = ({ ...props }) => {
                   )}
                   <div className="col-3">
                     <p>
-                      <b>{inclusao.motivo.nome}</b>
+                      <b className={`${ehDiaCancelado(inclusao)}`}>
+                        {inclusao.motivo.nome}
+                      </b>
                     </p>
                   </div>
                   <div className="col-3">
                     <p>
-                      <b>{inclusao.data}</b>
+                      <b className={`${ehDiaCancelado(inclusao)}`}>
+                        {inclusao.data}
+                      </b>
                     </p>
                   </div>
                   {idx === 0 ? (
@@ -114,6 +124,27 @@ export const InclusaoBody = ({ ...props }) => {
                 </div>
               );
             })}
+            {solicitacao.inclusoes.find(
+              inclusao => inclusao.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.inclusoes
+                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .map((inclusao, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {inclusao.data}
+                          {" - "}
+                          justificativa: {inclusao.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
+            )}
           </div>
         </td>
       </tr>
