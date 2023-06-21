@@ -60,19 +60,19 @@ export default ({ guia }) => {
                 className="table-sm tabela-conferencia-guia"
                 alimentosConsolidado={guia.alimentos}
               />
+              <hr />
             </>
           )}
 
         {guia && guia.insucessos && guia.insucessos[0] && (
           <>
-            <hr />
             <InsucessoDetalhe insucesso={guia.insucessos[0]} />
+            {conferencia && <hr />}
           </>
         )}
 
         {conferencia && (
           <>
-            <hr />
             <ConferenciaDetalhe conferencia={conferencia} />
           </>
         )}
