@@ -33,3 +33,27 @@
     }
   }
 }
+
+.cancelado {
+  .weekly {
+    .week-circle {
+      text-decoration: line-through;
+    }
+
+    .week-circle-clicked.green {
+      background-color: $gray;
+      text-decoration: line-through;
+    }
+  }
+
+  .nome-periodo-escolar-relatorio-sol-alim,
+  .tipos-alimentacao-relatorio-sol-alim,
+  .numero-alunos-relatorio-sol-alim,
+  .observacao-relatorio-sol-alim {
+    p {
+      color: $grayLight;
+      font-weight: bold;
+      text-decoration: line-through;
+    }
+  }
+}
