@@ -81,6 +81,7 @@ export default () => {
     );
     toastSuccess("Guia desvinculada com sucesso!");
     setModal(false);
+    setGuiaModal(false);
   };
 
   const buscarDetalheGuia = async guia => {
