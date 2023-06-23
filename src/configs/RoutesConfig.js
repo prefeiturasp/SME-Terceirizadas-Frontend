@@ -230,6 +230,7 @@ import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitac
 import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
 import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
 import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
+import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
 
 const routesConfig = [
   {
@@ -1670,6 +1671,12 @@ const routesConfig = [
   {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
     component: CadastroNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.EDITAR_NOTIFICACAO}`,
+    component: EditarNotificacaoPage,
     exact: true,
     tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
   },
