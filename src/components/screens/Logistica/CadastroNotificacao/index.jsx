@@ -51,12 +51,16 @@ export default () => {
     setCarregando(true);
 
     if (!showVinculadas) {
-      const params = gerarParametrosConsulta({
+      const params = {
         page: page,
-        ...filtros,
-        notificacao_uuid: notificacao && notificacao.uuid
-      });
-      const response = await getGuiasNaoNotificadas(params);
+        ...filtros
+      };
+      if (notificacao) {
+        params["notificacao_uuid"] = notificacao.uuid;
+      }
+      const response = await getGuiasNaoNotificadas(
+        gerarParametrosConsulta(params)
+      );
       if (response.data.count) {
         setGuias(response.data.results);
         setTotal(response.data.count);
