@@ -73,6 +73,7 @@ export default () => {
             status={status}
             setCarregando={setCarregando}
             setTotal={setTotal}
+            filtros={filtros}
             setFiltros={setFiltros}
             setPage={setPage}
             editais={editais}
