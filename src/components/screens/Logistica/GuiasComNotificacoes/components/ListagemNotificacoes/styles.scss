@@ -1,0 +1,101 @@
+@import "styles/variables.scss";
+
+.resultado-guias-notificacoes {
+  margin-top: 10px;
+
+  .titulo-verde {
+    color: #0c6b45;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  article {
+    border-radius: 4px 4px 0px 0px;
+    border: 1px solid #e9eaea;
+    box-sizing: border-box;
+    margin: 10px 0 15px 0;
+
+    .grid-table {
+      height: 40px;
+      font-size: 14px;
+      line-height: 16px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      display: grid;
+<<<<<<< Updated upstream:src/components/screens/Logistica/GuiasComNotificacoes/components/ListagemGuias/styles.scss
+      grid-template-columns: 0.5fr 0.9fr 0.8fr 0.6fr 0.3fr;
+=======
+      grid-template-columns: 0.5fr 1.2fr 0.8fr 0.6fr 0.3fr;
+>>>>>>> Stashed changes:src/components/screens/Logistica/GuiasComNotificacoes/components/ListagemNotificacoes/styles.scss
+    }
+
+    .header-table {
+      background: #f5f6f8;
+      color: #42474a;
+      font-weight: bold;
+      div {
+        text-align: left;
+        display: grid;
+        align-items: center;
+        height: 100%;
+        padding-left: 8px;
+        border-right: 1px solid #e9eaea;
+
+        &:last-child {
+          border-right: 0px solid #e9eaea;
+        }
+      }
+    }
+
+    .body-table {
+      font-weight: 500;
+      color: #686868;
+
+      i.verde {
+        cursor: pointer;
+        color: $green;
+      }
+
+      .link-acoes {
+        cursor: pointer;
+        text-decoration: underline;
+        padding-right: 4px;
+        a {
+          color: #686868;
+        }
+
+        .fas {
+          text-decoration: none;
+          font-size: 16px;
+          padding-right: 4px;
+          padding-left: 4px;
+        }
+      }
+
+      .green {
+        color: $green;
+      }
+
+      .red {
+        color: $red;
+      }
+
+      div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e9eaea;
+        text-align: left;
+        padding-left: 8px;
+        border-right: 1px solid #e9eaea;
+      }
+
+      div:last-child {
+        border-right: 0px solid #e9eaea;
+      }
+    }
+  }
+}

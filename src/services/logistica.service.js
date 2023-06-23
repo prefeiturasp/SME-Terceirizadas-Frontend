@@ -211,3 +211,8 @@ export const getNotificacoesOcorrenciaByUuid = async uuid => {
   const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
   return await axios.get(url);
 };
+
+export const getNotificacao = async uuid => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
+  return await axios.get(url);
+};
