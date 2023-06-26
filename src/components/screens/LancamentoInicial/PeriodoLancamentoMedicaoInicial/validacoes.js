@@ -571,8 +571,8 @@ export const validacoesTabelaAlimentacao = (
     [NaN].includes(maxFrequencia) &&
     (inputName.includes("refeicao") ||
       inputName.includes("sobremesa") ||
-      inputName.includes("lanche")) &&
-    !inputName.includes("repeticao") &&
+      inputName.includes("lanche") ||
+      inputName.includes("repeticao")) &&
     !inputName.includes("emergencial") &&
     !(inputName in dadosValoresInclusoesAutorizadasState)
   ) {
@@ -829,7 +829,6 @@ export const exibirTooltipSuspensoesAutorizadas = (
 };
 
 export const exibirTooltipRPLAutorizadas = (
-  //
   formValuesAtualizados,
   row,
   column,
@@ -1027,5 +1026,35 @@ export const exibirTooltipLancheEmergTabelaEtec = (
     inclusoesEtecAutorizadas
       .filter(inc => inc.dia === column.dia)[0]
       .alimentacoes.includes("lanche_emergencial")
+  );
+};
+
+export const exibirTooltipRepeticao = (
+  formValuesAtualizados,
+  row,
+  column,
+  categoria
+) => {
+  const value =
+    formValuesAtualizados[
+      `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const maxRefeicao =
+    formValuesAtualizados[
+      `refeicao__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+  const maxSobremesa =
+    formValuesAtualizados[
+      `sobremesa__dia_${column.dia}__categoria_${categoria.id}`
+    ];
+
+  return (
+    value &&
+    Number(value) > 0 &&
+    !["Mês anterior", "Mês posterior"].includes(value) &&
+    ((row.name.includes("repeticao_refeicao") &&
+      (!maxRefeicao || (Number(maxRefeicao) && value > maxRefeicao))) ||
+      (row.name.includes("repeticao_sobremesa") &&
+        (!maxSobremesa || (Number(maxSobremesa) && value > maxSobremesa))))
   );
 };
