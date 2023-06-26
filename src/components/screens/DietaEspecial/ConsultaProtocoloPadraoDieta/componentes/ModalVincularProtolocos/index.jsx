@@ -22,8 +22,7 @@ export const ModalVincularProtocolos = ({
   closeModal,
   showModal,
   editais,
-  buscar,
-  filtros
+  buscar
 }) => {
   const [protocolosPadrao, setProtocolosPadrao] = useState([]);
 
@@ -45,7 +44,7 @@ export const ModalVincularProtocolos = ({
       const response = await vincularProtocolosEditais(values);
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Protocolos Padrão vinculados com sucesso!");
-        buscar(filtros);
+        buscar();
         closeModal(false);
       }
     } catch (e) {

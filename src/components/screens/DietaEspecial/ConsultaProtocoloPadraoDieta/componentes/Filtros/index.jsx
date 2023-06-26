@@ -23,7 +23,8 @@ export default ({
   filtros,
   setFiltros,
   setPage,
-  editais
+  editais,
+  onChangePage
 }) => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
@@ -168,7 +169,7 @@ export default ({
             showModal={showModal}
             closeModal={value => setShowModal(value)}
             editais={editais}
-            buscar={values => onSubmit(values)}
+            buscar={() => onChangePage()}
             filtros={filtros}
           />
         </form>
