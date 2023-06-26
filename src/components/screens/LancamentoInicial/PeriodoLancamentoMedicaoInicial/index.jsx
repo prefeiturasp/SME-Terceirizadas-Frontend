@@ -52,6 +52,7 @@ import {
   exibirTooltipLancheEmergencialSolAlimentacoes,
   exibirTooltipFrequenciaZeroTabelaEtec,
   exibirTooltipLancheEmergTabelaEtec,
+  exibirTooltipRepeticao,
   validacoesTabelaAlimentacao,
   validacoesTabelasDietas,
   validarFormulario,
@@ -267,7 +268,7 @@ export default () => {
       if (indexRefeicao !== -1) {
         tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
         tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
-          nome: "Repet. Refeição",
+          nome: "Repetição Refeição",
           name: "repeticao_refeicao",
           uuid: null
         });
@@ -277,9 +278,9 @@ export default () => {
         ali => ali.nome === "Sobremesa"
       );
       if (indexSobremesa !== -1) {
-        tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1ª Ofe.";
+        tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
         tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
-          nome: "Repet. Sobremesa",
+          nome: "Repetição Sobremesa",
           name: "repeticao_sobremesa",
           uuid: null
         });
@@ -397,7 +398,7 @@ export default () => {
       const rowsSolicitacoesAlimentacao = [];
       rowsSolicitacoesAlimentacao.push(
         {
-          nome: "Lanche Emergenc.",
+          nome: "Lanche Emergencial",
           name: "lanche_emergencial",
           uuid: null
         },
@@ -438,7 +439,7 @@ export default () => {
         tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
           "Refeição 1ª Oferta";
         tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
-          nome: "Repet. Refeição",
+          nome: "Repetição Refeição",
           name: "repeticao_refeicao",
           uuid: null
         });
@@ -449,9 +450,9 @@ export default () => {
       );
       if (indexSobremesaEtec !== -1) {
         tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
-          "Sobremesa 1ª Ofe.";
+          "Sobremesa 1º Oferta";
         tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
-          nome: "Repet. Sobremesa",
+          nome: "Repetição Sobremesa",
           name: "repeticao_sobremesa",
           uuid: null
         });
@@ -462,7 +463,7 @@ export default () => {
       );
       if (indexLancheEmergencialEtec !== -1) {
         tiposAlimentacaoEtecFormatadas[indexLancheEmergencialEtec].nome =
-          "Lanche Emergenc.";
+          "Lanche Emergencial";
       }
 
       tiposAlimentacaoEtecFormatadas.unshift(
@@ -522,6 +523,7 @@ export default () => {
           }
         );
         if (response_log_dietas_autorizadas.data.length) {
+          let categoriasDietasParaDeletar = [];
           for (const categoria of response_categorias_medicao) {
             if (
               categoria.nome === "DIETA ESPECIAL - TIPO A" &&
@@ -534,10 +536,7 @@ export default () => {
                     Number(dieta.quantidade) !== 0
                 ).length)
             ) {
-              const categoriaIndex = response_categorias_medicao.findIndex(
-                categoria => categoria.nome === "DIETA ESPECIAL - TIPO A"
-              );
-              response_categorias_medicao.splice(categoriaIndex, 1);
+              categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO A");
             } else if (
               categoria.nome.includes("ENTERAL") &&
               (!response_log_dietas_autorizadas.data.filter(dieta =>
@@ -560,10 +559,9 @@ export default () => {
                       Number(dieta.quantidade) !== 0
                   ).length))
             ) {
-              const categoriaIndex = response_categorias_medicao.findIndex(
-                categoria => categoria.nome.includes("ENTERAL")
+              categoriasDietasParaDeletar.push(
+                "DIETA ESPECIAL - TIPO A - ENTERAL / RESTRIÇÃO DE AMINOÁCIDOS"
               );
-              response_categorias_medicao.splice(categoriaIndex, 1);
             } else if (
               categoria.nome.includes("TIPO B") &&
               (!response_log_dietas_autorizadas.data.filter(dieta =>
@@ -575,12 +573,14 @@ export default () => {
                     Number(dieta.quantidade) !== 0
                 ).length)
             ) {
-              const categoriaIndex = response_categorias_medicao.findIndex(
-                categoria => categoria.nome.includes("TIPO B")
-              );
-              response_categorias_medicao.splice(categoriaIndex, 1);
+              categoriasDietasParaDeletar.push("DIETA ESPECIAL - TIPO B");
             }
           }
+          response_categorias_medicao = response_categorias_medicao.filter(
+            categoria => {
+              return !categoriasDietasParaDeletar.includes(categoria.nome);
+            }
+          );
         } else {
           response_categorias_medicao = response_categorias_medicao.filter(
             categoria => {
@@ -1792,6 +1792,34 @@ export default () => {
                           disabled={true}
                         />
                       </div>
+                      <div className="col-5">
+                        <div className="legenda-tooltips">
+                          <div>
+                            <b className="pb-2">Legenda das Informações:</b>
+                          </div>
+                          <div>
+                            <i className="fas fa-info icone-legenda-error" />
+                            <p>
+                              Há erros no lançamento. Corrija para conseguir
+                              salvar.
+                            </p>
+                          </div>
+                          <div>
+                            <i className="fas fa-info icone-legenda-warning" />
+                            <p>
+                              Há divergências no lançamento. Adicione uma
+                              observação.
+                            </p>
+                          </div>
+                          <div>
+                            <i className="fas fa-info icone-legenda-success" />
+                            <p>
+                              Atenção! Verifique se está correto e prossiga os
+                              apontamentos.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     {location.state && location.state.justificativa_periodo && (
                       <div className="row py-2">
@@ -1807,7 +1835,7 @@ export default () => {
                         </div>
                       </div>
                     )}
-                    <div className="row pb-2 pt-4">
+                    <div className="row pb-2 pt-4 title-semanas">
                       <div className="col">
                         <b className="section-title">
                           Semanas do Período para Lançamento da Medição Inicial
@@ -1938,7 +1966,37 @@ export default () => {
                                                           column,
                                                           dadosValoresInclusoesAutorizadasState
                                                         )
-                                                          ? BUTTON_STYLE.RED_OUTLINE
+                                                          ? textoBotaoObservacao(
+                                                              formValuesAtualizados[
+                                                                `${
+                                                                  row.name
+                                                                }__dia_${
+                                                                  column.dia
+                                                                }__categoria_${
+                                                                  categoria.id
+                                                                }`
+                                                              ],
+                                                              valoresObservacoes,
+                                                              column.dia,
+                                                              categoria.id
+                                                            ) === "Visualizar"
+                                                            ? BUTTON_STYLE.RED
+                                                            : BUTTON_STYLE.RED_OUTLINE
+                                                          : textoBotaoObservacao(
+                                                              formValuesAtualizados[
+                                                                `${
+                                                                  row.name
+                                                                }__dia_${
+                                                                  column.dia
+                                                                }__categoria_${
+                                                                  categoria.id
+                                                                }`
+                                                              ],
+                                                              valoresObservacoes,
+                                                              column.dia,
+                                                              categoria.id
+                                                            ) === "Visualizar"
+                                                          ? BUTTON_STYLE.GREEN
                                                           : BUTTON_STYLE.GREEN_OUTLINE_WHITE
                                                       }
                                                       onClick={() =>
@@ -2101,7 +2159,37 @@ export default () => {
                                                             ehGrupoETECUrlParam,
                                                             feriadosNoMes
                                                           )
-                                                            ? BUTTON_STYLE.RED_OUTLINE
+                                                            ? textoBotaoObservacao(
+                                                                formValuesAtualizados[
+                                                                  `${
+                                                                    row.name
+                                                                  }__dia_${
+                                                                    column.dia
+                                                                  }__categoria_${
+                                                                    categoria.id
+                                                                  }`
+                                                                ],
+                                                                valoresObservacoes,
+                                                                column.dia,
+                                                                categoria.id
+                                                              ) === "Visualizar"
+                                                              ? BUTTON_STYLE.RED
+                                                              : BUTTON_STYLE.RED_OUTLINE
+                                                            : textoBotaoObservacao(
+                                                                formValuesAtualizados[
+                                                                  `${
+                                                                    row.name
+                                                                  }__dia_${
+                                                                    column.dia
+                                                                  }__categoria_${
+                                                                    categoria.id
+                                                                  }`
+                                                                ],
+                                                                valoresObservacoes,
+                                                                column.dia,
+                                                                categoria.id
+                                                              ) === "Visualizar"
+                                                            ? BUTTON_STYLE.GREEN
                                                             : BUTTON_STYLE.GREEN_OUTLINE_WHITE
                                                         }
                                                         onClick={() =>
@@ -2168,6 +2256,12 @@ export default () => {
                                                               )}-${column.dia}`
                                                           )
                                                         }
+                                                        exibeTooltipRepeticao={exibirTooltipRepeticao(
+                                                          formValuesAtualizados,
+                                                          row,
+                                                          column,
+                                                          categoria
+                                                        )}
                                                         exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo={
                                                           `${row.name}__dia_${
                                                             column.dia

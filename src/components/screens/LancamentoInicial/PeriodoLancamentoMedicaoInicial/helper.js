@@ -516,7 +516,7 @@ export const formatarLinhasTabelaAlimentacao = (
   if (indexRefeicao !== -1) {
     tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
     tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
-      nome: "Repet. Refeição",
+      nome: "Repetição Refeição",
       name: "repeticao_refeicao",
       uuid: null
     });
@@ -526,9 +526,9 @@ export const formatarLinhasTabelaAlimentacao = (
     ali => ali.nome === "Sobremesa"
   );
   if (indexSobremesa !== -1) {
-    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1ª Ofe.";
+    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
     tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
-      nome: "Repet. Sobremesa",
+      nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
       uuid: null
     });
@@ -635,7 +635,7 @@ export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
   const linhasTabelaSolicitacoesAlimentacao = [];
   linhasTabelaSolicitacoesAlimentacao.push(
     {
-      nome: "Lanche Emergenc.",
+      nome: "Lanche Emergencial",
       name: "lanche_emergencial",
       uuid: null
     },
@@ -677,7 +677,7 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
     tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
       "Refeição 1ª Oferta";
     tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
-      nome: "Repet. Refeição",
+      nome: "Repetição Refeição",
       name: "repeticao_refeicao",
       uuid: null
     });
@@ -688,9 +688,9 @@ export const formatarLinhasTabelaEtecAlimentacao = () => {
   );
   if (indexSobremesaEtec !== -1) {
     tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
-      "Sobremesa 1ª Ofe.";
+      "Sobremesa 1º Oferta";
     tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
-      nome: "Repet. Sobremesa",
+      nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
       uuid: null
     });
