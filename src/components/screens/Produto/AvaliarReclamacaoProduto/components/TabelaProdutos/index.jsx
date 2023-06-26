@@ -49,6 +49,7 @@ export default class TabelaProdutos extends Component {
       uuidReclamacao: undefined,
       acao: undefined,
       mostraModalJustificativa: false,
+      mostraModalSuspensao: false,
       showModalAnalise: false,
       tipo_resposta: undefined,
       protocoloAnalise: null,
@@ -187,8 +188,16 @@ export default class TabelaProdutos extends Component {
     });
   };
 
+  abreModalSuspensao = () => {
+    this.setState({ mostraModalSuspensao: true });
+  };
+
   fechaModalJustificativa = () => {
     this.setState({ mostraModalJustificativa: false });
+  };
+
+  fechaModalSuspensao = () => {
+    this.setState({ mostraModalSuspensao: false });
   };
 
   abreModalAnalise = async uuidReclamacao => {
@@ -204,13 +213,14 @@ export default class TabelaProdutos extends Component {
     this.setState({ showModalAnalise: false });
   };
 
-  onModalJustificativaSubmit = async formValues => {
+  onModalJustificativaOuSuspensaoSubmit = async formValues => {
     const { uuidReclamacao } = this.state;
     const endpoint = this.defineEndpoint();
     const response = await endpoint(uuidReclamacao, formValues);
     if (response.status === 200) {
       this.props.atualizar();
       this.fechaModalJustificativa();
+      this.fechaModalSuspensao();
       this.mostraToastSucesso();
     } else {
       toastError(response.errors);
@@ -227,6 +237,7 @@ export default class TabelaProdutos extends Component {
     } = this.props;
     const {
       mostraModalJustificativa,
+      mostraModalSuspensao,
       showModalAnalise,
       protocoloAnalise,
       escola,
@@ -448,12 +459,17 @@ export default class TabelaProdutos extends Component {
           titulo={this.defineTitulo()}
           labelJustificativa={this.defineLabelJustificativa()}
           showModal={mostraModalJustificativa}
+          showModalSuspensao={mostraModalSuspensao}
+          abreModalSuspensao={this.abreModalSuspensao}
           closeModal={this.fechaModalJustificativa}
-          onSubmit={this.onModalJustificativaSubmit}
+          closeModalSuspensao={this.fechaModalSuspensao}
+          onSubmit={this.onModalJustificativaOuSuspensaoSubmit}
           state={this.state}
           comAnexo={this.state.acao === this.RESPONDER}
           terceirizada={terceirizada}
           escola={escola}
+          produto={this.state.produto}
+          uuidReclamacao={this.state.uuidReclamacao}
         />
         <ModalPadrao
           showModal={showModalAnalise}
