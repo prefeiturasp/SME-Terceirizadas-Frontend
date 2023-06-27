@@ -76,6 +76,15 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     }
   };
 
+  findOutrasInformacoes = history => {
+    if (history !== undefined && history.changes) {
+      const field = history.changes.find(change => {
+        return ["outras informacoes"].includes(change.field);
+      });
+      return field;
+    }
+  };
+
   ajusta_nome = campo => {
     if (campo === "nome_protocolo") {
       return "Nome Protocolo";
@@ -446,7 +455,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                         </table>
                       )}
                     {histSelecionado !== undefined &&
-                      this.findEditais(histSelecionado) !== undefined && (
+                      (this.findEditais(histSelecionado) !== undefined ||
+                        this.findOutrasInformacoes(histSelecionado) !==
+                          undefined) && (
                         <table className="table table-bordered table-alimentacao">
                           <tbody>
                             <tr className="table-body-alimentacao">
@@ -464,35 +475,71 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr className="table-body-alimentacao">
-                                      <td>Editais</td>
-                                      <td>
-                                        <ul>
-                                          {this.findEditais(histSelecionado)
-                                            .from &&
-                                            this.findEditais(
-                                              histSelecionado
-                                            ).from.map((edital, idx) => {
-                                              return (
-                                                <li key={idx}>{edital}</li>
-                                              );
-                                            })}
-                                        </ul>
-                                      </td>
-                                      <td>
-                                        <ul>
-                                          {this.findEditais(histSelecionado)
-                                            .to &&
-                                            this.findEditais(
-                                              histSelecionado
-                                            ).to.map((edital, idx) => {
-                                              return (
-                                                <li key={idx}>{edital}</li>
-                                              );
-                                            })}
-                                        </ul>
-                                      </td>
-                                    </tr>
+                                    {this.findEditais(histSelecionado) !==
+                                      undefined && (
+                                      <tr className="table-body-alimentacao">
+                                        <td>Editais</td>
+                                        <td>
+                                          <ul>
+                                            {this.findEditais(histSelecionado)
+                                              .from &&
+                                              this.findEditais(
+                                                histSelecionado
+                                              ).from.map((edital, idx) => {
+                                                return (
+                                                  <li key={idx}>{edital}</li>
+                                                );
+                                              })}
+                                          </ul>
+                                        </td>
+                                        <td>
+                                          <ul>
+                                            {this.findEditais(histSelecionado)
+                                              .to &&
+                                              this.findEditais(
+                                                histSelecionado
+                                              ).to.map((edital, idx) => {
+                                                return (
+                                                  <li key={idx}>{edital}</li>
+                                                );
+                                              })}
+                                          </ul>
+                                        </td>
+                                      </tr>
+                                    )}
+                                    {this.findOutrasInformacoes(
+                                      histSelecionado
+                                    ) !== undefined && (
+                                      <tr className="table-body-alimentacao">
+                                        <td>Outras Informações</td>
+                                        <td>
+                                          {this.findOutrasInformacoes(
+                                            histSelecionado
+                                          ).from && (
+                                            <p
+                                              dangerouslySetInnerHTML={{
+                                                __html: this.findOutrasInformacoes(
+                                                  histSelecionado
+                                                ).from
+                                              }}
+                                            />
+                                          )}
+                                        </td>
+                                        <td>
+                                          {this.findOutrasInformacoes(
+                                            histSelecionado
+                                          ).to && (
+                                            <p
+                                              dangerouslySetInnerHTML={{
+                                                __html: this.findOutrasInformacoes(
+                                                  histSelecionado
+                                                ).to
+                                              }}
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    )}
                                   </tbody>
                                 </table>
                               </td>
