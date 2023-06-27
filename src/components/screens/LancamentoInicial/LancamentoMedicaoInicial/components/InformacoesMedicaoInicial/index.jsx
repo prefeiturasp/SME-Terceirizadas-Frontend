@@ -42,7 +42,7 @@ export default ({
     }
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { Option } = Select;
   const { Panel } = Collapse;
 
@@ -64,17 +64,14 @@ export default ({
         solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid
       );
     }
+    if (!solicitacaoMedicaoInicial) {
+      setIsOpen(true);
+    }
   }, []);
 
   useEffect(() => {
     getDefaultValueSelectTipoContagem();
   }, []);
-
-  useEffect(() => {
-    if (solicitacaoMedicaoInicial) {
-      setIsOpen(false);
-    }
-  }, [solicitacaoMedicaoInicial]);
 
   const opcoesContagem = tiposDeContagem
     ? tiposDeContagem.map(tipo => {
@@ -175,6 +172,7 @@ export default ({
         data
       );
       if (response.status === HTTP_STATUS.OK) {
+        setIsOpen(false);
         if (
           responsaveisPayload.length ===
           solicitacaoMedicaoInicial.responsaveis.length
@@ -218,6 +216,7 @@ export default ({
       };
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
+        setIsOpen(false);
         toastSuccess("Solicitação de Medição Inicial criada com sucesso!");
       } else {
         const errorMessage = Object.values(response.data).join("; ");
@@ -238,7 +237,11 @@ export default ({
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
-          <Collapse expandIconPosition="end" activeKey={isOpen ? ["1"] : []}>
+          <Collapse
+            expandIconPosition="end"
+            activeKey={isOpen ? ["1"] : []}
+            onChange={() => setIsOpen(!isOpen)}
+          >
             <Panel header="Informações Básicas da Medição Inicial" key="1">
               <div className="row">
                 <div className="col-5 info-label select-medicao-inicial">
