@@ -1,8 +1,11 @@
 import React from "react";
-
+import { useHistory } from "react-router-dom";
 import "./styles.scss";
+import { EDITAR_NOTIFICACAO } from "configs/constants";
 
 const ListagemSolicitacoes = ({ guias }) => {
+  const history = useHistory();
+
   return (
     <section className="resultado-guias-notificacoes">
       <div className="titulo-verde">Lista de Notificações</div>
@@ -12,6 +15,7 @@ const ListagemSolicitacoes = ({ guias }) => {
           <div>Empresa</div>
           <div>Status da Notificação</div>
           <div>Número SEI</div>
+          <div>Ações</div>
         </div>
         {guias.map(guia => {
           return (
@@ -21,6 +25,29 @@ const ListagemSolicitacoes = ({ guias }) => {
                 <div>{guia.nome_empresa}</div>
                 <div>{guia.status}</div>
                 <div>{guia.processo_sei ? guia.processo_sei : "--"}</div>
+                <div>
+                  <span
+                    onClick={() =>
+                      history.push({
+                        pathname: `/logistica/${EDITAR_NOTIFICACAO}`,
+                        state: {
+                          guia: guia
+                        }
+                      })
+                    }
+                  >
+                    <i
+                      title={
+                        guia.status === "RASCUNHO"
+                          ? "Editar Rascunho"
+                          : "Visualizar Notificação"
+                      }
+                      className={`verde fas fa-${
+                        guia.status === "RASCUNHO" ? "edit" : "eye"
+                      }`}
+                    />
+                  </span>
+                </div>
               </div>
             </>
           );

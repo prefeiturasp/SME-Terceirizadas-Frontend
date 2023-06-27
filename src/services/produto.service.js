@@ -553,6 +553,12 @@ export const suspenderProduto = async (uuid, payload) => {
     .catch(ErrorHandlerFunction);
 };
 
+export const vinculosAtivosProdutoEditais = async uuid => {
+  return await axios
+    .get(`/homologacoes-produtos/${uuid}/vinculos-ativos-produto-edital/`)
+    .catch(ErrorHandlerFunction);
+};
+
 export const getNumeroProtocoloAnaliseSensorial = async () => {
   return await axios.get(`/homologacoes-produtos/numero_protocolo/`);
 };

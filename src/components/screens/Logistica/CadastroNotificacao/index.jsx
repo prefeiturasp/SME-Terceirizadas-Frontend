@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Pagination, Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemGuias from "./components/ListagemGuias";
@@ -6,6 +7,7 @@ import { useEffect } from "react";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   criarNotificacao,
+  editarNotificacao,
   getGuiaDetalhe,
   getGuiasNaoNotificadas
 } from "services/logistica.service";
@@ -33,6 +35,7 @@ export default () => {
   const [showVinculadas, setShowVinculadas] = useState(false);
   const [empresa, setEmpresa] = useState(null);
   const [guiaModal, setGuiaModal] = useState();
+  const [notificacao, setNotificacao] = useState();
 
   useEffect(() => {
     if (filtros) {
@@ -48,8 +51,16 @@ export default () => {
     setCarregando(true);
 
     if (!showVinculadas) {
-      const params = gerarParametrosConsulta({ page: page, ...filtros });
-      const response = await getGuiasNaoNotificadas(params);
+      const params = {
+        page: page,
+        ...filtros
+      };
+      if (notificacao) {
+        params["notificacao_uuid"] = notificacao.uuid;
+      }
+      const response = await getGuiasNaoNotificadas(
+        gerarParametrosConsulta(params)
+      );
       if (response.data.count) {
         setGuias(response.data.results);
         setTotal(response.data.count);
@@ -102,10 +113,17 @@ export default () => {
       empresa,
       guias: guiasVinculadas.map(guia => guia.uuid)
     };
-    const response = await criarNotificacao(payload);
-    if (response.status === 201) {
-      toastSuccess("Notificação criada com sucesso");
-      history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+    if (notificacao) {
+      const response = await editarNotificacao(notificacao.uuid, payload);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Notificação atualizada com sucesso");
+      }
+    } else {
+      const response = await criarNotificacao(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Notificação criada com sucesso");
+        history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+      }
     }
   };
 
@@ -150,12 +168,21 @@ export default () => {
       />
       <div className="card mt-3 card-guias-notificacoes">
         <div className="card-body guias-notificacoes">
+          {notificacao && (
+            <div className="title-editar-notificacoes pb-3">
+              Notificação - <span>{notificacao.numero}</span>
+            </div>
+          )}
           <Filtros
             setFiltros={setFiltros}
+            buscarGuias={buscarGuias}
+            guias={guias}
             setGuias={setGuias}
+            setGuiasVinculadas={setGuiasVinculadas}
             travaEmpresa={guiasVinculadas.length > 0}
             showVinculadas={showVinculadas}
             setShowVinculadas={setShowVinculadas}
+            setNotificacaoIndex={setNotificacao}
           />
           {guias && (
             <>
@@ -166,6 +193,7 @@ export default () => {
                 desvincularGuia={guia => {
                   setModal(guia);
                 }}
+                showVinculadas={showVinculadas}
                 buscarDetalheGuia={buscarDetalheGuia}
               />
               <div className="row">

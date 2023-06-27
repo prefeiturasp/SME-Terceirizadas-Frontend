@@ -25,7 +25,7 @@
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.5fr 1.2fr 0.8fr 0.6fr;
+      grid-template-columns: 0.5fr 0.9fr 0.8fr 0.6fr 0.3fr;
     }
 
     .header-table {
@@ -49,6 +49,11 @@
     .body-table {
       font-weight: 500;
       color: #686868;
+
+      i.verde {
+        cursor: pointer;
+        color: $green;
+      }
 
       .link-acoes {
         cursor: pointer;
