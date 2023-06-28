@@ -102,6 +102,19 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return valor_campo;
   };
 
+  formatar_action = action_name => {
+    switch (action_name) {
+      case "CREATE":
+        return "CRIAÇÃO";
+      case "UPDATE":
+        return "EDIÇÃO";
+      case "UPDATE_VINCULOS":
+        return "VÍNCULO DO EDITAL AO PROTOCOLO";
+      default:
+        return action_name;
+    }
+  };
+
   render() {
     const { visible, onOk, onCancel, history } = this.props;
     const { histSelecionado } = this.state;
@@ -123,7 +136,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
               {history.length > 0 &&
                 history.map((hist, index) => {
                   const { ativo } = hist;
-                  const iniciais = this.retornaIniciais(hist.user.email);
+                  const iniciais = this.retornaIniciais(
+                    hist.user.nome ? hist.user.nome : hist.user.email
+                  );
                   return (
                     <div
                       key={index}
@@ -137,10 +152,12 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                       </div>
                       <div className="descricao">
                         <div className="descicao-titulo" title={hist.action}>
-                          {hist.action === "CREATE" ? "CRIAÇÃO" : "EDIÇÃO"}
+                          {this.formatar_action(hist.action)}
                         </div>
                         <div className="descicao-entidade">
-                          {hist.user.email}
+                          {hist.user.username
+                            ? `${hist.user.nome} - ${hist.user.username}`
+                            : hist.user.email}
                         </div>
                       </div>
                       <div className="descricao">
@@ -197,11 +214,19 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                     <div className="header-log">
                       <div className="usuario">
                         <div>
-                          {this.retornaIniciais(histSelecionado.user.email)}
+                          {this.retornaIniciais(
+                            histSelecionado.user.nome
+                              ? histSelecionado.user.nome
+                              : histSelecionado.user.email
+                          )}
                         </div>
                       </div>
                       <div className="nome-fantasia-empresa">
-                        {histSelecionado.user.email}
+                        {histSelecionado.user.username
+                          ? `${histSelecionado.user.nome} - ${
+                              histSelecionado.user.username
+                            }`
+                          : histSelecionado.user.email}
                       </div>
                       <div>
                         {histSelecionado.updated_at !== undefined && (
