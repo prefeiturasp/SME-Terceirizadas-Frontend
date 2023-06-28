@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { Form, Field } from "react-final-form";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
@@ -12,6 +12,7 @@ import {
 import { consultaProtocoloPadrao } from "services/dietaEspecial.service";
 import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { ModalVincularProtocolos } from "../ModalVincularProtolocos";
 
 export default ({
   setResultado,
@@ -19,11 +20,14 @@ export default ({
   status,
   setCarregando,
   setTotal,
+  filtros,
   setFiltros,
   setPage,
-  editais
+  editais,
+  onChangePage
 }) => {
   const history = useHistory();
+  const [showModal, setShowModal] = useState(false);
 
   const getNomesProtocolosFiltrado = nomeProtocolo => {
     if (nomeProtocolo) {
@@ -132,6 +136,13 @@ export default ({
                   history.push(`/${DIETA_ESPECIAL}/${PROTOCOLO_PADRAO_DIETA}`)
                 }
               />
+              <Botao
+                texto="Vincular Protocolos Padrão"
+                className="ml-3"
+                type={BUTTON_TYPE.BUTTON}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                onClick={() => setShowModal(true)}
+              />
             </div>
             <div className="col-4">
               <Botao
@@ -154,6 +165,13 @@ export default ({
               />
             </div>
           </div>
+          <ModalVincularProtocolos
+            showModal={showModal}
+            closeModal={value => setShowModal(value)}
+            editais={editais}
+            buscar={() => onChangePage()}
+            filtros={filtros}
+          />
         </form>
       )}
     />
