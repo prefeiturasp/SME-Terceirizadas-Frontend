@@ -93,7 +93,7 @@ export default ({
             (meta.error || meta.warning) &&
             "invalid-field"}`}
           disabled={props.disabled}
-          placeholder="Selecione"
+          placeholder={placeholder ? placeholder : "Selecione"}
           data-cy={input.name}
           required={required}
           value={disabledInputValue()}
