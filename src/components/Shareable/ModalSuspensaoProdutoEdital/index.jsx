@@ -20,7 +20,6 @@ import "./style.scss";
 
 const ModalSuspensaoProdutoEdital = ({
   closeModalSuspender,
-  //closeModalJustificativa,
   showModal,
   produto,
   onSubmitSupender,
@@ -58,7 +57,9 @@ const ModalSuspensaoProdutoEdital = ({
           funcionario_cargo: dados.cargo || "",
           nome_produto: produto.nome,
           marca_produto: produto.marca.nome,
-          produto_tipo: produto.tipo
+          produto_tipo: produto.eh_para_alunos_com_dieta
+            ? "D. Especial"
+            : "Comum"
         }
       : {};
   };
