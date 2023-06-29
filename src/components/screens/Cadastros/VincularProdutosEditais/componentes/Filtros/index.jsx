@@ -25,6 +25,7 @@ export default ({
   filtrarPorEditalNomeTipo
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoesTipos = listaTipos
     ? listaTipos.map(tipo => {
@@ -110,7 +111,12 @@ export default ({
                   component={ASelect}
                   className="input-busca-tipo-item"
                   placeholder="Selecione um tipo de produto"
-                  suffixIcon={<CaretDownOutlined />}
+                  suffixIcon={
+                    <CaretDownOutlined onClick={() => setOpen(!open)} />
+                  }
+                  open={open}
+                  onClick={() => setOpen(!open)}
+                  onBlur={() => setOpen(false)}
                   name="tipo"
                   filterOption={(inputValue, option) =>
                     option.props.children

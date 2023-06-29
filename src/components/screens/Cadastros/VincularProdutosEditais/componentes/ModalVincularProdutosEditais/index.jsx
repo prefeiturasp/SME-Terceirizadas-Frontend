@@ -32,6 +32,9 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
   const [opcoesEditaisOrigem, setOpcoesEditaisOrigem] = useState([]);
   const [opcoesEditaisDestino, setOpcoesEditaisDestino] = useState([]);
   const [opcoesProdutosEditais, setOpcoesProdutosEditais] = useState([]);
+  const [openSelect1, setOpenSelect1] = useState(false);
+  const [openSelect2, setOpenSelect2] = useState(false);
+  const [openSelect3, setOpenSelect3] = useState(false);
   const [
     produtosEditaisSelecionados,
     setProdutosEditaisSelecionados
@@ -247,7 +250,14 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                     <Field
                       component={ASelect}
                       placeholder={"Selecione um edital"}
-                      suffixIcon={<CaretDownOutlined />}
+                      suffixIcon={
+                        <CaretDownOutlined
+                          onClick={() => setOpenSelect1(!openSelect1)}
+                        />
+                      }
+                      open={openSelect1}
+                      onClick={() => setOpenSelect1(!openSelect1)}
+                      onBlur={() => setOpenSelect1(false)}
                       name="edital_origem"
                       onChange={value =>
                         onChangeEditalDeOrigem(value, form, values)
@@ -275,7 +285,14 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                     <Field
                       component={ASelect}
                       placeholder={"Selecione o tipo de produto"}
-                      suffixIcon={<CaretDownOutlined />}
+                      suffixIcon={
+                        <CaretDownOutlined
+                          onClick={() => setOpenSelect2(!openSelect2)}
+                        />
+                      }
+                      open={openSelect2}
+                      onClick={() => setOpenSelect2(!openSelect2)}
+                      onBlur={() => setOpenSelect2(false)}
                       name="tipo_produto_edital_origem"
                       onChange={value => {
                         form.change("tipo_produto_edital_origem", value);
@@ -330,7 +347,14 @@ export default ({ closeModal, showModal, listaEditais, opcoesTipos }) => {
                     <Field
                       component={ASelect}
                       className="input-busca-tipo-item"
-                      suffixIcon={<CaretDownOutlined />}
+                      suffixIcon={
+                        <CaretDownOutlined
+                          onClick={() => setOpenSelect3(!openSelect3)}
+                        />
+                      }
+                      open={openSelect3}
+                      onClick={() => setOpenSelect3(!openSelect3)}
+                      onBlur={() => setOpenSelect3(false)}
                       name="tipo_produto"
                       onChange={value => {
                         form.change("tipo_produto", value);

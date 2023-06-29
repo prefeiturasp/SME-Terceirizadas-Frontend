@@ -209,6 +209,7 @@ export default () => {
                   }
                   open={open}
                   onClick={() => setOpen(!open)}
+                  onBlur={() => setOpen(false)}
                   name="periodo_lancamento"
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo
