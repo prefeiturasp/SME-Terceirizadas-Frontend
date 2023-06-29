@@ -203,18 +203,27 @@ export const ConferenciaDosLancamentos = () => {
         periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
       );
 
+      const todosPeriodosGrupoAnalisado = periodosGruposMedicao.every(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+          periodoGrupo.status === "MEDICAO_APROVADA_PELA_DRE"
+      );
+
       if (!statusPermitidosSolicitarCorrecao.includes(solicitacao.status)) {
         if (solicitacao.com_ocorrencias) {
           if (
             ocorrencia &&
             (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
-              algumPeriodoGrupoParaCorrigir)
+              (todosPeriodosGrupoAnalisado && algumPeriodoGrupoParaCorrigir))
           ) {
             setDesabilitarSolicitarCorrecao(false);
           } else {
             setDesabilitarSolicitarCorrecao(true);
           }
-        } else if (algumPeriodoGrupoParaCorrigir) {
+        } else if (
+          todosPeriodosGrupoAnalisado &&
+          algumPeriodoGrupoParaCorrigir
+        ) {
           setDesabilitarSolicitarCorrecao(false);
         } else {
           setDesabilitarSolicitarCorrecao(true);
