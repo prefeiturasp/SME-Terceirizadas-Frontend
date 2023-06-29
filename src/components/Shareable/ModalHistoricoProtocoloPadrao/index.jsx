@@ -234,7 +234,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                 histSelecionado.user.username
                               )}`}</div>
                             ) : histSelecionado.user.username.length === 14 ? (
-                              <div className="w-100">{`CPF: ${formatarCPFouCNPJ(
+                              <div className="w-100">{`CNPJ: ${formatarCPFouCNPJ(
                                 histSelecionado.user.username
                               )}`}</div>
                             ) : (
