@@ -1,6 +1,9 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { useEffect, useState } from "react";
-import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import {
+  getVinculosTipoAlimentacaoMotivoInclusaoEspecifico,
+  getVinculosTipoAlimentacaoPorEscola
+} from "services/cadastroTipoAlimentacao.service";
 import {
   buscaPeriodosEscolares,
   getQuantidadeAlunosEscola
@@ -30,6 +33,9 @@ export const Container = () => {
     escolaEhCei() ? [] : null
   );
   const [periodos, setPeriodos] = useState(null);
+  const [periodosMotivoEspecifico, setPeriodosMotivoEspecifico] = useState(
+    null
+  );
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [periodoNoite, setPeriodoNoite] = useState(
@@ -77,6 +83,21 @@ export const Container = () => {
       );
       const escola_uuid = response.data.vinculo_atual.instituicao.uuid;
       getQuantidaDeAlunosPorPeriodoEEscolaAsync(periodos, escola_uuid);
+      const tipo_unidade_escolar_iniciais =
+        response.data.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais;
+      const vinculosTipoAlimentacaoMotivoInclusaoEspecifico = await getVinculosTipoAlimentacaoMotivoInclusaoEspecifico(
+        { tipo_unidade_escolar_iniciais }
+      );
+      let periodosMotivoInclusaoEspecifico = [];
+      vinculosTipoAlimentacaoMotivoInclusaoEspecifico.data.forEach(vinculo => {
+        let periodo = vinculo.periodo_escolar;
+        periodo.tipos_alimentacao = vinculo.tipos_alimentacao;
+        periodo.maximo_alunos = null;
+        periodosMotivoInclusaoEspecifico.push(periodo);
+      });
+      setPeriodosMotivoEspecifico(
+        formatarPeriodos(periodosMotivoInclusaoEspecifico)
+      );
     } else {
       setErro(true);
     }
@@ -167,6 +188,7 @@ export const Container = () => {
           proximosCincoDiasUteis={proximosCincoDiasUteis}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           periodoNoite={periodoNoite}
+          periodosMotivoEspecifico={periodosMotivoEspecifico}
         />
       )}
     </div>
