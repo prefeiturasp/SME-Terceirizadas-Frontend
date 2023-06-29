@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Field } from "react-final-form";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
@@ -6,6 +6,8 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import { selectValidate } from "helpers/fieldValidators";
 
 const ClassificacaoDaDieta = ({ classificacoesDieta }) => {
+  const [open, setOpen] = useState(false);
+
   const { Option } = SelectAntd;
 
   const opcoes = classificacoesDieta.map(classificacao => {
@@ -22,7 +24,10 @@ const ClassificacaoDaDieta = ({ classificacoesDieta }) => {
         <Field
           component={ASelect}
           className={"select-form-produto"}
-          suffixIcon={<CaretDownOutlined />}
+          suffixIcon={<CaretDownOutlined onClick={() => setOpen(!open)} />}
+          open={open}
+          onClick={() => setOpen(!open)}
+          onBlur={() => setOpen(false)}
           showSearch
           required
           validate={selectValidate}

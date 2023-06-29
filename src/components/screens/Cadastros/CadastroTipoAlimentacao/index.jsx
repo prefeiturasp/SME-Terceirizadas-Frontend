@@ -39,6 +39,7 @@ export default ({ tiposUnidadesEscolar }) => {
   ] = useState(false);
   const [vinculos, setVinculos] = useState(undefined);
   const [carregando, setCarregando] = useState(undefined);
+  const [open, setOpen] = useState(false);
 
   async function fetchData() {
     setCarregando(true);
@@ -114,7 +115,12 @@ export default ({ tiposUnidadesEscolar }) => {
                     <article>
                       <Field
                         component={ASelect}
-                        suffixIcon={<CaretDownOutlined />}
+                        suffixIcon={
+                          <CaretDownOutlined onClick={() => setOpen(!open)} />
+                        }
+                        open={open}
+                        onBlur={() => setOpen(false)}
+                        onClick={() => setOpen(!open)}
                         showSearch
                         name="tipo_unidade_escolar"
                         filterOption={(inputValue, option) =>

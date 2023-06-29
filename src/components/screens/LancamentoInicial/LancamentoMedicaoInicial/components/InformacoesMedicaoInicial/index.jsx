@@ -45,6 +45,7 @@ export default ({
   const [isOpen, setIsOpen] = useState(false);
   const { Option } = Select;
   const { Panel } = Collapse;
+  const [openSelect, setOpenSelect] = useState(false);
 
   const location = useLocation();
 
@@ -250,8 +251,14 @@ export default ({
                   </b>
                   {opcoesContagem.length > 0 && (
                     <Select
-                      suffixIcon={<CaretDownOutlined />}
+                      suffixIcon={
+                        <CaretDownOutlined
+                          onClick={() => setOpenSelect(!openSelect)}
+                        />
+                      }
                       name="contagem_refeicoes"
+                      open={openSelect}
+                      onClick={() => setOpenSelect(!openSelect)}
                       defaultValue={getDefaultValueSelectTipoContagem()}
                       onChange={value => handleChangeTipoContagem(value)}
                       className="mt-2"
