@@ -202,12 +202,35 @@ export const editarNotificacao = async (uuid, payload) => {
   }
 };
 
+export const criarEditarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/criar-notificacao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const enviarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/enviar-notificacao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getNotificacoesOcorrencia = async params => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.get(url, { params });
 };
 
 export const getNotificacoesOcorrenciaByUuid = async uuid => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
+  return await axios.get(url);
+};
+
+export const getNotificacao = async uuid => {
   const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
   return await axios.get(url);
 };
