@@ -239,7 +239,7 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                               )}`}</div>
                             ) : (
                               <div className="w-100">{`RF: ${
-                                histSelecionado.use.username
+                                histSelecionado.user.username
                               }`}</div>
                             )}
                           </>
