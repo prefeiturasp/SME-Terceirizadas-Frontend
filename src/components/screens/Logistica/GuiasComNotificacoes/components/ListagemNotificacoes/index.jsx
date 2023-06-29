@@ -52,15 +52,21 @@ const ListagemNotificacoes = ({ notificacoes }) => {
                       }`}
                     />
                   </span>
-                  <NavLink
-                    to={`/${LOGISTICA}/${NOTIFICAR_EMPRESA}?uuid=${
-                      notificacao.uuid
-                    }`}
-                  >
+                  {notificacao.status === "Notificação Enviada Fiscal" ? (
                     <span className="link-acoes px-2">
-                      <i className="fas fa-eye green" />
+                      <i title="Notificação Enviada" className="fas fa-bell" />
                     </span>
-                  </NavLink>
+                  ) : (
+                    <NavLink
+                      to={`/${LOGISTICA}/${NOTIFICAR_EMPRESA}?uuid=${
+                        notificacao.uuid
+                      }`}
+                    >
+                      <span className="link-acoes px-2">
+                        <i title="Notificação" className="fas fa-bell green" />
+                      </span>
+                    </NavLink>
+                  )}
                 </div>
               </div>
             </>
