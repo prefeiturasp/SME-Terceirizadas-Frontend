@@ -193,10 +193,11 @@ export default () => {
                       name="processo_sei"
                       className="input-busca-produto"
                       placeholder="Digite o Nº do Processo SEI"
+                      required
                     />
                   </div>
                   <div className="col-6">
-                    Link do Processo SEI: Clique &nbsp;
+                    Link do Processo SEI: Clique&nbsp;
                     <a href="https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx#">
                       aqui
                     </a>
@@ -234,6 +235,7 @@ export default () => {
                               label="Previsão Contratual"
                               name={`previsao_contratual_${index}`}
                               className="input-busca-produto"
+                              placeholder="Descreva a Previsão contratual"
                               required
                             />
                           </div>
