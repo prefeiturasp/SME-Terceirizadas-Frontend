@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import React, { Component } from "react";
 
 import moment from "moment";
+import { formatarCPFouCNPJ } from "helpers/utilities";
 
 export default class ModalHistoricoProtocoloPadrao extends Component {
   constructor(props) {
@@ -150,13 +151,13 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                       <div className="usuario">
                         <div>{iniciais}</div>
                       </div>
-                      <div className="descricao">
+                      <div className="descricao d-block">
                         <div className="descicao-titulo" title={hist.action}>
                           {this.formatar_action(hist.action)}
                         </div>
                         <div className="descicao-entidade">
                           {hist.user.username
-                            ? `${hist.user.nome} - ${hist.user.username}`
+                            ? hist.user.nome
                             : hist.user.email}
                         </div>
                       </div>
@@ -221,12 +222,30 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                           )}
                         </div>
                       </div>
-                      <div className="nome-fantasia-empresa">
-                        {histSelecionado.user.username
-                          ? `${histSelecionado.user.nome} - ${
-                              histSelecionado.user.username
-                            }`
-                          : histSelecionado.user.email}
+                      <div className="nome-fantasia-empresa d-block">
+                        {histSelecionado.user.nome &&
+                        histSelecionado.user.username ? (
+                          <>
+                            <div className="w-100">
+                              {histSelecionado.user.nome}
+                            </div>
+                            {histSelecionado.user.username.length === 11 ? (
+                              <div className="w-100">{`CPF: ${formatarCPFouCNPJ(
+                                histSelecionado.user.username
+                              )}`}</div>
+                            ) : histSelecionado.user.username.length === 14 ? (
+                              <div className="w-100">{`CNPJ: ${formatarCPFouCNPJ(
+                                histSelecionado.user.username
+                              )}`}</div>
+                            ) : (
+                              <div className="w-100">{`RF: ${
+                                histSelecionado.user.username
+                              }`}</div>
+                            )}
+                          </>
+                        ) : (
+                          histSelecionado.user.email
+                        )}
                       </div>
                       <div>
                         {histSelecionado.updated_at !== undefined && (
