@@ -181,6 +181,7 @@ export const ENTREGAS_DRE = "entregas-dre";
 export const GUIAS_NOTIFICACAO = "guias-notificacao";
 export const CADASTRO_NOTIFICACAO = "cadastro-notificacao";
 export const EDITAR_NOTIFICACAO = "editar-notificacao";
+export const NOTIFICAR_EMPRESA = "notificar-empresa";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 

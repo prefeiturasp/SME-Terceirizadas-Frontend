@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Pagination, Spin } from "antd";
 import Filtros from "./components/Filtros";
-import ListagemGuias from "./components/ListagemGuias";
+import ListagemNotificacoes from "./components/ListagemNotificacoes";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getNotificacoesOcorrencia } from "services/logistica.service";
 
@@ -49,7 +49,7 @@ export default () => {
           {notificacoes && (
             <>
               <hr />
-              <ListagemGuias guias={notificacoes} />
+              <ListagemNotificacoes notificacoes={notificacoes} />
               <div className="row">
                 <div className="col">
                   <Pagination
