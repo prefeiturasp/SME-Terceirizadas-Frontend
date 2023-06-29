@@ -40,6 +40,8 @@ export default () => {
     anexo: null,
     status: null
   });
+  const [open, setOpen] = useState(false);
+
   const history = useHistory();
   const location = useLocation();
 
@@ -198,11 +200,15 @@ export default () => {
             <div className="pl-0">
               {objectoPeriodos.length > 0 ? (
                 <Select
-                  suffixIcon={<CaretDownOutlined />}
+                  suffixIcon={
+                    <CaretDownOutlined onClick={() => setOpen(!open)} />
+                  }
                   disabled={
                     location.state &&
                     location.state.status === "Aprovado pela DRE"
                   }
+                  open={open}
+                  onClick={() => setOpen(!open)}
                   name="periodo_lancamento"
                   defaultValue={
                     periodoFromSearchParam || objectoPeriodos[0].periodo
