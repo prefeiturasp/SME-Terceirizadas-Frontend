@@ -14,11 +14,9 @@ export default ({ show, handleClose, voltarPagina }) => {
       dialogClassName="modal-cancelar-envio-notificacao"
     >
       <Modal.Header closeButton>
-        <Modal.Title>Salvar e Enviar Notificação</Modal.Title>
+        <Modal.Title>Cancelar Edição da Notificação</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        Deseja encaminhar a notificação para a assinatura do Fiscal do Contrato?
-      </Modal.Body>
+      <Modal.Body>Deseja cancelar a edição da notificação?</Modal.Body>
       <Modal.Footer>
         <Botao
           texto="Não"

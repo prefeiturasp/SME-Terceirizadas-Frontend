@@ -198,7 +198,11 @@ export default () => {
                   </div>
                   <div className="col-6">
                     Link do Processo SEI: Clique&nbsp;
-                    <a href="https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx#">
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx#"
+                    >
                       aqui
                     </a>
                   </div>
