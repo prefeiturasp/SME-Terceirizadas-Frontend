@@ -1,22 +1,22 @@
 svg.ck.ck-icon.ck-reset_all-excluded.ck-icon_inherit-color.ck-dropdown__arrow {
-  z-index: 0;
+  z-index: 0 !important;
 }
 
 button.ant-btn.css-dev-only-do-not-override-yp8pcc.ant-btn-primary {
-  background-color: transparent;
-  border: 1px solid #198459;
-  color: #198459;
-  font-weight: 900;
-  height: 40px;
-  border-radius: 5px;
+  background-color: transparent !important;
+  border: 1px solid #198459 !important;
+  color: #198459 !important;
+  font-weight: 900 !important;
+  height: 40px !important;
+  border-radius: 5px !important;
 }
 
 button.ant-btn.css-dev-only-do-not-override-yp8pcc.ant-btn-primary:hover {
-  border: 1.5px solid #198459;
-  color: #ffffff;
-  background-color: #198459;
+  border: 1.5px solid #198459 !important;
+  color: #ffffff !important;
+  background-color: #198459 !important;
 }
 
 button.ant-btn.css-dev-only-do-not-override-yp8pcc.ant-btn-default {
-  display: none;
+  display: none !important;
 }
