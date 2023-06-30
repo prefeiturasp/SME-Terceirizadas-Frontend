@@ -80,6 +80,12 @@ const ModalSuspensaoProdutoEdital = ({
     return [];
   };
 
+  const verificaEditaisSelecionados = values => {
+    const editaisSelecionados =
+      values.editais_para_suspensao && values.editais_para_suspensao.length;
+    return editaisSelecionados === opcoesEditais().length;
+  };
+
   return (
     <Modal
       dialogClassName="modal-ativacao-produto modal-90w"
@@ -217,7 +223,12 @@ const ModalSuspensaoProdutoEdital = ({
                     className="ml-3"
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
-                      state.tipo_resposta = "aceitar";
+                      const todosEditaisSelecionados = verificaEditaisSelecionados(
+                        values
+                      );
+                      state.tipo_resposta = todosEditaisSelecionados
+                        ? "aceitar"
+                        : "aceitar_parcialmente";
                       form.submit();
                     }}
                     disabled={
