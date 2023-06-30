@@ -220,16 +220,19 @@ export default () => {
                   Nenhum resultado encontrado
                 </div>
               )}
-              <div className="mt-4 mb-4">
-                <Botao
-                  texto="Salvar Rascunho"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN}
-                  className="float-right ml-3"
-                  onClick={salvarNotificacao}
-                  disabled={guiasVinculadas.length === 0}
-                />
-              </div>
+              {(!notificacao ||
+                notificacao.status.toUpperCase() === "RASCUNHO") && (
+                <div className="mt-4 mb-4">
+                  <Botao
+                    texto="Salvar Rascunho"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-right ml-3"
+                    onClick={salvarNotificacao}
+                    disabled={guiasVinculadas.length === 0}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>
