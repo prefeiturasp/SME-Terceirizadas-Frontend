@@ -43,12 +43,14 @@ const ListagemNotificacoes = ({ notificacoes }) => {
                   >
                     <i
                       title={
-                        notificacao.status === "RASCUNHO"
+                        notificacao.status.toUpperCase() === "RASCUNHO"
                           ? "Editar Rascunho"
                           : "Visualizar Notificação"
                       }
                       className={`verde fas fa-${
-                        notificacao.status === "RASCUNHO" ? "edit" : "eye"
+                        notificacao.status.toUpperCase() === "RASCUNHO"
+                          ? "edit"
+                          : "eye"
                       }`}
                     />
                   </span>
