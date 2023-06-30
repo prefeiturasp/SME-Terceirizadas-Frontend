@@ -34,7 +34,7 @@ export const CorpoRelatorio = props => {
           {prazoDoPedidoMensagem}
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {
