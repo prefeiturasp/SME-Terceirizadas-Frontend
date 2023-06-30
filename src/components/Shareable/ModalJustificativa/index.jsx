@@ -31,8 +31,6 @@ const ModalJustificativa = ({
   abreModalSuspensao,
   closeModalSuspensao
 }) => {
-  //const [showModalSuspender, setShowModalSuspender] = useState(false);
-
   return (
     <Modal
       dialogClassName="modal-justificativa-com-anexo modal-90w"
