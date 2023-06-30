@@ -1,12 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { Botao } from "../../Shareable/Botao";
-import {
-  BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
-} from "../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
 import { getDetalheKitLancheAvulsa } from "../../../services/kitLanche";
@@ -290,16 +285,6 @@ class Relatorio extends Component {
             <span className="page-title">{`Kit Lanche Passeio - Solicitação # ${
               solicitacaoKitLanche.id_externo
             }`}</span>
-            <Link to={`/`}>
-              <Botao
-                texto="Voltar"
-                titulo="Voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio

@@ -1,6 +1,5 @@
 import { Botao } from "components/Shareable/Botao";
 import {
-  BUTTON_ICON,
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
@@ -19,7 +18,6 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import { getAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { meusDados } from "services/perfil.service";
@@ -305,16 +303,6 @@ class Relatorio extends Component {
             <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
               alteracaoDeCardapio.id_externo
             }`}</span>
-            <Link to={`/`}>
-              <Botao
-                texto="voltar"
-                titulo="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.BLUE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
