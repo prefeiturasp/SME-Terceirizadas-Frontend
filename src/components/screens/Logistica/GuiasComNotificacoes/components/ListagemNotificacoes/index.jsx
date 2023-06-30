@@ -33,12 +33,14 @@ const ListagemNotificacoes = ({ notificacoes }) => {
                 <div>
                   <span
                     onClick={() =>
-                      history.push({
-                        pathname: `/logistica/${EDITAR_NOTIFICACAO}`,
-                        state: {
-                          guia: notificacao
-                        }
-                      })
+                      notificacao.status.toUpperCase() === "RASCUNHO"
+                        ? history.push({
+                            pathname: `/logistica/${EDITAR_NOTIFICACAO}`,
+                            state: {
+                              guia: notificacao
+                            }
+                          })
+                        : "#"
                     }
                   >
                     <i
