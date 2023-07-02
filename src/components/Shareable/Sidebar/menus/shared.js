@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const ListItem = ({ icon, to, children }) => (
   <li className="nav-item">
@@ -19,15 +19,16 @@ export const SubMenu = ({
   children
 }) => (
   <>
-    <NavLink
-      onClick={() => onClick(path)}
-      activeClassName="active"
-      className="collapse-item"
-      to="#"
+    <div
+      onClick={e => {
+        e.stopPropagation();
+        onClick(path);
+      }}
+      className={`collapse-item ${activeMenu === path ? "active" : ""}`}
     >
       {title}
       <i className={`fas ${icon}`} />
-    </NavLink>
+    </div>
     {activeMenu === path && <div className="submenu">{children}</div>}
   </>
 );
@@ -41,17 +42,22 @@ export const LeafItem = ({ to, children }) => (
 
 export const Menu = ({ id, title, icon, children }) => (
   <li className="nav-item">
-    <Link
+    <div
       className={`nav-link collapsed`}
-      to="#"
       data-toggle="collapse"
       data-target={`#collapse${id}`}
       aria-expanded="false"
       aria-controls={`collapse${id}`}
+      onClick={e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentElement = document.querySelector(`#collapse${id}`);
+        currentElement.classList.toggle("show");
+      }}
     >
       <i className={`fas ${icon}`} />
       <span>{title}</span>
-    </Link>
+    </div>
     <div
       id={`collapse${id}`}
       className={`collapse`}
