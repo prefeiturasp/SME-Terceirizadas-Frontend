@@ -1743,6 +1743,32 @@ export default () => {
       : setShowModalVoltarPeriodoLancamento(true);
   };
 
+  const getClassNameToNextInput = (row, column, categoria, index) => {
+    if (
+      row.name !== "observacoes" &&
+      column &&
+      index + 1 < linhasTabelaAlimentacao(categoria).length - 1
+    ) {
+      return `${linhasTabelaAlimentacao(categoria)[index + 1].name}__dia_${
+        column.dia
+      }__categoria_${categoria.id}`;
+    }
+    return undefined;
+  };
+
+  const getClassNameToPrevInput = (row, column, categoria, index) => {
+    if (
+      row.name !== "frequencia" &&
+      column &&
+      linhasTabelaAlimentacao(categoria)[index - 1]
+    ) {
+      return `${linhasTabelaAlimentacao(categoria)[index - 1].name}__dia_${
+        column.dia
+      }__categoria_${categoria.id}`;
+    }
+    return undefined;
+  };
+
   return (
     <>
       <div className="text-right botao-voltar-lancamento-medicao">
@@ -2020,6 +2046,18 @@ export default () => {
                                                       component={
                                                         InputValueMedicao
                                                       }
+                                                      classNameToNextInput={getClassNameToNextInput(
+                                                        row,
+                                                        column,
+                                                        categoria,
+                                                        index
+                                                      )}
+                                                      classNameToPrevInput={getClassNameToPrevInput(
+                                                        row,
+                                                        column,
+                                                        categoria,
+                                                        index
+                                                      )}
                                                       apenasNumeros
                                                       name={`${row.name}__dia_${
                                                         column.dia
@@ -2211,6 +2249,18 @@ export default () => {
                                                         component={
                                                           InputValueMedicao
                                                         }
+                                                        classNameToNextInput={getClassNameToNextInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
+                                                        classNameToPrevInput={getClassNameToPrevInput(
+                                                          row,
+                                                          column,
+                                                          categoria,
+                                                          index
+                                                        )}
                                                         apenasNumeros
                                                         name={`${
                                                           row.name
