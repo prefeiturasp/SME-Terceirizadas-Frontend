@@ -475,6 +475,33 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     );
   };
 
+  const getClassNameToNextInput = (row, column, categoria, index) => {
+    if (
+      row.name !== "observacoes" &&
+      column &&
+      index + 1 < escolherTabela(categoria).length - 1
+    ) {
+      return `${escolherTabela(categoria)[index + 1].name}__dia_${
+        column.dia
+      }__categoria_${categoria.id}`;
+    } else {
+      return undefined;
+    }
+  };
+
+  const getClassNameToPrevInput = (row, column, categoria, index) => {
+    if (
+      row.name !== "frequencia" &&
+      column &&
+      escolherTabela(categoria)[index - 1]
+    ) {
+      return `${escolherTabela(categoria)[index - 1].name}__dia_${
+        column.dia
+      }__categoria_${categoria.id}`;
+    }
+    return undefined;
+  };
+
   return (
     <div key={key}>
       <div className="content-section-acompanhamento-lancamento mb-3">
@@ -654,6 +681,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                                       <Field
                                         className={`m-2`}
                                         component={InputValueMedicao}
+                                        classNameToNextInput={getClassNameToNextInput(
+                                          row,
+                                          column,
+                                          categoria,
+                                          index
+                                        )}
+                                        classNameToPrevInput={getClassNameToPrevInput(
+                                          row,
+                                          column,
+                                          categoria,
+                                          index
+                                        )}
                                         apenasNumeros
                                         name={`${row.name}__dia_${
                                           column.dia
