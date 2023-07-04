@@ -189,6 +189,20 @@ export const listarCardsPermitidos = () => {
       CARD_HOMOLOGADOS,
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
+  } else if ([TIPO_PERFIL.DIRETORIA_REGIONAL].includes(perfil)) {
+    const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
+    const cardAguardandoAnaliseReclamacao = Object.assign(
+      {},
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO
+    );
+
+    return [
+      CARD_PRODUTOS_SUSPENSOS,
+      CARD_NAO_HOMOLOGADOS,
+      cardHomologados,
+      cardAguardandoAnaliseReclamacao,
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    ];
   }
 
   const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
