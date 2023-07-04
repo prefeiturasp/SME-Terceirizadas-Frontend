@@ -16,7 +16,6 @@ import {
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Relatorio from "../../components/AlteracaoDeCardapio/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacaoReduxForm";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
@@ -24,6 +23,7 @@ import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Sharea
 import Page from "../../components/Shareable/Page/Page";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
 import { HOME } from "../../constants/config";
+import { ModalCancelarAlteracaoCardapio } from "components/Shareable/ModalCancelaAlteracaoCardapio";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -45,7 +45,7 @@ export const RelatorioBase = ({ ...props }) => {
   };
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
@@ -56,7 +56,7 @@ export const RelatorioBase = ({ ...props }) => {
 export const RelatorioEscola = () => (
   <RelatorioBase
     visao={ESCOLA}
-    ModalNaoAprova={ModalCancelarSolicitacao}
+    ModalNaoAprova={ModalCancelarAlteracaoCardapio}
     toastNaoAprovaMensagem={
       "Alteração do Tipo de Alimentação cancelada com sucesso!"
     }

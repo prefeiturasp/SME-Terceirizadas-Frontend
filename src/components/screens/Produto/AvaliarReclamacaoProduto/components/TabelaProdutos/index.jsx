@@ -49,15 +49,19 @@ export default class TabelaProdutos extends Component {
       uuidReclamacao: undefined,
       acao: undefined,
       mostraModalJustificativa: false,
+      mostraModalSuspensao: false,
       showModalAnalise: false,
       tipo_resposta: undefined,
       protocoloAnalise: null,
       terceirizada: null,
-      escola: null
+      escola: null,
+      uuisdReclamacaoDisabled: [],
+      uuidReclamacaoResposta: undefined
     };
   }
 
   ACEITAR_RECLAMACAO = "aceitar";
+  ACEITAR_RECLAMACAO_PARCIALMENTE = "aceitar_parcialmente";
   RECUSAR_RECLAMACAO = "rejeitar";
   QUESTIONAR_TERCEIRIZADA = "questionar_terceirizada";
   QUESTIONAR_UE = "questionar_ue";
@@ -103,7 +107,10 @@ export default class TabelaProdutos extends Component {
       case this.QUESTIONAR_NUTRISUPERVISOR:
         return CODAEQuestionaNutrisupervisor;
       case this.RESPONDER:
-        if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+        if (
+          this.state.tipo_resposta === this.ACEITAR_RECLAMACAO ||
+          this.state.tipo_resposta === this.ACEITAR_RECLAMACAO_PARCIALMENTE
+        ) {
           return CODAEAceitaReclamacao;
         }
         if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
@@ -187,8 +194,16 @@ export default class TabelaProdutos extends Component {
     });
   };
 
+  abreModalSuspensao = () => {
+    this.setState({ mostraModalSuspensao: true });
+  };
+
   fechaModalJustificativa = () => {
     this.setState({ mostraModalJustificativa: false });
+  };
+
+  fechaModalSuspensao = () => {
+    this.setState({ mostraModalSuspensao: false });
   };
 
   abreModalAnalise = async uuidReclamacao => {
@@ -204,18 +219,50 @@ export default class TabelaProdutos extends Component {
     this.setState({ showModalAnalise: false });
   };
 
-  onModalJustificativaSubmit = async formValues => {
+  onModalJustificativaOuSuspensaoSubmit = async formValues => {
     const { uuidReclamacao } = this.state;
     const endpoint = this.defineEndpoint();
     const response = await endpoint(uuidReclamacao, formValues);
     if (response.status === 200) {
       this.props.atualizar();
       this.fechaModalJustificativa();
+      this.fechaModalSuspensao();
       this.mostraToastSucesso();
+
+      if (this.state.tipo_resposta === this.RECUSAR_RECLAMACAO) {
+        this.setState({
+          uuisdReclamacaoDisabled: [
+            ...this.state.uuisdReclamacaoDisabled,
+            this.state.uuidReclamacaoResposta
+          ]
+        });
+      } else if (this.state.tipo_resposta === this.ACEITAR_RECLAMACAO) {
+        const uuidsReclamacoes = this.props.listaProdutos
+          .map(produto =>
+            produto.ultima_homologacao.reclamacoes.map(
+              reclamacao => reclamacao.uuid
+            )
+          )
+          .flat();
+        this.setState({ uuisdReclamacaoDisabled: uuidsReclamacoes });
+      } else if (
+        this.state.tipo_resposta === this.ACEITAR_RECLAMACAO_PARCIALMENTE
+      ) {
+        this.setState({
+          uuisdReclamacaoDisabled: [
+            ...this.state.uuisdReclamacaoDisabled,
+            this.state.uuidReclamacaoResposta
+          ]
+        });
+      }
     } else {
       toastError(response.errors);
     }
     this.props.setLoading(false);
+  };
+
+  deveDesabilitarBotao = uuidReclamacao => {
+    return this.state.uuisdReclamacaoDisabled.includes(uuidReclamacao);
   };
 
   render() {
@@ -227,6 +274,7 @@ export default class TabelaProdutos extends Component {
     } = this.props;
     const {
       mostraModalJustificativa,
+      mostraModalSuspensao,
       showModalAnalise,
       protocoloAnalise,
       escola,
@@ -426,14 +474,20 @@ export default class TabelaProdutos extends Component {
                             className="ml-3 botaoResponder"
                             type={BUTTON_TYPE.BUTTON}
                             style={BUTTON_STYLE.GREEN}
-                            disabled={desabilitaResponder}
-                            onClick={() =>
+                            disabled={
+                              desabilitaResponder ||
+                              this.deveDesabilitarBotao(reclamacao.uuid)
+                            }
+                            onClick={() => {
                               this.abreModalJustificativa(
                                 this.RESPONDER,
                                 reclamacao.uuid,
                                 produto
-                              )
-                            }
+                              );
+                              this.setState({
+                                uuidReclamacaoResposta: reclamacao.uuid
+                              });
+                            }}
                           />
                         </div>,
                         deveMostrarBarraHorizontal && <hr />
@@ -448,12 +502,17 @@ export default class TabelaProdutos extends Component {
           titulo={this.defineTitulo()}
           labelJustificativa={this.defineLabelJustificativa()}
           showModal={mostraModalJustificativa}
+          showModalSuspensao={mostraModalSuspensao}
+          abreModalSuspensao={this.abreModalSuspensao}
           closeModal={this.fechaModalJustificativa}
-          onSubmit={this.onModalJustificativaSubmit}
+          closeModalSuspensao={this.fechaModalSuspensao}
+          onSubmit={this.onModalJustificativaOuSuspensaoSubmit}
           state={this.state}
           comAnexo={this.state.acao === this.RESPONDER}
           terceirizada={terceirizada}
           escola={escola}
+          produto={this.state.produto}
+          uuidReclamacao={this.state.uuidReclamacao}
         />
         <ModalPadrao
           showModal={showModalAnalise}

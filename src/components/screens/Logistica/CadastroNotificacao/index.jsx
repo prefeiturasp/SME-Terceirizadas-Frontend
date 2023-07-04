@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Pagination, Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemGuias from "./components/ListagemGuias";
@@ -6,9 +7,11 @@ import { useEffect } from "react";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   criarNotificacao,
+  editarNotificacao,
+  getGuiaDetalhe,
   getGuiasNaoNotificadas
 } from "services/logistica.service";
-import { toastSuccess } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalDesvincular from "./components/ModalDesvincular";
 import Botao from "components/Shareable/Botao";
 import {
@@ -18,6 +21,7 @@ import {
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import "./styles.scss";
+import ModalDetalharGuia from "./components/ModalDetalharGuia";
 
 export default () => {
   const history = useHistory();
@@ -30,6 +34,8 @@ export default () => {
   const [guiasVinculadas, setGuiasVinculadas] = useState([]);
   const [showVinculadas, setShowVinculadas] = useState(false);
   const [empresa, setEmpresa] = useState(null);
+  const [guiaModal, setGuiaModal] = useState();
+  const [notificacao, setNotificacao] = useState();
 
   useEffect(() => {
     if (filtros) {
@@ -45,8 +51,16 @@ export default () => {
     setCarregando(true);
 
     if (!showVinculadas) {
-      const params = gerarParametrosConsulta({ page: page, ...filtros });
-      const response = await getGuiasNaoNotificadas(params);
+      const params = {
+        page: page,
+        ...filtros
+      };
+      if (notificacao) {
+        params["notificacao_uuid"] = notificacao.uuid;
+      }
+      const response = await getGuiasNaoNotificadas(
+        gerarParametrosConsulta(params)
+      );
       if (response.data.count) {
         setGuias(response.data.results);
         setTotal(response.data.count);
@@ -78,6 +92,20 @@ export default () => {
     );
     toastSuccess("Guia desvinculada com sucesso!");
     setModal(false);
+    setGuiaModal(false);
+  };
+
+  const buscarDetalheGuia = async guia => {
+    let response;
+    try {
+      setCarregando(true);
+      response = await getGuiaDetalhe(guia.uuid);
+      setGuiaModal(response.data);
+      setCarregando(false);
+    } catch (e) {
+      toastError(e.response.data.detail);
+      setCarregando(false);
+    }
   };
 
   const salvarNotificacao = async () => {
@@ -85,15 +113,54 @@ export default () => {
       empresa,
       guias: guiasVinculadas.map(guia => guia.uuid)
     };
-    const response = await criarNotificacao(payload);
-    if (response.status === 201) {
-      toastSuccess("Notificação criada com sucesso");
-      history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+    if (notificacao) {
+      const response = await editarNotificacao(notificacao.uuid, payload);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Notificação atualizada com sucesso");
+      }
+    } else {
+      const response = await criarNotificacao(payload);
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Notificação criada com sucesso");
+        history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
+      }
+    }
+  };
+
+  const botaoAcao = guia => {
+    if (guia && guiasVinculadas.find(g => g.uuid === guia.uuid)) {
+      return (
+        <Botao
+          texto="Excluir Vínculo"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => setModal(guia)}
+        />
+      );
+    } else {
+      return (
+        <Botao
+          texto="Vincular Guia"
+          type={BUTTON_TYPE.BUTTON}
+          style={BUTTON_STYLE.GREEN}
+          className="ml-3"
+          onClick={() => {
+            setGuiaModal(false);
+            vincularGuia(guia);
+          }}
+        />
+      );
     }
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
+      <ModalDetalharGuia
+        guia={guiaModal}
+        handleClose={() => setGuiaModal(false)}
+        botaoAcao={botaoAcao}
+      />
       <ModalDesvincular
         guia={modal}
         handleClose={() => setModal(false)}
@@ -101,12 +168,21 @@ export default () => {
       />
       <div className="card mt-3 card-guias-notificacoes">
         <div className="card-body guias-notificacoes">
+          {notificacao && (
+            <div className="title-editar-notificacoes pb-3">
+              Notificação - <span>{notificacao.numero}</span>
+            </div>
+          )}
           <Filtros
             setFiltros={setFiltros}
+            buscarGuias={buscarGuias}
+            guias={guias}
             setGuias={setGuias}
+            setGuiasVinculadas={setGuiasVinculadas}
             travaEmpresa={guiasVinculadas.length > 0}
             showVinculadas={showVinculadas}
             setShowVinculadas={setShowVinculadas}
+            setNotificacaoIndex={setNotificacao}
           />
           {guias && (
             <>
@@ -117,6 +193,8 @@ export default () => {
                 desvincularGuia={guia => {
                   setModal(guia);
                 }}
+                showVinculadas={showVinculadas}
+                buscarDetalheGuia={buscarDetalheGuia}
               />
               <div className="row">
                 <div className="col-12 pb-3">
@@ -142,16 +220,19 @@ export default () => {
                   Nenhum resultado encontrado
                 </div>
               )}
-              <div className="mt-4 mb-4">
-                <Botao
-                  texto="Salvar Rascunho"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN}
-                  className="float-right ml-3"
-                  onClick={salvarNotificacao}
-                  disabled={guiasVinculadas.length === 0}
-                />
-              </div>
+              {(!notificacao ||
+                notificacao.status.toUpperCase() === "RASCUNHO") && (
+                <div className="mt-4 mb-4">
+                  <Botao
+                    texto="Salvar Rascunho"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    className="float-right ml-3"
+                    onClick={salvarNotificacao}
+                    disabled={guiasVinculadas.length === 0}
+                  />
+                </div>
+              )}
             </>
           )}
         </div>

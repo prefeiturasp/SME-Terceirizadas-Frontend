@@ -48,7 +48,7 @@ import {
   toastSuccess,
   toastWarn
 } from "../Shareable/Toast/dialogs";
-import { construirPeriodosECombos } from "./helper";
+import { construirPeriodosECombos, formataValues } from "./helper";
 import ModalConfirmaAlteracao from "./ModalConfirmaAlteracao";
 import { Rascunhos } from "./Rascunhos";
 import "./style.scss";
@@ -477,6 +477,7 @@ class AlteracaoCardapio extends Component {
       if (!erros) {
         this.resetaTodoPeriodoCheck();
         this.resetForm("alteracaoCardapio");
+        values = formataValues(values);
         if (!values.uuid) {
           escolaCriarSolicitacaoDeAlteracaoCardapio(
             values,

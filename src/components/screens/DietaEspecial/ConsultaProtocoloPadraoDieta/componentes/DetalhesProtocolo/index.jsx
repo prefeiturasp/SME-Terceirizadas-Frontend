@@ -24,7 +24,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
   return (
     <>
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="3">
+        <td colSpan="4">
           <Botao
             texto="Histórico"
             type={BUTTON_TYPE.BUTTON}
@@ -43,7 +43,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
         />
       )}
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="3">
+        <td colSpan="4">
           <p className="data-title">Orientações Gerais</p>
           <div
             dangerouslySetInnerHTML={{
@@ -53,7 +53,7 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
         </td>
       </tr>
       <tr className={selecionado === idx ? "" : "d-none"}>
-        <td colSpan="3">
+        <td colSpan="4">
           <p className="data-title">Lista de Substituições</p>
           <table className="table table-bordered table-alimentacao">
             <thead>
@@ -93,6 +93,22 @@ export default ({ protocoloPadrao, idx, selecionado }) => {
               )}
             </tbody>
           </table>
+        </td>
+      </tr>
+      {protocoloPadrao && protocoloPadrao.outras_informacoes && (
+        <tr className={selecionado === idx ? "" : "d-none"}>
+          <td colSpan="4">
+            <p className="data-title">Outras informações</p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: protocoloPadrao.outras_informacoes
+              }}
+            />
+          </td>
+        </tr>
+      )}
+      <tr className={selecionado === idx ? "" : "d-none"}>
+        <td colSpan="4">
           <Botao
             texto="Criar cópia"
             type={BUTTON_TYPE.BUTTON}

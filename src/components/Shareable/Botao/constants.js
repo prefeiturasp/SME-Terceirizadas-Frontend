@@ -21,6 +21,7 @@ export const BUTTON_ICON = {
   CHECK_CIRCLE: "fas fa-check-circle",
   CHECK_NORMAL: "fas fa-check",
   DOWNLOAD: "fas fa-download",
+  EDIT: "fas fa-edit",
   FILE_EXCEL: "fas fa-file-excel",
   FILE_PDF: "far fa-file-pdf",
   FILE_ALT: "far fa-file-alt",

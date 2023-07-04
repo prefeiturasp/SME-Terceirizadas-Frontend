@@ -1,3 +1,7 @@
+import React from "react";
+import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
+import { OnChange } from "react-final-form-listeners";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import Botao from "components/Shareable/Botao";
@@ -22,10 +26,6 @@ import {
   fimDoCalendario,
   formatarParaMultiselect
 } from "helpers/utilities";
-import React from "react";
-import { Field } from "react-final-form";
-import { FieldArray } from "react-final-form-arrays";
-import { OnChange } from "react-final-form-listeners";
 import "../../style.scss";
 
 export const DataInclusaoNormal = ({ ...props }) => {
@@ -120,12 +120,16 @@ export const PeriodosInclusaoNormal = ({
   values,
   periodos,
   meusDados,
-  ehETEC
+  ehETEC,
+  motivoEspecifico,
+  uuid,
+  idExterno
 }) => {
   const getPeriodo = indice => {
     return values.quantidades_periodo[indice];
   };
-
+  form.change("uuid", uuid);
+  form.change("id_externo", idExterno);
   const onTiposAlimentacaoChanged = (values_, indice) => {
     if (ehETEC) {
       const LANCHE_4H_UUID = periodos[0].tipos_alimentacao.find(
@@ -176,6 +180,20 @@ export const PeriodosInclusaoNormal = ({
         values_
       );
     }
+  };
+
+  const validacaoNumeroAlunos = (periodos, indice) => {
+    return motivoEspecifico
+      ? composeValidators(naoPodeSerZero, numericInteger)
+      : composeValidators(
+          naoPodeSerZero,
+          numericInteger,
+          maxValue(
+            periodos.find(p => p.uuid === getPeriodo(indice).uuid) &&
+              periodos.find(p => p.uuid === getPeriodo(indice).uuid)
+                .maximo_alunos
+          )
+        );
   };
 
   return (
@@ -258,18 +276,7 @@ export const PeriodosInclusaoNormal = ({
                       meusDados.vinculo_atual.instituicao
                         .tipo_unidade_escolar_iniciais !== "CEU GESTAO"
                         ? getPeriodo(indice).checked &&
-                          composeValidators(
-                            naoPodeSerZero,
-                            numericInteger,
-                            maxValue(
-                              periodos.find(
-                                p => p.uuid === getPeriodo(indice).uuid
-                              ) &&
-                                periodos.find(
-                                  p => p.uuid === getPeriodo(indice).uuid
-                                ).maximo_alunos
-                            )
-                          )
+                          validacaoNumeroAlunos(periodos, indice)
                         : false
                     }
                   />

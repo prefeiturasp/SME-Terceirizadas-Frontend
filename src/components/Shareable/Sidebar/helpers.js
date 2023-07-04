@@ -17,7 +17,7 @@ export const labelSidebar = nomeEscolaOuTerceirizada => {
     usuarioEhCoordenadorNutriCODAE() ||
     usuarioEhAdministradorNutriCODAE()
   ) {
-    return "Núcleo Dietas Especiais";
+    return "Núcleo de Necessidades Nutricionais Específicas";
   } else if (usuarioEhCODAEGestaoAlimentacao()) {
     return "Núcleo de Gestão de Terceirizadas";
   } else if (usuarioEhCODAENutriManifestacao()) {

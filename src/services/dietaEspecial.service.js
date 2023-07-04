@@ -429,3 +429,18 @@ export const deleteSolicitacaoAberta = async id => {
     return data;
   }
 };
+
+export const getNomesProtocolosValidosPorEdital = async payload =>
+  axios.get(
+    `/protocolo-padrao-dieta-especial/lista-protocolos-liberados-por-edital/`,
+    {
+      params: payload
+    }
+  );
+
+export const vincularProtocolosEditais = async payload => {
+  return await axios.put(
+    `/protocolo-padrao-dieta-especial/atualizar-editais/`,
+    payload
+  );
+};

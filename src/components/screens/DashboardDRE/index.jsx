@@ -359,7 +359,7 @@ export const DashboardDRE = props => {
                   <Botao
                     texto="Solicitação Unificada"
                     type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.BLUE_OUTLINE}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
                   />
                 </Link>
               </div>

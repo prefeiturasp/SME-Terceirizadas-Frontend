@@ -31,6 +31,7 @@
     }
   }
 }
+
 .tabela-tipos-alimentacao {
   margin-top: 10px;
   margin-bottom: 32px;
@@ -215,4 +216,59 @@
       }
     }
   }
+}
+
+.botao-voltar-lancamento-medicao {
+  margin-top: -35px;
+  margin-bottom: 15px;
+}
+
+.legenda-tooltips {
+  border: 2px solid $grayDisabled;
+  border-radius: 5px;
+  position: absolute;
+  right: 12px;
+  padding: 10px 16px 0px 16px;
+
+  i {
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+    border-radius: 50%;
+    font-size: 9px;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  div {
+    &:first-child {
+      margin-bottom: 0px;
+    }
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+    margin-bottom: 16px;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  .icone-legenda-error {
+    background-color: $red;
+  }
+
+  .icone-legenda-warning {
+    background-color: $orange;
+  }
+
+  .icone-legenda-success {
+    background-color: $green;
+  }
+}
+
+.title-semanas {
+  margin-top: 50px !important;
 }

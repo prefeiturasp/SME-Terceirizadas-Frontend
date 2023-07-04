@@ -16,6 +16,14 @@ export default ({ escolaInstituicao, loteEscolaSimples }) => {
         <Collapse expandIconPosition="end">
           <Panel header="Informações da Unidade Educacional">
             <div className="row">
+              <div className="col-12 info-label">
+                <label>NOME DA UE</label>
+                <p className="value-label">
+                  {escolaInstituicao && escolaInstituicao.nome}
+                </p>
+              </div>
+            </div>
+            <div className="row">
               <div className="col-8 info-label">
                 <label>DRE</label>
                 <p className="value-label">

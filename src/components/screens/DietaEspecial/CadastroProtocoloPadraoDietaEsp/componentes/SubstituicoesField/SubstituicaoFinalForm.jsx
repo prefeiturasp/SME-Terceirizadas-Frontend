@@ -49,6 +49,7 @@ const SubstituicoesField = ({
   deveHabilitarApagar
 }) => {
   const [valoresSelecionados, setValoresSelecionados] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const produtosSelcionados = values => {
     let listaSelecionados = [];
@@ -69,7 +70,10 @@ const SubstituicoesField = ({
           <Field
             component={ASelect}
             className={"select-form-produto"}
-            suffixIcon={<CaretDownOutlined />}
+            suffixIcon={<CaretDownOutlined onClick={() => setOpen(!open)} />}
+            open={open}
+            onClick={() => setOpen(!open)}
+            onBlur={() => setOpen(false)}
             showSearch
             name={`${name}.alimento`}
             filterOption={(input, option) =>
