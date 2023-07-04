@@ -18,7 +18,7 @@ export default () => {
   const [filtros, setFiltros] = useState({});
   const [editais, setEditais] = useState(undefined);
   const [erroAPI, setErroAPI] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const getEditaisAsync = async () => {
     const response = await getNumerosEditais();
@@ -73,9 +73,13 @@ export default () => {
             status={status}
             setCarregando={setCarregando}
             setTotal={setTotal}
+            filtros={filtros}
             setFiltros={setFiltros}
             setPage={setPage}
             editais={editais}
+            onChangePage={() => {
+              changePage(page);
+            }}
           />
         )}
         {resultado && (

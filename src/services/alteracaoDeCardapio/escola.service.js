@@ -91,29 +91,17 @@ export const getRascunhosAlteracaoTipoAlimentacao = async tipoSolicitacao => {
   }
 };
 
-export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
+export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getAlteracaoCEMEI = async uuid => {

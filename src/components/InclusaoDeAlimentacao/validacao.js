@@ -1,4 +1,8 @@
-export const validarSubmissaoNormal = (values, meusDados) => {
+export const validarSubmissaoNormal = (
+  values,
+  meusDados,
+  ehMotivoEspecifico
+) => {
   if (!values.quantidades_periodo.find(qp => qp.checked))
     return "Necessário selecionar ao menos um período";
 
@@ -25,13 +29,20 @@ export const validarSubmissaoNormal = (values, meusDados) => {
     meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
     "CEU GESTAO"
   ) {
-    if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+    if (
+      !ehMotivoEspecifico &&
+      meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos
+    )
       return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
   }
   return false;
 };
 
-export const validarSubmissaoContinua = (values, meusDados) => {
+export const validarSubmissaoContinua = (
+  values,
+  meusDados,
+  ehMotivoEspecifico
+) => {
   if (!values.quantidades_periodo)
     return "Necessário adicionar ao menos uma recorrência";
 
@@ -46,7 +57,10 @@ export const validarSubmissaoContinua = (values, meusDados) => {
     meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais !==
       "CEU GESTAO"
   ) {
-    if (meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos)
+    if (
+      !ehMotivoEspecifico &&
+      meusDados.vinculo_atual.instituicao.quantidade_alunos < totalAlunos
+    )
       return "Número total de alunos do pedido ultrapassa quantidade de alunos da escola";
   }
 

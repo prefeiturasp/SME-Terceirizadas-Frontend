@@ -1,5 +1,6 @@
 import axios from "./_base";
 import { saveAs } from "file-saver";
+import { ErrorHandlerFunction } from "./service-helpers";
 
 export const getNomesDistribuidores = async () =>
   await axios.get("/terceirizadas/lista-nomes-distribuidores/");
@@ -192,7 +193,44 @@ export const criarNotificacao = async payload => {
   return await axios.post(url, payload);
 };
 
+export const editarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/edicao-rascunho/`;
+  const response = await axios.put(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const criarEditarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/criar-notificacao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const enviarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/enviar-notificacao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getNotificacoesOcorrencia = async params => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.get(url, { params });
+};
+
+export const getNotificacoesOcorrenciaByUuid = async uuid => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
+  return await axios.get(url);
+};
+
+export const getNotificacao = async uuid => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
+  return await axios.get(url);
 };

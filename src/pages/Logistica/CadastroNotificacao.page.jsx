@@ -18,7 +18,7 @@ const anteriores = [
 ];
 
 export default () => (
-  <Page botaoVoltar voltarPara="/" titulo={atual.titulo}>
+  <Page botaoVoltar titulo={atual.titulo}>
     <Breadcrumb home={HOME} atual={atual} anteriores={anteriores} />
     <CadastroNotificacao />
   </Page>

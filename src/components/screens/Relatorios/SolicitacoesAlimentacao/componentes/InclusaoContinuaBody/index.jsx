@@ -1,7 +1,7 @@
 import { WEEK } from "configs/constants";
 import React, { useState } from "react";
 
-export const InclusaoContiniuaBody = ({ ...props }) => {
+export const InclusaoContinuaBody = ({ ...props }) => {
   const { solicitacao, item, index, filtros, labelData } = props;
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
@@ -81,7 +81,15 @@ export const InclusaoContiniuaBody = ({ ...props }) => {
                 .map(tipo_alimentacao => tipo_alimentacao.nome)
                 .join(", ");
               return (
-                <div className="row" key={idx}>
+                <div
+                  className={`row ${
+                    quantidade_periodo.cancelado ||
+                    solicitacao.status === "ESCOLA_CANCELOU"
+                      ? "cancelado"
+                      : ""
+                  }`}
+                  key={idx}
+                >
                   <div className="col-3 weekly">
                     {WEEK.map((day, key) => {
                       return (
@@ -102,23 +110,23 @@ export const InclusaoContiniuaBody = ({ ...props }) => {
                       );
                     })}
                   </div>
-                  <div className="col-3">
+                  <div className="col-3 nome-periodo-escolar-relatorio-sol-alim">
                     <p>
                       <b>{quantidade_periodo.periodo_escolar.nome}</b>
                     </p>
                   </div>
-                  <div className="col-3">
+                  <div className="col-3 tipos-alimentacao-relatorio-sol-alim">
                     <p>
                       <b>{tiposAlimentacao}</b>
                     </p>
                   </div>
-                  <div className="col-3">
+                  <div className="col-3 numero-alunos-relatorio-sol-alim">
                     <p>
                       <b>{quantidade_periodo.numero_alunos}</b>
                     </p>
                   </div>
                   {quantidade_periodo.observacao !== "<p></p>" && (
-                    <div className="col-12">
+                    <div className="col-12 observacao-relatorio-sol-alim">
                       <p>Observação:</p>
                       <b>
                         <p
@@ -133,6 +141,38 @@ export const InclusaoContiniuaBody = ({ ...props }) => {
                 </div>
               );
             })}
+            {solicitacao.quantidades_periodo.find(
+              quantidades_periodo => quantidades_periodo.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.quantidades_periodo
+                    .filter(
+                      quantidades_periodo =>
+                        quantidades_periodo.cancelado_justificativa
+                    )
+                    .map((quantidades_periodo, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {quantidades_periodo.data ||
+                            `${
+                              quantidades_periodo.periodo_escolar.nome
+                            } - ${quantidades_periodo.tipos_alimentacao
+                              .map(ta => ta.nome)
+                              .join(", ")} - ${
+                              quantidades_periodo.numero_alunos
+                            }`}
+                          {" - "}
+                          justificativa:{" "}
+                          {quantidades_periodo.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
+            )}
           </div>
         </td>
       </tr>

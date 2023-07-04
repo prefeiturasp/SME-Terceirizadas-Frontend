@@ -53,7 +53,7 @@ export const RelatorioBase = ({ ...props }) => {
   ];
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>

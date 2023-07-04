@@ -5,6 +5,8 @@ import "../style.scss";
 
 export const InputText = props => {
   const {
+    classNameToNextInput,
+    classNameToPrevInput,
     className,
     disabled,
     esconderAsterisco,
@@ -39,8 +41,7 @@ export const InputText = props => {
     exibeTooltipLancheEmergencialSolAlimentacoes,
     exibeTooltipFrequenciaZeroTabelaEtec,
     exibeTooltipLancheEmergTabelaEtec,
-    ehGrupoETECUrlParam,
-    ehProgramasEProjetos
+    exibeTooltipRepeticao
   } = props;
 
   let msgTooltip = "";
@@ -62,15 +63,8 @@ export const InputText = props => {
       validacaoMeta() &&
       (input.name.includes("refeicao") ||
         input.name.includes("sobremesa") ||
-        input.name.includes("lanche"));
-    if (!ehGrupoETECUrlParam && !ehProgramasEProjetos) {
-      validacao =
-        validacaoMeta() &&
-        (input.name.includes("refeicao") ||
-          input.name.includes("sobremesa") ||
-          input.name.includes("lanche")) &&
-        !input.name.includes("repeticao");
-    }
+        input.name.includes("lanche") ||
+        input.name.includes("repeticao"));
     if (validacao) {
       msgTooltip = meta.error;
       return true;
@@ -106,6 +100,17 @@ export const InputText = props => {
           title={
             "Dia de sobremesa doce. Justifique o lançamento de repetição nas observações."
           }
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
+      {exibeTooltipRepeticao && (
+        <Tooltip
+          title={`${
+            input.name.includes("repeticao_refeicao")
+              ? "Lançamento de repetição de refeição maior do que lançamento da 1º Oferta. Confira a digitação."
+              : "Lançamento maior do que o registrado na 1º Oferta. Confira a digitação."
+          }`}
         >
           <i className="fas fa-info icone-info-success" />
         </Tooltip>
@@ -241,7 +246,7 @@ export const InputText = props => {
         min={min}
         max={max}
         step={step}
-        name={name}
+        name={input.name}
         data-cy={input.name}
         placeholder={placeholder}
         required={required}
@@ -257,6 +262,21 @@ export const InputText = props => {
             ? e.target.value.replace(/\D/g, "")
             : e.target.value;
         }}
+        onKeyDown={e => {
+          if (e.key === "Enter" && classNameToPrevInput && e.shiftKey) {
+            let elements = document.getElementsByName(classNameToPrevInput);
+            if (elements && elements.length === 1) {
+              elements[0].focus();
+            }
+          }
+
+          if (e.key === "Enter" && classNameToNextInput && !e.shiftKey) {
+            let elements = document.getElementsByName(classNameToNextInput);
+            if (elements && elements.length === 1) {
+              elements[0].focus();
+            }
+          }
+        }}
       />
     </div>
   );
@@ -264,6 +284,8 @@ export const InputText = props => {
 
 InputText.propTypes = {
   className: PropTypes.string,
+  classNameToNextInput: PropTypes.string,
+  classNameToPrevInput: PropTypes.string,
   disabled: PropTypes.bool,
   esconderAsterisco: PropTypes.bool,
   helpText: PropTypes.string,
@@ -281,6 +303,8 @@ InputText.propTypes = {
 
 InputText.defaultProps = {
   className: "",
+  classNameToNextInput: undefined,
+  classNameToPrevInput: undefined,
   disabled: false,
   esconderAsterisco: false,
   helpText: "",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
@@ -10,6 +10,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { selectValidate } from "helpers/fieldValidators";
 
 const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
+  const [open, setOpen] = useState(false);
+
   const { Option } = SelectAntd;
 
   const getProtocolo = async (payload, form) => {
@@ -58,7 +60,10 @@ const Protocolos = ({ protocolos, setProtocoloPadrao, form }) => {
         <Field
           component={ASelect}
           className={"select-form-produto"}
-          suffixIcon={<CaretDownOutlined />}
+          suffixIcon={<CaretDownOutlined onClick={() => setOpen(!open)} />}
+          open={open}
+          onClick={() => setOpen(!open)}
+          onBlur={() => setOpen(false)}
           showSearch
           required
           validate={selectValidate}

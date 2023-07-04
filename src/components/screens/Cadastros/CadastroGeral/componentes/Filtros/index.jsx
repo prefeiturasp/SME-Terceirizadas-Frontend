@@ -25,6 +25,7 @@ export default ({
   changePage
 }) => {
   const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const { Option } = SelectAntd;
   const opcoes = tipos
     ? tipos.map(tipo => {
@@ -82,7 +83,12 @@ export default ({
                 <Field
                   component={ASelect}
                   className="input-busca-tipo-item"
-                  suffixIcon={<CaretDownOutlined />}
+                  suffixIcon={
+                    <CaretDownOutlined onClick={() => setOpen(!open)} />
+                  }
+                  open={open}
+                  onClick={() => setOpen(!open)}
+                  onBlur={() => setOpen(false)}
                   showSearch
                   name="tipo"
                   filterOption={(inputValue, option) =>

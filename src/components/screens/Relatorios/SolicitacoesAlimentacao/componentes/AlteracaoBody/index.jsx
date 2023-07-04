@@ -5,6 +5,12 @@ export const AlteracaoBody = ({ ...props }) => {
   const log = solicitacao.logs[solicitacao.logs.length - 1];
   const [showDetail, setShowDetail] = useState(false);
 
+  const ehDiaCancelado = diaIntervalo => {
+    return diaIntervalo.cancelado || solicitacao.status === "ESCOLA_CANCELOU"
+      ? "dia-cancelado"
+      : "";
+  };
+
   return [
     <tr className="table-body-items" key={index}>
       <td>
@@ -37,7 +43,7 @@ export const AlteracaoBody = ({ ...props }) => {
       <tr key={item.uuid}>
         <td colSpan={6}>
           <div className="container-fluid">
-            <div className="row mt-3">
+            <div className="row mt-3" style={{ marginBottom: "-3em" }}>
               <div className="col-3">
                 <p>ID da Solicitação:</p>
                 <p>
@@ -46,21 +52,9 @@ export const AlteracaoBody = ({ ...props }) => {
               </div>
               <div className="col-3">
                 <p>Tipo de Alteração:</p>
-                <p>
-                  <b>{solicitacao.motivo.nome}</b>
-                </p>
               </div>
               <div className="col-3">
-                <p>Data(s) do Evento:</p>
-                <p>
-                  <b>
-                    {solicitacao.data_inicial}{" "}
-                    {solicitacao.data_final &&
-                    solicitacao.data_inicial !== solicitacao.data_final
-                      ? `- ${solicitacao.data_final}`
-                      : ""}
-                  </b>
-                </p>
+                <p>Dia(s) de Alteração:</p>
               </div>
               <div className="col-3">
                 <p>{labelData}</p>
@@ -69,6 +63,26 @@ export const AlteracaoBody = ({ ...props }) => {
                 </p>
               </div>
             </div>
+            {solicitacao.datas_intervalo.map((data_intervalo, key) => {
+              return (
+                <div key={key} className="row">
+                  <div className="offset-3 col-3">
+                    <p>
+                      <b className={`${ehDiaCancelado(data_intervalo)}`}>
+                        {solicitacao.motivo.nome}
+                      </b>
+                    </p>
+                  </div>
+                  <div className="col-3">
+                    <p>
+                      <b className={`${ehDiaCancelado(data_intervalo)}`}>
+                        {data_intervalo.data}
+                      </b>
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
             <div className="row mt-3">
               <div className="col-3">
                 <p>Período:</p>
@@ -122,6 +136,30 @@ export const AlteracaoBody = ({ ...props }) => {
                   />
                 </div>
               </div>
+            )}
+            {solicitacao.datas_intervalo.find(
+              data_intervalo => data_intervalo.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.datas_intervalo
+                    .filter(
+                      data_intervalo => data_intervalo.cancelado_justificativa
+                    )
+                    .map((data_intervalo, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {data_intervalo.data}
+                          {" - "}
+                          justificativa:{" "}
+                          {data_intervalo.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
             )}
           </div>
         </td>

@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.scss";
 
-export default ({ conferencia, reposicaoFlag }) => {
+export default ({ conferencia, reposicaoFlag, guia }) => {
   const filtraEmbalagemPorTipo = (embalagens, tipo) => {
     const embalagensFiltradas = embalagens.filter(value => {
       return value.tipo_embalagem.toUpperCase() === tipo;
@@ -187,6 +187,11 @@ export default ({ conferencia, reposicaoFlag }) => {
           <div className="col-6">
             <p>Placa do Veículo: </p>
             <p className="dado-conferencia">{conferencia.placa_veiculo}</p>
+          </div>
+
+          <div className="col-12">
+            <p>Nome da Escola: </p>
+            <p className="dado-conferencia">{guia.nome_unidade}</p>
           </div>
         </div>
 

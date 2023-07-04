@@ -13,6 +13,7 @@ import {
 } from "components/Shareable/Botao/constants";
 
 import "./style.scss";
+import ModalSuspensaoProdutoEdital from "../ModalSuspensaoProdutoEdital";
 
 const ModalJustificativa = ({
   showModal,
@@ -23,7 +24,12 @@ const ModalJustificativa = ({
   comAnexo = false,
   labelJustificativa = "Justificativa",
   escola,
-  terceirizada
+  terceirizada,
+  produto,
+  uuidReclamacao,
+  showModalSuspensao,
+  abreModalSuspensao,
+  closeModalSuspensao
 }) => {
   return (
     <Modal
@@ -193,10 +199,7 @@ const ModalJustificativa = ({
                       <Botao
                         texto="Suspender produto"
                         type={BUTTON_TYPE.BUTTON}
-                        onClick={() => {
-                          state.tipo_resposta = "aceitar";
-                          form.submit();
-                        }}
+                        onClick={abreModalSuspensao}
                         style={BUTTON_STYLE.RED_OUTLINE}
                         className="ml-3"
                         disabled={submitting}
@@ -216,6 +219,15 @@ const ModalJustificativa = ({
             </Modal.Footer>
           </form>
         )}
+      />
+      <ModalSuspensaoProdutoEdital
+        showModal={showModalSuspensao}
+        closeModalSuspender={closeModalSuspensao}
+        onSubmitSupender={onSubmit}
+        closeModalJustificativa={closeModal}
+        produto={produto}
+        uuidReclamacao={uuidReclamacao}
+        state={state}
       />
     </Modal>
   );

@@ -25,7 +25,7 @@ const atual = {
 };
 
 export default () => (
-  <Page botaoVoltar titulo={atual.titulo}>
+  <Page titulo={atual.titulo}>
     <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
     <PeriodoLancamentoMedicaoInicial />
   </Page>
