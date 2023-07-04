@@ -1,9 +1,9 @@
 import React from "react";
-import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import Relatorio from "../../components/SolicitacaoUnificada/Relatorio";
-import Page from "../../components/Shareable/Page/Page";
-import { HOME } from "../../constants/config";
-import { DRE, CODAE, TERCEIRIZADA, ESCOLA } from "../../configs/constants";
+import Breadcrumb from "components/Shareable/Breadcrumb";
+import Relatorio from "components/SolicitacaoUnificada/Relatorio";
+import Page from "components/Shareable/Page/Page";
+import { HOME } from "constants/config";
+import { DRE, CODAE, TERCEIRIZADA, ESCOLA } from "configs/constants";
 import {
   cancelaKitLancheUnificadoDre,
   TerceirizadaTomaCienciaSolicitacoUnificada,
@@ -15,8 +15,8 @@ import {
 } from "../../services/solicitacaoUnificada.service";
 import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
-import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 
 class RelatorioBase extends React.Component {
   render() {
@@ -32,7 +32,7 @@ class RelatorioBase extends React.Component {
     ];
 
     return (
-      <Page>
+      <Page botaoVoltar>
         <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
         <Relatorio {...this.props} />
       </Page>
@@ -67,7 +67,7 @@ export const RelatorioCODAE = () => (
   <RelatorioBase
     visao={CODAE}
     ModalNaoAprova={ModalNegarSolicitacao}
-    ModalQuestionamento={ModalCODAEQuestiona}
+    ModalQuestionamento={ModalCODAEQuestionaFinalForm}
     toastAprovaMensagem={"Solicitação Unificada autorizada com sucesso!"}
     toastAprovaMensagemErro={
       "Houve um erro ao autorizar a Solicitação Unificada"
