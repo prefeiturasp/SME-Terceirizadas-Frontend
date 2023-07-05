@@ -248,27 +248,30 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
-      {alteracaoDeCardapio.datas_intervalo.find(
-        data_intervalo => data_intervalo.cancelado_justificativa
-      ) && (
-        <>
-          <hr />
-          <p>
-            <strong>Histórico de cancelamento</strong>
-            {alteracaoDeCardapio.datas_intervalo
-              .filter(data_intervalo => data_intervalo.cancelado_justificativa)
-              .map((data_intervalo, key) => {
-                return (
-                  <div key={key}>
-                    {data_intervalo.data}
-                    {" - justificativa: "}
-                    {data_intervalo.cancelado_justificativa}
-                  </div>
-                );
-              })}
-          </p>
-        </>
-      )}
+      {!ehInclusaoCei(tipoSolicitacao) &&
+        alteracaoDeCardapio.datas_intervalo.find(
+          data_intervalo => data_intervalo.cancelado_justificativa
+        ) && (
+          <>
+            <hr />
+            <p>
+              <strong>Histórico de cancelamento</strong>
+              {alteracaoDeCardapio.datas_intervalo
+                .filter(
+                  data_intervalo => data_intervalo.cancelado_justificativa
+                )
+                .map((data_intervalo, key) => {
+                  return (
+                    <div key={key}>
+                      {data_intervalo.data}
+                      {" - justificativa: "}
+                      {data_intervalo.cancelado_justificativa}
+                    </div>
+                  );
+                })}
+            </p>
+          </>
+        )}
       {justificativaNegacao && (
         <table className="table-periods">
           <tr>
