@@ -313,7 +313,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento",
   CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor",
   NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO:
-    "nutrisupervisor_respondeu_questionamento"
+    "nutrisupervisor_respondeu_questionamento",
+  RESPONDER_QUESTIONAMENTO_DA_CODAE: "responder_questionamentos_da_codae"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {

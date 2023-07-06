@@ -208,7 +208,7 @@ export default class DashboardGestaoProduto extends Component {
                                 this.apontaParaFormularioDeAlteracao(
                                   card2.titulo
                                 ),
-                                card.titulo
+                                card2.titulo
                               )}
                               icon={card2.icon}
                               href={`/${GESTAO_PRODUTO}/${card2.rota}`}
