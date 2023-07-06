@@ -5,7 +5,7 @@ import {
   getMotivosAlteracaoCardapio,
   getPeriodosComMatriculadosPorUE
 } from "services/alteracaoDeCardapio";
-import { getDiasUteis } from "services/diasUteis.service";
+import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
 import MeusDadosContext from "context/MeusDadosContext";
 import { useEffect } from "react";
 import { AlteracaoDoTipoDeAlimentacaoCEI } from ".";
@@ -20,6 +20,7 @@ export const Container = () => {
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
   const [erroAPI, setErroAPI] = useState("");
   const [periodosValidos, setPeriodosValidos] = useState([]);
+  const [feriadosAno, setFeriadosAno] = useState(null);
 
   const getMotivosAlteracaoCardapioAsync = async () => {
     const response = await getMotivosAlteracaoCardapio();
@@ -65,9 +66,19 @@ export const Container = () => {
     }
   };
 
+  const getFeriadosAnoAsync = async () => {
+    const response = await getFeriadosAno();
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriadosAno(response.data.results);
+    } else {
+      setErroAPI("Erro ao carregar dias úteis para a solicitação.");
+    }
+  };
+
   useEffect(() => {
     getMotivosAlteracaoCardapioAsync();
     getDiasUteisAsync();
+    getFeriadosAnoAsync();
     meusDados &&
       getVinculosTipoAlimentacaoPorEscolaAsync(
         meusDados.vinculo_atual.instituicao.uuid
@@ -79,7 +90,8 @@ export const Container = () => {
     !proximosCincoDiasUteis ||
     !proximosDoisDiasUteis ||
     !motivos ||
-    !vinculos;
+    !vinculos ||
+    !feriadosAno;
 
   const filtroPeriodos = () => {
     return meusDados.vinculo_atual.instituicao.periodos_escolares.filter(
@@ -104,6 +116,7 @@ export const Container = () => {
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
           vinculos={filtroVinculos()}
+          feriadosAno={feriadosAno}
         />
       )}
     </Spin>
