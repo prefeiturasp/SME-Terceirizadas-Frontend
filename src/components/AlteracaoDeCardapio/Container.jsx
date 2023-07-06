@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import AlteracaoDeCardapio from ".";
 import { agregarDefault, dataParaUTC } from "../../helpers/utilities";
 import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
-import { getDiasUteis } from "../../services/diasUteis.service";
+import { getDiasUteis, getFeriadosAno } from "../../services/diasUteis.service";
 import { meusDados } from "../../services/perfil.service";
 
 class Container extends Component {
@@ -13,7 +13,8 @@ class Container extends Component {
       motivos: [],
       periodos: [],
       proximos_dois_dias_uteis: null,
-      proximos_cinco_dias_uteis: null
+      proximos_cinco_dias_uteis: null,
+      feriados_ano: null
     };
   }
 
@@ -42,6 +43,11 @@ class Container extends Component {
         proximos_dois_dias_uteis,
         proximos_cinco_dias_uteis
       });
+    });
+
+    getFeriadosAno().then(response => {
+      const feriados_ano = response.data.results;
+      this.setState({ feriados_ano });
     });
   }
 
