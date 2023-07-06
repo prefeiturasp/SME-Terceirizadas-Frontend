@@ -208,7 +208,7 @@ import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
-import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
+import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
@@ -232,6 +232,8 @@ import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
 import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
 import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
+import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
+import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
 
 const routesConfig = [
   {
@@ -748,11 +750,35 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.PRODUTOS
     }`,
-    component: CadastroProdutosCronograma,
+    component: ProdutosLogisticaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma() || usuarioEhCodaeDilog()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
   },
-
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_PRODUTOS
+    }`,
+    component: CadastroProdutosLogisticaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDICAO_PRODUTOS
+    }`,
+    component: EditarProdutosLogisticaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
+  },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.EMBALAGEM
