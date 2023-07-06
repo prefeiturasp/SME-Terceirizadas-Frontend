@@ -46,7 +46,8 @@ export class InputComData extends Component {
     fullScreen: false,
     inline: false,
     hasIcon: true,
-    writable: false
+    writable: false,
+    usarDirty: false
   };
 
   constructor(props) {
@@ -105,7 +106,8 @@ export class InputComData extends Component {
       popperPlacement,
       tooltipText,
       visitedError,
-      writable
+      writable,
+      usarDirty
     } = this.props;
     return (
       <div className="datepicker">
@@ -155,7 +157,8 @@ export class InputComData extends Component {
             maxDate={maxDate}
             disabled={disabled}
             selected={this.dataSelecionada(input.value)}
-            className={`form-control ${className} ${meta.touched &&
+            className={`form-control ${className} ${meta &&
+              (usarDirty ? meta.dirty : meta.touched) &&
               meta.error &&
               "invalid-field"}`}
             ref={c => (this._calendar = c)}
@@ -169,7 +172,11 @@ export class InputComData extends Component {
           )}
         </div>
         <HelpText helpText={helpText} />
-        <InputErroMensagem meta={meta} visitedError={visitedError} />
+        <InputErroMensagem
+          meta={meta}
+          visitedError={visitedError}
+          dirtyValidation={usarDirty}
+        />
       </div>
     );
   }
