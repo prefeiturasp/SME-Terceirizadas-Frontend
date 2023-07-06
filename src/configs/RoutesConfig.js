@@ -1109,7 +1109,10 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor()
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1306,7 +1309,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
