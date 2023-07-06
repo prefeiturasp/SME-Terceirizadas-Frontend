@@ -177,8 +177,8 @@ export const getPdfRelatorioQuantitativo = async params => {
   saveAs(data, "relatorio_quantitativo_por_terceirizada.pdf");
 };
 
-export const getFornecedoresSimples = async () =>
-  await axios.get("/terceirizadas/lista-fornecedores-simples/");
+export const getEmpresasCronograma = async () =>
+  await axios.get("/terceirizadas/lista-empresas-cronograma/");
 
 export const getCNPJsEmpresas = async () =>
   await axios.get("/terceirizadas/lista-cnpjs/");
