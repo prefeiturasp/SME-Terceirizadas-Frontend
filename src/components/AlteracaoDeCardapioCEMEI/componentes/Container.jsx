@@ -7,7 +7,7 @@ import { getMeusDados } from "services/perfil.service";
 import { getQuantidadeAlunosCEMEIporCEIEMEI } from "services/aluno.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getMotivosAlteracaoCardapio } from "services/alteracaoDeCardapio";
-import { getDiasUteis } from "services/diasUteis.service";
+import { getDiasUteis, getFeriadosAno } from "services/diasUteis.service";
 
 export const Container = () => {
   const [dados, setDados] = useState(null);
@@ -16,6 +16,7 @@ export const Container = () => {
   const [vinculos, setVinculos] = useState(null);
   const [proximosDoisDiasUteis, setProximosDoisDiasUteis] = useState(null);
   const [proximosCincoDiasUteis, setProximosCincoDiasUteis] = useState(null);
+  const [feriadosAno, setFeriadosAno] = useState(null);
 
   const [erro, setErro] = useState(false);
 
@@ -70,10 +71,20 @@ export const Container = () => {
     }
   };
 
+  const getFeriadosAnoAsync = async () => {
+    const response = await getFeriadosAno();
+    if (response.status === HTTP_STATUS.OK) {
+      setFeriadosAno(response.data.results);
+    } else {
+      setErro("Erro ao carregar dias úteis para a solicitação.");
+    }
+  };
+
   useEffect(() => {
     getMeusDadosAsync();
     getMotivosAlteracaoCardapioAsync();
     getDiasUteisAsync();
+    getFeriadosAnoAsync();
   }, []);
 
   const REQUISICOES_CONCLUIDAS =
@@ -82,7 +93,8 @@ export const Container = () => {
     vinculos &&
     periodos &&
     proximosDoisDiasUteis &&
-    proximosCincoDiasUteis;
+    proximosCincoDiasUteis &&
+    feriadosAno;
 
   return (
     <div>
@@ -98,6 +110,7 @@ export const Container = () => {
           vinculos={vinculos}
           proximosDoisDiasUteis={proximosDoisDiasUteis}
           proximosCincoDiasUteis={proximosCincoDiasUteis}
+          feriadosAno={feriadosAno}
         />
       )}
     </div>
