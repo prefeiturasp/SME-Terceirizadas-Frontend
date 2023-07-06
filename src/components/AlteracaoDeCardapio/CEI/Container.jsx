@@ -71,7 +71,7 @@ export const Container = () => {
     if (response.status === HTTP_STATUS.OK) {
       setFeriadosAno(response.data.results);
     } else {
-      setErroAPI("Erro ao carregar dias úteis para a solicitação.");
+      setErroAPI("Erro ao carregar feriados");
     }
   };
 
