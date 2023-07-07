@@ -190,11 +190,20 @@ export const listarCardsPermitidos = () => {
       CARD_HOMOLOGADOS,
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
-  } else if ([TIPO_PERFIL.DIRETORIA_REGIONAL].includes(perfil)) {
+  } else if (
+    [
+      TIPO_PERFIL.DIRETORIA_REGIONAL,
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+    ].includes(perfil)
+  ) {
     const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
     const cardAguardandoAnaliseReclamacao = Object.assign(
       {},
       CARD_AGUARDANDO_ANALISE_RECLAMACAO
+    );
+
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
     );
 
     return [

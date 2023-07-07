@@ -205,11 +205,17 @@ export const CardStatusDeSolicitacao = props => {
       </div>
       <hr />
       {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
-      tipoPerfil !== TIPO_PERFIL.DIRETORIA_REGIONAL
+      ![
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+      ].includes(tipoPerfil)
         ? renderSolicitations(filteredSolicitations)
         : renderSolicitations(solicitations)}
       {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
-      tipoPerfil !== TIPO_PERFIL.DIRETORIA_REGIONAL
+      ![
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+      ].includes(tipoPerfil)
         ? renderVerMais(filteredSolicitations)
         : renderVerMais(solicitations)}
     </div>

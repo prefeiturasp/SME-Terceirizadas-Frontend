@@ -7,7 +7,8 @@ import {
   comparaObjetosMoment,
   usuarioEhEscolaTerceirizada,
   usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhCogestorDRE
+  usuarioEhCogestorDRE,
+  usuarioEhCODAEGestaoAlimentacao
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -47,11 +48,12 @@ export const incluirDados = (statuses, arr) => {
 
 const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
-    usuarioEhCogestorDRE() &&
-    [
-      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
-      CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo
-    ].includes(titulo)
+    usuarioEhCogestorDRE() ||
+    (usuarioEhCODAEGestaoAlimentacao() &&
+      [
+        CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
+        CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo
+      ].includes(titulo))
   ) {
     return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
   } else if (
