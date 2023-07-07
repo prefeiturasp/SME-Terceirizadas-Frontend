@@ -1205,7 +1205,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCogestorDRE()
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1219,7 +1220,8 @@ const routesConfig = [
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCogestorDRE()
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1347,7 +1349,10 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
     component: ConsultaResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaTerceirizada() || usuarioEhCogestorDRE()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,

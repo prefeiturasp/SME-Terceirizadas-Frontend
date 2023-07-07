@@ -14,7 +14,10 @@ import {
   escolheStatusPendenteHomologacao,
   escolheStatusAguardandoAnaliseReclamacao
 } from "./helpers";
-import { usuarioEhCogestorDRE } from "helpers/utilities";
+import {
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCogestorDRE
+} from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
@@ -114,7 +117,7 @@ export const NaoHomologados = () => (
 export const ResponderQuestionamentoDaCodae = () => (
   <StatusSolicitacoesBase
     status={
-      usuarioEhCogestorDRE()
+      usuarioEhCogestorDRE() || usuarioEhCODAEGestaoAlimentacao()
         ? ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.RESPONDER_QUESTIONAMENTO_DA_CODAE
         : ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO
     }
