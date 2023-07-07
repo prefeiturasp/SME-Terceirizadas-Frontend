@@ -16,6 +16,7 @@ import {
 } from "./helpers";
 import {
   usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao,
   usuarioEhCogestorDRE
 } from "helpers/utilities";
 
@@ -117,7 +118,9 @@ export const NaoHomologados = () => (
 export const ResponderQuestionamentoDaCodae = () => (
   <StatusSolicitacoesBase
     status={
-      usuarioEhCogestorDRE() || usuarioEhCODAEGestaoAlimentacao()
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
         ? ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.RESPONDER_QUESTIONAMENTO_DA_CODAE
         : ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO
     }

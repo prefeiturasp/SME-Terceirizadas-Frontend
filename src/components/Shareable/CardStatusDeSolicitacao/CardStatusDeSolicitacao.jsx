@@ -207,14 +207,16 @@ export const CardStatusDeSolicitacao = props => {
       {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
       ![
         TIPO_PERFIL.DIRETORIA_REGIONAL,
-        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.NUTRICAO_MANIFESTACAO
       ].includes(tipoPerfil)
         ? renderSolicitations(filteredSolicitations)
         : renderSolicitations(solicitations)}
       {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
       ![
         TIPO_PERFIL.DIRETORIA_REGIONAL,
-        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.NUTRICAO_MANIFESTACAO
       ].includes(tipoPerfil)
         ? renderVerMais(filteredSolicitations)
         : renderVerMais(solicitations)}
