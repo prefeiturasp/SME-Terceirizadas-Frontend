@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Spin, Pagination } from "antd";
-import { getListaProdutosLogistica } from "services/produto.service";
+import {
+  getListaProdutosLogistica,
+  getNomesProdutosLogistica
+} from "services/produto.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import "./style.scss";
@@ -19,10 +22,15 @@ export default () => {
     setCarregando(true);
     const params = gerarParametrosConsulta({ page: page, ...filtros });
     const res = await getListaProdutosLogistica(params);
-    if (!nomes) setNomes(res.data.results.map(prod => prod.nome));
     setResultado(res.data.results);
     setTotal(res.data.count);
     setCarregando(false);
+  };
+
+  const buscarNomes = async () => {
+    const res = await getNomesProdutosLogistica();
+    console.log(res.data.results);
+    setNomes(res.data.results);
   };
 
   useEffect(() => {
@@ -31,6 +39,10 @@ export default () => {
       setPage(1);
     }
   }, [filtros]);
+
+  useEffect(() => {
+    buscarNomes();
+  }, []);
 
   const changePage = page => {
     buscarProdutos(page);
