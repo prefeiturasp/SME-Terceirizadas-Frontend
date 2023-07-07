@@ -76,6 +76,7 @@ export default () => {
     <div className="card mt-3 card-cadastro-produto">
       <div className="card-body">
         <Spin tip="Carregando..." spinning={carregando}>
+          <div className="titulo-verde">Dados do Produto</div>
           <Form
             onSubmit={onSubmit}
             render={({ handleSubmit, submitting }) => (

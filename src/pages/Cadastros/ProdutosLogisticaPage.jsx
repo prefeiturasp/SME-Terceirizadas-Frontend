@@ -9,9 +9,16 @@ const atual = {
   titulo: "Produtos"
 };
 
+const anteriores = [
+  {
+    href: `/${CONFIGURACOES}/${CADASTROS}`,
+    titulo: "Cadastros"
+  }
+];
+
 export default () => (
   <Page titulo={atual.titulo} botaoVoltar voltarPara={`/`}>
-    <Breadcrumb home={"/"} atual={atual} />
+    <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <ProdutosLogistica />
   </Page>
 );

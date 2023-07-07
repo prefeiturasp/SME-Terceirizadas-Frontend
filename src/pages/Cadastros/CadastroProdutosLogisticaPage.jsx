@@ -11,8 +11,15 @@ import {
 
 const atual = {
   href: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_PRODUTOS}`,
-  titulo: "Cadastro de Produtos"
+  titulo: "Cadastrar Produto"
 };
+
+const anteriores = [
+  {
+    href: `/${CONFIGURACOES}/${CADASTROS}`,
+    titulo: "Cadastros"
+  }
+];
 
 export default () => (
   <Page
@@ -20,7 +27,7 @@ export default () => (
     botaoVoltar
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}
   >
-    <Breadcrumb home={"/"} atual={atual} />
+    <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <CadastroProdutosLogistica />
   </Page>
 );

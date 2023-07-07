@@ -44,8 +44,8 @@ export default ({ setResultado, nomes, setFiltros }) => {
               <div className="col-5">
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getNomesProdutosFiltrado(values.nome_item)}
-                  name="nome_item"
+                  dataSource={getNomesProdutosFiltrado(values.nome)}
+                  name="nome"
                   label="Nome"
                   placeholder="Digite um nome"
                   className="input-busca-nome-item"

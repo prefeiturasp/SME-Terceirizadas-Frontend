@@ -14,13 +14,20 @@ const atual = {
   titulo: "Editar Cadastro de Produto"
 };
 
+const anteriores = [
+  {
+    href: `/${CONFIGURACOES}/${CADASTROS}`,
+    titulo: "Cadastros"
+  }
+];
+
 export default () => (
   <Page
     titulo={atual.titulo}
     botaoVoltar
     voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}
   >
-    <Breadcrumb home={"/"} atual={atual} />
+    <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
     <CadastroProdutosLogistica />
   </Page>
 );
