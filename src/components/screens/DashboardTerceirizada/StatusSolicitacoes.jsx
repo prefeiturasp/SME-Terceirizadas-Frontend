@@ -119,16 +119,7 @@ export class StatusSolicitacoes extends Component {
                 )
               ))
           );
-          if (
-            this.props.titulo ===
-            GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
-          ) {
-            solicitacoesFiltrados = this.cardResponderQuestionamentosCodae(
-              solicitacoes
-            );
-          } else {
-            solicitacoesFiltrados = solicitacoes;
-          }
+          solicitacoesFiltrados = solicitacoes;
           this.setState({
             count: 1,
             currentPage: 1,
@@ -309,7 +300,6 @@ export class StatusSolicitacoes extends Component {
       formatarDadosSolicitacao,
       status
     } = this.props;
-
     const listaStatus = Array.isArray(status) ? status : [status];
     const { erro, loading, currentPage } = this.state;
     const url = window.location.href;
@@ -369,14 +359,7 @@ export class StatusSolicitacoes extends Component {
     if (solicitacoes.length > 0 && !erro && loading) {
       this.setState({ loading: false });
     }
-    if (
-      this.props.titulo ===
-      GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
-    ) {
-      solicitacoes = this.cardResponderQuestionamentosCodae(solicitacoes);
-    } else {
-      solicitacoes = solicitacoes.sort(ordenaPorDate);
-    }
+    solicitacoes = solicitacoes.sort(ordenaPorDate);
     if (usuarioEhEmpresaTerceirizada() || usuarioEhCogestorDRE()) {
       await getMeusLotes().then(response => {
         this.setState({
@@ -469,9 +452,11 @@ export class StatusSolicitacoes extends Component {
                   tipo={tipoCard}
                   icone={icone}
                 />
-                {!loading && solicitacoesFiltrados.length === 0 && (
-                  <div>Não há solicitações neste status</div>
-                )}
+                {!loading &&
+                  solicitacoesFiltrados &&
+                  solicitacoesFiltrados.length === 0 && (
+                    <div>Não há solicitações neste status</div>
+                  )}
                 <Paginacao
                   onChange={this.navegacaoPage}
                   total={count}
