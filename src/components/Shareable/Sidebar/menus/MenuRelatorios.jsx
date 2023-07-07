@@ -35,7 +35,10 @@ const MenuRelatorios = () => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
-    usuarioEhCODAEDietaEspecial();
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
@@ -45,7 +48,8 @@ const MenuRelatorios = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhCODAENutriManifestacao();
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGestaoAlimentacao();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
