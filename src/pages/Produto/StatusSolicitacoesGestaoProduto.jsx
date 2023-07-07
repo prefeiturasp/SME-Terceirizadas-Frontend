@@ -14,6 +14,7 @@ import {
   escolheStatusPendenteHomologacao,
   escolheStatusAguardandoAnaliseReclamacao
 } from "./helpers";
+import { usuarioEhCogestorDRE } from "helpers/utilities";
 
 class StatusSolicitacoesBase extends React.Component {
   render() {
@@ -112,7 +113,11 @@ export const NaoHomologados = () => (
 
 export const ResponderQuestionamentoDaCodae = () => (
   <StatusSolicitacoesBase
-    status={ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO}
+    status={
+      usuarioEhCogestorDRE()
+        ? ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.RESPONDER_QUESTIONAMENTO_DA_CODAE
+        : ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO
+    }
     tipoCard={CARD_TYPE_ENUM.PENDENTE}
     icone={ICON_CARD_TYPE_ENUM.PENDENTE}
     titulo={GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE}
