@@ -29,7 +29,6 @@ export default () => {
 
   const buscarNomes = async () => {
     const res = await getNomesProdutosLogistica();
-    console.log(res.data.results);
     setNomes(res.data.results);
   };
 
