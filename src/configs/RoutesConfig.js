@@ -1206,7 +1206,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao()
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1221,7 +1222,8 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
       usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao()
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1352,7 +1354,8 @@ const routesConfig = [
     tipoUsuario:
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhCogestorDRE() ||
-      usuarioEhCODAEGestaoAlimentacao()
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,

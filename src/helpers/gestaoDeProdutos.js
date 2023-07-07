@@ -193,7 +193,8 @@ export const listarCardsPermitidos = () => {
   } else if (
     [
       TIPO_PERFIL.DIRETORIA_REGIONAL,
-      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.NUTRICAO_MANIFESTACAO
     ].includes(perfil)
   ) {
     const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
