@@ -42,11 +42,11 @@ export default ({ setResultado, nomes, setFiltros }) => {
           <form onSubmit={handleSubmit}>
             <div className="row mt-3 mb-3">
               <div className="col-5">
-                <label className="col-form-label mb-1">Nome</label>
                 <Field
                   component={AutoCompleteField}
                   dataSource={getNomesProdutosFiltrado(values.nome_item)}
                   name="nome_item"
+                  label="Nome"
                   placeholder="Digite um nome"
                   className="input-busca-nome-item"
                 />
