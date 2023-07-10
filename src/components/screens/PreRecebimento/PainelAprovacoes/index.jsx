@@ -20,7 +20,11 @@ import {
   truncarString,
   usuarioEhDilogDiretoria
 } from "helpers/utilities";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  DETALHAR_ALTERACAO_CRONOGRAMA,
+  DETALHE_CRONOGRAMA,
+  PRE_RECEBIMENTO
+} from "configs/constants";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
@@ -128,7 +132,7 @@ export default () => {
     return items.sort(ordenaPorLogMaisRecente).map(item => ({
       text: getTextAlteracao(item),
       date: item.log_mais_recente,
-      link: "",
+      link: gerarLinkSolicitacaoAlteracao(item),
       status: item.status
     }));
   };
@@ -141,6 +145,12 @@ export default () => {
     ) {
       return `/${PRE_RECEBIMENTO}/${DETALHE_CRONOGRAMA}?uuid=${item.uuid}`;
     }
+  };
+
+  const gerarLinkSolicitacaoAlteracao = item => {
+    return `/${PRE_RECEBIMENTO}/${DETALHAR_ALTERACAO_CRONOGRAMA}?uuid=${
+      item.uuid
+    }`;
   };
 
   const filtrarCronograma = debounce((value, values) => {
