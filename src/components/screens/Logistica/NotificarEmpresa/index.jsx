@@ -38,7 +38,6 @@ export default () => {
       try {
         setCarregando(true);
         response = await getNotificacao(uuid);
-        console.log(response.data);
         setNotificacao(organizaOcorrencias(response.data));
         setInitialValues({
           nome_empresa: response.data.empresa.nome_fantasia
@@ -46,11 +45,9 @@ export default () => {
 
         setCarregando(false);
       } catch (e) {
-        console.log(e);
         toastError(e.response.data.detail);
         setCarregando(false);
       }
-      console.log(notificacao);
     };
 
     const queryString = window.location.search;

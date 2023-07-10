@@ -697,11 +697,17 @@ export const criarVinculoProdutosEditais = async payload =>
 export const getNomesProdutosEdital = async () =>
   axios.get("/cadastro-produtos-edital/lista-nomes/");
 
+export const getNomesProdutosLogistica = async () =>
+  axios.get("/cadastro-produtos-edital/lista-nomes-logistica/");
+
 export const getCadastroProdutosEdital = async params =>
   axios.get(`/cadastro-produtos-edital/`, { params });
 
 export const getListaProdutosEdital = async params =>
   axios.get(`/cadastro-produtos-edital/lista-completa/`, { params });
+
+export const getListaProdutosLogistica = async params =>
+  axios.get(`/cadastro-produtos-edital/produtos-logistica/`, { params });
 
 export const cadastrarProdutoEdital = async payload =>
   await axios.post(`/cadastro-produtos-edital/`, payload);

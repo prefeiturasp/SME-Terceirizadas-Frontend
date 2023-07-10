@@ -107,6 +107,7 @@ export const SidebarContent = () => {
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
     usuarioEhDilogQualidadeOuCronograma() ||
+    usuarioEhEmpresaFornecedor() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() ||
