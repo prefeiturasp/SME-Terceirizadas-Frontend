@@ -1,7 +1,6 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import Embalagens from "components/screens/Cadastros/Embalagens";
-// import EmbalagensCadastradas from "components/screens/Cadastros/CadastroEmbalagem/EmbalagensCadastradas";
 import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
