@@ -949,6 +949,17 @@ export const tipoStatus = () => {
   ];
 };
 
+export const statusProdutos = [
+  {
+    uuid: "Ativo",
+    nome: "Ativo"
+  },
+  {
+    uuid: "Inativo",
+    nome: "Inativo"
+  }
+];
+
 export const fimDoCalendario = () => {
   return new Date().getMonth() === JS_DATE_DEZEMBRO
     ? new Date(new Date().getFullYear() + 1, 11, 31)
