@@ -732,7 +732,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
+      constants.CADASTRO_EMBALAGEM
     }`,
     component: CadastroEmbalagemPage,
     exact: true,
@@ -781,7 +781,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
+      constants.CADASTRO_EMBALAGEM
     }/${constants.EDITAR}`,
     component: EditarCadastroEmbalagemPage,
     exact: true,

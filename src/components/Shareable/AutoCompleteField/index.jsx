@@ -16,6 +16,9 @@ export default class AutoCompleteField extends Component {
       name,
       required,
       esconderIcone,
+      toUppercaseActive,
+      maxlength,
+      proibeNumeros,
       ...props
     } = this.props;
     return (
@@ -35,6 +38,15 @@ export default class AutoCompleteField extends Component {
           {...props}
           {...input}
           onSearch={onSearch}
+          maxLength={maxlength}
+          onInput={e => {
+            e.target.value = toUppercaseActive
+              ? e.target.value.toUpperCase()
+              : e.target.value;
+            e.target.value = proibeNumeros
+              ? e.target.value.replace(/[0-9]/, "")
+              : e.target.value;
+          }}
         >
           {esconderIcone ? (
             <Input

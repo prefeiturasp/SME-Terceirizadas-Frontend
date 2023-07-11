@@ -10,7 +10,7 @@ import {
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import { Modal } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   alphaNumericAndSingleSpaceBetweenCharacters,
   noSpaceStartOrEnd,
@@ -149,40 +149,14 @@ export default () => {
             initialValues={initialValues}
             render={({ form, handleSubmit, values }) => (
               <form onSubmit={handleSubmit}>
-                {!edicao ? (
-                  <>
-                    <div className="mb-4">
-                      <Link
-                        to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
-                      >
-                        <Botao
-                          texto="Embalagens Cadastradas"
-                          type={BUTTON_TYPE.BUTTON}
-                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                          className="float-right"
-                          onClick={() => {}}
-                        />
-                      </Link>
-                    </div>
-                    <div className="row">
-                      <div className="card-title green">
-                        Dados das Embalagens
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="mt-4 card-title green">
-                    Dados das Embalagens
-                  </div>
-                )}
-
+                <div className="mt-4 card-title green">Dados da Embalagem</div>
                 <div className="row">
                   <div className="col-6">
                     <Field
                       component={InputText}
                       label="Nome da Embalagem"
                       name="nome_embalagem"
-                      placeholder="Digite o Nome da Embalagem"
+                      placeholder="Digite o nome da Embalagem"
                       validate={composeValidators(
                         required,
                         validaNomeEmbalagem,
@@ -198,16 +172,18 @@ export default () => {
                       component={InputText}
                       label="Abreviação"
                       name="abreviacao"
-                      placeholder="Digite o Nome da Abreviação"
+                      placeholder="Digite a Abreviação"
                       validate={composeValidators(required)}
                       required
                       toUppercaseActive
+                      maxlength="3"
+                      proibeNumeros
                     />
                   </div>
                   <div className="col-3">
                     <Field
                       component={InputText}
-                      label="Data de Cadastro"
+                      label="Data do Cadastro"
                       name="data_cadastro"
                       disabled={true}
                     />
@@ -264,11 +240,9 @@ export default () => {
                       type={BUTTON_TYPE.BUTTON}
                       onClick={() => {
                         setShowModalCancelar(false);
-                        edicao
-                          ? history.push(
-                              `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
-                            )
-                          : history.push("/");
+                        history.push(
+                          `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`
+                        );
                       }}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
