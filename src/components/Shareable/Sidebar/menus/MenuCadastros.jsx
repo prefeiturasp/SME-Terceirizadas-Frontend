@@ -11,8 +11,8 @@ import {
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
   LABORATORIO,
-  EMBALAGEM,
-  PRODUTOS
+  PRODUTOS,
+  EMBALAGENS_CADASTRADAS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -43,7 +43,9 @@ const MenuCadastros = () => {
         </LeafItem>
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGEM}`}>
+        <LeafItem
+          to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+        >
           Embalagens
         </LeafItem>
       )}
