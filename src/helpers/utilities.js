@@ -497,9 +497,11 @@ export const usuarioEhDilogQualidade = () =>
   localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
-  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
 };
 
 /*
