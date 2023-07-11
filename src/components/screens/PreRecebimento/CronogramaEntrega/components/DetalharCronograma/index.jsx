@@ -96,9 +96,15 @@ export default () => {
           {cronograma && (
             <>
               {cronograma.logs && (
-                <div className="row pb-3">
-                  <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
-                </div>
+                <>
+                  <div className="row pb-3">
+                    <p className="head-green mt-3 ml-3 mb-5">
+                      Status do Cronograma
+                    </p>
+                    <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
+                  </div>
+                  <hr className="hr-detalhar" />
+                </>
               )}
               <DadosCronograma cronograma={cronograma} />
               <hr className="hr-detalhar" />
