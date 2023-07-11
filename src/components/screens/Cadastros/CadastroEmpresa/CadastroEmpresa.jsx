@@ -36,7 +36,6 @@ const verificarUsuarioEhDistribuidor = () => {
   if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
     return false;
   } else if (
-    tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
     tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
     tipoPerfil === PERFIL.DILOG_CRONOGRAMA
   ) {
