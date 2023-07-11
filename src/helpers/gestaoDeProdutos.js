@@ -1,3 +1,4 @@
+import React from "react";
 import { TIPO_PERFIL } from "constants/shared";
 import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
@@ -94,6 +95,11 @@ const CARD_CORRECAO_DE_PRODUTO = {
 export const CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE = {
   id: CARD_ID.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
   titulo: "Responder Questionamentos da CODAE",
+  titulo_menu: (
+    <span>
+      Responder Questionamentos <br /> da CODAE
+    </span>
+  ),
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
