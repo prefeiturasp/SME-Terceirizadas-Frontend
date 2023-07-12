@@ -47,7 +47,7 @@ export default ({ setResultado, nomes, setFiltros }) => {
                   dataSource={getNomesProdutosFiltrado(values.nome)}
                   name="nome"
                   label="Nome"
-                  placeholder="Digite um nome"
+                  placeholder="Digite o nome do Produto"
                   className="input-busca-nome-item"
                 />
               </div>
