@@ -12,6 +12,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import {
   corDaMensagem,
+  justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
   prazoDoPedidoMensagem
 } from "helpers/utilities";
@@ -342,6 +343,19 @@ export const CorpoRelatorio = ({ ...props }) => {
               className="value"
               dangerouslySetInnerHTML={{
                 __html: justificativaAoNegarSolicitacao(solicitacao.logs)
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {solicitacao && justificativaAoAprovarSolicitacao(solicitacao.logs) && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>Informações da CODAE</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaAoAprovarSolicitacao(solicitacao.logs)
               }}
             />
           </div>
