@@ -133,16 +133,6 @@ export const retornArrayTerceirizadas = response => {
 
 export const formataJsonParaEnvio = (valoresForm, valoresState) => {
   if (valoresState.ehDistribuidor) {
-    const contatosNutri = [
-      {
-        nome: "nome",
-        crn_numero: "numero",
-        super_admin_terceirizadas: false,
-        telefone: "0000000000000",
-        email: "email@email.com",
-        eh_nutricionista: true
-      }
-    ];
     const contatosEmpresa = valoresState.contatosPessoaEmpresa.map(item => {
       return {
         nome: item.nome,
@@ -161,7 +151,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       ],
       encerrado: contrato.encerrado ? true : false
     }));
-    const contatos = [...contatosEmpresa, ...contatosNutri];
+    const contatos = [...contatosEmpresa];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       tipo_alimento: valoresForm.tipo_alimento,
@@ -186,19 +176,7 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         valoresForm.responsavel_telefone
       ),
       responsavel_email: valoresForm.responsavel_email,
-      lotes: [],
-      ativo: valoresForm.situacao,
-      super_admin: {
-        nome: "xxx",
-        cpf: "00000000000",
-        email: "xxx@xxx.com",
-        contatos: [
-          {
-            email: "xxx@xxx.com",
-            telefone: "000000000"
-          }
-        ]
-      }
+      ativo: valoresForm.situacao
     };
   } else {
     let contatosNutri = [];
