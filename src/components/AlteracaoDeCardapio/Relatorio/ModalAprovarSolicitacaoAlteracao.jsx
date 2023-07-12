@@ -16,7 +16,7 @@ export class ModalAprovarSolicitacaoAlteracao extends Component {
       uuid,
       {
         justificativa:
-          this.props.justificativa && this.props.justificativa.lenght > 0
+          this.props.justificativa && this.props.justificativa.length > 0
             ? this.props.justificativa
             : "Sem observações por parte da CODAE"
       },
