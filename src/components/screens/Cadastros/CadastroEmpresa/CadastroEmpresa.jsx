@@ -316,6 +316,7 @@ export const CadastroEmpresa = () => {
     }
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
   }, []);
+
   const onSubmit = async values => {
     const dados = {
       ehDistribuidor: ehDistribuidor,
@@ -400,7 +401,7 @@ export const CadastroEmpresa = () => {
                 <Form
                   initialValues={initialValuesForm}
                   onSubmit={onSubmit}
-                  render={({ handleSubmit, values }) => (
+                  render={({ form, handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                       <DadosEmpresa ehDistribuidor={ehDistribuidor} />
                       <EnderecoEmpresa
@@ -488,7 +489,7 @@ export const CadastroEmpresa = () => {
                             <div className="col-12 text-right">
                               <Botao
                                 texto="Cancelar"
-                                onClick={event => this.resetForm(event)}
+                                onClick={() => form.restart()}
                                 type={BUTTON_TYPE.BUTTON}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                               />
