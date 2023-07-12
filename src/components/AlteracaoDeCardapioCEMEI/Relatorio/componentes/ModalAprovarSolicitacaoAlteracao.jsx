@@ -22,7 +22,7 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
 
   const onSubmit = async values => {
     values.justificativa =
-      values.justificativa && values.justificativa.lenght > 0
+      values.justificativa && values.justificativa.length > 0
         ? values.justificativa
         : "Sem observações por parte da CODAE";
     const response = await endpoint(solicitacao.uuid, values, tipoSolicitacao);

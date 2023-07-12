@@ -8,6 +8,7 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import {
@@ -24,6 +25,9 @@ export const CorpoRelatorio = ({ ...props }) => {
   let totalQuantidadeAlunos = 0;
   const [imprimindo, setImprimindo] = useState(false);
   const { dadosTabela, solicitacao } = props;
+  const EXIBIR_HISTORICO =
+    solicitacao.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(solicitacao.logs);
 
   const imprimirRelatorio = async () => {
     setImprimindo(true);
@@ -319,22 +323,20 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         );
       })}
+      <hr />
       {solicitacao && solicitacao.observacao && (
         <div className="row mt-3">
           <div className="col-12">
-            <div className="container-fluid">
-              <p>Observações:</p>
-              <p
-                className="observacao-alteracao-cardapio-cemei"
-                dangerouslySetInnerHTML={{
-                  __html: solicitacao.observacao
-                }}
-              />
-            </div>
+            <p>Observações:</p>
+            <p
+              className="observacao-alteracao-cardapio-cemei"
+              dangerouslySetInnerHTML={{
+                __html: solicitacao.observacao
+              }}
+            />
           </div>
         </div>
       )}
-      <hr />
       {solicitacao && justificativaAoNegarSolicitacao(solicitacao.logs) && (
         <div className="row">
           <div className="col-12 report-label-value">
@@ -348,19 +350,28 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         </div>
       )}
-      {solicitacao && justificativaAoAprovarSolicitacao(solicitacao.logs) && (
-        <div className="row">
-          <div className="col-12 report-label-value">
-            <p>Informações da CODAE</p>
-            <p
-              className="value"
-              dangerouslySetInnerHTML={{
-                __html: justificativaAoAprovarSolicitacao(solicitacao.logs)
-              }}
-            />
+      {solicitacao &&
+        justificativaAoAprovarSolicitacao(solicitacao.logs) &&
+        !EXIBIR_HISTORICO && (
+          <div className="row">
+            <div className="col-12 report-label-value">
+              <p>
+                <b>Autorizou</b>
+              </p>
+              <p>{`${
+                solicitacao.logs.find(
+                  log => log.status_evento_explicacao === "CODAE autorizou"
+                ).criado_em
+              } - Informações da CODAE`}</p>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativaAoAprovarSolicitacao(solicitacao.logs)
+                }}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
       <RelatorioHistoricoJustificativaEscola solicitacao={solicitacao} />
       <RelatorioHistoricoQuestionamento solicitacao={solicitacao} />
     </>
