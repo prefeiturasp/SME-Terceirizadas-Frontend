@@ -76,7 +76,7 @@ export default ({
                   )}
                   label="Abreviação"
                   name="abreviacao"
-                  placeholder="Digite o nome da Embalagem"
+                  placeholder="Digite a Abreviação"
                   className="filtro-inputs-embalagens"
                   maxlength="3"
                   toUppercaseActive
