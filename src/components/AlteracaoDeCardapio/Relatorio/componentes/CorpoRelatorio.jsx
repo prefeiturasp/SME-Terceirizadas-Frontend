@@ -3,7 +3,8 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   ehInclusaoCei,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  justificativaAoAprovarSolicitacao
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -20,6 +21,10 @@ export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
 
   const justificativaNegacao = justificativaAoNegarSolicitacao(
+    alteracaoDeCardapio.logs
+  );
+
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
     alteracaoDeCardapio.logs
   );
 
@@ -283,6 +288,23 @@ export const CorpoRelatorio = props => {
                 className="value"
                 dangerouslySetInnerHTML={{
                   __html: justificativaNegacao
+                }}
+              />
+            </td>
+          </tr>
+        </table>
+      )}
+      {justificativaAprovacao && (
+        <table className="table-periods">
+          <tr>
+            <th>Informações da CODAE</th>
+          </tr>
+          <tr>
+            <td>
+              <p
+                className="value"
+                dangerouslySetInnerHTML={{
+                  __html: justificativaAprovacao
                 }}
               />
             </td>
