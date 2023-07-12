@@ -928,6 +928,19 @@ export const justificativaAoNegarSolicitacao = logs => {
   return justificativa;
 };
 
+export const justificativaAoAprovarSolicitacao = logs => {
+  let justificativa = null;
+  if (logs.length) {
+    justificativa = logs.filter(log =>
+      ["CODAE autorizou"].includes(log.status_evento_explicacao)
+    );
+    justificativa = justificativa.length
+      ? justificativa[0].justificativa
+      : null;
+  }
+  return justificativa;
+};
+
 export const deepEqual = (x, y) => {
   const ok = Object.keys,
     tx = typeof x,
