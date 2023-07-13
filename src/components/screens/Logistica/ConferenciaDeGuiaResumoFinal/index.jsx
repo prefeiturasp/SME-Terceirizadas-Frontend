@@ -56,7 +56,13 @@ export default ({ reposicao }) => {
       conferencia.status_alimento = mapeiaStatusAlimento(item.status);
       if (item.ocorrencias) conferencia.ocorrencia = item.ocorrencias;
       if (item.observacoes) conferencia.observacao = item.observacoes;
-      if (item.arquivo) conferencia.arquivo = item.arquivo.arquivo;
+      if (item.arquivo) {
+        if (reposicao) {
+          conferencia.arquivo = item.arquivo.arquivo;
+        } else {
+          conferencia.arquivo = item.arquivo[0].arquivo;
+        }
+      }
 
       if (item.recebidos_fechada !== undefined) {
         conferencia.tipo_embalagem = "FECHADA";
