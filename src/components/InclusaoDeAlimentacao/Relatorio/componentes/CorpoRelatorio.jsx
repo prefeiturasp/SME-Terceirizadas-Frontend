@@ -16,6 +16,7 @@ import {
 import { formataMotivosDias } from "./helper";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "components/Shareable/TabelaFaixaEtaria";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 import { getRelatorioInclusaoAlimentacao } from "services/relatorios";
 import { WEEK } from "configs/constants";
 import InclusoesCEI from "./InclusoesCEI";
@@ -385,6 +386,33 @@ export const CorpoRelatorio = ({ ...props }) => {
           )}
         </>
       )}
+
+      {inclusaoDeAlimentacao.status === "CODAE_AUTORIZADO" &&
+        !existeLogDeQuestionamentoDaCODAE(inclusaoDeAlimentacao.logs) && (
+          <>
+            <div className="mt-3">
+              <p className="mb-0">
+                <b>Autorizou</b>
+              </p>
+              {
+                inclusaoDeAlimentacao.logs.find(
+                  log => log.status_evento_explicacao === "CODAE autorizou"
+                ).criado_em
+              }{" "}
+              - Informações da CODAE
+            </div>
+            <p>
+              <div
+                className="obs"
+                dangerouslySetInnerHTML={{
+                  __html: `${inclusaoDeAlimentacao.logs.find(
+                    log => log.status_evento_explicacao === "CODAE autorizou"
+                  ).justificativa || `Sem observações por parte da CODAE`}`
+                }}
+              />
+            </p>
+          </>
+        )}
 
       {justificativaNegacao && (
         <div className="row">
