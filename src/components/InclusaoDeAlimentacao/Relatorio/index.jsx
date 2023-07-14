@@ -8,7 +8,7 @@ import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia"
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { CODAE, DRE, TERCEIRIZADA } from "configs/constants";
 import { statusEnum, TIPO_PERFIL, TIPO_SOLICITACAO } from "constants/shared";
 import {
   prazoDoPedidoMensagem,
@@ -34,6 +34,7 @@ class Relatorio extends Component {
       showNaoAprovaModal: false,
       tipoSolicitacao: null,
       showAutorizarModal: false,
+      showModalCodaeAutorizar: false,
       showModal: false,
       meusDados: null,
       inclusaoDeAlimentacao: null,
@@ -46,6 +47,7 @@ class Relatorio extends Component {
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
+    this.closeModalCodaeAutorizar = this.closeModalCodaeAutorizar.bind(this);
     this.loadSolicitacao = this.loadSolicitacao.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
@@ -103,6 +105,14 @@ class Relatorio extends Component {
     this.setState({ showAutorizarModal: false });
   }
 
+  showModalCodaeAutorizar() {
+    this.setState({ showModalCodaeAutorizar: true });
+  }
+
+  closeModalCodaeAutorizar() {
+    this.setState({ showModalCodaeAutorizar: false });
+  }
+
   showModalMarcarConferencia() {
     this.setState({ showModalMarcarConferencia: true });
   }
@@ -154,6 +164,7 @@ class Relatorio extends Component {
       showQuestionamentoModal,
       uuid,
       showAutorizarModal,
+      showModalCodaeAutorizar,
       meusDados,
       showModalMarcarConferencia
     } = this.state;
@@ -168,7 +179,8 @@ class Relatorio extends Component {
       endpointQuestionamento,
       ModalNaoAprova,
       ModalQuestionamento,
-      motivosDREnaoValida
+      motivosDREnaoValida,
+      ModalCodaeAutoriza
     } = this.props;
     const tipoPerfil = localStorage.getItem("tipo_perfil");
     const EXIBIR_BOTAO_NAO_APROVAR =
@@ -201,7 +213,7 @@ class Relatorio extends Component {
       [statusEnum.DRE_VALIDADO, statusEnum.CODAE_QUESTIONADO].includes(
         inclusaoDeAlimentacao.status
       );
-    const EXIBIR_MODAL_AUTORIZACAO =
+    const EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO =
       visao === CODAE &&
       inclusaoDeAlimentacao &&
       inclusaoDeAlimentacao.prioridade !== "REGULAR" &&
@@ -290,10 +302,21 @@ class Relatorio extends Component {
             }
           />
         )}
+        {ModalCodaeAutoriza && (
+          <ModalCodaeAutoriza
+            showModal={showModalCodaeAutorizar}
+            loadSolicitacao={this.loadSolicitacao}
+            closeModal={this.closeModalCodaeAutorizar}
+            endpoint={endpointAprovaSolicitacao}
+            uuid={uuid}
+            ehInclusao={true}
+            tipoSolicitacao={this.state.tipoSolicitacao}
+          />
+        )}
         {!inclusaoDeAlimentacao ? (
           <div>Carregando...</div>
         ) : (
-          <form onSubmit={this.props.handleSubmit || (() => {})}>
+          <form onSubmit={() => {}}>
             {endpointAprovaSolicitacao && (
               <ModalAutorizarAposQuestionamento
                 showModal={showAutorizarModal}
@@ -380,9 +403,11 @@ class Relatorio extends Component {
                             texto={textoBotaoAprova}
                             type={BUTTON_TYPE.BUTTON}
                             onClick={() =>
-                              EXIBIR_MODAL_AUTORIZACAO
+                              visao === DRE
+                                ? this.handleSubmit()
+                                : EXIBIR_MODAL_AUTORIZACAO_APOS_QUESTIONAMENTO
                                 ? this.showAutorizarModal()
-                                : this.handleSubmit()
+                                : this.showModalCodaeAutorizar()
                             }
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
@@ -396,7 +421,7 @@ class Relatorio extends Component {
                           <Botao
                             key="1"
                             texto="Não"
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             onClick={() => this.showQuestionamentoModal("Não")}
                             style={BUTTON_STYLE.GREEN_OUTLINE}
                             className="ml-3"
@@ -412,7 +437,7 @@ class Relatorio extends Component {
                               ? "Questionar"
                               : "Sim"
                           }
-                          type={BUTTON_TYPE.SUBMIT}
+                          type={BUTTON_TYPE.BUTTON}
                           onClick={() => this.showQuestionamentoModal("Sim")}
                           style={BUTTON_STYLE.GREEN}
                           className="ml-3"
