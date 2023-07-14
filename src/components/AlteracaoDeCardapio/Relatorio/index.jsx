@@ -145,6 +145,7 @@ class Relatorio extends Component {
 
   closeModalObservacaoCodae() {
     this.setState({ showModalObservacaoCodae: false });
+    this.props.change("justificativa", "");
   }
 
   handleSubmit() {
