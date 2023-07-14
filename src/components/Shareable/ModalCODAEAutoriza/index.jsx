@@ -57,7 +57,7 @@ export class ModalCODAEAutoriza extends Component {
   }
 
   render() {
-    const { showModal, closeModal, uuid } = this.props;
+    const { showModal, closeModal, uuid, ehInclusao } = this.props;
     return (
       <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
         <Form
@@ -75,10 +75,14 @@ export class ModalCODAEAutoriza extends Component {
                       component={CKEditorField}
                       label="Informações da CODAE"
                       name="justificativa_autorizacao"
-                      validate={composeValidators(
-                        textAreaRequiredAndAtLeastOneCharacter,
-                        maxLength1500
-                      )}
+                      validate={
+                        ehInclusao
+                          ? maxLength1500
+                          : composeValidators(
+                              textAreaRequiredAndAtLeastOneCharacter,
+                              maxLength1500
+                            )
+                      }
                     />
                     <OnChange name="justificativa_autorizacao">
                       {value => {

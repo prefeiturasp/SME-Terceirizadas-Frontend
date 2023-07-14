@@ -5,8 +5,13 @@ import Page from "components/Shareable/Page/Page";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import { HOME } from "constants/config";
 import { RelatorioInclusaoDeAlimentacaoCEMEI } from "components/InclusaoDeAlimentacaoCEMEI/Relatorio";
-import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "configs/constants";
 import { ModalCancelarInclusaoAlimentacao } from "components/Shareable/ModalCancelarInclusaoAlimentacao";
+import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
+import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
+import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
+import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
+import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
+import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "configs/constants";
 import {
   codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao,
   codaeNegarSolicitacaoDeInclusaoDeAlimentacao,
@@ -18,10 +23,6 @@ import {
   terceirizadaResponderQuestionamentoDeInclusaoDeAlimentacao
 } from "services/inclusaoDeAlimentacao";
 import { TIPO_SOLICITACAO } from "constants/shared";
-import { ModalNaoValidarFinalForm } from "components/Shareable/ModalNaoValidarFinalForm";
-import { ModalNegarFinalForm } from "components/Shareable/ModalNegarFinalForm";
-import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
-import { ModalTercRespondeQuestFinalForm } from "components/Shareable/ModalTercRespondeQuestFinalForm";
 
 export const RelatorioBase = ({ ...props }) => {
   const [motivosDREnaoValida, setMotivosDREnaoValida] = useState();
@@ -109,6 +110,7 @@ export const RelatorioCODAE = () => {
       visao={CODAE}
       ModalNaoAprova={ModalNegarFinalForm}
       ModalQuestionamento={ModalCODAEQuestionaFinalForm}
+      ModalCodaeAutoriza={ModalCODAEAutoriza}
       toastAprovaMensagem={"Inclusão de alimentação autorizada com sucesso!"}
       toastAprovaMensagemErro={
         "Houve um erro ao autorizar a Inclusão de Alimentação"

@@ -18,6 +18,7 @@ import { getMotivosDREnaoValida } from "services/relatorios";
 import Relatorio from "../../components/InclusaoDeAlimentacao/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
+import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacaoReduxForm";
 import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
@@ -94,6 +95,7 @@ export const RelatorioCODAE = () => {
       visao={CODAE}
       ModalNaoAprova={ModalNegarSolicitacao}
       ModalQuestionamento={ModalCODAEQuestiona}
+      ModalCodaeAutoriza={ModalCODAEAutoriza}
       toastAprovaMensagem={"Inclusão de Alimentação autorizada com sucesso!"}
       toastAprovaMensagemErro={
         "Houve um erro ao autorizar a Inclusão de Alimentação"

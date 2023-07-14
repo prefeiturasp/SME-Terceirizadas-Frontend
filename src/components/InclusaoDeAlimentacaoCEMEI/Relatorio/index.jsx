@@ -11,7 +11,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { statusEnum, TIPO_PERFIL } from "constants/shared";
-import { CODAE, TERCEIRIZADA } from "configs/constants";
+import { CODAE, DRE, TERCEIRIZADA } from "configs/constants";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
@@ -26,6 +26,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
   const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
     false
   );
+  const [showModalCodaeAutorizar, setShowModalCodaeAutorizar] = useState(false);
 
   const {
     endpointAprovaSolicitacao,
@@ -34,6 +35,7 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
     motivosDREnaoValida,
     ModalNaoAprova,
     ModalQuestionamento,
+    ModalCodaeAutoriza,
     textoBotaoAprova,
     textoBotaoNaoAprova,
     visao,
@@ -179,7 +181,12 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               ).length > 0 ? null : (
                                 <Botao
                                   texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.SUBMIT}
+                                  type={BUTTON_TYPE.BUTTON}
+                                  onClick={() =>
+                                    visao === DRE
+                                      ? handleSubmit()
+                                      : setShowModalCodaeAutorizar(true)
+                                  }
                                   style={BUTTON_STYLE.GREEN}
                                   className="ml-3"
                                 />
@@ -239,6 +246,19 @@ export const RelatorioInclusaoDeAlimentacaoCEMEI = ({ ...props }) => {
                               endpoint={endpointQuestionamento}
                               tipoSolicitacao={tipoSolicitacao}
                               solicitacao={solicitacao}
+                            />
+                          )}
+                          {ModalCodaeAutoriza && (
+                            <ModalCodaeAutoriza
+                              showModal={showModalCodaeAutorizar}
+                              loadSolicitacao={getInclusaoCEMEIAsync}
+                              closeModal={() =>
+                                setShowModalCodaeAutorizar(false)
+                              }
+                              endpoint={endpointAprovaSolicitacao}
+                              uuid={uuid}
+                              ehInclusao={true}
+                              tipoSolicitacao={tipoSolicitacao}
                             />
                           )}
                         </div>
