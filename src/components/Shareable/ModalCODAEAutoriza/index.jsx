@@ -19,17 +19,23 @@ const maxLength1500 = maxLengthProduto(1500);
 export class ModalCODAEAutoriza extends Component {
   constructor(props) {
     super(props);
-    this.state = { desabilitarSubmit: true };
+    this.state = { desabilitarSubmit: !this.props.ehInclusao };
 
     this.setDesabilitarSubmit = this.setDesabilitarSubmit.bind(this);
   }
 
   setDesabilitarSubmit(value) {
-    this.setState({
-      desabilitarSubmit:
-        [undefined, null, "", "<p></p>\n"].includes(value) ||
-        maxLength1500(value)
-    });
+    if (this.props.ehInclusao) {
+      this.setState({
+        desabilitarSubmit: maxLength1500(value)
+      });
+    } else {
+      this.setState({
+        desabilitarSubmit:
+          [undefined, null, "", "<p></p>\n"].includes(value) ||
+          maxLength1500(value)
+      });
+    }
   }
 
   async autorizarSolicitacao(uuid, values) {
@@ -108,6 +114,7 @@ export class ModalCODAEAutoriza extends Component {
                       onClick={() => {
                         this.autorizarSolicitacao(uuid, values);
                       }}
+                      disabled={this.state.desabilitarSubmit}
                       style={BUTTON_STYLE.GREEN}
                       className="ml-3"
                     />
