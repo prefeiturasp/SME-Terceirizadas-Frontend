@@ -36,10 +36,17 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
   };
 
   return (
-    <Modal dialogClassName=" modal-50w" show={showModal} onHide={closeModal}>
-      <Form onSubmit={onSubmit}>
-        {({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
+    <Form onSubmit={onSubmit}>
+      {({ handleSubmit, values }) => (
+        <form onSubmit={handleSubmit}>
+          <Modal
+            dialogClassName=" modal-50w"
+            show={showModal}
+            onHide={() => {
+              values.justificativa = "";
+              closeModal();
+            }}
+          >
             <Modal.Header closeButton>
               <Modal.Title className="modal-alteracao-cardapio-cemei">
                 Deseja autorizar a solicitação?
@@ -62,20 +69,24 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
               <Botao
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
-                onClick={closeModal}
+                onClick={() => {
+                  values.justificativa = "";
+                  closeModal();
+                }}
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="ml-3"
               />
               <Botao
                 texto="Sim"
-                type={BUTTON_TYPE.SUBMIT}
+                type={BUTTON_TYPE.BUTTON}
+                onClick={() => onSubmit(values)}
                 style={BUTTON_STYLE.GREEN}
                 className="ml-3"
               />
             </Modal.Footer>
-          </form>
-        )}
-      </Form>
-    </Modal>
+          </Modal>
+        </form>
+      )}
+    </Form>
   );
 };
