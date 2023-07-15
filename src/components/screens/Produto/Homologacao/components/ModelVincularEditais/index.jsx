@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import StatefulMultiSelect from "@khanacademy/react-multi-select";
-import { Field } from "react-final-form";
+import { Form, Field } from "react-final-form";
 import { Modal } from "react-bootstrap";
 import InputText from "components/Shareable/Input/InputText";
 import Botao from "components/Shareable/Botao";
@@ -21,7 +21,8 @@ export const ModalVincularEditais = ({ ...props }) => {
     editais,
     onChangeEditais,
     uuid,
-    loadSolicitacao
+    loadSolicitacao,
+    produto
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -55,93 +56,115 @@ export const ModalVincularEditais = ({ ...props }) => {
   };
 
   return (
-    <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
-      <Spin tip="Enviando..." spinning={loading}>
-        <Modal.Header closeButton>
-          <Modal.Title>Homologação do Produto</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row mb-3">
-            <div className="col-4">
-              <Field
-                name="produto.nome"
-                label="Nome do Produto"
-                component={InputText}
-                disabled
-              />
-            </div>
-            <div className="col-4">
-              <Field
-                name="produto.marca.nome"
-                label="Marca do Produto"
-                component={InputText}
-                disabled
-              />
-            </div>
-            <div className="col-4">
-              <Field
-                name="produto.fabricante.nome"
-                label="Fabricante do Produto"
-                component={InputText}
-                disabled
-              />
-            </div>
-          </div>
-          <div className="row mb-3">
-            <div className="col-4">
-              <Field
-                name="produto.tipo"
-                label="Tipo do Produto"
-                component={InputText}
-                disabled
-              />
-            </div>
-            <div className="col-4">
-              <div className="mb-2">
-                <label>Editais</label>
-              </div>
-              <Field
-                component={StatefulMultiSelect}
-                name="editais"
-                selected={editais}
-                disableSearch={true}
-                options={editaisOptions.map(edital => ({
-                  label: edital.numero,
-                  value: edital.uuid
-                }))}
-                valueRenderer={(selected, options) =>
-                  renderizarLabelEditais(selected, options)
-                }
-                overrideStrings={{
-                  selectAll: "Todos os editais"
-                }}
-                onSelectedChanged={values => onChangeEditais(values)}
-              />
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="row mt-4">
-            <div className="col-12">
-              <Botao
-                texto="Voltar"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={closeModal}
-                style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                className="ml-3"
-              />
-              <Botao
-                texto="Homologar"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => onSubmit()}
-                style={BUTTON_STYLE.GREEN}
-                className="ml-3"
-                disabled={editais.length === 0}
-              />
-            </div>
-          </div>
-        </Modal.Footer>
-      </Spin>
-    </Modal>
+    <Form
+      initialValues={{
+        produto: {
+          tipo: produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum",
+          nome: produto.nome,
+          marca: produto.marca.nome,
+          fabricante: produto.fabricante.nome
+        }
+      }}
+      onSubmit={onSubmit}
+    >
+      {({ handleSubmit, form }) => (
+        <form onSubmit={handleSubmit}>
+          <Modal
+            dialogClassName="modal-90w"
+            show={showModal}
+            onHide={closeModal}
+          >
+            <Spin tip="Enviando..." spinning={loading}>
+              <Modal.Header closeButton>
+                <Modal.Title>Homologação do Produto</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <div className="row mb-3">
+                  <div className="col-4">
+                    <Field
+                      name="produto.nome"
+                      label="Nome do Produto"
+                      component={InputText}
+                      disabled
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      name="produto.marca"
+                      label="Marca do Produto"
+                      component={InputText}
+                      disabled
+                    />
+                  </div>
+                  <div className="col-4">
+                    <Field
+                      name="produto.fabricante"
+                      label="Fabricante do Produto"
+                      component={InputText}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-4">
+                    <Field
+                      name="produto.tipo"
+                      label="Tipo do Produto"
+                      component={InputText}
+                      disabled
+                    />
+                  </div>
+                  <div className="col-4">
+                    <div className="mb-2">
+                      <label>Editais</label>
+                    </div>
+                    <Field
+                      component={StatefulMultiSelect}
+                      name="editais"
+                      selected={editais}
+                      disableSearch={true}
+                      options={editaisOptions.map(edital => ({
+                        label: edital.numero,
+                        value: edital.uuid
+                      }))}
+                      valueRenderer={(selected, options) =>
+                        renderizarLabelEditais(selected, options)
+                      }
+                      overrideStrings={{
+                        selectAll: "Todos os editais"
+                      }}
+                      onSelectedChanged={values => onChangeEditais(values)}
+                    />
+                  </div>
+                </div>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="row mt-4">
+                  <div className="col-12">
+                    <Botao
+                      texto="Voltar"
+                      type={BUTTON_TYPE.BUTTON}
+                      onClick={closeModal}
+                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                      className="ml-3"
+                    />
+                    <Botao
+                      texto="Homologar"
+                      type={BUTTON_TYPE.BUTTON}
+                      style={BUTTON_STYLE.GREEN}
+                      className="ml-3"
+                      onClick={() => {
+                        form.submit();
+                      }}
+                      disabled={editais.length === 0}
+                    />
+                  </div>
+                </div>
+              </Modal.Footer>
+            </Spin>
+          </Modal>
+        </form>
+      )}
+    </Form>
   );
 };
