@@ -59,7 +59,7 @@ export const ModalVincularEditais = ({ ...props }) => {
     <Form
       initialValues={{
         produto: {
-          tipo: produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum",
+          tipo: produto.eh_para_alunos_com_dieta ? "Dieta Especial" : "Comum",
           nome: produto.nome,
           marca: produto.marca.nome,
           fabricante: produto.fabricante.nome
