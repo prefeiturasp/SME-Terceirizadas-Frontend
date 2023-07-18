@@ -234,6 +234,7 @@ import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
 import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
 import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 
 const routesConfig = [
   {
@@ -1575,6 +1576,15 @@ const routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.DETALHAMENTO_DO_LANCAMENTO
+    }`,
+    component: DetalhamentoDoLancamentoPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${
