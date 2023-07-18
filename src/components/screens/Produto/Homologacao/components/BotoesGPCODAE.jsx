@@ -104,6 +104,7 @@ export const BotoesGPCODAE = ({
         onChangeEditais={onChangeEditais}
         uuid={homologacao.uuid}
         loadSolicitacao={() => getHomologacaoProdutoAsync()}
+        produto={homologacao?.produto}
       />
       {/* solicitar análise sensorial, correção ou não homologar */}
       <ModalPadrao

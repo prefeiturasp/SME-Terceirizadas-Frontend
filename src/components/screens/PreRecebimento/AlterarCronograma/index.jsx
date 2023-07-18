@@ -290,12 +290,18 @@ export default ({ analiseSolicitacao }) => {
       <div className="card mt-3">
         <div className="card-body alterar-cronograma">
           {solicitacaoAlteracaoCronograma && (
-            <div className="row pb-3">
-              <FluxoDeStatusCronograma
-                listaDeStatus={solicitacaoAlteracaoCronograma.logs}
-                solicitacao={true}
-              />
-            </div>
+            <>
+              <div className="row pb-3">
+                <p className="head-green mt-3 ml-3 mb-5">
+                  Status do Cronograma
+                </p>
+                <FluxoDeStatusCronograma
+                  listaDeStatus={solicitacaoAlteracaoCronograma.logs}
+                  solicitacao={true}
+                />
+              </div>
+              <hr className="hr-detalhar" />
+            </>
           )}
           {cronograma && (
             <>

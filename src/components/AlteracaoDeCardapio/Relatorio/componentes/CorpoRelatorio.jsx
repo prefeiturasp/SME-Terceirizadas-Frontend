@@ -3,7 +3,8 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   ehInclusaoCei,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  justificativaAoAprovarSolicitacao
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -15,6 +16,7 @@ import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
 export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
@@ -22,6 +24,14 @@ export const CorpoRelatorio = props => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     alteracaoDeCardapio.logs
   );
+
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
+    alteracaoDeCardapio.logs
+  );
+
+  const EXIBIR_HISTORICO =
+    alteracaoDeCardapio.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(alteracaoDeCardapio.logs);
 
   return (
     <div>
@@ -288,6 +298,34 @@ export const CorpoRelatorio = props => {
             </td>
           </tr>
         </table>
+      )}
+      {justificativaAprovacao && !EXIBIR_HISTORICO && (
+        <Fragment>
+          <table className="table-periods">
+            <tr>
+              <th>
+                <b>Autorizou</b>
+              </th>
+            </tr>
+            <tr>
+              <th>{`${
+                alteracaoDeCardapio.logs.find(
+                  log => log.status_evento_explicacao === "CODAE autorizou"
+                ).criado_em
+              } - Informações da CODAE`}</th>
+            </tr>
+            <tr>
+              <td>
+                <p
+                  className="value"
+                  dangerouslySetInnerHTML={{
+                    __html: justificativaAprovacao
+                  }}
+                />
+              </td>
+            </tr>
+          </table>
+        </Fragment>
       )}
     </div>
   );

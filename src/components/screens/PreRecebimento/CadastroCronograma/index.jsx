@@ -29,7 +29,7 @@ import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
-import { getFornecedoresSimples } from "services/terceirizada.service";
+import { getEmpresasCronograma } from "services/terceirizada.service";
 import {
   getListaProdutosEdital,
   getUnidadesDeMedidaProduto
@@ -380,7 +380,7 @@ export default () => {
     };
 
     const buscaFornecedores = async () => {
-      const response = await getFornecedoresSimples();
+      const response = await getEmpresasCronograma();
       setFornecedores(
         response.data.results.map(forn => ({
           uuid: forn.uuid,

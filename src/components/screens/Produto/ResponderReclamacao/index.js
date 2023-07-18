@@ -3,7 +3,10 @@ import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import {
+  gerarParametrosConsulta,
+  usuarioEhEmpresaTerceirizada
+} from "helpers/utilities";
 
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
@@ -209,12 +212,14 @@ const ResponderReclamacaoProduto = ({
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 screen-responder-reclamacao-produto">
         <div className="card-body">
-          <FormBuscaProduto
-            onSubmit={onSubmitForm}
-            onAtualizaProdutos={() => {}}
-            exibirBotaoVoltar
-            exibirStatus={false}
-          />
+          {usuarioEhEmpresaTerceirizada() && (
+            <FormBuscaProduto
+              onSubmit={onSubmitForm}
+              onAtualizaProdutos={() => {}}
+              exibirBotaoVoltar
+              exibirStatus={false}
+            />
+          )}
         </div>
         {produtos && !produtos.length && (
           <div className="text-center mt-5">

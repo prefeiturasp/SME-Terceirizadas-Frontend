@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { Field, FormSection, formValueSelector, reduxForm } from "redux-form";
+import { isWeekend } from "date-fns";
 import CKEditorField from "components/Shareable/CKEditorField";
 import MultiSelect from "components/Shareable/FinalForm/MultiSelect";
 import { InputText } from "components/Shareable/Input/InputText";
@@ -803,6 +804,7 @@ class AlteracaoCardapio extends Component {
         ""
       );
     });
+    this.props.change("alterar_dia", "");
     periodos = periodos.map(periodo => {
       periodo["substituicoes"] = [];
       return periodo;
@@ -935,6 +937,36 @@ class AlteracaoCardapio extends Component {
     return opcoesDe;
   }
 
+  ehLPRouRPL() {
+    return (
+      this.props.formValues &&
+      this.props.formValues.motivo &&
+      this.props.motivos &&
+      (this.props.motivos
+        .find(motivo => motivo.uuid === this.props.formValues.motivo)
+        .nome.includes("LPR") ||
+        this.props.motivos
+          .find(motivo => motivo.uuid === this.props.formValues.motivo)
+          .nome.includes("RPL"))
+    );
+  }
+
+  ehDiaUtil = value => {
+    const ehFinalDeSemana = value => {
+      const valores = value.split("/");
+      const dataFormatada = `${valores[1]}/${valores[0]}/${valores[2]}`;
+      return isWeekend(new Date(dataFormatada));
+    };
+
+    return value &&
+      ![undefined].includes(value) &&
+      this.ehLPRouRPL() &&
+      (ehFinalDeSemana(value) ||
+        (this.props.feriados_ano && this.props.feriados_ano.includes(value)))
+      ? "Não é possível solicitar LPR ou RPL para dia não útil!"
+      : undefined;
+  };
+
   render() {
     const {
       loading,
@@ -1023,6 +1055,8 @@ class AlteracaoCardapio extends Component {
                     maxDate={fimDoCalendario()}
                     label="Alterar dia"
                     disabled={this.props.data_inicial || this.props.data_final}
+                    validate={this.ehDiaUtil}
+                    usarDirty={true}
                   />
                   <>
                     <div className="opcao-data">Ou</div>

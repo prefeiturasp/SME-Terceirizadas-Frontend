@@ -497,9 +497,11 @@ export const usuarioEhDilogQualidade = () =>
   localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
-  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
 };
 
 /*
@@ -928,6 +930,19 @@ export const justificativaAoNegarSolicitacao = logs => {
   return justificativa;
 };
 
+export const justificativaAoAprovarSolicitacao = logs => {
+  let justificativa = null;
+  if (logs.length) {
+    justificativa = logs.filter(log =>
+      ["CODAE autorizou"].includes(log.status_evento_explicacao)
+    );
+    justificativa = justificativa.length
+      ? justificativa[0].justificativa
+      : null;
+  }
+  return justificativa;
+};
+
 export const deepEqual = (x, y) => {
   const ok = Object.keys,
     tx = typeof x,
@@ -948,6 +963,17 @@ export const tipoStatus = () => {
     }
   ];
 };
+
+export const statusProdutos = [
+  {
+    uuid: "Ativo",
+    nome: "Ativo"
+  },
+  {
+    uuid: "Inativo",
+    nome: "Inativo"
+  }
+];
 
 export const fimDoCalendario = () => {
   return new Date().getMonth() === JS_DATE_DEZEMBRO

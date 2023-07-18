@@ -11,6 +11,8 @@ import { FluxoDeStatus } from "components/Shareable/FluxoDeStatus";
 import { fluxoPartindoEscola } from "components/Shareable/FluxoDeStatus/helper";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 import { TIPO_SOLICITACAO } from "constants/shared";
 import { getRelatorioInclusaoAlimentacaoCEMEI } from "services/relatorios";
 import {
@@ -24,7 +26,6 @@ import {
   periodosDaInclusao
 } from "../../helpers";
 import "./style.scss";
-import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 
 export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
   const [imprimindo, setImprimindo] = useState(false);
@@ -336,6 +337,33 @@ export const CorpoRelatorio = ({ solicitacao, vinculos }) => {
           </div>
         );
       })}
+      {solicitacao.status === "CODAE_AUTORIZADO" &&
+        !existeLogDeQuestionamentoDaCODAE(solicitacao.logs) && (
+          <>
+            <hr />
+            <div className="mt-3">
+              <p className="mb-0">
+                <b>Autorizou</b>
+              </p>
+              {
+                solicitacao.logs.find(
+                  log => log.status_evento_explicacao === "CODAE autorizou"
+                ).criado_em
+              }{" "}
+              - Informações da CODAE
+            </div>
+            <p>
+              <div
+                className="obs"
+                dangerouslySetInnerHTML={{
+                  __html: `${solicitacao.logs.find(
+                    log => log.status_evento_explicacao === "CODAE autorizou"
+                  ).justificativa || `Sem observações por parte da CODAE`}`
+                }}
+              />
+            </p>
+          </>
+        )}
     </div>
   );
 };

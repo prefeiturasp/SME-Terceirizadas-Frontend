@@ -11,8 +11,8 @@ import {
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
   LABORATORIO,
-  EMBALAGEM,
-  PRODUTOS
+  PRODUTOS,
+  EMBALAGENS_CADASTRADAS
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -23,7 +23,8 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhLogistica,
   usuarioEhMedicao,
-  usuarioEhCodaeDilog
+  usuarioEhCodaeDilog,
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -43,7 +44,9 @@ const MenuCadastros = () => {
         </LeafItem>
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGEM}`}>
+        <LeafItem
+          to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+        >
           Embalagens
         </LeafItem>
       )}
@@ -82,12 +85,13 @@ const MenuCadastros = () => {
           Sobremesa Doce
         </LeafItem>
       )}
-      {usuarioEhCronograma() ||
-        (usuarioEhCodaeDilog() && (
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
-            Produtos
-          </LeafItem>
-        ))}
+      {(usuarioEhCronograma() ||
+        usuarioEhCodaeDilog() ||
+        usuarioEhEmpresaFornecedor()) && (
+        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
+          Produtos
+        </LeafItem>
+      )}
     </Menu>
   );
 };

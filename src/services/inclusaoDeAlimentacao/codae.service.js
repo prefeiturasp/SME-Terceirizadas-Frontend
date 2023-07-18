@@ -38,14 +38,14 @@ export const codaeListarSolicitacoesDeInclusaoDeAlimentacao = async (
 
 export const codaeAutorizarSolicitacaoDeInclusaoDeAlimentacao = (
   uuid,
-  justificativa = {},
+  justificativa = "",
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   let status = 0;
   return fetch(url, {
     method: "PATCH",
-    body: JSON.stringify(justificativa),
+    body: JSON.stringify({ justificativa: justificativa }),
     headers: authToken
   })
     .then(res => {

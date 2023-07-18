@@ -402,34 +402,32 @@ export const ConferenciaDosLancamentos = () => {
                                         ].nome}
                                     </b>
                                   </span>
-                                  {ocorrencia ? (
-                                    ocorrenciaExpandida ? (
-                                      <span
-                                        className="download-ocorrencias"
-                                        onClick={() =>
-                                          medicaoInicialExportarOcorrenciasPDF(
-                                            ocorrencia.arquivo
-                                          )
-                                        }
-                                      >
-                                        <i
-                                          className={`${
-                                            BUTTON_ICON.DOWNLOAD
-                                          } mr-2`}
-                                        />
-                                        Download de Ocorrências
-                                      </span>
-                                    ) : (
-                                      <label
-                                        className="green visualizar-ocorrencias"
-                                        onClick={() =>
-                                          setOcorrenciaExpandida(true)
-                                        }
-                                      >
-                                        <b>VISUALIZAR</b>
-                                      </label>
-                                    )
-                                  ) : null}
+                                  {ocorrencia && ocorrenciaExpandida ? (
+                                    <span
+                                      className="download-ocorrencias"
+                                      onClick={() =>
+                                        medicaoInicialExportarOcorrenciasPDF(
+                                          ocorrencia.ultimo_arquivo
+                                        )
+                                      }
+                                    >
+                                      <i
+                                        className={`${
+                                          BUTTON_ICON.DOWNLOAD
+                                        } mr-2`}
+                                      />
+                                      Download de Ocorrências
+                                    </span>
+                                  ) : (
+                                    <label
+                                      className="green visualizar-ocorrencias"
+                                      onClick={() =>
+                                        setOcorrenciaExpandida(true)
+                                      }
+                                    >
+                                      <b>VISUALIZAR</b>
+                                    </label>
+                                  )}
                                 </div>
                               </Fragment>
                             ) : (

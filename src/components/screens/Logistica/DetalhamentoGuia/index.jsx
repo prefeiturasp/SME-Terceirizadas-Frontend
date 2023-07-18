@@ -29,10 +29,11 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [initialValues, setInitialValues] = useState({});
 
-  const baixarPDFGuiaRemessa = () => {
+  const baixarPDFGuiaRemessa = guia => {
     setCarregando(true);
     let uuid = guia.uuid;
-    imprimirGuiaRemessa(uuid)
+    let numero = guia.numero_guia;
+    imprimirGuiaRemessa(uuid, numero)
       .then(() => {
         setCarregando(false);
       })
@@ -169,7 +170,7 @@ export default () => {
                     type={BUTTON_TYPE.BUTTON}
                     style={BUTTON_STYLE.GREEN_OUTLINE}
                     className="float-right ml-3"
-                    onClick={() => baixarPDFGuiaRemessa()}
+                    onClick={() => baixarPDFGuiaRemessa(guia)}
                   />
                 </div>
               </form>

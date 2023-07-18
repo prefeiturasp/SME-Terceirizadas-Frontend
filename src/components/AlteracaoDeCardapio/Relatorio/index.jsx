@@ -23,6 +23,7 @@ import { getAlteracaoCardapio } from "services/alteracaoDeCardapio";
 import { meusDados } from "services/perfil.service";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import ModalConfirmaAlteracaoDuplicada from "./ModalConfirmaAlteracaoDuplicada";
+import { ModalAprovarSolicitacaoAlteracao } from "./ModalAprovarSolicitacaoAlteracao";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -38,8 +39,10 @@ class Relatorio extends Component {
       resposta_sim_nao: null,
       error: false,
       showModalConfirm: false,
-      showModalMarcarConferencia: false
+      showModalMarcarConferencia: false,
+      showModalObservacaoCodae: false
     };
+
     this.closeQuestionamentoModal = this.closeQuestionamentoModal.bind(this);
     this.closeNaoAprovaModal = this.closeNaoAprovaModal.bind(this);
     this.closeAutorizarModal = this.closeAutorizarModal.bind(this);
@@ -49,6 +52,7 @@ class Relatorio extends Component {
     this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
       this
     );
+    this.closeModalObservacaoCodae = this.closeModalObservacaoCodae.bind(this);
   }
 
   componentDidMount() {
@@ -135,6 +139,15 @@ class Relatorio extends Component {
     this.setState({ showModalMarcarConferencia: false });
   }
 
+  showModalObservacaoCodae() {
+    this.setState({ showModalObservacaoCodae: true });
+  }
+
+  closeModalObservacaoCodae() {
+    this.setState({ showModalObservacaoCodae: false });
+    this.props.change("justificativa", "");
+  }
+
   handleSubmit() {
     const { toastAprovaMensagem, toastAprovaMensagemErro } = this.props;
     const uuid = this.state.uuid;
@@ -168,7 +181,8 @@ class Relatorio extends Component {
       erro,
       showModalConfirm,
       showModalMarcarConferencia,
-      tipoSolicitacao
+      tipoSolicitacao,
+      showModalObservacaoCodae
     } = this.state;
     const {
       justificativa,
@@ -334,7 +348,7 @@ class Relatorio extends Component {
                           alteracaoDeCardapio.eh_alteracao_com_lanche_repetida ? (
                             <Botao
                               texto={textoBotaoAprova}
-                              type={BUTTON_TYPE.SUBMIT}
+                              type={BUTTON_TYPE.BUTTON}
                               onClick={() => this.showModalConfirm()}
                               style={BUTTON_STYLE.GREEN}
                               className="ml-3"
@@ -342,10 +356,13 @@ class Relatorio extends Component {
                           ) : (
                             <Botao
                               texto={textoBotaoAprova}
-                              type={BUTTON_TYPE.SUBMIT}
+                              type={BUTTON_TYPE.BUTTON}
                               onClick={() =>
                                 EXIBIR_MODAL_AUTORIZACAO
                                   ? this.showAutorizarModal()
+                                  : tipoPerfil ===
+                                    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                  ? this.showModalObservacaoCodae()
                                   : this.handleSubmit()
                               }
                               style={BUTTON_STYLE.GREEN}
@@ -361,10 +378,13 @@ class Relatorio extends Component {
                           ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             onClick={() =>
                               EXIBIR_MODAL_AUTORIZACAO
                                 ? this.showAutorizarModal()
+                                : tipoPerfil ===
+                                  TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                ? this.showModalObservacaoCodae()
                                 : this.handleSubmit()
                             }
                             style={BUTTON_STYLE.GREEN}
@@ -381,7 +401,7 @@ class Relatorio extends Component {
                               ? "Questionar"
                               : "Sim"
                           }
-                          type={BUTTON_TYPE.SUBMIT}
+                          type={BUTTON_TYPE.BUTTON}
                           onClick={() => this.showQuestionamentoModal("Sim")}
                           style={BUTTON_STYLE.GREEN}
                           className="ml-3"
@@ -389,8 +409,16 @@ class Relatorio extends Component {
                       ) : (
                         <Botao
                           texto="Autorizar"
-                          type={BUTTON_TYPE.SUBMIT}
-                          onClick={() => this.handleSubmit()}
+                          type={BUTTON_TYPE.BUTTON}
+                          onClick={() => {
+                            tipoPerfil ===
+                            TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                              ? this.showModalObservacaoCodae()
+                              : tipoPerfil ===
+                                TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                              ? this.showModalObservacaoCodae()
+                              : this.handleSubmit();
+                          }}
                           style={BUTTON_STYLE.GREEN}
                           className="ml-3"
                         />
@@ -417,6 +445,17 @@ class Relatorio extends Component {
               showModal={showModalConfirm}
               closeModal={this.closeModalConfirm}
               handleSubmit={this.handleSubmit}
+            />
+            <ModalAprovarSolicitacaoAlteracao
+              showModal={showModalObservacaoCodae}
+              loadSolicitacao={() =>
+                this.loadSolicitacao(uuid, tipoSolicitacao)
+              }
+              justificativa={justificativa}
+              closeModal={() => this.closeModalObservacaoCodae()}
+              endpoint={endpointAprovaSolicitacao}
+              uuid={uuid}
+              tipoSolicitacao={tipoSolicitacao}
             />
           </form>
         )}
