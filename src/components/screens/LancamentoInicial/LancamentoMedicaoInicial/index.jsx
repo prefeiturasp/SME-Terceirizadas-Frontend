@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { addMonths, getYear, format } from "date-fns";
+import { addMonths, getYear, format, getMonth } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Select, Skeleton } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
@@ -11,10 +11,17 @@ import FluxoDeStatusMedicaoInicial from "./components/FluxoDeStatusMedicaoInicia
 import LancamentoPorPeriodo from "./components/LancamentoPorPeriodo";
 import Ocorrencias from "./components/Ocorrencias";
 
+import {
+  DETALHAMENTO_DO_LANCAMENTO,
+  LANCAMENTO_MEDICAO_INICIAL
+} from "configs/constants";
 import * as perfilService from "services/perfil.service";
 import { getEscolaSimples } from "services/escola.service";
 import { getPanoramaEscola } from "services/dietaEspecial.service";
-import { getSolicitacaoMedicaoInicial } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  getSolicitacaoMedicaoInicial,
+  getSolicitacoesLancadas
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import "./styles.scss";
 
@@ -66,17 +73,43 @@ export default () => {
       setLoteEscolaSimples(respostaEscolaSimples.data.lote.nome);
       setPeriodosEscolaSimples(response_vinculos.data.results);
 
+      let solicitacoesLancadas = [];
+
+      if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
+        const payload = {
+          escola: escola.uuid
+        };
+
+        solicitacoesLancadas = await getSolicitacoesLancadas(payload);
+      }
+
       for (let mes = 0; mes <= proximosDozeMeses; mes++) {
         const dataBRT = addMonths(new Date(), -mes);
         const mesString = format(dataBRT, "LLLL", { locale: ptBR }).toString();
-        periodos.push({
-          dataBRT: dataBRT,
-          periodo:
-            mesString.charAt(0).toUpperCase() +
-            mesString.slice(1) +
-            " / " +
-            getYear(dataBRT).toString()
-        });
+        if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
+          const temSolicitacaoLancada = solicitacoesLancadas.data.filter(
+            solicitacao => Number(solicitacao.mes) === getMonth(dataBRT) + 1
+          ).length;
+          if (!temSolicitacaoLancada) {
+            periodos.push({
+              dataBRT: dataBRT,
+              periodo:
+                mesString.charAt(0).toUpperCase() +
+                mesString.slice(1) +
+                " / " +
+                getYear(dataBRT).toString()
+            });
+          }
+        } else {
+          periodos.push({
+            dataBRT: dataBRT,
+            periodo:
+              mesString.charAt(0).toUpperCase() +
+              mesString.slice(1) +
+              " / " +
+              getYear(dataBRT).toString()
+          });
+        }
       }
 
       const params = new URLSearchParams(window.location.search);
@@ -204,8 +237,9 @@ export default () => {
                     <CaretDownOutlined onClick={() => setOpen(!open)} />
                   }
                   disabled={
-                    location.state &&
-                    location.state.status === "Aprovado pela DRE"
+                    (location.state &&
+                      location.state.status === "Aprovado pela DRE") ||
+                    location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO)
                   }
                   open={open}
                   onClick={() => setOpen(!open)}
