@@ -38,8 +38,7 @@ import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import {
   CONFERENCIA_DOS_LANCAMENTOS,
-  LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL,
+  DETALHAMENTO_DO_LANCAMENTO,
   MEDICAO_INICIAL
 } from "configs/constants";
 import { required } from "helpers/fieldValidators";
@@ -242,7 +241,7 @@ export const AcompanhamentoDeLancamentos = () => {
   ) => {
     if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
       history.push({
-        pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`,
+        pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
         search: `mes=${mes}&ano=${ano}`,
         state: {
           veioDoAcompanhamentoDeLancamentos: true,

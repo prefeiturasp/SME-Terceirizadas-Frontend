@@ -5,16 +5,17 @@ import { getYear, format } from "date-fns";
 import { Collapse, Input, Select } from "antd";
 import Botao from "components/Shareable/Botao";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
   getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({
   periodoSelecionado,
@@ -288,25 +289,26 @@ export default ({
                 </div>
                 {renderDadosResponsaveis()}
                 {(!location.state ||
-                  location.state.status !== "Aprovado pela DRE") && (
-                  <div className="mt-3 pr-2">
-                    <Botao
-                      texto="Salvar"
-                      style={BUTTON_STYLE.GREEN}
-                      className="float-right ml-3"
-                      onClick={() => handleClickSalvar()}
-                      disabled={!emEdicao}
-                    />
-                    <Botao
-                      texto="Editar"
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      icon={BUTTON_ICON.PEN}
-                      className="float-right ml-3"
-                      onClick={() => handleClickEditar()}
-                      disabled={emEdicao}
-                    />
-                  </div>
-                )}
+                  location.state.status !== "Aprovado pela DRE") &&
+                  !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
+                    <div className="mt-3 pr-2">
+                      <Botao
+                        texto="Salvar"
+                        style={BUTTON_STYLE.GREEN}
+                        className="float-right ml-3"
+                        onClick={() => handleClickSalvar()}
+                        disabled={!emEdicao}
+                      />
+                      <Botao
+                        texto="Editar"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={BUTTON_ICON.PEN}
+                        className="float-right ml-3"
+                        onClick={() => handleClickEditar()}
+                        disabled={emEdicao}
+                      />
+                    </div>
+                  )}
               </div>
             </Panel>
           </Collapse>
