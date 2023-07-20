@@ -70,7 +70,7 @@ export default ({
                       </b>
                     </span>
                     <span
-                      className="download-ocorrencias"
+                      className="download-ocorrencias mr-0"
                       onClick={() =>
                         medicaoInicialExportarOcorrenciasPDF(
                           solicitacaoMedicaoInicial.ocorrencia.ultimo_arquivo
