@@ -55,6 +55,13 @@ export default class ModalAtivacaoSuspensaoProduto extends Component {
       toastSuccess(
         `${capitalizar(this.props.acao)} de produto enviada com sucesso.`
       );
+      if (this.props.ehSuspensaoFluxoAlteracaoDados) {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("uuid", response.data.uuid);
+        const newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+      }
       this.props.atualizarDados();
     } else {
       toastError(`Houve um erro ao registrar a ${this.props.acao} de produto`);

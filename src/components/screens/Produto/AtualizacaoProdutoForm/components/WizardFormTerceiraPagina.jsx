@@ -9,7 +9,8 @@ import Especificacoes from "./components/Especificacoes";
 import { STATUS_CODAE_QUESTIONADO } from "configs/constants";
 import {
   updateProduto,
-  excluirImagemDoProduto
+  excluirImagemDoProduto,
+  alteracaoProdutoHomologado
 } from "services/produto.service";
 import { getError } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
@@ -165,8 +166,10 @@ class WizardFormTerceiraPagina extends Component {
     } else {
       values["tem_aditivos_alergenicos"] = false;
     }
-
-    const response = await updateProduto(values);
+    const endpoint = this.props.homologacao.esta_homologado
+      ? alteracaoProdutoHomologado
+      : updateProduto;
+    const response = await endpoint(values, this.props.homologacao.uuid);
     if (response.status === HTTP_STATUS.OK) {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)
         toastSuccess("Correção efetuada com sucesso.");

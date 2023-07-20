@@ -22,7 +22,8 @@ export const ModalVincularEditais = ({ ...props }) => {
     onChangeEditais,
     uuid,
     loadSolicitacao,
-    produto
+    produto,
+    tituloModal
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,9 @@ export const ModalVincularEditais = ({ ...props }) => {
           >
             <Spin tip="Enviando..." spinning={loading}>
               <Modal.Header closeButton>
-                <Modal.Title>Homologação do Produto</Modal.Title>
+                <Modal.Title>
+                  {tituloModal || "Homologação do Produto"}
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <div className="row mb-3">
