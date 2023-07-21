@@ -67,9 +67,6 @@ export const CadastroEmpresa = () => {
     telefone: null,
     cargo: null
   });
-  const [contatosPessoaEmpresaForm, setContatosPessoaEmpresaForm] = useState([
-    "contatoPessoaEmpresa_0"
-  ]);
   const [contatosEmpresaForm, setContatosEmpresaForm] = useState([
     "contatoEmpresa_0"
   ]);
@@ -143,17 +140,12 @@ export const CadastroEmpresa = () => {
     contatos
       .filter(contato => contato.nome)
       .forEach((contato, indice) => {
-        if (
-          indice !== 0 &&
-          contatos.length > contatosPessoaEmpresaForm.length
-        ) {
-          contatosPessoaEmpresaForm.push(`contatoPessoaEmpresa_${indice}`);
+        if (indice !== 0 && contatos.length > contatosPessoaEmpresa.length) {
           contatosPessoaEmpresa.push({
             telefone: null,
             email: null
           });
         }
-        setContatosEmpresaForm(contatosPessoaEmpresaForm);
 
         contatosPessoaEmpresa[indice]["nome"] = contato.nome;
         contatosPessoaEmpresa[indice]["email"] = contato.email;
@@ -420,10 +412,7 @@ export const CadastroEmpresa = () => {
                       <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
                       <ContatoFormSet
                         ehDistribuidor={ehDistribuidor}
-                        contatosPessoaEmpresaForm={contatosPessoaEmpresaForm}
-                        setContatosPessoaEmpresaForm={
-                          setContatosPessoaEmpresaForm
-                        }
+                        values={values}
                         contatosPessoaEmpresa={contatosPessoaEmpresa}
                         setContatosPessoaEmpresa={setContatosPessoaEmpresa}
                       />
