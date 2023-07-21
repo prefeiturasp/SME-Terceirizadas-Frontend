@@ -219,7 +219,7 @@ export const validarCPF = cpf => {
 };
 
 export const removeCaracteresEspeciais = valor =>
-  valor.replace(/[^\w\s]/gi, "");
+  valor?.replace(/[^\w\s]/gi, "");
 
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
