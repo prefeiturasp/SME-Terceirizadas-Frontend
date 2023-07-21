@@ -17,6 +17,7 @@ export default class AutoCompleteField extends Component {
       required,
       esconderIcone,
       toUppercaseActive,
+      toLowerCaseActive,
       maxlength,
       proibeNumeros,
       ...props
@@ -42,6 +43,9 @@ export default class AutoCompleteField extends Component {
           onInput={e => {
             e.target.value = toUppercaseActive
               ? e.target.value.toUpperCase()
+              : e.target.value;
+            e.target.value = toLowerCaseActive
+              ? e.target.value.toLowerCase()
               : e.target.value;
             e.target.value = proibeNumeros
               ? e.target.value.replace(/[0-9]/, "")
