@@ -234,3 +234,18 @@ export const getNotificacao = async uuid => {
   const url = `/notificacao-guias-com-ocorrencias/${uuid}/`;
   return await axios.get(url);
 };
+
+export const getUnidadesMedida = async params =>
+  await axios.get("/unidades-medida-logistica/", { params });
+
+export const getUnidadeMedida = async uuid =>
+  await axios.get(`/unidades-medida-logistica/${uuid}/`);
+
+export const cadastrarUnidadeMedida = async payload =>
+  await axios.post("/unidades-medida-logistica/", payload);
+
+export const editarUnidadeMedida = async payload =>
+  await axios.patch("/unidades-medida-logistica/", payload);
+
+export const getNomesEAbreviacoesUnidadesMedida = async () =>
+  await axios.get("/unidades-medida-logistica/lista-nomes-abreviacoes/");
