@@ -74,6 +74,9 @@ export const FluxoDeStatus = props => {
         if (log.status_evento_explicacao === "Correção solicitada") {
           return "Devolvido para ajustes pela DRE";
         }
+        if (log.status_evento_explicacao === "Correção solicitada pela CODAE") {
+          return "Devolvido para ajustes pela CODAE";
+        }
         return log.status_evento_explicacao;
       }
     }

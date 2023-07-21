@@ -176,7 +176,10 @@ export default ({
             <div className="col-3 pr-0">
               <div
                 className={`float-right status-card-periodo-grupo ${
-                  statusPeriodo() === "MEDICAO_CORRECAO_SOLICITADA"
+                  [
+                    "MEDICAO_CORRECAO_SOLICITADA",
+                    "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                  ].includes(statusPeriodo())
                     ? "red"
                     : statusPeriodo() === "MEDICAO_CORRIGIDA_PELA_UE"
                     ? "blue"
