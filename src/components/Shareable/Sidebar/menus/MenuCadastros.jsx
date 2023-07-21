@@ -12,7 +12,8 @@ import {
   SOBREMESA_DOCE,
   LABORATORIO,
   PRODUTOS,
-  EMBALAGENS_CADASTRADAS
+  EMBALAGENS_CADASTRADAS,
+  UNIDADES_MEDIDA
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -44,11 +45,16 @@ const MenuCadastros = () => {
         </LeafItem>
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
-        <LeafItem
-          to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
-        >
-          Embalagens
-        </LeafItem>
+        <>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+          >
+            Embalagens
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}>
+            Unidades de Medida
+          </LeafItem>
+        </>
       )}
       {usuarioEhDilogQualidade() && (
         <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}`}>
