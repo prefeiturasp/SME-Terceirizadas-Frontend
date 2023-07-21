@@ -5,8 +5,9 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
+import { usuarioEhMedicao } from "helpers/utilities";
 
-export const ModalEnviarParaCodae = ({ ...props }) => {
+export const ModalEnviarParaCodaeECodaeAprovar = ({ ...props }) => {
   const { showModal, setShowModal, aprovarSolicitacaoMedicao } = props;
 
   return (
@@ -16,12 +17,18 @@ export const ModalEnviarParaCodae = ({ ...props }) => {
       onHide={() => setShowModal(false)}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Enviar para CODAE</Modal.Title>
+        <Modal.Title>
+          {usuarioEhMedicao() ? "Aprovar Medição" : "Enviar para CODAE"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="row">
           <div className="col-12">
-            <p>Deseja aprovar e enviar a Medição para análise da CODAE?</p>
+            <p>
+              {usuarioEhMedicao()
+                ? "Deseja aprovar a Medição Inicial?"
+                : "Deseja aprovar e enviar a Medição para análise da CODAE?"}
+            </p>
           </div>
         </div>
       </Modal.Body>
