@@ -1848,7 +1848,7 @@ export default () => {
                       </div>
                     </div>
                     {location.state && location.state.justificativa_periodo && (
-                      <div className="row py-2">
+                      <div className="row pt-4 pb-2 mt-legenda">
                         <div className="col">
                           <b className="pb-2 mb-2">
                             Correções solicitadas pela DRE:
@@ -1861,7 +1861,11 @@ export default () => {
                         </div>
                       </div>
                     )}
-                    <div className="row pb-2 pt-4 title-semanas">
+                    <div
+                      className={`row pb-2 pt-4 ${!(
+                        location.state && location.state.justificativa_periodo
+                      ) && "mt-legenda"}`}
+                    >
                       <div className="col">
                         <b className="section-title">
                           Semanas do Período para Lançamento da Medição Inicial
