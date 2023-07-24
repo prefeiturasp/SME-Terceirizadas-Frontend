@@ -13,6 +13,7 @@ import {
   imprimeFichaIdentificacaoProduto
 } from "services/produto.service";
 import ModalAtivacaoSuspensaoProduto from "../../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 export const BotoesCabecalho = ({
   homologacao,
@@ -46,99 +47,105 @@ export const BotoesCabecalho = ({
   };
 
   return (
-    <div className="row">
-      <ModalHistorico
-        visible={showModal}
-        onOk={() => setShowModal(false)}
-        onCancel={() => setShowModal(false)}
-        logs={homologacao.logs}
-        getHistorico={() => getHistorico}
-      />
-      <ModalPadrao
-        showModal={showModalAnaliseSensorial}
-        closeModal={() => setShowModalAnaliseSensorial(false)}
-        toastSuccessMessage="Solicitação de análise sensorial enviada com sucesso"
-        modalTitle="Deseja solicitar a análise sensorial do produto?"
-        endpoint={CODAEPedeAnaliseSensorialProduto}
-        uuid={homologacao.uuid}
-        protocoloAnalise={protocoloAnalise}
-        loadSolicitacao={() => getHomologacaoProdutoAsync()}
-        justificativa={homologacao.justificativa}
-        labelJustificativa="Informações Adicionais"
-        helpText="Solicitamos que seja informado a quantidade e descrição para análise sensorial"
-        eAnalise={true}
-        terceirizadas={terceirizadas}
-        status={homologacao.status}
-        terceirizada={homologacao.rastro_terceirizada}
-        tipoModal="analise"
-      />
-      <ModalAtivacaoSuspensaoProduto
-        showModal={showModalSuspender}
-        closeModal={() => setShowModalSuspender(false)}
-        acao={acao}
-        produto={homologacao.produto}
-        idHomologacao={homologacao.uuid}
-        atualizarDados={() => getHomologacaoProdutoAsync()}
-        ehCardSuspensos={ehCardSuspensos}
-        status={homologacao.status}
-      />
-      <div className="col-12">
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          style={BUTTON_STYLE.GREEN}
-          icon={BUTTON_ICON.PRINT}
-          onClick={() =>
-            imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
-          }
-          className="float-right"
+    <>
+      <div className="row">
+        <ModalHistorico
+          visible={showModal}
+          onOk={() => setShowModal(false)}
+          onCancel={() => setShowModal(false)}
+          logs={homologacao.logs}
+          getHistorico={() => getHistorico}
         />
-        <Botao
-          type={BUTTON_TYPE.BUTTON}
-          texto="Histórico"
-          style={BUTTON_STYLE.GREEN_OUTLINE}
-          onClick={() => setShowModal(true)}
-          className="mr-2 float-right"
+        <ModalPadrao
+          showModal={showModalAnaliseSensorial}
+          closeModal={() => setShowModalAnaliseSensorial(false)}
+          toastSuccessMessage="Solicitação de análise sensorial enviada com sucesso"
+          modalTitle="Deseja solicitar a análise sensorial do produto?"
+          endpoint={CODAEPedeAnaliseSensorialProduto}
+          uuid={homologacao.uuid}
+          protocoloAnalise={protocoloAnalise}
+          loadSolicitacao={() => getHomologacaoProdutoAsync()}
+          justificativa={homologacao.justificativa}
+          labelJustificativa="Informações Adicionais"
+          helpText="Solicitamos que seja informado a quantidade e descrição para análise sensorial"
+          eAnalise={true}
+          terceirizadas={terceirizadas}
+          status={homologacao.status}
+          terceirizada={homologacao.rastro_terceirizada}
+          tipoModal="analise"
         />
-        {checaStatus(homologacao.status) && ehGPCODAE && ehCardSuspensos && (
+        <ModalAtivacaoSuspensaoProduto
+          showModal={showModalSuspender}
+          closeModal={() => setShowModalSuspender(false)}
+          acao={acao}
+          produto={homologacao.produto}
+          idHomologacao={homologacao.uuid}
+          atualizarDados={() => getHomologacaoProdutoAsync()}
+          ehCardSuspensos={ehCardSuspensos}
+          status={homologacao.status}
+        />
+        <div className="col-12">
+          {usuarioEhEmpresaTerceirizada() && homologacao.tem_copia && (
+            <span className="msg-atualizacao-em-andamento">
+              Não é possível realizar edições neste produto no momento, pois já
+              existe uma solicitação de atualização de dados em andamento.
+            </span>
+          )}
           <Botao
-            texto="Ativar"
             type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN}
+            icon={BUTTON_ICON.PRINT}
+            onClick={() =>
+              imprimeFichaIdentificacaoProduto(homologacao.uuid, params)
+            }
+            className="float-right"
+          />
+          <Botao
+            type={BUTTON_TYPE.BUTTON}
+            texto="Histórico"
             style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={() => {
-              setShowModalSuspender(true);
-              setAcao("ativação");
-            }}
+            onClick={() => setShowModal(true)}
             className="mr-2 float-right"
           />
-        )}
-        {checaStatus(homologacao.status) && ehGPCODAE && !ehCardSuspensos && (
-          <Botao
-            texto="Suspender"
-            type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.GREEN_OUTLINE}
-            onClick={() => {
-              setShowModalSuspender(true);
-              setAcao("suspensão");
-            }}
-            className="mr-2 float-right"
-          />
-        )}
-        {homologacao.status === "CODAE_HOMOLOGADO" &&
-          ehGPCODAE &&
-          !ehCardSuspensos && (
+          {checaStatus(homologacao.status) && ehGPCODAE && ehCardSuspensos && (
             <Botao
-              texto="Solicitar análise sensorial"
+              texto="Ativar"
               type={BUTTON_TYPE.BUTTON}
-              onClick={() => setShowModalAnaliseSensorial(true)}
               style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                setShowModalSuspender(true);
+                setAcao("ativação");
+              }}
               className="mr-2 float-right"
             />
           )}
+          {checaStatus(homologacao.status) && ehGPCODAE && !ehCardSuspensos && (
+            <Botao
+              texto="Suspender"
+              type={BUTTON_TYPE.BUTTON}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                setShowModalSuspender(true);
+                setAcao("suspensão");
+              }}
+              className="mr-2 float-right"
+            />
+          )}
+          {homologacao.status === "CODAE_HOMOLOGADO" &&
+            ehGPCODAE &&
+            !ehCardSuspensos && (
+              <Botao
+                texto="Solicitar análise sensorial"
+                type={BUTTON_TYPE.BUTTON}
+                onClick={() => setShowModalAnaliseSensorial(true)}
+                style={BUTTON_STYLE.GREEN_OUTLINE}
+                className="mr-2 float-right"
+              />
+            )}
+        </div>
       </div>
-      <div className="col-12">
-        <hr />
-      </div>
-    </div>
+      <hr />
+    </>
   );
 };
 export default BotoesCabecalho;

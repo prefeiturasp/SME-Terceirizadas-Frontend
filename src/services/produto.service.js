@@ -221,22 +221,20 @@ export const submitProduto = async payload => {
 
 export const updateProduto = async payload => {
   const url = `${API_URL}/produtos/${payload.uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify(payload)
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const alteracaoProdutoHomologado = async (payload, uuid) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/alteracao-produto-homologado/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const respostaAnaliseSensorial = payload => {

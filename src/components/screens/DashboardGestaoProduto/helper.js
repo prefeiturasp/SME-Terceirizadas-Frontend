@@ -91,6 +91,19 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     }&card_suspensos=${true}`;
   } else if (
     usuarioEhEmpresaTerceirizada() &&
+    item.tem_copia &&
+    [
+      CODAE_HOMOLOGADO,
+      CODAE_SUSPENDEU,
+      CODAE_NAO_HOMOLOGADO,
+      CODAE_QUESTIONADO,
+      CODAE_AUTORIZOU_RECLAMACAO,
+      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+    ].includes(item.status.toLowerCase())
+  ) {
+    return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
+  } else if (
+    usuarioEhEmpresaTerceirizada() &&
     [
       CODAE_HOMOLOGADO,
       CODAE_SUSPENDEU,

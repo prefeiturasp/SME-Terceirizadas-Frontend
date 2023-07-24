@@ -28,7 +28,8 @@ const ModalAtivacaoSuspensaoProduto = ({
   atualizarDados,
   closeModal,
   showModal,
-  produto
+  produto,
+  ehSuspensaoFluxoAlteracaoDados
 }) => {
   const [meusDadosUsuario, setMeusDadosUsuario] = useState(undefined);
   const [editais, setEditais] = useState(undefined);
@@ -56,6 +57,13 @@ const ModalAtivacaoSuspensaoProduto = ({
     const endpoint = acao === "ativação" ? ativarProduto : suspenderProduto;
     const response = await endpoint(idHomologacao, values);
     if (response.status === HTTP_STATUS.OK) {
+      if (ehSuspensaoFluxoAlteracaoDados) {
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("uuid", response.data.uuid);
+        const newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+      }
       toastSuccess(`${capitalizar(acao)} de produto enviada com sucesso.`);
       atualizarDados();
     } else {
