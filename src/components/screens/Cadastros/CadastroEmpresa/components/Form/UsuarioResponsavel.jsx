@@ -90,7 +90,8 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
               </div>
               <div className="col-5">
                 <Field
-                  component={InputText}
+                  component={MaskedInputText}
+                  mask={telefoneMask}
                   name="telefone_representante"
                   label="Telefone"
                   id="telefone_representante"
@@ -103,7 +104,7 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
                 <Field
                   component={InputText}
                   label="E-mail"
-                  name="email_representante_legal"
+                  name="representante_email"
                   maxlength="140"
                 />
               </div>

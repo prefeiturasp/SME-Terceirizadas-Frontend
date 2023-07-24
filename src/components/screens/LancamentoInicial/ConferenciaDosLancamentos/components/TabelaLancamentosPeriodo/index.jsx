@@ -511,7 +511,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         <div className="content-section-acompanhamento-lancamento-right">
           <div
             className={`acompanhamento-status-lancamento mr-3 ${
-              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
+              [
+                "MEDICAO_CORRECAO_SOLICITADA",
+                "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+              ].includes(periodoGrupo.status)
+                ? "red"
+                : ""
             }`}
           >
             {PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
@@ -776,9 +781,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 className={`col-${
                   modoCorrecao
                     ? 6
-                    : ["MEDICAO_APROVADA_PELA_CODAE"].includes(
-                        solicitacao.status
-                      )
+                    : [
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      ].includes(solicitacao.status)
                     ? 12
                     : 8
                 } pl-0 pr-4`}
@@ -812,9 +818,10 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   />
                 </div>
               ) : (
-                !["MEDICAO_APROVADA_PELA_CODAE"].includes(
-                  solicitacao.status
-                ) && (
+                ![
+                  "MEDICAO_APROVADA_PELA_CODAE",
+                  "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                ].includes(solicitacao.status) && (
                   <div className="botoes col-4 px-0">
                     <Botao
                       texto="Solicitar Correção"

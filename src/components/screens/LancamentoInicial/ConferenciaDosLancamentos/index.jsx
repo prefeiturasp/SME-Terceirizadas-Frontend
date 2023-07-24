@@ -26,7 +26,8 @@ import {
   dreAprovaMedicao,
   dreAprovaSolicitacaoMedicao,
   dreSolicitaCorrecaoUE,
-  codaeAprovaSolicitacaoMedicao
+  codaeAprovaSolicitacaoMedicao,
+  codaeSolicitaCorrecaoUE
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -214,34 +215,74 @@ export const ConferenciaDosLancamentos = () => {
         }
       }
 
-      const statusPermitidosSolicitarCorrecao = [
+      const statusPermitidosSolicitarCorrecaoPelaDRE = [
         "MEDICAO_CORRECAO_SOLICITADA",
         "MEDICAO_APROVADA_PELA_DRE"
       ];
-      const algumPeriodoGrupoParaCorrigir = periodosGruposMedicao.some(
+
+      const statusPermitidosSolicitarCorrecaoPelaCODAE = [
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_APROVADA_PELA_CODAE"
+      ];
+
+      const algumPeriodoGrupoParaCorrigirPelaDRE = periodosGruposMedicao.some(
         periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
       );
 
-      const todosPeriodosGrupoAnalisado = periodosGruposMedicao.every(
+      const algumPeriodoGrupoParaCorrigirPelaCODAE = periodosGruposMedicao.some(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+      );
+
+      const todosPeriodosGruposAnalisadosPelaDRE = periodosGruposMedicao.every(
         periodoGrupo =>
           periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ||
           periodoGrupo.status === "MEDICAO_APROVADA_PELA_DRE"
       );
 
-      if (!statusPermitidosSolicitarCorrecao.includes(solicitacao.status)) {
+      const todosPeriodosGruposAnalisadosPelaCODAE = periodosGruposMedicao.every(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
+          periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
+      );
+
+      if (
+        (usuarioEhDRE() &&
+          !statusPermitidosSolicitarCorrecaoPelaDRE.includes(
+            solicitacao.status
+          )) ||
+        (usuarioEhMedicao() &&
+          !statusPermitidosSolicitarCorrecaoPelaCODAE.includes(
+            solicitacao.status
+          ))
+      ) {
         if (solicitacao.com_ocorrencias) {
           if (
             ocorrencia &&
-            (ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" ||
-              (todosPeriodosGrupoAnalisado && algumPeriodoGrupoParaCorrigir))
+            ((usuarioEhDRE() &&
+              ((ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" &&
+                todosPeriodosGruposAnalisadosPelaDRE) ||
+                (ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+                  todosPeriodosGruposAnalisadosPelaDRE &&
+                  algumPeriodoGrupoParaCorrigirPelaDRE))) ||
+              (usuarioEhMedicao() &&
+                ((ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" &&
+                  todosPeriodosGruposAnalisadosPelaCODAE) ||
+                  (ocorrencia.status === "MEDICAO_APROVADA_PELA_CODAE" &&
+                    todosPeriodosGruposAnalisadosPelaCODAE &&
+                    algumPeriodoGrupoParaCorrigirPelaCODAE))))
           ) {
             setDesabilitarSolicitarCorrecao(false);
           } else {
             setDesabilitarSolicitarCorrecao(true);
           }
         } else if (
-          todosPeriodosGrupoAnalisado &&
-          algumPeriodoGrupoParaCorrigir
+          (usuarioEhDRE() &&
+            todosPeriodosGruposAnalisadosPelaDRE &&
+            algumPeriodoGrupoParaCorrigirPelaDRE) ||
+          (usuarioEhMedicao() &&
+            todosPeriodosGruposAnalisadosPelaCODAE &&
+            algumPeriodoGrupoParaCorrigirPelaCODAE)
         ) {
           setDesabilitarSolicitarCorrecao(false);
         } else {
@@ -271,13 +312,14 @@ export const ConferenciaDosLancamentos = () => {
   };
 
   const aprovarSolicitacaoMedicao = async () => {
+    const msgErro = "Erro ao aprovar Medição. Tente novamente mais tarde.";
     setLoading(true);
     if (usuarioEhMedicao()) {
       const response = await codaeAprovaSolicitacaoMedicao(solicitacao.uuid);
       if (response.status === HTTP_STATUS.OK) {
         toastSuccess("Medição Inicial aprovada com sucesso!");
       } else {
-        setErroAPI("Erro ao aprovar Medição. Tente novamente mais tarde.");
+        setErroAPI(msgErro);
       }
     } else {
       const response = await dreAprovaSolicitacaoMedicao(solicitacao.uuid);
@@ -286,7 +328,7 @@ export const ConferenciaDosLancamentos = () => {
           "Medição aprovada pela DRE e enviada para análise de CODAE"
         );
       } else {
-        setErroAPI("Erro ao aprovar Medição. Tente novamente mais tarde.");
+        setErroAPI(msgErro);
       }
     }
     getSolMedInicialAsync();
@@ -294,17 +336,20 @@ export const ConferenciaDosLancamentos = () => {
     getPeriodosGruposMedicaoAsync();
   };
 
-  const dreSolicitaCorrecaoMedicao = async () => {
+  const solicitarCorrecaoMedicao = async () => {
+    const msgSuccess =
+      "Solicitação de correção enviada para a unidade com sucesso";
+    const msgErro =
+      "Erro ao solicitar correção da Medição. Tente novamente mais tarde.";
     setLoading(true);
-    const response = await dreSolicitaCorrecaoUE(solicitacao.uuid);
+    const endpoint = usuarioEhMedicao()
+      ? codaeSolicitaCorrecaoUE
+      : dreSolicitaCorrecaoUE;
+    const response = await endpoint(solicitacao.uuid);
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess(
-        "Solicitação de correção enviada para a unidade com sucesso"
-      );
+      toastSuccess(msgSuccess);
     } else {
-      setErroAPI(
-        "Erro ao solicitar correção da Medição. Tente novamente mais tarde."
-      );
+      setErroAPI(msgErro);
     }
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
@@ -418,8 +463,10 @@ export const ConferenciaDosLancamentos = () => {
                                   <span className="status-ocorrencia text-center mr-3">
                                     <b
                                       className={
-                                        ocorrencia.status ===
-                                        "MEDICAO_CORRECAO_SOLICITADA"
+                                        [
+                                          "MEDICAO_CORRECAO_SOLICITADA",
+                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                                        ].includes(ocorrencia.status)
                                           ? "red"
                                           : ""
                                       }
@@ -480,9 +527,16 @@ export const ConferenciaDosLancamentos = () => {
                                     style={BUTTON_STYLE.GREEN_OUTLINE}
                                     onClick={visualizarModal}
                                   />
-                                  {!["MEDICAO_APROVADA_PELA_CODAE"].includes(
-                                    solicitacao.status
-                                  ) && (
+                                  {((usuarioEhMedicao() &&
+                                    [
+                                      "MEDICAO_APROVADA_PELA_DRE",
+                                      "MEDICAO_CORRIGIDA_PARA_CODAE"
+                                    ].includes(solicitacao.status)) ||
+                                    (usuarioEhDRE() &&
+                                      [
+                                        "MEDICAO_ENVIADA_PELA_UE",
+                                        "MEDICAO_CORRIGIDA_PELA_UE"
+                                      ].includes(solicitacao.status))) && (
                                     <>
                                       <Botao
                                         className="mx-3"
@@ -565,7 +619,9 @@ export const ConferenciaDosLancamentos = () => {
                       />
                       {((![
                         "MEDICAO_APROVADA_PELA_DRE",
-                        "MEDICAO_CORRECAO_SOLICITADA"
+                        "MEDICAO_CORRECAO_SOLICITADA",
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
                       ].includes(solicitacao.status) &&
                         usuarioEhDRE()) ||
                         ([
@@ -646,7 +702,7 @@ export const ConferenciaDosLancamentos = () => {
           showModal={showModalSolicitarCorrecaoUE}
           setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
           endpoint={() => {
-            dreSolicitaCorrecaoMedicao();
+            solicitarCorrecaoMedicao();
           }}
         />
       </Spin>

@@ -152,6 +152,15 @@ export const codaeAprovaSolicitacaoMedicao = async uuid => {
   }
 };
 
+export const codaeSolicitaCorrecaoUE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/codae-solicita-correcao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const escolaEnviaCorrecaoMedicaoInicialDRE = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/escola-corrige-medicao-para-dre/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
