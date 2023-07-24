@@ -244,8 +244,8 @@ export const getUnidadeMedida = async uuid =>
 export const cadastrarUnidadeMedida = async payload =>
   await axios.post("/unidades-medida-logistica/", payload);
 
-export const editarUnidadeMedida = async payload =>
-  await axios.patch("/unidades-medida-logistica/", payload);
+export const editarUnidadeMedida = async (payload, uuid) =>
+  await axios.patch(`/unidades-medida-logistica/${uuid}/`, payload);
 
 export const getNomesEAbreviacoesUnidadesMedida = async () =>
   await axios.get("/unidades-medida-logistica/lista-nomes-abreviacoes/");
