@@ -28,9 +28,6 @@ const ModalAtivacaoSuspensaoProduto = ({
   atualizarDados,
   closeModal,
   showModal,
-  ehCardSuspensos,
-  status,
-  suspenso,
   produto
 }) => {
   const [meusDadosUsuario, setMeusDadosUsuario] = useState(undefined);
