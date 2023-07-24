@@ -71,7 +71,6 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
-import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
@@ -1114,15 +1113,6 @@ const routesConfig = [
     component: RelatorioProduto,
     exact: true,
     tipoUsuario: validaPerfilEscolaMistaParceira()
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${
-      constants.RELATORIO_SITUACAO_PRODUTO
-    }`,
-    component: RelatorioSituacaoProduto,
-    exact: true,
-    tipoUsuario:
-      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
