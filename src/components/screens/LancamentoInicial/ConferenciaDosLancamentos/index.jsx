@@ -163,9 +163,11 @@ export const ConferenciaDosLancamentos = () => {
         if (logOcorrencia) {
           setTextoOcorrencia(
             (usuarioEhDRE() &&
+              logOcorrencia &&
               logOcorrencia.status_evento_explicacao ===
                 "Correção solicitada") ||
               (usuarioEhMedicao() &&
+                logOcorrenciaCODAE &&
                 logOcorrenciaCODAE.status_evento_explicacao ===
                   "Correção solicitada pela CODAE")
               ? "Solicitação de correção no Formulário de Ocorrências realizada em"
