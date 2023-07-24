@@ -1,17 +1,17 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import CadastroEmbalagem from "components/screens/Cadastros/Embalagens/components/CadastroEmbalagem";
+import CadastroUnidadeMedida from "components/screens/Cadastros/UnidadesMedida/components/CadastroUnidadeMedida";
 import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  CADASTRO_EMBALAGEM,
-  EMBALAGENS_CADASTRADAS
+  EDICAO_UNIDADE_MEDIDA,
+  UNIDADES_MEDIDA
 } from "../../configs/constants";
 
 const atual = {
-  href: `/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}`,
-  titulo: "Editar Cadastro de Embalagem"
+  href: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_UNIDADE_MEDIDA}`,
+  titulo: "Editar Cadastro de Unidade de Medida"
 };
 
 const anteriores = [
@@ -20,8 +20,8 @@ const anteriores = [
     titulo: "Cadastros"
   },
   {
-    href: `/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`,
-    titulo: "Embalagens Cadastradas"
+    href: `/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`,
+    titulo: "Unidades de Medida"
   }
 ];
 
@@ -29,9 +29,9 @@ export default () => (
   <Page
     titulo={atual.titulo}
     botaoVoltar
-    voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+    voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <CadastroEmbalagem />
+    <CadastroUnidadeMedida />
   </Page>
 );
