@@ -69,6 +69,9 @@ export const ConferenciaDosLancamentos = () => {
     setShowModalSolicitarCorrecaoUE
   ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
+  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] = useState(
+    null
+  );
   const [
     exibirModalCentralDownloads,
     setExibirModalCentralDownloads
@@ -100,6 +103,21 @@ export const ConferenciaDosLancamentos = () => {
       );
     }
   };
+
+  const desabilitarSolicitarCorrecaoOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
+      solicitacao.status
+    );
+
+  const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    [
+      "MEDICAO_APROVADA_PELA_CODAE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+    ].includes(solicitacao.status);
 
   const getSolMedInicialAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -134,11 +152,22 @@ export const ConferenciaDosLancamentos = () => {
             log.status_evento_explicacao
           )
         );
+        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find(log =>
+          ["Correção solicitada pela CODAE", "Aprovado pela CODAE"].includes(
+            log.status_evento_explicacao
+          )
+        );
         setOcorrencia(arquivoPdfOcorrencia);
         setLogCorrecaoOcorrencia(logOcorrencia);
+        setLogCorrecaoOcorrenciaCODAE(logOcorrenciaCODAE);
         if (logOcorrencia) {
           setTextoOcorrencia(
-            logOcorrencia.status_evento_explicacao === "Correção solicitada"
+            (usuarioEhDRE() &&
+              logOcorrencia.status_evento_explicacao ===
+                "Correção solicitada") ||
+              (usuarioEhMedicao() &&
+                logOcorrenciaCODAE.status_evento_explicacao ===
+                  "Correção solicitada pela CODAE")
               ? "Solicitação de correção no Formulário de Ocorrências realizada em"
               : "Formulário de Ocorrências aprovado em"
           );
@@ -515,7 +544,8 @@ export const ConferenciaDosLancamentos = () => {
                             {ocorrenciaExpandida && ocorrencia && (
                               <Fragment>
                                 <div className="col-5 mt-3">
-                                  {logCorrecaoOcorrencia &&
+                                  {(logCorrecaoOcorrencia ||
+                                    logCorrecaoOcorrenciaCODAE) &&
                                     `${textoOcorrencia} ${
                                       logCorrecaoOcorrencia.criado_em
                                     }`}
@@ -543,11 +573,10 @@ export const ConferenciaDosLancamentos = () => {
                                         texto="Solicitar correção no formulário"
                                         type={BUTTON_TYPE.BUTTON}
                                         style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                                        disabled={[
-                                          "MEDICAO_APROVADA_PELA_DRE",
-                                          "MEDICAO_CORRECAO_SOLICITADA",
-                                          "MEDICAO_APROVADA_PELA_CODAE"
-                                        ].includes(solicitacao.status)}
+                                        disabled={
+                                          desabilitarSolicitarCorrecaoOcorrenciaDRE ||
+                                          desabilitarSolicitarCorrecaoOcorrenciaCODAE
+                                        }
                                         onClick={() =>
                                           setShowModalSalvarOcorrencia(true)
                                         }

@@ -116,6 +116,15 @@ export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
   }
 };
 
+export const CODAEPedeCorrecaoOcorrencia = async (uuid, params) => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/codae-pede-correcao-ocorrencia/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const drePedeAprovacaoOcorrencia = async uuid => {
   const url = `medicao-inicial/ocorrencia/${uuid}/dre-aprova-ocorrencia/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);

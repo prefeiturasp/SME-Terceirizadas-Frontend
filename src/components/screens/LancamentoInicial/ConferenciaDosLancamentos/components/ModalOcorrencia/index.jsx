@@ -12,8 +12,10 @@ import CKEditorField from "components/Shareable/CKEditorField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   drePedeCorrecaoOcorrencia,
-  drePedeAprovacaoOcorrencia
+  drePedeAprovacaoOcorrencia,
+  CODAEPedeCorrecaoOcorrencia
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { usuarioEhDRE } from "helpers/utilities";
 
 export const ModalOcorrencia = ({ ...props }) => {
   const {
@@ -29,7 +31,9 @@ export const ModalOcorrencia = ({ ...props }) => {
   } = props;
 
   const solicitarCorrecao = async values => {
-    const response = await drePedeCorrecaoOcorrencia(ocorrencia.uuid, values);
+    const response = usuarioEhDRE()
+      ? await drePedeCorrecaoOcorrencia(ocorrencia.uuid, values)
+      : await CODAEPedeCorrecaoOcorrencia(ocorrencia.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       setShowModal(false);
       toastSuccess(
