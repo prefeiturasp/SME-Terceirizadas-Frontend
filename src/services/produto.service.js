@@ -153,12 +153,6 @@ export const getReclamacoesTerceirizadaPorFiltro = async params => {
   });
 };
 
-export const getProdutosRelatorioSituacao = async params => {
-  return await axios.get(`/produtos/filtro-relatorio-situacao-produto/`, {
-    params
-  });
-};
-
 export const getProdutosRelatorioAnaliseSensorial = async params => {
   return await axios.get(`/produtos/filtro-relatorio-em-analise-sensorial/`, {
     params
@@ -607,14 +601,6 @@ export const getProdutosSuspensos = async payload => {
     `/homologacoes-produtos/homologacoes_suspensas/`,
     payload
   );
-};
-
-export const getPdfRelatorioSituacaoProduto = async params => {
-  const { data } = await axios.get("/produtos/relatorio-situacao-produto/", {
-    params,
-    responseType: "blob"
-  });
-  saveAs(data, "relatorio_situacao_produto.pdf");
 };
 
 export const getProdutosListagem = async params => {
