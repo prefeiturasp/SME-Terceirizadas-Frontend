@@ -31,7 +31,7 @@ import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import {
-  getListaProdutosEdital,
+  getListaCompletaProdutosLogistica,
   getUnidadesDeMedidaProduto
 } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
@@ -396,7 +396,7 @@ export default () => {
     };
 
     const buscaProdutos = async () => {
-      const response = await getListaProdutosEdital();
+      const response = await getListaCompletaProdutosLogistica();
       setProdutosOptions(response.data.results);
     };
 
