@@ -116,7 +116,7 @@ export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
   }
 };
 
-export const CODAEPedeCorrecaoOcorrencia = async (uuid, params) => {
+export const codaePedeCorrecaoOcorrencia = async (uuid, params) => {
   const url = `medicao-inicial/ocorrencia/${uuid}/codae-pede-correcao-ocorrencia/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
   if (response) {

@@ -13,7 +13,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   drePedeCorrecaoOcorrencia,
   drePedeAprovacaoOcorrencia,
-  CODAEPedeCorrecaoOcorrencia
+  codaePedeCorrecaoOcorrencia
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { usuarioEhDRE } from "helpers/utilities";
 
@@ -33,7 +33,7 @@ export const ModalOcorrencia = ({ ...props }) => {
   const solicitarCorrecao = async values => {
     const response = usuarioEhDRE()
       ? await drePedeCorrecaoOcorrencia(ocorrencia.uuid, values)
-      : await CODAEPedeCorrecaoOcorrencia(ocorrencia.uuid, values);
+      : await codaePedeCorrecaoOcorrencia(ocorrencia.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       setShowModal(false);
       toastSuccess(

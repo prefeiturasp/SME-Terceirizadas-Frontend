@@ -544,10 +544,15 @@ export const ConferenciaDosLancamentos = () => {
                             {ocorrenciaExpandida && ocorrencia && (
                               <Fragment>
                                 <div className="col-5 mt-3">
-                                  {(logCorrecaoOcorrencia ||
-                                    logCorrecaoOcorrenciaCODAE) &&
+                                  {usuarioEhDRE() &&
+                                    logCorrecaoOcorrencia &&
                                     `${textoOcorrencia} ${
                                       logCorrecaoOcorrencia.criado_em
+                                    }`}
+                                  {usuarioEhMedicao() &&
+                                    logCorrecaoOcorrenciaCODAE &&
+                                    `${textoOcorrencia} ${
+                                      logCorrecaoOcorrenciaCODAE.criado_em
                                     }`}
                                 </div>
                                 <div className="col-7 text-right mt-3">
