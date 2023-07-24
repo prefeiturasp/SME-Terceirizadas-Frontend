@@ -353,6 +353,7 @@ class AtualizacaoProdutoForm extends Component {
                   onSubmit={onSubmit}
                   valuesForm={values}
                   produto={produto}
+                  homologacao={homologacao}
                   valoresSegundoForm={valoresSegundoForm}
                   valoresterceiroForm={valoresterceiroForm}
                   terceiroStep={terceiroStep}

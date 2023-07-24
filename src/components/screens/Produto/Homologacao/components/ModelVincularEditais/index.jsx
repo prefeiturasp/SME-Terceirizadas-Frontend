@@ -22,7 +22,9 @@ export const ModalVincularEditais = ({ ...props }) => {
     onChangeEditais,
     uuid,
     loadSolicitacao,
-    produto
+    produto,
+    tituloModal,
+    ehSuspensaoFluxoAlteracaoDados
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -47,7 +49,16 @@ export const ModalVincularEditais = ({ ...props }) => {
         toastSuccess("Solicitação de homologado enviada com sucesso");
         setLoading(false);
         closeModal();
-        loadSolicitacao(uuid);
+        if (ehSuspensaoFluxoAlteracaoDados) {
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set("uuid", response.data.uuid);
+          const newRelativePathQuery =
+            window.location.pathname + "?" + searchParams.toString();
+          history.pushState(null, "", newRelativePathQuery);
+          loadSolicitacao(response.data.uuid);
+        } else {
+          loadSolicitacao(uuid);
+        }
       } else {
         toastError(response.data.detail);
         setLoading(false);
@@ -76,7 +87,9 @@ export const ModalVincularEditais = ({ ...props }) => {
           >
             <Spin tip="Enviando..." spinning={loading}>
               <Modal.Header closeButton>
-                <Modal.Title>Homologação do Produto</Modal.Title>
+                <Modal.Title>
+                  {tituloModal || "Homologação do Produto"}
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <div className="row mb-3">
