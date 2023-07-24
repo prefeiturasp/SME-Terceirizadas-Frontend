@@ -235,7 +235,7 @@ import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
 import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
 import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
 import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
-import CadastroUnidadesMedidaPage from "pages/Cadastros/CadastroUnidadesMedidaPage";
+import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 
 const routesConfig = [
@@ -802,7 +802,7 @@ const routesConfig = [
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.CADASTRO_UNIDADE_MEDIDA
     }`,
-    component: CadastroUnidadesMedidaPage,
+    component: CadastroUnidadeMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
