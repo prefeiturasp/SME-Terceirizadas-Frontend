@@ -166,9 +166,11 @@ class WizardFormTerceiraPagina extends Component {
     } else {
       values["tem_aditivos_alergenicos"] = false;
     }
-    const endpoint = this.props.homologacao.esta_homologado
-      ? alteracaoProdutoHomologado
-      : updateProduto;
+    const endpoint =
+      this.props.homologacao.esta_homologado &&
+      this.props.homologacao.status !== "CODAE_QUESTIONADO"
+        ? alteracaoProdutoHomologado
+        : updateProduto;
     const response = await endpoint(values, this.props.homologacao.uuid);
     if (response.status === HTTP_STATUS.OK) {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO)

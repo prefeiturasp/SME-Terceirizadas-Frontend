@@ -112,6 +112,7 @@ export const BotoesGPCODAE = ({
             ? "Aceitar alterações"
             : "Homologação do Produto"
         }
+        ehSuspensaoFluxoAlteracaoDados
       />
 
       <ModalAtivacaoSuspensaoProduto

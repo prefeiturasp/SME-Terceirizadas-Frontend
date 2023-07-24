@@ -23,7 +23,8 @@ export const ModalVincularEditais = ({ ...props }) => {
     uuid,
     loadSolicitacao,
     produto,
-    tituloModal
+    tituloModal,
+    ehSuspensaoFluxoAlteracaoDados
   } = props;
 
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,16 @@ export const ModalVincularEditais = ({ ...props }) => {
         toastSuccess("Solicitação de homologado enviada com sucesso");
         setLoading(false);
         closeModal();
-        loadSolicitacao(uuid);
+        if (ehSuspensaoFluxoAlteracaoDados) {
+          const searchParams = new URLSearchParams(window.location.search);
+          searchParams.set("uuid", response.data.uuid);
+          const newRelativePathQuery =
+            window.location.pathname + "?" + searchParams.toString();
+          history.pushState(null, "", newRelativePathQuery);
+          loadSolicitacao(response.data.uuid);
+        } else {
+          loadSolicitacao(uuid);
+        }
       } else {
         toastError(response.data.detail);
         setLoading(false);
