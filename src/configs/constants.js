@@ -122,7 +122,6 @@ export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
 export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
   "acompanhar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
-export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
