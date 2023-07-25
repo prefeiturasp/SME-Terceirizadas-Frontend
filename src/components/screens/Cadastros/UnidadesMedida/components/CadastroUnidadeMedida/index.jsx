@@ -70,9 +70,7 @@ export default () => {
         setShowModalSalvar(false);
       }
     } catch (error) {
-      console.log(error);
-      if (erroCadastroOuEdicaoRepetida(error)) {
-        history.push(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
+      if (erroCadastroOuEdicaoRepetido(error)) {
         toastError("Item já cadastrado");
       } else {
         toastError("Ocorreu um erro ao salvar a Unidade de Medida");
@@ -91,7 +89,7 @@ export default () => {
     return payload;
   };
 
-  const erroCadastroOuEdicaoRepetida = error => {
+  const erroCadastroOuEdicaoRepetido = error => {
     return error.response.data.non_field_errors.includes(
       "Os campos nome devem criar um set único."
     );
@@ -110,7 +108,6 @@ export default () => {
         setCarregando(false);
       }
     } catch (e) {
-      console.log(e);
       toastError("Ocorreu um erro ao carregar dados da Unidade de Medida");
       setCarregando(false);
     }
