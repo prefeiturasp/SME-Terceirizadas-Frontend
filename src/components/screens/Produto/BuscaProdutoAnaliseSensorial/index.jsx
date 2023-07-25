@@ -179,7 +179,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
                             type={BUTTON_TYPE.SUBMIT}
                             style={BUTTON_STYLE.GREEN}
                             disabled={this.responder_deve_aparecer(
-                              homologacao.rastro_terceirizada
+                              homologacao.ultima_analise.terceirizada
                             )}
                             onClick={this.showModal}
                           />

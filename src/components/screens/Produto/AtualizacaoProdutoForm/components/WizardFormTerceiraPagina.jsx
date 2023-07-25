@@ -166,6 +166,9 @@ class WizardFormTerceiraPagina extends Component {
     } else {
       values["tem_aditivos_alergenicos"] = false;
     }
+    if (values["aditivos"] === null) {
+      values["aditivos"] = "";
+    }
     const endpoint =
       this.props.homologacao.esta_homologado &&
       this.props.homologacao.status !== "CODAE_QUESTIONADO"
