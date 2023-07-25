@@ -118,6 +118,7 @@ export const ContatoFormSet = ({
                             component={InputText}
                             label="E-mail"
                             maxlength="140"
+                            validate={required}
                             required
                           />
                           <OnChange name={`email_contato_${indiceEmpresa}`}>
