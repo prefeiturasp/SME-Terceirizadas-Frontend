@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Pagination, Spin } from "antd";
 import Filtros from "./components/Filtros";
-import ListagemEmbalagens from "./components/ListagemEmbalagens";
+import ListagemUnidadesMedida from "./components/ListagemUnidadesMedida";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
-  getEmbalagens,
-  getListaNomesEmbalagens,
-  getListaAbreviacaoEmbalagens
+  getUnidadesMedida,
+  getNomesEAbreviacoesUnidadesMedida
 } from "services/qualidade.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [embalagens, setEmbalagens] = useState(undefined);
-  const [nomesEmbalagens, setNomesEmbalagens] = useState([]);
-  const [abreviacaoEmbalagens, setAbreviacaoEmbalagens] = useState([]);
+  const [unidadesMedida, setUnidadesMedida] = useState(undefined);
+  const [nomesUnidadesMedida, setNomesUnidadesMedida] = useState([]);
+  const [abreviacoesUnidadesMedida, setAbreviacoesUnidadesMedida] = useState(
+    []
+  );
   const [filtros, setFiltros] = useState();
   const [page, setPage] = useState();
   const [total, setTotal] = useState();
@@ -24,54 +25,54 @@ export default () => {
 
   useEffect(() => {
     if (filtros) {
-      buscarEmbalagens(1);
+      buscarResultados(1);
       setPage(1);
     }
   }, [filtros]);
 
   const buscaDadosAutoComplete = async () => {
-    const respNomes = await getListaNomesEmbalagens();
-    const respAbreviacoes = await getListaAbreviacaoEmbalagens();
-    setNomesEmbalagens(respNomes.data.results);
-    setAbreviacaoEmbalagens(respAbreviacoes.data.results);
+    const nomesEAbreviacoes = await getNomesEAbreviacoesUnidadesMedida();
+    const nomes = nomesEAbreviacoes.data.results.map(e => e.nome);
+    const abreviacoes = nomesEAbreviacoes.data.results.map(e => e.abreviacao);
+    setNomesUnidadesMedida(nomes);
+    setAbreviacoesUnidadesMedida(abreviacoes);
   };
 
-  const buscarEmbalagens = async page => {
+  const buscarResultados = async pageNumber => {
     setCarregando(true);
 
-    const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getEmbalagens(params);
-    if (response.data.count) {
-      setEmbalagens(response.data.results);
-      setTotal(response.data.count);
-    } else {
-      setTotal(response.data.count);
-      setEmbalagens([]);
-    }
+    const params = gerarParametrosConsulta({ page: pageNumber, ...filtros });
+    const response = await getUnidadesMedida(params);
+
+    response.data.count
+      ? setUnidadesMedida(response.data.results)
+      : setUnidadesMedida([]);
+
+    setTotal(response.data.count);
+
     setCarregando(false);
   };
 
   const nextPage = page => {
-    buscarEmbalagens(page);
+    buscarResultados(page);
     setPage(page);
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-embalagens">
-        <div className="card-body embalagens">
+      <div className="card mt-3">
+        <div className="card-body">
           <Filtros
             setFiltros={setFiltros}
-            nomesEmbalagens={nomesEmbalagens}
-            abreviacaoEmbalagens={abreviacaoEmbalagens}
+            nomesUnidadesMedida={nomesUnidadesMedida}
+            abreviacoesUnidadesMedida={abreviacoesUnidadesMedida}
             setTotal={setTotal}
-            setEmbalagens={setEmbalagens}
+            setUnidadesMedida={setUnidadesMedida}
           />
 
-          {embalagens && (
+          {unidadesMedida && (
             <>
-              <hr />
-              <ListagemEmbalagens embalagens={embalagens} />
+              <ListagemUnidadesMedida unidadesMedida={unidadesMedida} />
               <div className="row">
                 <div className="col">
                   <Pagination

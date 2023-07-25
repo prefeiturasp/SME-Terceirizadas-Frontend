@@ -1,15 +1,17 @@
 import React from "react";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import CadastroLaboratorio from "components/screens/Cadastros/Laboratorios/components/CadastroLaboratorio";
+import CadastroUnidadeMedida from "components/screens/Cadastros/UnidadesMedida/components/CadastroUnidadeMedida";
 import Page from "../../components/Shareable/Page/Page";
 import {
   CADASTROS,
   CONFIGURACOES,
-  LABORATORIOS_CADASTRADOS
+  EDICAO_UNIDADE_MEDIDA,
+  UNIDADES_MEDIDA
 } from "../../configs/constants";
 
 const atual = {
-  titulo: "Editar Cadastro de Laboratório"
+  href: `/${CONFIGURACOES}/${CADASTROS}/${EDICAO_UNIDADE_MEDIDA}`,
+  titulo: "Editar Cadastro de Unidade de Medida"
 };
 
 const anteriores = [
@@ -18,8 +20,8 @@ const anteriores = [
     titulo: "Cadastros"
   },
   {
-    href: `/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`,
-    titulo: "Laboratórios Cadastrados"
+    href: `/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`,
+    titulo: "Unidades de Medida"
   }
 ];
 
@@ -27,9 +29,9 @@ export default () => (
   <Page
     titulo={atual.titulo}
     botaoVoltar
-    voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`}
+    voltarPara={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}
   >
     <Breadcrumb home={"/"} anteriores={anteriores} atual={atual} />
-    <CadastroLaboratorio />
+    <CadastroUnidadeMedida />
   </Page>
 );

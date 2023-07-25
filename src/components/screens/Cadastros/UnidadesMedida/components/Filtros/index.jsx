@@ -13,31 +13,29 @@ import { NavLink } from "react-router-dom";
 import {
   CADASTROS,
   CONFIGURACOES,
-  CADASTRO_EMBALAGEM
+  CADASTRO_UNIDADE_MEDIDA
 } from "configs/constants";
 import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
-const FORM_NAME = "embalagens";
+const FORM_NAME = "unidades-medida";
 
 export default ({
   setFiltros,
-  nomesEmbalagens,
-  abreviacaoEmbalagens,
-  setEmbalagens,
+  nomesUnidadesMedida,
+  abreviacoesUnidadesMedida,
+  setUnidadesMedida,
   setTotal
 }) => {
-  const initialValues = {};
-
   const onSubmit = async values => {
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
 
   return (
-    <div className="filtros-embalagens">
+    <div className="filtros-cadastros">
       <Form
         onSubmit={onSubmit}
-        initialValues={initialValues}
+        initialValues={{}}
         render={({ form, handleSubmit, values }) => (
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
@@ -46,13 +44,13 @@ export default ({
                 <Field
                   component={AutoCompleteField}
                   dataSource={getListaFiltradaAutoComplete(
-                    nomesEmbalagens,
+                    nomesUnidadesMedida,
                     values.nome
                   )}
-                  label="Nome da Embalagem"
+                  label="Nome da Unidade de Medida"
                   name="nome"
-                  placeholder="Digite o nome da Embalagem"
-                  className="filtro-inputs-embalagens"
+                  placeholder="Digite o nome da Unidade de Medida"
+                  className="filtro-inputs"
                   toUppercaseActive
                 />
               </div>
@@ -60,16 +58,14 @@ export default ({
                 <Field
                   component={AutoCompleteField}
                   dataSource={getListaFiltradaAutoComplete(
-                    abreviacaoEmbalagens,
+                    abreviacoesUnidadesMedida,
                     values.abreviacao
                   )}
                   label="Abreviação"
                   name="abreviacao"
                   placeholder="Digite a Abreviação"
-                  className="filtro-inputs-embalagens"
-                  maxlength="3"
-                  toUppercaseActive
-                  proibeNumeros
+                  className="filtro-inputs"
+                  toLowerCaseActive
                 />
               </div>
               <div className="col-3">
@@ -77,7 +73,7 @@ export default ({
                   component={InputComData}
                   label="Data do Cadastro"
                   name="data_cadastro"
-                  className="filtro-inputs-embalagens"
+                  className="filtro-inputs"
                   placeholder="Selecione a Data"
                   minDate={null}
                   writable={false}
@@ -85,12 +81,12 @@ export default ({
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="pt-4 pb-5">
               <NavLink
-                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}`}
+                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_UNIDADE_MEDIDA}`}
               >
                 <Botao
-                  texto="Cadastrar Embalagem"
+                  texto="Cadastrar Unidade"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => {}}
@@ -112,7 +108,7 @@ export default ({
                 className="float-right ml-3"
                 onClick={() => {
                   form.reset({});
-                  setEmbalagens(undefined);
+                  setUnidadesMedida(undefined);
                   setTotal(undefined);
                 }}
               />

@@ -1,7 +1,6 @@
 import React from "react";
 import { Form, Field } from "react-final-form";
 import FinalFormToRedux from "components/Shareable/FinalFormToRedux";
-import { InputComData } from "components/Shareable/DatePicker";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -9,21 +8,23 @@ import {
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
+import SelectSelecione from "components/Shareable/SelectSelecione";
+import { ehLaboratorioCredenciado } from "helpers/utilities";
+import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 import { NavLink } from "react-router-dom";
 import {
   CADASTROS,
   CONFIGURACOES,
-  CADASTRO_EMBALAGEM
+  CADASTRO_LABORATORIO
 } from "configs/constants";
-import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
-const FORM_NAME = "embalagens";
+const FORM_NAME = "laboratorios";
 
 export default ({
   setFiltros,
-  nomesEmbalagens,
-  abreviacaoEmbalagens,
-  setEmbalagens,
+  nomesLaboratorios,
+  cnpjsLaboratorios,
+  setResultado,
   setTotal
 }) => {
   const initialValues = {};
@@ -34,7 +35,7 @@ export default ({
   };
 
   return (
-    <div className="filtros-embalagens">
+    <div className="filtros-laboratorios">
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues}
@@ -46,13 +47,13 @@ export default ({
                 <Field
                   component={AutoCompleteField}
                   dataSource={getListaFiltradaAutoComplete(
-                    nomesEmbalagens,
+                    nomesLaboratorios,
                     values.nome
                   )}
-                  label="Nome da Embalagem"
+                  label="Nome do Laboratório"
                   name="nome"
-                  placeholder="Digite o nome da Embalagem"
-                  className="filtro-inputs-embalagens"
+                  placeholder="Digite o nome do Laboratório"
+                  className="filtro-inputs-laboratorios"
                   toUppercaseActive
                 />
               </div>
@@ -60,37 +61,33 @@ export default ({
                 <Field
                   component={AutoCompleteField}
                   dataSource={getListaFiltradaAutoComplete(
-                    abreviacaoEmbalagens,
-                    values.abreviacao
+                    cnpjsLaboratorios,
+                    values.cnpj
                   )}
-                  label="Abreviação"
-                  name="abreviacao"
-                  placeholder="Digite a Abreviação"
-                  className="filtro-inputs-embalagens"
-                  maxlength="3"
-                  toUppercaseActive
-                  proibeNumeros
+                  label="CNPJ"
+                  name="cnpj"
+                  placeholder="Digite o CNPJ"
+                  className="filtro-inputs-laboratorios"
                 />
               </div>
               <div className="col-3">
                 <Field
-                  component={InputComData}
-                  label="Data do Cadastro"
-                  name="data_cadastro"
-                  className="filtro-inputs-embalagens"
-                  placeholder="Selecione a Data"
-                  minDate={null}
-                  writable={false}
+                  component={SelectSelecione}
+                  naoDesabilitarPrimeiraOpcao
+                  options={ehLaboratorioCredenciado}
+                  label="Credenciado"
+                  name="credenciado"
+                  placeholder={"Selecione"}
                 />
               </div>
             </div>
 
             <div className="mt-4 mb-4">
               <NavLink
-                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_EMBALAGEM}`}
+                to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_LABORATORIO}`}
               >
                 <Botao
-                  texto="Cadastrar Embalagem"
+                  texto="Cadastrar Laboratório"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => {}}
@@ -99,7 +96,7 @@ export default ({
               </NavLink>
 
               <Botao
-                texto="Pesquisar"
+                texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="float-right ml-3"
@@ -112,7 +109,7 @@ export default ({
                 className="float-right ml-3"
                 onClick={() => {
                   form.reset({});
-                  setEmbalagens(undefined);
+                  setResultado(undefined);
                   setTotal(undefined);
                 }}
               />
