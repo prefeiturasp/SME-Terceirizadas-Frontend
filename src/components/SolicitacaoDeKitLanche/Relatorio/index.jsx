@@ -17,6 +17,7 @@ import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import { meusDados } from "services/perfil.service";
 import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import { ModalAprovarSolicitacaoKitLanche } from "./componentes/ModalAprovarSolicitacaoKitLanche";
 
 class Relatorio extends Component {
   constructor(props) {
@@ -39,6 +40,7 @@ class Relatorio extends Component {
     this.closeModalMarcarConferencia = this.closeModalMarcarConferencia.bind(
       this
     );
+    this.closeModalObservacaoCodae = this.closeModalObservacaoCodae.bind(this);
   }
 
   componentDidMount() {
@@ -103,6 +105,15 @@ class Relatorio extends Component {
     this.setState({ showModalMarcarConferencia: false });
   }
 
+  showModalObservacaoCodae() {
+    this.setState({ showModalObservacaoCodae: true });
+  }
+
+  closeModalObservacaoCodae() {
+    this.setState({ showModalObservacaoCodae: false });
+    this.props.change("justificativa", "");
+  }
+
   loadSolicitacao(uuid) {
     getDetalheKitLancheAvulsa(uuid, this.state.tipoSolicitacao).then(
       response => {
@@ -149,7 +160,8 @@ class Relatorio extends Component {
       showAutorizarModal,
       meusDados,
       showModalMarcarConferencia,
-      tipoSolicitacao
+      tipoSolicitacao,
+      showModalObservacaoCodae
     } = this.state;
     const {
       visao,
@@ -325,10 +337,13 @@ class Relatorio extends Component {
                         ).length > 0 ? null : (
                           <Botao
                             texto={textoBotaoAprova}
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             onClick={() =>
                               EXIBIR_MODAL_AUTORIZACAO
                                 ? this.showAutorizarModal()
+                                : tipoPerfil ===
+                                  TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                ? this.showModalObservacaoCodae()
                                 : this.handleSubmit()
                             }
                             style={BUTTON_STYLE.GREEN}
@@ -367,6 +382,15 @@ class Relatorio extends Component {
                 )}
               </div>
             </div>
+            <ModalAprovarSolicitacaoKitLanche
+              showModal={showModalObservacaoCodae}
+              loadSolicitacao={() => this.loadSolicitacao(uuid)}
+              justificativa={justificativa}
+              closeModal={() => this.closeModalObservacaoCodae()}
+              endpoint={endpointAprovaSolicitacao}
+              uuid={uuid}
+              tipoSolicitacao={tipoSolicitacao}
+            />
           </form>
         )}
       </div>

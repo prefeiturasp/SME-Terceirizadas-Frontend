@@ -511,7 +511,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         <div className="content-section-acompanhamento-lancamento-right">
           <div
             className={`acompanhamento-status-lancamento mr-3 ${
-              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
+              [
+                "MEDICAO_CORRECAO_SOLICITADA",
+                "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+              ].includes(periodoGrupo.status)
+                ? "red"
+                : ""
             }`}
           >
             {PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
@@ -772,7 +777,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               </>
             )}
             <div className="periodo-final-tabela-lancamento mb-4">
-              <div className={`col-${modoCorrecao ? 6 : 8} pl-0 pr-4`}>
+              <div
+                className={`col-${
+                  modoCorrecao
+                    ? 6
+                    : [
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      ].includes(solicitacao.status)
+                    ? 12
+                    : 8
+                } pl-0 pr-4`}
+              >
                 <p className="section-title-conf-lancamentos periodo mb-0">
                   {periodoGrupo.nome_periodo_grupo}
                 </p>
@@ -802,33 +818,38 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   />
                 </div>
               ) : (
-                <div className="botoes col-4 px-0">
-                  <Botao
-                    texto="Solicitar Correção"
-                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="col-6 mr-3"
-                    onClick={() => setModoCorrecao(true)}
-                    disabled={
-                      !solicitacaoPermitidosCorrecao.includes(
-                        solicitacao.status
-                      )
-                    }
-                  />
-                  <Botao
-                    texto="Aprovar Período"
-                    style={BUTTON_STYLE.GREEN}
-                    className="col-5"
-                    onClick={() => setShowModalAprovarPeriodo(true)}
-                    disabled={
-                      !statusPermitidosParaAprovacao.includes(
-                        periodoGrupo.status
-                      ) ||
-                      !solicitacaoPermitidosCorrecao.includes(
-                        solicitacao.status
-                      )
-                    }
-                  />
-                </div>
+                ![
+                  "MEDICAO_APROVADA_PELA_CODAE",
+                  "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                ].includes(solicitacao.status) && (
+                  <div className="botoes col-4 px-0">
+                    <Botao
+                      texto="Solicitar Correção"
+                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                      className="col-6 mr-3"
+                      onClick={() => setModoCorrecao(true)}
+                      disabled={
+                        !solicitacaoPermitidosCorrecao.includes(
+                          solicitacao.status
+                        )
+                      }
+                    />
+                    <Botao
+                      texto="Aprovar Período"
+                      style={BUTTON_STYLE.GREEN}
+                      className="col-5"
+                      onClick={() => setShowModalAprovarPeriodo(true)}
+                      disabled={
+                        !statusPermitidosParaAprovacao.includes(
+                          periodoGrupo.status
+                        ) ||
+                        !solicitacaoPermitidosCorrecao.includes(
+                          solicitacao.status
+                        )
+                      }
+                    />
+                  </div>
+                )
               )}
             </div>
           </div>

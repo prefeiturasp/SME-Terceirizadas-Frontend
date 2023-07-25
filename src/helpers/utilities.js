@@ -219,7 +219,7 @@ export const validarCPF = cpf => {
 };
 
 export const removeCaracteresEspeciais = valor =>
-  valor.replace(/[^\w\s]/gi, "");
+  valor?.replace(/[^\w\s]/gi, "");
 
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
@@ -866,7 +866,8 @@ export const exibirGA = () => {
     "GUAIANASES",
     "SAO MATEUS",
     "SAO MIGUEL",
-    "JACANA/TREMEMBE"
+    "JACANA/TREMEMBE",
+    "ITAQUERA"
   ];
 
   if (["production"].includes(ENVIRONMENT)) {

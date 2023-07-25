@@ -116,6 +116,15 @@ export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
   }
 };
 
+export const codaePedeCorrecaoOcorrencia = async (uuid, params) => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/codae-pede-correcao-ocorrencia/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const drePedeAprovacaoOcorrencia = async uuid => {
   const url = `medicao-inicial/ocorrencia/${uuid}/dre-aprova-ocorrencia/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
@@ -143,9 +152,36 @@ export const dreSolicitaCorrecaoUE = async uuid => {
   }
 };
 
+export const codaeAprovaSolicitacaoMedicao = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/codae-aprova-solicitacao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const codaeSolicitaCorrecaoUE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/codae-solicita-correcao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const escolaEnviaCorrecaoMedicaoInicialDRE = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/escola-corrige-medicao-para-dre/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesLancadas = async params => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/solicitacoes-lancadas/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

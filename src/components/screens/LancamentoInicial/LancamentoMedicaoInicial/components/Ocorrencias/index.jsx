@@ -55,8 +55,12 @@ export default ({
                     <span className="status-ocorrencia text-center mr-3">
                       <b
                         className={
-                          solicitacaoMedicaoInicial.ocorrencia.status ===
-                          "MEDICAO_CORRECAO_SOLICITADA"
+                          [
+                            "MEDICAO_CORRECAO_SOLICITADA",
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                          ].includes(
+                            solicitacaoMedicaoInicial.ocorrencia.status
+                          )
                             ? "red"
                             : ""
                         }
@@ -70,7 +74,7 @@ export default ({
                       </b>
                     </span>
                     <span
-                      className="download-ocorrencias"
+                      className="download-ocorrencias mr-0"
                       onClick={() =>
                         medicaoInicialExportarOcorrenciasPDF(
                           solicitacaoMedicaoInicial.ocorrencia.ultimo_arquivo
@@ -113,7 +117,7 @@ export default ({
                           className="ml-3"
                           onClick={visualizarModalHistorico}
                         />
-                        {solicitacaoMedicaoInicial.status ===
+                        {solicitacaoMedicaoInicial.ocorrencia.status ===
                           "MEDICAO_CORRECAO_SOLICITADA" && (
                           <Botao
                             className="float-right ml-3"

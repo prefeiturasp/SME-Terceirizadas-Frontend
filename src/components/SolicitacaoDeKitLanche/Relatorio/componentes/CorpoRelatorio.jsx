@@ -3,7 +3,8 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   deepCopy,
-  ehInclusaoCei
+  ehInclusaoCei,
+  justificativaAoAprovarSolicitacao
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -21,6 +22,7 @@ import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
 export const CorpoRelatorio = props => {
   const {
@@ -36,6 +38,16 @@ export const CorpoRelatorio = props => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLanche.logs
   );
+
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
+    solicitacaoKitLanche.logs
+  );
+
+  const EXIBIR_HISTORICO =
+    solicitacaoKitLanche.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(solicitacaoKitLanche.logs);
+
+  console.log("justificativaAprovacao", justificativaAprovacao);
 
   const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
@@ -260,6 +272,26 @@ export const CorpoRelatorio = props => {
               className="value"
               dangerouslySetInnerHTML={{
                 __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {justificativaAprovacao && !EXIBIR_HISTORICO && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>
+              <b>Autorizou</b>
+            </p>
+            <p>{`${
+              solicitacaoKitLanche.logs.find(
+                log => log.status_evento_explicacao === "CODAE autorizou"
+              ).criado_em
+            } - Informações da CODAE`}</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaAprovacao
               }}
             />
           </div>

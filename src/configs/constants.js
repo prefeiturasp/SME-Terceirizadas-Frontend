@@ -122,7 +122,6 @@ export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
 export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
   "acompanhar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
-export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
@@ -189,6 +188,7 @@ export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
+export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";

@@ -71,7 +71,6 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
-import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
@@ -237,6 +236,7 @@ import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogistica
 import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
+import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 
 const routesConfig = [
   {
@@ -1143,15 +1143,6 @@ const routesConfig = [
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
-      constants.RELATORIO_SITUACAO_PRODUTO
-    }`,
-    component: RelatorioSituacaoProduto,
-    exact: true,
-    tipoUsuario:
-      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${
       constants.RELATORIO_RECLAMACAO_PRODUTO
     }`,
     component: RelatorioReclamacaoProduto,
@@ -1602,6 +1593,15 @@ const routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.DETALHAMENTO_DO_LANCAMENTO
+    }`,
+    component: DetalhamentoDoLancamentoPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${

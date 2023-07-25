@@ -200,16 +200,6 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       };
     });
     const contatosEmpresa = [...contatosEmpresaFormatado, ...contatosNutri];
-    let super_admin = { ...valoresState.super_admin };
-    super_admin["cpf"] = removeCaracteresEspeciais(super_admin["cpf"]);
-    super_admin.contatos = [
-      {
-        email: super_admin.email,
-        telefone: super_admin.telefone
-          ? removeCaracteresEspeciais(super_admin.telefone)
-          : null
-      }
-    ];
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,
@@ -228,14 +218,13 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       estado: valoresForm.estado,
       numero: valoresForm.numero,
       responsavel_cargo: valoresForm.responsavel_cargo,
-      responsavel_cpf: valoresForm.responsavel_cpf,
+      responsavel_cpf: removeCaracteresEspeciais(valoresForm.responsavel_cpf),
       responsavel_nome: valoresForm.responsavel_nome,
       responsavel_telefone: valoresForm.responsavel_telefone
         ? valoresForm.responsavel_telefone.replace(/[^a-z0-9]/gi, "")
         : "",
       responsavel_email: valoresForm.responsavel_email,
-      lotes: valoresState.lotesSelecionados,
-      super_admin: super_admin
+      lotes: valoresState.lotesSelecionados
     };
   }
 };

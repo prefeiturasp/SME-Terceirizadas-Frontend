@@ -10,14 +10,13 @@ import {
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
-export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
+export const ModalAprovarSolicitacaoKitLanche = ({ ...props }) => {
   const {
     showModal,
     closeModal,
     solicitacao,
     endpoint,
-    loadSolicitacao,
-    tipoSolicitacao
+    loadSolicitacao
   } = props;
 
   const onSubmit = async values => {
@@ -25,7 +24,7 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
       values.justificativa && values.justificativa.length > 0
         ? values.justificativa
         : "Sem observações por parte da CODAE";
-    const response = await endpoint(solicitacao.uuid, values, tipoSolicitacao);
+    const response = await endpoint(solicitacao.uuid, values);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação autorizada com sucesso!");
       loadSolicitacao();
@@ -79,7 +78,9 @@ export const ModalAprovarSolicitacaoAlteracao = ({ ...props }) => {
               <Botao
                 texto="Sim"
                 type={BUTTON_TYPE.BUTTON}
-                onClick={() => onSubmit(values)}
+                onClick={() => {
+                  onSubmit(values);
+                }}
                 style={BUTTON_STYLE.GREEN}
                 className="ml-3"
               />
