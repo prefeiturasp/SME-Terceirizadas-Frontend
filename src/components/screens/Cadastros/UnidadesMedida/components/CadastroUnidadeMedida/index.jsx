@@ -19,8 +19,7 @@ import {
 import {
   cadastrarUnidadeMedida,
   editarUnidadeMedida,
-  getUnidadeMedida,
-  getNomesEAbreviacoesUnidadesMedida
+  getUnidadeMedida
 } from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
@@ -40,7 +39,6 @@ export default () => {
   const [carregando, setCarregando] = useState(false);
   const [showModalSalvar, setShowModalSalvar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
-  const [nomesUnidadesMedida, setNomesUnidadesMedida] = useState(null);
   const [edicao, setEdicao] = useState(false);
   const [uuid, setUuid] = useState(null);
   const [initialValues, setInitialValues] = useState({});
@@ -72,7 +70,13 @@ export default () => {
         setShowModalSalvar(false);
       }
     } catch (error) {
-      toastError("Ocorreu um erro ao salvar a Unidade de Medida");
+      console.log(error);
+      if (erroCadastroOuEdicaoRepetida(error)) {
+        history.push(`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`);
+        toastError("Item já cadastrado");
+      } else {
+        toastError("Ocorreu um erro ao salvar a Unidade de Medida");
+      }
       setCarregando(false);
       setShowModalSalvar(false);
     }
@@ -87,12 +91,10 @@ export default () => {
     return payload;
   };
 
-  const validaNomeJaCadastrado = nome => {
-    if (nome !== initialValues.nome_unidade_medida) {
-      if (nomesUnidadesMedida && nomesUnidadesMedida.includes(nome))
-        return "Unidade de Medida já cadastrada";
-      else return undefined;
-    } else return undefined;
+  const erroCadastroOuEdicaoRepetida = error => {
+    return error.response.data.non_field_errors.includes(
+      "Os campos nome devem criar um set único."
+    );
   };
 
   const buscaUnidadeMedida = async uuid => {
@@ -128,14 +130,6 @@ export default () => {
         data_cadastro: new Date().toLocaleDateString()
       });
     }
-
-    const buscaListaNomesUnidadesMedida = async () => {
-      const response = await getNomesEAbreviacoesUnidadesMedida();
-      const nomes = response.data.results.map(e => e.nome);
-      setNomesUnidadesMedida(nomes);
-    };
-
-    buscaListaNomesUnidadesMedida();
   }, []);
 
   return (
@@ -159,7 +153,6 @@ export default () => {
                       placeholder="Digite o nome da Unidade de Medida"
                       validate={composeValidators(
                         required,
-                        validaNomeJaCadastrado,
                         alphaNumericAndSingleSpaceBetweenCharacters,
                         noSpaceStartOrEnd
                       )}
