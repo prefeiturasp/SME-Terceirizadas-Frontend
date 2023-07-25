@@ -181,7 +181,10 @@ export default ({
                     "MEDICAO_CORRECAO_SOLICITADA_CODAE"
                   ].includes(statusPeriodo())
                     ? "red"
-                    : statusPeriodo() === "MEDICAO_CORRIGIDA_PELA_UE"
+                    : [
+                        "MEDICAO_CORRIGIDA_PELA_UE",
+                        "MEDICAO_CORRIGIDA_PARA_CODAE"
+                      ].includes(statusPeriodo())
                     ? "blue"
                     : ""
                 }`}
