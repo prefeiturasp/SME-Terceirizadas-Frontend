@@ -127,7 +127,11 @@ export default () => {
       buscaUnidadeMedida(uuid);
     } else {
       setInitialValues({
-        data_cadastro: new Date().toLocaleDateString()
+        data_cadastro: new Date().toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric"
+        })
       });
     }
   }, []);
