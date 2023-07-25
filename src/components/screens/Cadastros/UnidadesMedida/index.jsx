@@ -81,7 +81,7 @@ export default () => {
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="mb-2"
+                    className="float-left mb-2"
                   />
                 </div>
               </div>
