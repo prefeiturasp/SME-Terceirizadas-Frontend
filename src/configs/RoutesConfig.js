@@ -719,7 +719,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
     exact: true,
@@ -727,7 +727,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
     }/${constants.EDITAR}`,
     component: EditarCadastroLaboratorioPage,
     exact: true,

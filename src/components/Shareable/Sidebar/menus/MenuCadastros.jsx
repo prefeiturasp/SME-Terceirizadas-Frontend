@@ -10,7 +10,7 @@ import {
   FAIXAS_ETARIAS,
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
-  LABORATORIO,
+  LABORATORIOS_CADASTRADOS,
   PRODUTOS,
   EMBALAGENS_CADASTRADAS,
   UNIDADES_MEDIDA
@@ -57,7 +57,9 @@ const MenuCadastros = () => {
         </>
       )}
       {usuarioEhDilogQualidade() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}`}>
+        <LeafItem
+          to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`}
+        >
           Laboratórios
         </LeafItem>
       )}

@@ -3,7 +3,10 @@ import axios from "./_base";
 export const getLaboratorio = async uuid =>
   await axios.get(`/laboratorios/${uuid}/`);
 
-export const getLaboratorios = async () => await axios.get("/laboratorios/");
+export const getLaboratorios = async params => {
+  const url = `/laboratorios/`;
+  return await axios.get(url, { params });
+};
 
 export const getListaLaboratorios = async () =>
   await axios.get("/laboratorios/lista-laboratorios/");

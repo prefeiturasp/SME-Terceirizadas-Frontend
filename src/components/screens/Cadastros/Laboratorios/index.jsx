@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Pagination, Spin } from "antd";
 import Filtros from "./components/Filtros";
-import ListagemEmbalagens from "./components/ListagemEmbalagens";
+import ListagemLaboratorios from "./components/ListagemLaboratorios";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
-  getEmbalagens,
-  getListaNomesEmbalagens,
-  getListaAbreviacaoEmbalagens
-} from "services/qualidade.service";
+  getLaboratorios,
+  getListaLaboratorios
+} from "services/laboratorio.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [embalagens, setEmbalagens] = useState(undefined);
-  const [nomesEmbalagens, setNomesEmbalagens] = useState([]);
-  const [abreviacaoEmbalagens, setAbreviacaoEmbalagens] = useState([]);
+  const [resultado, setResultado] = useState(undefined);
+  const [nomesLaboratorios, setNomesLaboratorios] = useState([]);
+  const [cnpjsLaboratorios, setCnpjsLaboratorios] = useState([]);
   const [filtros, setFiltros] = useState();
   const [page, setPage] = useState();
   const [total, setTotal] = useState();
@@ -24,54 +23,54 @@ export default () => {
 
   useEffect(() => {
     if (filtros) {
-      buscarEmbalagens(1);
+      buscaResultado(1);
       setPage(1);
     }
   }, [filtros]);
 
   const buscaDadosAutoComplete = async () => {
-    const respNomes = await getListaNomesEmbalagens();
-    const respAbreviacoes = await getListaAbreviacaoEmbalagens();
-    setNomesEmbalagens(respNomes.data.results);
-    setAbreviacaoEmbalagens(respAbreviacoes.data.results);
+    const response = await getListaLaboratorios();
+    const nomes = response.data.results.map(e => e.nome);
+    const cnpjs = response.data.results.map(e => e.cnpj);
+    setNomesLaboratorios(nomes);
+    setCnpjsLaboratorios(cnpjs);
   };
 
-  const buscarEmbalagens = async page => {
+  const buscaResultado = async page => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: page, ...filtros });
-    const response = await getEmbalagens(params);
+    const response = await getLaboratorios(params);
     if (response.data.count) {
-      setEmbalagens(response.data.results);
+      setResultado(response.data.results);
       setTotal(response.data.count);
     } else {
       setTotal(response.data.count);
-      setEmbalagens([]);
+      setResultado([]);
     }
     setCarregando(false);
   };
 
   const nextPage = page => {
-    buscarEmbalagens(page);
+    buscaResultado(page);
     setPage(page);
   };
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
-      <div className="card mt-3 card-embalagens">
-        <div className="card-body embalagens">
+      <div className="card mt-3 card-laboratorios">
+        <div className="card-body">
           <Filtros
             setFiltros={setFiltros}
-            nomesEmbalagens={nomesEmbalagens}
-            abreviacaoEmbalagens={abreviacaoEmbalagens}
+            nomesLaboratorios={nomesLaboratorios}
+            cnpjsLaboratorios={cnpjsLaboratorios}
             setTotal={setTotal}
-            setEmbalagens={setEmbalagens}
+            setResultado={setResultado}
           />
-
-          {embalagens && (
+          {resultado && (
             <>
               <hr />
-              <ListagemEmbalagens embalagens={embalagens} />
+              <ListagemLaboratorios laboratorios={resultado} />
               <div className="row">
                 <div className="col">
                   <Pagination
