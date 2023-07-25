@@ -15,6 +15,7 @@ import {
   CONFIGURACOES,
   CADASTRO_UNIDADE_MEDIDA
 } from "configs/constants";
+import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
 const FORM_NAME = "unidades-medida";
 
@@ -30,15 +31,6 @@ export default ({
     setFiltros({ ...filtros });
   };
 
-  const getDadosFiltrados = (dados, valorFiltro, regex = "iu") => {
-    if (valorFiltro) {
-      const reg = new RegExp(valorFiltro, regex);
-      const dadosUnicos = Array.from(new Set(dados));
-      return dadosUnicos.filter(e => reg.test(e));
-    }
-    return [];
-  };
-
   return (
     <div className="filtros-cadastros">
       <Form
@@ -51,7 +43,7 @@ export default ({
               <div className="col-6">
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getDadosFiltrados(
+                  dataSource={getListaFiltradaAutoComplete(
                     nomesUnidadesMedida,
                     values.nome
                   )}
@@ -65,7 +57,7 @@ export default ({
               <div className="col-3">
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getDadosFiltrados(
+                  dataSource={getListaFiltradaAutoComplete(
                     abreviacoesUnidadesMedida,
                     values.abreviacao
                   )}
