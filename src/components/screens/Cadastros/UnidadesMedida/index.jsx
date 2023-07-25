@@ -6,11 +6,11 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import {
   getUnidadesMedida,
   getNomesEAbreviacoesUnidadesMedida
-} from "services/logistica.service";
+} from "services/qualidade.service";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [unidadesMedida, setUnidadesMedida] = useState();
+  const [unidadesMedida, setUnidadesMedida] = useState(undefined);
   const [nomesUnidadesMedida, setNomesUnidadesMedida] = useState([]);
   const [abreviacoesUnidadesMedida, setAbreviacoesUnidadesMedida] = useState(
     []
@@ -25,7 +25,7 @@ export default () => {
 
   useEffect(() => {
     if (filtros) {
-      buscarEmbalagens(1);
+      buscarResultados(1);
       setPage(1);
     }
   }, [filtros]);
@@ -38,7 +38,7 @@ export default () => {
     setAbreviacoesUnidadesMedida(abreviacoes);
   };
 
-  const buscarEmbalagens = async pageNumber => {
+  const buscarResultados = async pageNumber => {
     setCarregando(true);
 
     const params = gerarParametrosConsulta({ page: pageNumber, ...filtros });
@@ -54,7 +54,7 @@ export default () => {
   };
 
   const nextPage = page => {
-    buscarEmbalagens(page);
+    buscarResultados(page);
     setPage(page);
   };
 

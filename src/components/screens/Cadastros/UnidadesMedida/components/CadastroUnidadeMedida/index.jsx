@@ -21,7 +21,7 @@ import {
   editarUnidadeMedida,
   getUnidadeMedida,
   getNomesEAbreviacoesUnidadesMedida
-} from "services/logistica.service";
+} from "services/qualidade.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { composeValidators } from "helpers/utilities";
 import { CADASTROS, CONFIGURACOES, UNIDADES_MEDIDA } from "configs/constants";
