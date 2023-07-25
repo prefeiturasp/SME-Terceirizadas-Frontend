@@ -11,7 +11,7 @@ import {
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
-  const [embalagens, setEmbalagens] = useState();
+  const [embalagens, setEmbalagens] = useState(undefined);
   const [nomesEmbalagens, setNomesEmbalagens] = useState([]);
   const [abreviacaoEmbalagens, setAbreviacaoEmbalagens] = useState([]);
   const [filtros, setFiltros] = useState();
