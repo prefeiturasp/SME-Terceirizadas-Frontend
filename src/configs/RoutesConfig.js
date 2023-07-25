@@ -233,6 +233,9 @@ import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
 import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
 import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
+import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 
 const routesConfig = [
@@ -732,6 +735,14 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGENS_CADASTRADAS
+    }`,
+    component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
       constants.CADASTRO_EMBALAGEM
     }`,
     component: CadastroEmbalagemPage,
@@ -740,9 +751,9 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGENS_CADASTRADAS
-    }`,
-    component: EmbalagensCadastradasPage,
+      constants.CADASTRO_EMBALAGEM
+    }/${constants.EDITAR}`,
+    component: EditarCadastroEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
@@ -781,9 +792,25 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.CADASTRO_EMBALAGEM
-    }/${constants.EDITAR}`,
-    component: EditarCadastroEmbalagemPage,
+      constants.UNIDADES_MEDIDA
+    }`,
+    component: UnidadesMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_UNIDADE_MEDIDA
+    }`,
+    component: CadastroUnidadeMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDICAO_UNIDADE_MEDIDA
+    }`,
+    component: EditarUnidadesMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },

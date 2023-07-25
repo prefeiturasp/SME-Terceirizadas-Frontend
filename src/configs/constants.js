@@ -213,13 +213,21 @@ export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
+
 export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
 export const LABORATORIOS_CADASTRADOS = "laboratorios";
-export const CADASTRO_EMBALAGEM = "cadastro-embalagem";
+
 export const EMBALAGENS_CADASTRADAS = "embalagens";
+export const CADASTRO_EMBALAGEM = "cadastro-embalagem";
+
+export const UNIDADES_MEDIDA = "unidades-medida";
+export const CADASTRO_UNIDADE_MEDIDA = "cadastro-unidade-medida";
+export const EDICAO_UNIDADE_MEDIDA = "edicao-unidade-medida";
+
 export const PRODUTOS = "produtos";
 export const CADASTRO_PRODUTOS = "cadastro-produtos";
 export const EDICAO_PRODUTOS = "edicao-produtos";
+
 export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
