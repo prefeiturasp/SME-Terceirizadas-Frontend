@@ -16,6 +16,7 @@ import {
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
+  escolaEnviaCorrecaoMedicaoInicialCODAE,
   escolaEnviaCorrecaoMedicaoInicialDRE,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial
@@ -228,16 +229,21 @@ export default ({
   const renderBotaoEnviarCorrecao = () => {
     return (
       solicitacaoMedicaoInicial &&
-      solicitacaoMedicaoInicial.status === "MEDICAO_CORRECAO_SOLICITADA" &&
+      [
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+      ].includes(solicitacaoMedicaoInicial.status) &&
       usuarioEhDiretorUE()
     );
   };
 
-  const escolaEnviaCorrecaoDRE = async () => {
+  const escolaEnviaCorrecaoDreCodae = async () => {
     setDesabilitaSim(true);
-    const response = await escolaEnviaCorrecaoMedicaoInicialDRE(
-      solicitacaoMedicaoInicial.uuid
-    );
+    const endpoint =
+      solicitacaoMedicaoInicial.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+        ? escolaEnviaCorrecaoMedicaoInicialCODAE
+        : escolaEnviaCorrecaoMedicaoInicialDRE;
+    const response = await endpoint(solicitacaoMedicaoInicial.uuid);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Correção da Medição Inicial enviada com sucesso!");
       getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
@@ -253,14 +259,20 @@ export default ({
     return (
       quantidadeAlimentacoesLancadas.some(
         periodo =>
-          !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
-            periodo.status
-          )
+          ![
+            "MEDICAO_APROVADA_PELA_DRE",
+            "MEDICAO_APROVADA_PELA_CODAE",
+            "MEDICAO_CORRIGIDA_PELA_UE",
+            "MEDICAO_CORRIGIDA_PARA_CODAE"
+          ].includes(periodo.status)
       ) ||
       (solicitacaoMedicaoInicial.com_ocorrencias &&
-        !["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
-          solicitacaoMedicaoInicial.ocorrencia.status
-        ))
+        ![
+          "MEDICAO_APROVADA_PELA_DRE",
+          "MEDICAO_APROVADA_PELA_CODAE",
+          "MEDICAO_CORRIGIDA_PELA_UE",
+          "MEDICAO_CORRIGIDA_PARA_CODAE"
+        ].includes(solicitacaoMedicaoInicial.ocorrencia.status))
     );
   };
 
@@ -374,7 +386,6 @@ export default ({
                       texto="Enviar Correção"
                       type={BUTTON_TYPE.BUTTON}
                       style={BUTTON_STYLE.GREEN}
-                      className="mr-3"
                       onClick={() => setShowModalEnviarCorrecao(true)}
                       disabled={verificaSeEnviarCorrecaoDisabled()}
                     />
@@ -398,13 +409,23 @@ export default ({
           <ModalPadraoSimNao
             showModal={showModalEnviarCorrecao}
             closeModal={() => setShowModalEnviarCorrecao(false)}
-            tituloModal="Enviar Correção para DRE"
+            tituloModal={`Enviar Correção para ${
+              solicitacaoMedicaoInicial.status ===
+              "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                ? "CODAE"
+                : "DRE"
+            }`}
             descricaoModal={
               <p className="col-12 my-3 p-0">
-                Deseja enviar a correção para DRE?
+                Deseja enviar a correção para{" "}
+                {solicitacaoMedicaoInicial.status ===
+                "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                  ? "CODAE"
+                  : "DRE"}
+                ?
               </p>
             }
-            funcaoSim={escolaEnviaCorrecaoDRE}
+            funcaoSim={escolaEnviaCorrecaoDreCodae}
             desabilitaSim={desabilitaSim}
           />
         </>
