@@ -42,7 +42,7 @@ import {
   initialStateWeekColumns,
   PERIODO_STATUS_DE_PROGRESSO
 } from "../../constants";
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
 import { ModalCancelarCorrecao } from "../ModalCancelarCorrecao";
 import { ModalSalvarCorrecao } from "../ModalSalvarCorrecao";
@@ -52,7 +52,10 @@ import {
   getPeriodosInclusaoContinua,
   getValoresPeriodosLancamentos
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { drePedeCorrecaMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  drePedeCorrecaMedicao,
+  codaePedeCorrecaMedicao
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -116,8 +119,17 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     "MEDICAO_CORRIGIDA_PELA_UE"
   ];
 
+  const solicitacaoPermitidosCorrecaoCODAE = [
+    "MEDICAO_APROVADA_PELA_DRE",
+    "MEDICAO_CORRIGIDA_PELA_UE"
+  ];
+
   const logPeriodoAprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Aprovado pela DRE"
+  );
+
+  const logPeriodoReprovadoCODAE = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Correção solicitada pela CODAE"
   );
 
   const logPeriodoReprovado = periodoGrupo.logs.find(
@@ -417,11 +429,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       uuids_valores_medicao_para_correcao: uuidsValoresMedicaoParaCorrecao,
       justificativa: descricao_correcao
     };
-
-    const response = await drePedeCorrecaMedicao(
-      uuidMedicaoPeriodoGrupo,
-      payload
-    );
+    const response = usuarioEhDRE()
+      ? await drePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload)
+      : await codaePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação de correção salva com sucesso");
     } else {
@@ -728,7 +738,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   </section>
                 </div>
               ))}
-            {logPeriodoAprovado && (
+            {usuarioEhDRE() && logPeriodoAprovado && (
               <div className="row">
                 <div className="col-12">
                   <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
@@ -737,7 +747,18 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               </div>
             )}
-            {logPeriodoReprovado && (
+            {usuarioEhMedicao() && logPeriodoReprovadoCODAE && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  devolvido para ajustes pela CODAE em ${
+                    logPeriodoReprovadoCODAE.criado_em
+                  }`}</p>
+                </div>
+              </div>
+            )}
+            {usuarioEhDRE() && logPeriodoReprovado && (
               <div className="row">
                 <div className="col-12">
                   <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
@@ -829,9 +850,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       className="col-6 mr-3"
                       onClick={() => setModoCorrecao(true)}
                       disabled={
-                        !solicitacaoPermitidosCorrecao.includes(
-                          solicitacao.status
-                        )
+                        (usuarioEhDRE() &&
+                          !solicitacaoPermitidosCorrecao.includes(
+                            solicitacao.status
+                          )) ||
+                        (usuarioEhMedicao() &&
+                          !solicitacaoPermitidosCorrecaoCODAE.includes(
+                            solicitacao.status
+                          ))
                       }
                     />
                     <Botao

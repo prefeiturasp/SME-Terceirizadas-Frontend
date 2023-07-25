@@ -89,6 +89,15 @@ export const drePedeCorrecaMedicao = async (uuid, params) => {
   }
 };
 
+export const codaePedeCorrecaMedicao = async (uuid, params) => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-pede-correcao-medicao/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const escolaCorrigeMedicao = async (uuid, params) => {
   const url = `medicao-inicial/medicao/${uuid}/escola-corrige-medicao/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
