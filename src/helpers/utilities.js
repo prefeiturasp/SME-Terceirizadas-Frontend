@@ -493,8 +493,12 @@ export const usuarioEhCronogramaCriacaoEdicao = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDilogQualidade = () =>
-  localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
+export const usuarioEhDilogQualidade = () => {
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
+};
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
   return [
@@ -972,6 +976,17 @@ export const statusProdutos = [
   {
     uuid: "Inativo",
     nome: "Inativo"
+  }
+];
+
+export const ehLaboratorioCredenciado = [
+  {
+    uuid: "true",
+    nome: "Sim"
+  },
+  {
+    uuid: "false",
+    nome: "Não"
   }
 ];
 
