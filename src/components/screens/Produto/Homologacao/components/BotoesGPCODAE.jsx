@@ -144,7 +144,15 @@ export const BotoesGPCODAE = ({
         eAnalise={propsModal.eAnalise}
         terceirizadas={terceirizadas}
         status={homologacao.status}
-        terceirizada={homologacao.rastro_terceirizada}
+        terceirizada={
+          homologacao.logs.filter(
+            log => log.status_evento_explicacao === "Solicitação Realizada"
+          )[
+            homologacao.logs.filter(
+              log => log.status_evento_explicacao === "Solicitação Realizada"
+            ).length - 1
+          ].usuario
+        }
         tipoModal={tipoModal}
         cancelaAnaliseSensorial={propsModal.cancelaSolicitacao}
       />
