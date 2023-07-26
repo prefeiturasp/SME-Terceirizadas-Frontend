@@ -86,7 +86,7 @@ export default ({
                 to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_UNIDADE_MEDIDA}`}
               >
                 <Botao
-                  texto="Cadastrar Unidade"
+                  texto="Cadastrar Unidade de Medida"
                   type={BUTTON_TYPE.BUTTON}
                   style={BUTTON_STYLE.GREEN}
                   onClick={() => {}}

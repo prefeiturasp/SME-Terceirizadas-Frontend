@@ -181,6 +181,7 @@ export default () => {
                       component={InputText}
                       label="Data do Cadastro"
                       name="data_cadastro"
+                      required
                       disabled={true}
                     />
                   </div>
@@ -205,6 +206,7 @@ export default () => {
                 </div>
                 <Modal
                   show={showModalCancelar}
+                  dialogClassName="modal-dialog-unidades-medida"
                   onHide={() => {
                     setShowModalCancelar(false);
                   }}
