@@ -39,10 +39,11 @@ import createDecorator from "final-form-calculate";
 import { getEnderecoPorCEP } from "services/cep.service";
 import { cepMask, cnpjMask, telefoneMask } from "constants/shared";
 
-export default () => {
+export default ({ naoEditavel = false }) => {
   const [carregando, setCarregando] = useState(true);
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
+
   const [contatos, setContatos] = useState([{}]);
   const [credenciado, setCredenciado] = useState(null);
   const [laboratorios, setLaboratorios] = useState(null);
@@ -52,7 +53,76 @@ export default () => {
   const [uuidLaboratorio, setUuidLaboratorio] = useState(null);
   const [laboratorio, setLaboratorio] = useState({});
   const [contatosValues, setContatosValues] = useState({});
+
   const history = useHistory();
+
+  const getDadosLaboratorio = async () => {
+    try {
+      const responseLaboratorio = await getLaboratorio(uuidLaboratorio);
+      if (responseLaboratorio.status === HTTP_STATUS.OK) {
+        const laboratorioValues = {};
+        const lab = responseLaboratorio.data;
+        laboratorioValues["nome_laboratorio"] = lengthOrUnderfined(lab.nome);
+        laboratorioValues["data_cadastro"] = lab.criado_em.slice(0, 10);
+        laboratorioValues["cnpj"] = formatarCPFouCNPJ(
+          lengthOrUnderfined(lab.cnpj)
+        );
+        laboratorioValues["cep"] = formatarCEP(lengthOrUnderfined(lab.cep));
+        laboratorioValues["logradouro"] = lengthOrUnderfined(lab.logradouro);
+        laboratorioValues["numero"] = lengthOrUnderfined(lab.numero);
+        laboratorioValues["complemento"] = lengthOrUnderfined(lab.complemento);
+        laboratorioValues["bairro"] = lengthOrUnderfined(lab.bairro);
+        laboratorioValues["cidade"] = lengthOrUnderfined(lab.cidade);
+        laboratorioValues["estado"] = lengthOrUnderfined(lab.estado);
+
+        laboratorioValues["credenciado"] = lab.credenciado ? true : false;
+        laboratorioValues["credenciado_literal"] = lab.credenciado
+          ? "Sim"
+          : "Não";
+        setCredenciado(lab.credenciado ? true : false);
+
+        setContatos(responseLaboratorio.data.contatos);
+        const contatosValues = {};
+        responseLaboratorio.data.contatos.forEach((contato, i) => {
+          contatosValues[`nome_${i}`] = lengthOrUnderfined(contato.nome);
+          contatosValues[`telefone_${i}`] = formatarTelefone(
+            lengthOrUnderfined(contato.telefone)
+          );
+          contatosValues[`email_${i}`] = lengthOrUnderfined(contato.email);
+        });
+        setContatosValues(contatosValues);
+        setLaboratorio(laboratorioValues);
+      }
+    } catch (e) {
+      toastError("Ocorreu um erro ao carregar dados do laboratório");
+    }
+    setCarregando(false);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid && valoresIniciais) {
+      setUuidLaboratorio(uuid);
+      setCarregando(true);
+      setEdicao(true);
+    } else {
+      setCarregando(false);
+    }
+
+    const buscaListaLabs = async () => {
+      const response = await getListaLaboratorios();
+      setLaboratorios(response.data.results);
+    };
+
+    buscaListaLabs();
+  }, [valoresIniciais]);
+
+  if (valoresIniciais && edicao) {
+    getDadosLaboratorio();
+    setValoresIniciais(false);
+  }
 
   const onSubmit = () => {
     setShowModalEnviar(true);
@@ -82,12 +152,12 @@ export default () => {
     setCarregando(false);
   };
 
-  const handleOnChange = (event, values) => {
+  const handleOnChangeCredenciado = (event, values) => {
     values.credenciado = event.target.value;
     setCredenciado(event.target.value);
   };
 
-  const calculator = createDecorator({
+  const cepCalculator = createDecorator({
     field: "cep",
     updates: {
       dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
@@ -148,77 +218,153 @@ export default () => {
     return valor && valor.length > 0 ? valor : undefined;
   };
 
-  const getDadosLaboratorio = async () => {
-    try {
-      const responseLaboratorio = await getLaboratorio(uuidLaboratorio);
-      if (responseLaboratorio.status === HTTP_STATUS.OK) {
-        const laboratorioValues = {};
-        const lab = responseLaboratorio.data;
-        laboratorioValues["nome_laboratorio"] = lengthOrUnderfined(lab.nome);
-        laboratorioValues["data_cadastro"] = lab.criado_em.slice(0, 10);
-        laboratorioValues["cnpj"] = formatarCPFouCNPJ(
-          lengthOrUnderfined(lab.cnpj)
-        );
-        laboratorioValues["cep"] = formatarCEP(lengthOrUnderfined(lab.cep));
-        laboratorioValues["logradouro"] = lengthOrUnderfined(lab.logradouro);
-        laboratorioValues["numero"] = lengthOrUnderfined(lab.numero);
-        laboratorioValues["complemento"] = lengthOrUnderfined(lab.complemento);
-        laboratorioValues["bairro"] = lengthOrUnderfined(lab.bairro);
-        laboratorioValues["cidade"] = lengthOrUnderfined(lab.cidade);
-        laboratorioValues["estado"] = lengthOrUnderfined(lab.estado);
-
-        laboratorioValues["credenciado"] = lab.credenciado ? true : false;
-        setCredenciado(lab.credenciado ? true : false);
-
-        setContatos(responseLaboratorio.data.contatos);
-        const contatosValues = {};
-        responseLaboratorio.data.contatos.forEach((contato, i) => {
-          contatosValues[`nome_${i}`] = lengthOrUnderfined(contato.nome);
-          contatosValues[`telefone_${i}`] = formatarTelefone(
-            lengthOrUnderfined(contato.telefone)
-          );
-          contatosValues[`email_${i}`] = lengthOrUnderfined(contato.email);
-        });
-        setContatosValues(contatosValues);
-        setLaboratorio(laboratorioValues);
-      }
-    } catch (e) {
-      toastError("Ocorreu um erro ao carregar dados do laboratório");
-    }
-    setCarregando(false);
+  const renderizarCredenciamentoNaoEditavel = () => {
+    return (
+      <>
+        <div className="col mb-5 mt-3">
+          <Field
+            component={InputText}
+            label="Esse Laboratório está Credenciado?"
+            name="credenciado_literal"
+            className="input-busca-produto col-2"
+            required
+            disabled={naoEditavel}
+          />
+        </div>
+      </>
+    );
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
+  const renderizarCredenciamentoEditavel = formValues => {
+    return (
+      <>
+        <div className="row pergunta-credenciado">
+          <div className="texto-pergunta">
+            Esse Laboratório está Credenciado?
+          </div>
+          <Radio.Group
+            onChange={event => handleOnChangeCredenciado(event, formValues)}
+            value={credenciado}
+          >
+            <Radio className="" value={true}>
+              SIM
+            </Radio>
+            <Radio className="" value={false}>
+              NÃO
+            </Radio>
+          </Radio.Group>
+        </div>
 
-    if (uuid && valoresIniciais) {
-      setUuidLaboratorio(uuid);
-      setCarregando(true);
-      setEdicao(true);
-    } else {
-      setCarregando(false);
-    }
+        {credenciado === false && (
+          <div className="texto-nao-credenciado">
+            Por não estar credenciado em um órgão oficial este laboratório não
+            poderá ser utilizado no cadastro de Laudos.
+          </div>
+        )}
+        <div className="mt-4 mb-4">
+          <Botao
+            texto="Salvar"
+            type={BUTTON_TYPE.SUBMIT}
+            style={BUTTON_STYLE.GREEN}
+            className="float-right ml-3"
+          />
+          <Botao
+            texto="Cancelar"
+            type={BUTTON_TYPE.BUTTON}
+            style={BUTTON_STYLE.GREEN_OUTLINE}
+            className="float-right ml-3"
+            onClick={() => {
+              setShowModalCancelar(true);
+            }}
+          />
+        </div>
+        <Modal
+          show={showModalCancelar}
+          onHide={() => {
+            setShowModalCancelar(false);
+          }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>
+              {`Cancelar ${edicao ? "Edição" : "Cadastro"} do Laboratório`}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{`Deseja cancelar ${
+            edicao ? "a edição d" : ""
+          }o Cadastro?`}</Modal.Body>
+          <Modal.Footer>
+            <Botao
+              texto="Não"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                setShowModalCancelar(false);
+              }}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="ml-3"
+            />
+            <Botao
+              texto="Sim"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                setShowModalCancelar(false);
+                edicao
+                  ? history.push(
+                      "/configuracoes/cadastros/laboratorios-cadastrados"
+                    )
+                  : history.push("/");
+              }}
+              style={BUTTON_STYLE.GREEN}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Modal>
+        <Modal
+          show={showModalEnviar}
+          onHide={() => {
+            setShowModalEnviar(false);
+          }}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{`Salvar ${
+              edicao ? "Edição" : "Cadastro"
+            } do Laboratório`}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{`Confirma ${
+            edicao ? "a edição d" : ""
+          }o cadastro do Laboratório?`}</Modal.Body>
+          <Modal.Footer>
+            <Botao
+              texto="Não"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                setShowModalEnviar(false);
+                setCarregando(false);
+              }}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="ml-3"
+            />
+            <Botao
+              texto="Sim"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={() => {
+                salvarLaboratorio(formValues);
+              }}
+              style={BUTTON_STYLE.GREEN}
+              className="ml-3"
+            />
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  };
 
-    const buscaListaLabs = async () => {
-      const response = await getListaLaboratorios();
-      setLaboratorios(response.data.results);
-    };
-
-    buscaListaLabs();
-  }, [valoresIniciais]);
-
-  if (valoresIniciais && edicao) {
-    getDadosLaboratorio();
-    setValoresIniciais(false);
-  }
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-cadastro-laboratorio">
         <div className="card-body cadastro-laboratorio">
           <Form
             onSubmit={onSubmit}
-            decorators={[calculator]}
+            decorators={[cepCalculator]}
             initialValues={{
               data_cadastro: new Date().toLocaleDateString(),
               ...laboratorio,
@@ -239,7 +385,7 @@ export default () => {
                 <div className="mt-4 card-title green">
                   Dados do Laboratório
                 </div>
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col-8">
                     <Field
                       component={InputText}
@@ -253,8 +399,9 @@ export default () => {
                         alphaNumericAndSingleSpaceBetweenCharacters,
                         noSpaceStartOrEnd
                       )}
-                      required
                       toUppercaseActive
+                      required
+                      disabled={naoEditavel}
                     />
                   </div>
                   <div className="col-4">
@@ -263,12 +410,13 @@ export default () => {
                       label="Data de Cadastro"
                       name="data_cadastro"
                       className="input-busca-produto"
+                      required
                       disabled={true}
                     />
                   </div>
                 </div>
 
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col-5">
                     <Field
                       component={MaskedInputText}
@@ -279,14 +427,15 @@ export default () => {
                       placeholder="Digite o CNPJ do Laboratório"
                       validate={composeValidators(required, tamanhoCnpjMascara)}
                       required
+                      disabled={naoEditavel}
                     />
                   </div>
                 </div>
 
-                <div className="card-title green">Endereço do Laboratório</div>
                 <hr />
 
-                <div className="row">
+                <div className="card-title green">Endereço do Laboratório</div>
+                <div className="row mt-3">
                   <div className="col-4">
                     <Field
                       component={MaskedInputText}
@@ -297,6 +446,7 @@ export default () => {
                       placeholder="Digite o CEP"
                       validate={composeValidators(required, cep)}
                       required
+                      disabled={naoEditavel}
                     />
                   </div>
                   <div className="col-8">
@@ -308,11 +458,11 @@ export default () => {
                       placeholder="Nome do Logradouro"
                       validate={required}
                       required
-                      disabled={desabilitaEndereco}
+                      disabled={desabilitaEndereco || naoEditavel}
                     />
                   </div>
                 </div>
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col-4">
                     <Field
                       component={InputText}
@@ -322,6 +472,7 @@ export default () => {
                       placeholder="Digite o número"
                       validate={required}
                       required
+                      disabled={naoEditavel}
                     />
                   </div>
                   <div className="col-4">
@@ -330,6 +481,7 @@ export default () => {
                       label="Complemento"
                       name="complemento"
                       className="input-busca-produto"
+                      disabled={naoEditavel}
                     />
                   </div>
                   <div className="col-4">
@@ -341,11 +493,11 @@ export default () => {
                       placeholder="Nome do Bairro"
                       validate={required}
                       required
-                      disabled={desabilitaEndereco}
+                      disabled={desabilitaEndereco || naoEditavel}
                     />
                   </div>
                 </div>
-                <div className="row">
+                <div className="row mt-3">
                   <div className="col-6">
                     <Field
                       component={InputText}
@@ -355,7 +507,7 @@ export default () => {
                       placeholder="Nome da Cidade"
                       validate={required}
                       required
-                      disabled={desabilitaEndereco}
+                      disabled={desabilitaEndereco || naoEditavel}
                     />
                   </div>
                   <div className="col-6">
@@ -367,17 +519,17 @@ export default () => {
                       placeholder="Nome do Estado"
                       validate={required}
                       required
-                      disabled={desabilitaEndereco}
+                      disabled={desabilitaEndereco || naoEditavel}
                     />
                   </div>
                 </div>
 
-                <div className="card-title green">Contatos</div>
                 <hr />
 
+                <div className="card-title green">Contatos</div>
                 {contatos.map((contato, index) => (
                   <div key={index} className="row">
-                    <div className="col-4">
+                    <div className="col">
                       <Field
                         component={InputText}
                         label="Nome"
@@ -386,6 +538,7 @@ export default () => {
                         placeholder="Nome do Contato"
                         validate={required}
                         required
+                        disabled={naoEditavel}
                       />
                     </div>
                     <div className="col-3">
@@ -398,9 +551,10 @@ export default () => {
                         placeholder="(00) 0000-00000"
                         validate={required}
                         required
+                        disabled={naoEditavel}
                       />
                     </div>
-                    <div className="col-4">
+                    <div className="col">
                       <Field
                         component={InputText}
                         label="E-mail"
@@ -409,51 +563,54 @@ export default () => {
                         placeholder="Digite o E-mail do Contato"
                         validate={composeValidators(required, email)}
                         required
+                        disabled={naoEditavel}
                       />
                     </div>
-                    <div className={`col-1 mt-auto mb-1`}>
-                      {index === 0 ? (
-                        <Tooltip title="Adicionar Contato">
-                          <span>
-                            <Botao
-                              texto="+"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              onClick={() => {
-                                let newContatos = [...contatos, {}];
-                                setContatos(newContatos);
-                              }}
-                            />
-                          </span>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Remover Contato">
-                          <span>
-                            <Botao
-                              icon="fas fa-trash"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              onClick={() => {
-                                let contatosNovo = [...contatos];
-                                values[`nome_${index}`] = null;
-                                values[`telefone_${index}`] = null;
-                                values[`email_${index}`] = null;
-                                contatosNovo.splice(index, 1);
-                                setContatos(contatosNovo);
-                              }}
-                            />
-                          </span>
-                        </Tooltip>
-                      )}
-                    </div>
+                    {naoEditavel === false && (
+                      <div className={`col-1 mt-auto mb-1`}>
+                        {index === 0 ? (
+                          <Tooltip title="Adicionar Contato">
+                            <span>
+                              <Botao
+                                texto="+"
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                onClick={() => {
+                                  let newContatos = [...contatos, {}];
+                                  setContatos(newContatos);
+                                }}
+                              />
+                            </span>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title="Remover Contato">
+                            <span>
+                              <Botao
+                                icon="fas fa-trash"
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                onClick={() => {
+                                  let contatosNovo = [...contatos];
+                                  values[`nome_${index}`] = null;
+                                  values[`telefone_${index}`] = null;
+                                  values[`email_${index}`] = null;
+                                  contatosNovo.splice(index, 1);
+                                  setContatos(contatosNovo);
+                                }}
+                              />
+                            </span>
+                          </Tooltip>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
+
+                <hr />
 
                 <div className="card-title green">
                   Laboratórios Credenciados
                 </div>
-                <hr />
-
                 <div className="texto-laboratorios">
                   <p className="font-weight-bold">Lembrete!</p>
                   <p className="">
@@ -476,127 +633,9 @@ export default () => {
                   </ul>
                 </div>
 
-                <div className="row pergunta-credenciado">
-                  <div className="texto-pergunta">
-                    Esse Laboratório está Credenciado?
-                  </div>
-                  <Radio.Group
-                    onChange={event => handleOnChange(event, values)}
-                    value={credenciado}
-                  >
-                    <Radio className="" value={true}>
-                      SIM
-                    </Radio>
-                    <Radio className="" value={false}>
-                      NÃO
-                    </Radio>
-                  </Radio.Group>
-                </div>
-
-                {credenciado === false && (
-                  <div className="texto-nao-credenciado">
-                    Por não estar credenciado em um órgão oficial este
-                    laboratório não poderá ser utilizado no cadastro de Laudos.
-                  </div>
-                )}
-
-                <hr />
-
-                <div className="mt-4 mb-4">
-                  <Botao
-                    texto="Salvar"
-                    type={BUTTON_TYPE.SUBMIT}
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
-                  />
-                  <Botao
-                    texto="Cancelar"
-                    type={BUTTON_TYPE.BUTTON}
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    className="float-right ml-3"
-                    onClick={() => {
-                      setShowModalCancelar(true);
-                    }}
-                  />
-                </div>
-                <Modal
-                  show={showModalCancelar}
-                  onHide={() => {
-                    setShowModalCancelar(false);
-                  }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>
-                      {`Cancelar ${
-                        edicao ? "Edição" : "Cadastro"
-                      } do Laboratório`}
-                    </Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>{`Deseja cancelar ${
-                    edicao ? "a edição d" : ""
-                  }o Cadastro?`}</Modal.Body>
-                  <Modal.Footer>
-                    <Botao
-                      texto="Não"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setShowModalCancelar(false);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Sim"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setShowModalCancelar(false);
-                        edicao
-                          ? history.push(
-                              "/configuracoes/cadastros/laboratorios-cadastrados"
-                            )
-                          : history.push("/");
-                      }}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </Modal.Footer>
-                </Modal>
-                <Modal
-                  show={showModalEnviar}
-                  onHide={() => {
-                    setShowModalEnviar(false);
-                  }}
-                >
-                  <Modal.Header closeButton>
-                    <Modal.Title>{`Salvar ${
-                      edicao ? "Edição" : "Cadastro"
-                    } do Laboratório`}</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>{`Confirma ${
-                    edicao ? "a edição d" : ""
-                  }o cadastro do Laboratório?`}</Modal.Body>
-                  <Modal.Footer>
-                    <Botao
-                      texto="Não"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setShowModalEnviar(false);
-                        setCarregando(false);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Sim"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        salvarLaboratorio(values);
-                      }}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </Modal.Footer>
-                </Modal>
+                {naoEditavel
+                  ? renderizarCredenciamentoNaoEditavel()
+                  : renderizarCredenciamentoEditavel(values)}
               </form>
             )}
           />
