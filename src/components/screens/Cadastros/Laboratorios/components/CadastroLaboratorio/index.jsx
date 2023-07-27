@@ -221,12 +221,12 @@ export default ({ naoEditavel = false }) => {
   const renderizarCredenciamentoNaoEditavel = () => {
     return (
       <>
-        <div className="col-3 mb-5">
+        <div className="col mb-5 mt-3">
           <Field
             component={InputText}
             label="Esse Laboratório está Credenciado?"
             name="credenciado_literal"
-            className="input-busca-produto"
+            className="input-busca-produto col-2"
             required
             disabled={naoEditavel}
           />
