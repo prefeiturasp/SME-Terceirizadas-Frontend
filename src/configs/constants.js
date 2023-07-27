@@ -256,6 +256,7 @@ export const STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO =
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
+export const DETALHAR = "detalhar";
 
 export const QUALQUER_USUARIO = true;
 
