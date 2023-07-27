@@ -201,6 +201,7 @@ import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSoli
 import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
@@ -722,6 +723,14 @@ const routesConfig = [
       constants.CADASTRO_LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_LABORATORIO
+    }/${constants.DETALHAR}`,
+    component: DetalharCadastroLaboratorioPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidade()
   },

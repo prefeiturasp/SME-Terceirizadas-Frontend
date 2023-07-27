@@ -2,7 +2,8 @@ import {
   CADASTROS,
   CONFIGURACOES,
   EDITAR,
-  CADASTRO_LABORATORIO
+  CADASTRO_LABORATORIO,
+  DETALHAR
 } from "configs/constants";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -29,6 +30,15 @@ const ListagemLaboratorios = ({ laboratorios }) => {
                 <div>{formatarCPFouCNPJ(laboratorio.cnpj)}</div>
                 <div>{laboratorio.credenciado ? "Sim" : "Não"} </div>
                 <div>
+                  <NavLink
+                    to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_LABORATORIO}/${DETALHAR}?uuid=${
+                      laboratorio.uuid
+                    }`}
+                  >
+                    <span className="link-acoes px-2">
+                      <i title="Detalhar" className="verde fas fa-eye" />
+                    </span>
+                  </NavLink>
                   <NavLink
                     to={`/${CONFIGURACOES}/${CADASTROS}/${CADASTRO_LABORATORIO}/${EDITAR}?uuid=${
                       laboratorio.uuid
