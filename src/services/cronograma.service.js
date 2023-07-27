@@ -122,3 +122,7 @@ export const imprimirCronograma = async (uuid, numero) => {
   const { data } = await axios.get(url, { responseType: "blob" });
   saveAs(data, "cronograma_" + numero + ".pdf");
 };
+
+export const getUnidadesDeMedidaLogistica = async () => {
+  return await axios.get(`/unidades-medida-logistica/lista-nomes-abreviacoes/`);
+};

@@ -19,7 +19,8 @@ import {
   editaCronograma,
   getCronograma,
   getEtapas,
-  getRascunhos
+  getRascunhos,
+  getUnidadesDeMedidaLogistica
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
@@ -30,10 +31,7 @@ import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
-import {
-  getListaCompletaProdutosLogistica,
-  getUnidadesDeMedidaProduto
-} from "services/produto.service";
+import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
@@ -401,7 +399,7 @@ export default () => {
     };
 
     const buscaUnidadesMedida = async () => {
-      const response = await getUnidadesDeMedidaProduto();
+      const response = await getUnidadesDeMedidaLogistica();
       setUnidadesMedidaOptions(response.data.results);
     };
 
