@@ -43,6 +43,7 @@ export default ({ naoEditavel = false }) => {
   const [carregando, setCarregando] = useState(true);
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [showModalCancelar, setShowModalCancelar] = useState(false);
+
   const [contatos, setContatos] = useState([{}]);
   const [credenciado, setCredenciado] = useState(null);
   const [laboratorios, setLaboratorios] = useState(null);
@@ -54,100 +55,6 @@ export default ({ naoEditavel = false }) => {
   const [contatosValues, setContatosValues] = useState({});
 
   const history = useHistory();
-
-  const onSubmit = () => {
-    setShowModalEnviar(true);
-  };
-
-  const salvarLaboratorio = async values => {
-    setCarregando(true);
-    let payload = montaPayload(values);
-
-    try {
-      let response = edicao
-        ? await editaLaboratorio(payload, uuidLaboratorio)
-        : await cadastraLaboratorio(payload);
-      if (response.status === 201) {
-        toastSuccess("Laboratório Cadastrado com sucesso!");
-        setShowModalEnviar(false);
-      } else if (response.status === 200) {
-        toastSuccess("Edição do cadastro realizado com sucesso!");
-        setShowModalEnviar(false);
-      } else {
-        toastError("Ocorreu um erro ao salvar o Laboratório");
-      }
-      setCarregando(false);
-    } catch (error) {
-      exibeError(error, "Ocorreu um erro ao salvar o Laboratório");
-    }
-    setCarregando(false);
-  };
-
-  const handleOnChange = (event, values) => {
-    values.credenciado = event.target.value;
-    setCredenciado(event.target.value);
-  };
-
-  const calculator = createDecorator({
-    field: "cep",
-    updates: {
-      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
-    }
-  });
-
-  const buscaCEP = async (cep, values) => {
-    if (cep.length === 9) {
-      const response = await getEnderecoPorCEP(cep);
-      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
-        const { data } = response;
-        values.bairro = data.bairro;
-        values.cidade = data.localidade;
-        values.logradouro = data.logradouro;
-        values.estado = data.uf;
-        setDesabilitaEndereco(true);
-      } else {
-        setDesabilitaEndereco(false);
-      }
-    }
-  };
-
-  const montaPayload = values => {
-    let payload = {};
-
-    payload.nome = values.nome_laboratorio;
-    payload.cnpj = removeCaracteresEspeciais(values.cnpj);
-    payload.cep = removeCaracteresEspeciais(values.cep);
-    payload.logradouro = values.logradouro;
-    payload.numero = values.numero;
-    payload.complemento = values.complemento;
-    payload.bairro = values.bairro;
-    payload.cidade = values.cidade;
-    payload.estado = values.estado;
-    payload.credenciado = credenciado;
-
-    payload.contatos = contatos.map((contatos, index) => ({
-      nome: values[`nome_${index}`],
-      telefone: removeCaracteresEspeciais(values[`telefone_${index}`]),
-      email: values[`email_${index}`]
-    }));
-
-    return payload;
-  };
-
-  const validaNomeLab = value => {
-    if (
-      laboratorios &&
-      laboratorios.includes(value.toUpperCase()) &&
-      (!edicao || laboratorio.nome_laboratorio !== value.toUpperCase())
-    )
-      return "Laboratório já cadastrado";
-    else return undefined;
-  };
-
-  const lengthOrUnderfined = value => {
-    let valor = value ? value.toString() : undefined;
-    return valor && valor.length > 0 ? valor : undefined;
-  };
 
   const getDadosLaboratorio = async () => {
     try {
@@ -217,6 +124,100 @@ export default ({ naoEditavel = false }) => {
     setValoresIniciais(false);
   }
 
+  const onSubmit = () => {
+    setShowModalEnviar(true);
+  };
+
+  const salvarLaboratorio = async values => {
+    setCarregando(true);
+    let payload = montaPayload(values);
+
+    try {
+      let response = edicao
+        ? await editaLaboratorio(payload, uuidLaboratorio)
+        : await cadastraLaboratorio(payload);
+      if (response.status === 201) {
+        toastSuccess("Laboratório Cadastrado com sucesso!");
+        setShowModalEnviar(false);
+      } else if (response.status === 200) {
+        toastSuccess("Edição do cadastro realizado com sucesso!");
+        setShowModalEnviar(false);
+      } else {
+        toastError("Ocorreu um erro ao salvar o Laboratório");
+      }
+      setCarregando(false);
+    } catch (error) {
+      exibeError(error, "Ocorreu um erro ao salvar o Laboratório");
+    }
+    setCarregando(false);
+  };
+
+  const handleOnChangeCredenciado = (event, values) => {
+    values.credenciado = event.target.value;
+    setCredenciado(event.target.value);
+  };
+
+  const cepCalculator = createDecorator({
+    field: "cep",
+    updates: {
+      dummy: (minimumValue, allValues) => buscaCEP(minimumValue, allValues)
+    }
+  });
+
+  const buscaCEP = async (cep, values) => {
+    if (cep.length === 9) {
+      const response = await getEnderecoPorCEP(cep);
+      if (response.status === HTTP_STATUS.OK && !response.data.erro) {
+        const { data } = response;
+        values.bairro = data.bairro;
+        values.cidade = data.localidade;
+        values.logradouro = data.logradouro;
+        values.estado = data.uf;
+        setDesabilitaEndereco(true);
+      } else {
+        setDesabilitaEndereco(false);
+      }
+    }
+  };
+
+  const montaPayload = values => {
+    let payload = {};
+
+    payload.nome = values.nome_laboratorio;
+    payload.cnpj = removeCaracteresEspeciais(values.cnpj);
+    payload.cep = removeCaracteresEspeciais(values.cep);
+    payload.logradouro = values.logradouro;
+    payload.numero = values.numero;
+    payload.complemento = values.complemento;
+    payload.bairro = values.bairro;
+    payload.cidade = values.cidade;
+    payload.estado = values.estado;
+    payload.credenciado = credenciado;
+
+    payload.contatos = contatos.map((contatos, index) => ({
+      nome: values[`nome_${index}`],
+      telefone: removeCaracteresEspeciais(values[`telefone_${index}`]),
+      email: values[`email_${index}`]
+    }));
+
+    return payload;
+  };
+
+  const validaNomeLab = value => {
+    if (
+      laboratorios &&
+      laboratorios.includes(value.toUpperCase()) &&
+      (!edicao || laboratorio.nome_laboratorio !== value.toUpperCase())
+    )
+      return "Laboratório já cadastrado";
+    else return undefined;
+  };
+
+  const lengthOrUnderfined = value => {
+    let valor = value ? value.toString() : undefined;
+    return valor && valor.length > 0 ? valor : undefined;
+  };
+
   const renderizarCredenciamentoNaoEditavel = () => {
     return (
       <>
@@ -242,7 +243,7 @@ export default ({ naoEditavel = false }) => {
             Esse Laboratório está Credenciado?
           </div>
           <Radio.Group
-            onChange={event => handleOnChange(event, formValues)}
+            onChange={event => handleOnChangeCredenciado(event, formValues)}
             value={credenciado}
           >
             <Radio className="" value={true}>
@@ -363,7 +364,7 @@ export default ({ naoEditavel = false }) => {
         <div className="card-body cadastro-laboratorio">
           <Form
             onSubmit={onSubmit}
-            decorators={[calculator]}
+            decorators={[cepCalculator]}
             initialValues={{
               data_cadastro: new Date().toLocaleDateString(),
               ...laboratorio,
