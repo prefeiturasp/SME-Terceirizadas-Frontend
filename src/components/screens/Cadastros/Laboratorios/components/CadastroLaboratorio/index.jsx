@@ -621,12 +621,20 @@ export default ({ naoEditavel = false }) => {
                   </p>
                   <ul>
                     <li>
-                      <a href="http://www.inmetro.gov.br/laboratorios/rble/ ">
+                      <a
+                        href="http://www.inmetro.gov.br/laboratorios/rble/"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         INMETRO
                       </a>
                     </li>
                     <li>
-                      <a href="https://app.powerbi.com/view?r=eyJrIjoiYWZhYzg4YmUtZDBmZS00MDU3LWI1MGMtN2Y5ODNhOGNiODJiIiwidCI6ImI2N2FmMjNmLWMzZjMtNGQzNS04MGM3LWI3MDg1ZjVlZGQ4MSJ9&pageName=ReportSection255cb87f555de69e1841 ">
+                      <a
+                        href="https://app.powerbi.com/view?r=eyJrIjoiYWZhYzg4YmUtZDBmZS00MDU3LWI1MGMtN2Y5ODNhOGNiODJiIiwidCI6ImI2N2FmMjNmLWMzZjMtNGQzNS04MGM3LWI3MDg1ZjVlZGQ4MSJ9&pageName=ReportSection255cb87f555de69e1841"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         REBLAS
                       </a>
                     </li>
