@@ -113,33 +113,6 @@ export const finalizarVinculoDiretoriaRegional = (uuid, vinculo_uuid) =>
     }
   );
 
-export const criarEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada = (
-  uuid,
-  registro_funcional
-) =>
-  fetchPost(
-    `${API_URL}/vinculos-codae-gestao-alimentacao-terceirizada/${uuid}/criar_equipe_administradora/`,
-    {
-      registro_funcional
-    }
-  );
-
-export const getEquipeAdministradoraCODAEGestaoAlimentacaoTerceirizada = uuid =>
-  fetchGet(
-    `${API_URL}/vinculos-codae-gestao-alimentacao-terceirizada/${uuid}/get_equipe_administradora/`
-  );
-
-export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
-  uuid,
-  vinculo_uuid
-) =>
-  fetchPatch(
-    `${API_URL}/vinculos-codae-gestao-alimentacao-terceirizada/${uuid}/finalizar_vinculo/`,
-    {
-      vinculo_uuid
-    }
-  );
-
 export const criarEquipeAdministradoraSupervisaoNutricao = (
   uuid,
   registro_funcional
