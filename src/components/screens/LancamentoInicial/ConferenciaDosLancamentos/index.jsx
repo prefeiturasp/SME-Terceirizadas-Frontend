@@ -104,20 +104,57 @@ export const ConferenciaDosLancamentos = () => {
     }
   };
 
+  const exibirBotoesOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ["MEDICAO_ENVIADA_PELA_UE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+      solicitacao.status
+    );
+
+  const exibirBotoesOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PARA_CODAE"].includes(
+      solicitacao.status
+    );
+
   const desabilitarSolicitarCorrecaoOcorrenciaDRE =
     usuarioEhDRE() &&
     solicitacao &&
-    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
-      solicitacao.status
-    );
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRIGIDA_PELA_UE"
+    ].includes(solicitacao.ocorrencia.status);
 
   const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
     usuarioEhMedicao() &&
     solicitacao &&
-    [
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
       "MEDICAO_APROVADA_PELA_CODAE",
-      "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-    ].includes(solicitacao.status);
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitarAprovarOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitarAprovarOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA"
+    ].includes(solicitacao.ocorrencia.status);
 
   const getSolMedInicialAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -564,16 +601,8 @@ export const ConferenciaDosLancamentos = () => {
                                     style={BUTTON_STYLE.GREEN_OUTLINE}
                                     onClick={visualizarModal}
                                   />
-                                  {((usuarioEhMedicao() &&
-                                    [
-                                      "MEDICAO_APROVADA_PELA_DRE",
-                                      "MEDICAO_CORRIGIDA_PARA_CODAE"
-                                    ].includes(solicitacao.status)) ||
-                                    (usuarioEhDRE() &&
-                                      [
-                                        "MEDICAO_ENVIADA_PELA_UE",
-                                        "MEDICAO_CORRIGIDA_PELA_UE"
-                                      ].includes(solicitacao.status))) && (
+                                  {(exibirBotoesOcorrenciaDRE ||
+                                    exibirBotoesOcorrenciaCODAE) && (
                                     <>
                                       <Botao
                                         className="mx-3"
@@ -593,14 +622,8 @@ export const ConferenciaDosLancamentos = () => {
                                         type={BUTTON_TYPE.BUTTON}
                                         style={BUTTON_STYLE.GREEN}
                                         disabled={
-                                          (logCorrecaoOcorrencia &&
-                                            logCorrecaoOcorrencia.status_evento_explicacao ===
-                                              "Aprovado pela DRE") ||
-                                          [
-                                            "MEDICAO_APROVADA_PELA_DRE",
-                                            "MEDICAO_CORRECAO_SOLICITADA",
-                                            "MEDICAO_APROVADA_PELA_CODAE"
-                                          ].includes(solicitacao.status)
+                                          desabilitarAprovarOcorrenciaCODAE ||
+                                          desabilitarAprovarOcorrenciaDRE
                                         }
                                         onClick={() =>
                                           setShowModalAprovarOcorrencia(true)

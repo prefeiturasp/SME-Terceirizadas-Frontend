@@ -117,8 +117,12 @@ export default ({
                           className="ml-3"
                           onClick={visualizarModalHistorico}
                         />
-                        {solicitacaoMedicaoInicial.ocorrencia.status ===
-                          "MEDICAO_CORRECAO_SOLICITADA" && (
+                        {[
+                          "MEDICAO_CORRECAO_SOLICITADA",
+                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                        ].includes(
+                          solicitacaoMedicaoInicial.ocorrencia.status
+                        ) && (
                           <Botao
                             className="float-right ml-3"
                             texto="Atualizar Formulário de Ocorrências"
