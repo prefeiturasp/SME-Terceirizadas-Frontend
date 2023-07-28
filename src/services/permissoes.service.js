@@ -73,22 +73,6 @@ export const getDadosUsuarioEOLCompleto = async registroFuncional =>
     .get(`/dados-usuario-eol-completo/${registroFuncional}/`)
     .catch(ErrorHandlerFunction);
 
-export const criarEquipeAdministradoraEscola = (uuid, registro_funcional) =>
-  fetchPost(
-    `${API_URL}/vinculos-escolas/${uuid}/criar_equipe_administradora/`,
-    {
-      registro_funcional
-    }
-  );
-
-export const getEquipeAdministradoraEscola = uuid =>
-  fetchGet(`${API_URL}/vinculos-escolas/${uuid}/get_equipe_administradora/`);
-
-export const finalizarVinculoEscola = (uuid, vinculo_uuid) =>
-  fetchPatch(`${API_URL}/vinculos-escolas/${uuid}/finalizar_vinculo/`, {
-    vinculo_uuid
-  });
-
 export const criarEquipeAdministradoraDiretoriaRegional = (
   uuid,
   registro_funcional
