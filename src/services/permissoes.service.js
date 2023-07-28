@@ -73,30 +73,6 @@ export const getDadosUsuarioEOLCompleto = async registroFuncional =>
     .get(`/dados-usuario-eol-completo/${registroFuncional}/`)
     .catch(ErrorHandlerFunction);
 
-export const criarEquipeAdministradoraDiretoriaRegional = (
-  uuid,
-  registro_funcional
-) =>
-  fetchPost(
-    `${API_URL}/vinculos-diretorias-regionais/${uuid}/criar_equipe_administradora/`,
-    {
-      registro_funcional
-    }
-  );
-
-export const getEquipeAdministradoraDiretoriaRegional = uuid =>
-  fetchGet(
-    `${API_URL}/vinculos-diretorias-regionais/${uuid}/get_equipe_administradora/`
-  );
-
-export const finalizarVinculoDiretoriaRegional = (uuid, vinculo_uuid) =>
-  fetchPatch(
-    `${API_URL}/vinculos-diretorias-regionais/${uuid}/finalizar_vinculo/`,
-    {
-      vinculo_uuid
-    }
-  );
-
 export const criarEquipeAdministradoraSupervisaoNutricao = (
   uuid,
   registro_funcional
