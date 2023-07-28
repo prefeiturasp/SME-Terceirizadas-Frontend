@@ -140,22 +140,6 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
     }
   );
 
-export const criarEquipeAdministradoraTerceirizadas = (uuid, payload) =>
-  fetchPost(
-    `${API_URL}/vinculos-terceirizadas/${uuid}/criar_equipe_administradora/`,
-    payload
-  );
-
-export const getEquipeAdministradoraTerceirizadas = uuid =>
-  fetchGet(
-    `${API_URL}/vinculos-terceirizadas/${uuid}/get_equipe_administradora/`
-  );
-
-export const finalizarVinculoTerceirizadas = (uuid, vinculo_uuid) =>
-  fetchPatch(`${API_URL}/vinculos-terceirizadas/${uuid}/finalizar_vinculo/`, {
-    vinculo_uuid
-  });
-
 export const criarEquipeAdministradoraDietaEspecial = (
   uuid,
   registro_funcional
