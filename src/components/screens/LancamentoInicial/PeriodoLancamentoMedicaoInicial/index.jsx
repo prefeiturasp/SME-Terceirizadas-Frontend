@@ -89,10 +89,7 @@ import * as perfilService from "services/perfil.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import { getListaDiasSobremesaDoce } from "services/medicaoInicial/diaSobremesaDoce.service";
 import { escolaCorrigeMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import {
-  LANCAMENTO_INICIAL,
-  LANCAMENTO_MEDICAO_INICIAL
-} from "configs/constants";
+import { DETALHAMENTO_DO_LANCAMENTO, MEDICAO_INICIAL } from "configs/constants";
 import "./styles.scss";
 
 export default () => {
@@ -1339,7 +1336,7 @@ export default () => {
         const ano = new Date(location.state.mesAnoSelecionado).getFullYear();
         mes = String(mes).length === 1 ? "0" + String(mes) : String(mes);
         history.push(
-          `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}?mes=${mes}&ano=${ano}`
+          `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}?mes=${mes}&ano=${ano}`
         );
         return toastSuccess("Correções salvas com sucesso!");
       } else {
@@ -1851,7 +1848,12 @@ export default () => {
                       <div className="row pt-4 pb-2 mt-legenda">
                         <div className="col">
                           <b className="pb-2 mb-2">
-                            Correções solicitadas pela DRE:
+                            Correções solicitadas pela{" "}
+                            {location.state.status_periodo ===
+                            "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                              ? "CODAE"
+                              : "DRE"}
+                            :
                           </b>
                           <Field
                             component={CKEditorField}
@@ -2478,10 +2480,14 @@ export default () => {
                     )}
                     {[
                       "MEDICAO_CORRECAO_SOLICITADA",
-                      "MEDICAO_CORRIGIDA_PELA_UE"
+                      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                      "MEDICAO_CORRIGIDA_PELA_UE",
+                      "MEDICAO_CORRIGIDA_PARA_CODAE"
                     ].includes(location.state.status_periodo) &&
-                    location.state.status_solicitacao ===
-                      "MEDICAO_CORRECAO_SOLICITADA" ? (
+                    [
+                      "MEDICAO_CORRECAO_SOLICITADA",
+                      "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                    ].includes(location.state.status_solicitacao) ? (
                       <Botao
                         className="float-right"
                         texto="Salvar Correções"
