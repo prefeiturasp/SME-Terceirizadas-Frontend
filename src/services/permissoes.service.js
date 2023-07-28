@@ -140,28 +140,6 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
     }
   );
 
-export const criarEquipeAdministradoraDietaEspecial = (
-  uuid,
-  registro_funcional
-) =>
-  fetchPost(
-    `${API_URL}/vinculos-codae-gestao-dieta-especial/${uuid}/criar_equipe_administradora/`,
-    { registro_funcional }
-  );
-
-export const getEquipeAdministradoraDietaEspecial = uuid =>
-  fetchGet(
-    `${API_URL}/vinculos-codae-gestao-dieta-especial/${uuid}/get_equipe_administradora/`
-  );
-
-export const finalizarVinculoDietaEspecial = (uuid, vinculo_uuid) =>
-  fetchPatch(
-    `${API_URL}/vinculos-codae-gestao-dieta-especial/${uuid}/finalizar_vinculo/`,
-    {
-      vinculo_uuid
-    }
-  );
-
 export const criarEquipeAdministradoraGestaoProdutos = (
   uuid,
   registro_funcional
