@@ -100,9 +100,11 @@ export default ({
     ) {
       return true;
     } else if (
-      ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRECAO_SOLICITADA"].includes(
-        solicitacaoMedicaoInicial.status
-      ) ||
+      [
+        "MEDICAO_APROVADA_PELA_DRE",
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+      ].includes(solicitacaoMedicaoInicial.status) ||
       statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
     ) {
       return false;
@@ -223,15 +225,24 @@ export default ({
             <div className="col-2 pr-0">
               <Botao
                 texto={
-                  solicitacaoMedicaoInicial.status ===
-                    "MEDICAO_APROVADA_PELA_DRE" ||
-                  statusPeriodo() === "MEDICAO_APROVADA_PELA_DRE"
+                  [
+                    "MEDICAO_APROVADA_PELA_DRE",
+                    "MEDICAO_APROVADA_PELA_CODAE"
+                  ].includes(solicitacaoMedicaoInicial.status) ||
+                  [
+                    "MEDICAO_APROVADA_PELA_DRE",
+                    "MEDICAO_APROVADA_PELA_CODAE"
+                  ].includes(statusPeriodo())
                     ? "Visualizar"
-                    : solicitacaoMedicaoInicial.status ===
-                        "MEDICAO_CORRECAO_SOLICITADA" &&
+                    : [
+                        "MEDICAO_CORRECAO_SOLICITADA",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      ].includes(solicitacaoMedicaoInicial.status) &&
                       [
                         "MEDICAO_CORRECAO_SOLICITADA",
-                        "MEDICAO_CORRIGIDA_PELA_UE"
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                        "MEDICAO_CORRIGIDA_PELA_UE",
+                        "MEDICAO_CORRIGIDA_PARA_CODAE"
                       ].includes(statusPeriodo())
                     ? "Corrigir"
                     : "Editar"

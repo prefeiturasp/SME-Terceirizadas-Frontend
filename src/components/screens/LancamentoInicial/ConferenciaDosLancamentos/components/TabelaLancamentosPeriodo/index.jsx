@@ -121,7 +121,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
 
   const solicitacaoPermitidosCorrecaoCODAE = [
     "MEDICAO_APROVADA_PELA_DRE",
-    "MEDICAO_CORRIGIDA_PELA_UE"
+    "MEDICAO_CORRIGIDA_PARA_CODAE"
   ];
 
   const logPeriodoAprovado = periodoGrupo.logs.find(
@@ -801,7 +801,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               <div
                 className={`col-${
                   modoCorrecao
-                    ? 6
+                    ? 9
                     : [
                         "MEDICAO_APROVADA_PELA_CODAE",
                         "MEDICAO_CORRECAO_SOLICITADA_CODAE"
@@ -820,13 +820,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   <Botao
                     texto="Cancelar"
                     style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="col-3 mr-4"
+                    className="mr-4"
                     onClick={() => setShowModalCancelarSolicitacao(true)}
                   />
                   <Botao
                     texto="Salvar Solicitação de Correção para UE"
                     style={BUTTON_STYLE.GREEN}
-                    className="col-8"
                     disabled={
                       !values[
                         `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(

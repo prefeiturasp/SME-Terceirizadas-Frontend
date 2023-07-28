@@ -256,7 +256,10 @@ export default ({
               ehModal={true}
               disabled={
                 location.state &&
-                location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE"
+                [
+                  "MEDICAO_APROVADA_PELA_DRE",
+                  "MEDICAO_APROVADA_PELA_CODAE"
+                ].includes(location.state.status_periodo)
               }
               validate={maxLengthSemTags(250)}
             />
@@ -285,7 +288,11 @@ export default ({
               className="ml-3 float-left"
               texto="Excluir"
               disabled={
-                location.state && location.state.status === "Aprovado pela DRE"
+                location.state &&
+                [
+                  "MEDICAO_APROVADA_PELA_DRE",
+                  "MEDICAO_APROVADA_PELA_CODAE"
+                ].includes(location.state.status_periodo)
               }
               type={BUTTON_TYPE.BUTTON}
               icon={BUTTON_ICON.TRASH}

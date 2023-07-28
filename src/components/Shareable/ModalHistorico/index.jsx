@@ -23,6 +23,7 @@ const ModalHistorico = ({
   const statusValidosDownload = [
     "Enviado pela UE",
     "Corrigido para DRE",
+    "Corrigido para CODAE",
     "Terceirizada respondeu a análise"
   ];
 
@@ -267,15 +268,17 @@ const ModalHistorico = ({
                         }}
                       />
                     ) : (
-                      <Botao
-                        className="download-ocorrencias"
-                        style={BUTTON_STYLE.GREEN}
-                        texto="Download do formulário"
-                        onClick={() => {
-                          const urlArquivoPDF = getArquivoUrl(logSelecionado);
-                          medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
-                        }}
-                      />
+                      getArquivoUrl(logSelecionado) && (
+                        <Botao
+                          className="download-ocorrencias"
+                          style={BUTTON_STYLE.GREEN}
+                          texto="Download do formulário"
+                          onClick={() => {
+                            const urlArquivoPDF = getArquivoUrl(logSelecionado);
+                            medicaoInicialExportarOcorrenciasPDF(urlArquivoPDF);
+                          }}
+                        />
+                      )
                     )}
                   </article>
                 </footer>
