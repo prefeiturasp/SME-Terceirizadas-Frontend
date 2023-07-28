@@ -140,28 +140,6 @@ export const finalizarVinculoCODAEGestaoAlimentacaoTerceirizada = (
     }
   );
 
-export const criarEquipeAdministradoraGestaoProdutos = (
-  uuid,
-  registro_funcional
-) =>
-  fetchPost(
-    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/criar_equipe_administradora/`,
-    { registro_funcional }
-  );
-
-export const getEquipeAdministradoraGestaoProdutos = uuid =>
-  fetchGet(
-    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/get_equipe_administradora/`
-  );
-
-export const finalizarVinculoGestaoProdutos = (uuid, vinculo_uuid) =>
-  fetchPatch(
-    `${API_URL}/vinculos-codae-gestao-produtos/${uuid}/finalizar_vinculo/`,
-    {
-      vinculo_uuid
-    }
-  );
-
 export const criarEquipeAdministradoraSupervisaoNutricao = (
   uuid,
   registro_funcional
