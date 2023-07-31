@@ -17,7 +17,7 @@ import { statusEnum } from "constants/shared";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import { CODAE, ESCOLA, TERCEIRIZADA } from "configs/constants";
-import { ModalAutorizarAposQuestionamento } from "components/Shareable/ModalAutorizarAposQuestionamento";
+import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 class Relatorio extends Component {
