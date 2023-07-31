@@ -896,8 +896,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   />
                 </div>
               ) : (
-                exibirBotoesDRE ||
-                (exibirBotoesCODAE && (
+                (exibirBotoesDRE || exibirBotoesCODAE) && (
                   <div className="botoes col-4 px-0">
                     <Botao
                       texto="Solicitar Correção"
@@ -920,7 +919,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       }
                     />
                   </div>
-                ))
+                )
               )}
             </div>
             <hr />
