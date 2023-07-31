@@ -47,8 +47,6 @@ export const CorpoRelatorio = props => {
     solicitacaoKitLanche.prioridade !== "REGULAR" &&
     existeLogDeQuestionamentoDaCODAE(solicitacaoKitLanche.logs);
 
-  console.log("justificativaAprovacao", justificativaAprovacao);
-
   const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
     _solicitacoesSimilares[idxSolicitacaoSimilar][
@@ -192,31 +190,35 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <table className="table-report">
-        <tr>
-          <th>Nº de Alunos</th>
-          <th>Tempo Previsto de Passeio</th>
-          <th>Opção Desejada</th>
-          <th>Nº Total de Kits</th>
-        </tr>
-        <tr>
-          <td>{solicitacaoKitLanche.quantidade_alunos}</td>
-          <td>
-            {
-              solicitacaoKitLanche.solicitacao_kit_lanche
-                .tempo_passeio_explicacao
-            }
-          </td>
-          <td>
-            {stringSeparadaPorVirgulas(
-              solicitacaoKitLanche.solicitacao_kit_lanche.kits,
-              "nome"
-            )}
-          </td>
-          <td>
-            {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
-              solicitacaoKitLanche.quantidade_alunos}
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Nº de Alunos</th>
+            <th>Tempo Previsto de Passeio ggg</th>
+            <th>Opção Desejada</th>
+            <th>Nº Total de Kits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{solicitacaoKitLanche.quantidade_alunos}</td>
+            <td>
+              {
+                solicitacaoKitLanche.solicitacao_kit_lanche
+                  .tempo_passeio_explicacao
+              }
+            </td>
+            <td>
+              {stringSeparadaPorVirgulas(
+                solicitacaoKitLanche.solicitacao_kit_lanche.kits,
+                "nome"
+              )}
+            </td>
+            <td>
+              {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
+                solicitacaoKitLanche.quantidade_alunos}
+            </td>
+          </tr>
+        </tbody>
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (
         <Fragment>

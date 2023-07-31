@@ -3,7 +3,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import { ModalAutorizarAposQuestionamento } from "components/Shareable/ModalAutorizarAposQuestionamento";
+import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
 import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";

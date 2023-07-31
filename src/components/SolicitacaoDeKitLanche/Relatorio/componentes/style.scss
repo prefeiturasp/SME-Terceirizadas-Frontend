@@ -9,8 +9,12 @@
 .green {
   color: $green;
 }
+table.table-report tbody tr td {
+  background-color: white;
+  color: #42474a;
+}
 
-.table-report-dieta-especial {
+.table-report {
   border-radius: 4px;
   border: 1px solid #e9eaea;
   margin: 0 0 2em 0;
