@@ -356,11 +356,17 @@ export const getRelatorioKitLancheCEMEI = async uuid => {
 };
 
 export const medicaoInicialExportarOcorrenciasPDF = async url => {
-  let extensao = url.split(".").pop();
   const { data } = await axios.get(`${url}`, {
     responseType: "blob"
   });
-  saveAs(data, `ocorrencias_medicao_inicial.${extensao}`);
+  saveAs(data, "ocorrencias_medicao_inicial.pdf");
+};
+
+export const medicaoInicialExportarOcorrenciasXLSX = async url => {
+  const { data } = await axios.get(`${url}`, {
+    responseType: "blob"
+  });
+  saveAs(data, "ocorrencias_medicao_inicial.xlsx");
 };
 
 export const documentoAnaliseSensorial = async url => {
