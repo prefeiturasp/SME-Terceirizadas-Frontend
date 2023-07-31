@@ -119,7 +119,8 @@ export default ({
                         />
                         {[
                           "MEDICAO_CORRECAO_SOLICITADA",
-                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                          "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+                          "MEDICAO_CORRIGIDA_PARA_CODAE"
                         ].includes(
                           solicitacaoMedicaoInicial.ocorrencia.status
                         ) && (
