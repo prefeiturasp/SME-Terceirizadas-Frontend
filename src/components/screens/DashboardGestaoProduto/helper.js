@@ -83,7 +83,8 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
     usuarioEhCODAEGestaoProduto() &&
-    item.status === "CODAE_HOMOLOGADO" &&
+    (item.status === "CODAE_HOMOLOGADO" ||
+      item.status === "CODAE_AUTORIZOU_RECLAMACAO") &&
     item.data_edital_suspenso_mais_recente
   ) {
     return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${

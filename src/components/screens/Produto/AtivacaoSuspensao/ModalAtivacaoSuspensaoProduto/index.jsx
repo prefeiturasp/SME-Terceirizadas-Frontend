@@ -57,6 +57,22 @@ const ModalAtivacaoSuspensaoProduto = ({
     const endpoint = acao === "ativação" ? ativarProduto : suspenderProduto;
     const response = await endpoint(idHomologacao, values);
     if (response.status === HTTP_STATUS.OK) {
+      if (
+        values.editais_para_suspensao_ativacao &&
+        values.editais_para_suspensao_ativacao.length === editais.length
+      ) {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (acao === "ativação") {
+          searchParams.delete("card_suspensos");
+        } else {
+          searchParams.set("card_suspensos", true);
+        }
+        const newRelativePathQuery =
+          window.location.pathname + "?" + searchParams.toString();
+        history.pushState(null, "", newRelativePathQuery);
+        toastSuccess(`${capitalizar(acao)} de produto enviada com sucesso.`);
+        window.location.reload();
+      }
       if (ehSuspensaoFluxoAlteracaoDados) {
         const searchParams = new URLSearchParams(window.location.search);
         searchParams.set("uuid", response.data.uuid);

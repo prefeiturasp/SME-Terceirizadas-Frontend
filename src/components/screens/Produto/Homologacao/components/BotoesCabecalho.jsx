@@ -32,9 +32,11 @@ export const BotoesCabecalho = ({
   const [acao, setAcao] = useState();
 
   const checaStatus = status => {
-    return ["CODAE_HOMOLOGADO", "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"].includes(
-      status
-    );
+    return [
+      "CODAE_HOMOLOGADO",
+      "CODAE_AUTORIZOU_RECLAMACAO",
+      "ESCOLA_OU_NUTRICIONISTA_RECLAMOU"
+    ].includes(status);
   };
 
   const getHistorico = () => {
