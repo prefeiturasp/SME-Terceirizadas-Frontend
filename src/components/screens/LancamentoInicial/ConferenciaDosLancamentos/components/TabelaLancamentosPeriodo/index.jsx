@@ -435,6 +435,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     });
   };
 
+  const algumCheckboxMarcado = () => {
+    const listaChaves = Object.keys(values).filter(key =>
+      key.includes(`ckbox_dias_semana__`)
+    );
+    const resultado = listaChaves.some(chave => values[chave] === true);
+    return resultado;
+  };
+
   const salvarCorrecao = async uuidMedicaoPeriodoGrupo => {
     let uuidsValoresMedicaoParaCorrecao = [];
     Object.keys(valoresParaCorrecao).forEach(key => {
@@ -851,7 +859,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               <div
                 className={`col-${
                   modoCorrecao
-                    ? 9
+                    ? 7
                     : [
                         "MEDICAO_APROVADA_PELA_CODAE",
                         "MEDICAO_CORRECAO_SOLICITADA_CODAE"
@@ -863,28 +871,28 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 <p className="section-title-conf-lancamentos periodo mb-0">
                   {periodoGrupo.nome_periodo_grupo}
                 </p>
-                <hr className="my-0" />
               </div>
               {modoCorrecao ? (
-                <div className="botoes col-6 px-0">
-                  <Botao
-                    texto="Cancelar"
-                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="mr-4"
-                    onClick={() => setShowModalCancelarSolicitacao(true)}
-                  />
+                <div className="col-5 px-0">
                   <Botao
                     texto="Salvar Solicitação de Correção para UE"
                     style={BUTTON_STYLE.GREEN}
+                    className="float-right"
                     disabled={
                       !values[
                         `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
                           0,
                           5
                         )}`
-                      ]
+                      ] || !algumCheckboxMarcado()
                     }
                     onClick={() => setShowModalSalvarSolicitacao(true)}
+                  />
+                  <Botao
+                    texto="Cancelar"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="mr-3 float-right"
+                    onClick={() => setShowModalCancelarSolicitacao(true)}
                   />
                 </div>
               ) : (
@@ -915,6 +923,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 ))
               )}
             </div>
+            <hr />
           </div>
           <ModalAprovarPeriodo
             showModal={showModalAprovarPeriodo}

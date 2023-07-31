@@ -561,7 +561,8 @@ export const ConferenciaDosLancamentos = () => {
                                         );
                                         usuarioEhMedicao() &&
                                           medicaoInicialExportarOcorrenciasPDF(
-                                            ocorrencia.ultimo_arquivo_excel
+                                            ocorrencia.ultimo_arquivo_excel,
+                                            ".xls"
                                           );
                                       }}
                                     >
