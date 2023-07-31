@@ -54,7 +54,7 @@ import {
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import {
   drePedeCorrecaMedicao,
-  codaePedeCorrecaMedicao
+  codaePedeCorrecaPeriodo
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
@@ -108,32 +108,72 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     false
   );
 
-  const statusPermitidosParaAprovacao = [
-    "MEDICAO_ENVIADA_PELA_UE",
-    "MEDICAO_CORRIGIDA_PELA_UE",
-    "MEDICAO_CORRECAO_SOLICITADA"
-  ];
+  const exibirBotoesDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ["MEDICAO_ENVIADA_PELA_UE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+      solicitacao.status
+    );
 
-  const solicitacaoPermitidosCorrecao = [
-    "MEDICAO_ENVIADA_PELA_UE",
-    "MEDICAO_CORRIGIDA_PELA_UE"
-  ];
+  const exibirBotoesCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PARA_CODAE"].includes(
+      solicitacao.status
+    );
 
-  const solicitacaoPermitidosCorrecaoCODAE = [
-    "MEDICAO_APROVADA_PELA_DRE",
-    "MEDICAO_CORRIGIDA_PARA_CODAE"
-  ];
+  const statusPermitidosAprovacaoDRE =
+    usuarioEhDRE() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRIGIDA_PELA_UE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosAprovacaoCODAE =
+    usuarioEhMedicao() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosCorrecaoDRE =
+    usuarioEhDRE() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_APROVADA_PELA_DRE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosCorrecaoCODAE =
+    usuarioEhMedicao() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+      "MEDICAO_APROVADA_PELA_CODAE"
+    ].includes(periodoGrupo.status);
 
   const logPeriodoAprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Aprovado pela DRE"
   );
 
-  const logPeriodoReprovadoCODAE = periodoGrupo.logs.find(
-    log => log.status_evento_explicacao === "Correção solicitada pela CODAE"
+  const logPeriodoAprovadoCODAE = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Aprovado por CODAE"
   );
 
   const logPeriodoReprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Correção solicitada"
+  );
+
+  const logPeriodoReprovadoCODAE = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Correção solicitada pela CODAE"
   );
 
   useEffect(() => {
@@ -431,7 +471,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     };
     const response = usuarioEhDRE()
       ? await drePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload)
-      : await codaePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload);
+      : await codaePedeCorrecaPeriodo(uuidMedicaoPeriodoGrupo, payload);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação de correção salva com sucesso");
     } else {
@@ -747,6 +787,16 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               </div>
             )}
+
+            {usuarioEhMedicao() && logPeriodoAprovadoCODAE && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  aprovado em ${logPeriodoAprovadoCODAE.criado_em}`}</p>
+                </div>
+              </div>
+            )}
             {usuarioEhMedicao() && logPeriodoReprovadoCODAE && (
               <div className="row">
                 <div className="col-12">
@@ -838,10 +888,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   />
                 </div>
               ) : (
-                ![
-                  "MEDICAO_APROVADA_PELA_CODAE",
-                  "MEDICAO_CORRECAO_SOLICITADA_CODAE"
-                ].includes(solicitacao.status) && (
+                exibirBotoesDRE ||
+                (exibirBotoesCODAE && (
                   <div className="botoes col-4 px-0">
                     <Botao
                       texto="Solicitar Correção"
@@ -849,14 +897,8 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       className="col-6 mr-3"
                       onClick={() => setModoCorrecao(true)}
                       disabled={
-                        (usuarioEhDRE() &&
-                          !solicitacaoPermitidosCorrecao.includes(
-                            solicitacao.status
-                          )) ||
-                        (usuarioEhMedicao() &&
-                          !solicitacaoPermitidosCorrecaoCODAE.includes(
-                            solicitacao.status
-                          ))
+                        statusPermitidosCorrecaoDRE ||
+                        statusPermitidosCorrecaoCODAE
                       }
                     />
                     <Botao
@@ -865,16 +907,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                       className="col-5"
                       onClick={() => setShowModalAprovarPeriodo(true)}
                       disabled={
-                        !statusPermitidosParaAprovacao.includes(
-                          periodoGrupo.status
-                        ) ||
-                        !solicitacaoPermitidosCorrecao.includes(
-                          solicitacao.status
-                        )
+                        statusPermitidosAprovacaoDRE ||
+                        statusPermitidosAprovacaoCODAE
                       }
                     />
                   </div>
-                )
+                ))
               )}
             </div>
           </div>
