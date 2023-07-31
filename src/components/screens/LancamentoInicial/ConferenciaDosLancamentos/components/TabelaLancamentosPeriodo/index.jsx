@@ -54,7 +54,7 @@ import {
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import {
   drePedeCorrecaMedicao,
-  codaePedeCorrecaMedicao
+  codaePedeCorrecaPeriodo
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
@@ -471,7 +471,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     };
     const response = usuarioEhDRE()
       ? await drePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload)
-      : await codaePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload);
+      : await codaePedeCorrecaPeriodo(uuidMedicaoPeriodoGrupo, payload);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação de correção salva com sucesso");
     } else {
