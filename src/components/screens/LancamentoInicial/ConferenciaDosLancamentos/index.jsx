@@ -28,7 +28,7 @@ import {
   dreSolicitaCorrecaoUE,
   codaeAprovaSolicitacaoMedicao,
   codaeSolicitaCorrecaoUE,
-  codaeAprovaMedicao
+  codaeAprovaPeriodo
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -371,7 +371,7 @@ export const ConferenciaDosLancamentos = () => {
     setLoading(true);
     const response = usuarioEhDRE()
       ? await dreAprovaMedicao(periodoGrupo.uuid_medicao_periodo_grupo)
-      : await codaeAprovaMedicao(periodoGrupo.uuid_medicao_periodo_grupo);
+      : await codaeAprovaPeriodo(periodoGrupo.uuid_medicao_periodo_grupo);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess(`Período ${nomePeridoFormatado} aprovado com sucesso!`);
     } else {

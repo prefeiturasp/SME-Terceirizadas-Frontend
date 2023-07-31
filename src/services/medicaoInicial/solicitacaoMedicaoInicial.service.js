@@ -80,15 +80,14 @@ export const dreAprovaMedicao = async uuid => {
   }
 };
 
-export const codaeAprovaMedicao = async uuid => {
-  const url = `medicao-inicial/medicao/${uuid}/codae-aprova-medicao/`;
+export const codaeAprovaPeriodo = async uuid => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-aprova-periodo/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;
   }
 };
-codaeAprovaMedicao;
 
 export const drePedeCorrecaMedicao = async (uuid, params) => {
   const url = `medicao-inicial/medicao/${uuid}/dre-pede-correcao-medicao/`;
@@ -99,8 +98,8 @@ export const drePedeCorrecaMedicao = async (uuid, params) => {
   }
 };
 
-export const codaePedeCorrecaMedicao = async (uuid, params) => {
-  const url = `medicao-inicial/medicao/${uuid}/codae-pede-correcao-medicao/`;
+export const codaePedeCorrecaPeriodo = async (uuid, params) => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-pede-correcao-periodo/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
