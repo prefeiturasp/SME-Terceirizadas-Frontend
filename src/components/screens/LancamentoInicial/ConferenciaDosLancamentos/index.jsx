@@ -17,6 +17,7 @@ import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
 import {
   medicaoInicialExportarOcorrenciasPDF,
+  medicaoInicialExportarOcorrenciasXLSX,
   relatorioMedicaoInicialPDF
 } from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
@@ -560,9 +561,8 @@ export const ConferenciaDosLancamentos = () => {
                                           ocorrencia.ultimo_arquivo
                                         );
                                         usuarioEhMedicao() &&
-                                          medicaoInicialExportarOcorrenciasPDF(
-                                            ocorrencia.ultimo_arquivo_excel,
-                                            ".xls"
+                                          medicaoInicialExportarOcorrenciasXLSX(
+                                            ocorrencia.ultimo_arquivo_excel
                                           );
                                       }}
                                     >
