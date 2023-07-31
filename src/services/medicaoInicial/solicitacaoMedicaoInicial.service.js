@@ -80,6 +80,16 @@ export const dreAprovaMedicao = async uuid => {
   }
 };
 
+export const codaeAprovaMedicao = async uuid => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-aprova-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+codaeAprovaMedicao;
+
 export const drePedeCorrecaMedicao = async (uuid, params) => {
   const url = `medicao-inicial/medicao/${uuid}/dre-pede-correcao-medicao/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);

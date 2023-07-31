@@ -27,7 +27,8 @@ import {
   dreAprovaSolicitacaoMedicao,
   dreSolicitaCorrecaoUE,
   codaeAprovaSolicitacaoMedicao,
-  codaeSolicitaCorrecaoUE
+  codaeSolicitaCorrecaoUE,
+  codaeAprovaMedicao
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import {
   MEDICAO_STATUS_DE_PROGRESSO,
@@ -121,6 +122,7 @@ export const ConferenciaDosLancamentos = () => {
   const desabilitarSolicitarCorrecaoOcorrenciaDRE =
     usuarioEhDRE() &&
     solicitacao &&
+    solicitacao.ocorrencia &&
     ![
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRECAO_SOLICITADA",
@@ -131,6 +133,7 @@ export const ConferenciaDosLancamentos = () => {
   const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
     usuarioEhMedicao() &&
     solicitacao &&
+    solicitacao.ocorrencia &&
     ![
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -141,6 +144,7 @@ export const ConferenciaDosLancamentos = () => {
   const desabilitarAprovarOcorrenciaCODAE =
     usuarioEhMedicao() &&
     solicitacao &&
+    solicitacao.ocorrencia &&
     ![
       "MEDICAO_APROVADA_PELA_DRE",
       "MEDICAO_CORRECAO_SOLICITADA_CODAE",
@@ -150,6 +154,7 @@ export const ConferenciaDosLancamentos = () => {
   const desabilitarAprovarOcorrenciaDRE =
     usuarioEhDRE() &&
     solicitacao &&
+    solicitacao.ocorrencia &&
     ![
       "MEDICAO_ENVIADA_PELA_UE",
       "MEDICAO_CORRIGIDA_PELA_UE",
@@ -364,9 +369,9 @@ export const ConferenciaDosLancamentos = () => {
 
   const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
     setLoading(true);
-    const response = await dreAprovaMedicao(
-      periodoGrupo.uuid_medicao_periodo_grupo
-    );
+    const response = usuarioEhDRE()
+      ? await dreAprovaMedicao(periodoGrupo.uuid_medicao_periodo_grupo)
+      : await codaeAprovaMedicao(periodoGrupo.uuid_medicao_periodo_grupo);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess(`Período ${nomePeridoFormatado} aprovado com sucesso!`);
     } else {
@@ -550,11 +555,15 @@ export const ConferenciaDosLancamentos = () => {
                                   {ocorrencia && ocorrenciaExpandida ? (
                                     <span
                                       className="download-ocorrencias mr-0"
-                                      onClick={() =>
+                                      onClick={() => {
                                         medicaoInicialExportarOcorrenciasPDF(
                                           ocorrencia.ultimo_arquivo
-                                        )
-                                      }
+                                        );
+                                        usuarioEhMedicao() &&
+                                          medicaoInicialExportarOcorrenciasPDF(
+                                            ocorrencia.ultimo_arquivo_excel
+                                          );
+                                      }}
                                     >
                                       <i
                                         className={`${
