@@ -20,7 +20,7 @@ import Breadcrumb from "../../components/Shareable/Breadcrumb";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalCODAEAutoriza } from "components/Shareable/ModalCODAEAutoriza";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacaoReduxForm";
-import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import ModalNegarSolicitacao from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import Page from "../../components/Shareable/Page/Page";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { Modal } from "react-bootstrap";
-import { Field } from "redux-form";
+import { Field, FormSpy } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
 import Botao from "components/Shareable/Botao";
 import {
@@ -10,73 +10,81 @@ import {
 import { TextArea } from "components/Shareable/TextArea/TextArea";
 import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
 
-export class ModalAprovarSolicitacaoKitLanche extends Component {
-  async autorizarSolicitacao(uuid) {
-    const resp = await this.props.endpoint(
+const ModalAprovarSolicitacaoKitLanche = ({
+  showModal,
+  closeModal,
+  uuid,
+  endpoint,
+  loadSolicitacao,
+  tipoSolicitacao
+}) => {
+  const autorizarSolicitacao = async (uuid, justificativa) => {
+    const resp = await endpoint(
       uuid,
       {
         justificativa:
-          this.props.justificativa && this.props.justificativa.length > 0
-            ? this.props.justificativa
+          justificativa && justificativa.length > 0
+            ? justificativa
             : "Sem observações por parte da CODAE"
       },
-      this.props.tipoSolicitacao
+      tipoSolicitacao
     );
     if (resp.status === HTTP_STATUS.OK) {
-      this.props.loadSolicitacao();
+      closeModal();
       toastSuccess("Solicitação autorizada com sucesso!");
+      loadSolicitacao();
     } else {
-      toastError(resp.detail);
+      toastError(resp?.detail);
     }
-    this.props.closeModal();
-  }
+  };
 
-  render() {
-    const { showModal, closeModal, justificativa, uuid } = this.props;
-    return (
-      <Modal
-        dialogClassName="modal-50w"
-        show={showModal}
-        onHide={() => closeModal()}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Deseja autorizar a solicitação?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="row">
-            <div className="col-12">
-              <Field
-                component={TextArea}
-                label="Informações da CODAE"
-                name="justificativa"
-                placeholder="Qual a sua observação para essa decisão?"
-                maxLength={1500}
-              />
-            </div>
+  return (
+    <Modal dialogClassName="modal-50w" show={showModal} onHide={closeModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Deseja autorizar a solicitação?</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <div className="row">
+          <div className="col-12">
+            <Field
+              component={TextArea}
+              label="Informações da CODAE"
+              name="justificativa"
+              placeholder="Qual a sua observação para essa decisão?"
+              maxLength={1500}
+            />
           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="row">
-            <div className="col-12">
-              <Botao
-                texto="Não"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => closeModal()}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                className="ml-3"
-              />
-              <Botao
-                texto="Sim"
-                type={BUTTON_TYPE.BUTTON}
-                onClick={() => this.autorizarSolicitacao(uuid)}
-                disabled={justificativa && justificativa.length >= 1500}
-                style={BUTTON_STYLE.GREEN}
-                className="ml-3"
-              />
-            </div>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <div className="row">
+          <div className="col-12">
+            <Botao
+              texto="Não"
+              type={BUTTON_TYPE.BUTTON}
+              onClick={closeModal}
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              className="ml-3"
+            />
+            <FormSpy subscription={{ form: true }}>
+              {({ form }) => (
+                <Botao
+                  texto="Sim"
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={() => {
+                    const values = form.getState().values;
+                    autorizarSolicitacao(uuid, values.justificativa);
+                  }}
+                  style={BUTTON_STYLE.GREEN}
+                  className="ml-3"
+                />
+              )}
+            </FormSpy>
           </div>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-}
+        </div>
+      </Modal.Footer>
+    </Modal>
+  );
+};
+
+export default ModalAprovarSolicitacaoKitLanche;
