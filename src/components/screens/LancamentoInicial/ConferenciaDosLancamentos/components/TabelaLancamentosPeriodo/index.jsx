@@ -165,7 +165,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
   );
 
   const logPeriodoAprovadoCODAE = periodoGrupo.logs.find(
-    log => log.status_evento_explicacao === "Aprovado por CODAE"
+    log => log.status_evento_explicacao === "Aprovado pela CODAE"
   );
 
   const logPeriodoReprovado = periodoGrupo.logs.find(
