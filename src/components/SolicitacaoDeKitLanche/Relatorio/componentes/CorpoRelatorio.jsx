@@ -193,7 +193,7 @@ export const CorpoRelatorio = props => {
         <thead>
           <tr>
             <th>Nº de Alunos</th>
-            <th>Tempo Previsto de Passeio ggg</th>
+            <th>Tempo Previsto de Passeio</th>
             <th>Opção Desejada</th>
             <th>Nº Total de Kits</th>
           </tr>

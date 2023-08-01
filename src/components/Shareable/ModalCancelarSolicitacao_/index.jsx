@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
 import { Modal } from "react-bootstrap";
 import { Field } from "react-final-form";
@@ -11,6 +11,7 @@ import { textAreaRequired } from "../../../helpers/fieldValidators";
 import { mensagemCancelamento } from "../../../helpers/utilities";
 import { TIPOS_SOLICITACAO_LABEL } from "constants/shared";
 import { DRE } from "configs/constants";
+import { OnChange } from "react-final-form-listeners";
 
 const ModalCancelarSolicitacao = ({
   showModal,
@@ -20,15 +21,10 @@ const ModalCancelarSolicitacao = ({
   visao,
   endpoint,
   tipoSolicitacao,
-  loadSolicitacao,
-  justificativaProp
+  loadSolicitacao
 }) => {
   const [justificativa, setJustificativa] = useState("");
   const [escolasSelecionadas, setEscolasSelecionadas] = useState([]);
-
-  useEffect(() => {
-    setJustificativa(justificativaProp);
-  }, [justificativaProp]);
 
   const optionsMultiselect = () =>
     solicitacao.escolas_quantidades
@@ -135,6 +131,9 @@ const ModalCancelarSolicitacao = ({
               name="justificativa"
               validate={textAreaRequired}
             />
+            <OnChange name="justificativa">
+              {value => setJustificativa(value)}
+            </OnChange>
           </div>
         </div>
       </Modal.Body>
