@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { Field } from "redux-form";
+import { Field } from "react-final-form";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import CKEditorField from "../CKEditorField";

@@ -13,8 +13,8 @@ import {
   CODAEquestionaSolicitacaoUnificada,
   cancelaKitLancheUnificadoEscola
 } from "../../services/solicitacaoUnificada.service";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
-import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import ModalCancelarSolicitacao from "../../components/Shareable/ModalCancelarSolicitacao_";
+import ModalNegarSolicitacao from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import { ModalCODAEQuestionaFinalForm } from "components/Shareable/ModalCODAEQuestionaFinalForm";
 

@@ -71,7 +71,6 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
-import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
@@ -202,6 +201,7 @@ import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSoli
 import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
@@ -234,6 +234,10 @@ import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
 import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
 import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
+import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
+import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 
 const routesConfig = [
   {
@@ -716,7 +720,7 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
     exact: true,
@@ -724,11 +728,27 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
+    }/${constants.DETALHAR}`,
+    component: DetalharCadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_LABORATORIO
     }/${constants.EDITAR}`,
     component: EditarCadastroLaboratorioPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidade()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EMBALAGENS_CADASTRADAS
+    }`,
+    component: EmbalagensCadastradasPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -740,9 +760,9 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGENS_CADASTRADAS
-    }`,
-    component: EmbalagensCadastradasPage,
+      constants.CADASTRO_EMBALAGEM
+    }/${constants.EDITAR}`,
+    component: EditarCadastroEmbalagemPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
@@ -781,9 +801,25 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.CADASTRO_EMBALAGEM
-    }/${constants.EDITAR}`,
-    component: EditarCadastroEmbalagemPage,
+      constants.UNIDADES_MEDIDA
+    }`,
+    component: UnidadesMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_UNIDADE_MEDIDA
+    }`,
+    component: CadastroUnidadeMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDICAO_UNIDADE_MEDIDA
+    }`,
+    component: EditarUnidadesMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
@@ -1113,15 +1149,6 @@ const routesConfig = [
     component: RelatorioProduto,
     exact: true,
     tipoUsuario: validaPerfilEscolaMistaParceira()
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${
-      constants.RELATORIO_SITUACAO_PRODUTO
-    }`,
-    component: RelatorioSituacaoProduto,
-    exact: true,
-    tipoUsuario:
-      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1575,6 +1602,15 @@ const routesConfig = [
       usuarioEhMedicao() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.DETALHAMENTO_DO_LANCAMENTO
+    }`,
+    component: DetalhamentoDoLancamentoPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${

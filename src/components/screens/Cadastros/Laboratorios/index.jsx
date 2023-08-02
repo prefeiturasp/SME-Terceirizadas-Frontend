@@ -1,0 +1,97 @@
+import React, { useEffect, useState } from "react";
+import { Pagination, Spin } from "antd";
+import Filtros from "./components/Filtros";
+import ListagemLaboratorios from "./components/ListagemLaboratorios";
+import { gerarParametrosConsulta } from "helpers/utilities";
+import {
+  getLaboratorios,
+  getListaLaboratorios
+} from "services/laboratorio.service";
+
+export default () => {
+  const [carregando, setCarregando] = useState(false);
+  const [resultado, setResultado] = useState(undefined);
+  const [nomesLaboratorios, setNomesLaboratorios] = useState([]);
+  const [cnpjsLaboratorios, setCnpjsLaboratorios] = useState([]);
+  const [filtros, setFiltros] = useState();
+  const [page, setPage] = useState();
+  const [total, setTotal] = useState();
+
+  useEffect(() => {
+    buscaDadosAutoComplete();
+  }, []);
+
+  useEffect(() => {
+    if (filtros) {
+      buscaResultado(1);
+      setPage(1);
+    }
+  }, [filtros]);
+
+  const buscaDadosAutoComplete = async () => {
+    const response = await getListaLaboratorios();
+    const nomes = response.data.results.map(e => e.nome);
+    const cnpjs = response.data.results.map(e => e.cnpj);
+    setNomesLaboratorios(nomes);
+    setCnpjsLaboratorios(cnpjs);
+  };
+
+  const buscaResultado = async page => {
+    setCarregando(true);
+
+    const params = gerarParametrosConsulta({ page: page, ...filtros });
+    const response = await getLaboratorios(params);
+    if (response.data.count) {
+      setResultado(response.data.results);
+      setTotal(response.data.count);
+    } else {
+      setTotal(response.data.count);
+      setResultado([]);
+    }
+    setCarregando(false);
+  };
+
+  const nextPage = page => {
+    buscaResultado(page);
+    setPage(page);
+  };
+
+  return (
+    <Spin tip="Carregando..." spinning={carregando}>
+      <div className="card mt-3 card-laboratorios">
+        <div className="card-body">
+          <Filtros
+            setFiltros={setFiltros}
+            nomesLaboratorios={nomesLaboratorios}
+            cnpjsLaboratorios={cnpjsLaboratorios}
+            setTotal={setTotal}
+            setResultado={setResultado}
+          />
+          {resultado && (
+            <>
+              <hr />
+              <ListagemLaboratorios laboratorios={resultado} />
+              <div className="row">
+                <div className="col">
+                  <Pagination
+                    current={page}
+                    total={total}
+                    showSizeChanger={false}
+                    onChange={nextPage}
+                    pageSize={10}
+                    className="float-left mb-2"
+                  />
+                </div>
+              </div>
+              {total === 0 && (
+                <div className="text-center mt-5">
+                  Nenhum resultado encontrado
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
+    </Spin>
+  );
+};

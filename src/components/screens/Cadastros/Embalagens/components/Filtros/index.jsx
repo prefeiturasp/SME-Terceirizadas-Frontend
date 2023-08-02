@@ -15,6 +15,7 @@ import {
   CONFIGURACOES,
   CADASTRO_EMBALAGEM
 } from "configs/constants";
+import { getListaFiltradaAutoComplete } from "helpers/autoComplete";
 
 const FORM_NAME = "embalagens";
 
@@ -32,22 +33,6 @@ export default ({
     setFiltros({ ...filtros });
   };
 
-  const getNomesEmbalagensFiltradas = nome => {
-    if (nome) {
-      const reg = new RegExp(nome, "iu");
-      return nomesEmbalagens.filter(a => reg.test(a));
-    }
-    return [];
-  };
-
-  const getabreviacaoEmbalagensFiltradas = abreviacao => {
-    if (abreviacao) {
-      const reg = new RegExp(abreviacao, "iu");
-      return abreviacaoEmbalagens.filter(a => reg.test(a));
-    }
-    return [];
-  };
-
   return (
     <div className="filtros-embalagens">
       <Form
@@ -60,7 +45,10 @@ export default ({
               <div className="col-6">
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getNomesEmbalagensFiltradas(values.nome)}
+                  dataSource={getListaFiltradaAutoComplete(
+                    nomesEmbalagens,
+                    values.nome
+                  )}
                   label="Nome da Embalagem"
                   name="nome"
                   placeholder="Digite o nome da Embalagem"
@@ -71,7 +59,8 @@ export default ({
               <div className="col-3">
                 <Field
                   component={AutoCompleteField}
-                  dataSource={getabreviacaoEmbalagensFiltradas(
+                  dataSource={getListaFiltradaAutoComplete(
+                    abreviacaoEmbalagens,
                     values.abreviacao
                   )}
                   label="Abreviação"

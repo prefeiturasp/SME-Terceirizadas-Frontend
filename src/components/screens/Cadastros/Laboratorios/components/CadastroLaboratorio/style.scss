@@ -1,4 +1,4 @@
-@import "../../../../styles/variables.scss";
+@import "../../../../../../styles/variables.scss";
 
 .card-cadastro-laboratorio {
   .cadastro-laboratorio {
@@ -11,8 +11,6 @@
     }
 
     hr {
-      margin-top: -0.5rem;
-
       &:last-of-type {
         margin-top: 1rem;
       }

@@ -42,7 +42,7 @@ import {
   initialStateWeekColumns,
   PERIODO_STATUS_DE_PROGRESSO
 } from "../../constants";
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
 import { ModalAprovarPeriodo } from "../ModalAprovarPeriodo";
 import { ModalCancelarCorrecao } from "../ModalCancelarCorrecao";
 import { ModalSalvarCorrecao } from "../ModalSalvarCorrecao";
@@ -52,7 +52,10 @@ import {
   getPeriodosInclusaoContinua,
   getValoresPeriodosLancamentos
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { drePedeCorrecaMedicao } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import {
+  drePedeCorrecaMedicao,
+  codaePedeCorrecaPeriodo
+} from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 
 export const TabelaLancamentosPeriodo = ({ ...props }) => {
   const {
@@ -105,23 +108,72 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     false
   );
 
-  const statusPermitidosParaAprovacao = [
-    "MEDICAO_ENVIADA_PELA_UE",
-    "MEDICAO_CORRIGIDA_PELA_UE",
-    "MEDICAO_CORRECAO_SOLICITADA"
-  ];
+  const exibirBotoesDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ["MEDICAO_ENVIADA_PELA_UE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+      solicitacao.status
+    );
 
-  const solicitacaoPermitidosCorrecao = [
-    "MEDICAO_ENVIADA_PELA_UE",
-    "MEDICAO_CORRIGIDA_PELA_UE"
-  ];
+  const exibirBotoesCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PARA_CODAE"].includes(
+      solicitacao.status
+    );
+
+  const statusPermitidosAprovacaoDRE =
+    usuarioEhDRE() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRIGIDA_PELA_UE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosAprovacaoCODAE =
+    usuarioEhMedicao() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosCorrecaoDRE =
+    usuarioEhDRE() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_APROVADA_PELA_DRE"
+    ].includes(periodoGrupo.status);
+
+  const statusPermitidosCorrecaoCODAE =
+    usuarioEhMedicao() &&
+    periodoGrupo &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE",
+      "MEDICAO_APROVADA_PELA_CODAE"
+    ].includes(periodoGrupo.status);
 
   const logPeriodoAprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Aprovado pela DRE"
   );
 
+  const logPeriodoAprovadoCODAE = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Aprovado pela CODAE"
+  );
+
   const logPeriodoReprovado = periodoGrupo.logs.find(
     log => log.status_evento_explicacao === "Correção solicitada"
+  );
+
+  const logPeriodoReprovadoCODAE = periodoGrupo.logs.find(
+    log => log.status_evento_explicacao === "Correção solicitada pela CODAE"
   );
 
   useEffect(() => {
@@ -383,6 +435,14 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
     });
   };
 
+  const algumCheckboxMarcado = () => {
+    const listaChaves = Object.keys(values).filter(key =>
+      key.includes(`ckbox_dias_semana__`)
+    );
+    const resultado = listaChaves.some(chave => values[chave] === true);
+    return resultado;
+  };
+
   const salvarCorrecao = async uuidMedicaoPeriodoGrupo => {
     let uuidsValoresMedicaoParaCorrecao = [];
     Object.keys(valoresParaCorrecao).forEach(key => {
@@ -417,11 +477,9 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
       uuids_valores_medicao_para_correcao: uuidsValoresMedicaoParaCorrecao,
       justificativa: descricao_correcao
     };
-
-    const response = await drePedeCorrecaMedicao(
-      uuidMedicaoPeriodoGrupo,
-      payload
-    );
+    const response = usuarioEhDRE()
+      ? await drePedeCorrecaMedicao(uuidMedicaoPeriodoGrupo, payload)
+      : await codaePedeCorrecaPeriodo(uuidMedicaoPeriodoGrupo, payload);
     if (response.status === HTTP_STATUS.OK) {
       toastSuccess("Solicitação de correção salva com sucesso");
     } else {
@@ -511,7 +569,12 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
         <div className="content-section-acompanhamento-lancamento-right">
           <div
             className={`acompanhamento-status-lancamento mr-3 ${
-              periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ? "red" : ""
+              [
+                "MEDICAO_CORRECAO_SOLICITADA",
+                "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+              ].includes(periodoGrupo.status)
+                ? "red"
+                : ""
             }`}
           >
             {PERIODO_STATUS_DE_PROGRESSO[periodoGrupo.status] &&
@@ -723,7 +786,7 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                   </section>
                 </div>
               ))}
-            {logPeriodoAprovado && (
+            {usuarioEhDRE() && logPeriodoAprovado && (
               <div className="row">
                 <div className="col-12">
                   <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
@@ -732,7 +795,28 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
                 </div>
               </div>
             )}
-            {logPeriodoReprovado && (
+
+            {usuarioEhMedicao() && logPeriodoAprovadoCODAE && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  aprovado em ${logPeriodoAprovadoCODAE.criado_em}`}</p>
+                </div>
+              </div>
+            )}
+            {usuarioEhMedicao() && logPeriodoReprovadoCODAE && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
+                    periodoGrupo.nome_periodo_grupo
+                  )}  devolvido para ajustes pela CODAE em ${
+                    logPeriodoReprovadoCODAE.criado_em
+                  }`}</p>
+                </div>
+              </div>
+            )}
+            {usuarioEhDRE() && logPeriodoReprovado && (
               <div className="row">
                 <div className="col-12">
                   <p className="periodo-aprovado text-rigth">{`Período ${formatarNomePeriodo(
@@ -772,65 +856,73 @@ export const TabelaLancamentosPeriodo = ({ ...props }) => {
               </>
             )}
             <div className="periodo-final-tabela-lancamento mb-4">
-              <div className={`col-${modoCorrecao ? 6 : 8} pl-0 pr-4`}>
+              <div
+                className={`col-${
+                  modoCorrecao
+                    ? 7
+                    : [
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      ].includes(solicitacao.status)
+                    ? 12
+                    : 8
+                } pl-0 pr-4`}
+              >
                 <p className="section-title-conf-lancamentos periodo mb-0">
                   {periodoGrupo.nome_periodo_grupo}
                 </p>
-                <hr className="my-0" />
               </div>
               {modoCorrecao ? (
-                <div className="botoes col-6 px-0">
-                  <Botao
-                    texto="Cancelar"
-                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="col-3 mr-4"
-                    onClick={() => setShowModalCancelarSolicitacao(true)}
-                  />
+                <div className="col-5 px-0">
                   <Botao
                     texto="Salvar Solicitação de Correção para UE"
                     style={BUTTON_STYLE.GREEN}
-                    className="col-8"
+                    className="float-right"
                     disabled={
                       !values[
                         `descricao_correcao__periodo_grupo_${periodoGrupo.uuid_medicao_periodo_grupo.slice(
                           0,
                           5
                         )}`
-                      ]
+                      ] || !algumCheckboxMarcado()
                     }
                     onClick={() => setShowModalSalvarSolicitacao(true)}
                   />
+                  <Botao
+                    texto="Cancelar"
+                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                    className="mr-3 float-right"
+                    onClick={() => setShowModalCancelarSolicitacao(true)}
+                  />
                 </div>
               ) : (
-                <div className="botoes col-4 px-0">
-                  <Botao
-                    texto="Solicitar Correção"
-                    style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
-                    className="col-6 mr-3"
-                    onClick={() => setModoCorrecao(true)}
-                    disabled={
-                      !solicitacaoPermitidosCorrecao.includes(
-                        solicitacao.status
-                      )
-                    }
-                  />
-                  <Botao
-                    texto="Aprovar Período"
-                    style={BUTTON_STYLE.GREEN}
-                    className="col-5"
-                    onClick={() => setShowModalAprovarPeriodo(true)}
-                    disabled={
-                      !statusPermitidosParaAprovacao.includes(
-                        periodoGrupo.status
-                      ) ||
-                      !solicitacaoPermitidosCorrecao.includes(
-                        solicitacao.status
-                      )
-                    }
-                  />
-                </div>
+                (exibirBotoesDRE || exibirBotoesCODAE) && (
+                  <div className="botoes col-4 px-0">
+                    <Botao
+                      texto="Solicitar Correção"
+                      style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                      className="col-6 mr-3"
+                      onClick={() => setModoCorrecao(true)}
+                      disabled={
+                        statusPermitidosCorrecaoDRE ||
+                        statusPermitidosCorrecaoCODAE
+                      }
+                    />
+                    <Botao
+                      texto="Aprovar Período"
+                      style={BUTTON_STYLE.GREEN}
+                      className="col-5"
+                      onClick={() => setShowModalAprovarPeriodo(true)}
+                      disabled={
+                        statusPermitidosAprovacaoDRE ||
+                        statusPermitidosAprovacaoCODAE
+                      }
+                    />
+                  </div>
+                )
               )}
             </div>
+            <hr />
           </div>
           <ModalAprovarPeriodo
             showModal={showModalAprovarPeriodo}

@@ -80,8 +80,26 @@ export const dreAprovaMedicao = async uuid => {
   }
 };
 
+export const codaeAprovaPeriodo = async uuid => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-aprova-periodo/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const drePedeCorrecaMedicao = async (uuid, params) => {
   const url = `medicao-inicial/medicao/${uuid}/dre-pede-correcao-medicao/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const codaePedeCorrecaPeriodo = async (uuid, params) => {
+  const url = `medicao-inicial/medicao/${uuid}/codae-pede-correcao-periodo/`;
   const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -116,8 +134,26 @@ export const drePedeCorrecaoOcorrencia = async (uuid, params) => {
   }
 };
 
+export const codaePedeCorrecaoOcorrencia = async (uuid, params) => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/codae-pede-correcao-ocorrencia/`;
+  const response = await axios.patch(url, params).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const drePedeAprovacaoOcorrencia = async uuid => {
   const url = `medicao-inicial/ocorrencia/${uuid}/dre-aprova-ocorrencia/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const codaePedeAprovacaoOcorrencia = async uuid => {
+  const url = `medicao-inicial/ocorrencia/${uuid}/codae-aprova-ocorrencia/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -143,9 +179,45 @@ export const dreSolicitaCorrecaoUE = async uuid => {
   }
 };
 
+export const codaeAprovaSolicitacaoMedicao = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/codae-aprova-solicitacao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const codaeSolicitaCorrecaoUE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/codae-solicita-correcao-medicao/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const escolaEnviaCorrecaoMedicaoInicialDRE = async uuid => {
   const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/escola-corrige-medicao-para-dre/`;
   const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const escolaEnviaCorrecaoMedicaoInicialCODAE = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/escola-corrige-medicao-para-codae/`;
+  const response = await axios.patch(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesLancadas = async params => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/solicitacoes-lancadas/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
     return data;

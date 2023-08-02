@@ -95,15 +95,6 @@ const MenuRelatorios = () => {
       {exibirMenuTodosPerfis && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/${
-            constants.RELATORIO_SITUACAO_PRODUTO
-          }`}
-        >
-          Relatório Situação Produto
-        </LeafItem>
-      )}
-      {exibirMenuTodosPerfis && (
-        <LeafItem
-          to={`/${constants.GESTAO_PRODUTO}/${
             constants.RELATORIO_RECLAMACAO_PRODUTO
           }`}
         >
