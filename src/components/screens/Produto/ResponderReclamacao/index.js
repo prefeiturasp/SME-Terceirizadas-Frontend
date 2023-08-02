@@ -1,4 +1,4 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
@@ -30,6 +30,7 @@ import FormBuscaProduto from "./FormBuscaProduto";
 
 import { getStatus } from "./helpers.js";
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaProdutos = ({
   produtos,
@@ -238,7 +239,8 @@ const ResponderReclamacaoProduto = ({
                 ativos={ativos}
                 setAtivos={setAtivos}
               />
-              <Pagination
+              <Paginacao
+                className="mt-3 mb-3"
                 current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}

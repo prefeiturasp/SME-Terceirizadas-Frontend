@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import {
   getDownloads,
@@ -11,6 +11,7 @@ import ListagemDownloads from "./components/ListagemDownloads";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import Filtros from "./components/Filtros";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const centralDownloadContext = useContext(CentralDeDownloadContext);
@@ -86,13 +87,13 @@ export default () => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={totalDownloads}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

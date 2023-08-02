@@ -8,7 +8,7 @@ import { bindActionCreators } from "redux";
 
 import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
 
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 
 import {
   setDadosResultados,
@@ -21,6 +21,7 @@ import {
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "constants/shared";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const AtivasInativasPorAluno = ({
   dadosResultados,
@@ -106,7 +107,8 @@ const AtivasInativasPorAluno = ({
               dadosUsuario={meusDados}
             />
             <hr />
-            <Pagination
+            <Paginacao
+              className="mt-3 mb-3"
               total={totalResultados}
               onChange={nextPage}
               current={page}

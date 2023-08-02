@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import {
   alterarVinculo,
@@ -18,6 +18,7 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [carregando, setCarregando] = useState(false);
@@ -279,13 +280,13 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={totalVinculos}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

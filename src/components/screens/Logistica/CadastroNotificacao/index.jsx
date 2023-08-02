@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Pagination, Spin } from "antd";
+import { Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemGuias from "./components/ListagemGuias";
 import { useEffect } from "react";
@@ -22,6 +22,7 @@ import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import "./styles.scss";
 import ModalDetalharGuia from "./components/ModalDetalharGuia";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const history = useHistory();
@@ -205,13 +206,13 @@ export default () => {
               </div>
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

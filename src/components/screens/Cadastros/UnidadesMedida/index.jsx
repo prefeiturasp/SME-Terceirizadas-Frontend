@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Spin } from "antd";
+import { Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemUnidadesMedida from "./components/ListagemUnidadesMedida";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -7,6 +7,7 @@ import {
   getUnidadesMedida,
   getNomesEAbreviacoesUnidadesMedida
 } from "services/qualidade.service";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -75,14 +76,7 @@ export default () => {
               <ListagemUnidadesMedida unidadesMedida={unidadesMedida} />
               <div className="row">
                 <div className="col">
-                  <Pagination
-                    current={page}
-                    total={total}
-                    showSizeChanger={false}
-                    onChange={nextPage}
-                    pageSize={10}
-                    className="float-left mb-2"
-                  />
+                  <Paginacao current={page} total={total} onChange={nextPage} />
                 </div>
               </div>
               {total === 0 && (

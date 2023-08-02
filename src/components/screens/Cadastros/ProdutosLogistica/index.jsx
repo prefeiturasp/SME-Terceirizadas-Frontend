@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import {
   getListaProdutosLogistica,
   getNomesProdutosLogistica
@@ -8,6 +8,7 @@ import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import "./style.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -61,7 +62,7 @@ export default () => {
             <>
               <hr />
               <Tabela produtos={resultado} />
-              <Pagination
+              <Paginacao
                 className="mt-3 mb-3"
                 current={page || 1}
                 total={total}

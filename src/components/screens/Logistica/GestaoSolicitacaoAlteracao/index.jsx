@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { getListagemSolicitacaoAlteracao } from "../../../../services/logistica.service.js";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
+import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -94,13 +95,13 @@ export default () => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

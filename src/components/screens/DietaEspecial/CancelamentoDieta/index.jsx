@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import FormFiltros from "./components/FormFiltros";
 import { getSolicitacaoDietaEspecialListagem } from "services/dietaEspecial.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemDietas from "./components/ListagemDietas";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -66,7 +67,8 @@ export default () => {
                 filtros={filtros}
                 setFiltros={setFiltros}
               />
-              <Pagination
+              <Paginacao
+                className="mt-3 mb-3"
                 current={page || 1}
                 total={total}
                 showSizeChanger={false}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { normalizaLabelValueEmpresaSocial } from "components/screens/Cadastros/EditaisContratos/helper";
 import CardLogo from "components/Shareable/CardLogo/CardLogo";
 import IconeDietaEspecial from "components/Shareable/Icones/IconeDietaEspecial";
@@ -14,6 +14,7 @@ import {
   getTerceirizada_razoes
 } from "services/terceirizada.service";
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -161,13 +162,13 @@ export default () => {
                   modulo={modulo}
                 />
                 <div className="pagination-center">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page || 1}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left"
                   />
                 </div>
               </div>

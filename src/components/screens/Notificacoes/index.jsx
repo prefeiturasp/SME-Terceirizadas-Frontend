@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./style.scss";
 import {
   getNotificacoesGerais,
@@ -9,6 +9,7 @@ import {
 import CardNotificacao from "./components/CardNotificacao";
 import Filtros from "./components/Filtros";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando] = useState(false);
@@ -135,13 +136,13 @@ export default () => {
               </div>
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={totalNotifs}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={5}
-                    className="float-left mt-4 mb-2"
                   />
                 </div>
               </div>
