@@ -161,16 +161,14 @@ export default () => {
                   setAtivos={setAtivos}
                   modulo={modulo}
                 />
-                <div className="pagination-center">
-                  <Paginacao
-                    className="mt-3 mb-3"
-                    current={page || 1}
-                    total={total}
-                    showSizeChanger={false}
-                    onChange={nextPage}
-                    pageSize={10}
-                  />
-                </div>
+                <Paginacao
+                  className="mt-3 mb-3"
+                  current={page || 1}
+                  total={total}
+                  showSizeChanger={false}
+                  onChange={nextPage}
+                  pageSize={10}
+                />
               </div>
             </div>
           </Spin>
