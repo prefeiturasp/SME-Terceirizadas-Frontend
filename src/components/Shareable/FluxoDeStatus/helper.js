@@ -124,9 +124,11 @@ export const tipoDeStatus = status => {
     case "Em aberto para preenchimento pela UE":
     case "Enviado pela UE":
     case "Aprovado pela DRE":
+    case "Aprovado pela CODAE":
     case "CODAE homologou":
     case "CODAE Atualizou o protocolo":
     case "Corrigido para DRE":
+    case "Corrigido para CODAE":
       return "prosseguiu";
 
     case "CODAE pediu correção":
@@ -137,6 +139,7 @@ export const tipoDeStatus = status => {
     case "Ativo em alguns editais":
     case "Vínculo do Edital ao Produto":
     case "Correção solicitada":
+    case "Correção solicitada pela CODAE":
       return "questionado";
 
     case "Escola cancelou":

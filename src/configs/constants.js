@@ -122,7 +122,6 @@ export const AVALIAR_SOLICITACAO_CADASTRO_PRODUTO =
 export const ACOMPANHAR_SOLICITACAO_CADASTRO_PRODUTO =
   "acompanhar-solicitacao-cadastro-produto";
 export const RELATORIO_PRODUTO = "relatorio-produto";
-export const RELATORIO_SITUACAO_PRODUTO = "relatorio-situacao-produto";
 export const RELATORIO_RECLAMACAO_PRODUTO = "relatorio-reclamacao-produto";
 export const RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP =
   "relatorio-quantitativo-solic-dieta-esp";
@@ -189,6 +188,7 @@ export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
+export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
 
 export const NOTIFICACOES = "notificacoes";
 export const CENTRAL_DOWNLOADS = "central-downloads";
@@ -213,11 +213,21 @@ export const CADASTRO_CRONOGRAMA = "cadastro-cronograma";
 export const DETALHE_CRONOGRAMA = "detalhe-cronograma";
 export const ALTERACAO_CRONOGRAMA = "altera-cronograma";
 export const DETALHAR_ALTERACAO_CRONOGRAMA = "detalhe-alteracao-cronograma";
-export const LABORATORIO = "laboratorio";
-export const LABORATORIOS_CADASTRADOS = "laboratorios-cadastrados";
-export const EMBALAGEM = "embalagem";
-export const EMBALAGENS_CADASTRADAS = "embalagens-cadastradas";
+
+export const CADASTRO_LABORATORIO = "cadastro-laboratorio";
+export const LABORATORIOS_CADASTRADOS = "laboratorios";
+
+export const EMBALAGENS_CADASTRADAS = "embalagens";
+export const CADASTRO_EMBALAGEM = "cadastro-embalagem";
+
+export const UNIDADES_MEDIDA = "unidades-medida";
+export const CADASTRO_UNIDADE_MEDIDA = "cadastro-unidade-medida";
+export const EDICAO_UNIDADE_MEDIDA = "edicao-unidade-medida";
+
 export const PRODUTOS = "produtos";
+export const CADASTRO_PRODUTOS = "cadastro-produtos";
+export const EDICAO_PRODUTOS = "edicao-produtos";
+
 export const PAINEL_APROVACOES = "painel-aprovacoes";
 export const SOLICITACOES_ALTERACOES = "solicitacoes-alteracoes";
 export const ALTERACOES_APROVADAS = "alteracoes-aprovadas";
@@ -246,6 +256,7 @@ export const STATUS_TERCEIRIZADA_RESPONDEU_RECLAMACAO =
 
 export const VISUALIZAR = "visualizar";
 export const EDITAR = "editar";
+export const DETALHAR = "detalhar";
 
 export const QUALQUER_USUARIO = true;
 

@@ -115,7 +115,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
     closeModal();
   };
 
-  const handleFinalizarMedicao = async () => {
+  const handleFinalizarAtualizacao = async () => {
     let data = new FormData();
     data.append("com_ocorrencias", String(!opcaoSelecionada));
     data.append("justificativa", justificativa);
@@ -269,7 +269,7 @@ export const ModalAtualizarOcorrencia = ({ ...props }) => {
             <Botao
               texto="Finalizar Atualização"
               type={BUTTON_TYPE.BUTTON}
-              onClick={() => handleFinalizarMedicao()}
+              onClick={() => handleFinalizarAtualizacao()}
               style={BUTTON_STYLE.GREEN}
               className="ml-3"
               disabled={disableFinalizarMedicao}

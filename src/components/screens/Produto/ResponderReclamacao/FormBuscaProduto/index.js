@@ -20,6 +20,7 @@ import {
 } from "services/produto.service";
 
 import "./style.scss";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 
 const initialState = {
   dados: {},
@@ -68,7 +69,9 @@ const FormBuscaProduto = ({
         });
       });
     }
-    fetchData();
+    if (usuarioEhEmpresaTerceirizada()) {
+      fetchData();
+    }
   }, []);
 
   return (

@@ -21,7 +21,7 @@ import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalAutorizarAposQuestionamento from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 

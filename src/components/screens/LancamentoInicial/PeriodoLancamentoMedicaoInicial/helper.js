@@ -233,10 +233,14 @@ export const desabilitarField = (
   if (
     location.state &&
     (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
       location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
-        location.state.status_periodo
-      ) &&
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
         !valorField))
   ) {
     return true;
@@ -821,10 +825,14 @@ export const desabilitarBotaoColunaObservacoes = (
   return (
     location.state &&
     (((location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
       location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
-      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
-        location.state.status_periodo
-      ) &&
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
         !valoresPeriodosLancamentos
           .filter(valor => valor.nome_campo === "observacoes")
           .filter(valor => String(valor.dia) === String(column.dia))
@@ -837,11 +845,16 @@ export const desabilitarBotaoColunaObservacoes = (
         categoria.id,
         valoresPeriodosLancamentos
       )) ||
-      (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" &&
-        botaoEhAdicionar) ||
-      (["MEDICAO_CORRECAO_SOLICITADA", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+      (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
         location.state.status_periodo
       ) &&
+        botaoEhAdicionar) ||
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
         !ehDiaParaCorrigir(
           column.dia,
           categoria.id,

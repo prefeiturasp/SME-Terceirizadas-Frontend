@@ -1,11 +1,40 @@
 import moment from "moment";
-import { format, getYear } from "date-fns";
+import { format, getYear, isWeekend } from "date-fns";
 import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
 import { TIPO_PERFIL } from "constants/shared";
 
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
+
+export const ehDiaUtil = (values, motivos, feriadosAno) => value => {
+  const ehLPRouRPL = () => {
+    return (
+      values &&
+      values.motivo &&
+      motivos &&
+      (motivos
+        .find(motivo => motivo.uuid === values.motivo)
+        .nome.includes("LPR") ||
+        motivos
+          .find(motivo => motivo.uuid === values.motivo)
+          .nome.includes("RPL"))
+    );
+  };
+
+  const ehFinalDeSemana = value => {
+    const valores = value.split("/");
+    const dataFormatada = `${valores[1]}/${valores[0]}/${valores[2]}`;
+    return isWeekend(new Date(dataFormatada));
+  };
+
+  return value &&
+    ![undefined].includes(value) &&
+    ehLPRouRPL() &&
+    (ehFinalDeSemana(value) || (feriadosAno && feriadosAno.includes(value)))
+    ? "Não é possível solicitar LPR ou RPL para dia não útil!"
+    : undefined;
+};
 
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);

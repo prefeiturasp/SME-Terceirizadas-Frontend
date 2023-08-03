@@ -1,0 +1,14 @@
+@import "../../../../../../styles/variables.scss";
+
+.card-cadastro {
+  .card-cadastro-body {
+    .card-cadastro-title {
+      color: $green;
+      font-weight: bold;
+    }
+  }
+}
+
+.modal-dialog-unidades-medida {
+  max-width: 525px !important;
+}

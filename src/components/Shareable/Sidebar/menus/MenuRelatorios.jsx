@@ -35,7 +35,10 @@ const MenuRelatorios = () => {
     usuarioEhEmpresaTerceirizada() ||
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
-    usuarioEhCODAEDietaEspecial();
+    usuarioEhCODAEDietaEspecial() ||
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGestaoAlimentacao() ||
+    usuarioEhDRE();
 
   const exibirProdutosSuspensos =
     usuarioEhCODAEGestaoProduto() ||
@@ -45,7 +48,8 @@ const MenuRelatorios = () => {
     usuarioEhEscolaTerceirizada() ||
     usuarioEhEscolaTerceirizadaDiretor() ||
     usuarioEhCODAEDietaEspecial() ||
-    usuarioEhCODAENutriManifestacao();
+    usuarioEhCODAENutriManifestacao() ||
+    usuarioEhCODAEGestaoAlimentacao();
 
   const exibirRelatorioQuantitativoSolicDietaEsp =
     usuarioEhCODAEDietaEspecial() ||
@@ -88,15 +92,6 @@ const MenuRelatorios = () => {
         </LeafItem>
       )}
 
-      {exibirMenuTodosPerfis && (
-        <LeafItem
-          to={`/${constants.GESTAO_PRODUTO}/${
-            constants.RELATORIO_SITUACAO_PRODUTO
-          }`}
-        >
-          Relatório Situação Produto
-        </LeafItem>
-      )}
       {exibirMenuTodosPerfis && (
         <LeafItem
           to={`/${constants.GESTAO_PRODUTO}/${

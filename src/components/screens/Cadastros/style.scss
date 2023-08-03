@@ -380,9 +380,18 @@ table.cadastro-empresa {
 
   .fields-set-contatos {
     display: grid;
-    grid-template-columns: 26% 26% 42%;
+    grid-template-columns: 24% 24% 40% 2%;
     grid-template-rows: 50% 50%;
     grid-column-gap: 3%;
+
+    .deletar-contato {
+      margin-top: 30px;
+      height: 35px;
+    }
+  }
+
+  .adicionar-contato {
+    height: 35px;
   }
 
   .fields-set-edital {

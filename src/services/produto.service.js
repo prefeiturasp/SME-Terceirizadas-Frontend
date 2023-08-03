@@ -153,12 +153,6 @@ export const getReclamacoesTerceirizadaPorFiltro = async params => {
   });
 };
 
-export const getProdutosRelatorioSituacao = async params => {
-  return await axios.get(`/produtos/filtro-relatorio-situacao-produto/`, {
-    params
-  });
-};
-
 export const getProdutosRelatorioAnaliseSensorial = async params => {
   return await axios.get(`/produtos/filtro-relatorio-em-analise-sensorial/`, {
     params
@@ -221,22 +215,20 @@ export const submitProduto = async payload => {
 
 export const updateProduto = async payload => {
   const url = `${API_URL}/produtos/${payload.uuid}/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: authToken,
-    body: JSON.stringify(payload)
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error;
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const alteracaoProdutoHomologado = async (payload, uuid) => {
+  const url = `${API_URL}/homologacoes-produtos/${uuid}/alteracao-produto-homologado/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const respostaAnaliseSensorial = payload => {
@@ -611,14 +603,6 @@ export const getProdutosSuspensos = async payload => {
   );
 };
 
-export const getPdfRelatorioSituacaoProduto = async params => {
-  const { data } = await axios.get("/produtos/relatorio-situacao-produto/", {
-    params,
-    responseType: "blob"
-  });
-  saveAs(data, "relatorio_situacao_produto.pdf");
-};
-
 export const getProdutosListagem = async params => {
   return await axios.get(`/produtos/`, {
     params: params
@@ -697,11 +681,17 @@ export const criarVinculoProdutosEditais = async payload =>
 export const getNomesProdutosEdital = async () =>
   axios.get("/cadastro-produtos-edital/lista-nomes/");
 
+export const getNomesProdutosLogistica = async () =>
+  axios.get("/cadastro-produtos-edital/lista-nomes-logistica/");
+
 export const getCadastroProdutosEdital = async params =>
   axios.get(`/cadastro-produtos-edital/`, { params });
 
-export const getListaProdutosEdital = async params =>
-  axios.get(`/cadastro-produtos-edital/lista-completa/`, { params });
+export const getListaCompletaProdutosLogistica = async params =>
+  axios.get(`/cadastro-produtos-edital/lista-completa-logistica/`, { params });
+
+export const getListaProdutosLogistica = async params =>
+  axios.get(`/cadastro-produtos-edital/produtos-logistica/`, { params });
 
 export const cadastrarProdutoEdital = async payload =>
   await axios.post(`/cadastro-produtos-edital/`, payload);

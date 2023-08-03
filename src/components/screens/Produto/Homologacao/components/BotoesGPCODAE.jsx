@@ -12,6 +12,7 @@ import {
   CODAEPedeAnaliseSensorialProduto,
   CODAEPedeCorrecao
 } from "services/produto.service";
+import ModalAtivacaoSuspensaoProduto from "../../AtivacaoSuspensao/ModalAtivacaoSuspensaoProduto";
 
 export const BotoesGPCODAE = ({
   homologacao,
@@ -26,6 +27,7 @@ export const BotoesGPCODAE = ({
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [showModalHomologar, setShowModalHomologar] = useState(false);
+  const [showModalSuspender, setShowModalSuspender] = useState(false);
   const [propsModal, setPropsModal] = useState({});
 
   const onChangeEditais = values => {
@@ -104,6 +106,25 @@ export const BotoesGPCODAE = ({
         onChangeEditais={onChangeEditais}
         uuid={homologacao.uuid}
         loadSolicitacao={() => getHomologacaoProdutoAsync()}
+        produto={homologacao?.produto}
+        tituloModal={
+          homologacao.esta_homologado
+            ? "Aceitar alterações"
+            : "Homologação do Produto"
+        }
+        ehSuspensaoFluxoAlteracaoDados
+      />
+
+      <ModalAtivacaoSuspensaoProduto
+        showModal={showModalSuspender}
+        closeModal={() => setShowModalSuspender(false)}
+        acao="suspensão"
+        produto={homologacao?.produto}
+        idHomologacao={homologacao.uuid}
+        atualizarDados={() => {
+          getHomologacaoProdutoAsync();
+        }}
+        ehSuspensaoFluxoAlteracaoDados
       />
       {/* solicitar análise sensorial, correção ou não homologar */}
       <ModalPadrao
@@ -123,7 +144,15 @@ export const BotoesGPCODAE = ({
         eAnalise={propsModal.eAnalise}
         terceirizadas={terceirizadas}
         status={homologacao.status}
-        terceirizada={homologacao.rastro_terceirizada}
+        terceirizada={
+          homologacao.logs.filter(
+            log => log.status_evento_explicacao === "Solicitação Realizada"
+          )[
+            homologacao.logs.filter(
+              log => log.status_evento_explicacao === "Solicitação Realizada"
+            ).length - 1
+          ].usuario
+        }
         tipoModal={tipoModal}
         cancelaAnaliseSensorial={propsModal.cancelaSolicitacao}
       />
@@ -141,7 +170,9 @@ export const BotoesGPCODAE = ({
         ) : (
           <>
             <Botao
-              texto="Homologar"
+              texto={
+                homologacao.esta_homologado ? "Aceitar alterações" : "Homologar"
+              }
               className="float-right"
               type={BUTTON_TYPE.BUTTON}
               onClick={() => setShowModalHomologar(true)}
@@ -149,9 +180,15 @@ export const BotoesGPCODAE = ({
               disabled={values.necessita_analise_sensorial === "1"}
             />
             <Botao
-              texto="Não homologar"
+              texto={
+                homologacao.esta_homologado ? "Suspender" : "Não homologar"
+              }
               className="mr-3 float-right"
-              onClick={() => setPropsModalPadrao("nao-homologar")}
+              onClick={() =>
+                homologacao.esta_homologado
+                  ? setShowModalSuspender(true)
+                  : setPropsModalPadrao("nao-homologar")
+              }
               type={BUTTON_TYPE.BUTTON}
               style={BUTTON_STYLE.GREEN_OUTLINE}
               disabled={values.necessita_analise_sensorial === "1"}

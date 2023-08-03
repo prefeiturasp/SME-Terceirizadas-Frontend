@@ -9,6 +9,7 @@ export default ({
 }) => {
   return (
     <>
+      <p className="head-green mt-4 mb-4">Dados Gerais</p>
       {solicitacaoAlteracaoCronograma ? (
         <div className="row detalhar-head">
           <div className="col-3">

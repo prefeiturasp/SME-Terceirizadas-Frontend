@@ -30,7 +30,7 @@ const ModalSuspensaoProdutoEdital = ({
 
   const vinculosProdutoEditais = async () => {
     const vinculosEditais = await vinculosAtivosProdutoEditais(
-      produto?.homologacao.uuid
+      produto?.homologacao?.uuid || produto?.ultima_homologacao.uuid
     );
     if (vinculosEditais.status === HTTP_STATUS.OK) {
       setVinculos(vinculosEditais.data);

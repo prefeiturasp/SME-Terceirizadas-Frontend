@@ -4,6 +4,7 @@ import HTTP_STATUS from "http-status-codes";
 import {
   corDaMensagem,
   deepCopy,
+  justificativaAoAprovarSolicitacao,
   justificativaAoNegarSolicitacao,
   visualizaBotoesDoFluxo
 } from "helpers/utilities";
@@ -33,6 +34,8 @@ import { SolicitacaoAlimentacaoContext } from "context/SolicitacaoAlimentacao";
 import "../../style.scss";
 import { getRelatorioKitLancheCEMEI } from "services/relatorios";
 import { SolicitacoesSimilaresKitLanche } from "components/Shareable/SolicitacoesSimilaresKitLanche";
+import { ModalAprovarSolicitacaoKitLanche } from "../ModalAprovarSolicitacaoKitLanche";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
 export const CorpoRelatorio = ({ ...props }) => {
   const {
@@ -57,6 +60,9 @@ export const CorpoRelatorio = ({ ...props }) => {
   const [collapseAlunosEMEI, setCollapseAlunosEMEI] = useState(false);
   const [showNaoAprovaModal, setShowNaoAprovaModal] = useState(false);
   const [showModalMarcarConferencia, setShowModalMarcarConferencia] = useState(
+    false
+  );
+  const [showModalObservacaoCodae, setShowModalObservacaoCodae] = useState(
     false
   );
   const [showQuestionamentoModal, setShowQuestionamentoModal] = useState(false);
@@ -113,9 +119,18 @@ export const CorpoRelatorio = ({ ...props }) => {
     solicitacaoKitLancheCEMEI.logs
   );
 
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
+    solicitacaoKitLancheCEMEI.logs
+  );
+
+  const EXIBIR_HISTORICO =
+    solicitacaoKitLancheCEMEI.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(solicitacaoKitLancheCEMEI.logs);
+
   const onClickBotaoAprovar = async () => {
     const resp = await endpointAprovaSolicitacao(
-      solicitacaoKitLancheCEMEI.uuid
+      solicitacaoKitLancheCEMEI.uuid,
+      {}
     );
     if (resp.status === HTTP_STATUS.OK) {
       toastSuccess(toastAprovaMensagem);
@@ -524,6 +539,26 @@ export const CorpoRelatorio = ({ ...props }) => {
           </div>
         </div>
       )}
+      {justificativaAprovacao && !EXIBIR_HISTORICO && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>
+              <b>Autorizou</b>
+            </p>
+            <p>{`${
+              solicitacaoKitLancheCEMEI.logs.find(
+                log => log.status_evento_explicacao === "CODAE autorizou"
+              ).criado_em
+            } - Informações da CODAE`}</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaAprovacao
+              }}
+            />
+          </div>
+        </div>
+      )}
       <RelatorioHistoricoJustificativaEscola
         solicitacao={solicitacaoKitLancheCEMEI}
       />
@@ -573,7 +608,11 @@ export const CorpoRelatorio = ({ ...props }) => {
                   <Botao
                     texto={textoBotaoAprova}
                     type={BUTTON_TYPE.SUBMIT}
-                    onClick={() => onClickBotaoAprovar()}
+                    onClick={() =>
+                      tipoPerfil === TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                        ? setShowModalObservacaoCodae(true)
+                        : onClickBotaoAprovar()
+                    }
                     style={BUTTON_STYLE.GREEN}
                     className="ml-3"
                   />
@@ -640,6 +679,14 @@ export const CorpoRelatorio = ({ ...props }) => {
                 solicitacao={solicitacaoKitLancheCEMEI}
               />
             )}
+            <ModalAprovarSolicitacaoKitLanche
+              closeModal={() => setShowModalObservacaoCodae(false)}
+              showModal={showModalObservacaoCodae}
+              loadSolicitacao={fetchData}
+              endpoint={endpointAprovaSolicitacao}
+              tipoSolicitacao={tipoSolicitacao}
+              solicitacao={solicitacaoKitLancheCEMEI}
+            />
           </div>
         </>
       )}

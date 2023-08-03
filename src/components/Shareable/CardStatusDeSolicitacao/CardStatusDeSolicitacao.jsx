@@ -71,30 +71,31 @@ export const CardStatusDeSolicitacao = props => {
     cardTitle.toString().includes("Recebidas") &&
       tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       initSocket();
-  }, []);
 
-  if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {
-    if (tipoPerfil === `"${TERCEIRIZADA}"`) {
-      filteredSolicitations = solicitations.filter(
-        solicitation =>
-          ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
-          solicitation.status
-      );
-    } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
-      filteredSolicitations = solicitations.filter(
-        solicitation =>
-          ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
-          solicitation.status
-      );
-    } else {
-      filteredSolicitations = solicitations.filter(
-        solicitation =>
-          nomeUsuario === `"${solicitation.nome_usuario_log_de_reclamacao}"` &&
-          ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
+    if (cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE) {
+      if (tipoPerfil === `"${TERCEIRIZADA}"`) {
+        filteredSolicitations = solicitations.filter(
+          solicitation =>
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_PEDIU_ANALISE_RECLAMACAO.toUpperCase() ===
             solicitation.status
-      );
+        );
+      } else if (tipoPerfil === TIPO_PERFIL.SUPERVISAO_NUTRICAO) {
+        filteredSolicitations = solicitations.filter(
+          solicitation =>
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_NUTRISUPERVISOR.toUpperCase() ===
+            solicitation.status
+        );
+      } else {
+        filteredSolicitations = solicitations.filter(
+          solicitation =>
+            nomeUsuario ===
+              `"${solicitation.nome_usuario_log_de_reclamacao}"` &&
+            ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS.CODAE_QUESTIONOU_UE.toUpperCase() ===
+              solicitation.status
+        );
+      }
     }
-  }
+  }, []);
 
   const dietasFiltradas = solicitation => {
     return dietasAbertas.filter(dieta =>
@@ -203,10 +204,20 @@ export const CardStatusDeSolicitacao = props => {
         <span className="float-right my-auto">Data/Hora</span>
       </div>
       <hr />
-      {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+      {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
+      ![
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+      ].includes(tipoPerfil)
         ? renderSolicitations(filteredSolicitations)
         : renderSolicitations(solicitations)}
-      {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE
+      {cardTitle === GESTAO_PRODUTO_CARDS.RESPONDER_QUESTIONAMENTOS_DA_CODAE &&
+      ![
+        TIPO_PERFIL.DIRETORIA_REGIONAL,
+        TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+        TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+      ].includes(tipoPerfil)
         ? renderVerMais(filteredSolicitations)
         : renderVerMais(solicitations)}
     </div>

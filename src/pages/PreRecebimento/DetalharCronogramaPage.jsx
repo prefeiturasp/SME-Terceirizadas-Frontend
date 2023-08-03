@@ -2,7 +2,11 @@ import React from "react";
 import { HOME } from "constants/config";
 import Breadcrumb from "components/Shareable/Breadcrumb";
 import Page from "components/Shareable/Page/Page";
-import { DETALHE_CRONOGRAMA, PRE_RECEBIMENTO } from "configs/constants";
+import {
+  CRONOGRAMA_ENTREGA,
+  DETALHE_CRONOGRAMA,
+  PRE_RECEBIMENTO
+} from "configs/constants";
 import DetalharCronograma from "components/screens/PreRecebimento/CronogramaEntrega/components/DetalharCronograma";
 
 const atual = {
@@ -14,6 +18,10 @@ const anteriores = [
   {
     href: `/`,
     titulo: "Pré-Recebimento"
+  },
+  {
+    href: `/${PRE_RECEBIMENTO}/${CRONOGRAMA_ENTREGA}`,
+    titulo: "Cronograma de Entrega"
   }
 ];
 

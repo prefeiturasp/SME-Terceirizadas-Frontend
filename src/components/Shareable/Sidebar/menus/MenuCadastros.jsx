@@ -10,9 +10,10 @@ import {
   FAIXAS_ETARIAS,
   HORARIO_COMBOS_ALIMENTACAO,
   SOBREMESA_DOCE,
-  LABORATORIO,
-  EMBALAGEM,
-  PRODUTOS
+  LABORATORIOS_CADASTRADOS,
+  PRODUTOS,
+  EMBALAGENS_CADASTRADAS,
+  UNIDADES_MEDIDA
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
@@ -23,7 +24,8 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEhLogistica,
   usuarioEhMedicao,
-  usuarioEhCodaeDilog
+  usuarioEhCodaeDilog,
+  usuarioEhEmpresaFornecedor
 } from "helpers/utilities";
 
 const MenuCadastros = () => {
@@ -43,12 +45,21 @@ const MenuCadastros = () => {
         </LeafItem>
       )}
       {usuarioEhDilogQualidadeOuCronograma() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGEM}`}>
-          Embalagens
-        </LeafItem>
+        <>
+          <LeafItem
+            to={`/${CONFIGURACOES}/${CADASTROS}/${EMBALAGENS_CADASTRADAS}`}
+          >
+            Embalagens
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${UNIDADES_MEDIDA}`}>
+            Unidades de Medida
+          </LeafItem>
+        </>
       )}
       {usuarioEhDilogQualidade() && (
-        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIO}`}>
+        <LeafItem
+          to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`}
+        >
           Laboratórios
         </LeafItem>
       )}
@@ -82,12 +93,13 @@ const MenuCadastros = () => {
           Sobremesa Doce
         </LeafItem>
       )}
-      {usuarioEhCronograma() ||
-        (usuarioEhCodaeDilog() && (
-          <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
-            Produtos
-          </LeafItem>
-        ))}
+      {(usuarioEhCronograma() ||
+        usuarioEhCodaeDilog() ||
+        usuarioEhEmpresaFornecedor()) && (
+        <LeafItem to={`/${CONFIGURACOES}/${CADASTROS}/${PRODUTOS}`}>
+          Produtos
+        </LeafItem>
+      )}
     </Menu>
   );
 };

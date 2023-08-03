@@ -1,3 +1,4 @@
+import React from "react";
 import { TIPO_PERFIL } from "constants/shared";
 import { ROTAS_SOLICITACOES_HOMOLOGACAO_PRODUTO as ROTA } from "configs/constants";
 import { ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS } from "constants/shared";
@@ -57,6 +58,7 @@ export const CARD_AGUARDANDO_ANALISE_RECLAMACAO = {
   rota: ROTA.AGUARDANDO_ANALISE_RECLAMACAO,
   incluir_status: [
     CODAE_PEDIU_ANALISE_RECLAMACAO,
+    TERCEIRIZADA_RESPONDEU_RECLAMACAO,
     CODAE_QUESTIONOU_UE,
     UE_RESPONDEU_QUESTIONAMENTO,
     CODAE_QUESTIONOU_NUTRISUPERVISOR,
@@ -93,6 +95,11 @@ const CARD_CORRECAO_DE_PRODUTO = {
 export const CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE = {
   id: CARD_ID.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
   titulo: "Responder Questionamentos da CODAE",
+  titulo_menu: (
+    <span>
+      Responder Questionamentos <br /> da CODAE
+    </span>
+  ),
   icon: "fa-exclamation-triangle",
   style: "card-pending",
   rota: ROTA.RESPONDER_QUESTIONAMENTOS_DA_CODAE,
@@ -187,6 +194,30 @@ export const listarCardsPermitidos = () => {
       CARD_PRODUTOS_SUSPENSOS,
       CARD_NAO_HOMOLOGADOS,
       CARD_HOMOLOGADOS,
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
+    ];
+  } else if (
+    [
+      TIPO_PERFIL.DIRETORIA_REGIONAL,
+      TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA,
+      TIPO_PERFIL.NUTRICAO_MANIFESTACAO
+    ].includes(perfil)
+  ) {
+    const cardHomologados = Object.assign({}, CARD_HOMOLOGADOS);
+    const cardAguardandoAnaliseReclamacao = Object.assign(
+      {},
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO
+    );
+
+    cardAguardandoAnaliseReclamacao.incluir_status.push(
+      ESCOLA_OU_NUTRICIONISTA_RECLAMOU
+    );
+
+    return [
+      CARD_PRODUTOS_SUSPENSOS,
+      CARD_NAO_HOMOLOGADOS,
+      cardHomologados,
+      cardAguardandoAnaliseReclamacao,
       CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE
     ];
   }

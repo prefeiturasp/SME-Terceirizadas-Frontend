@@ -150,10 +150,14 @@ const AtivacaoSuspencaoProduto = () => {
         status.push("CODAE_HOMOLOGADO");
         break;
       case "suspenso":
-        status.push("CODAE_SUSPENDEU");
+        status.push("CODAE_SUSPENDEU", "CODAE_AUTORIZOU_RECLAMACAO");
         break;
       default:
-        status.push("CODAE_HOMOLOGADO", "CODAE_SUSPENDEU");
+        status.push(
+          "CODAE_HOMOLOGADO",
+          "CODAE_SUSPENDEU",
+          "CODAE_AUTORIZOU_RECLAMACAO"
+        );
     }
     setFiltros({ ...formValues, status });
   };

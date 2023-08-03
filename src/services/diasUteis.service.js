@@ -9,3 +9,12 @@ export const getDiasUteis = async params => {
     console.log(error);
   }
 };
+
+export const getFeriadosAno = async () => {
+  const url = `${API_URL}/feriados-ano/`;
+  try {
+    return await axios.get(url);
+  } catch (error) {
+    console.log(error);
+  }
+};
