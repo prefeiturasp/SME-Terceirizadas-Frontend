@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Pagination } from "antd";
 
 import "./style.scss";
 import {
@@ -10,6 +9,7 @@ import {
   usuarioEhNutricionistaSupervisao,
   usuarioEhEmpresaTerceirizada
 } from "helpers/utilities";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaAgrupadaProdutosTerceirizadas = ({
   dadosProdutos,
@@ -78,7 +78,8 @@ const TabelaAgrupadaProdutosTerceirizadas = ({
             })}
         </tbody>
       </table>
-      <Pagination
+      <Paginacao
+        className="mt-3 mb-3"
         total={quantidadeHomologados}
         onChange={onChangePagination}
         current={page}

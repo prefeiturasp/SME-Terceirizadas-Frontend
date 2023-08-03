@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import ListagemPlanilhas from "./components/ListagemPlanilhas";
@@ -17,6 +17,7 @@ import {
 import ModalCadastroPlanilha from "./components/ModalCadastroPlanilha";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalRemocaoPlanilha from "./components/ModalRemocaoPlanilha";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default ({ servidores }) => {
   const [carregando, setCarregando] = useState(false);
@@ -158,13 +159,13 @@ export default ({ servidores }) => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={totalPlanilhas}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>
