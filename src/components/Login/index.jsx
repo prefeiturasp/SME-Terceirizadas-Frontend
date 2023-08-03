@@ -231,9 +231,11 @@ export class Login extends Component {
                     <i className="fas fa-hotel" />
                   </div>
                   <div className="texto">
-                    Instruções de <strong>acesso</strong>, em breve
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
                   </div>
-                  <div className="rodape-fake" />
+                  <div className="rodape">
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
+                  </div>
                 </div>
               </div>
             </div>
@@ -570,6 +572,12 @@ export class Login extends Component {
         <div className="texto-simples mt-3">
           <span className="texto-simples-verde font-weight-bold">
             Fornecedor ou Distribuidor: &nbsp;
+          </span>
+          Digite seu <strong>CPF</strong>.
+        </div>
+        <div className="texto-simples mt-3">
+          <span className="texto-simples-verde font-weight-bold">
+            Rede Parceira: &nbsp;
           </span>
           Digite seu <strong>CPF</strong>.
         </div>
