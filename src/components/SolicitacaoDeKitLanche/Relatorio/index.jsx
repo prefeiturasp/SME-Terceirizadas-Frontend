@@ -349,7 +349,7 @@ const Relatorio = props => {
                                 ? "Questionar"
                                 : "Sim"
                             }
-                            type={BUTTON_TYPE.SUBMIT}
+                            type={BUTTON_TYPE.BUTTON}
                             onClick={() => showQuestionamentoModal("Sim")}
                             style={BUTTON_STYLE.GREEN}
                             className="ml-3"
