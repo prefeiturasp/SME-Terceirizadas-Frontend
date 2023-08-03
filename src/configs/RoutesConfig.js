@@ -129,7 +129,8 @@ import {
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE,
   usuarioEhAdministradorNutriCODAE,
-  usuarioEhDilogJuridico
+  usuarioEhDilogJuridico,
+  usuarioEhDilog
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -229,6 +230,7 @@ import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitaco
 import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
 import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
 import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
+import GuiasNotificacoesFiscalPage from "pages/Logistica/GuiasNotificacoesFiscalPage";
 import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
 import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
@@ -716,7 +718,7 @@ const routesConfig = [
     }`,
     component: LaboratoriosCadastradosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -724,7 +726,7 @@ const routesConfig = [
     }`,
     component: CadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -732,7 +734,7 @@ const routesConfig = [
     }/${constants.DETALHAR}`,
     component: DetalharCadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -740,7 +742,7 @@ const routesConfig = [
     }/${constants.EDITAR}`,
     component: EditarCadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -1744,6 +1746,12 @@ const routesConfig = [
     component: GuiasNotificacoesPage,
     exact: true,
     tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
+    component: GuiasNotificacoesFiscalPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
   },
   {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
