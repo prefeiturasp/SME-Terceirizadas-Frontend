@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Spin } from "antd";
+import { Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemLaboratorios from "./components/ListagemLaboratorios";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -7,6 +7,7 @@ import {
   getLaboratorios,
   getListaLaboratorios
 } from "services/laboratorio.service";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -73,13 +74,13 @@ export default () => {
               <ListagemLaboratorios laboratorios={resultado} />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

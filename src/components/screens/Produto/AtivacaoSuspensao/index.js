@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { Link } from "react-router-dom";
 import { getProdutosListagem } from "services/produto.service";
 import { deepEqual, gerarParametrosConsulta } from "helpers/utilities";
@@ -12,6 +12,7 @@ import {
 import FormBuscaProduto from "./FormBuscaProduto";
 import { ATIVACAO_DE_PRODUTO, GESTAO_PRODUTO } from "configs/constants";
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaProdutos = ({ filtros, produtos }) => {
   let arrayDeProdutosRenderizados = [];
@@ -182,7 +183,8 @@ const AtivacaoSuspencaoProduto = () => {
           <div className="container-tabela">
             <LabelResultadoDaBusca filtros={filtros} />
             <TabelaProdutos filtros={filtros} produtos={produtos} />
-            <Pagination
+            <Paginacao
+              className="mt-3 mb-3"
               current={page}
               total={produtosCount}
               showSizeChanger={false}
