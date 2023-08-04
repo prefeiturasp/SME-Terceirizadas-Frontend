@@ -28,7 +28,8 @@ import {
   usuarioEhQualquerUsuarioEmpresa,
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhDilogQualidade
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -142,7 +143,8 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
-    usuarioComAcessoTelaEntregasDilog();
+    usuarioComAcessoTelaEntregasDilog() ||
+    usuarioEhDilogQualidade();
 
   const exibirMenuPreRecebimento =
     usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
