@@ -38,9 +38,16 @@ export default () => {
       try {
         setCarregando(true);
         response = await getNotificacao(uuid);
-        setNotificacao(organizaOcorrencias(response.data));
+        let notificacao = organizaOcorrencias(response.data);
+        setNotificacao(notificacao);
+        let previsoes_contratuais = getPrevisoesContratuais(
+          response.data.previsoes_contratuais,
+          notificacao.lista_ocorrencias
+        );
         setInitialValues({
-          nome_empresa: response.data.empresa.nome_fantasia
+          nome_empresa: response.data.empresa.nome_fantasia,
+          processo_sei: response.data.processo_sei,
+          ...previsoes_contratuais
         });
 
         setCarregando(false);
@@ -61,6 +68,17 @@ export default () => {
 
   const labelOcorrencia = id =>
     TIPOS_OCORRENCIAS_OPTIONS.find(x => x.value === id).label;
+
+  const getPrevisoesContratuais = (previsoes, ocorrencias) => {
+    let values = {};
+    previsoes.forEach(prev => {
+      let index = Object.keys(ocorrencias).findIndex(
+        x => x === prev.motivo_ocorrencia
+      );
+      values[`previsao_contratual_${index}`] = prev.previsao_contratual;
+    });
+    return values;
+  };
 
   const organizaOcorrencias = notificacao => {
     let guias = notificacao.guias_notificadas;
