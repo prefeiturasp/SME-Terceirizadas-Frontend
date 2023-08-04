@@ -23,15 +23,12 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCodaeDilog,
   usuarioEhEscolaAbastecimentoDiretor,
-  usuarioEhDilogJuridico
+  exibirModuloOcorrencias
 } from "helpers/utilities";
 
 const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
-      {/* <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
-        Disponibilização de solicitações
-      </LeafItem> */}
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
           Requisição de Entrega
@@ -90,7 +87,7 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+      {exibirModuloOcorrencias() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
