@@ -18,7 +18,7 @@ import { CADASTRO_NOTIFICACAO, LOGISTICA } from "configs/constants";
 
 const FORM_NAME = "guiasOcorrencias";
 
-export default ({ setFiltros, setNotificacoes }) => {
+export default ({ setFiltros, setNotificacoes, fiscal }) => {
   const [distribuidores, setDistribuidores] = useState([]);
 
   const initialValues = {};
@@ -68,6 +68,7 @@ export default ({ setFiltros, setNotificacoes }) => {
                   label="Empresa"
                   name="empresa"
                   placeholder={"Selecione uma Empresa"}
+                  classe="input-numero-notificacao"
                 />
               </div>
             </div>
@@ -87,23 +88,35 @@ export default ({ setFiltros, setNotificacoes }) => {
                     }
                   ]}
                   placeholder="Selecione o Status da Notificação"
+                  className="input-numero-notificacao"
+                />
+              </div>
+              <div className="col-6">
+                <Field
+                  component={InputText}
+                  label="Nº do Processo SEI"
+                  name="processo_sei"
+                  placeholder="Digite o Nº SEI"
+                  className="input-numero-notificacao"
                 />
               </div>
             </div>
 
             <div className="mt-4 mb-4">
-              <NavLink to={`/${LOGISTICA}/${CADASTRO_NOTIFICACAO}`}>
-                <Botao
-                  texto="Nova Notificação"
-                  type={BUTTON_TYPE.BUTTON}
-                  style={BUTTON_STYLE.GREEN}
-                  onClick={() => {}}
-                  className="float-left"
-                />
-              </NavLink>
+              {fiscal === false && (
+                <NavLink to={`/${LOGISTICA}/${CADASTRO_NOTIFICACAO}`}>
+                  <Botao
+                    texto="Nova Notificação"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN}
+                    onClick={() => {}}
+                    className="float-left"
+                  />
+                </NavLink>
+              )}
 
               <Botao
-                texto="Consultar"
+                texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}
                 style={BUTTON_STYLE.GREEN}
                 className="float-right ml-3"

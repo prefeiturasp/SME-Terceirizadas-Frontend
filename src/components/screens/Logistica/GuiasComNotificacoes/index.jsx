@@ -6,7 +6,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import { getNotificacoesOcorrencia } from "services/logistica.service";
 import { Paginacao } from "components/Shareable/Paginacao";
 
-export default () => {
+export default ({ fiscal = false }) => {
   const [carregando, setCarregando] = useState(false);
   const [notificacoes, setNotificacoes] = useState();
   const [filtros, setFiltros] = useState();
@@ -45,12 +45,19 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-guias-notificacoes">
         <div className="card-body guias-notificacoes">
-          <Filtros setFiltros={setFiltros} setNotificacoes={setNotificacoes} />
+          <Filtros
+            setFiltros={setFiltros}
+            setNotificacoes={setNotificacoes}
+            fiscal={fiscal}
+          />
 
           {notificacoes && (
             <>
               <hr />
-              <ListagemNotificacoes notificacoes={notificacoes} />
+              <ListagemNotificacoes
+                notificacoes={notificacoes}
+                fiscal={fiscal}
+              />
               <div className="row">
                 <div className="col">
                   <Paginacao

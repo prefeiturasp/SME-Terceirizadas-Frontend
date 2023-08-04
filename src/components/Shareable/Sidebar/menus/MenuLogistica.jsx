@@ -12,7 +12,8 @@ import {
   ENTREGAS_DILOG,
   ENTREGAS_DRE,
   ENTREGAS_DISTRIBUIDOR,
-  GUIAS_NOTIFICACAO
+  GUIAS_NOTIFICACAO,
+  GUIAS_NOTIFICACAO_FISCAL
 } from "configs/constants";
 import {
   usuarioEhEmpresaDistribuidora,
@@ -23,7 +24,10 @@ import {
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCodaeDilog,
   usuarioEhEscolaAbastecimentoDiretor,
-  exibirModuloOcorrencias
+  exibirModuloOcorrencias,
+  usuarioEhDilogJuridico,
+  usuarioEhDilogQualidade,
+  usuarioEhDilog
 } from "helpers/utilities";
 
 const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
@@ -94,9 +98,17 @@ const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
           title="Ocorrências"
           activeMenu={activeMenu}
         >
-          <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
-            Guias com Notificações
-          </LeafItem>
+          {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+            <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
+              Guias com Notificações
+            </LeafItem>
+          )}
+
+          {(usuarioEhDilogQualidade() || usuarioEhDilog()) && (
+            <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}/`}>
+              Notificações
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>

@@ -493,12 +493,8 @@ export const usuarioEhCronogramaCriacaoEdicao = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDilogQualidade = () => {
-  return [
-    PERFIL.DILOG_QUALIDADE,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
-  ].includes(localStorage.getItem("perfil"));
-};
+export const usuarioEhDilogQualidade = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
   return [
@@ -925,7 +921,10 @@ export const exibirModuloMedicaoInicial = () => {
 export const exibirModuloOcorrencias = () => {
   return (
     !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhCodaeDilog() || usuarioEhDilogJuridico())
+    (usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhDilogQualidade() ||
+      usuarioEhDilog())
   );
 };
 
