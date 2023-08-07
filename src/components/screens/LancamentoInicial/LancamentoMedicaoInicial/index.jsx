@@ -23,7 +23,10 @@ import {
   getSolicitacoesLancadas
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
 import "./styles.scss";
+import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
+import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -264,6 +267,14 @@ export default () => {
         </div>
         {loadingSolicitacaoMedInicial ? (
           <Skeleton paragraph={false} active />
+        ) : ehEscolaTipoCEI(escolaInstituicao) ? (
+          <InformacoesMedicaoInicialCEI
+            periodoSelecionado={periodoSelecionado}
+            escolaInstituicao={escolaInstituicao}
+            nomeTerceirizada={nomeTerceirizada}
+            solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+            onClickInfoBasicas={onClickInfoBasicas}
+          />
         ) : (
           <InformacoesMedicaoInicial
             periodoSelecionado={periodoSelecionado}
@@ -295,7 +306,27 @@ export default () => {
         {mes &&
           ano &&
           periodosEscolaSimples &&
-          !loadingSolicitacaoMedInicial && (
+          !loadingSolicitacaoMedInicial &&
+          (ehEscolaTipoCEI(escolaInstituicao) ? (
+            <LancamentoPorPeriodoCEI
+              panoramaGeral={panoramaGeral}
+              mes={mes}
+              ano={ano}
+              periodoSelecionado={periodoSelecionado}
+              escolaInstituicao={escolaInstituicao}
+              periodosEscolaSimples={periodosEscolaSimples}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              onClickInfoBasicas={onClickInfoBasicas}
+              setLoadingSolicitacaoMedicaoInicial={value =>
+                setLoadingSolicitacaoMedicaoInicial(value)
+              }
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              setObjSolicitacaoMIFinalizada={value =>
+                setObjSolicitacaoMIFinalizada(value)
+              }
+              setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+            />
+          ) : (
             <LancamentoPorPeriodo
               panoramaGeral={panoramaGeral}
               mes={mes}
@@ -314,7 +345,7 @@ export default () => {
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
             />
-          )}
+          ))}
       </div>
     </div>
   );
