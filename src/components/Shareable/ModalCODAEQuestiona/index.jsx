@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { Field } from "react-final-form";
+import { Field, Form } from "react-final-form";
 import Botao from "../Botao";
 import { BUTTON_STYLE, BUTTON_TYPE } from "../Botao/constants";
 import CKEditorField from "../CKEditorField";
@@ -40,51 +40,58 @@ export const ModalCODAEQuestiona = ({ ...props }) => {
       show={showModal}
       onHide={closeModal}
     >
-      <Modal.Header closeButton>
-        <Modal.Title>Questionamento</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="row">
-          <div className="col-12">
-            <p className="title">
-              É possível atender a solicitação com todos os itens previstos no
-              contrato?
-            </p>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-12">
-            <Field
-              component={CKEditorField}
-              label="Observação"
-              placeholder="Alguma observação para a Terceirizada?"
-              name="justificativa"
-            />
-          </div>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="row mt-5">
-          <div className="col-12">
-            <Botao
-              texto="Cancelar"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={closeModal}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
-            />
-            <Botao
-              texto="Enviar"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={() => {
-                enviarQuestionamento(uuid);
-              }}
-              style={BUTTON_STYLE.GREEN}
-              className="ml-3"
-            />
-          </div>
-        </div>
-      </Modal.Footer>
+      <Form
+        onSubmit={() => {}}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>Questionamento</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="row">
+                <div className="col-12">
+                  <p className="title">
+                    É possível atender a solicitação com todos os itens
+                    previstos no contrato?
+                  </p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12">
+                  <Field
+                    component={CKEditorField}
+                    label="Observação"
+                    placeholder="Alguma observação para a Terceirizada?"
+                    name="justificativa"
+                  />
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <div className="row mt-5">
+                <div className="col-12">
+                  <Botao
+                    texto="Cancelar"
+                    type={BUTTON_TYPE.BUTTON}
+                    onClick={closeModal}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="ml-3"
+                  />
+                  <Botao
+                    texto="Enviar"
+                    type={BUTTON_TYPE.BUTTON}
+                    onClick={() => {
+                      enviarQuestionamento(uuid);
+                    }}
+                    style={BUTTON_STYLE.GREEN}
+                    className="ml-3"
+                  />
+                </div>
+              </div>
+            </Modal.Footer>
+          </form>
+        )}
+      />
     </Modal>
   );
 };

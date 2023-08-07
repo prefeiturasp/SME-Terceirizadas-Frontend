@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Modal, Spin, Pagination } from "antd";
+import { Modal, Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -14,6 +14,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import { getCabecalhoPorFiltros } from "helpers/dietaEspecial";
 import { getStatusSolicitacaoFrontend } from "./helpers";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const ModalRelatorioDietaEspecial = ({
   showModal,
@@ -79,11 +80,11 @@ const ModalRelatorioDietaEspecial = ({
       onCancel={closeModal}
       width={"95%"}
       footer={[
-        <Pagination
+        <Paginacao
+          className="mt-3 mb-3"
           key={0}
           current={page}
           total={totalResultados}
-          className="float-left"
           showSizeChanger={false}
           onChange={page => {
             nextPage(page);

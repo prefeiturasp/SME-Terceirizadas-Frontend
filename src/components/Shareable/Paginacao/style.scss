@@ -1,23 +1,41 @@
 @import "../../../styles/variables.scss";
 
-.footer-pagination-default {
+.pagination-container {
   display: flex;
   justify-content: center;
+  align-items: center;
 
-  a.ant-pagination-item-link {
-    border: 0px !important;
+  .ant-pagination-item {
+    width: 32px;
+    height: 32px;
+    color: #999;
+    font-weight: 600;
+    background-color: $white;
+    border: 1px solid #dadada;
+    border-radius: 3px;
+
+    &:hover {
+      border: 1px solid $green;
+    }
   }
 
-  ul.ant-pagination {
-    li {
-      border-radius: 0px;
-      border: 0px;
-      width: 36px;
-      height: 32px;
+  .ant-pagination-item-active {
+    color: $white;
+    background-color: $green;
+    border: 1px solid $green;
+  }
+
+  .ant-pagination-next,
+  .ant-pagination-prev {
+    border: 1px solid #dadada;
+    svg {
+      fill: #999;
+      stroke: #999;
+      stroke-width: 100;
     }
-    li.ant-pagination-item-active {
-      background-color: $green !important;
-      color: $white;
-    }
+  }
+
+  .anticon {
+    vertical-align: 0.15rem;
   }
 }

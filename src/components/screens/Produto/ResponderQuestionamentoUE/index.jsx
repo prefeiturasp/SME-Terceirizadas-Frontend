@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { toastError } from "components/Shareable/Toast/dialogs";
 
 import Filtros from "./components/Filtros";
 import TabelaProdutos from "./components/TabelaProdutos";
 
 import { filtrarReclamacoesEscola } from "services/reclamacaoProduto.service";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const ResponderQuestionamentoUE = () => {
   const [exibirModal, setExibirModal] = useState();
@@ -78,7 +79,7 @@ const ResponderQuestionamentoUE = () => {
                 setShowBuscaVazia={setShowBuscaVazia}
                 filtradoPorParametro={filtradoPorParametro}
               />,
-              <Pagination
+              <Paginacao
                 className="mt-3 mb-3"
                 key={2}
                 current={page || 1}

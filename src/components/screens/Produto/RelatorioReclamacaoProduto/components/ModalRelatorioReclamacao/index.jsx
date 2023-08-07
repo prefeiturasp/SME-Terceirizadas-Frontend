@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { Modal } from "antd";
 import Botao from "components/Shareable/Botao";
 import { gerarParametrosConsulta } from "helpers/utilities";
@@ -13,6 +13,7 @@ import "./styles.scss";
 import { getRelatorioReclamacao } from "services/relatorios.service";
 import { getConfigCabecario } from "./helpers";
 import Reclamacao from "./Reclamacao";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const ModalRelatorioReclamacao = ({
   showModal,
@@ -49,11 +50,11 @@ const ModalRelatorioReclamacao = ({
       onCancel={closeModal}
       width={"95%"}
       footer={[
-        <Pagination
+        <Paginacao
+          className="mt-3 mb-3"
           key={0}
           current={page}
           total={produtosCount}
-          className="float-left"
           showSizeChanger={false}
           onChange={page => {
             nextPage(page);

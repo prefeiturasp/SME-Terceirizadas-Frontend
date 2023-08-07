@@ -1,4 +1,4 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -22,6 +22,7 @@ import ListagemProdutos from "./components/ListagemProdutos";
 import { ordenaProdutos } from "./helpers";
 
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const BuscaAvancada = ({
   produtos,
@@ -87,7 +88,8 @@ const BuscaAvancada = ({
                 setAtivos={setAtivos}
               />
 
-              <Pagination
+              <Paginacao
+                className="mt-3 mb-3"
                 current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}

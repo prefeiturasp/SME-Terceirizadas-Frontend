@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import {
@@ -14,6 +14,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import Filtros from "./Filtros";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -96,13 +97,13 @@ export default () => {
               <ListagemInconsistencias guias={guias} />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

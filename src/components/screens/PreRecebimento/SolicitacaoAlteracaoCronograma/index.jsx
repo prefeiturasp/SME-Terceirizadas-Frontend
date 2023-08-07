@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getListagemSolicitacaoAlteracaoCronograma } from "../../../../services/cronograma.service.js";
 import Filtros from "./components/Filtros/index.jsx";
 import ListagemAlteracoesCronogramas from "./components/ListagemAlteracoesCronogramas/index.jsx";
 import { remove_filtros_nulos } from "./helper.js";
+import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
 
 export default ({ fornecedor }) => {
   const [carregando, setCarregando] = useState(false);
@@ -65,13 +66,13 @@ export default ({ fornecedor }) => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

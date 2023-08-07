@@ -1,7 +1,8 @@
 import React, { Fragment, useState } from "react";
 import { getProdutosRelatorioSuspenso } from "services/produto.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaResultado = ({
   produtosCount,
@@ -202,11 +203,11 @@ const TabelaResultado = ({
             </table>
           </div>
           <div className="col-12">
-            <Pagination
+            <Paginacao
+              className="mt-3 mb-3"
               key={0}
               current={page}
               total={produtosCount}
-              className="text-center"
               showSizeChanger={false}
               onChange={page => {
                 nextPage(page);

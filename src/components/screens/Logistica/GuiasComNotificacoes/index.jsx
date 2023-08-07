@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Pagination, Spin } from "antd";
+import { Spin } from "antd";
 import Filtros from "./components/Filtros";
 import ListagemNotificacoes from "./components/ListagemNotificacoes";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getNotificacoesOcorrencia } from "services/logistica.service";
+import { Paginacao } from "components/Shareable/Paginacao";
 
-export default () => {
+export default ({ fiscal = false }) => {
   const [carregando, setCarregando] = useState(false);
   const [notificacoes, setNotificacoes] = useState();
   const [filtros, setFiltros] = useState();
@@ -44,21 +45,28 @@ export default () => {
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 card-guias-notificacoes">
         <div className="card-body guias-notificacoes">
-          <Filtros setFiltros={setFiltros} setNotificacoes={setNotificacoes} />
+          <Filtros
+            setFiltros={setFiltros}
+            setNotificacoes={setNotificacoes}
+            fiscal={fiscal}
+          />
 
           {notificacoes && (
             <>
               <hr />
-              <ListagemNotificacoes notificacoes={notificacoes} />
+              <ListagemNotificacoes
+                notificacoes={notificacoes}
+                fiscal={fiscal}
+              />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>
