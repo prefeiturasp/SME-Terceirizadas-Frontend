@@ -1,9 +1,12 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { gerarParametrosConsulta } from "helpers/utilities";
+import {
+  gerarParametrosConsulta,
+  usuarioEhEmpresaTerceirizada
+} from "helpers/utilities";
 
 import Botao from "components/Shareable/Botao";
 import LabelResultadoDaBusca from "components/Shareable/LabelResultadoDaBusca";
@@ -27,6 +30,7 @@ import FormBuscaProduto from "./FormBuscaProduto";
 
 import { getStatus } from "./helpers.js";
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const TabelaProdutos = ({
   produtos,
@@ -198,7 +202,6 @@ const ResponderReclamacaoProduto = ({
       setCarregando(false);
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros, page]);
 
   const onSubmitForm = formValues => {
@@ -210,12 +213,14 @@ const ResponderReclamacaoProduto = ({
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3 screen-responder-reclamacao-produto">
         <div className="card-body">
-          <FormBuscaProduto
-            onSubmit={onSubmitForm}
-            onAtualizaProdutos={() => {}}
-            exibirBotaoVoltar
-            exibirStatus={false}
-          />
+          {usuarioEhEmpresaTerceirizada() && (
+            <FormBuscaProduto
+              onSubmit={onSubmitForm}
+              onAtualizaProdutos={() => {}}
+              exibirBotaoVoltar
+              exibirStatus={false}
+            />
+          )}
         </div>
         {produtos && !produtos.length && (
           <div className="text-center mt-5">
@@ -234,7 +239,8 @@ const ResponderReclamacaoProduto = ({
                 ativos={ativos}
                 setAtivos={setAtivos}
               />
-              <Pagination
+              <Paginacao
+                className="mt-3 mb-3"
                 current={page || 1}
                 total={produtosCount}
                 showSizeChanger={false}

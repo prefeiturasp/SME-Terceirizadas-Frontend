@@ -52,7 +52,7 @@ class BuscaPorPeriodo extends Component {
           ];
         } else if (usuarioEhDRE()) {
           const dre_uuid = meusDados.vinculo_atual.instituicao.uuid;
-          getEscolasTrecTotal(dre_uuid).then(response => {
+          getEscolasTrecTotal({ dre: dre_uuid }).then(response => {
             escolas = [{ nome: TODOS, uuid: TODOS }].concat(response.data);
           });
 

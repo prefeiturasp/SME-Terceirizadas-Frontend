@@ -58,6 +58,15 @@ export const getDiasCalendario = async params => {
   }
 };
 
+export const getFeriadosNoMes = async params => {
+  const url = "medicao-inicial/medicao/feriados-no-mes/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data };
+    return data;
+  }
+};
+
 export const getLogDietasAutorizadasPeriodo = async params => {
   const url = "log-quantidade-dietas-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
@@ -69,6 +78,15 @@ export const getLogDietasAutorizadasPeriodo = async params => {
 
 export const getSolicitacoesInclusoesAutorizadasEscola = async params => {
   const url = "escola-solicitacoes/inclusoes-autorizadas/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesInclusoesEtecAutorizadasEscola = async params => {
+  const url = "escola-solicitacoes/inclusoes-etec-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };
@@ -96,6 +114,15 @@ export const getSolicitacoesSuspensoesAutorizadasEscola = async params => {
 
 export const getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola = async params => {
   const url = "escola-solicitacoes/alteracoes-alimentacao-autorizadas/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSolicitacoesKitLanchesAutorizadasEscola = async params => {
+  const url = "escola-solicitacoes/kit-lanches-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

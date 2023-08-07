@@ -2,38 +2,34 @@ import React from "react";
 import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   CONFIGURACOES,
-  PERMISSOES,
   MENSAGEM,
   GERENCIAMENTO_EMAILS,
   GESTAO_ACESSO_CODAE_DILOG,
   GESTAO_ACESSO_DIRETOR_ESCOLA,
   CARGAS_USUARIOS,
   GESTAO_ACESSO_EMPRESA,
-  GESTAO_ACESSO_GERAL
+  GESTAO_ACESSO_GERAL,
+  GESTAO_ACESSO_COGESTOR,
+  GESTAO_ACESSO_MASTER,
+  CARGAS_USUARIOS_SERVIDORES,
+  ATUALIZACAO_EMAIL_EOL
 } from "configs/constants";
 import {
   usuarioEhCODAEGestaoAlimentacao,
   usuarioEhCODAEDietaEspecial,
-  usuarioEhDiretorEscola,
   usuarioEhEmpresaTerceirizada,
   usuarioEhCoordenadorNutriSupervisao,
-  usuarioEhDRE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorCODAE,
-  usuarioEhLogistica,
   usuarioEhAdministradorRepresentanteCodae,
-  usuarioEhAdmQualquerEmpresa
+  usuarioEhAdmQualquerEmpresa,
+  usuarioEhCogestorDRE,
+  usuarioEhCodaeDilog,
+  usuarioEhDiretorUE
 } from "helpers/utilities";
 
 const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
-  const exibirPermissoes =
-    usuarioEhCoordenadorNutriCODAE() ||
-    usuarioEhCoordenadorGpCODAE() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhDRE() ||
-    usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioEhEmpresaTerceirizada();
   const exibirConfigEmail =
     usuarioEhCODAEGestaoAlimentacao() ||
     usuarioEhCODAEDietaEspecial() ||
@@ -43,20 +39,16 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
     usuarioEhCODAEDietaEspecial() ||
     usuarioEhCoordenadorGpCODAE();
 
-  const exibirGestaoUsuario =
-    usuarioEhLogistica() ||
-    usuarioEhCoordenadorCODAE() ||
-    usuarioEhAdministradorRepresentanteCodae();
+  const exibirGestaoUsuarioMaster =
+    usuarioEhCodaeDilog() || usuarioEhCoordenadorCODAE();
 
   const exibirGestaoAcesso =
-    usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE();
+    usuarioEhCoordenadorNutriCODAE() ||
+    usuarioEhCoordenadorGpCODAE() ||
+    usuarioEhCoordenadorNutriSupervisao();
 
   return (
     <Menu id="Configuracoes" icon="fa-cog" title={"Configurações"}>
-      {exibirPermissoes && (
-        <LeafItem to={`/${CONFIGURACOES}/${PERMISSOES}`}>Permissões</LeafItem>
-      )}
-
       {exibirConfigEmail && (
         <>
           <LeafItem to={`/${CONFIGURACOES}`}>Disparo de E-mail</LeafItem>
@@ -71,7 +63,26 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
         </LeafItem>
       )}
 
-      {exibirGestaoUsuario && (
+      {exibirGestaoUsuarioMaster && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_MASTER}/`}>
+            Gestão de Acesso
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
+            Cargas de Usuários
+          </LeafItem>
+          <LeafItem to={`/${CONFIGURACOES}/${ATUALIZACAO_EMAIL_EOL}/`}>
+            Atualização de E-mail do EOL
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {usuarioEhAdministradorRepresentanteCodae() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
@@ -81,13 +92,13 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_CODAE_DILOG}/`}>
             Gestão de Acesso
           </LeafItem>
-          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS}/`}>
+          <LeafItem to={`/${CONFIGURACOES}/${CARGAS_USUARIOS_SERVIDORES}/`}>
             Cargas de Usuários
           </LeafItem>
         </SubMenu>
       )}
 
-      {usuarioEhDiretorEscola() && (
+      {usuarioEhDiretorUE() && (
         <SubMenu
           icon="fa-chevron-down"
           onClick={onSubmenuClick}
@@ -95,6 +106,19 @@ const MenuConfiguracoes = ({ activeMenu, onSubmenuClick }) => {
           activeMenu={activeMenu}
         >
           <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_DIRETOR_ESCOLA}/`}>
+            Gestão de Acesso
+          </LeafItem>
+        </SubMenu>
+      )}
+
+      {usuarioEhCogestorDRE() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Gestão de Usuários"
+          activeMenu={activeMenu}
+        >
+          <LeafItem to={`/${CONFIGURACOES}/${GESTAO_ACESSO_COGESTOR}/`}>
             Gestão de Acesso
           </LeafItem>
         </SubMenu>

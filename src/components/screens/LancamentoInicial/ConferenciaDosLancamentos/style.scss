@@ -7,6 +7,31 @@ div.conferencia-dos-lancamentos {
     color: $green;
   }
 
+  .dias-semana-tabela {
+    display: flex;
+    justify-content: center;
+
+    .label-dias-semana-tabela {
+      margin-left: 4px;
+      border: 0;
+    }
+
+    input {
+      accent-color: #c73932;
+    }
+  }
+
+  .input-dias-semana-tabela {
+    position: absolute;
+    margin-left: 8px;
+  }
+
+  .input-para-correcao {
+    div.input {
+      background-color: #c73932;
+    }
+  }
+
   .periodo-final-tabela-lancamento {
     display: flex;
     flex-direction: row;
@@ -20,29 +45,6 @@ div.conferencia-dos-lancamentos {
 
     .botoes {
       margin-left: 10px;
-    }
-  }
-
-  .content-section-ocorrencias {
-    border: 1px solid $grayDisabled;
-    border-radius: 4px;
-    padding: 14px 14px 10px 14px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
-    .value-avaliacao-servico-red {
-      color: $red;
-    }
-
-    .value-avaliacao-servico-green {
-      color: $green;
-    }
-
-    .download-ocorrencias {
-      color: $green;
-      font-weight: 700;
-      cursor: pointer;
     }
   }
 
@@ -74,9 +76,71 @@ div.conferencia-dos-lancamentos {
         color: black;
       }
 
+      .red {
+        color: $red;
+      }
+
       .visualizar-lancamento {
         cursor: pointer;
       }
     }
+  }
+  .periodo-aprovado {
+    color: #42474a;
+    font-weight: 700;
+  }
+}
+
+.content-section-ocorrencias {
+  border: 1px solid $grayDisabled;
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .value-avaliacao-servico-red {
+    color: $red;
+  }
+
+  .value-avaliacao-servico-green {
+    color: $green;
+  }
+
+  .download-ocorrencias {
+    color: $green;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .status-ocorrencia {
+    border: 1px solid #bcd7cb;
+    background-color: #bcd7cb;
+    color: #42474a;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    border-radius: 24px;
+    padding: 5px 12px;
+
+    .red {
+      color: $red;
+    }
+  }
+
+  .justificativa-ocorrencia-medicao {
+    background: #e8eaf3;
+    border: 1px solid #a6a6a6;
+    border-radius: 6px;
+    font-weight: 700;
+    color: #333333;
+    min-height: 100px;
+    padding: 15px;
+  }
+
+  .visualizar-ocorrencias {
+    cursor: pointer;
   }
 }

@@ -147,7 +147,6 @@ export const FormBuscaProduto = ({
     }
     fetchData();
     usuarioEhDRE() && getListaEditaisDREAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSearch = (filtro, searchText) => {

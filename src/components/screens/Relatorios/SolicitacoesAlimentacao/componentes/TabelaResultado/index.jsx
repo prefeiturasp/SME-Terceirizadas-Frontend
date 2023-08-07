@@ -5,7 +5,7 @@ import { AlteracaoCEMEIBody } from "../AlteracaoCEMEIBody";
 import { InclusaoBody } from "../InclusaoBody";
 import { InclusaoCEIBody } from "../InclusaoCEIBody";
 import { InclusaoCEMEIBody } from "../InclusaoCEMEIBody";
-import { InclusaoContiniuaBody } from "../InclusaoContinuaBody";
+import { InclusaoContinuaBody } from "../InclusaoContinuaBody";
 import { InversaoCardapioBody } from "../InversaoCardapioBody";
 import { KitLancheAvulsaBody } from "../KitLancheAvulsaBody";
 import { KitLancheAvulsaCEIBody } from "../KitLancheAvulsaCEIBody";
@@ -38,7 +38,7 @@ export const TabelaResultado = ({ ...props }) => {
         );
       case "INC_ALIMENTA_CONTINUA":
         return (
-          <InclusaoContiniuaBody
+          <InclusaoContinuaBody
             solicitacao={solicitacao}
             item={item}
             index={index}

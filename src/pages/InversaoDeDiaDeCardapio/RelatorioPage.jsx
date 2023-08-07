@@ -5,10 +5,10 @@ import { getMotivosDREnaoValida } from "services/relatorios";
 import Container from "../../components/InversaoDeDiaDeCardapio/Container";
 import Relatorio from "../../components/InversaoDeDiaDeCardapio/Relatorio";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import ModalCancelarSolicitacao from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacaoReduxForm";
-import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import ModalNegarSolicitacao from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import Page from "../../components/Shareable/Page/Page";
 import { CODAE, DRE, ESCOLA, TERCEIRIZADA } from "../../configs/constants";
@@ -44,7 +44,7 @@ export const RelatorioBase = ({ ...props }) => {
   };
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>
@@ -58,7 +58,7 @@ export class InversaoDeDiaDeCardapioPage extends React.Component {
       titulo: "Inversão de dia de Cardápio"
     };
     return (
-      <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+      <Page titulo={atual.titulo} botaoVoltar>
         <Breadcrumb home={HOME} atual={atual} />
         <Container />
       </Page>

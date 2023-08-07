@@ -60,11 +60,34 @@
     }
     padding-left: 32px;
   }
-  .button-editar-card {
+  .botao-editar-visualizar-card {
     position: absolute;
     bottom: 0;
     right: 0;
   }
+  .status-card-periodo-grupo {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background-color: $grayLightHeader;
+    color: #198459;
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 24px;
+    padding: 5px 12px;
+  }
+
+  .red {
+    color: $red;
+  }
+
+  .blue {
+    color: $blue;
+  }
+
   .col-form-label {
     font-size: 14px;
     span {

@@ -39,7 +39,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
     this.pageSize = 10;
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { history, reset, homologacoes } = this.props;
     if (history && history.action === "PUSH") reset();
     if (homologacoes === undefined || history.action === "PUSH") this.refresh();
@@ -179,7 +179,7 @@ class BuscaProdutoAnaliseSensorial extends Component {
                             type={BUTTON_TYPE.SUBMIT}
                             style={BUTTON_STYLE.GREEN}
                             disabled={this.responder_deve_aparecer(
-                              homologacao.rastro_terceirizada
+                              homologacao.ultima_analise.terceirizada
                             )}
                             onClick={this.showModal}
                           />

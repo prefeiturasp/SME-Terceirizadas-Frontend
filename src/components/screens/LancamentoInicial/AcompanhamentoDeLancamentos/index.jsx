@@ -28,35 +28,48 @@ import { getEscolasTrecTotal } from "services/escola.service";
 import { getDiretoriaregionalSimplissima } from "services/diretoriaRegional.service";
 import {
   formatarOpcoesDRE,
-  usuarioEhDiretorUE,
   usuarioEhDRE,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhEscolaTerceirizadaQualquerPerfil,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
 } from "helpers/utilities";
 import { ASelect } from "components/Shareable/MakeField";
 import { Select as SelectAntd } from "antd";
 import {
   CONFERENCIA_DOS_LANCAMENTOS,
+  DETALHAMENTO_DO_LANCAMENTO,
   MEDICAO_INICIAL
 } from "configs/constants";
+import { required } from "helpers/fieldValidators";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { relatorioMedicaoInicialPDF } from "services/relatorios";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
 export const AcompanhamentoDeLancamentos = () => {
   const history = useHistory();
   const { meusDados } = useContext(MeusDadosContext);
+  const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
   const [dadosDashboard, setDadosDashboard] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(null);
   const [resultados, setResultados] = useState(null);
   const [mesesAnos, setMesesAnos] = useState(null);
-  const [lotes, setLotes] = useState(null);
-  const [tiposUnidades, setTiposUnidades] = useState(null);
-  const [nomesEscolas, setNomesEscolas] = useState(null);
+  const [lotes, setLotes] = useState(DEFAULT_STATE);
+  const [tiposUnidades, setTiposUnidades] = useState(DEFAULT_STATE);
+  const [nomesEscolas, setNomesEscolas] = useState(DEFAULT_STATE);
   const [diretoriasRegionais, setDiretoriasRegionais] = useState(null);
   const [diretoriaRegional, setDiretoriaRegional] = useState(null);
+  const [mudancaDre, setMudancaDre] = useState(false);
 
   const [erroAPI, setErroAPI] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadingComFiltros, setLoadingComFiltros] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
 
   const PAGE_SIZE = 10;
   const LOADING =
@@ -77,13 +90,9 @@ export const AcompanhamentoDeLancamentos = () => {
       const dashboardResults = response.data.results;
       if (!usuarioEhMedicao() || diretoriaRegional) {
         let NovoDashboardResults = [...dashboardResults];
-        if (usuarioEhDiretorUE())
+        if (usuarioEhEscolaTerceirizadaQualquerPerfil())
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
-          );
-        else
-          NovoDashboardResults = NovoDashboardResults.filter(
-            medicoes => medicoes.status !== "MEDICAO_CORRECAO_SOLICITADA_CODAE"
           );
         setDadosDashboard(NovoDashboardResults);
       }
@@ -99,6 +108,7 @@ export const AcompanhamentoDeLancamentos = () => {
     }
     setLoading(false);
     setLoadingComFiltros(false);
+    setMudancaDre(false);
   };
 
   useEffect(() => {
@@ -123,43 +133,50 @@ export const AcompanhamentoDeLancamentos = () => {
         );
       }
     };
-    getDiretoriasRegionaisAsync();
+
     getDashboardMedicaoInicialAsync();
     getMesesAnosSolicitacoesMedicaoinicialAsync();
-    getTiposUnidadeEscolarAsync();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [diretoriaRegional]);
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      getDiretoriasRegionaisAsync();
+      getTiposUnidadeEscolarAsync();
+    }
+  }, []);
 
   useEffect(() => {
-    const uuid = usuarioEhDRE()
-      ? meusDados && meusDados.vinculo_atual.instituicao.uuid
-      : diretoriaRegional;
+    if (!usuarioEhEscolaTerceirizadaQualquerPerfil()) {
+      const uuid = usuarioEhDRE()
+        ? meusDados && meusDados.vinculo_atual.instituicao.uuid
+        : diretoriaRegional;
 
-    const getLotesAsync = async () => {
-      const response = await getLotesSimples({
-        diretoria_regional__uuid: uuid
-      });
-      if (response.status === HTTP_STATUS.OK) {
-        setLotes(response.data.results);
-      } else {
-        setErroAPI("Erro ao carregar lotes. Tente novamente mais tarde.");
-      }
-    };
+      const getLotesAsync = async () => {
+        const response = await getLotesSimples({
+          diretoria_regional__uuid: uuid
+        });
+        if (response.status === HTTP_STATUS.OK) {
+          setLotes(response.data.results);
+        } else {
+          setErroAPI("Erro ao carregar lotes. Tente novamente mais tarde.");
+        }
+      };
 
-    const getEscolasTrecTotalAsync = async () => {
-      const response = await getEscolasTrecTotal(uuid);
-      if (response.status === HTTP_STATUS.OK) {
-        setNomesEscolas(
-          response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
-        );
-      } else {
-        setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
-      }
-    };
+      const getEscolasTrecTotalAsync = async () => {
+        const response = await getEscolasTrecTotal({ dre: uuid });
+        if (response.status === HTTP_STATUS.OK) {
+          setNomesEscolas(
+            response.data.map(escola => `${escola.codigo_eol} - ${escola.nome}`)
+          );
+        } else {
+          setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
+        }
+      };
 
-    meusDados && getLotesAsync();
-    meusDados && getEscolasTrecTotalAsync();
+      meusDados && getLotesAsync();
+      meusDados && getEscolasTrecTotalAsync();
+    }
+    if (diretoriaRegional) {
+      getDashboardMedicaoInicialAsync();
+    }
   }, [meusDados, diretoriaRegional]);
 
   const onPageChanged = async page => {
@@ -210,18 +227,52 @@ export const AcompanhamentoDeLancamentos = () => {
       "diretoria_regional" || undefined
     );
     form.reset();
+    setResultados(undefined);
     diretoria_regional &&
       form.change("diretoria_regional", diretoria_regional.value);
   };
 
-  const handleClickVisualizar = (uuidSolicitacaoMedicao, escolaUuid) => {
-    history.push({
-      pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
-      search: `uuid=${uuidSolicitacaoMedicao}`,
-      state: {
-        escolaUuid: escolaUuid
-      }
-    });
+  const handleClickVisualizar = (
+    uuidSolicitacaoMedicao,
+    escolaUuid,
+    mes,
+    ano,
+    status
+  ) => {
+    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
+      history.push({
+        pathname: `/${MEDICAO_INICIAL}/${DETALHAMENTO_DO_LANCAMENTO}`,
+        search: `mes=${mes}&ano=${ano}`,
+        state: {
+          veioDoAcompanhamentoDeLancamentos: true,
+          status
+        }
+      });
+    } else {
+      history.push({
+        pathname: `/${MEDICAO_INICIAL}/${CONFERENCIA_DOS_LANCAMENTOS}`,
+        search: `uuid=${uuidSolicitacaoMedicao}`,
+        state: {
+          escolaUuid: escolaUuid
+        }
+      });
+    }
+  };
+
+  const handleClickDownload = async uuidSolicitacaoMedicao => {
+    const response = await relatorioMedicaoInicialPDF(uuidSolicitacaoMedicao);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
+    }
+  };
+
+  const exibirDashboard = () => {
+    if (usuarioEhMedicao() && loadingComFiltros) {
+      return !mudancaDre;
+    }
+    return true;
   };
 
   return (
@@ -244,6 +295,7 @@ export const AcompanhamentoDeLancamentos = () => {
                           setDiretoriaRegional(value || undefined);
                           setStatusSelecionado(null);
                           setResultados(null);
+                          setMudancaDre(true);
                         }}
                         name="diretoria_regional"
                         filterOption={(inputValue, option) =>
@@ -259,8 +311,9 @@ export const AcompanhamentoDeLancamentos = () => {
                     </div>
                   )}
                   <div className="card-body">
-                    <div className="d-flex">
-                      {dadosDashboard &&
+                    <div className="d-flex row row-cols-1">
+                      {exibirDashboard() &&
+                        dadosDashboard &&
                         dadosDashboard.map((dadosPorStatus, key) => {
                           return (
                             <CardMedicaoPorStatus
@@ -303,96 +356,103 @@ export const AcompanhamentoDeLancamentos = () => {
                         </span>
                       )}{" "}
                     </div>
-                    {statusSelecionado && !usuarioEhDiretorUE() && (
-                      <>
-                        <hr />
+                    {statusSelecionado &&
+                      !usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+                        <>
+                          <hr />
 
-                        <div className="row">
-                          <div className="col-4">
-                            <Field
-                              component={Select}
-                              name="mes_ano"
-                              label="Mês de referência"
-                              options={[
-                                { nome: "Selecione o mês", uuid: "" }
-                              ].concat(
-                                mesesAnos.map(mesAno => ({
-                                  nome: `${MESES[parseInt(mesAno.mes) - 1]} - ${
-                                    mesAno.ano
-                                  }`,
-                                  uuid: `${mesAno.mes}_${mesAno.ano}`
-                                }))
-                              )}
-                              naoDesabilitarPrimeiraOpcao
-                            />
+                          <div className="row">
+                            <div className="col-4">
+                              <Field
+                                component={Select}
+                                name="mes_ano"
+                                label="Mês de referência"
+                                options={[
+                                  { nome: "Selecione o mês", uuid: "" }
+                                ].concat(
+                                  mesesAnos.map(mesAno => ({
+                                    nome: `${
+                                      MESES[parseInt(mesAno.mes) - 1]
+                                    } - ${mesAno.ano}`,
+                                    uuid: `${mesAno.mes}_${mesAno.ano}`
+                                  }))
+                                )}
+                                naoDesabilitarPrimeiraOpcao
+                                validate={required}
+                                required
+                              />
+                            </div>
+                            <div className="col-4">
+                              <label className="mb-2">Lote</label>
+                              <Field
+                                component={StatefulMultiSelect}
+                                name="lotes"
+                                selected={values.lotes_selecionados || []}
+                                options={lotes.map(lote => ({
+                                  label: lote.nome,
+                                  value: lote.uuid
+                                }))}
+                                onSelectedChanged={values_ => {
+                                  form.change(`lotes_selecionados`, values_);
+                                }}
+                                disableSearch={true}
+                                overrideStrings={{
+                                  selectSomeItems: "Selecione um ou mais lotes",
+                                  allItemsAreSelected:
+                                    "Todos os lotes estão selecionados",
+                                  selectAll: "Todos"
+                                }}
+                              />
+                            </div>
+                            <div className="col-4">
+                              <Field
+                                component={Select}
+                                name="tipo_unidade"
+                                label="Tipo de unidade"
+                                options={[
+                                  { nome: "Selecione o tipo de UE", uuid: "" }
+                                ].concat(
+                                  tiposUnidades.map(tipoUnidade => ({
+                                    nome: tipoUnidade.iniciais,
+                                    uuid: tipoUnidade.uuid
+                                  }))
+                                )}
+                                naoDesabilitarPrimeiraOpcao
+                              />
+                            </div>
                           </div>
-                          <div className="col-4">
-                            <label className="mb-2">Lote</label>
-                            <Field
-                              component={StatefulMultiSelect}
-                              name="lotes"
-                              selected={values.lotes_selecionados || []}
-                              options={lotes.map(lote => ({
-                                label: lote.nome,
-                                value: lote.uuid
-                              }))}
-                              onSelectedChanged={values_ => {
-                                form.change(`lotes_selecionados`, values_);
-                              }}
-                              disableSearch={true}
-                              overrideStrings={{
-                                selectSomeItems: "Selecione um ou mais lotes",
-                                allItemsAreSelected:
-                                  "Todos os lotes estão selecionados",
-                                selectAll: "Todos"
-                              }}
-                            />
+                          <div
+                            className={`row ${resultados ? "" : "ue-botoes"}`}
+                          >
+                            <div className="col-8">
+                              <Field
+                                dataSource={getNomesItemsFiltrado(
+                                  values.escola
+                                )}
+                                component={AutoCompleteField}
+                                name="escola"
+                                label="Unidade Educacional"
+                                placeholder={"Digite um nome"}
+                                className="input-busca-nome-item"
+                              />
+                            </div>
+                            <div className="col-4 mt-auto text-right">
+                              <Botao
+                                type={BUTTON_TYPE.BUTTON}
+                                onClick={() => resetForm(form)}
+                                style={BUTTON_STYLE.GREEN_OUTLINE}
+                                texto="Limpar"
+                                className="mr-3"
+                              />
+                              <Botao
+                                type={BUTTON_TYPE.SUBMIT}
+                                style={BUTTON_STYLE.GREEN}
+                                texto="Filtrar"
+                              />
+                            </div>
                           </div>
-                          <div className="col-4">
-                            <Field
-                              component={Select}
-                              name="tipo_unidade"
-                              label="Tipo de unidade"
-                              options={[
-                                { nome: "Selecione o tipo de UE", uuid: "" }
-                              ].concat(
-                                tiposUnidades.map(tipoUnidade => ({
-                                  nome: tipoUnidade.iniciais,
-                                  uuid: tipoUnidade.uuid
-                                }))
-                              )}
-                              naoDesabilitarPrimeiraOpcao
-                            />
-                          </div>
-                        </div>
-                        <div className="row">
-                          <div className="col-8">
-                            <Field
-                              dataSource={getNomesItemsFiltrado(values.escola)}
-                              component={AutoCompleteField}
-                              name="escola"
-                              label="Unidade Educacional"
-                              placeholder={"Digite um nome"}
-                              className="input-busca-nome-item"
-                            />
-                          </div>
-                          <div className="col-4 mt-auto text-right">
-                            <Botao
-                              type={BUTTON_TYPE.BUTTON}
-                              onClick={() => resetForm(form)}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              texto="Limpar"
-                              className="mr-3"
-                            />
-                            <Botao
-                              type={BUTTON_TYPE.SUBMIT}
-                              style={BUTTON_STYLE.GREEN}
-                              texto="Filtrar"
-                            />
-                          </div>
-                        </div>
-                      </>
-                    )}
+                        </>
+                      )}
                     <Spin tip="Carregando..." spinning={loadingComFiltros}>
                       {resultados && (
                         <>
@@ -408,17 +468,25 @@ export const AcompanhamentoDeLancamentos = () => {
                                 <thead>
                                   <tr className="row">
                                     <th className="col-5 pl-2">
-                                      {usuarioEhDiretorUE
+                                      {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                         ? "Período do Lançamento"
                                         : "Nome da UE"}
                                     </th>
-                                    {!usuarioEhDiretorUE() && (
+                                    {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
                                       <th className="col-1 text-center">
                                         Tipo de UE
                                       </th>
                                     )}
-                                    <th className="col-2 text-center">
-                                      Status do lançamento
+                                    <th
+                                      className={`${
+                                        !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                          ? "col-2"
+                                          : "col-3"
+                                      } text-center`}
+                                    >
+                                      {usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                        ? "Status"
+                                        : "Status do lançamento"}
                                     </th>
                                     <th className="col-2 text-center">
                                       Última atualização
@@ -431,16 +499,22 @@ export const AcompanhamentoDeLancamentos = () => {
                                     return (
                                       <tr key={key} className="row">
                                         <td className="col-5 pl-2 pt-3">
-                                          {usuarioEhDiretorUE()
+                                          {usuarioEhEscolaTerceirizadaQualquerPerfil()
                                             ? dado.mes_ano
                                             : dado.escola}
                                         </td>
-                                        {!usuarioEhDiretorUE() && (
+                                        {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
                                           <td className="col-1 text-center pt-3">
                                             {dado.tipo_unidade}
                                           </td>
                                         )}
-                                        <td className="col-2 text-center pt-3">
+                                        <td
+                                          className={`${
+                                            !usuarioEhEscolaTerceirizadaQualquerPerfil()
+                                              ? "col-2"
+                                              : "col-3"
+                                          } text-center pt-3`}
+                                        >
                                           {dado.status}
                                         </td>
                                         <td className="col-2 text-center pt-3">
@@ -456,7 +530,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                             onClick={() =>
                                               handleClickVisualizar(
                                                 dado.uuid,
-                                                dado.escola_uuid
+                                                dado.escola_uuid,
+                                                dado.mes,
+                                                dado.ano,
+                                                dado.status
                                               )
                                             }
                                           />
@@ -466,6 +543,9 @@ export const AcompanhamentoDeLancamentos = () => {
                                               BUTTON_STYLE.GREEN_OUTLINE
                                             } no-border`}
                                             icon={BUTTON_ICON.DOWNLOAD}
+                                            onClick={() =>
+                                              handleClickDownload(dado.uuid)
+                                            }
                                           />
                                         </td>
                                       </tr>
@@ -478,6 +558,10 @@ export const AcompanhamentoDeLancamentos = () => {
                                 total={resultados.total}
                                 pageSize={PAGE_SIZE}
                                 current={currentPage}
+                              />
+                              <ModalSolicitacaoDownload
+                                show={exibirModalCentralDownloads}
+                                setShow={setExibirModalCentralDownloads}
                               />
                             </>
                           )}

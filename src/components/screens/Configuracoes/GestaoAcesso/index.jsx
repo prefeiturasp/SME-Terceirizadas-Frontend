@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import {
+  alterarVinculo,
   cadastrarVinculo,
-  editarVinculo,
   finalizarVinculo,
   getVinculosAtivos
 } from "services/vinculos.service";
@@ -18,8 +18,9 @@ import {
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
+import { Paginacao } from "components/Shareable/Paginacao";
 
-export default ({ diretor_escola, empresa, geral }) => {
+export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [carregando, setCarregando] = useState(false);
   const [vinculos, setVinculos] = useState([]);
   const [filtros, setFiltros] = useState();
@@ -43,7 +44,8 @@ export default ({ diretor_escola, empresa, geral }) => {
 
     let options_perfis = lista_perfis.map(perfil => ({
       uuid: perfil.nome,
-      nome: perfil.nome
+      nome: perfil.nome,
+      visao: perfil.visao
     }));
 
     let options_visoes = visoes.data.map(visao => ({
@@ -51,10 +53,27 @@ export default ({ diretor_escola, empresa, geral }) => {
       nome: visao.nome
     }));
 
+    if (codae) {
+      setVisoes(options_visoes.filter(visao => visao.uuid === "CODAE"));
+      setPerfis(
+        lista_perfis
+          .filter(perfil => perfil.visao && perfil.visao === "CODAE")
+          .map(visao => ({
+            uuid: visao.id,
+            nome: visao.nome
+          }))
+      );
+      setListaPerfis(lista_perfis);
+      setFiltros({});
+      return;
+    }
+
     if (diretor_escola) {
       setPerfisVisao(lista_perfis, "ESCOLA");
     } else if (empresa) {
       setPerfisVisao(lista_perfis, "EMPRESA");
+    } else if (cogestor) {
+      setPerfisVisao(lista_perfis, "DRE");
     } else if (geral) {
       const perfis_subordinados = await getPerfisSubordinados();
       const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
@@ -73,7 +92,7 @@ export default ({ diretor_escola, empresa, geral }) => {
     }
 
     setVisoes(options_visoes);
-    setListaPerfis(options_perfis);
+    setListaPerfis(lista_perfis);
   };
 
   const setPerfisVisao = (lista_perfis, visao) => {
@@ -93,6 +112,15 @@ export default ({ diretor_escola, empresa, geral }) => {
     if (geral && !filtros.perfil) {
       filtros.perfil = perfisSubordinados;
     }
+
+    if (cogestor) {
+      filtros.perfil = "COGESTOR_DRE";
+    }
+
+    if (codae) {
+      filtros.visao = "CODAE";
+    }
+
     let payload = gerarParametrosConsulta({ page, ...filtros });
     let data = await getVinculosAtivos(payload);
 
@@ -136,17 +164,31 @@ export default ({ diretor_escola, empresa, geral }) => {
       setShowCadastro(false);
       buscarVinculos(page);
     } else {
-      toastError(
-        "Erro ao adicionar acesso ao usuário, procure o administrador do SIGPAE na sua Unidade!"
-      );
+      if (
+        response.data &&
+        response.data.length &&
+        ehErroEmail(response.data[0])
+      ) {
+        toastError(
+          "Erro ao adicionar acesso ao usuário: já existe um usuário com este e-mail cadastrado!"
+        );
+      } else {
+        toastError(
+          "Erro ao adicionar acesso ao usuário, procure o administrador do SIGPAE na sua Unidade!"
+        );
+      }
     }
   };
+
+  const ehErroEmail = erro =>
+    erro.includes("(email)") && erro.includes("already exists");
 
   const editarAcesso = async values => {
     let payload = {};
     payload.email = values.email;
     payload.username = values.cpf.replace(/[^\w\s]/gi, "");
-    let response = await editarVinculo(payload);
+    payload.perfil = values.perfil;
+    const response = await alterarVinculo(payload);
 
     if (response.status === 200) {
       toastSuccess("Acesso editado com sucesso!");
@@ -180,8 +222,6 @@ export default ({ diretor_escola, empresa, geral }) => {
 
   useEffect(() => {
     buscaFiltros();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -189,7 +229,6 @@ export default ({ diretor_escola, empresa, geral }) => {
       buscarVinculos(1);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   return (
@@ -200,9 +239,11 @@ export default ({ diretor_escola, empresa, geral }) => {
         listaPerfis={visaoUnica ? perfis : listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
+        cogestor={cogestor}
         empresa={empresa}
         onSubmit={salvarAcesso}
         visaoUnica={visaoUnica}
+        codae={codae}
       />
       <ModalCadastroVinculo
         show={showEdicao}
@@ -227,6 +268,7 @@ export default ({ diretor_escola, empresa, geral }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             visaoUnica={visaoUnica}
+            desabilitaCadastro={diretor_escola && totalVinculos >= 4}
           />
           {vinculos && (
             <>
@@ -238,13 +280,13 @@ export default ({ diretor_escola, empresa, geral }) => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={totalVinculos}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

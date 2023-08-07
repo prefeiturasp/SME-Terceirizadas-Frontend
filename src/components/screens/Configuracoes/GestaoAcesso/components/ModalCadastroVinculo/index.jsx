@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Modal } from "react-bootstrap";
 import { Form, Field } from "react-final-form";
-import "antd/dist/antd.css";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
@@ -15,7 +15,8 @@ import {
   email,
   required,
   tamanhoCnpj,
-  validaCPF
+  validaCPF,
+  SMEPrefeituraEmail
 } from "helpers/fieldValidators";
 import {
   composeValidators,
@@ -35,6 +36,8 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { cnpjMask, cpfMask } from "constants/shared";
 import InputErroMensagem from "components/Shareable/Input/InputErroMensagem";
 
+const ENTER = 13;
+
 const campoObrigatorio = {
   touched: true,
   error: "Informação não localizada"
@@ -50,17 +53,22 @@ const ModalCadastroVinculo = ({
   vinculo,
   toggleExclusao,
   empresa,
-  visaoUnica
+  visaoUnica,
+  codae,
+  cogestor
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
   const [showExclusao, setShowExclusao] = useState(false);
   const [valoresEdicao, setValoresEdicao] = useState();
   const [rfBuscado, setRfBuscado] = useState(false);
+  const [desabilitaEmail, setDesabilitaEmail] = useState(true);
 
   const { meusDados } = useContext(MeusDadosContext);
   const handleClose = () => {
     setRfBuscado(false);
+    setDesabilitaEmail(true);
+    setTipoUsuario("");
     toggleShow(false, null);
   };
 
@@ -84,7 +92,9 @@ const ModalCadastroVinculo = ({
 
     const subdivisoes_restrita_por_perfil = {
       COORDENADOR_DIETA_ESPECIAL: "CODAE - Gestão Dieta Especial",
-      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos"
+      COORDENADOR_GESTAO_PRODUTO: "CODAE - Gestão de Produtos",
+      COORDENADOR_SUPERVISAO_NUTRICAO:
+        "CODAE - Coordenador Supervisão de Nutrição"
     };
 
     if (perfil in subdivisoes_restrita_por_perfil) {
@@ -101,7 +111,7 @@ const ModalCadastroVinculo = ({
 
     if (response.status === 200) {
       const usuarioEOL = response.data;
-      if (diretor_escola) {
+      if (diretor_escola || cogestor) {
         const codigo_eol_unidade =
           meusDados.vinculo_atual.instituicao.codigo_eol;
         if (codigo_eol_unidade !== usuarioEOL.codigo_eol_unidade) {
@@ -110,7 +120,9 @@ const ModalCadastroVinculo = ({
       }
       values.nome_servidor = usuarioEOL.nome ? usuarioEOL.nome : undefined;
       values.cargo_servidor = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
-      values.email_servidor = usuarioEOL.email ? usuarioEOL.email : undefined;
+      values.email_servidor = usuarioEOL.email
+        ? usuarioEOL.email
+        : setDesabilitaEmail(false);
       values.cpf = usuarioEOL.cpf;
       values.cpf_servidor = usuarioEOL.cpf
         ? formataCPFCensurado(usuarioEOL.cpf)
@@ -118,6 +130,7 @@ const ModalCadastroVinculo = ({
       values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
 
       let t = document.getElementById("inputRF");
+      t.blur();
       t.focus();
       setRfBuscado(true);
     } else {
@@ -132,6 +145,12 @@ const ModalCadastroVinculo = ({
   const abreDeletar = () => {
     toggleExclusao(true, vinculo);
     toggleShow(false, vinculo);
+  };
+
+  const onKeyPress = (event, values) => {
+    if (event.which === ENTER) {
+      buscaEOL(values);
+    }
   };
 
   const getVinculoEmpresaAsync = async () => {
@@ -169,10 +188,10 @@ const ModalCadastroVinculo = ({
 
     if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
-    } else if (diretor_escola || visaoUnica) {
+    } else if (diretor_escola || visaoUnica || codae) {
       setTipoUsuario("SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica]);
+  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica, codae]);
 
   return (
     <>
@@ -189,14 +208,18 @@ const ModalCadastroVinculo = ({
         <Form
           onSubmit={onSubmit}
           initialValues={valoresEdicao}
-          render={({ form, handleSubmit, values, errors }) => (
+          render={({ handleSubmit, values, errors }) => (
             <>
               <Modal.Body>
-                <form onSubmit={handleSubmit} className="">
+                <form
+                  onSubmit={handleSubmit}
+                  className=""
+                  onKeyPress={event => onKeyPress(event, values)}
+                >
                   {diretor_escola ||
                     empresa ||
                     visaoUnica !== undefined ||
-                    (!vinculo && (
+                    (!vinculo && !codae && (
                       <div className="row mx-0 my-1">
                         <span className="label-radio">
                           Selecione o tipo de usuário:
@@ -276,8 +299,8 @@ const ModalCadastroVinculo = ({
                             label="E-mail"
                             name="email_servidor"
                             className="input-busca-produto"
-                            disabled={true}
-                            validate={required}
+                            disabled={desabilitaEmail}
+                            validate={SMEPrefeituraEmail}
                             required
                           />
                           {rfBuscado && !values.email_servidor && (
@@ -436,9 +459,12 @@ const ModalCadastroVinculo = ({
                             placeholder="Selecione o perfil de acesso"
                             className="input-busca-produto"
                             required
-                            options={listaPerfis}
+                            options={
+                              listaPerfis.some(perfil => perfil.visao)
+                                ? getPerfis("EMPRESA")
+                                : listaPerfis
+                            }
                             validate={required}
-                            disabled={valoresEdicao && !empresa}
                           />
                         </div>
                       </div>
@@ -472,6 +498,9 @@ const ModalCadastroVinculo = ({
                     type={BUTTON_TYPE.BUTTON}
                     onClick={() => {
                       onSubmit(values, tipoUsuario, valoresEdicao);
+                      setRfBuscado(false);
+                      setDesabilitaEmail(true);
+                      setTipoUsuario("");
                     }}
                     disabled={Object.keys(errors).length > 0}
                     style={BUTTON_STYLE.GREEN}

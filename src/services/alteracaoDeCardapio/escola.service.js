@@ -91,29 +91,17 @@ export const getRascunhosAlteracaoTipoAlimentacao = async tipoSolicitacao => {
   }
 };
 
-export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = (
+export const escolaCancelarSolicitacaoDeAlteracaoDeCardapio = async (
   uuid,
-  justificativa,
+  payload,
   tipoSolicitacao
 ) => {
   const url = `${getPath(tipoSolicitacao)}/${uuid}/${FLUXO.ESCOLA_CANCELA}/`;
-
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    headers: AUTH_TOKEN,
-    body: JSON.stringify({ justificativa })
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const getAlteracaoCEMEI = async uuid => {
@@ -168,6 +156,15 @@ export const getAlunosPorFaixaEtariaNumaData = async (
   const url = `/${
     ENDPOINT.PERIODOS_ESCOLARES
   }/${periodoUUID}/alunos-por-faixa-etaria/${dataReferencia}/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getSomatorioFaixas = async (escola_id, dataReferencia) => {
+  const url = `/escola-quantidade-alunos-por-periodo-e-faixa-etaria/${escola_id}/somatorio-faixas-etarias/${dataReferencia}/`;
   const response = await axios.get(url).catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

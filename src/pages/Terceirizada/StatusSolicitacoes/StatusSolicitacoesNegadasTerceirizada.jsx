@@ -9,7 +9,7 @@ import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitaca
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import { formatarLotesParaVisao } from "helpers/utilities";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import MeusDadosContext from "context/MeusDadosContext";
 
 const atual = {
@@ -21,7 +21,7 @@ export const StatusSolicitacoesNegadasTerceirizadaPage = () => {
   const { meusDados } = useContext(MeusDadosContext);
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       {meusDados && (
         <SolicitacoesPorStatusGenerico

@@ -4,7 +4,7 @@ import { toastError } from "../components/Shareable/Toast/dialogs";
 import HTTP_STATUS from "http-status-codes";
 import { getError } from "helpers/utilities";
 
-export const TOKEN_ALIAS = "TOKEN";
+export const TOKEN_ALIAS = "TOKEN_CORESSO";
 
 const login = async (login, password) => {
   try {
@@ -29,7 +29,7 @@ const login = async (login, password) => {
         }
       });
 
-      if (login.length === 11 && !json.last_login) {
+      if (!json.last_login) {
         localStorage.setItem("senhaAtual", password);
         window.location.href = "/login?tab=PRIMEIRO_ACESSO";
       }
@@ -117,6 +117,7 @@ const logout = () => {
   localStorage.removeItem("eh_cemei");
   localStorage.removeItem("dre_nome");
   localStorage.removeItem("lotes");
+  localStorage.removeItem("modalCestas");
   window.location.href = "/login";
 };
 

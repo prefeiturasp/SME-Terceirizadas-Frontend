@@ -41,6 +41,7 @@ class DashboardTerceirizada extends Component {
       canceladasListSolicitacao: [],
       negadasListSolicitacao: [],
       loadingFiltro: false,
+      loadingAcompanhamentoSolicitacoes: false,
 
       listaStatus: [
         { nome: "Conferência Status", uuid: "" },
@@ -50,6 +51,7 @@ class DashboardTerceirizada extends Component {
     };
     this.alterarCollapse = this.alterarCollapse.bind(this);
     this.onPesquisaChanged = this.onPesquisaChanged.bind(this);
+    this.typingTimeout = null;
   }
 
   alterarCollapse() {
@@ -57,6 +59,8 @@ class DashboardTerceirizada extends Component {
   }
 
   async getSolicitacoesAsync(params = null) {
+    this.setState({ loadingAcompanhamentoSolicitacoes: true });
+
     getSolicitacoesComQuestionamento(params).then(request => {
       let questionamentosListSolicitacao = ajustarFormatoLog(
         request.data.results,
@@ -94,8 +98,16 @@ class DashboardTerceirizada extends Component {
         LOG_PARA.TERCEIRIZADA
       );
       this.setState({
-        autorizadasListSolicitacao
+        autorizadasListSolicitacao,
+        loadingAcompanhamentoSolicitacoes: false
       });
+    });
+  }
+
+  resetParams() {
+    const newParams = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
+    this.setState({ loadingFiltro: true }, () => {
+      this.getSolicitacoesAsync(newParams);
     });
   }
 
@@ -109,7 +121,7 @@ class DashboardTerceirizada extends Component {
         secao: MENU_DASHBOARD_TERCEIRIZADAS.GESTAO_DE_ALIMENTACAO
       });
     }
-    this.getSolicitacoesAsync(PARAMS);
+    this.resetParams();
   }
 
   onPesquisaChanged(values, previous) {
@@ -161,7 +173,8 @@ class DashboardTerceirizada extends Component {
       negadasListSolicitacao,
       autorizadasListSolicitacao,
       listaStatus,
-      loadingFiltro
+      loadingFiltro,
+      loadingAcompanhamentoSolicitacoes
     } = this.state;
 
     const LOADING =
@@ -188,50 +201,60 @@ class DashboardTerceirizada extends Component {
             <CardBody
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={this.onPesquisaChanged}
+              onChange={values => {
+                clearTimeout(this.typingTimeout);
+                this.typingTimeout = setTimeout(async () => {
+                  this.onPesquisaChanged(values);
+                }, 1000);
+              }}
               listaLotes={listaLotes}
               listaStatus={listaStatus}
             >
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Questionamentos da CODAE"}
-                    cardType={CARD_TYPE_ENUM.PENDENTE}
-                    solicitations={questionamentosListSolicitacao}
-                    icon={"fa-exclamation-triangle"}
-                    href={`/${TERCEIRIZADA}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
-                  />
+              <Spin
+                tip="Carregando..."
+                spinning={loadingAcompanhamentoSolicitacoes}
+              >
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Questionamentos da CODAE"}
+                      cardType={CARD_TYPE_ENUM.PENDENTE}
+                      solicitations={questionamentosListSolicitacao}
+                      icon={"fa-exclamation-triangle"}
+                      href={`/${TERCEIRIZADA}/${SOLICITACOES_COM_QUESTIONAMENTO}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Autorizadas"}
+                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                      solicitations={autorizadasListSolicitacao}
+                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                      href={`/${TERCEIRIZADA}/${SOLICITACOES_AUTORIZADAS}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={autorizadasListSolicitacao}
-                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${TERCEIRIZADA}/${SOLICITACOES_AUTORIZADAS}`}
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Negadas"}
+                      cardType={CARD_TYPE_ENUM.NEGADO}
+                      solicitations={negadasListSolicitacao}
+                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                      href={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      solicitations={canceladasListSolicitacao}
+                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      href={`/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={negadasListSolicitacao}
-                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${TERCEIRIZADA}/${SOLICITACOES_NEGADAS}`}
-                  />
-                </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={canceladasListSolicitacao}
-                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${TERCEIRIZADA}/${SOLICITACOES_CANCELADAS}`}
-                  />
-                </div>
-              </div>
+              </Spin>
             </CardBody>
           </Spin>
         </form>

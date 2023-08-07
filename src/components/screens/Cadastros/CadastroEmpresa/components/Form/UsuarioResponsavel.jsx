@@ -13,7 +13,7 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
           <hr className="linha-form" />
           <div className="card-body">
             <div className="card-title green">
-              Cadastro do Usuário Responsável pelo acesso ao Sistema
+              Dados do Responsável pelo acesso ao Sistema
             </div>
             <div className="row">
               <div className="col-4">
@@ -90,7 +90,8 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
               </div>
               <div className="col-5">
                 <Field
-                  component={InputText}
+                  component={MaskedInputText}
+                  mask={telefoneMask}
                   name="telefone_representante"
                   label="Telefone"
                   id="telefone_representante"
@@ -103,7 +104,7 @@ export const UsuarioResponsavel = ({ ehDistribuidor }) => {
                 <Field
                   component={InputText}
                   label="E-mail"
-                  name="email_representante_legal"
+                  name="representante_email"
                   maxlength="140"
                 />
               </div>

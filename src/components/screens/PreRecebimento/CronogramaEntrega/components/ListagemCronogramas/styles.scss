@@ -52,6 +52,13 @@
       font-weight: 500;
       color: #686868;
 
+      .link-acoes {
+        &:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+
       .desativar-borda {
         border-left: 0px solid #e9eaea;
         color: #42474a;

@@ -37,13 +37,13 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
 
   const getSolicitacoesDetalhadasAsync = async solicitacoes => {
     const payloadSolicitacoesDetalhadas = solicitacoes.map(solicitacao => {
-      return {
+      return JSON.stringify({
         tipo_doc: solicitacao.tipo_doc,
         uuid: solicitacao.uuid
-      };
+      });
     });
     const response = await getSolicitacoesDetalhadas({
-      solicitacoes: payloadSolicitacoesDetalhadas
+      "solicitacoes[]": payloadSolicitacoesDetalhadas
     });
     if (response.status === HTTP_STATUS.OK) {
       setSolicitacoes(response.data.data);
@@ -109,7 +109,7 @@ export const RelatorioSolicitacoesAlimentacao = ({ ...props }) => {
             setTotalBusca={setTotalBusca}
             setPage={setPage}
             setFiltros={setFiltros}
-            endpoint={endpoint}
+            endpoint={values => endpoint(values)}
             getSolicitacoesDetalhadasAsync={getSolicitacoesDetalhadasAsync}
             setCarregando={setCarregando}
             setResultadoPaginado={setResultadoPaginado}

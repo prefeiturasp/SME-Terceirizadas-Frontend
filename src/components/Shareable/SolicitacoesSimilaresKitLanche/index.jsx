@@ -304,7 +304,8 @@ export const SolicitacoesSimilaresKitLanche = ({ ...props }) => {
                   dangerouslySetInnerHTML={{
                     __html:
                       solicitacao.observacao ||
-                      solicitacao.solicitacao_kit_lanche.descricao
+                      (solicitacao.solicitacao_kit_lanche &&
+                        solicitacao.solicitacao_kit_lanche.descricao)
                   }}
                 />
               </div>

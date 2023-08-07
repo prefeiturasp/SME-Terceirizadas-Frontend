@@ -21,10 +21,8 @@ export const PERFIL = {
   ADMINISTRADOR_UE: `"ADMINISTRADOR_UE"`,
   COORDENADOR_LOGISTICA: `"COORDENADOR_LOGISTICA"`,
   COORDENADOR_CODAE_DILOG_LOGISTICA: `"COORDENADOR_CODAE_DILOG_LOGISTICA"`,
-  SUPLENTE: `"SUPLENTE"`,
-  COGESTOR: `"COGESTOR"`,
+  COGESTOR_DRE: `"COGESTOR_DRE"`,
   COORDENADOR_DRE: `"COORDENADOR_DRE"`,
-  ADMINISTRADOR_DRE: `"ADMINISTRADOR_DRE"`,
   COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA: `"COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA"`,
   ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA: `"ADMINISTRADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA"`,
   COORDENADOR_DIETA_ESPECIAL: `"COORDENADOR_DIETA_ESPECIAL"`,
@@ -315,7 +313,8 @@ export const ENDPOINT_HOMOLOGACOES_PRODUTO_STATUS = {
   UE_RESPONDEU_QUESTIONAMENTO: "ue_respondeu_questionamento",
   CODAE_QUESTIONOU_NUTRISUPERVISOR: "codae_questionou_nutrisupervisor",
   NUTRISUPERVISOR_RESPONDEU_QUESTIONAMENTO:
-    "nutrisupervisor_respondeu_questionamento"
+    "nutrisupervisor_respondeu_questionamento",
+  RESPONDER_QUESTIONAMENTO_DA_CODAE: "responder_questionamentos_da_codae"
 };
 
 export const RECLAMACAO_PRODUTO_STATUS_EXPLICACAO = {
@@ -436,6 +435,49 @@ export const TIPOS_SOLICITACOES_OPTIONS = [
   { nome: "Kit Lanche Unificado", uuid: "Kit Lanche Passeio Unificado" },
   { nome: "Inversão de dia de Cardápio", uuid: "Inversão" },
   { nome: "Suspensão de Alimentação", uuid: "Suspensão" }
+];
+
+export const TIPOS_OCORRENCIAS_OPTIONS = [
+  {
+    value: "QTD_MENOR",
+    label: "Quantidade menor que a prevista"
+  },
+  {
+    value: "PROBLEMA_QUALIDADE",
+    label: "Problema de qualidade do produto"
+  },
+  {
+    value: "ALIMENTO_DIFERENTE",
+    label: "Alimento diferente do previsto"
+  },
+  {
+    value: "EMBALAGEM_DANIFICADA",
+    label: "Embalagem danificada"
+  },
+  {
+    value: "EMBALAGEM_VIOLADA",
+    label: "Embalagem violada"
+  },
+  {
+    value: "VALIDADE_EXPIRADA",
+    label: "Prazo de validade expirado"
+  },
+  {
+    value: "ATRASO_ENTREGA",
+    label: "Atraso na entrega"
+  },
+  {
+    value: "AUSENCIA_PRODUTO",
+    label: "Ausência do produto"
+  },
+  {
+    value: "FALTA_URBANIDADE",
+    label: "Falta de urbanidade na entrega"
+  },
+  {
+    value: "FALTA_ESPACO_ARMAZENAMENTO",
+    label: "Falta de espaço no freezer para armazenamento"
+  }
 ];
 
 export const cnpjMask = [

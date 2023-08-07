@@ -1,62 +1,72 @@
-import React, { Fragment, useEffect, useState } from "react";
-import "antd/dist/antd.css";
-import "./styles.scss";
+import React, { useState } from "react";
+import HTTP_STATUS from "http-status-codes";
 import { Paginacao } from "components/Shareable/Paginacao";
-import { STATUS_DIETAS } from "constants/shared";
 import { formataAlergias } from "components/screens/DietaEspecial/Relatorio/componentes/FormAutorizaDietaEspecial/helper";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
+import { getSolicitacoesRelatorioDietasEspeciais } from "services/dietaEspecial.service";
 
-const ListagemDietas = ({ dietasFiltradas, ehNutriSupervisao, status }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [dietasFiltradasCopy, setDietasFiltradasCopy] = useState([]);
+import "./styles.scss";
+import { toastError } from "components/Shareable/Toast/dialogs";
 
-  const pageSize = 10;
+export const ListagemDietas = ({ ...props }) => {
+  const [paginaAtual, setPaginaAtual] = useState(1);
 
-  const onChangePage = page => {
-    setCurrentPage(page);
-  };
+  const {
+    dietasEspeciais,
+    meusDados,
+    setDietasEspeciais,
+    setLoadingDietas,
+    values
+  } = props;
 
-  useEffect(() => {
-    setDietasFiltradasCopy(dietasFiltradas.slice(0, pageSize));
-    setCurrentPage(1);
-  }, [dietasFiltradas]);
+  const PAGE_SIZE = 10;
 
-  useEffect(() => {
-    const dietasFiltradasPagina = dietasFiltradas.slice(
-      currentPage * pageSize - pageSize,
-      currentPage * pageSize
-    );
-    setDietasFiltradasCopy(dietasFiltradasPagina);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
-
-  const ehStatusCanceladas = () => {
-    return status === STATUS_DIETAS.CANCELADAS.toUpperCase();
+  const onChangePage = async (page, values) => {
+    setPaginaAtual(page);
+    setLoadingDietas(true);
+    let params = {
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+      ...values
+    };
+    if (usuarioEhEmpresaTerceirizada()) {
+      params["terceirizada_uuid"] = meusDados.vinculo_atual.instituicao.uuid;
+    }
+    const response = await getSolicitacoesRelatorioDietasEspeciais(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setDietasEspeciais(response.data);
+    } else {
+      toastError(
+        "Erro ao carregar dados das dietas especiais. Tente novamente mais tarde."
+      );
+    }
+    setLoadingDietas(false);
   };
 
   return (
     <section className="tabela-dietas-especiais">
       <article>
         <div
-          className={`grid-table-rel-dietas dietas-${
-            ehStatusCanceladas() ? "canceladas" : "autorizadas"
-          } header-table`}
+          className={`grid-table-rel-dietas dietas-${values.status_selecionado.toLowerCase()} header-table`}
         >
           <div>Cód. EOL do aluno</div>
           <div>Nome do aluno</div>
           <div>Nome da Escola</div>
           <div>Classificação da dieta</div>
           <div>
-            {ehNutriSupervisao ? "Relação por Diagnóstico" : "Protocolo padrão"}
+            {usuarioEhEmpresaTerceirizada()
+              ? "Protocolo padrão"
+              : "Relação por Diagnóstico"}
           </div>
-          {ehStatusCanceladas() && <div>Data de cancelamento</div>}
+          {values.status_selecionado === "CANCELADAS" && (
+            <div>Data de cancelamento</div>
+          )}
         </div>
-        {dietasFiltradasCopy.map((dietaEspecial, index) => {
+        {dietasEspeciais.results.map((dietaEspecial, index) => {
           return (
-            <Fragment key={index}>
+            <div key={index}>
               <div
-                className={`grid-table-rel-dietas dietas-${
-                  ehStatusCanceladas() ? "canceladas" : "autorizadas"
-                } body-table`}
+                className={`grid-table-rel-dietas dietas-${values.status_selecionado.toLowerCase()} body-table`}
               >
                 <div>{dietaEspecial.cod_eol_aluno || "--"}</div>
                 <div>{dietaEspecial.nome_aluno}</div>
@@ -67,7 +77,7 @@ const ListagemDietas = ({ dietasFiltradas, ehNutriSupervisao, status }) => {
                     : "--"}
                 </div>
                 <div>
-                  {ehNutriSupervisao
+                  {!usuarioEhEmpresaTerceirizada()
                     ? formataAlergias(dietaEspecial)
                         .map(a => a.nome)
                         .join("; ")
@@ -75,22 +85,20 @@ const ListagemDietas = ({ dietasFiltradas, ehNutriSupervisao, status }) => {
                         dietaEspecial.protocolo_padrao.nome) ||
                       dietaEspecial.nome_protocolo}
                 </div>
-                {ehStatusCanceladas() && (
+                {values.status_selecionado === "CANCELADAS" && (
                   <div>{dietaEspecial.data_ultimo_log}</div>
                 )}
               </div>
-            </Fragment>
+            </div>
           );
         })}
       </article>
       <Paginacao
-        onChange={onChangePage}
-        total={dietasFiltradas.length}
-        pageSize={pageSize}
-        current={currentPage}
+        onChange={page => onChangePage(page, values)}
+        total={dietasEspeciais.count}
+        pageSize={PAGE_SIZE}
+        current={paginaAtual}
       />
     </section>
   );
 };
-
-export default ListagemDietas;

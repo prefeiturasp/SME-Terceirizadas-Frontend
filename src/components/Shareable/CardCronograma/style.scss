@@ -69,4 +69,18 @@
       color: $greenLight;
     }
   }
+
+  &.card-solicitacoes-alteracoes {
+    border-left-color: $blueButtonFont !important;
+    i {
+      color: $blueButtonFont;
+    }
+  }
+
+  &.card-solicitacoes-reprovadas {
+    border-left-color: $redCard !important;
+    i {
+      color: $redCard;
+    }
+  }
 }

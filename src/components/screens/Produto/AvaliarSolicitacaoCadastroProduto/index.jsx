@@ -1,10 +1,11 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import React, { useState, useEffect } from "react";
 import FormBuscaSolicitacao from "./components/FormBuscaSolicitacoes";
 import ListagemProdutos from "./components/ListagemSolicitacoes";
 import { getSolicitacoesCadastroProdutoDieta } from "services/produto.service";
 import "./styles.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [ativos, setAtivos] = useState(undefined);
@@ -32,7 +33,6 @@ export default () => {
 
   useEffect(() => {
     if (formValues) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues, page]);
 
   const onSubmit = async values => {
@@ -52,7 +52,8 @@ export default () => {
                 ativos={ativos}
                 setAtivos={setAtivos}
               />
-              <Pagination
+              <Paginacao
+                className="mt-3 mb-3"
                 current={page || 1}
                 total={totalSolicitacoes}
                 showSizeChanger={false}

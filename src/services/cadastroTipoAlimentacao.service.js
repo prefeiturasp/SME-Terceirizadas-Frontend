@@ -262,3 +262,15 @@ export const atualizaQuantidadeDeAlunos = async (payload, uuid) => {
     return err;
   }
 };
+
+export const getVinculosTipoAlimentacaoMotivoInclusaoEspecifico = async (
+  params = null
+) => {
+  const url =
+    "/vinculos-tipo-alimentacao-u-e-periodo-escolar/motivo_inclusao_especifico/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

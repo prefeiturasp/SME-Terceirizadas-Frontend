@@ -34,8 +34,14 @@ export const InclusaoCEIBody = ({ ...props }) => {
 
   useEffect(() => {
     getVinculosAlimentacao();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const ehDiaCancelado = dia_motivo_inclusao => {
+    return dia_motivo_inclusao.cancelado ||
+      solicitacao.status === "ESCOLA_CANCELOU"
+      ? "dia-cancelado"
+      : "";
+  };
 
   return [
     <tr className="table-body-items" key={index}>
@@ -92,12 +98,16 @@ export const InclusaoCEIBody = ({ ...props }) => {
                     )}
                     <div className="col-3">
                       <p>
-                        <b>{dia_motivo_inclusao.motivo.nome}</b>
+                        <b className={`${ehDiaCancelado(dia_motivo_inclusao)}`}>
+                          {dia_motivo_inclusao.motivo.nome}
+                        </b>
                       </p>
                     </div>
                     <div className="col-3">
                       <p>
-                        <b>{dia_motivo_inclusao.data}</b>
+                        <b className={`${ehDiaCancelado(dia_motivo_inclusao)}`}>
+                          {dia_motivo_inclusao.data}
+                        </b>
                       </p>
                     </div>
                     {idx === 0 ? (
@@ -227,6 +237,27 @@ export const InclusaoCEIBody = ({ ...props }) => {
                   );
                 });
               })}
+            {solicitacao.dias_motivos_da_inclusao_cei.find(
+              inclusao => inclusao.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.dias_motivos_da_inclusao_cei
+                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .map((inclusao, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {inclusao.data}
+                          {" - "}
+                          justificativa: {inclusao.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
+            )}
           </div>
         </td>
       </tr>

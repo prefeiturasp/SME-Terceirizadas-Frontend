@@ -8,7 +8,7 @@ import {
 } from "configs/constants";
 import {
   exibirModuloMedicaoInicial,
-  usuarioEhDiretorUE,
+  usuarioEhEscolaTerceirizadaDiretor,
   usuarioEhDRE,
   usuarioEhEscolaTerceirizada,
   usuarioEhMedicao
@@ -22,12 +22,15 @@ export default () => {
         icon="fas fa-pencil-alt"
         title={"Medição Inicial"}
       >
-        {usuarioEhEscolaTerceirizada() && (
+        {(usuarioEhEscolaTerceirizada() ||
+          usuarioEhEscolaTerceirizadaDiretor()) && (
           <LeafItem to={`/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}`}>
             Lançamento Medição Inicial
           </LeafItem>
         )}
-        {(usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()) && (
+        {(usuarioEhDRE() ||
+          usuarioEhMedicao() ||
+          usuarioEhEscolaTerceirizadaDiretor()) && (
           <LeafItem to={`/${MEDICAO_INICIAL}/${ACOMPANHAMENTO_DE_LANCAMENTOS}`}>
             Acompanhamento de Lançamentos
           </LeafItem>

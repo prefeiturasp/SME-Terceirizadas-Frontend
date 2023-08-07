@@ -7,8 +7,7 @@ import { GESTAO_PRODUTO } from "configs/constants";
 import { formataCards, incluirDados } from "./helper";
 import {
   dataAtual,
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada
+  usuarioEhEscolaTerceirizadaQualquerPerfil
 } from "helpers/utilities";
 import { listarCardsPermitidos } from "helpers/gestaoDeProdutos";
 import {
@@ -208,7 +207,7 @@ export default class DashboardGestaoProduto extends Component {
                                 this.apontaParaFormularioDeAlteracao(
                                   card2.titulo
                                 ),
-                                card.titulo
+                                card2.titulo
                               )}
                               icon={card2.icon}
                               href={`/${GESTAO_PRODUTO}/${card2.rota}`}
@@ -230,8 +229,7 @@ export default class DashboardGestaoProduto extends Component {
             )}
           </CardBody>
         )}
-        {(usuarioEhEscolaTerceirizadaDiretor() ||
-          usuarioEhEscolaTerceirizada()) && (
+        {usuarioEhEscolaTerceirizadaQualquerPerfil() && (
           <div className="row row-shortcuts">
             <div className="col-sm-3 col-12">
               <CardAtalho

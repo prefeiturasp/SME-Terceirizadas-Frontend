@@ -11,7 +11,7 @@ import {
   ICON_CARD_TYPE_ENUM
 } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import CardLegendas from "components/Shareable/CardLegendas";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import { getSolicitacoesComQuestionamentoNutrisupervisao } from "services/painelNutricionista.service";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 
@@ -21,7 +21,7 @@ const atual = {
 };
 
 export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+  <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <SolicitacoesPorStatusGenerico
       tipoCard={CARD_TYPE_ENUM.PENDENTE}

@@ -66,8 +66,8 @@ export const dataPrioritaria = (
   );
 };
 
-export const agregarDefault = lista => {
-  return [{ nome: "Selecione", uuid: "" }].concat(lista);
+export const agregarDefault = (lista, valor = "") => {
+  return [{ nome: `Selecione ${valor}`, uuid: "" }].concat(lista);
 };
 
 export const formatarParaMultiselect = lista => {
@@ -219,7 +219,7 @@ export const validarCPF = cpf => {
 };
 
 export const removeCaracteresEspeciais = valor =>
-  valor.replace(/[^\w\s]/gi, "");
+  valor?.replace(/[^\w\s]/gi, "");
 
 export const formataCPF = cpf => {
   cpf = cpf.replace(/[^\d]/g, "");
@@ -373,6 +373,10 @@ export const usuarioEhAdministradorNutriSupervisao = () => {
   );
 };
 
+export const usuarioEhDilog = () => {
+  return localStorage.getItem("perfil") === PERFIL.COORDENADOR_LOGISTICA;
+};
+
 export const usuarioEhCodaeDilog = () => {
   return (
     localStorage.getItem("perfil") === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
@@ -393,8 +397,8 @@ export const usuarioEhEscolaTerceirizada = () => {
   );
 };
 
-export const usuarioEhDiretorEscola = () => {
-  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
+export const usuarioEhEscolaTerceirizadaQualquerPerfil = () => {
+  return usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor();
 };
 
 export const usuarioEhAdmQualquerEmpresa = () => {
@@ -408,7 +412,11 @@ export const usuarioEhQualquerUsuarioEmpresa = () => {
 };
 
 export const usuarioEhDiretorUE = () => {
-  return [PERFIL.DIRETOR, PERFIL.DIRETOR_CEI].includes(
+  return [PERFIL.DIRETOR_UE].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhEscola = () => {
+  return [PERFIL.DIRETOR_UE, PERFIL.ADMINISTRADOR_UE].includes(
     localStorage.getItem("perfil")
   );
 };
@@ -452,9 +460,7 @@ export const usuarioComAcessoTelaEntregasDilog = () => {
     PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
     PERFIL.ADMINISTRADOR_CODAE_GABINETE,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
-    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO,
-    PERFIL.ADMINISTRADOR_SUPERVISAO_NUTRICAO,
-    PERFIL.COORDENADOR_SUPERVISAO_NUTRICAO
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
   ].includes(localStorage.getItem("perfil"));
 };
 
@@ -464,6 +470,12 @@ export const usuarioEhOutrosDilog = () => {
     PERFIL.ADMINISTRADOR_CODAE_DILOG_CONTABIL,
     PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
   ].includes(localStorage.getItem("perfil"));
+};
+
+export const usuarioEhDilogJuridico = () => {
+  return [PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO].includes(
+    localStorage.getItem("perfil")
+  );
 };
 
 export const usuarioEhLogistica = () => {
@@ -485,9 +497,11 @@ export const usuarioEhDilogQualidade = () =>
   localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
-  return [PERFIL.DILOG_QUALIDADE, PERFIL.DILOG_CRONOGRAMA].includes(
-    localStorage.getItem("perfil")
-  );
+  return [
+    PERFIL.DILOG_QUALIDADE,
+    PERFIL.DILOG_CRONOGRAMA,
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
+  ].includes(localStorage.getItem("perfil"));
 };
 
 /*
@@ -569,8 +583,8 @@ export const usuarioEhCoordenadorDRE = () => {
   return localStorage.getItem("perfil") === PERFIL.COORDENADOR_DRE;
 };
 
-export const usuarioEhAdministradorDRE = () => {
-  return localStorage.getItem("perfil") === PERFIL.ADMINISTRADOR_DRE;
+export const usuarioEhCogestorDRE = () => {
+  return localStorage.getItem("perfil") === PERFIL.COGESTOR_DRE;
 };
 
 export const usuarioEhCODAEGestaoAlimentacao = () => {
@@ -640,12 +654,6 @@ export const obtemIdentificacaoNutricionista = () =>
   `Elaborado por ${localStorage.getItem("nome")} - RF ${localStorage.getItem(
     "registro_funcional"
   )}`.replace(/[^\w\s-]/g, "");
-
-export const obtemIdentificacaoNutricionistaDieta = usuario =>
-  `Elaborado por ${usuario.nome} - RF ${usuario.registro_funcional}`.replace(
-    /[^\w\s-]/g,
-    ""
-  );
 
 export const getKey = obj => {
   return Object.keys(obj)[0];
@@ -747,7 +755,7 @@ export const comoTipo = obj => {
   if (ehEscolaTipoCEI(obj.escola)) {
     return TIPO_SOLICITACAO.SOLICITACAO_CEI;
   }
-  return obj.data_inicial && obj.data_inicial !== obj.data_final
+  return obj.motivo
     ? TIPO_SOLICITACAO.SOLICITACAO_CONTINUA
     : TIPO_SOLICITACAO.SOLICITACAO_NORMAL;
 };
@@ -855,8 +863,11 @@ export const exibirGA = () => {
     "IPIRANGA",
     "PIRITUBA",
     "FREGUESIA/BRASILANDIA",
+    "GUAIANASES",
     "SAO MATEUS",
-    "SAO MIGUEL"
+    "SAO MIGUEL",
+    "JACANA/TREMEMBE",
+    "ITAQUERA"
   ];
 
   if (["production"].includes(ENVIRONMENT)) {
@@ -870,8 +881,20 @@ export const exibirGA = () => {
           localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
-          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
+        return (
+          [
+            `"Anga"`,
+            `"ANGA"`,
+            `"VERDE MAIS"`,
+            `"Verde Mais"`,
+            `"Apetece"`,
+            `"APETECE"`
+          ].includes(localStorage.getItem("nome_instituicao")) ||
+          JSON.parse(localStorage.getItem("lotes")).find(lote =>
+            dresPermitidas.some(dre =>
+              lote.diretoria_regional.nome.includes(dre)
+            )
+          )
         );
       case `"gestao_alimentacao_terceirizada"`:
       case `"nutricao_manifestacao"`:
@@ -886,7 +909,7 @@ export const exibirGA = () => {
 
 export const exibirModuloMedicaoInicial = () => {
   return (
-    !["treinamento", "production"].includes(ENVIRONMENT) &&
+    !["production"].includes(ENVIRONMENT) &&
     (usuarioEhDRE() ||
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
@@ -895,11 +918,34 @@ export const exibirModuloMedicaoInicial = () => {
   );
 };
 
+export const exibirModuloOcorrencias = () => {
+  return (
+    !["production"].includes(ENVIRONMENT) &&
+    (usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhDilogQualidade() ||
+      usuarioEhDilog())
+  );
+};
+
 export const justificativaAoNegarSolicitacao = logs => {
   let justificativa = null;
   if (logs.length) {
     justificativa = logs.filter(log =>
       ["DRE não validou", "CODAE negou"].includes(log.status_evento_explicacao)
+    );
+    justificativa = justificativa.length
+      ? justificativa[0].justificativa
+      : null;
+  }
+  return justificativa;
+};
+
+export const justificativaAoAprovarSolicitacao = logs => {
+  let justificativa = null;
+  if (logs.length) {
+    justificativa = logs.filter(log =>
+      ["CODAE autorizou"].includes(log.status_evento_explicacao)
     );
     justificativa = justificativa.length
       ? justificativa[0].justificativa
@@ -929,8 +975,34 @@ export const tipoStatus = () => {
   ];
 };
 
+export const statusProdutos = [
+  {
+    uuid: "Ativo",
+    nome: "Ativo"
+  },
+  {
+    uuid: "Inativo",
+    nome: "Inativo"
+  }
+];
+
+export const ehLaboratorioCredenciado = [
+  {
+    uuid: "true",
+    nome: "Sim"
+  },
+  {
+    uuid: "false",
+    nome: "Não"
+  }
+];
+
 export const fimDoCalendario = () => {
   return new Date().getMonth() === JS_DATE_DEZEMBRO
     ? new Date(new Date().getFullYear() + 1, 11, 31)
     : new Date(new Date().getFullYear(), 11, 31);
+};
+
+export const tiposAlimentacaoETEC = () => {
+  return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
 };

@@ -8,14 +8,12 @@ import {
   usuarioEhCODAEGestaoProduto,
   usuarioEhNutricionistaSupervisao,
   usuarioEhDRE,
-  usuarioEhAdministradorDRE,
   usuarioEhLogistica,
   usuarioEhPreRecebimento,
   usuarioEhAdministradorGpCODAE,
   usuarioEhAdministradorNutriSupervisao,
   usuarioEhEmpresaDistribuidora,
   usuarioComAcessoTelaEntregasDilog,
-  usuarioEhCoordenadorNutriSupervisao,
   usuarioEscolaEhGestaoDireta,
   usuarioEhMedicao,
   exibirGA,
@@ -29,7 +27,9 @@ import {
   usuarioEhEscolaAbastecimentoDiretor,
   usuarioEhQualquerUsuarioEmpresa,
   exibirModuloMedicaoInicial,
-  usuarioEhCodaeDilog
+  usuarioEhCodaeDilog,
+  usuarioEhDilog,
+  usuarioEhDilogQualidade
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -108,6 +108,7 @@ export const SidebarContent = () => {
     usuarioEhCodaeDilog() ||
     usuarioEhMedicao() ||
     usuarioEhDilogQualidadeOuCronograma() ||
+    usuarioEhEmpresaFornecedor() ||
     (!exibeMenuValidandoAmbiente && usuarioEhCODAEGestaoAlimentacao()) ||
     (exibeMenuValidandoAmbiente &&
       (usuarioEhCODAEGestaoAlimentacao() ||
@@ -130,11 +131,11 @@ export const SidebarContent = () => {
     !usuarioEhEscolaTerceirizada() &&
     !usuarioEhAdministradorGpCODAE() &&
     !usuarioEhAdministradorNutriSupervisao() &&
-    !usuarioEhAdministradorDRE() &&
     !usuarioEhEscolaAbastecimento() &&
     !usuarioEhOutrosDilog() &&
     !usuarioEhPreRecebimentoSemLogistica() &&
-    !usuarioEhQualquerUsuarioEmpresa();
+    !usuarioEhQualquerUsuarioEmpresa() &&
+    !usuarioEhDilog();
 
   const exibirMenuLogistica =
     usuarioEhLogistica() ||
@@ -142,8 +143,8 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
-    usuarioEhCoordenadorNutriSupervisao() ||
-    usuarioComAcessoTelaEntregasDilog();
+    usuarioComAcessoTelaEntregasDilog() ||
+    usuarioEhDilogQualidade();
 
   const exibirMenuPreRecebimento =
     usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
@@ -166,7 +167,7 @@ export const SidebarContent = () => {
     exibirGestaoProduto && <MenuGestaoDeProduto key={3} {..._props} />,
     exibirCadastros && <MenuCadastros key={5} />,
     exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
-    exibirMenuLogistica && <MenuLogistica key={7} />,
+    exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
     exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
     exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />

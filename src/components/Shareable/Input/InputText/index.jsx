@@ -30,9 +30,11 @@ export const InputText = props => {
     icone,
     contador,
     toUppercaseActive,
+    toLowerCaseActive,
     apenasNumeros,
     id,
-    proibeLetras
+    proibeLetras,
+    proibeNumeros
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -74,11 +76,17 @@ export const InputText = props => {
           e.target.value = toUppercaseActive
             ? e.target.value.toUpperCase()
             : e.target.value;
+          e.target.value = toLowerCaseActive
+            ? e.target.value.toLowerCase()
+            : e.target.value;
           e.target.value = apenasNumeros
             ? e.target.value.replace(/\D/g, "")
             : e.target.value;
           e.target.value = proibeLetras
             ? e.target.value.replace(/[A-Za-z]/, "")
+            : e.target.value;
+          e.target.value = proibeNumeros
+            ? e.target.value.replace(/[0-9]/, "")
             : e.target.value;
         }}
       />

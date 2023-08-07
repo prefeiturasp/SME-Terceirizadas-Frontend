@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+
 import "./styles.scss";
 import { OPTIONS_STATUS } from "../../constants";
 import { Tooltip } from "antd";

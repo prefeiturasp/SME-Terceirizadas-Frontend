@@ -9,6 +9,8 @@ import {
   SOLICITACOES_CANCELADAS
 } from "configs/constants";
 import "./style.scss";
+import { ASelect } from "../MakeField";
+import { SOLICITACOES_NEGADAS } from "configs/constants";
 
 export const InputSearchPendencias = props => {
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
@@ -32,9 +34,11 @@ export const InputSearchPendencias = props => {
   };
 
   const verificaStatusFiltros = () => {
-    return [SOLICITACOES_AUTORIZADAS, SOLICITACOES_CANCELADAS].includes(
-      props.tipoSolicitacao
-    );
+    return [
+      SOLICITACOES_AUTORIZADAS,
+      SOLICITACOES_CANCELADAS,
+      SOLICITACOES_NEGADAS
+    ].includes(props.tipoSolicitacao);
   };
 
   const defineColunas = () => {
@@ -45,7 +49,10 @@ export const InputSearchPendencias = props => {
       if (verificaStatusFiltros()) {
         classTitulo = "offset-3 col-3";
       }
+    } else if (ehURLGestaoProduto()) {
+      classTitulo = "col-4";
     }
+
     return classTitulo;
   };
 
@@ -58,12 +65,39 @@ export const InputSearchPendencias = props => {
       render={({ handleSubmit, values }) => (
         <form onSubmit={handleSubmit}>
           <div className="row">
+            {ehURLGestaoProduto() && (
+              <>
+                <div className="col-4 produtos-edital">
+                  <Field
+                    component={ASelect}
+                    showSearch
+                    name="edital"
+                    placeholder={"Número do Edital"}
+                    initialValue={
+                      props.propsProduto && props.propsProduto.editalProduto
+                    }
+                    options={[{ label: "Número do Edital", value: "" }].concat(
+                      props.editais
+                    )}
+                  />
+                  <OnChange name="edital">
+                    {() => {
+                      props.filterList(values);
+                    }}
+                  </OnChange>
+                </div>
+              </>
+            )}
             <div className={`${classTitulo}`}>
               <Field
                 component={InputText}
                 name="titulo"
                 placeholder="Pesquisar"
                 disabled={props.disabled}
+                initialValue={
+                  (props.propsDieta && props.propsDieta.tituloDieta) ||
+                  (props.propsProduto && props.propsProduto.nomeProduto)
+                }
               />
               <OnChange name="titulo">
                 {() => {
@@ -86,6 +120,9 @@ export const InputSearchPendencias = props => {
                       name="status"
                       placeholder="Conferência Status"
                       naoDesabilitarPrimeiraOpcao
+                      initialValue={
+                        props.propsDieta && props.propsDieta.statusDieta
+                      }
                     />
                     <OnChange name="status">
                       {() => {
@@ -102,6 +139,9 @@ export const InputSearchPendencias = props => {
                       name="lote"
                       placeholder="Selecione um Lote"
                       naoDesabilitarPrimeiraOpcao
+                      initialValue={
+                        props.propsDieta && props.propsDieta.loteDieta
+                      }
                     />
                     <OnChange name="lote">
                       {() => {
@@ -112,9 +152,33 @@ export const InputSearchPendencias = props => {
                 )}
               </>
             )}
+            {ehURLGestaoProduto() && (
+              <>
+                <div className="col-4">
+                  <Field
+                    component={InputText}
+                    name="marca"
+                    placeholder="Busca da Marca"
+                    initialValue={
+                      props.propsProduto && props.propsProduto.marcaProduto
+                    }
+                  />
+                  <div className="warning-num-charac">
+                    * mínimo de 3 caracteres
+                  </div>
+                  <OnChange name="marca">
+                    {() => {
+                      props.filterList(values);
+                    }}
+                  </OnChange>
+                </div>
+              </>
+            )}
           </div>
         </form>
       )}
     />
   );
 };
+
+export default InputSearchPendencias;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import CKEditor from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 import { HelpText } from "../HelpText";
@@ -14,10 +14,28 @@ const CKEditorField = props => {
     meta,
     name,
     required,
+    placeholder,
     ...rest
   } = props;
 
   const [touched, setTouched] = useState(false);
+
+  const config = {
+    placeholder: placeholder,
+    removePlugins: ["Heading", "BlockQuote", "CKFinder", "Link"],
+    toolbar: [
+      "bold",
+      "italic",
+      "|",
+      "bulletedList",
+      "numberedList",
+      "|",
+      "insertTable",
+      "|",
+      "undo",
+      "redo"
+    ]
+  };
 
   return (
     <div className="select">
@@ -39,27 +57,12 @@ const CKEditorField = props => {
         }}
         {...rest}
         onBlur={() => setTouched(true)}
+        config={config}
       />
       <HelpText helpText={helpText} />
       <InputErroMensagemCKEditor meta={meta} touched={touched} />
     </div>
   );
 };
-CKEditorField.defaultProps = {
-  config: {
-    removePlugins: ["Heading", "Link", "BlockQuote"],
-    toolbar: [
-      "bold",
-      "italic",
-      "|",
-      "bulletedList",
-      "numberedList",
-      "|",
-      "insertTable",
-      "|",
-      "undo",
-      "redo"
-    ]
-  }
-};
+
 export default CKEditorField;

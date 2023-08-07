@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import "./styles.scss";
 import Filtros from "./components/Filtros";
 import ListagemSolicitacoes from "./components/ListagemSolicitacoes";
 import { getListagemSolicitacaoAlteracao } from "../../../../services/logistica.service.js";
 import { gerarParametrosConsulta } from "helpers/utilities";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -51,7 +52,6 @@ export default () => {
       setNumeroSolicitacaoInicial(codigo);
       setFiltros({ ...filtro });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -59,7 +59,6 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -90,13 +89,13 @@ export default () => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
               </div>

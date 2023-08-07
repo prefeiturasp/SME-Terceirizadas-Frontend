@@ -9,7 +9,6 @@ import {
 } from "../../../../../services/produto.service";
 import "./style.scss";
 
-import "antd/dist/antd.css";
 import Botao from "../../../../Shareable/Botao";
 import {
   BUTTON_TYPE,

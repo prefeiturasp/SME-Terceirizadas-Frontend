@@ -1,7 +1,7 @@
+import React, { useEffect, useState } from "react";
 import CardMatriculados from "components/Shareable/CardMatriculados";
 import HTTP_STATUS from "http-status-codes";
 import { TIPO_SOLICITACAO } from "constants/shared";
-import React, { useEffect, useState } from "react";
 import { Field, Form } from "react-final-form";
 import {
   updateInclusaoAlimentacao,
@@ -54,6 +54,10 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   const [rascunhos, setRascunhos] = useState(null);
   const [erroRascunhos, setErroRascunhos] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [motivoEspecifico, setMotivoEspecifico] = useState(false);
+  const [carregandoRascunho, setCarregandoRascunho] = useState(false);
+  const [uuid, setUuid] = useState(null);
+  const [idExterno, setIdExterno] = useState(null);
 
   const {
     meusDados,
@@ -62,7 +66,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     proximosDoisDiasUteis,
     proximosCincoDiasUteis,
     periodos,
-    periodoNoite
+    periodoNoite,
+    periodosMotivoEspecifico
   } = props;
 
   useEffect(() => {
@@ -70,12 +75,17 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   }, []);
 
   const resetForm = async form => {
+    await form.change("uuid", undefined);
+    await form.change("id_externo", undefined);
     await form.change("inclusoes", [{ motivo: undefined }]);
     await form.change("quantidades_periodo", undefined);
     await form.change("dias_semana", undefined);
     await form.change("tipos_alimentacao_selecionados", []);
     await form.change("periodo_escolar");
     await form.change("numero_alunos", undefined);
+    setCarregandoRascunho(false);
+    setUuid(false);
+    setIdExterno(false);
   };
 
   const motivoSimplesSelecionado = values => {
@@ -162,6 +172,8 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   };
 
   const carregarRascunho = async (form, values, inclusao) => {
+    setUuid(inclusao.uuid);
+    setIdExterno(inclusao.id_externo);
     await form.change("uuid", inclusao.uuid);
     await form.change("id_externo", inclusao.id_externo);
     const inclusao_ = deepCopy(inclusao);
@@ -173,15 +185,41 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
   };
 
   const carregarRascunhoNormal = async (form, inclusao_) => {
-    await form.change("quantidades_periodo", periodos);
+    setCarregandoRascunho(true);
+    if (
+      inclusao_.inclusoes &&
+      inclusao_.inclusoes[0].motivo &&
+      motivosSimples
+        .find(motivo => motivo.uuid === inclusao_.inclusoes[0].motivo.uuid)
+        .nome.includes("Específico")
+    ) {
+      setMotivoEspecifico(true);
+      await form.change("quantidades_periodo", periodosMotivoEspecifico);
+    } else {
+      setMotivoEspecifico(false);
+      await form.change("quantidades_periodo", periodos);
+    }
     inclusao_.inclusoes.forEach(i => {
       i.motivo = i.motivo.uuid;
     });
     await form.change("inclusoes", inclusao_.inclusoes);
     inclusao_.quantidades_periodo.forEach(async qp => {
-      const index = periodos.findIndex(
-        qp_ => qp_.nome === qp.periodo_escolar.nome
-      );
+      let index;
+      if (
+        inclusao_.inclusoes &&
+        inclusao_.inclusoes[0].motivo &&
+        motivosSimples
+          .find(motivo => motivo.uuid === inclusao_.inclusoes[0].motivo)
+          .nome.includes("Específico")
+      ) {
+        setMotivoEspecifico(true);
+        index = periodosMotivoEspecifico.findIndex(
+          qp_ => qp_.nome === qp.periodo_escolar.nome
+        );
+      } else {
+        setMotivoEspecifico(false);
+        index = periodos.findIndex(qp_ => qp_.nome === qp.periodo_escolar.nome);
+      }
       await form.change(`quantidades_periodo[${index}].checked`, true);
       await form.change(
         `quantidades_periodo[${index}].multiselect`,
@@ -250,15 +288,29 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
     }
   };
 
+  const ehMotivoInclusaoEspecifico = values => {
+    const motivos = motivoContinuoSelecionado(values)
+      ? motivosContinuos
+      : motivosSimples;
+    return (
+      values.inclusoes &&
+      values.inclusoes[0].motivo &&
+      motivos
+        .find(motivo => motivo.uuid === values.inclusoes[0].motivo)
+        .nome.includes("Específico")
+    );
+  };
+
   const onSubmit = async (values, form) => {
+    const ehMotivoEspecifico = ehMotivoInclusaoEspecifico(values);
     const values_ = deepCopy(values);
     const tipoSolicitacao = motivoSimplesSelecionado(values)
       ? TIPO_SOLICITACAO.SOLICITACAO_NORMAL
       : TIPO_SOLICITACAO.SOLICITACAO_CONTINUA;
     const erro =
       tipoSolicitacao === TIPO_SOLICITACAO.SOLICITACAO_NORMAL
-        ? validarSubmissaoNormal(values, meusDados)
-        : validarSubmissaoContinua(values, meusDados);
+        ? validarSubmissaoNormal(values, meusDados, ehMotivoEspecifico)
+        : validarSubmissaoContinua(values, meusDados, ehMotivoEspecifico);
     if (erro) {
       toastError(erro);
       return;
@@ -319,6 +371,23 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
       )
     ) {
       setShowModal(true);
+    }
+  };
+
+  const checaMotivoInclusaoEspecifico = async (values, form, value) => {
+    if (
+      (ehMotivoInclusaoEspecifico(values) && !carregandoRascunho) ||
+      (motivosSimples
+        .find(motivo => motivo.uuid === value)
+        .nome.includes("Específico") &&
+        carregandoRascunho)
+    ) {
+      setMotivoEspecifico(true);
+      form.change("quantidades_periodo", undefined);
+      form.change("quantidades_periodo", periodosMotivoEspecifico);
+    } else {
+      form.change("quantidades_periodo", periodos);
+      setMotivoEspecifico(false);
     }
   };
 
@@ -392,7 +461,16 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                               label="Motivo"
                               options={
                                 values.inclusoes.length > 1
-                                  ? agregarDefault(motivosSimples)
+                                  ? motivoEspecifico
+                                    ? agregarDefault(motivosSimples).filter(
+                                        motivo =>
+                                          motivo.nome.includes("Selecione") ||
+                                          motivo.nome.includes("Específico")
+                                      )
+                                    : agregarDefault(motivosSimples).filter(
+                                        motivo =>
+                                          !motivo.nome.includes("Específico")
+                                      )
                                   : agregarDefault(motivosSimples).concat(
                                       motivosContinuos
                                     )
@@ -413,11 +491,12 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       "quantidades_periodo",
                                       undefined
                                     );
-                                    form.change(
-                                      "quantidades_periodo",
-                                      periodos
-                                    );
                                     form.change("reload", !values.reload);
+                                    await checaMotivoInclusaoEspecifico(
+                                      values,
+                                      form,
+                                      value
+                                    );
                                   } else if (
                                     motivosContinuos.find(
                                       motivo => motivo.uuid === value
@@ -432,12 +511,33 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                                       periodoNoite
                                     );
                                     form.change("reload", !values.reload);
+                                  } else if (
+                                    motivosContinuos.find(
+                                      motivo => motivo.uuid === value
+                                    )
+                                  ) {
+                                    form.change("dias_semana", undefined);
+                                    form.change(
+                                      "tipos_alimentacao_selecionados",
+                                      []
+                                    );
+                                    form.change("periodo_escolar", undefined);
+                                    form.change("numero_alunos", undefined);
+                                    form.change("observacao", undefined);
+                                    form.change(
+                                      "quantidades_periodo",
+                                      undefined
+                                    );
                                   } else {
                                     form.change(
                                       "quantidades_periodo",
                                       undefined
                                     );
                                   }
+                                }
+                                if (uuid && idExterno) {
+                                  form.change("uuid", uuid);
+                                  form.change("id_externo", idExterno);
                                 }
                               }}
                             </OnChange>
@@ -477,15 +577,22 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                     <div className="mt-3">
                       <AdicionarDia push={push} />
                     </div>
-                    {values.quantidades_periodo &&
-                      values.quantidades_periodo.length === periodos.length && (
-                        <PeriodosInclusaoNormal
-                          form={form}
-                          values={values}
-                          periodos={periodos}
-                          meusDados={meusDados}
-                        />
-                      )}
+                    {values.quantidades_periodo && (
+                      <PeriodosInclusaoNormal
+                        form={form}
+                        values={values}
+                        periodos={
+                          ehMotivoInclusaoEspecifico(values) ||
+                          (carregandoRascunho && motivoEspecifico)
+                            ? periodosMotivoEspecifico
+                            : periodos
+                        }
+                        meusDados={meusDados}
+                        motivoEspecifico={motivoEspecifico}
+                        uuid={uuid}
+                        idExterno={idExterno}
+                      />
+                    )}
                   </>
                 )}
                 {motivoETECSelecionado(values) &&
@@ -505,15 +612,30 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                       <Recorrencia
                         values={values}
                         form={form}
-                        periodos={periodos}
+                        periodos={
+                          ehMotivoInclusaoEspecifico(values) ||
+                          (carregandoRascunho && motivoEspecifico)
+                            ? periodosMotivoEspecifico
+                            : periodos
+                        }
                         push={push}
                         meusDados={meusDados}
+                        ehMotivoInclusaoEspecifico={ehMotivoInclusaoEspecifico(
+                          values
+                        )}
+                        uuid={uuid}
+                        idExterno={idExterno}
                       />
                       {values.quantidades_periodo && (
                         <div className="mt-5">
                           <RecorrenciaTabela
                             values={values}
-                            periodos={periodos}
+                            periodos={
+                              ehMotivoInclusaoEspecifico(values) ||
+                              (carregandoRascunho && motivoEspecifico)
+                                ? periodosMotivoEspecifico
+                                : periodos
+                            }
                             form={form}
                             meusDados={meusDados}
                           />
@@ -548,7 +670,9 @@ export const InclusaoDeAlimentacao = ({ ...props }) => {
                           motivoETECSelecionado(values) &&
                           values.quantidades_periodo &&
                           values.quantidades_periodo.some(
-                            q => !q.tipos_alimentacao_selecionados.length
+                            q =>
+                              q.tipos_alimentacao_selecionados &&
+                              !q.tipos_alimentacao_selecionados.length
                           ))
                       }
                       onClick={() => {

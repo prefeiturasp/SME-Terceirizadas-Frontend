@@ -9,9 +9,17 @@ div.acompanhamento-de-lancamentos {
     color: $gray;
   }
 
+  div.card-body {
+    padding-bottom: 50px !important;
+
+    div.ue-botoes {
+      padding-bottom: 80px !important;
+    }
+  }
+
   div.card-medicao-por-status {
-    height: 124px;
-    width: 129px;
+    height: 130px;
+    width: 148px;
     border: 1px solid black;
     border-left: 7px solid black;
     border-radius: 4px;
@@ -35,8 +43,7 @@ div.acompanhamento-de-lancamentos {
     div.conferir-lista {
       font-weight: 400;
       font-size: 10px;
-      margin-top: -1.8em;
-      margin-left: 4.8em;
+      margin-top: -1.5em;
       color: $blackInput;
     }
 

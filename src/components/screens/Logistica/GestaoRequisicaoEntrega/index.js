@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from "react";
 import HTTP_STATUS from "http-status-codes";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import {
   getRequisicoesListagem,
   gerarPDFDistribuidorSolicitacao,
@@ -21,6 +21,7 @@ import { gerarParametrosConsulta } from "helpers/utilities";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { CentralDeDownloadContext } from "context/CentralDeDownloads";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload/index.jsx";
+import { Paginacao } from "components/Shareable/Paginacao/index.jsx";
 
 export default () => {
   const [carregando, setCarregando] = useState(false);
@@ -147,7 +148,6 @@ export default () => {
       buscarSolicitacoes(1);
       setPage(1);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const nextPage = page => {
@@ -186,13 +186,13 @@ export default () => {
               />
               <div className="row">
                 <div className="col">
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page}
                     total={total}
                     showSizeChanger={false}
                     onChange={nextPage}
                     pageSize={10}
-                    className="float-left mb-2"
                   />
                 </div>
                 <div className="d-flex align-items-end">

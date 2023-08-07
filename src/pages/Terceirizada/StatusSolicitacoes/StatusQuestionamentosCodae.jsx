@@ -9,7 +9,7 @@ import { HOME } from "../constants";
 import { ICON_CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
 import { getSolicitacoesComQuestionamento } from "services/painelTerceirizada.service";
 import { CARD_TYPE_ENUM } from "components/Shareable/CardStatusDeSolicitacao/CardStatusDeSolicitacao";
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import { PAGINACAO_DEFAULT } from "constants/shared";
 import MeusDadosContext from "context/MeusDadosContext";
@@ -24,7 +24,7 @@ export const StatusQuestionamentosCodae = () => {
   const { meusDados } = useContext(MeusDadosContext);
 
   return (
-    <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+    <Page titulo={atual.titulo} botaoVoltar>
       <Breadcrumb home={HOME} atual={atual} />
       {meusDados && (
         <SolicitacoesPorStatusGenerico

@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, LeafItem } from "./shared";
+import { Menu, LeafItem, SubMenu } from "./shared";
 import {
   ENVIO_REQUISICOES_ENTREGA_AVANCADO,
   LOGISTICA,
@@ -11,7 +11,9 @@ import {
   INSUCESSO_ENTREGA,
   ENTREGAS_DILOG,
   ENTREGAS_DRE,
-  ENTREGAS_DISTRIBUIDOR
+  ENTREGAS_DISTRIBUIDOR,
+  GUIAS_NOTIFICACAO,
+  GUIAS_NOTIFICACAO_FISCAL
 } from "configs/constants";
 import {
   usuarioEhEmpresaDistribuidora,
@@ -21,15 +23,16 @@ import {
   usuarioComAcessoTelaEntregasDilog,
   usuarioEhCoordenadorNutriSupervisao,
   usuarioEhCodaeDilog,
-  usuarioEhEscolaAbastecimentoDiretor
+  usuarioEhEscolaAbastecimentoDiretor,
+  exibirModuloOcorrencias,
+  usuarioEhDilogJuridico,
+  usuarioEhDilogQualidade,
+  usuarioEhDilog
 } from "helpers/utilities";
 
-const MenuLogistica = () => {
+const MenuLogistica = ({ activeMenu, onSubmenuClick }) => {
   return (
     <Menu id="Logistica" icon="fa-truck" title="Abastecimento">
-      {/* <LeafItem to={`/${LOGISTICA}/${DISPONIBILIZACAO_DE_SOLICITACOES}`}>
-        Disponibilização de solicitações
-      </LeafItem> */}
       {usuarioEhLogistica() && (
         <LeafItem to={`/${LOGISTICA}/${ENVIO_REQUISICOES_ENTREGA_AVANCADO}`}>
           Requisição de Entrega
@@ -86,6 +89,27 @@ const MenuLogistica = () => {
         <LeafItem to={`/${LOGISTICA}/${CONFERIR_ENTREGA}`}>
           Conferir Entrega
         </LeafItem>
+      )}
+
+      {exibirModuloOcorrencias() && (
+        <SubMenu
+          icon="fa-chevron-down"
+          onClick={onSubmenuClick}
+          title="Ocorrências"
+          activeMenu={activeMenu}
+        >
+          {(usuarioEhCodaeDilog() || usuarioEhDilogJuridico()) && (
+            <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO}/`}>
+              Guias com Notificações
+            </LeafItem>
+          )}
+
+          {(usuarioEhDilogQualidade() || usuarioEhDilog()) && (
+            <LeafItem to={`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}/`}>
+              Notificações
+            </LeafItem>
+          )}
+        </SubMenu>
       )}
     </Menu>
   );

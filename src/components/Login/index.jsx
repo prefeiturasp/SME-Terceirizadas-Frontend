@@ -8,28 +8,31 @@ import {
   required,
   rfOuCpfOuCodOperador,
   semCaracteresEspeciais
-} from "../../helpers/fieldValidators";
-import authService from "../../services/auth";
+} from "helpers/fieldValidators";
+import authService from "services/auth";
 import {
   atualizarSenhaLogado,
   recuperaSenha,
   setUsuario
-} from "../../services/perfil.service";
-import { Botao } from "../Shareable/Botao";
-import { BUTTON_STYLE, BUTTON_TYPE } from "../Shareable/Botao/constants";
-import { InputText } from "../Shareable/Input/InputText";
-import { InputPassword } from "../Shareable/Input/InputPassword";
-import Select from "../Shareable/Select";
-import RequisitosSenha from "../Shareable/RequisitosSenha";
-import { toastError, toastSuccess } from "../Shareable/Toast/dialogs";
+} from "services/perfil.service";
+import { Botao } from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { InputText } from "components/Shareable/Input/InputText";
+import { InputPassword } from "components/Shareable/Input/InputPassword";
+import Select from "components/Shareable/Select";
+import RequisitosSenha from "components/Shareable/RequisitosSenha";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { TIPOS_EMAIL_CADASTRO, TABS } from "./constans";
 import "./style.scss";
 import { validarForm } from "./validar";
 import {
   fieldCnpj,
   fieldCpf
-} from "../screens/Cadastros/CadastroEmpresa/helper";
-import { deepCopy } from "helpers/utilities";
+} from "components/screens/Cadastros/CadastroEmpresa/helper";
+import { composeValidators, deepCopy } from "helpers/utilities";
 import { Form, Field as FieldFF } from "react-final-form";
 
 const TOOLTIP_CPF = `Somente números`;
@@ -105,13 +108,11 @@ export class Login extends Component {
     values_["senha_atual"] = localStorage.getItem("senhaAtual");
     const response = await atualizarSenhaLogado(values_);
     if (response.status === HTTP_STATUS.OK) {
-      toastSuccess("senha atualizada com sucesso!");
+      toastSuccess("Senha atualizada com sucesso!");
       localStorage.removeItem("senhaAtual");
       this.setState({ componenteAtivo: this.COMPONENTE.LOGIN });
     } else {
-      toastError(
-        "Erro ao tentar atualizar a senha. Tente novamente mais tarde."
-      );
+      toastError(response.data.detail);
     }
   };
 
@@ -230,11 +231,10 @@ export class Login extends Component {
                     <i className="fas fa-hotel" />
                   </div>
                   <div className="texto">
-                    Acesse com seu <strong>Código Operador</strong> de 7
-                    caracteres
+                    Acesse com seu <strong>CPF</strong> de 11 dígitos
                   </div>
                   <div className="rodape">
-                    A <strong>senha</strong> é a mesma de acesso ao EOL
+                    A <strong>senha</strong> é a cadastrada no primeiro acesso
                   </div>
                 </div>
               </div>
@@ -579,7 +579,7 @@ export class Login extends Component {
           <span className="texto-simples-verde font-weight-bold">
             Rede Parceira: &nbsp;
           </span>
-          Digite seu <strong>Código Operador</strong>.
+          Digite seu <strong>CPF</strong>.
         </div>
         <Form
           onSubmit={this.handleRecuperaSenha}
@@ -591,10 +591,15 @@ export class Login extends Component {
                 <form className="login mt-3">
                   <FieldFF
                     component={InputText}
+                    className="input-login"
+                    esconderAsterisco
                     label="Usuário"
                     name="recuperar_login"
-                    placeholder="Digite seu RF, CPF ou Código Operador"
-                    validate={required}
+                    placeholder={"Digite seu RF ou CPF ou Código Operador"}
+                    required
+                    type="number"
+                    maxlength="11"
+                    validate={composeValidators(required, rfOuCpfOuCodOperador)}
                   />
                 </form>
 
@@ -614,7 +619,11 @@ export class Login extends Component {
                     texto="Continuar"
                     type={BUTTON_TYPE.SUBMIT}
                     onClick={() => this.handleRecuperaSenha(values)}
-                    disabled={!values.recuperar_login}
+                    disabled={
+                      !values.recuperar_login ||
+                      (values.recuperar_login.length !== 7 &&
+                        values.recuperar_login.length !== 11)
+                    }
                   />
                 </div>
               </>
@@ -641,7 +650,7 @@ export class Login extends Component {
           onSubmit={this.handleAtualizarSenhaPrimeiroAcesso}
           initialValues={{}}
           validate={() => {}}
-          render={({ form, handleSubmit, values }) => {
+          render={({ handleSubmit, values }) => {
             const letra = values.senha
               ? values.senha.match(/[a-zA-Z]/g)
               : false;
@@ -739,7 +748,7 @@ export class Login extends Component {
   renderLogoTexto(texto) {
     return (
       <div className="logo-sigpae">
-        <img src="/assets/image/logo-sigpae.png" alt="" />
+        <img src="/assets/image/logo-sigpae-com-texto.png" alt="" />
         {texto && <div className="titulo">{texto}</div>}
       </div>
     );

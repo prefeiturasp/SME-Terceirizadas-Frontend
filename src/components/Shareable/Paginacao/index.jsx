@@ -1,15 +1,17 @@
 import React from "react";
-import "antd/dist/antd.css";
+
 import "./style.scss";
 import { Pagination } from "antd";
 
 export const Paginacao = props => {
-  const { pageSize, ...rest } = props;
+  const { pageSize, showTitle, showSizeChanger, ...rest } = props;
+
   return (
-    <section className="pt-3 footer-pagination-default">
+    <section className="pagination-container">
       <Pagination
-        defaultPageSize={pageSize || 100}
-        showSizeChanger={false}
+        defaultPageSize={pageSize || 10}
+        showTitle={showTitle || false}
+        showSizeChanger={showSizeChanger || false}
         {...rest}
       />
     </section>

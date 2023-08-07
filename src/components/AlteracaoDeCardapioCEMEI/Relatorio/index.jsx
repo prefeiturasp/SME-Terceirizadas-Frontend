@@ -17,6 +17,7 @@ import { statusEnum, TIPO_PERFIL } from "constants/shared";
 import { Form } from "react-final-form";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
+import { ModalAprovarSolicitacaoAlteracao } from "./componentes/ModalAprovarSolicitacaoAlteracao";
 
 export const Relatorio = ({ ...props }) => {
   const {
@@ -56,6 +57,10 @@ export const Relatorio = ({ ...props }) => {
       setMatriculados(response.data);
     }
   };
+
+  const [showModalObservacaoCodae, setShowModalObservacaoCodae] = useState(
+    false
+  );
 
   const getSolicitacao = async (uuid_ = uuid) => {
     const response = await getAlteracaoCEMEI(uuid_);
@@ -131,7 +136,6 @@ export const Relatorio = ({ ...props }) => {
     const urlParams = new URLSearchParams(window.location.search);
     setUuid(urlParams.get("uuid"));
     getSolicitacao(urlParams.get("uuid"));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -142,7 +146,7 @@ export const Relatorio = ({ ...props }) => {
       {solicitacao && dadosTabela && matriculados && (
         <>
           <Form onSubmit={onSubmit}>
-            {({ handleSubmit }) => (
+            {({ handleSubmit, form }) => (
               <form onSubmit={handleSubmit}>
                 <span className="page-title">{`Alteração do Tipo de Alimentação - Solicitação # ${
                   solicitacao.id_externo
@@ -199,8 +203,14 @@ export const Relatorio = ({ ...props }) => {
                               ).length > 0 ? null : (
                                 <Botao
                                   texto={textoBotaoAprova}
-                                  type={BUTTON_TYPE.SUBMIT}
+                                  type={BUTTON_TYPE.BUTTON}
                                   style={BUTTON_STYLE.GREEN}
+                                  onClick={() => {
+                                    tipoPerfil ===
+                                    TIPO_PERFIL.GESTAO_ALIMENTACAO_TERCEIRIZADA
+                                      ? setShowModalObservacaoCodae(true)
+                                      : form.submit();
+                                  }}
                                   className="ml-3"
                                 />
                               )))}
@@ -261,6 +271,16 @@ export const Relatorio = ({ ...props }) => {
                               solicitacao={solicitacao}
                             />
                           )}
+                          <ModalAprovarSolicitacaoAlteracao
+                            closeModal={() =>
+                              setShowModalObservacaoCodae(false)
+                            }
+                            showModal={showModalObservacaoCodae}
+                            loadSolicitacao={getSolicitacao}
+                            endpoint={endpointAprovaSolicitacao}
+                            tipoSolicitacao={tipoSolicitacao}
+                            solicitacao={solicitacao}
+                          />
                         </div>
                       </div>
                     )}

@@ -10,3 +10,12 @@ export const getFiltros = async () => {
     return data;
   }
 };
+
+export const filtrarAlunosMatriculados = async params => {
+  const url = `${API_URL}/relatorio-alunos-matriculados/filtrar/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

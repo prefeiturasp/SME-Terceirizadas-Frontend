@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import HTTP_STATUS from "http-status-codes";
@@ -8,6 +8,7 @@ import {
   filtrarPorEditalNomeTipo
 } from "services/produto.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -76,7 +77,7 @@ export default () => {
         {resultado && (
           <>
             <Tabela resultado={resultado} changePage={() => changePage(page)} />
-            <Pagination
+            <Paginacao
               className="mt-3 mb-3"
               current={page || 1}
               total={total}

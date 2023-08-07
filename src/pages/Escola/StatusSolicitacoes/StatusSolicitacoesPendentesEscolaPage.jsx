@@ -1,4 +1,4 @@
-import { SolicitacoesPorStatusGenerico } from "components/screens/SolicitacoesPorStatusGenerico";
+import SolicitacoesPorStatusGenerico from "components/screens/SolicitacoesPorStatusGenerico";
 import CardLegendas from "components/Shareable/CardLegendas";
 import {
   CARD_TYPE_ENUM,
@@ -18,7 +18,7 @@ const atual = {
 };
 
 export default () => (
-  <Page titulo={atual.titulo} botaoVoltar voltarPara={HOME}>
+  <Page titulo={atual.titulo} botaoVoltar>
     <Breadcrumb home={HOME} atual={atual} />
     <SolicitacoesPorStatusGenerico
       tipoCard={CARD_TYPE_ENUM.PENDENTE}

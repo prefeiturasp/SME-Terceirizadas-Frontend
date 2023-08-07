@@ -11,11 +11,16 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
-import { option_status } from "../../helper";
+import { montarMenuOptionStatus } from "../../helper";
 
 const FORM_NAME = "buscaSolicitacaoAlteracaoCronograma";
 
-export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
+export default ({
+  setFiltros,
+  setAlteracoesCronogramas,
+  setTotal,
+  fornecedor
+}) => {
   const onSubmit = async values => {
     const filtros = { ...values };
     if (filtros.motivos) {
@@ -32,7 +37,7 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
           <form onSubmit={handleSubmit}>
             <FinalFormToRedux form={FORM_NAME} />
             <div className="row">
-              <div className="col-6">
+              <div className="col-6 mb-3">
                 <Field
                   component={InputText}
                   label="N° do Cronograma"
@@ -41,18 +46,18 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   className="input-busca-cronograma"
                 />
               </div>
-              <div className="col-6">
-                <Field
-                  component={InputText}
-                  label="Nome da Empresa"
-                  name="fornecedor"
-                  placeholder="Digite o nome da empresa"
-                  className="input-busca-cronograma"
-                />
-              </div>
-            </div>
-            <div className="row mt-3">
-              <div className="col-3">
+              {!fornecedor && (
+                <div className="col-6 mb-3">
+                  <Field
+                    component={InputText}
+                    label="Nome da Empresa"
+                    name="fornecedor"
+                    placeholder="Digite o nome da empresa"
+                    className="input-busca-cronograma"
+                  />
+                </div>
+              )}
+              <div className="col-3 mb-3">
                 <Field
                   component={InputComData}
                   label="Data da Solicitação"
@@ -67,7 +72,7 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   }
                 />
               </div>
-              <div className="col-3">
+              <div className="col-3 mb-3">
                 <Field
                   component={InputComData}
                   label="&nbsp;"
@@ -83,7 +88,7 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   maxDate={null}
                 />
               </div>
-              <div className="col-6">
+              <div className="col-6 mb-3">
                 <Field
                   label="Status"
                   placeholder="Selecione um Status"
@@ -93,12 +98,12 @@ export default ({ setFiltros, setAlteracoesCronogramas, setTotal }) => {
                   multiple
                   nomeDoItemNoPlural="status"
                   pluralFeminino
-                  options={option_status}
+                  options={montarMenuOptionStatus()}
                 />
               </div>
             </div>
 
-            <div className="mt-4 mb-4">
+            <div className="mt-2 mb-4">
               <Botao
                 texto="Filtrar"
                 type={BUTTON_TYPE.SUBMIT}

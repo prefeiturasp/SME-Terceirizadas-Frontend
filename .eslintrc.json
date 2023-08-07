@@ -10,8 +10,12 @@
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
+    "requireConfigFile": false,
     "ecmaFeatures": {
       "jsx": true
     },
@@ -27,9 +31,9 @@
     "no-var": "error",
     "no-class-assign": "off", // TODO: investigar  essa regra.
     "react/no-string-refs": "off", // TODO: investigar  essa regra.
-    "no-dupe-else-if": "on",
-    "no-import-assign": "on",
-    "no-setter-return": "on"
+    "no-dupe-else-if": 0,
+    "no-import-assign": 0,
+    "no-setter-return": 0
   },
   "settings": {
     "react": {

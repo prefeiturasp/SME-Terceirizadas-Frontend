@@ -3,7 +3,14 @@ import moment from "moment";
 import Select from "components/Shareable/Select";
 import HTTP_STATUS from "http-status-codes";
 import { required } from "helpers/fieldValidators";
-import { agregarDefault, deepCopy, usuarioEhDRE } from "helpers/utilities";
+import {
+  agregarDefault,
+  deepCopy,
+  usuarioEhDRE,
+  usuarioEhEmpresaTerceirizada,
+  usuarioEhEscolaTerceirizada,
+  usuarioEhEscolaTerceirizadaDiretor
+} from "helpers/utilities";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Field, Form } from "react-final-form";
@@ -13,7 +20,7 @@ import { lotesToOptions } from "../../helpers";
 import "../../style.scss";
 import { getTiposUnidadeEscolar } from "services/cadastroTipoAlimentacao.service";
 import { STATUS_SOLICITACOES, TIPOS_SOLICITACAO } from "../../constants";
-import { getEscolasTrecTotal } from "services/escola.service";
+import { getEscolaSimples, getEscolasTrecTotal } from "services/escola.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesTerceirizadas } from "services/produto.service";
 import Botao from "components/Shareable/Botao";
@@ -29,6 +36,7 @@ export const Filtros = ({ ...props }) => {
   const [tiposUnidades, setTiposUnidades] = useState([]);
   const [unidadesEducacionais, setUnidadesEducacionais] = useState([]);
   const [terceirizadas, setTerceirizadas] = useState([]);
+  const [unidadeEducacional, setUnidadeEducacional] = useState(null);
 
   const {
     erroAPI,
@@ -50,6 +58,9 @@ export const Filtros = ({ ...props }) => {
       params["diretoria_regional__uuid"] =
         meusDados.vinculo_atual.instituicao.uuid;
     }
+    if (usuarioEhEmpresaTerceirizada()) {
+      params["terceirizada__uuid"] = meusDados.vinculo_atual.instituicao.uuid;
+    }
     const response = await getLotesSimples(params);
     if (response.status === HTTP_STATUS.OK) {
       setLotes(lotesToOptions(response.data.results));
@@ -70,13 +81,32 @@ export const Filtros = ({ ...props }) => {
   };
 
   const getEscolasSimplissimaComDREUnpaginatedAsync = async () => {
-    const response = await getEscolasTrecTotal(
-      usuarioEhDRE() ? meusDados.vinculo_atual.instituicao.uuid : null
-    );
+    let params = null;
+    if (usuarioEhDRE()) {
+      params = { dre: meusDados.vinculo_atual.instituicao.uuid };
+    }
+    if (usuarioEhEmpresaTerceirizada()) {
+      params = { terceirizada: meusDados.vinculo_atual.instituicao.uuid };
+    }
+    const response = await getEscolasTrecTotal(params);
     if (response.status === HTTP_STATUS.OK) {
       setUnidadesEducacionais(response.data);
     } else {
       setErroAPI("Erro ao carregar unidades educacionais.");
+    }
+  };
+
+  const getEscolaSimplesAsync = async () => {
+    let uuidEscola = null;
+    if (usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()) {
+      uuidEscola = meusDados.vinculo_atual.instituicao.uuid;
+    }
+    const response = await getEscolaSimples(uuidEscola);
+    if (response.status === HTTP_STATUS.OK) {
+      let unidadeEducacional = response.data;
+      setUnidadeEducacional(unidadeEducacional);
+    } else {
+      setErroAPI("Erro ao carregar unidade educacional.");
     }
   };
 
@@ -98,7 +128,7 @@ export const Filtros = ({ ...props }) => {
     getTiposUnidadeEscolarAsync();
     getEscolasSimplissimaComDREUnpaginatedAsync();
     getTerceirizadasAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    getEscolaSimplesAsync();
   }, []);
 
   const filtroEscolas = (unidadesEducacionais, values) => {
@@ -122,6 +152,7 @@ export const Filtros = ({ ...props }) => {
     setCarregando(true);
     let _values = deepCopy(values);
     setFiltros(values);
+
     const page = 1;
     _values["limit"] = 10;
     _values["offset"] = (page - 1) * _values["limit"];
@@ -177,7 +208,14 @@ export const Filtros = ({ ...props }) => {
                   <Field
                     component={StatefulMultiSelect}
                     name="lotes"
-                    selected={values.lotes || []}
+                    selected={
+                      values.lotes ||
+                      (unidadeEducacional &&
+                        unidadeEducacional.lote && [
+                          unidadeEducacional.lote.uuid
+                        ]) ||
+                      []
+                    }
                     options={lotes}
                     onSelectedChanged={values_ => form.change(`lotes`, values_)}
                     hasSelectAll
@@ -186,7 +224,7 @@ export const Filtros = ({ ...props }) => {
                       allItemsAreSelected: "Todos os lotes",
                       selectAll: "Todos"
                     }}
-                    disabled={!values.status}
+                    disabled={!values.status || unidadeEducacional}
                   />
                 </div>
                 <div className="col-lg-5 col-xl-4">
@@ -216,7 +254,13 @@ export const Filtros = ({ ...props }) => {
                     <Field
                       component={StatefulMultiSelect}
                       name="tipos_unidade"
-                      selected={values.tipos_unidade || []}
+                      selected={
+                        values.tipos_unidade ||
+                        (unidadeEducacional && [
+                          unidadeEducacional.tipo_unidade.uuid
+                        ]) ||
+                        []
+                      }
                       options={tiposUnidades.map(tipoUnidade => ({
                         label: tipoUnidade.iniciais,
                         value: tipoUnidade.uuid
@@ -230,7 +274,7 @@ export const Filtros = ({ ...props }) => {
                         allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
-                      disabled={!values.status}
+                      disabled={!values.status || unidadeEducacional}
                     />
                   </div>
                   <div className="col-8">
@@ -238,18 +282,22 @@ export const Filtros = ({ ...props }) => {
                     <Field
                       component={StatefulMultiSelect}
                       name="unidades_educacionais"
-                      selected={values.unidades_educacionais || []}
-                      options={filtroEscolas(unidadesEducacionais, values)}
-                      onSelectedChanged={values_ =>
-                        form.change(`unidades_educacionais`, values_)
+                      selected={
+                        values.unidades_educacionais ||
+                        (unidadeEducacional && [unidadeEducacional.uuid]) ||
+                        []
                       }
+                      options={filtroEscolas(unidadesEducacionais, values)}
+                      onSelectedChanged={values_ => {
+                        form.change(`unidades_educacionais`, values_);
+                      }}
                       hasSelectAll
                       overrideStrings={{
                         selectSomeItems: "Selecione",
                         allItemsAreSelected: "Todos os tipos de unidade",
                         selectAll: "Todos"
                       }}
-                      disabled={!values.status}
+                      disabled={!values.status || unidadeEducacional}
                     />
                   </div>
                 </div>

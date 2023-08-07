@@ -1,4 +1,3 @@
-import "antd/dist/antd.css";
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import React, { useEffect, useState } from "react";
@@ -74,7 +73,6 @@ const BuscaProdutoSuspensos = () => {
 
     if (!meusDados) getDadosUsuario();
     if (filtros) fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros, meusDados]);
 
   const onSubmitForm = formValues => {

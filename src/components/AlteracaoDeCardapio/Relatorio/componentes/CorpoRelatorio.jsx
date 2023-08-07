@@ -3,7 +3,8 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   ehInclusaoCei,
-  justificativaAoNegarSolicitacao
+  justificativaAoNegarSolicitacao,
+  justificativaAoAprovarSolicitacao
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import {
@@ -14,6 +15,8 @@ import {
 import { getRelatorioAlteracaoCardapio } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
+import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
 export const CorpoRelatorio = props => {
   const { alteracaoDeCardapio, prazoDoPedidoMensagem, tipoSolicitacao } = props;
@@ -21,6 +24,14 @@ export const CorpoRelatorio = props => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     alteracaoDeCardapio.logs
   );
+
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
+    alteracaoDeCardapio.logs
+  );
+
+  const EXIBIR_HISTORICO =
+    alteracaoDeCardapio.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(alteracaoDeCardapio.logs);
 
   return (
     <div>
@@ -33,7 +44,7 @@ export const CorpoRelatorio = props => {
           {prazoDoPedidoMensagem}
           <Botao
             type={BUTTON_TYPE.BUTTON}
-            style={BUTTON_STYLE.BLUE}
+            style={BUTTON_STYLE.GREEN}
             icon={BUTTON_ICON.PRINT}
             className="float-right"
             onClick={() => {
@@ -113,30 +124,59 @@ export const CorpoRelatorio = props => {
         </div>
       )}
       <hr />
-      <table className="table-periods">
-        <tr>
-          <th>Tipo de Alteração</th>
-          {alteracaoDeCardapio.data_inicial ===
-          alteracaoDeCardapio.data_final ? (
-            <th>Alterar dia</th>
-          ) : (
-            [<th key={0}>Alterar de</th>, <th key={1}>Até</th>]
-          )}
-        </tr>
-        <tr>
-          <td>{alteracaoDeCardapio.motivo.nome}</td>
-          {alteracaoDeCardapio.data_inicial ===
-          alteracaoDeCardapio.data_final ? (
-            <td>
-              {alteracaoDeCardapio.data_inicial || alteracaoDeCardapio.data}
-            </td>
-          ) : (
-            [
-              <td key={0}>{alteracaoDeCardapio.data_inicial}</td>,
-              <td key={1}>{alteracaoDeCardapio.data_final}</td>
-            ]
-          )}
-        </tr>
+      <table className="table-periods-alteracao">
+        <thead>
+          <tr className="row">
+            <th className="col-2">Tipo de Alteração</th>
+            {alteracaoDeCardapio.data_inicial ===
+            alteracaoDeCardapio.data_final ? (
+              <th className="col-2">Alterar dia</th>
+            ) : (
+              <th className="col-2">Dia(s) de Alteração</th>
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="row">
+            <td className="col-2">{alteracaoDeCardapio.motivo.nome}</td>
+            {alteracaoDeCardapio.data_inicial ===
+            alteracaoDeCardapio.data_final ? (
+              <td className="col-2">
+                {alteracaoDeCardapio.data_inicial || alteracaoDeCardapio.data}
+              </td>
+            ) : (
+              alteracaoDeCardapio.datas_intervalo.map((data_intervalo, key) => {
+                return (
+                  <td
+                    className={`col-2 ${
+                      key > 0 && key % 5 === 0 ? "offset-2" : ""
+                    }`}
+                    key={key}
+                  >
+                    <span
+                      className={
+                        data_intervalo.cancelado_justificativa
+                          ? `data-cancelada`
+                          : ""
+                      }
+                    >
+                      {data_intervalo.data}
+                    </span>
+                    <br />
+                    {data_intervalo.cancelado_justificativa && (
+                      <span className="justificativa">
+                        justificativa:{" "}
+                        <span className="font-weight-normal">
+                          {data_intervalo.cancelado_justificativa}
+                        </span>
+                      </span>
+                    )}
+                  </td>
+                );
+              })
+            )}
+          </tr>
+        </tbody>
       </table>
       <table className="table-report mt-4">
         <tr>
@@ -218,6 +258,30 @@ export const CorpoRelatorio = props => {
           </td>
         </tr>
       </table>
+      {!ehInclusaoCei(tipoSolicitacao) &&
+        alteracaoDeCardapio.datas_intervalo.find(
+          data_intervalo => data_intervalo.cancelado_justificativa
+        ) && (
+          <>
+            <hr />
+            <p>
+              <strong>Histórico de cancelamento</strong>
+              {alteracaoDeCardapio.datas_intervalo
+                .filter(
+                  data_intervalo => data_intervalo.cancelado_justificativa
+                )
+                .map((data_intervalo, key) => {
+                  return (
+                    <div key={key}>
+                      {data_intervalo.data}
+                      {" - justificativa: "}
+                      {data_intervalo.cancelado_justificativa}
+                    </div>
+                  );
+                })}
+            </p>
+          </>
+        )}
       {justificativaNegacao && (
         <table className="table-periods">
           <tr>
@@ -234,6 +298,34 @@ export const CorpoRelatorio = props => {
             </td>
           </tr>
         </table>
+      )}
+      {justificativaAprovacao && !EXIBIR_HISTORICO && (
+        <Fragment>
+          <table className="table-periods">
+            <tr>
+              <th>
+                <b>Autorizou</b>
+              </th>
+            </tr>
+            <tr>
+              <th>{`${
+                alteracaoDeCardapio.logs.find(
+                  log => log.status_evento_explicacao === "CODAE autorizou"
+                ).criado_em
+              } - Informações da CODAE`}</th>
+            </tr>
+            <tr>
+              <td>
+                <p
+                  className="value"
+                  dangerouslySetInnerHTML={{
+                    __html: justificativaAprovacao
+                  }}
+                />
+              </td>
+            </tr>
+          </table>
+        </Fragment>
       )}
     </div>
   );

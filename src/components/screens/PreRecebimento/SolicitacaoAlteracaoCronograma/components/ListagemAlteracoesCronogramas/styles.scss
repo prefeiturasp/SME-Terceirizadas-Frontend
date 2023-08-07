@@ -1,7 +1,7 @@
 @import "styles/variables.scss";
 
 .resultado-cronograma-de-entrega {
-  margin-top: 90px;
+  margin-top: 40px;
 
   header {
     font-style: normal;
@@ -21,11 +21,14 @@
       height: 48px;
       font-size: 14px;
       line-height: 16px;
-      display: flex;
       align-items: center;
       text-align: center;
       display: grid;
-      grid-template-columns: 0.6fr 0.6fr 0.3fr 0.8fr 0.7fr 0.8fr;
+      grid-template-columns: 0.6fr 0.6fr 0.4fr 0.7fr 0.7fr 0.8fr;
+
+      &.fornecedor {
+        grid-template-columns: 0.6fr 0.6fr 0.8fr 0.7fr 0.8fr !important;
+      }
     }
 
     .header-table {

@@ -5,19 +5,29 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import {
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
   getSolicitacoesInclusoesAutorizadasEscola,
+  getSolicitacoesInclusoesEtecAutorizadasEscola,
+  getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
+import { tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
   tabelaAlimentacaoRows,
   tabelaDietaEnteralRows,
   dadosIniciaisFiltered,
-  diasDaSemanaSelecionada
+  diasDaSemanaSelecionada,
+  ehGrupoSolicitacoesDeAlimentacaoUrlParam,
+  ehGrupoETECUrlParam,
+  grupoLocation
 ) => {
-  if (values["periodo_escolar"].includes(" - ")) {
-    values["grupo"] = values["periodo_escolar"].split(" - ")[0];
-    values["periodo_escolar"] = values["periodo_escolar"].split(" - ")[1];
+  if (
+    values["periodo_escolar"].includes("Solicitações") ||
+    values["periodo_escolar"] === "ETEC" ||
+    values["periodo_escolar"] === "Programas e Projetos"
+  ) {
+    values["grupo"] = values["periodo_escolar"];
+    delete values["periodo_escolar"];
   }
   const valuesAsArray = Object.entries(values);
   const arrayCategoriesValues = valuesAsArray.filter(([key]) =>
@@ -55,7 +65,12 @@ export const formatarPayloadPeriodoLancamento = (
       valor: ["<p></p>\n", ""].includes(arr[1]) ? 0 : arr[1],
       nome_campo: nome_campo,
       categoria_medicao: idCategoria,
-      tipo_alimentacao: tipoAlimentacao.uuid || ""
+      tipo_alimentacao:
+        !ehGrupoSolicitacoesDeAlimentacaoUrlParam &&
+        !ehGrupoETECUrlParam &&
+        grupoLocation !== "Programas e Projetos"
+          ? tipoAlimentacao.uuid
+          : ""
     });
   });
 
@@ -71,6 +86,34 @@ export const formatarPayloadPeriodoLancamento = (
   });
 
   return { ...values, valores_medicao: valoresMedicao };
+};
+
+export const formatarPayloadParaCorrecao = (
+  valoresPeriodosLancamentos,
+  payload
+) => {
+  let payloadParaCorrecao = [];
+  valoresPeriodosLancamentos
+    .filter(
+      valor =>
+        valor.habilitado_correcao &&
+        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+          valor.nome_campo
+        )
+    )
+    .forEach(valor_lancamento => {
+      payloadParaCorrecao.push(
+        payload.valores_medicao.filter(
+          valor_medicao =>
+            String(valor_lancamento.categoria_medicao) ===
+              valor_medicao.categoria_medicao &&
+            valor_lancamento.dia === valor_medicao.dia &&
+            valor_lancamento.nome_campo === valor_medicao.nome_campo
+        )[0]
+      );
+    });
+
+  return payloadParaCorrecao;
 };
 
 export const deveExistirObservacao = (
@@ -167,13 +210,42 @@ export const desabilitarField = (
   dia,
   rowName,
   categoria,
+  nomeCategoria,
   values,
   mesAnoConsiderado,
   mesAnoDefault,
   dadosValoresInclusoesAutorizadasState,
   validacaoDiaLetivo,
-  validacaoSemana
+  validacaoSemana,
+  location,
+  ehGrupoETECUrlParam = false,
+  dadosValoresInclusoesEtecAutorizadasState = null,
+  inclusoesEtecAutorizadas = null,
+  grupoLocation = null,
+  valoresPeriodosLancamentos,
+  feriadosNoMes
 ) => {
+  const valorField = valoresPeriodosLancamentos
+    .filter(valor => valor.nome_campo === rowName)
+    .filter(valor => String(valor.dia) === String(dia))
+    .filter(valor => String(valor.categoria_medicao) === String(categoria))
+    .filter(valor => valor.habilitado_correcao === true)[0];
+  if (
+    location.state &&
+    (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
+        !valorField))
+  ) {
+    return true;
+  }
+
   const mesConsiderado = format(mesAnoConsiderado, "LLLL", {
     locale: ptBR
   }).toString();
@@ -181,6 +253,88 @@ export const desabilitarField = (
     locale: ptBR
   }).toString();
 
+  if (nomeCategoria.includes("SOLICITAÇÕES")) {
+    return (
+      !validacaoDiaLetivo(dia) ||
+      validacaoSemana(dia) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd"))
+    );
+  }
+  if (ehGrupoETECUrlParam && nomeCategoria === "ALIMENTAÇÃO") {
+    const inclusao = inclusoesEtecAutorizadas.filter(
+      inclusao => Number(inclusao.dia) === Number(dia)
+    );
+    if (
+      rowName === "frequencia" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      !["Mês anterior", "Mês posterior"].includes(
+        values[`frequencia__dia_${dia}__categoria_${categoria}`]
+      ) &&
+      Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+        String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+      )
+    ) {
+      return false;
+    } else if (
+      rowName === "repeticao_refeicao" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      (inclusao.length && inclusao[0].alimentacoes.includes("refeicao"))
+    ) {
+      return false;
+    } else if (
+      rowName === "repeticao_sobremesa" &&
+      validacaoDiaLetivo(dia) &&
+      !validacaoSemana(dia) &&
+      (inclusao.length && inclusao[0].alimentacoes.includes("sobremesa"))
+    ) {
+      return false;
+    } else {
+      return (
+        !validacaoDiaLetivo(dia) ||
+        validacaoSemana(dia) ||
+        rowName === "numero_de_alunos" ||
+        !Object.keys(dadosValoresInclusoesEtecAutorizadasState).some(key =>
+          String(key).includes(`__dia_${dia}__categoria_${categoria}`)
+        ) ||
+        (inclusao.length && !inclusao[0].alimentacoes.includes(rowName)) ||
+        (mesConsiderado === mesAtual &&
+          Number(dia) >= format(mesAnoDefault, "dd"))
+      );
+    }
+  }
+  if (
+    grupoLocation === "Programas e Projetos" &&
+    dadosValoresInclusoesAutorizadasState
+  ) {
+    if (nomeCategoria === "ALIMENTAÇÃO") {
+      if (feriadosNoMes.includes(dia)) {
+        return true;
+      } else if (rowName === "numero_de_alunos") {
+        return true;
+      } else if (validacaoSemana(dia)) {
+        return true;
+      } else if (
+        !Object.keys(dadosValoresInclusoesAutorizadasState).some(key =>
+          key.includes(`__dia_${dia}`)
+        )
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (rowName === "dietas_autorizadas") {
+        return true;
+      } else if (!validacaoDiaLetivo(dia) || validacaoSemana(dia)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
@@ -208,6 +362,7 @@ export const desabilitarField = (
       !validacaoDiaLetivo(dia) ||
       validacaoSemana(dia) ||
       rowName === "matriculados" ||
+      rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
       !values[`matriculados__dia_${dia}__categoria_${categoria}`] ||
       Number(
@@ -223,7 +378,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   escolaUuuid,
   mes,
   ano,
-  nome_periodo_escolar,
+  periodos_escolares,
   location
 ) => {
   const params = {};
@@ -231,7 +386,7 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
   params["tipo_solicitacao"] = "Inclusão de";
   params["mes"] = mes;
   params["ano"] = ano;
-  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  params["periodos_escolares"] = periodos_escolares;
   if (
     location.state.grupo &&
     location.state.grupo.includes("Programas e Projetos")
@@ -247,6 +402,27 @@ export const getSolicitacoesInclusaoAutorizadasAsync = async (
     return responseInclusoesAutorizadas.data.results;
   } else {
     toastError("Erro ao carregar Inclusões Autorizadas");
+    return [];
+  }
+};
+
+export const getSolicitacoesInclusoesEtecAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Inclusão de";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  const responseInclusoesAutorizadas = await getSolicitacoesInclusoesEtecAutorizadasEscola(
+    params
+  );
+  if (responseInclusoesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseInclusoesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Inclusões ETEC Autorizadas");
     return [];
   }
 };
@@ -278,14 +454,18 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   escolaUuuid,
   mes,
   ano,
-  nome_periodo_escolar
+  nomePeriodoEscolar,
+  ehLancheEmergencial = false
 ) => {
   const params = {};
   params["escola_uuid"] = escolaUuuid;
   params["tipo_solicitacao"] = "Alteração";
   params["mes"] = mes;
   params["ano"] = ano;
-  params["nome_periodo_escolar"] = nome_periodo_escolar;
+  params["eh_lanche_emergencial"] = ehLancheEmergencial;
+  if (!ehLancheEmergencial) {
+    params["nome_periodo_escolar"] = nomePeriodoEscolar;
+  }
   const responseAlteracoesAlimentacaoAutorizadas = await getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola(
     params
   );
@@ -297,24 +477,50 @@ export const getSolicitacoesAlteracoesAlimentacaoAutorizadasAsync = async (
   }
 };
 
-export const formatarLinhasTabelaAlimentacao = tipos_alimentacao => {
-  const tiposAlimentacaoFormatadas = tipos_alimentacao.map(alimentacao => {
-    return {
-      ...alimentacao,
-      name: alimentacao.nome
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replaceAll(/ /g, "_")
-    };
-  });
+export const getSolicitacoesKitLanchesAutorizadasAsync = async (
+  escolaUuuid,
+  mes,
+  ano
+) => {
+  const params = {};
+  params["escola_uuid"] = escolaUuuid;
+  params["tipo_solicitacao"] = "Kit Lanche";
+  params["mes"] = mes;
+  params["ano"] = ano;
+  const responseKitLanchesAutorizadas = await getSolicitacoesKitLanchesAutorizadasEscola(
+    params
+  );
+  if (responseKitLanchesAutorizadas.status === HTTP_STATUS.OK) {
+    return responseKitLanchesAutorizadas.data.results;
+  } else {
+    toastError("Erro ao carregar Kit Lanches Autorizadas");
+    return [];
+  }
+};
+
+export const formatarLinhasTabelaAlimentacao = (
+  tipos_alimentacao,
+  periodoGrupo
+) => {
+  const tiposAlimentacaoFormatadas = tipos_alimentacao
+    .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
+    .map(alimentacao => {
+      return {
+        ...alimentacao,
+        name: alimentacao.nome
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replaceAll(/ /g, "_")
+      };
+    });
   const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
     ali => ali.nome === "Refeição"
   );
   if (indexRefeicao !== -1) {
     tiposAlimentacaoFormatadas[indexRefeicao].nome = "Refeição 1ª Oferta";
     tiposAlimentacaoFormatadas.splice(indexRefeicao + 1, 0, {
-      nome: "Repet. Refeição",
+      nome: "Repetição Refeição",
       name: "repeticao_refeicao",
       uuid: null
     });
@@ -324,34 +530,33 @@ export const formatarLinhasTabelaAlimentacao = tipos_alimentacao => {
     ali => ali.nome === "Sobremesa"
   );
   if (indexSobremesa !== -1) {
-    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1ª Ofe.";
+    tiposAlimentacaoFormatadas[indexSobremesa].nome = "Sobremesa 1º Oferta";
     tiposAlimentacaoFormatadas.splice(indexSobremesa + 1, 0, {
-      nome: "Repet. Sobremesa",
+      nome: "Repetição Sobremesa",
       name: "repeticao_sobremesa",
       uuid: null
     });
   }
 
-  const indexLancheEmergencial = tiposAlimentacaoFormatadas.findIndex(
-    ali => ali.nome === "Lanche Emergencial"
-  );
-  if (indexLancheEmergencial !== -1) {
-    tiposAlimentacaoFormatadas[indexLancheEmergencial].nome =
-      "Lanche Emergenc.";
-  }
+  const matriculadosOuNumeroDeAlunos = () => {
+    return periodoGrupo.grupo === "Programas e Projetos"
+      ? {
+          nome: "Número de Alunos",
+          name: "numero_de_alunos",
+          uuid: null
+        }
+      : {
+          nome: "Matriculados",
+          name: "matriculados",
+          uuid: null
+        };
+  };
 
-  tiposAlimentacaoFormatadas.unshift(
-    {
-      nome: "Matriculados",
-      name: "matriculados",
-      uuid: null
-    },
-    {
-      nome: "Frequência",
-      name: "frequencia",
-      uuid: null
-    }
-  );
+  tiposAlimentacaoFormatadas.unshift(matriculadosOuNumeroDeAlunos(), {
+    nome: "Frequência",
+    name: "frequencia",
+    uuid: null
+  });
 
   tiposAlimentacaoFormatadas.push({
     nome: "Observações",
@@ -430,6 +635,93 @@ export const formatarLinhasTabelaDietaEnteral = (
   return linhasTabelasDietas;
 };
 
+export const formatarLinhasTabelaSolicitacoesAlimentacao = () => {
+  const linhasTabelaSolicitacoesAlimentacao = [];
+  linhasTabelaSolicitacoesAlimentacao.push(
+    {
+      nome: "Lanche Emergencial",
+      name: "lanche_emergencial",
+      uuid: null
+    },
+    {
+      nome: "Kit Lanche",
+      name: "kit_lanche",
+      uuid: null
+    },
+    {
+      nome: "Observações",
+      name: "observacoes",
+      uuid: null
+    }
+  );
+
+  return linhasTabelaSolicitacoesAlimentacao;
+};
+
+export const formatarLinhasTabelaEtecAlimentacao = () => {
+  const tiposAlimentacaoEtec = tiposAlimentacaoETEC();
+  const tiposAlimentacaoEtecFormatadas = tiposAlimentacaoEtec
+    .filter(alimentacao => alimentacao !== "Lanche Emergencial")
+    .map(alimentacao => {
+      return {
+        nome: alimentacao,
+        name: alimentacao
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replaceAll(/ /g, "_"),
+        uuid: null
+      };
+    });
+
+  const indexRefeicaoEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+    ali => ali.nome === "Refeição"
+  );
+  if (indexRefeicaoEtec !== -1) {
+    tiposAlimentacaoEtecFormatadas[indexRefeicaoEtec].nome =
+      "Refeição 1ª Oferta";
+    tiposAlimentacaoEtecFormatadas.splice(indexRefeicaoEtec + 1, 0, {
+      nome: "Repetição Refeição",
+      name: "repeticao_refeicao",
+      uuid: null
+    });
+  }
+
+  const indexSobremesaEtec = tiposAlimentacaoEtecFormatadas.findIndex(
+    ali => ali.nome === "Sobremesa"
+  );
+  if (indexSobremesaEtec !== -1) {
+    tiposAlimentacaoEtecFormatadas[indexSobremesaEtec].nome =
+      "Sobremesa 1º Oferta";
+    tiposAlimentacaoEtecFormatadas.splice(indexSobremesaEtec + 1, 0, {
+      nome: "Repetição Sobremesa",
+      name: "repeticao_sobremesa",
+      uuid: null
+    });
+  }
+
+  tiposAlimentacaoEtecFormatadas.unshift(
+    {
+      nome: "Número de Alunos",
+      name: "numero_de_alunos",
+      uuid: null
+    },
+    {
+      nome: "Frequência",
+      name: "frequencia",
+      uuid: null
+    }
+  );
+
+  tiposAlimentacaoEtecFormatadas.push({
+    nome: "Observações",
+    name: "observacoes",
+    uuid: null
+  });
+
+  return tiposAlimentacaoEtecFormatadas;
+};
+
 export const validacaoSemana = (dia, semanaSelecionada) => {
   return (
     (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
@@ -467,4 +759,106 @@ export const defaultValue = (
   }
 
   return result;
+};
+
+export const ehDiaParaCorrigir = (
+  dia,
+  categoria,
+  valoresPeriodosLancamentos
+) => {
+  const existeAlgumCampoParaCorrigir = valoresPeriodosLancamentos
+    .filter(
+      valor =>
+        !["matriculados", "dietas_autorizadas", "numero_de_alunos"].includes(
+          valor.nome_campo
+        )
+    )
+    .filter(valor => String(valor.dia) === String(dia))
+    .filter(valor => String(valor.categoria_medicao) === String(categoria))
+    .filter(valor => valor.habilitado_correcao === true)[0];
+
+  return existeAlgumCampoParaCorrigir;
+};
+
+export const textoBotaoObservacao = (
+  value,
+  valoresObservacoes,
+  dia,
+  categoria
+) => {
+  let text = "Adicionar";
+  if (value && !["<p></p>", "<p></p>\n", null, "", undefined].includes(value)) {
+    text = "Visualizar";
+  } else if (
+    valoresObservacoes &&
+    valoresObservacoes.find(
+      valor =>
+        String(valor.dia) === String(dia) &&
+        String(valor.categoria_medicao) === String(categoria)
+    )
+  ) {
+    text = "Visualizar";
+  }
+  return text;
+};
+
+export const desabilitarBotaoColunaObservacoes = (
+  location,
+  valoresPeriodosLancamentos,
+  column,
+  categoria,
+  formValuesAtualizados,
+  row,
+  valoresObservacoes,
+  dia
+) => {
+  const botaoEhAdicionar =
+    textoBotaoObservacao(
+      formValuesAtualizados[
+        `${row.name}__dia_${column.dia}__categoria_${categoria.id}`
+      ],
+      valoresObservacoes,
+      dia,
+      categoria.id
+    ) === "Adicionar";
+
+  return (
+    location.state &&
+    (((location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
+      location.state.status_periodo === "MEDICAO_APROVADA_PELA_CODAE" ||
+      location.state.status_periodo === "MEDICAO_ENVIADA_PELA_UE" ||
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
+        !valoresPeriodosLancamentos
+          .filter(valor => valor.nome_campo === "observacoes")
+          .filter(valor => String(valor.dia) === String(column.dia))
+          .filter(
+            valor => String(valor.categoria_medicao) === String(categoria.id)
+          )[0])) &&
+      botaoEhAdicionar &&
+      !ehDiaParaCorrigir(
+        column.dia,
+        categoria.id,
+        valoresPeriodosLancamentos
+      )) ||
+      (["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_APROVADA_PELA_CODAE"].includes(
+        location.state.status_periodo
+      ) &&
+        botaoEhAdicionar) ||
+      ([
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_CORRIGIDA_PELA_UE",
+        "MEDICAO_CORRIGIDA_PARA_CODAE"
+      ].includes(location.state.status_periodo) &&
+        !ehDiaParaCorrigir(
+          column.dia,
+          categoria.id,
+          valoresPeriodosLancamentos
+        )))
+  );
 };

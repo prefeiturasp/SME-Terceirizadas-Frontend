@@ -1,11 +1,40 @@
 import moment from "moment";
-import { format, getYear } from "date-fns";
+import { format, getYear, isWeekend } from "date-fns";
 import strip_tags from "locutus/php/strings/strip_tags";
 import { ALT_CARDAPIO } from "components/screens/helper";
 import { TIPO_PERFIL } from "constants/shared";
 
 export const required = value =>
   value !== undefined ? undefined : "Campo obrigatório";
+
+export const ehDiaUtil = (values, motivos, feriadosAno) => value => {
+  const ehLPRouRPL = () => {
+    return (
+      values &&
+      values.motivo &&
+      motivos &&
+      (motivos
+        .find(motivo => motivo.uuid === values.motivo)
+        .nome.includes("LPR") ||
+        motivos
+          .find(motivo => motivo.uuid === values.motivo)
+          .nome.includes("RPL"))
+    );
+  };
+
+  const ehFinalDeSemana = value => {
+    const valores = value.split("/");
+    const dataFormatada = `${valores[1]}/${valores[0]}/${valores[2]}`;
+    return isWeekend(new Date(dataFormatada));
+  };
+
+  return value &&
+    ![undefined].includes(value) &&
+    ehLPRouRPL() &&
+    (ehFinalDeSemana(value) || (feriadosAno && feriadosAno.includes(value)))
+    ? "Não é possível solicitar LPR ou RPL para dia não útil!"
+    : undefined;
+};
 
 export const composeValidators = (...validators) => value =>
   validators.reduce((error, validator) => error || validator(value), undefined);
@@ -21,7 +50,9 @@ export const requiredSearchSelectUnidEducDietas = escolas => value => {
     return undefined;
   }
   return value_ === undefined ||
-    escolas.find(escola => escola.label === value_.split("- ")[1])
+    escolas.find(
+      escola => escola.label === value_.substring(value_.indexOf("- ") + 2)
+    )
     ? undefined
     : "Selecione uma opção válida";
 };
@@ -88,6 +119,14 @@ export const maxLength = max => value =>
   value && value.length > max
     ? `Deve ter ${max} caracteres(s) ou menos`
     : undefined;
+
+export const maxLengthSemTags = max => value => {
+  if (value && strip_tags(value).length > max) {
+    return `Deve ter ${max} caracteres(s) ou menos`;
+  } else {
+    return undefined;
+  }
+};
 
 export const maxLengthProduto = max => value =>
   value && value.length > max
@@ -231,6 +270,11 @@ export const prefeituraEmail = value =>
   value && /.+@\prefeitura.sp.gov.br/.test(value)
     ? undefined
     : "Somente emails da prefeitura de São Paulo";
+
+export const SMEPrefeituraEmail = value =>
+  value && /.+@sme.prefeitura.sp.gov.br/.test(value)
+    ? undefined
+    : "Digite o E-mail @sme.prefeitura.sp.gov.br";
 
 export const peloMenosUmNumeroEUmaLetra = value =>
   value && /^(?=.*[0-9])(?=.*[a-zA-Z])/i.test(value)

@@ -19,7 +19,8 @@ import {
   editaCronograma,
   getCronograma,
   getEtapas,
-  getRascunhos
+  getRascunhos,
+  getUnidadesDeMedidaLogistica
 } from "services/cronograma.service";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import { useHistory } from "react-router-dom";
@@ -29,12 +30,10 @@ import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
 import { agregarDefault, exibeError } from "helpers/utilities";
-import { getFornecedoresSimples } from "services/terceirizada.service";
-import {
-  getListaProdutosEdital,
-  getUnidadesDeMedidaProduto
-} from "services/produto.service";
+import { getEmpresasCronograma } from "services/terceirizada.service";
+import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -236,7 +235,7 @@ export default () => {
       }
     } catch (error) {
       if (error.response.status === 401) {
-        toastError("Senha inválida.");
+        toastError(MSG_SENHA_INVALIDA);
         setCarregando(false);
       } else {
         exibeError(error, "Ocorreu um erro ao salvar o Cronograma");
@@ -379,7 +378,7 @@ export default () => {
     };
 
     const buscaFornecedores = async () => {
-      const response = await getFornecedoresSimples();
+      const response = await getEmpresasCronograma();
       setFornecedores(
         response.data.results.map(forn => ({
           uuid: forn.uuid,
@@ -395,12 +394,12 @@ export default () => {
     };
 
     const buscaProdutos = async () => {
-      const response = await getListaProdutosEdital();
+      const response = await getListaCompletaProdutosLogistica();
       setProdutosOptions(response.data.results);
     };
 
     const buscaUnidadesMedida = async () => {
-      const response = await getUnidadesDeMedidaProduto();
+      const response = await getUnidadesDeMedidaLogistica();
       setUnidadesMedidaOptions(response.data.results);
     };
 

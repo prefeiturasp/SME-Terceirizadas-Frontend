@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
-import "antd/dist/antd.css";
+
 import "./styles.scss";
 import { retornaStatusFormatado } from "./helpers";
 
@@ -32,7 +32,7 @@ const ListagemProdutos = ({ produtos, ativos, setAtivos }) => {
             <Fragment key={index}>
               <div className="grid-produto-table body-table-produtos">
                 <div className={`${bordas}`}>
-                  {produto.eh_para_alunos_com_dieta ? "D. Especial" : "Comum"}
+                  {produto.produto_edital_tipo_produto}
                 </div>
                 <div className={`${bordas}`}>
                   {retornaStatusFormatado(status)}

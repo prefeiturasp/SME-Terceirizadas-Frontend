@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import {
-  getNomesProtudosEdital,
+  getNomesProdutosEdital,
   getCadastroProdutosEdital
 } from "services/produto.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
 import "./style.scss";
 import { tipoStatus } from "helpers/utilities";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -21,7 +22,7 @@ export default () => {
   const [page, setPage] = useState(1);
 
   async function fetchData() {
-    const respNomes = await getNomesProtudosEdital();
+    const respNomes = await getNomesProdutosEdital();
     const respProdutos = await getCadastroProdutosEdital({});
     setNomes(respNomes.data.results);
     setStatus(tipoStatus);
@@ -66,7 +67,7 @@ export default () => {
         {resultado && (
           <>
             <Tabela resultado={resultado} changePage={() => changePage(page)} />
-            <Pagination
+            <Paginacao
               className="mt-3 mb-3"
               current={page || 1}
               total={total}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Field, Form } from "react-final-form";
 import HTTP_STATUS from "http-status-codes";
@@ -6,17 +6,41 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Spin } from "antd";
 import InputText from "components/Shareable/Input/InputText";
-import { toastError } from "components/Shareable/Toast/dialogs";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { ModalOcorrencia } from "./components/ModalOcorrencia";
 import { BUTTON_ICON } from "components/Shareable/Botao/constants";
 import { TabelaLancamentosPeriodo } from "./components/TabelaLancamentosPeriodo";
-import { medicaoInicialExportarOcorrenciasPDF } from "services/relatorios";
+import {
+  medicaoInicialExportarOcorrenciasPDF,
+  medicaoInicialExportarOcorrenciasXLSX,
+  relatorioMedicaoInicialPDF
+} from "services/relatorios";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
 import {
   getPeriodosGruposMedicao,
-  retrieveSolicitacaoMedicaoInicial
+  retrieveSolicitacaoMedicaoInicial,
+  dreAprovaMedicao,
+  dreAprovaSolicitacaoMedicao,
+  dreSolicitaCorrecaoUE,
+  codaeAprovaSolicitacaoMedicao,
+  codaeSolicitaCorrecaoUE,
+  codaeAprovaPeriodo
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { MEDICAO_STATUS_DE_PROGRESSO } from "./constants";
+import {
+  MEDICAO_STATUS_DE_PROGRESSO,
+  OCORRENCIA_STATUS_DE_PROGRESSO
+} from "./constants";
 import "./style.scss";
+import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
+import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaCodaeECodaeAprovar";
+import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
+import ModalHistorico from "components/Shareable/ModalHistorico";
+import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
 
 export const ConferenciaDosLancamentos = () => {
   const location = useLocation();
@@ -29,97 +53,414 @@ export const ConferenciaDosLancamentos = () => {
   const [periodosGruposMedicao, setPeriodosGruposMedicao] = useState(null);
   const [mesSolicitacao, setMesSolicitacao] = useState(null);
   const [anoSolicitacao, setAnoSolicitacao] = useState(null);
+  const [historico, setHistorico] = useState([]);
+  const [ocorrencia, setOcorrencia] = useState(null);
+  const [ocorrenciaExpandida, setOcorrenciaExpandida] = useState(false);
+  const [showModalSalvarOcorrencia, setShowModalSalvarOcorrencia] = useState(
+    false
+  );
+  const [showModalAprovarOcorrencia, setShowModalAprovarOcorrencia] = useState(
+    false
+  );
+  const [
+    showModalEnviarParaCodaeECodaeAprovar,
+    setShowModalEnviarParaCodaeECodaeAprovar
+  ] = useState(false);
+  const [
+    showModalSolicitarCorrecaoUE,
+    setShowModalSolicitarCorrecaoUE
+  ] = useState(false);
+  const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
+  const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] = useState(
+    null
+  );
+  const [
+    exibirModalCentralDownloads,
+    setExibirModalCentralDownloads
+  ] = useState(false);
+  const [textoOcorrencia, setTextoOcorrencia] = useState("");
+  const [
+    desabilitarEnviarParaCodaeECodaeAprovar,
+    setDesabilitarEnviarParaCodaeECodaeAprovar
+  ] = useState(true);
+  const [
+    desabilitarSolicitarCorrecao,
+    setDesabilitarSolicitarCorrecao
+  ] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
+  const visualizarModal = () => {
+    setShowModal(true);
+  };
+  const getPeriodosGruposMedicaoAsync = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uuid = urlParams.get("uuid");
-    const escolaUuid = location.state.escolaUuid;
+    const params = { uuid_solicitacao: uuid };
+    const response = await getPeriodosGruposMedicao(params);
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosGruposMedicao(response.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
+      );
+    }
+  };
+
+  const exibirBotoesOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    ["MEDICAO_ENVIADA_PELA_UE", "MEDICAO_CORRIGIDA_PELA_UE"].includes(
+      solicitacao.status
+    );
+
+  const exibirBotoesOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    ["MEDICAO_APROVADA_PELA_DRE", "MEDICAO_CORRIGIDA_PARA_CODAE"].includes(
+      solicitacao.status
+    );
+
+  const desabilitarSolicitarCorrecaoOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    solicitacao.ocorrencia &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA",
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRIGIDA_PELA_UE"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitarSolicitarCorrecaoOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    solicitacao.ocorrencia &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_APROVADA_PELA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitarAprovarOcorrenciaCODAE =
+    usuarioEhMedicao() &&
+    solicitacao &&
+    solicitacao.ocorrencia &&
+    ![
+      "MEDICAO_APROVADA_PELA_DRE",
+      "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+      "MEDICAO_CORRIGIDA_PARA_CODAE"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const desabilitarAprovarOcorrenciaDRE =
+    usuarioEhDRE() &&
+    solicitacao &&
+    solicitacao.ocorrencia &&
+    ![
+      "MEDICAO_ENVIADA_PELA_UE",
+      "MEDICAO_CORRIGIDA_PELA_UE",
+      "MEDICAO_CORRECAO_SOLICITADA"
+    ].includes(solicitacao.ocorrencia.status);
+
+  const getSolMedInicialAsync = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+    const response = await retrieveSolicitacaoMedicaoInicial(uuid);
     let dados_iniciais;
     let mes;
     let mesString;
     let ano;
     let escola;
-
-    const getSolMedInicialAsync = async () => {
-      const response = await retrieveSolicitacaoMedicaoInicial(uuid);
-      if (response.status === HTTP_STATUS.OK) {
-        mes = response.data.mes;
-        ano = response.data.ano;
-        const data = new Date(`${mes}/01/${ano}`);
-        mesString = format(data, "LLLL", {
-          locale: ptBR
-        }).toString();
-        mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
-        escola = response.data.escola;
-        dados_iniciais = {
-          mes_lancamento: `${mesString} / ${ano}`,
-          unidade_educacional: escola
-        };
-        setSolicitacao(response.data);
-        setMesSolicitacao(mes);
-        setAnoSolicitacao(ano);
-      } else {
-        setErroAPI("Erro ao carregar Medição Inicial.");
+    if (response.status === HTTP_STATUS.OK) {
+      mes = response.data.mes;
+      ano = response.data.ano;
+      const data = new Date(`${mes}/01/${ano}`);
+      mesString = format(data, "LLLL", {
+        locale: ptBR
+      }).toString();
+      mesString = mesString.charAt(0).toUpperCase() + mesString.slice(1);
+      escola = response.data.escola;
+      dados_iniciais = {
+        mes_lancamento: `${mesString} / ${ano}`,
+        unidade_educacional: escola
+      };
+      setSolicitacao(response.data);
+      setHistorico(response.data.ocorrencia && response.data.ocorrencia.logs);
+      setMesSolicitacao(mes);
+      setAnoSolicitacao(ano);
+      if (response.data.com_ocorrencias) {
+        const arquivoPdfOcorrencia = response.data.ocorrencia;
+        const logOcorrencia = arquivoPdfOcorrencia.logs.find(log =>
+          ["Correção solicitada", "Aprovado pela DRE"].includes(
+            log.status_evento_explicacao
+          )
+        );
+        const logOcorrenciaCODAE = arquivoPdfOcorrencia.logs.find(log =>
+          ["Correção solicitada pela CODAE", "Aprovado pela CODAE"].includes(
+            log.status_evento_explicacao
+          )
+        );
+        setOcorrencia(arquivoPdfOcorrencia);
+        setLogCorrecaoOcorrencia(logOcorrencia);
+        setLogCorrecaoOcorrenciaCODAE(logOcorrenciaCODAE);
+        if (logOcorrencia) {
+          setTextoOcorrencia(
+            (usuarioEhDRE() &&
+              logOcorrencia &&
+              logOcorrencia.status_evento_explicacao ===
+                "Correção solicitada") ||
+              (usuarioEhMedicao() &&
+                logOcorrenciaCODAE &&
+                logOcorrenciaCODAE.status_evento_explicacao ===
+                  "Correção solicitada pela CODAE")
+              ? "Solicitação de correção no Formulário de Ocorrências realizada em"
+              : "Formulário de Ocorrências aprovado em"
+          );
+        }
       }
-      dados_iniciais && setDadosIniciais(dados_iniciais);
-      setLoading(false);
-    };
+    } else {
+      setErroAPI("Erro ao carregar Medição Inicial.");
+    }
+    dados_iniciais && setDadosIniciais(dados_iniciais);
+    setLoading(false);
+  };
 
-    const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
-      const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
-        escolaUuid
+  const getVinculosTipoAlimentacaoPorEscolaAsync = async () => {
+    const escolaUuid = location.state.escolaUuid;
+    const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
+      escolaUuid
+    );
+    if (response_vinculos.status === HTTP_STATUS.OK) {
+      setPeriodosSimples(response_vinculos.data.results);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos simples. Tente novamente mais tarde."
       );
-      if (response_vinculos.status === HTTP_STATUS.OK) {
-        setPeriodosSimples(response_vinculos.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos simples. Tente novamente mais tarde."
-        );
-      }
-    };
+    }
+  };
 
-    const getPeriodosGruposMedicaoAsync = async () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const uuid = urlParams.get("uuid");
-      const params = { uuid_solicitacao: uuid };
-      const response = await getPeriodosGruposMedicao(params);
-      if (response.status === HTTP_STATUS.OK) {
-        setPeriodosGruposMedicao(response.data.results);
-      } else {
-        setErroAPI(
-          "Erro ao carregar períodos/grupos da solicitação de medição. Tente novamente mais tarde."
-        );
-      }
-    };
+  const getHistorico = () => {
+    return historico;
+  };
 
+  useEffect(() => {
     getSolMedInicialAsync();
     getVinculosTipoAlimentacaoPorEscolaAsync();
     getPeriodosGruposMedicaoAsync();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const downloadPdfOcorrencias = () => {
-    if (solicitacao.anexos) {
-      const pdfAnexo = solicitacao.anexos.find(anexo =>
-        anexo.arquivo.includes(".pdf")
+  useEffect(() => {
+    if (solicitacao && periodosGruposMedicao) {
+      const todosPeriodosGruposAprovadosDRE = !periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_DRE"
       );
-      if (pdfAnexo) {
-        medicaoInicialExportarOcorrenciasPDF(pdfAnexo.arquivo);
+      const todosPeriodosGruposAprovadosCODAE = !periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status !== "MEDICAO_APROVADA_PELA_CODAE"
+      );
+      if (
+        (solicitacao.status === "MEDICAO_APROVADA_PELA_DRE" &&
+          usuarioEhDRE()) ||
+        (solicitacao.status === "MEDICAO_APROVADA_PELA_CODAE" &&
+          usuarioEhMedicao())
+      ) {
+        setDesabilitarEnviarParaCodaeECodaeAprovar(true);
       } else {
-        toastError("Arquivo PDF de ocorrências não encontrado");
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            ((usuarioEhDRE() &&
+              ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+              todosPeriodosGruposAprovadosDRE) ||
+              (usuarioEhMedicao() &&
+                ocorrencia.status === "MEDICAO_APROVADA_PELA_CODAE" &&
+                todosPeriodosGruposAprovadosCODAE))
+          ) {
+            setDesabilitarEnviarParaCodaeECodaeAprovar(false);
+          } else {
+            setDesabilitarEnviarParaCodaeECodaeAprovar(true);
+          }
+        } else if (
+          (todosPeriodosGruposAprovadosDRE && usuarioEhDRE()) ||
+          todosPeriodosGruposAprovadosCODAE
+        ) {
+          setDesabilitarEnviarParaCodaeECodaeAprovar(false);
+        } else {
+          setDesabilitarEnviarParaCodaeECodaeAprovar(true);
+        }
       }
+
+      const statusPermitidosSolicitarCorrecaoPelaDRE = [
+        "MEDICAO_CORRECAO_SOLICITADA",
+        "MEDICAO_APROVADA_PELA_DRE"
+      ];
+
+      const statusPermitidosSolicitarCorrecaoPelaCODAE = [
+        "MEDICAO_CORRECAO_SOLICITADA_CODAE",
+        "MEDICAO_APROVADA_PELA_CODAE"
+      ];
+
+      const algumPeriodoGrupoParaCorrigirPelaDRE = periodosGruposMedicao.some(
+        periodoGrupo => periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA"
+      );
+
+      const algumPeriodoGrupoParaCorrigirPelaCODAE = periodosGruposMedicao.some(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+      );
+
+      const todosPeriodosGruposAnalisadosPelaDRE = periodosGruposMedicao.every(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA" ||
+          periodoGrupo.status === "MEDICAO_APROVADA_PELA_DRE"
+      );
+
+      const todosPeriodosGruposAnalisadosPelaCODAE = periodosGruposMedicao.every(
+        periodoGrupo =>
+          periodoGrupo.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" ||
+          periodoGrupo.status === "MEDICAO_APROVADA_PELA_CODAE"
+      );
+
+      if (
+        (usuarioEhDRE() &&
+          !statusPermitidosSolicitarCorrecaoPelaDRE.includes(
+            solicitacao.status
+          )) ||
+        (usuarioEhMedicao() &&
+          !statusPermitidosSolicitarCorrecaoPelaCODAE.includes(
+            solicitacao.status
+          ))
+      ) {
+        if (solicitacao.com_ocorrencias) {
+          if (
+            ocorrencia &&
+            ((usuarioEhDRE() &&
+              ((ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA" &&
+                todosPeriodosGruposAnalisadosPelaDRE) ||
+                (ocorrencia.status === "MEDICAO_APROVADA_PELA_DRE" &&
+                  todosPeriodosGruposAnalisadosPelaDRE &&
+                  algumPeriodoGrupoParaCorrigirPelaDRE))) ||
+              (usuarioEhMedicao() &&
+                ((ocorrencia.status === "MEDICAO_CORRECAO_SOLICITADA_CODAE" &&
+                  todosPeriodosGruposAnalisadosPelaCODAE) ||
+                  (ocorrencia.status === "MEDICAO_APROVADA_PELA_CODAE" &&
+                    todosPeriodosGruposAnalisadosPelaCODAE &&
+                    algumPeriodoGrupoParaCorrigirPelaCODAE))))
+          ) {
+            setDesabilitarSolicitarCorrecao(false);
+          } else {
+            setDesabilitarSolicitarCorrecao(true);
+          }
+        } else if (
+          (usuarioEhDRE() &&
+            todosPeriodosGruposAnalisadosPelaDRE &&
+            algumPeriodoGrupoParaCorrigirPelaDRE) ||
+          (usuarioEhMedicao() &&
+            todosPeriodosGruposAnalisadosPelaCODAE &&
+            algumPeriodoGrupoParaCorrigirPelaCODAE)
+        ) {
+          setDesabilitarSolicitarCorrecao(false);
+        } else {
+          setDesabilitarSolicitarCorrecao(true);
+        }
+      } else {
+        setDesabilitarSolicitarCorrecao(true);
+      }
+    }
+  }, [ocorrencia, solicitacao, periodosGruposMedicao]);
+
+  const aprovarPeriodo = async (periodoGrupo, nomePeridoFormatado) => {
+    setLoading(true);
+    const response = usuarioEhDRE()
+      ? await dreAprovaMedicao(periodoGrupo.uuid_medicao_periodo_grupo)
+      : await codaeAprovaPeriodo(periodoGrupo.uuid_medicao_periodo_grupo);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(`Período ${nomePeridoFormatado} aprovado com sucesso!`);
+    } else {
+      setErroAPI(
+        `Erro ao aprovar Período ${nomePeridoFormatado}. Tente novamente mais tarde.`
+      );
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const aprovarSolicitacaoMedicao = async () => {
+    const msgErro = "Erro ao aprovar Medição. Tente novamente mais tarde.";
+    setLoading(true);
+    if (usuarioEhMedicao()) {
+      const response = await codaeAprovaSolicitacaoMedicao(solicitacao.uuid);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Medição Inicial aprovada com sucesso!");
+      } else {
+        setErroAPI(msgErro);
+      }
+    } else {
+      const response = await dreAprovaSolicitacaoMedicao(solicitacao.uuid);
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess(
+          "Medição aprovada pela DRE e enviada para análise de CODAE"
+        );
+      } else {
+        setErroAPI(msgErro);
+      }
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const solicitarCorrecaoMedicao = async () => {
+    const msgSuccess =
+      "Solicitação de correção enviada para a unidade com sucesso";
+    const msgErro =
+      "Erro ao solicitar correção da Medição. Tente novamente mais tarde.";
+    setLoading(true);
+    const endpoint = usuarioEhMedicao()
+      ? codaeSolicitaCorrecaoUE
+      : dreSolicitaCorrecaoUE;
+    const response = await endpoint(solicitacao.uuid);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess(msgSuccess);
+    } else {
+      setErroAPI(msgErro);
+    }
+    getSolMedInicialAsync();
+    getVinculosTipoAlimentacaoPorEscolaAsync();
+    getPeriodosGruposMedicaoAsync();
+  };
+
+  const handleClickDownload = async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuidSolicitacaoMedicao = urlParams.get("uuid");
+    const response = await relatorioMedicaoInicialPDF(uuidSolicitacaoMedicao);
+    if (response.status === HTTP_STATUS.OK) {
+      setExibirModalCentralDownloads(true);
+    } else {
+      toastError("Erro ao exportar pdf. Tente novamente mais tarde.");
     }
   };
 
   return (
     <div className="conferencia-dos-lancamentos">
+      {solicitacao && solicitacao.ocorrencia && (
+        <ModalHistorico
+          visible={showModal}
+          onOk={() => setShowModal(false)}
+          onCancel={() => setShowModal(false)}
+          logs={solicitacao.ocorrencia.logs}
+          solicitacaoMedicaoInicial={solicitacao.ocorrencia}
+          titulo="Histórico do Formulário de Ocorrências"
+          getHistorico={getHistorico}
+        />
+      )}
       {erroAPI && <div>{erroAPI}</div>}
       <Spin tip="Carregando..." spinning={loading}>
         {!erroAPI && dadosIniciais && periodosGruposMedicao && (
           <Form
             onSubmit={() => {}}
             initialValues={dadosIniciais}
-            render={({ handleSubmit, form }) => (
+            render={({ handleSubmit, form, values }) => (
               <form onSubmit={handleSubmit}>
                 <div className="card mt-3">
                   <div className="card-body">
@@ -144,46 +485,167 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Progresso de validação de refeições informadas
-                      </p>
-                      <p>
-                        Status de progresso:{" "}
-                        <b>
-                          {MEDICAO_STATUS_DE_PROGRESSO[solicitacao.status].nome}
-                        </b>
-                      </p>
-                    </div>
-                    <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Ocorrências
-                      </p>
-                      <div className="content-section-ocorrencias">
-                        <p className="mb-0">
-                          Avaliação do Serviço:{" "}
-                          <b
-                            className={`${
-                              solicitacao.com_ocorrencias
-                                ? "value-avaliacao-servico-red"
-                                : "value-avaliacao-servico-green"
-                            }`}
-                          >
-                            {solicitacao.com_ocorrencias
-                              ? "COM OCORRÊNCIAS"
-                              : "SEM OCORRÊNCIAS"}
+                    <div className="row">
+                      <div className="col-12">
+                        <p className="section-title-conf-lancamentos">
+                          Progresso de validação de refeições informadas
+                        </p>
+                      </div>
+                      <div className="col-12">
+                        <p>
+                          Status de progresso:{" "}
+                          <b>
+                            {
+                              MEDICAO_STATUS_DE_PROGRESSO[solicitacao.status]
+                                .nome
+                            }
                           </b>
                         </p>
-                        {solicitacao.com_ocorrencias ? (
-                          <div
-                            className="download-ocorrencias"
-                            onClick={() => downloadPdfOcorrencias()}
-                          >
-                            <i className={`${BUTTON_ICON.DOWNLOAD} mr-2`} />
-                            Download de Ocorrências
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-12">
+                        <p className="section-title-conf-lancamentos">
+                          Ocorrências
+                        </p>
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="content-section-ocorrencias">
+                          <div className="row">
+                            <div className="col-6">
+                              <p className="mb-0">
+                                Avaliação do Serviço:{" "}
+                                <b
+                                  className={`${
+                                    solicitacao.com_ocorrencias
+                                      ? "value-avaliacao-servico-red"
+                                      : "value-avaliacao-servico-green"
+                                  }`}
+                                >
+                                  {solicitacao.com_ocorrencias
+                                    ? "COM OCORRÊNCIAS"
+                                    : "SEM OCORRÊNCIAS"}
+                                </b>
+                              </p>
+                            </div>
+                            {solicitacao.com_ocorrencias ? (
+                              <Fragment>
+                                <div className="col-6 text-right">
+                                  <span className="status-ocorrencia text-center mr-3">
+                                    <b
+                                      className={
+                                        [
+                                          "MEDICAO_CORRECAO_SOLICITADA",
+                                          "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                                        ].includes(ocorrencia.status)
+                                          ? "red"
+                                          : ""
+                                      }
+                                    >
+                                      {OCORRENCIA_STATUS_DE_PROGRESSO[
+                                        ocorrencia.status
+                                      ] &&
+                                        OCORRENCIA_STATUS_DE_PROGRESSO[
+                                          ocorrencia.status
+                                        ].nome}
+                                    </b>
+                                  </span>
+                                  {ocorrencia && ocorrenciaExpandida ? (
+                                    <span
+                                      className="download-ocorrencias mr-0"
+                                      onClick={() => {
+                                        medicaoInicialExportarOcorrenciasPDF(
+                                          ocorrencia.ultimo_arquivo
+                                        );
+                                        usuarioEhMedicao() &&
+                                          medicaoInicialExportarOcorrenciasXLSX(
+                                            ocorrencia.ultimo_arquivo_excel
+                                          );
+                                      }}
+                                    >
+                                      <i
+                                        className={`${
+                                          BUTTON_ICON.DOWNLOAD
+                                        } mr-2`}
+                                      />
+                                      Download de Ocorrências
+                                    </span>
+                                  ) : (
+                                    <label
+                                      className="green visualizar-ocorrencias"
+                                      onClick={() =>
+                                        setOcorrenciaExpandida(true)
+                                      }
+                                    >
+                                      <b>VISUALIZAR</b>
+                                    </label>
+                                  )}
+                                </div>
+                              </Fragment>
+                            ) : (
+                              <div className="col-6" />
+                            )}
                           </div>
-                        ) : null}
+                          <div className="row">
+                            {ocorrenciaExpandida && ocorrencia && (
+                              <Fragment>
+                                <div className="col-5 mt-3">
+                                  {usuarioEhDRE() &&
+                                    logCorrecaoOcorrencia &&
+                                    `${textoOcorrencia} ${
+                                      logCorrecaoOcorrencia.criado_em
+                                    }`}
+                                  {usuarioEhMedicao() &&
+                                    logCorrecaoOcorrenciaCODAE &&
+                                    `${textoOcorrencia} ${
+                                      logCorrecaoOcorrenciaCODAE.criado_em
+                                    }`}
+                                </div>
+                                <div className="col-7 text-right mt-3">
+                                  <Botao
+                                    texto="Histórico"
+                                    type={BUTTON_TYPE.BUTTON}
+                                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    onClick={visualizarModal}
+                                  />
+                                  {(exibirBotoesOcorrenciaDRE ||
+                                    exibirBotoesOcorrenciaCODAE) && (
+                                    <>
+                                      <Botao
+                                        className="mx-3"
+                                        texto="Solicitar correção no formulário"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                                        disabled={
+                                          desabilitarSolicitarCorrecaoOcorrenciaDRE ||
+                                          desabilitarSolicitarCorrecaoOcorrenciaCODAE
+                                        }
+                                        onClick={() =>
+                                          setShowModalSalvarOcorrencia(true)
+                                        }
+                                      />
+                                      <Botao
+                                        texto="Aprovar formulário"
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.GREEN}
+                                        disabled={
+                                          desabilitarAprovarOcorrenciaCODAE ||
+                                          desabilitarAprovarOcorrenciaDRE
+                                        }
+                                        onClick={() =>
+                                          setShowModalAprovarOcorrencia(true)
+                                        }
+                                      />
+                                    </>
+                                  )}
+                                </div>
+                              </Fragment>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <hr />
@@ -200,9 +662,67 @@ export const ConferenciaDosLancamentos = () => {
                             mesSolicitacao={mesSolicitacao}
                             anoSolicitacao={anoSolicitacao}
                             form={form}
+                            aprovarPeriodo={(
+                              periodoGrupo,
+                              nomePeridoFormatado
+                            ) =>
+                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
+                            }
+                            values={values}
+                            getPeriodosGruposMedicaoAsync={() =>
+                              getPeriodosGruposMedicaoAsync()
+                            }
+                            setOcorrenciaExpandida={() =>
+                              setOcorrenciaExpandida(false)
+                            }
+                            solicitacao={solicitacao}
                           />
                         );
                       })}
+                    </div>
+                    <div className="float-right">
+                      <Botao
+                        texto="Exportar PDF"
+                        style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                        onClick={() => handleClickDownload()}
+                      />
+                      {((![
+                        "MEDICAO_APROVADA_PELA_DRE",
+                        "MEDICAO_CORRECAO_SOLICITADA",
+                        "MEDICAO_APROVADA_PELA_CODAE",
+                        "MEDICAO_CORRECAO_SOLICITADA_CODAE"
+                      ].includes(solicitacao.status) &&
+                        usuarioEhDRE()) ||
+                        ([
+                          "MEDICAO_APROVADA_PELA_DRE",
+                          "MEDICAO_CORRIGIDA_PARA_CODAE"
+                        ].includes(solicitacao.status) &&
+                          usuarioEhMedicao())) && (
+                        <>
+                          <Botao
+                            className="ml-3"
+                            texto="Solicitar Correção"
+                            style={BUTTON_STYLE.GREEN_OUTLINE_WHITE}
+                            onClick={() =>
+                              setShowModalSolicitarCorrecaoUE(true)
+                            }
+                            disabled={desabilitarSolicitarCorrecao}
+                          />
+                          <Botao
+                            className="ml-3"
+                            texto={
+                              usuarioEhMedicao()
+                                ? "Aprovar Medição"
+                                : "Enviar para CODAE"
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            onClick={() =>
+                              setShowModalEnviarParaCodaeECodaeAprovar(true)
+                            }
+                            disabled={desabilitarEnviarParaCodaeECodaeAprovar}
+                          />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -210,6 +730,50 @@ export const ConferenciaDosLancamentos = () => {
             )}
           />
         )}
+        <ModalOcorrencia
+          showModal={showModalSalvarOcorrencia}
+          setShowModal={value => setShowModalSalvarOcorrencia(value)}
+          ocorrencia={ocorrencia}
+          atualizarDados={() => getSolMedInicialAsync()}
+          titulo={"Solicitar correção no formulário de ocorrências"}
+          descricao={
+            "Informe quais os pontos necessários de correção no Formulário de Ocorrências"
+          }
+          temJustificativa={true}
+          ehCorrecao={true}
+          tituloBotoes={["Cancelar", "Salvar"]}
+        />
+        <ModalOcorrencia
+          showModal={showModalAprovarOcorrencia}
+          setShowModal={value => setShowModalAprovarOcorrencia(value)}
+          ocorrencia={ocorrencia}
+          atualizarDados={() => getSolMedInicialAsync()}
+          titulo={"Aprovar Formulário de Ocorrências"}
+          descricao={"Deseja aprovar o Formulário de Ocorrências?"}
+          temJustificativa={false}
+          ehCorrecao={false}
+          tituloBotoes={["Não", "Sim"]}
+        />
+        <ModalSolicitacaoDownload
+          show={exibirModalCentralDownloads}
+          setShow={setExibirModalCentralDownloads}
+        />
+        <ModalEnviarParaCodaeECodaeAprovar
+          showModal={showModalEnviarParaCodaeECodaeAprovar}
+          setShowModal={value =>
+            setShowModalEnviarParaCodaeECodaeAprovar(value)
+          }
+          aprovarSolicitacaoMedicao={() => {
+            aprovarSolicitacaoMedicao();
+          }}
+        />
+        <ModalSolicitarCorrecaoUE
+          showModal={showModalSolicitarCorrecaoUE}
+          setShowModal={value => setShowModalSolicitarCorrecaoUE(value)}
+          endpoint={() => {
+            solicitarCorrecaoMedicao();
+          }}
+        />
       </Spin>
     </div>
   );

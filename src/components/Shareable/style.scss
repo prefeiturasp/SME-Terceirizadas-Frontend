@@ -583,8 +583,12 @@ table.table-report {
     tr.cancelado {
       td {
         p:not(.justificativa-cancelamento) {
-          color: $grayDisabled;
+          color: $grayLight;
+          font-weight: bold;
           text-decoration: line-through;
+        }
+        p:is(.justificativa-cancelamento) {
+          word-break: break-word;
         }
       }
 

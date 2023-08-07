@@ -17,12 +17,14 @@ export default ({
   setShowCadastro,
   visoes,
   perfis,
-  visaoUnica
+  visaoUnica,
+  desabilitaCadastro
 }) => {
-  const initialValues = {
-    visao: visaoUnica ? visaoUnica : undefined,
-    perfil: null
-  };
+  const initialValues = visaoUnica
+    ? {
+        visao: visaoUnica
+      }
+    : {};
   const inicioResultado = useRef();
 
   const onSubmit = async values => {
@@ -89,6 +91,12 @@ export default ({
                 style={BUTTON_STYLE.GREEN}
                 className="float-left"
                 onClick={() => setShowCadastro(true)}
+                disabled={desabilitaCadastro}
+                tooltipExterno={
+                  desabilitaCadastro
+                    ? "É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
+                    : ""
+                }
               />
 
               <Botao

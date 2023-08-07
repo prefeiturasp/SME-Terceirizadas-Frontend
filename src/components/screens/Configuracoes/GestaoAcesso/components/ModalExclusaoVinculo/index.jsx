@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "react-bootstrap";
-import "antd/dist/antd.css";
+
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,

@@ -1,3 +1,4 @@
+import React from "react";
 import { filter, propEq } from "ramda";
 import {
   ALTERACAO_TIPO_ALIMENTACAO,
@@ -286,3 +287,31 @@ export const gerarLinkDoItem = item => {
   };
   return mapeamentoItens[item.status.toLowerCase()];
 };
+
+export const deParaStatusAltCronograma = status =>
+  ["Cronograma ciente", "Aprovado DINUTRE", "Reprovado DINUTRE"].includes(
+    status
+  )
+    ? "Em análise"
+    : status;
+
+export const formatarPara4Digitos = numero => {
+  let numeroFormatado = numero.toString();
+  if (numeroFormatado.length === 1) {
+    numeroFormatado = "000" + numeroFormatado;
+  } else if (numeroFormatado.length === 2) {
+    numeroFormatado = "00" + numeroFormatado;
+  } else if (numeroFormatado.length === 3) {
+    numeroFormatado = "0" + numeroFormatado;
+  } else {
+    numeroFormatado = numero;
+  }
+  return numeroFormatado;
+};
+
+export const MSG_SENHA_INVALIDA = () => (
+  <>
+    <strong>Senha Inválida:</strong> Em caso de esquecimento de senha, solicite
+    a recuperação e tente novamente.
+  </>
+);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Spin } from "antd";
-import "antd/dist/antd.css";
+
 import "./styles.scss";
 import { Checkbox } from "antd";
 import Botao from "components/Shareable/Botao";

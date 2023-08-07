@@ -4,7 +4,7 @@ import {
   BUTTON_STYLE,
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
-import "antd/dist/antd.css";
+
 import ModalCancelamento from "../ModalCancelamento";
 import { TIPO_SOLICITACAO_DIETA } from "../../../../../../constants/shared";
 import SolicitacaoVigente from "../../../Escola/componentes/SolicitacaoVigente";
@@ -33,7 +33,6 @@ export default ({
     getSolicitacoesDietaEspecial(params).then(response => {
       setSolicitacoesVigentes(response.data.results);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getTipoSolicitacao = () => {

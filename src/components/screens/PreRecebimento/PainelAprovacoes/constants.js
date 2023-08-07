@@ -1,7 +1,11 @@
 import {
   AGUARDANDO_DILOG,
+  ALTERACOES_APROVADAS,
+  ALTERACOES_REPROVADAS,
   ASSINADO_CODAE,
+  DILOG,
   DINUTRE,
+  SOLICITACOES_ALTERACOES,
   SOLICITACOES_PENDENTES
 } from "configs/constants";
 
@@ -41,6 +45,60 @@ export const CARD_PENDENTES_ASSINATURA_DILOG = {
   href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`
 };
 
+export const CARD_SOLICITACOES_ALTERACOES_DINUTRE = {
+  id: "Solicitações de Alterações",
+  titulo: "Solicitações de Alterações",
+  icon: "fa-exclamation-triangle",
+  style: "card-solicitacoes-alteracoes",
+  incluir_status: ["CRONOGRAMA_CIENTE"],
+  href: `/${DINUTRE}/${SOLICITACOES_ALTERACOES}`
+};
+
+export const CARD_SOLICITACOES_APROVADAS_DINUTRE = {
+  id: "Alterações Aprovadas",
+  titulo: "Alterações Aprovadas",
+  icon: "fa-check",
+  style: "card-cronogramas-assinados",
+  incluir_status: ["APROVADO_DINUTRE"],
+  href: `/${DINUTRE}/${ALTERACOES_APROVADAS}`
+};
+
+export const CARD_SOLICITACOES_REPROVADAS_DINUTRE = {
+  id: "Alterações Reprovadas",
+  titulo: "Alterações Reprovadas",
+  icon: "fa-times-circle",
+  style: "card-solicitacoes-reprovadas",
+  incluir_status: ["REPROVADO_DINUTRE"],
+  href: `/${DINUTRE}/${ALTERACOES_REPROVADAS}`
+};
+
+export const CARD_SOLICITACOES_ALTERACOES_DILOG = {
+  id: "Solicitações de Alterações",
+  titulo: "Solicitações de Alterações",
+  icon: "fa-exclamation-triangle",
+  style: "card-solicitacoes-alteracoes",
+  incluir_status: ["APROVADO_DINUTRE", "REPROVADO_DINUTRE"],
+  href: `/${DILOG}/${SOLICITACOES_ALTERACOES}`
+};
+
+export const CARD_SOLICITACOES_APROVADAS_DILOG = {
+  id: "Alterações Aprovadas",
+  titulo: "Alterações Aprovadas",
+  icon: "fa-check",
+  style: "card-cronogramas-assinados",
+  incluir_status: ["APROVADO_DILOG"],
+  href: `/${DILOG}/${ALTERACOES_APROVADAS}`
+};
+
+export const CARD_SOLICITACOES_REPROVADAS_DILOG = {
+  id: "Alterações Reprovadas",
+  titulo: "Alterações Reprovadas",
+  icon: "fa-times-circle",
+  style: "card-solicitacoes-reprovadas",
+  incluir_status: ["REPROVADO_DILOG"],
+  href: `/${DILOG}/${ALTERACOES_REPROVADAS}`
+};
+
 export const cards_dinutre = [
   CARD_PENDENTES_ASSINATURA,
   CARD_AGUARDANDO_ASSINATURA,
@@ -50,4 +108,16 @@ export const cards_dinutre = [
 export const cards_dilog = [
   CARD_PENDENTES_ASSINATURA_DILOG,
   CARD_CRONOGRAMAS_ASSINADOS
+];
+
+export const cards_alteracao_dinutre = [
+  CARD_SOLICITACOES_ALTERACOES_DINUTRE,
+  CARD_SOLICITACOES_APROVADAS_DINUTRE,
+  CARD_SOLICITACOES_REPROVADAS_DINUTRE
+];
+
+export const cards_alteracao_dilog = [
+  CARD_SOLICITACOES_ALTERACOES_DILOG,
+  CARD_SOLICITACOES_APROVADAS_DILOG,
+  CARD_SOLICITACOES_REPROVADAS_DILOG
 ];

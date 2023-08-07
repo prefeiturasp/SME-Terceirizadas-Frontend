@@ -3,7 +3,7 @@ import { TimePicker } from "antd";
 import { InputErroMensagem } from "../InputErroMensagem";
 import { HelpText } from "../../../Shareable/HelpText";
 import TooltipIcone from "../../TooltipIcone";
-import "antd/dist/antd.css";
+
 import "./style.scss";
 import moment from "moment";
 

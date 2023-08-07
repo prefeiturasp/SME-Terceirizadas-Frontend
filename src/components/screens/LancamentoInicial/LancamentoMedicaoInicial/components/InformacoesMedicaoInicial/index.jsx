@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
 import { Collapse, Input, Select } from "antd";
 import Botao from "components/Shareable/Botao";
 import { CaretDownOutlined } from "@ant-design/icons";
+import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
+import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
   getTiposDeContagemAlimentacao,
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
-import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 
 export default ({
   periodoSelecionado,
@@ -41,8 +43,12 @@ export default ({
     }
   ]);
   const [emEdicao, setEmEdicao] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { Option } = Select;
   const { Panel } = Collapse;
+  const [openSelect, setOpenSelect] = useState(false);
+
+  const location = useLocation();
 
   useEffect(() => {
     async function fetch() {
@@ -60,13 +66,14 @@ export default ({
         solicitacaoMedicaoInicial.tipo_contagem_alimentacoes.uuid
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!solicitacaoMedicaoInicial) {
+      setIsOpen(true);
+    }
   }, []);
 
   useEffect(() => {
     getDefaultValueSelectTipoContagem();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [solicitacaoMedicaoInicial]);
+  }, []);
 
   const opcoesContagem = tiposDeContagem
     ? tiposDeContagem.map(tipo => {
@@ -167,6 +174,7 @@ export default ({
         data
       );
       if (response.status === HTTP_STATUS.OK) {
+        setIsOpen(false);
         if (
           responsaveisPayload.length ===
           solicitacaoMedicaoInicial.responsaveis.length
@@ -210,6 +218,7 @@ export default ({
       };
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
+        setIsOpen(false);
         toastSuccess("Solicitação de Medição Inicial criada com sucesso!");
       } else {
         const errorMessage = Object.values(response.data).join("; ");
@@ -230,8 +239,12 @@ export default ({
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
-          <Collapse expandIconPosition="end">
-            <Panel header="Informações Básicas da Medição Inicial">
+          <Collapse
+            expandIconPosition="end"
+            activeKey={isOpen ? ["1"] : []}
+            onChange={() => setIsOpen(!isOpen)}
+          >
+            <Panel header="Informações Básicas da Medição Inicial" key="1">
               <div className="row">
                 <div className="col-5 info-label select-medicao-inicial">
                   <b className="mb-2">
@@ -239,8 +252,14 @@ export default ({
                   </b>
                   {opcoesContagem.length > 0 && (
                     <Select
-                      suffixIcon={<CaretDownOutlined />}
+                      suffixIcon={
+                        <CaretDownOutlined
+                          onClick={() => setOpenSelect(!openSelect)}
+                        />
+                      }
                       name="contagem_refeicoes"
+                      open={openSelect}
+                      onClick={() => setOpenSelect(!openSelect)}
                       defaultValue={getDefaultValueSelectTipoContagem()}
                       onChange={value => handleChangeTipoContagem(value)}
                       className="mt-2"
@@ -269,23 +288,27 @@ export default ({
                   <label className="asterisk-label">*</label>
                 </div>
                 {renderDadosResponsaveis()}
-                <div className="mt-3 pr-2">
-                  <Botao
-                    texto="Salvar"
-                    style={BUTTON_STYLE.GREEN}
-                    className="float-right ml-3"
-                    onClick={() => handleClickSalvar()}
-                    disabled={!emEdicao}
-                  />
-                  <Botao
-                    texto="Editar"
-                    style={BUTTON_STYLE.GREEN_OUTLINE}
-                    icon={BUTTON_ICON.PEN}
-                    className="float-right ml-3"
-                    onClick={() => handleClickEditar()}
-                    disabled={emEdicao}
-                  />
-                </div>
+                {(!location.state ||
+                  location.state.status !== "Aprovado pela DRE") &&
+                  !location.pathname.includes(DETALHAMENTO_DO_LANCAMENTO) && (
+                    <div className="mt-3 pr-2">
+                      <Botao
+                        texto="Salvar"
+                        style={BUTTON_STYLE.GREEN}
+                        className="float-right ml-3"
+                        onClick={() => handleClickSalvar()}
+                        disabled={!emEdicao}
+                      />
+                      <Botao
+                        texto="Editar"
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        icon={BUTTON_ICON.PEN}
+                        className="float-right ml-3"
+                        onClick={() => handleClickEditar()}
+                        disabled={emEdicao}
+                      />
+                    </div>
+                  )}
               </div>
             </Panel>
           </Collapse>

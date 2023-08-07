@@ -1,24 +1,36 @@
 import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
 import { Form, Field } from "react-final-form";
 import { OnChange } from "react-final-form-listeners";
 import { Select } from "components/Shareable/Select";
 import InputText from "components/Shareable/Input/InputText";
-import {
-  usuarioEhEscolaTerceirizadaDiretor,
-  usuarioEhEscolaTerceirizada,
-  usuarioEhEmpresaTerceirizada
-} from "helpers/utilities";
+import { usuarioEhEmpresaTerceirizada } from "helpers/utilities";
 import { Spin } from "antd";
 import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "./DatePicker";
 import { ASelect } from "./MakeField";
 import { getNomesUnicosEditais } from "services/produto.service";
+import {
+  updateStatusDieta,
+  updateTituloDieta,
+  updateLoteDieta
+} from "reducers/filtersDietaReducer";
+import {
+  updateMarcaProduto,
+  updateNomeProduto,
+  updateEditalProduto
+} from "reducers/filtersProdutoReducer";
+import {
+  updateDataEventoAlimentacao,
+  updateLoteAlimentacao,
+  updateStatusAlimentacao,
+  updateTipoSolicitacaoAlimentacao,
+  updateTituloAlimentacao
+} from "reducers/filtersAlimentacaoReducer";
 
 const CardBody = props => {
   const [editais, setEditais] = useState([]);
   const ehTerceirizada = usuarioEhEmpresaTerceirizada();
-  const ehEscola =
-    usuarioEhEscolaTerceirizadaDiretor() || usuarioEhEscolaTerceirizada();
   const { exibirFiltrosDataEventoETipoSolicitacao } = props;
   const ehDashboardGestaoProduto = props.ehDashboardGestaoProduto;
   const filtrosDesabilitados = props.filtrosDesabilitados || false;
@@ -26,18 +38,13 @@ const CardBody = props => {
   const pathname = window.location.pathname;
   useEffect(() => {
     (async () => {
-      try {
-        const listaEditais = await getNomesUnicosEditais();
-        let listaRsultados = listaEditais.data.results;
-        let listaFormatada = listaRsultados.map(element => {
-          return { value: element, label: element };
-        });
-        setEditais(listaFormatada);
-      } catch (erro) {
-        throw erro;
-      }
+      const listaEditais = await getNomesUnicosEditais();
+      let listaRsultados = listaEditais.data.results;
+      let listaFormatada = listaRsultados.map(element => {
+        return { value: element, label: element };
+      });
+      setEditais(listaFormatada);
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -92,91 +99,89 @@ const CardBody = props => {
                         }
                       />
                       <OnChange name="edital">
-                        {() => {
+                        {edital => {
+                          props.updateEditalProduto(edital);
                           props.onChange(values);
                         }}
                       </OnChange>
                     </div>
                   )}
 
-                  {!ehEscola && (
-                    <div
-                      className={`${
-                        ehTerceirizada && props.listaStatus && props.listaLotes
-                          ? "offset-3 col-6"
-                          : exibirFiltrosDataEventoETipoSolicitacao
-                          ? "col-3"
-                          : ehDashboardGestaoProduto
-                          ? "col-4"
-                          : "offset-3 col-3"
-                      }`}
-                    >
-                      {loadingDietas && (
-                        <div>
-                          <Spin
-                            className="carregando-filtro"
-                            tip="Carregando Filtro..."
-                          />
-                        </div>
-                      )}
-                      <Field
-                        className={
-                          exibirFiltrosDataEventoETipoSolicitacao
-                            ? "input-com-filtros-adicionais"
-                            : ""
-                        }
-                        component={InputText}
-                        name="titulo"
-                        placeholder={loadingDietas ? "" : "Pesquisar"}
-                        disabled={loadingDietas || filtrosDesabilitados}
-                      />
-                      <div className="warning-num-charac">
-                        * mínimo de 3 caracteres
+                  <div
+                    className={`${
+                      ehTerceirizada && props.listaStatus && props.listaLotes
+                        ? "offset-3 col-6"
+                        : exibirFiltrosDataEventoETipoSolicitacao
+                        ? "col-3"
+                        : ehDashboardGestaoProduto
+                        ? "col-4"
+                        : "offset-3 col-3"
+                    }`}
+                  >
+                    {loadingDietas && (
+                      <div>
+                        <Spin
+                          className="carregando-filtro"
+                          tip="Carregando Filtro..."
+                        />
                       </div>
+                    )}
+                    <Field
+                      className={
+                        exibirFiltrosDataEventoETipoSolicitacao
+                          ? "input-com-filtros-adicionais"
+                          : ""
+                      }
+                      component={InputText}
+                      name="titulo"
+                      placeholder={loadingDietas ? "" : "Pesquisar"}
+                      disabled={loadingDietas || filtrosDesabilitados}
+                    />
+                    <div className="warning-num-charac">
+                      * mínimo de 3 caracteres
                       <OnChange name="titulo">
                         {(value, previous) => {
+                          props.updateTituloDieta(value);
+                          props.updateNomeProduto(value);
+                          props.updateTituloAlimentacao(value);
                           props.onChange(values, previous);
                         }}
                       </OnChange>
                     </div>
-                  )}
-                  {exibirFiltrosDataEventoETipoSolicitacao &&
-                    pathname === "/painel-gestao-produto" &&
-                    ehTerceirizada && (
-                      <>
-                        <div
-                          className={`${
-                            ehEscola ? "offset-3 col-3 pl-0" : "col-3 pl-0"
-                          }`}
-                        >
-                          <Field
-                            component={Select}
-                            name="tipo_solicitacao"
-                            naoDesabilitarPrimeiraOpcao
-                            placeholder="Tipo de Solicitação"
-                            options={TIPOS_SOLICITACOES_OPTIONS}
-                          />
-                        </div>
-                        <OnChange name="tipo_solicitacao">
-                          {() => {
+                  </div>
+                  {exibirFiltrosDataEventoETipoSolicitacao && (
+                    <>
+                      <div className={"col-3 pl-0"}>
+                        <Field
+                          component={Select}
+                          name="tipo_solicitacao"
+                          naoDesabilitarPrimeiraOpcao
+                          placeholder="Tipo de Solicitação"
+                          options={TIPOS_SOLICITACOES_OPTIONS}
+                        />
+                      </div>
+                      <OnChange name="tipo_solicitacao">
+                        {tipo => {
+                          props.updateTipoSolicitacaoAlimentacao(tipo);
+                          props.onChange(values);
+                        }}
+                      </OnChange>
+                      <div className="col-3 pl-0">
+                        <Field
+                          name="data_evento"
+                          minDate={null}
+                          component={InputComData}
+                          placeholder="Data do evento"
+                        />
+                        <OnChange name="data_evento">
+                          {data => {
+                            props.updateDataEventoAlimentacao(data);
                             props.onChange(values);
                           }}
                         </OnChange>
-                        <div className="col-3 pl-0">
-                          <Field
-                            name="data_evento"
-                            minDate={null}
-                            component={InputComData}
-                            placeholder="Data do evento"
-                          />
-                          <OnChange name="data_evento">
-                            {() => {
-                              props.onChange(values);
-                            }}
-                          </OnChange>
-                        </div>
-                      </>
-                    )}
+                      </div>
+                    </>
+                  )}
                   {ehDashboardGestaoProduto && (
                     <div
                       className={`${
@@ -193,7 +198,8 @@ const CardBody = props => {
                         * mínimo de 3 caracteres
                       </div>
                       <OnChange name="marca">
-                        {() => {
+                        {marca => {
+                          props.updateMarcaProduto(marca);
                           props.onChange(values);
                         }}
                       </OnChange>
@@ -212,7 +218,9 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="status">
-                          {() => {
+                          {status => {
+                            props.updateStatusAlimentacao(status);
+                            props.updateStatusDieta(status);
                             props.onChange(values);
                           }}
                         </OnChange>
@@ -228,38 +236,46 @@ const CardBody = props => {
                           naoDesabilitarPrimeiraOpcao
                         />
                         <OnChange name="lote">
-                          {() => {
+                          {lote => {
+                            props.updateLoteAlimentacao(lote);
+                            props.updateLoteDieta(lote);
                             props.onChange(values);
                           }}
                         </OnChange>
                       </div>
                     )}
-                    <div className="col-3">
-                      <Field
-                        component={Select}
-                        options={TIPOS_SOLICITACOES_OPTIONS}
-                        name="tipo_solicitacao"
-                        naoDesabilitarPrimeiraOpcao
-                      />
-                      <OnChange name="tipo_solicitacao">
-                        {() => {
-                          props.onChange(values);
-                        }}
-                      </OnChange>
-                    </div>
-                    <div className="col-3">
-                      <Field
-                        name="data_evento"
-                        minDate={null}
-                        component={InputComData}
-                        placeholder="Data do evento"
-                      />
-                      <OnChange name="data_evento">
-                        {() => {
-                          props.onChange(values);
-                        }}
-                      </OnChange>
-                    </div>
+                    {pathname === "/painel-gestao-alimentacao" && (
+                      <>
+                        <div className="col-3">
+                          <Field
+                            component={Select}
+                            options={TIPOS_SOLICITACOES_OPTIONS}
+                            name="tipo_solicitacao"
+                            naoDesabilitarPrimeiraOpcao
+                          />
+                          <OnChange name="tipo_solicitacao">
+                            {tipo => {
+                              props.updateTipoSolicitacaoAlimentacao(tipo);
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                        <div className="col-3">
+                          <Field
+                            name="data_evento"
+                            minDate={null}
+                            component={InputComData}
+                            placeholder="Data do evento"
+                          />
+                          <OnChange name="data_evento">
+                            {data => {
+                              props.updateDataEventoAlimentacao(data);
+                              props.onChange(values);
+                            }}
+                          </OnChange>
+                        </div>
+                      </>
+                    )}
                   </div>
                 )}
               </form>
@@ -272,4 +288,43 @@ const CardBody = props => {
   );
 };
 
-export default CardBody;
+const mapDispatchToProps = dispatch => ({
+  updateStatusDieta: statusDieta => {
+    dispatch(updateStatusDieta(statusDieta));
+  },
+  updateTituloDieta: tituloDieta => {
+    dispatch(updateTituloDieta(tituloDieta));
+  },
+  updateLoteDieta: loteDieta => {
+    dispatch(updateLoteDieta(loteDieta));
+  },
+  updateMarcaProduto: marcaProduto => {
+    dispatch(updateMarcaProduto(marcaProduto));
+  },
+  updateNomeProduto: tituloProduto => {
+    dispatch(updateNomeProduto(tituloProduto));
+  },
+  updateEditalProduto: editalProduto => {
+    dispatch(updateEditalProduto(editalProduto));
+  },
+  updateTituloAlimentacao: tituloAlimentacao => {
+    dispatch(updateTituloAlimentacao(tituloAlimentacao));
+  },
+  updateLoteAlimentacao: loteAlimentacao => {
+    dispatch(updateLoteAlimentacao(loteAlimentacao));
+  },
+  updateStatusAlimentacao: statusAlimentacao => {
+    dispatch(updateStatusAlimentacao(statusAlimentacao));
+  },
+  updateTipoSolicitacaoAlimentacao: tipoSolicitacaoAlimentacao => {
+    dispatch(updateTipoSolicitacaoAlimentacao(tipoSolicitacaoAlimentacao));
+  },
+  updateDataEventoAlimentacao: dataEventoAlimentacao => {
+    dispatch(updateDataEventoAlimentacao(dataEventoAlimentacao));
+  }
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CardBody);

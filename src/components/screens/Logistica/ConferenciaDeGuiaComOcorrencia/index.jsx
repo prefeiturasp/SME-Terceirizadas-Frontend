@@ -35,6 +35,7 @@ import moment from "moment";
 import "./styles.scss";
 
 import { gerarParametrosConsulta } from "helpers/utilities";
+import { TIPOS_OCORRENCIAS_OPTIONS } from "constants/shared.js";
 
 const FORM_NAME = "conferenciaGuiaRemessaComOcorrencia";
 const TOOLTIP_RECEBIDO = `Quantidade de embalagens que a UE efetivamente recebeu.
@@ -446,7 +447,6 @@ export default () => {
         carregarGuia(param);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -457,7 +457,7 @@ export default () => {
             onSubmit={onSubmit}
             initialValues={initialValues}
             validate={() => {}}
-            render={({ form, handleSubmit, values, errors }) => (
+            render={({ handleSubmit, values, errors }) => (
               <form onSubmit={handleSubmit}>
                 <FinalFormToRedux form={FORM_NAME} />
                 <span className="subtitulo">
@@ -800,40 +800,7 @@ export default () => {
                                   disableSearch
                                   multiple
                                   nomeDoItemNoPlural="ocorrências"
-                                  options={[
-                                    {
-                                      value: "QTD_MENOR",
-                                      label: "Quantidade menor que a prevista"
-                                    },
-                                    {
-                                      value: "PROBLEMA_QUALIDADE",
-                                      label: "Problema de qualidade do produto"
-                                    },
-                                    {
-                                      value: "ALIMENTO_DIFERENTE",
-                                      label: "Alimento diferente do previsto"
-                                    },
-                                    {
-                                      value: "EMBALAGEM_DANIFICADA",
-                                      label: "Embalagem danificada"
-                                    },
-                                    {
-                                      value: "EMBALAGEM_VIOLADA",
-                                      label: "Embalagem violada"
-                                    },
-                                    {
-                                      value: "VALIDADE_EXPIRADA",
-                                      label: "Prazo de validade expirado"
-                                    },
-                                    {
-                                      value: "ATRASO_ENTREGA",
-                                      label: "Atraso na entrega"
-                                    },
-                                    {
-                                      value: "AUSENCIA_PRODUTO",
-                                      label: "Ausência do produto"
-                                    }
-                                  ]}
+                                  options={TIPOS_OCORRENCIAS_OPTIONS}
                                   className="input-busca-produto"
                                   onChange={checaAtraso(values, index)}
                                   disabled={

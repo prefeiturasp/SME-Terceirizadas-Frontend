@@ -12,10 +12,10 @@ import {
 } from "services/kitLanche";
 import { getMotivosDREnaoValida } from "services/relatorios";
 import Breadcrumb from "../../components/Shareable/Breadcrumb";
-import { ModalCancelarSolicitacao } from "../../components/Shareable/ModalCancelarSolicitacao_";
+import ModalCancelarSolicitacao from "../../components/Shareable/ModalCancelarSolicitacao_";
 import { ModalCODAEQuestiona } from "../../components/Shareable/ModalCODAEQuestiona";
 import { ModalNaoValidarSolicitacao } from "../../components/Shareable/ModalNaoValidarSolicitacaoReduxForm";
-import { ModalNegarSolicitacao } from "../../components/Shareable/ModalNegarSolicitacao";
+import ModalNegarSolicitacao from "../../components/Shareable/ModalNegarSolicitacao";
 import { ModalTerceirizadaRespondeQuestionamento } from "../../components/Shareable/ModalTerceirizadaRespondeQuestionamento";
 import Page from "../../components/Shareable/Page/Page";
 import Relatorio from "../../components/SolicitacaoDeKitLanche/Relatorio";
@@ -53,7 +53,7 @@ export const RelatorioBase = ({ ...props }) => {
   ];
 
   return (
-    <Page>
+    <Page botaoVoltar>
       <Breadcrumb home={HOME} anteriores={anteriores} atual={atual} />
       <Relatorio motivosDREnaoValida={motivosDREnaoValida} {...props} />
     </Page>

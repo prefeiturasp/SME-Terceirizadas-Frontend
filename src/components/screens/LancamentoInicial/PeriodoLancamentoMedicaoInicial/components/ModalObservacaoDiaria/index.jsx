@@ -14,9 +14,13 @@ import {
 import InputText from "components/Shareable/Input/InputText";
 import CKEditorField from "components/Shareable/CKEditorField";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
-import { peloMenosUmCaractere } from "helpers/fieldValidators";
+import {
+  maxLengthSemTags,
+  peloMenosUmCaractere
+} from "helpers/fieldValidators";
 import { deleteObservacaoValoresPeriodosLancamentos } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import "./styles.scss";
+import strip_tags from "locutus/php/strings/strip_tags";
 
 export default ({
   closeModal,
@@ -31,7 +35,11 @@ export default ({
   onSubmit,
   dadosIniciais,
   setExibirTooltip,
-  errors
+  errors,
+  valoresObservacoes,
+  location,
+  setFormValuesAtualizados,
+  setValoresObservacoes
 }) => {
   const [desabilitarBotaoSalvar, setDesabilitarBotaoSalvar] = useState(true);
   const [showBotaoExcluir, setShowBotaoExcluir] = useState(false);
@@ -51,12 +59,22 @@ export default ({
         .filter(
           valor => String(valor.categoria_medicao) === String(categoria)
         )[0];
-      const uuidValor = valorAtual.uuid;
+      const uuidValor =
+        (valorAtual && valorAtual.uuid) ||
+        (valoresObservacoes &&
+          valoresObservacoes.find(
+            valor =>
+              String(valor.dia) === String(dia) &&
+              String(valor.categoria_medicao) === String(categoria)
+          ).uuid);
       const response = await deleteObservacaoValoresPeriodosLancamentos(
         uuidValor
       );
       if (response.status === HTTP_STATUS.NO_CONTENT) {
         form.change(`${rowName}__dia_${dia}__categoria_${categoria}`, "");
+        setValoresObservacoes(
+          valoresObservacoes.filter(v => v.uuid !== uuidValor)
+        );
         valoresPeriodosLancamentos.splice(
           valoresPeriodosLancamentos.findIndex(
             valor => valor.uuid === uuidValor
@@ -144,6 +162,38 @@ export default ({
     closeModal();
   };
 
+  const setUpModal = () => {
+    if (dia && categoria) {
+      if (
+        !values[`${rowName}__dia_${dia}__categoria_${categoria}`] &&
+        valoresObservacoes &&
+        valoresObservacoes.find(
+          valor =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        )
+      ) {
+        const updateObs = {};
+        updateObs[
+          `${rowName}__dia_${dia}__categoria_${categoria}`
+        ] = valoresObservacoes.find(
+          valor =>
+            String(valor.dia) === String(dia) &&
+            String(valor.categoria_medicao) === String(categoria)
+        ).valor;
+        setFormValuesAtualizados({ ...values, ...updateObs });
+        form.change(
+          `${rowName}__dia_${dia}__categoria_${categoria}`,
+          valoresObservacoes.find(
+            valor =>
+              String(valor.dia) === String(dia) &&
+              String(valor.categoria_medicao) === String(categoria)
+          ).valor
+        );
+      }
+    }
+  };
+
   const onChangeTextAreaField = value => {
     const valorFiltered = valoresPeriodosLancamentos
       .filter(valor => valor.nome_campo === rowName)
@@ -153,13 +203,14 @@ export default ({
       )[0];
     if (value) {
       setDesabilitarBotaoSalvar(
-        (!["<p></p>\n", null, ""].includes(
+        ((!["<p></p>\n", null, ""].includes(
           values[`${rowName}__dia_${dia}__categoria_${categoria}`]
         ) ||
           !!peloMenosUmCaractere(
             values[`${rowName}__dia_${dia}__categoria_${categoria}`]
           )) &&
-          (valorFiltered && valorFiltered.valor === value)
+          (valorFiltered && valorFiltered.valor === value)) ||
+          strip_tags(value).length > 250
       );
 
       setShowBotaoExcluir(
@@ -176,7 +227,12 @@ export default ({
   };
 
   return (
-    <Modal dialogClassName="modal-50w" show={showModal} onHide={onHideModal}>
+    <Modal
+      onEntered={() => setUpModal()}
+      dialogClassName="modal-50w"
+      show={showModal}
+      onHide={onHideModal}
+    >
       <Modal.Header closeButton>
         <Modal.Title>Observação Diária</Modal.Title>
       </Modal.Header>
@@ -198,6 +254,14 @@ export default ({
               component={CKEditorField}
               name={`${rowName}__dia_${dia}__categoria_${categoria}`}
               ehModal={true}
+              disabled={
+                location.state &&
+                [
+                  "MEDICAO_APROVADA_PELA_DRE",
+                  "MEDICAO_APROVADA_PELA_CODAE"
+                ].includes(location.state.status_periodo)
+              }
+              validate={maxLengthSemTags(250)}
             />
             <OnChange name={`${rowName}__dia_${dia}__categoria_${categoria}`}>
               {value => onChangeTextAreaField(value)}
@@ -211,6 +275,11 @@ export default ({
           ) &&
           valoresPeriodosLancamentos.length > 0 &&
           (showBotaoExcluir ||
+            valoresObservacoes.find(
+              valor =>
+                String(valor.dia) === String(dia) &&
+                String(valor.categoria_medicao) === String(categoria)
+            ) ||
             (!!dadosIniciais[
               `observacoes__dia_${dia}__categoria_${categoria}`
             ] &&
@@ -218,6 +287,13 @@ export default ({
             <Botao
               className="ml-3 float-left"
               texto="Excluir"
+              disabled={
+                location.state &&
+                [
+                  "MEDICAO_APROVADA_PELA_DRE",
+                  "MEDICAO_APROVADA_PELA_CODAE"
+                ].includes(location.state.status_periodo)
+              }
               type={BUTTON_TYPE.BUTTON}
               icon={BUTTON_ICON.TRASH}
               onClick={() => onClickExcluir()}

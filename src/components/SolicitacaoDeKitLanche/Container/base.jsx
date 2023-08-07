@@ -6,7 +6,7 @@ import React, { Component, Fragment } from "react";
 import { Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Field, formValueSelector, reduxForm } from "redux-form";
-import { getAlunosPorFaixaEtariaNumaData } from "services/alteracaoDeCardapio";
+import { getSomatorioFaixas } from "services/alteracaoDeCardapio";
 import {
   getSolicitacoesKitLanche,
   inicioPedido,
@@ -200,8 +200,10 @@ export class SolicitacaoDeKitLanche extends Component {
     this.props.reset();
   }
 
-  componentWillMount = async () => {
-    const resposta = await getDietasAtivasInativasPorAluno();
+  UNSAFE_componentWillMount = async () => {
+    const resposta = await getDietasAtivasInativasPorAluno({
+      incluir_alteracao_ue: true
+    });
     if (resposta.status === 200) {
       this.setState({
         alunosComDietaEspecial: resposta.data.solicitacoes.filter(
@@ -711,11 +713,8 @@ SolicitacaoDeKitLanche = reduxForm({
       (previousValues.evento_data === undefined ||
         previousValues.evento_data !== values.evento_data)
     ) {
-      const periodo = props.meusDados.vinculo_atual.instituicao.periodos_escolares.find(
-        p => p.nome === "INTEGRAL"
-      );
-      const response = await getAlunosPorFaixaEtariaNumaData(
-        periodo.uuid,
+      const response = await getSomatorioFaixas(
+        props.meusDados.vinculo_atual.instituicao.uuid,
         converterDDMMYYYYparaYYYYMMDD(values.evento_data)
       );
       if (response.status === 200 && response.data.count > 0) {

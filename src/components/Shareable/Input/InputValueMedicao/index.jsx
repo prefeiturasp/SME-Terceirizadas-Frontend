@@ -5,6 +5,8 @@ import "../style.scss";
 
 export const InputText = props => {
   const {
+    classNameToNextInput,
+    classNameToPrevInput,
     className,
     disabled,
     esconderAsterisco,
@@ -27,15 +29,19 @@ export const InputText = props => {
     toUppercaseActive,
     apenasNumeros,
     exibeTooltipDiaSobremesaDoce,
-    exibeTooltipAlimentacoesAutorizadas,
     exibeTooltipErroQtdMaiorQueAutorizado,
-    exibeTooltipSemAlimentacaoPreAutorizadaInformada,
     numeroDeInclusoesAutorizadas,
     exibeTooltipAlimentacoesAutorizadasDiaNaoLetivo,
-    exibeTooltipFrequenciaDiaNaoLetivo,
     exibeTooltipSuspensoesAutorizadas,
     exibeTooltipRPLAutorizadas,
-    exibeTooltipLPRAutorizadas
+    exibeTooltipLPRAutorizadas,
+    exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas,
+    exibeTooltipKitLancheSolAlimentacoes,
+    exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas,
+    exibeTooltipLancheEmergencialSolAlimentacoes,
+    exibeTooltipFrequenciaZeroTabelaEtec,
+    exibeTooltipLancheEmergTabelaEtec,
+    exibeTooltipRepeticao
   } = props;
 
   let msgTooltip = "";
@@ -53,13 +59,13 @@ export const InputText = props => {
   };
 
   const validacaoLancheRefeicaoSobremesa1Oferta = () => {
-    if (
+    let validacao =
       validacaoMeta() &&
       (input.name.includes("refeicao") ||
         input.name.includes("sobremesa") ||
-        input.name.includes("lanche")) &&
-      !input.name.includes("repeticao")
-    ) {
+        input.name.includes("lanche") ||
+        input.name.includes("repeticao"));
+    if (validacao) {
       msgTooltip = meta.error;
       return true;
     }
@@ -98,36 +104,21 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-success" />
         </Tooltip>
       )}
-      {exibeTooltipAlimentacoesAutorizadas &&
-        !["Mês anterior", "Mês posterior"].includes(input.value) && (
-          <Tooltip
-            title={`Foi autorizada a inclusão de ${numeroDeInclusoesAutorizadas} alimentações neste dia`}
-          >
-            <i className="fas fa-info icone-info-success" />
-          </Tooltip>
-        )}
+      {exibeTooltipRepeticao && (
+        <Tooltip
+          title={`${
+            input.name.includes("repeticao_refeicao")
+              ? "Lançamento de repetição de refeição maior do que lançamento da 1º Oferta. Confira a digitação."
+              : "Lançamento maior do que o registrado na 1º Oferta. Confira a digitação."
+          }`}
+        >
+          <i className="fas fa-info icone-info-success" />
+        </Tooltip>
+      )}
       {exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() && (
         <Tooltip
           title={
             "Número apontado de alimentações maior do que o autorizado. Justifique na Observação."
-          }
-        >
-          <i className="fas fa-info icone-info-warning" />
-        </Tooltip>
-      )}
-      {exibeTooltipSemAlimentacaoPreAutorizadaInformada && (
-        <Tooltip
-          title={
-            "Nenhuma alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
-          }
-        >
-          <i className="fas fa-info icone-info-warning" />
-        </Tooltip>
-      )}
-      {exibeTooltipFrequenciaDiaNaoLetivo && (
-        <Tooltip
-          title={
-            "Nenhuma frequência e alimentação apontada, porém havia inclusão autorizada. Justifique na Observação."
           }
         >
           <i className="fas fa-info icone-info-warning" />
@@ -160,6 +151,60 @@ export const InputText = props => {
           <i className="fas fa-info icone-info-warning" />
         </Tooltip>
       )}
+      {exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas && (
+        <Tooltip
+          title={
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipKitLancheSolAlimentacoes && (
+        <Tooltip
+          title={
+            "Não há autorização para oferta de Kit Lanche. Justifique na Observação para análise de CODAE."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas && (
+        <Tooltip
+          title={
+            "Quantidade lançada diferente da autorizada. Justifique na Observação para análise de CODAE."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergencialSolAlimentacoes && (
+        <Tooltip
+          title={
+            "Não há autorização para oferta de Lanche Emergencial. Justifique na Observação para análise de CODAE."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipFrequenciaZeroTabelaEtec && (
+        <Tooltip
+          title={
+            "Nenhuma frequência apontada, porém havia inclusão autorizada. Justifique na Observação."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
+      {exibeTooltipLancheEmergTabelaEtec && (
+        <Tooltip
+          title={
+            "Foi solicitada inclusão de Lanche Emergencial no período. Justifique o apontamento nas Observações."
+          }
+        >
+          <i className="fas fa-info icone-info-warning" />
+        </Tooltip>
+      )}
       {(validacaoFrequencia() || validacaoLancheRefeicaoSobremesa1Oferta()) && (
         <Tooltip title={msgTooltip}>
           <i className="fas fa-info icone-info-error" />
@@ -184,12 +229,16 @@ export const InputText = props => {
         } ${
           !meta.error &&
           (exibirTooltipAlimentacoesAutorizadasDiaNaoLetivo() ||
-            exibeTooltipFrequenciaDiaNaoLetivo ||
-            exibeTooltipSemAlimentacaoPreAutorizadaInformada ||
             exibeTooltipErroQtdMaiorQueAutorizado ||
             exibeTooltipSuspensoesAutorizadas ||
             exibeTooltipRPLAutorizadas ||
-            exibeTooltipLPRAutorizadas)
+            exibeTooltipLPRAutorizadas ||
+            exibeTooltipQtdKitLancheDiferenteSolAlimentacoesAutorizadas ||
+            exibeTooltipKitLancheSolAlimentacoes ||
+            exibeTooltipQtdLancheEmergencialDiferenteSolAlimentacoesAutorizadas ||
+            exibeTooltipLancheEmergencialSolAlimentacoes ||
+            exibeTooltipFrequenciaZeroTabelaEtec ||
+            exibeTooltipLancheEmergTabelaEtec)
             ? "border-warning"
             : ""
         }`}
@@ -197,7 +246,7 @@ export const InputText = props => {
         min={min}
         max={max}
         step={step}
-        name={name}
+        name={input.name}
         data-cy={input.name}
         placeholder={placeholder}
         required={required}
@@ -213,6 +262,21 @@ export const InputText = props => {
             ? e.target.value.replace(/\D/g, "")
             : e.target.value;
         }}
+        onKeyDown={e => {
+          if (e.key === "Enter" && classNameToPrevInput && e.shiftKey) {
+            let elements = document.getElementsByName(classNameToPrevInput);
+            if (elements && elements.length === 1) {
+              elements[0].focus();
+            }
+          }
+
+          if (e.key === "Enter" && classNameToNextInput && !e.shiftKey) {
+            let elements = document.getElementsByName(classNameToNextInput);
+            if (elements && elements.length === 1) {
+              elements[0].focus();
+            }
+          }
+        }}
       />
     </div>
   );
@@ -220,6 +284,8 @@ export const InputText = props => {
 
 InputText.propTypes = {
   className: PropTypes.string,
+  classNameToNextInput: PropTypes.string,
+  classNameToPrevInput: PropTypes.string,
   disabled: PropTypes.bool,
   esconderAsterisco: PropTypes.bool,
   helpText: PropTypes.string,
@@ -237,6 +303,8 @@ InputText.propTypes = {
 
 InputText.defaultProps = {
   className: "",
+  classNameToNextInput: undefined,
+  classNameToPrevInput: undefined,
   disabled: false,
   esconderAsterisco: false,
   helpText: "",

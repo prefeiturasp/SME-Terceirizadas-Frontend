@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+
 import { Select } from "antd";
 import "./styles.css";
 const { Option } = Select;

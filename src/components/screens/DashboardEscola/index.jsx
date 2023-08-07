@@ -43,6 +43,10 @@ export const DashboardEscola = () => {
         .join("-");
     return params;
   };
+  const [
+    loadingAcompanhamentoSolicitacoes,
+    setLoadingAcompanhamentoSolicitacoes
+  ] = useState(false);
   const { meusDados } = useContext(MeusDadosContext);
 
   const LOADING =
@@ -54,6 +58,8 @@ export const DashboardEscola = () => {
   const PARAMS = { limit: PAGINACAO_DEFAULT, offset: 0 };
 
   const getSolicitacoesAsync = async (params = null) => {
+    setLoadingAcompanhamentoSolicitacoes(true);
+
     const response = await getSolicitacoesPendentesEscola(params);
     if (response.status === HTTP_STATUS.OK) {
       setAguardandoAutorizacao(ajustarFormatoLog(response.data.results));
@@ -78,11 +84,12 @@ export const DashboardEscola = () => {
     } else {
       setErro("Erro ao carregar solicitações canceladas.");
     }
+
+    setLoadingAcompanhamentoSolicitacoes(false);
   };
 
   useEffect(() => {
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPesquisaChanged = values => {
@@ -95,6 +102,8 @@ export const DashboardEscola = () => {
       getSolicitacoesAsync(prepararParametros(values));
     }
   };
+
+  let typingTimeout = null;
 
   return (
     <div className="dashboard-school">
@@ -114,48 +123,58 @@ export const DashboardEscola = () => {
                 exibirFiltrosDataEventoETipoSolicitacao={true}
                 titulo={"Acompanhamento solicitações"}
                 dataAtual={dataAtual()}
-                onChange={onPesquisaChanged}
+                onChange={values => {
+                  clearTimeout(typingTimeout);
+                  typingTimeout = setTimeout(async () => {
+                    onPesquisaChanged(values);
+                  }, 1000);
+                }}
               >
-                <div className="row">
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Aguardando Autorização"}
-                      cardType={CARD_TYPE_ENUM.PENDENTE}
-                      solicitations={aguardandoAutorizacao}
-                      icon={ICON_CARD_TYPE_ENUM.PENDENTE}
-                      href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
-                    />
+                <Spin
+                  tip="Carregando..."
+                  spinning={loadingAcompanhamentoSolicitacoes}
+                >
+                  <div className="row">
+                    <div className="col-6">
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Aguardando Autorização"}
+                        cardType={CARD_TYPE_ENUM.PENDENTE}
+                        solicitations={aguardandoAutorizacao}
+                        icon={ICON_CARD_TYPE_ENUM.PENDENTE}
+                        href={`/${ESCOLA}/${SOLICITACOES_PENDENTES}`}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Autorizados"}
+                        cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                        solicitations={autorizadas}
+                        icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                        href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
+                      />
+                    </div>
                   </div>
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Autorizados"}
-                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                      solicitations={autorizadas}
-                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                      href={`/${ESCOLA}/${SOLICITACOES_AUTORIZADAS}`}
-                    />
+                  <div className="row pt-3">
+                    <div className="col-6">
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Negadas"}
+                        cardType={CARD_TYPE_ENUM.NEGADO}
+                        solicitations={negadas}
+                        icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                        href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
+                      />
+                    </div>
+                    <div className="col-6">
+                      <CardStatusDeSolicitacao
+                        cardTitle={"Canceladas"}
+                        cardType={CARD_TYPE_ENUM.CANCELADO}
+                        solicitations={canceladas}
+                        icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                        href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="row pt-3">
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Negadas"}
-                      cardType={CARD_TYPE_ENUM.NEGADO}
-                      solicitations={negadas}
-                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                      href={`/${ESCOLA}/${SOLICITACOES_NEGADAS}`}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <CardStatusDeSolicitacao
-                      cardTitle={"Canceladas"}
-                      cardType={CARD_TYPE_ENUM.CANCELADO}
-                      solicitations={canceladas}
-                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                      href={`/${ESCOLA}/${SOLICITACOES_CANCELADAS}`}
-                    />
-                  </div>
-                </div>
+                </Spin>
               </CardBody>
             </>
           )}

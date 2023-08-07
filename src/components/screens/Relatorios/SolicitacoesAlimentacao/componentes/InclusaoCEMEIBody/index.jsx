@@ -26,8 +26,14 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
 
   useEffect(() => {
     getVinculosAlimentacao();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const ehDiaCancelado = dia_motivo_inclusao => {
+    return dia_motivo_inclusao.cancelado ||
+      solicitacao.status === "ESCOLA_CANCELOU"
+      ? "dia-cancelado"
+      : "";
+  };
 
   return [
     <tr className="table-body-items" key={index}>
@@ -83,12 +89,16 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                   )}
                   <div className="col-3">
                     <p>
-                      <b>{inclusao.motivo.nome}</b>
+                      <b className={`${ehDiaCancelado(inclusao)}`}>
+                        {inclusao.motivo.nome}
+                      </b>
                     </p>
                   </div>
                   <div className="col-3">
                     <p>
-                      <b>{inclusao.data}</b>
+                      <b className={`${ehDiaCancelado(inclusao)}`}>
+                        {inclusao.data}
+                      </b>
                     </p>
                   </div>
                   {idx === 0 ? (
@@ -254,6 +264,27 @@ export const InclusaoCEMEIBody = ({ ...props }) => {
                   </Fragment>
                 );
               })}
+            {solicitacao.dias_motivos_da_inclusao_cemei.find(
+              inclusao => inclusao.cancelado_justificativa
+            ) && (
+              <>
+                <hr />
+                <p>
+                  <strong>Histórico de cancelamento</strong>
+                  {solicitacao.dias_motivos_da_inclusao_cemei
+                    .filter(inclusao => inclusao.cancelado_justificativa)
+                    .map((inclusao, key) => {
+                      return (
+                        <div className="cancelado_justificativa" key={key}>
+                          {inclusao.data}
+                          {" - "}
+                          justificativa: {inclusao.cancelado_justificativa}
+                        </div>
+                      );
+                    })}
+                </p>
+              </>
+            )}
           </div>
         </td>
       </tr>

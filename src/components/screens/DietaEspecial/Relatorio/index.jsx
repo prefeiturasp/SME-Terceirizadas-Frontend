@@ -30,7 +30,7 @@ import {
   TIPO_SOLICITACAO_DIETA
 } from "constants/shared";
 import EscolaCancelaDietaEspecial from "./componentes/EscolaCancelaDietaEspecial";
-import "antd/dist/antd.css";
+
 import { cabecalhoDieta, ehSolicitacaoDeCancelamento } from "./helpers";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import FormAutorizaDietaEspecial from "./componentes/FormAutorizaDietaEspecial";
@@ -141,7 +141,6 @@ const Relatorio = ({ visao }) => {
     tipoPerfil === TIPO_PERFIL.DIETA_ESPECIAL &&
       card === "pendentes-aut" &&
       initSocket(uuid);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -154,7 +153,7 @@ const Relatorio = ({ visao }) => {
   }, [dadosDietaAberta]);
 
   const gerarProtocolo = async (uuid, eh_importado) => {
-    if (eh_importado === true) {
+    if (eh_importado === true && !dietaEspecial.protocolo_padrao) {
       setShowModalAviso(true);
     } else {
       setCarregando(true);
@@ -420,7 +419,9 @@ const Relatorio = ({ visao }) => {
             ]}
           {dietaEspecial &&
             visao === TERCEIRIZADA &&
-            (status === statusEnum.CODAE_AUTORIZADO || dietaCancelada) && (
+            (status === statusEnum.CODAE_AUTORIZADO ||
+              dietaCancelada ||
+              status === statusEnum.CODAE_NEGOU_PEDIDO) && (
               <div className="form-group float-right mt-4">
                 {dietaEspecial.conferido ? (
                   <label className="ml-3 conferido">

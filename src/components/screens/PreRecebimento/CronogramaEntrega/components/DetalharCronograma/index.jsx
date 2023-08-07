@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Spin } from "antd";
-import { getCronograma } from "services/cronograma.service";
+import {
+  getCronogramaDetalhar,
+  imprimirCronograma
+} from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
 import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
@@ -15,16 +18,35 @@ import {
 import HTTP_STATUS from "http-status-codes";
 import "./styles.scss";
 import DadosCronograma from "../DadosCronograma";
+import { toastError } from "components/Shareable/Toast/dialogs";
+import Botao from "components/Shareable/Botao";
+import {
+  BUTTON_STYLE,
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
+import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 
 export default () => {
   const urlParams = new URLSearchParams(window.location.search);
   const uuid = urlParams.get("uuid");
   const [cronograma, setCronograma] = useState(null);
+  const [carregando, setCarregando] = useState(false);
+
+  const esconderLogFornecedor = logs => {
+    return logs.filter(
+      log => !["Assinado DINUTRE"].includes(log.status_evento_explicacao)
+    );
+  };
 
   const getDetalhes = async () => {
     if (uuid) {
-      const responseCronograma = await getCronograma(uuid);
+      let responseCronograma = await getCronogramaDetalhar(uuid);
       if (responseCronograma.status === HTTP_STATUS.OK) {
+        if (usuarioEhEmpresaFornecedor()) {
+          responseCronograma.data.logs = esconderLogFornecedor(
+            responseCronograma.data.logs
+          );
+        }
         setCronograma(responseCronograma.data);
       }
     }
@@ -38,18 +60,52 @@ export default () => {
     }
   };
 
+  const baixarPDFCronograma = () => {
+    setCarregando(true);
+    let uuid = cronograma.uuid;
+    let numero = cronograma.numero;
+    imprimirCronograma(uuid, numero)
+      .then(() => {
+        setCarregando(false);
+      })
+      .catch(error => {
+        error.response.data.text().then(text => toastError(text));
+        setCarregando(false);
+      });
+  };
+
+  const botaoImprimir = cronograma &&
+    cronograma.status === "Assinado CODAE" && (
+      <Botao
+        texto="Baixar PDF Cronograma"
+        type={BUTTON_TYPE.BUTTON}
+        style={BUTTON_STYLE.GREEN_OUTLINE}
+        className="float-right ml-3"
+        onClick={() => baixarPDFCronograma()}
+      />
+    );
+
   useEffect(() => {
     getDetalhes();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <Spin tip="Carregando..." spinning={!cronograma}>
+    <Spin tip="Carregando..." spinning={!cronograma || carregando}>
       <div className="card mt-3">
         <div className="card-body">
           {cronograma && (
             <>
+              {cronograma.logs && (
+                <>
+                  <div className="row pb-3">
+                    <p className="head-green mt-3 ml-3 mb-5">
+                      Status do Cronograma
+                    </p>
+                    <FluxoDeStatusCronograma listaDeStatus={cronograma.logs} />
+                  </div>
+                  <hr className="hr-detalhar" />
+                </>
+              )}
               <DadosCronograma cronograma={cronograma} />
               <hr className="hr-detalhar" />
               <p className="head-green mt-3">Dados do Recebimento</p>
@@ -83,18 +139,26 @@ export default () => {
               {usuarioEhEmpresaFornecedor() && (
                 <div className="mt-4 mb-4">
                   <AcoesDetalhar cronograma={cronograma} />
+                  {botaoImprimir}
                 </div>
               )}
               {usuarioEhCronograma() && (
                 <div className="mt-4 mb-4">
                   <AcoesDetalharCronograma cronograma={cronograma} />
+                  {botaoImprimir}
                 </div>
               )}
               {usuarioEhDinutreDiretoria() && (
-                <AcoesDetalharDinutreDiretoria cronograma={cronograma} />
+                <>
+                  <AcoesDetalharDinutreDiretoria cronograma={cronograma} />
+                  {botaoImprimir}
+                </>
               )}
               {usuarioEhDilogDiretoria() && (
-                <AcoesDetalharDilogDiretoria cronograma={cronograma} />
+                <>
+                  <AcoesDetalharDilogDiretoria cronograma={cronograma} />
+                  {botaoImprimir}
+                </>
               )}
             </>
           )}

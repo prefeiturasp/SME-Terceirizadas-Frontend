@@ -81,10 +81,10 @@ export const getEscolasSimplissimaComDRE = () => {
 export const getEscolasSimplissimaComDREUnpaginated = async () =>
   axios.get("escolas-simplissima-com-dre-unpaginated/");
 
-export const getEscolasTrecTotal = async (dre_uuid = null) => {
+export const getEscolasTrecTotal = async (params = {}) => {
   const url = "escolas-simplissima-com-dre-unpaginated/terc-total/";
   const response = await axios
-    .get(url, { params: { dre: dre_uuid } })
+    .get(url, { params: params })
     .catch(ErrorHandlerFunction);
   if (response) {
     const data = { data: response.data, status: response.status };

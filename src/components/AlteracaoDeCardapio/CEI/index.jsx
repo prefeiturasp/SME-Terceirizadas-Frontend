@@ -17,6 +17,7 @@ import { Rascunhos } from "../Rascunhos";
 import Select from "components/Shareable/Select";
 import { InputComData } from "components/Shareable/DatePicker";
 import {
+  ehDiaUtil,
   maxValue,
   naoPodeSerZero,
   peloMenosUmCaractere,
@@ -62,7 +63,8 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
     periodos,
     proximosCincoDiasUteis,
     proximosDoisDiasUteis,
-    vinculos
+    vinculos,
+    feriadosAno
   } = props;
 
   const [rascunhos, setRascunhos] = useState(null);
@@ -437,7 +439,11 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                           maxDate={fimDoCalendario()}
                           label="Alterar dia"
                           required
-                          validate={required}
+                          validate={composeValidators(
+                            required,
+                            ehDiaUtil(values, motivos, feriadosAno)
+                          )}
+                          usarDirty={true}
                         />
                         <OnChange name="data">
                           {value => {
@@ -509,10 +515,6 @@ export const AlteracaoDoTipoDeAlimentacaoCEI = ({ ...props }) => {
                                           data-cy={`checkbox-${
                                             getPeriodo(values, indice).nome
                                           }`}
-                                          validate={
-                                            getPeriodo(values, indice)
-                                              .checked && required
-                                          }
                                           required={
                                             getPeriodo(values, indice).checked
                                           }

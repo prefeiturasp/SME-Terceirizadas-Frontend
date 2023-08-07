@@ -113,7 +113,7 @@ const Reclamacao = ({ reclamacao }) => {
             />
           </div>
         </div>
-        {log.anexos.length > 0 && (
+        {log.anexos && log.anexos.length > 0 && (
           <div className="mb-3">
             <div key={1}>
               <p className="botao-reclamacao-title">Anexos da resposta</p>
@@ -311,7 +311,7 @@ const Reclamacao = ({ reclamacao }) => {
         </div>
       </div>
       <div className="row item-horizontal mt-3 mb-3">
-        <div className="col-4">
+        <div className="col-5">
           <div className="label-item">Nome Reclamante</div>
           <div className="value-item">{reclamacao.reclamante_nome}</div>
         </div>
@@ -321,18 +321,22 @@ const Reclamacao = ({ reclamacao }) => {
             {reclamacao.reclamante_registro_funcional}
           </div>
         </div>
-        <div className="col-4">
+      </div>
+      <div className="row item-horizontal mt-3 mb-3">
+        <div className="col-5">
+          <div className="label-item">DRE</div>
+          <div className="value-item">
+            {reclamacao.escola.diretoria_regional.nome}
+          </div>
+        </div>
+        <div className="col-5">
           <div className="label-item">Nome Escola</div>
           <div className="value-item">{reclamacao.escola.nome}</div>
         </div>
         <div className="col-2">
-          <div className="col-12">
-            <label className=" label-item right">Cód. EOL</label>
-          </div>
-          <div className="col-12">
-            <label className="value-item right m-1">
-              {reclamacao.escola.codigo_eol}
-            </label>
+          <div className="right">
+            <div className="label-item">Cód. EOL</div>
+            <div className="value-item">{reclamacao.escola.codigo_eol}</div>
           </div>
         </div>
       </div>

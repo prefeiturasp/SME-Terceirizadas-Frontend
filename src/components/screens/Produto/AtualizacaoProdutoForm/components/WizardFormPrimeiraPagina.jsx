@@ -46,7 +46,8 @@ class WizardFormPrimeiraPagina extends React.Component {
       completo: false,
       showModalCadastrarItem: false,
       desabilitarNomeDoProdutoField: true,
-      desabilitarEhParaAlunosComDietaField: true
+      desabilitarEhParaAlunosComDietaField: true,
+      status_codae_questionado: false
     };
   }
 
@@ -57,7 +58,8 @@ class WizardFormPrimeiraPagina extends React.Component {
     if (tipoPerfil === TIPO_PERFIL.TERCEIRIZADA) {
       if (produto.homologacao.status === STATUS_CODAE_QUESTIONADO) {
         this.setState({
-          desabilitarNomeDoProdutoField: false
+          desabilitarNomeDoProdutoField: false,
+          status_codae_questionado: true
         });
       }
       if (
@@ -309,7 +311,8 @@ class WizardFormPrimeiraPagina extends React.Component {
       marcasArray,
       fabricantesArray,
       desabilitarNomeDoProdutoField,
-      desabilitarEhParaAlunosComDietaField
+      desabilitarEhParaAlunosComDietaField,
+      status_codae_questionado
     } = this.state;
 
     return (
@@ -549,9 +552,21 @@ class WizardFormPrimeiraPagina extends React.Component {
         </section>
 
         <section className="rodape-botoes-acao">
+          {status_codae_questionado && (
+            <Botao
+              texto={"Cancelar"}
+              type={BUTTON_TYPE.BUTTON}
+              className="ml-3"
+              style={BUTTON_STYLE.GREEN_OUTLINE}
+              onClick={() => {
+                this.props.showModal(true);
+              }}
+            />
+          )}
           <Botao
             texto={"Próximo"}
             type={BUTTON_TYPE.SUBMIT}
+            className="ml-3"
             style={BUTTON_STYLE.GREEN_OUTLINE}
             onClick={() => {
               this.props.passouPrimeiroStep(valuesForm, produtoForm);

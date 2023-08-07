@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { getProduto, getInformacoesGrupo } from "services/produto.service";
 import ResultadoMock from "./components/resultadoMock";
 import CorpoRelatorio from "./components/corpoRelatorio";
-import "antd/dist/antd.css";
+
 import { Spin } from "antd";
 import { retornaTodosOsLogs } from "./helpers";
 
@@ -24,7 +24,6 @@ const RelatorioProduto = () => {
       }
     }
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

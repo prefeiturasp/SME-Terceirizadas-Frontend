@@ -36,7 +36,6 @@ const verificarUsuarioEhDistribuidor = () => {
   if (tipoPerfil === PERFIL.COORDENADOR_GESTAO_ALIMENTACAO_TERCEIRIZADA) {
     return false;
   } else if (
-    tipoPerfil === PERFIL.COORDENADOR_LOGISTICA ||
     tipoPerfil === PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA ||
     tipoPerfil === PERFIL.DILOG_CRONOGRAMA
   ) {
@@ -68,9 +67,6 @@ export const CadastroEmpresa = () => {
     telefone: null,
     cargo: null
   });
-  const [contatosPessoaEmpresaForm, setContatosPessoaEmpresaForm] = useState([
-    "contatoPessoaEmpresa_0"
-  ]);
   const [contatosEmpresaForm, setContatosEmpresaForm] = useState([
     "contatoEmpresa_0"
   ]);
@@ -103,9 +99,7 @@ export const CadastroEmpresa = () => {
   ]);
   const [terceirizada, setTerceirizada] = useState(undefined);
   const [uuid, setUuid] = useState(null);
-  const [tituloModal, setTituloModal] = useState(
-    "Confirma cadastro de Empresa?"
-  );
+  const [tituloModal, setTituloModal] = useState("Cadastro Empresa");
   const [exibirModal, setExibirModal] = useState(false);
   const [contatosPessoaEmpresa, setContatosPessoaEmpresa] = useState([
     {
@@ -146,17 +140,12 @@ export const CadastroEmpresa = () => {
     contatos
       .filter(contato => contato.nome)
       .forEach((contato, indice) => {
-        if (
-          indice !== 0 &&
-          contatos.length > contatosPessoaEmpresaForm.length
-        ) {
-          contatosPessoaEmpresaForm.push(`contatoPessoaEmpresa_${indice}`);
+        if (indice !== 0 && contatos.length > contatosPessoaEmpresa.length) {
           contatosPessoaEmpresa.push({
             telefone: null,
             email: null
           });
         }
-        setContatosEmpresaForm(contatosPessoaEmpresaForm);
 
         contatosPessoaEmpresa[indice]["nome"] = contato.nome;
         contatosPessoaEmpresa[indice]["email"] = contato.email;
@@ -238,7 +227,6 @@ export const CadastroEmpresa = () => {
   };
 
   const setaValoresForm = data => {
-    const super_admin = data.super_admin;
     data.cnpj = formatarCPFouCNPJ(data.cnpj);
     data.numero_contrato = data.numero;
     data.email_representante_legal = data.representante_email;
@@ -252,26 +240,20 @@ export const CadastroEmpresa = () => {
     data = atribuiContratosForm(data);
     data = atribuiContatosEmpresaForm(data);
     data = atribuiNutricionistaEmpresaForm(data);
-    if (super_admin) {
-      const super_admin_contato = data.super_admin.contatos.pop();
 
-      data.superuser_nome = data.super_admin.nome
-        ? data.super_admin.nome
-        : undefined;
-      data.superuser_cpf = data.super_admin.cpf;
-      data.superuser_cargo = data.super_admin.cargo;
-      data.superuser_telefone = super_admin_contato
-        ? super_admin_contato.telefone
-        : undefined;
-      data.superuser_email = data.super_admin.email;
-      setSuperUser({
-        nome: data.superuser_nome,
-        cpf: data.superuser_cpf,
-        cargo: data.superuser_cargo,
-        telefone: data.superuser_telefone,
-        email: data.superuser_email
-      });
-    }
+    data.superuser_nome = data.responsavel_nome;
+    data.superuser_cpf = data.responsavel_cpf;
+    data.superuser_cargo = data.responsavel_cargo;
+    data.superuser_telefone = data.responsavel_telefone;
+    data.superuser_email = data.responsavel_email;
+    setSuperUser({
+      nome: data.superuser_nome,
+      cpf: data.superuser_cpf,
+      cargo: data.superuser_cargo,
+      telefone: data.superuser_telefone,
+      email: data.superuser_email
+    });
+
     setInitialValuesForm(data);
     setTerceirizada(data);
   };
@@ -318,8 +300,8 @@ export const CadastroEmpresa = () => {
       });
     }
     setEhDistribuidor(verificarUsuarioEhDistribuidor());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const onSubmit = async values => {
     const dados = {
       ehDistribuidor: ehDistribuidor,
@@ -327,8 +309,7 @@ export const CadastroEmpresa = () => {
       contratos: contratos,
       contatosEmpresa: contatosEmpresa,
       contatosNutricionista: contatosNutricionista,
-      lotesSelecionados: lotesSelecionados,
-      super_admin: superUser
+      lotesSelecionados: lotesSelecionados
     };
     const data = formataJsonParaEnvio(values, dados);
     if (uuid !== null) {
@@ -404,7 +385,7 @@ export const CadastroEmpresa = () => {
                 <Form
                   initialValues={initialValuesForm}
                   onSubmit={onSubmit}
-                  render={({ handleSubmit, form, values }) => (
+                  render={({ form, handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                       <DadosEmpresa ehDistribuidor={ehDistribuidor} />
                       <EnderecoEmpresa
@@ -423,10 +404,7 @@ export const CadastroEmpresa = () => {
                       <UsuarioResponsavel ehDistribuidor={ehDistribuidor} />
                       <ContatoFormSet
                         ehDistribuidor={ehDistribuidor}
-                        contatosPessoaEmpresaForm={contatosPessoaEmpresaForm}
-                        setContatosPessoaEmpresaForm={
-                          setContatosPessoaEmpresaForm
-                        }
+                        values={values}
                         contatosPessoaEmpresa={contatosPessoaEmpresa}
                         setContatosPessoaEmpresa={setContatosPessoaEmpresa}
                       />
@@ -492,7 +470,7 @@ export const CadastroEmpresa = () => {
                             <div className="col-12 text-right">
                               <Botao
                                 texto="Cancelar"
-                                onClick={event => this.resetForm(event)}
+                                onClick={() => form.restart()}
                                 type={BUTTON_TYPE.BUTTON}
                                 style={BUTTON_STYLE.GREEN_OUTLINE}
                               />

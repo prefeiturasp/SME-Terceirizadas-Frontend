@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { formValueSelector, reduxForm } from "redux-form";
 import {
   INVERSAO_CARDAPIO,
@@ -17,15 +17,11 @@ import {
 } from "../../../helpers/utilities";
 import { getInversaoDeDiaDeCardapio } from "../../../services/inversaoDeDiaDeCardapio.service";
 import Botao from "../../Shareable/Botao";
-import {
-  BUTTON_ICON,
-  BUTTON_STYLE,
-  BUTTON_TYPE
-} from "../../Shareable/Botao/constants";
+import { BUTTON_STYLE, BUTTON_TYPE } from "../../Shareable/Botao/constants";
 import { toastError, toastSuccess } from "../../Shareable/Toast/dialogs";
 import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
 import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import ModalAutorizarAposQuestionamento from "../../Shareable/ModalAutorizarAposQuestionamento";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
@@ -326,16 +322,6 @@ class Relatorio extends Component {
             <span className="page-title">{`Inversão de dia de Cardápio - Solicitação # ${
               inversaoDiaCardapio.id_externo
             }`}</span>
-            <Link to={`/`}>
-              <Botao
-                texto="Voltar"
-                titulo="Voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN_OUTLINE}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio

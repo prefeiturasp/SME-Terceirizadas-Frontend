@@ -6,7 +6,10 @@ import {
   parseDataHoraBrToMoment,
   comparaObjetosMoment,
   usuarioEhEscolaTerceirizada,
-  usuarioEhEscolaTerceirizadaDiretor
+  usuarioEhEscolaTerceirizadaDiretor,
+  usuarioEhCogestorDRE,
+  usuarioEhCODAEGestaoAlimentacao,
+  usuarioEhCODAENutriManifestacao
 } from "helpers/utilities";
 import {
   RELATORIO,
@@ -46,6 +49,16 @@ export const incluirDados = (statuses, arr) => {
 
 const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
   if (
+    (usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()) &&
+    [
+      CARD_RESPONDER_QUESTIONAMENTOS_DA_CODAE.titulo,
+      CARD_AGUARDANDO_ANALISE_RECLAMACAO.titulo
+    ].includes(titulo)
+  ) {
+    return `/${GESTAO_PRODUTO}/responder-reclamacao/consulta?uuid=${item.uuid}`;
+  } else if (
     item.status.toLowerCase() === CODAE_PEDIU_ANALISE_RECLAMACAO &&
     usuarioEhEmpresaTerceirizada()
   ) {
@@ -70,12 +83,26 @@ const gerarLinkDoItem = (item, apontaParaEdicao, titulo) => {
     return `/${GESTAO_PRODUTO}/${ATIVACAO_DE_PRODUTO}/detalhe?id=${item.uuid}`;
   } else if (
     usuarioEhCODAEGestaoProduto() &&
-    item.status === "CODAE_HOMOLOGADO" &&
+    (item.status === "CODAE_HOMOLOGADO" ||
+      item.status === "CODAE_AUTORIZOU_RECLAMACAO") &&
     item.data_edital_suspenso_mais_recente
   ) {
     return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${
       item.uuid
     }&card_suspensos=${true}`;
+  } else if (
+    usuarioEhEmpresaTerceirizada() &&
+    item.tem_copia &&
+    [
+      CODAE_HOMOLOGADO,
+      CODAE_SUSPENDEU,
+      CODAE_NAO_HOMOLOGADO,
+      CODAE_QUESTIONADO,
+      CODAE_AUTORIZOU_RECLAMACAO,
+      TERCEIRIZADA_CANCELOU_SOLICITACAO_HOMOLOGACAO
+    ].includes(item.status.toLowerCase())
+  ) {
+    return `/${GESTAO_PRODUTO}/${RELATORIO}?uuid=${item.uuid}`;
   } else if (
     usuarioEhEmpresaTerceirizada() &&
     [
@@ -172,6 +199,7 @@ export const formataCards = (items, apontaParaEdicao, titulo) => {
     nome_usuario_log_de_reclamacao: item.nome_usuario_log_de_reclamacao,
     status: item.status,
     marca: item.marca_produto,
-    editais: item.editais
+    editais: item.editais,
+    produto_editais: item.produto_editais
   }));
 };

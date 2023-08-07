@@ -1,0 +1,30 @@
+.data_inicio {
+  label {
+    font-weight: 500 !important;
+    color: #686868 !important;
+  }
+}
+
+.filtros-guias-ocorrencias {
+  padding-bottom: 40px;
+
+  .input-numero-guia {
+    height: 40px;
+  }
+
+  .data-inicial {
+    height: 40px !important;
+  }
+
+  .data-final {
+    height: 40px !important;
+  }
+
+  .titulo-verde {
+    color: #0c6b45;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+}

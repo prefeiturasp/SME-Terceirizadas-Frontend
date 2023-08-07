@@ -1,27 +1,55 @@
+import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
+
+export const montarMenuOptionStatus = () => {
+  return usuarioEhEmpresaFornecedor()
+    ? option_status_fornecedor
+    : option_status;
+};
+
 export const option_status = [
-  {
-    value: "ACEITA",
-    label: "Cronograma Ciente"
-  },
-  {
-    value: "ACEITA",
-    label: "Aprovado DINUTRE"
-  },
-  {
-    value: "ACEITA",
-    label: "Aprovado CODAE"
-  },
   {
     value: "EM_ANALISE",
     label: "Em Análise"
   },
   {
-    value: "NEGADA",
-    label: "Negado DINUTRE"
+    value: "CRONOGRAMA_CIENTE",
+    label: "Cronograma Ciente"
   },
   {
-    value: "NEGADA",
-    label: "Negado CODAE"
+    value: "APROVADO_DINUTRE",
+    label: "Aprovado DINUTRE"
+  },
+  {
+    value: "REPROVADO_DINUTRE",
+    label: "Reprovado DINUTRE"
+  },
+  {
+    value: "APROVADO_DILOG",
+    label: "Aprovado DILOG"
+  },
+  {
+    value: "REPROVADO_DILOG",
+    label: "Reprovado DILOG"
+  }
+];
+
+export const option_status_fornecedor = [
+  {
+    value: [
+      "EM_ANALISE",
+      "CRONOGRAMA_CIENTE",
+      "APROVADO_DINUTRE",
+      "REPROVADO_DINUTRE"
+    ],
+    label: "Em Análise"
+  },
+  {
+    value: "APROVADO_DILOG",
+    label: "Aprovado DILOG"
+  },
+  {
+    value: "REPROVADO_DILOG",
+    label: "Reprovado DILOG"
   }
 ];
 

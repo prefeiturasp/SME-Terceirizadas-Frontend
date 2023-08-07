@@ -26,7 +26,11 @@ import {
   checaSeDataEstaEntre2e5DiasUteis
 } from "helpers/utilities";
 import { formatarPayload, validarSubmit } from "./helpers";
-import { required } from "helpers/fieldValidators";
+import {
+  composeValidators,
+  ehDiaUtil,
+  required
+} from "helpers/fieldValidators";
 import { STATUS_DRE_A_VALIDAR } from "configs/constants";
 import {
   createAlteracaoCardapioCEMEI,
@@ -45,7 +49,8 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
     periodos,
     vinculos,
     proximosDoisDiasUteis,
-    proximosCincoDiasUteis
+    proximosCincoDiasUteis,
+    feriadosAno
   } = props;
 
   useEffect(() => {
@@ -549,6 +554,11 @@ export const AlteracaoDeCardapioCEMEI = ({ ...props }) => {
                       maxDate={fimDoCalendario()}
                       label="Alterar dia"
                       disabled={values.data_inicial || desabilitarAlterarDia}
+                      validate={composeValidators(
+                        required,
+                        ehDiaUtil(values, motivos, feriadosAno)
+                      )}
+                      usarDirty={true}
                     />
                     <OnChange name="alterar_dia">
                       {value => {

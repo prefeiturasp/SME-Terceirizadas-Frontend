@@ -29,6 +29,10 @@ export const DashboardNutrimanifestacao = () => {
   const [negadas, setNegadas] = useState(null);
   const [autorizadas, setAutorizadas] = useState(null);
   const [erro, setErro] = useState("");
+  const [
+    loadingAcompanhamentoSolicitacoes,
+    setLoadingAcompanhamentoSolicitacoes
+  ] = useState(false);
 
   const { meusDados } = useContext(MeusDadosContext);
 
@@ -36,6 +40,8 @@ export const DashboardNutrimanifestacao = () => {
   const PARAMS = { limit: PAGINACAO_DASHBOARD_DEFAULT, offset: 0 };
 
   const getSolicitacoesAsync = async (params = null) => {
+    setLoadingAcompanhamentoSolicitacoes(true);
+
     const response = await getSolicitacoesCanceladasNutrimanifestacao(params);
     if (response.status === HTTP_STATUS.OK) {
       setCanceladas(ajustarFormatoLog(response.data.results));
@@ -59,11 +65,12 @@ export const DashboardNutrimanifestacao = () => {
     } else {
       setErro("Erro ao carregar solicitações autorizadas");
     }
+
+    setLoadingAcompanhamentoSolicitacoes(false);
   };
 
   useEffect(() => {
     getSolicitacoesAsync(PARAMS);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPesquisaChanged = values => {
@@ -89,6 +96,8 @@ export const DashboardNutrimanifestacao = () => {
     return params;
   };
 
+  let typingTimeout = null;
+
   return (
     <div>
       {erro && <div>{erro}</div>}
@@ -107,39 +116,49 @@ export const DashboardNutrimanifestacao = () => {
               exibirFiltrosDataEventoETipoSolicitacao={true}
               titulo={"Acompanhamento solicitações"}
               dataAtual={dataAtual()}
-              onChange={onPesquisaChanged}
+              onChange={values => {
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(async () => {
+                  onPesquisaChanged(values);
+                }, 1000);
+              }}
             >
-              <div className="row pb-3">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Autorizadas"}
-                    cardType={CARD_TYPE_ENUM.AUTORIZADO}
-                    solicitations={autorizadas}
-                    icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_AUTORIZADAS}`}
-                  />
+              <Spin
+                tip="Carregando..."
+                spinning={loadingAcompanhamentoSolicitacoes}
+              >
+                <div className="row pb-3">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Autorizadas"}
+                      cardType={CARD_TYPE_ENUM.AUTORIZADO}
+                      solicitations={autorizadas}
+                      icon={ICON_CARD_TYPE_ENUM.AUTORIZADO}
+                      href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_AUTORIZADAS}`}
+                    />
+                  </div>
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Negadas"}
+                      cardType={CARD_TYPE_ENUM.NEGADO}
+                      solicitations={negadas}
+                      icon={ICON_CARD_TYPE_ENUM.NEGADO}
+                      href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`}
+                    />
+                  </div>
                 </div>
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Negadas"}
-                    cardType={CARD_TYPE_ENUM.NEGADO}
-                    solicitations={negadas}
-                    icon={ICON_CARD_TYPE_ENUM.NEGADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_NEGADAS}`}
-                  />
+                <div className="row">
+                  <div className="col-6">
+                    <CardStatusDeSolicitacao
+                      cardTitle={"Canceladas"}
+                      cardType={CARD_TYPE_ENUM.CANCELADO}
+                      solicitations={canceladas}
+                      icon={ICON_CARD_TYPE_ENUM.CANCELADO}
+                      href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <CardStatusDeSolicitacao
-                    cardTitle={"Canceladas"}
-                    cardType={CARD_TYPE_ENUM.CANCELADO}
-                    solicitations={canceladas}
-                    icon={ICON_CARD_TYPE_ENUM.CANCELADO}
-                    href={`/${NUTRIMANIFESTACAO}/${SOLICITACOES_CANCELADAS}`}
-                  />
-                </div>
-              </div>
+              </Spin>
             </CardBody>
           )}
         </Spin>

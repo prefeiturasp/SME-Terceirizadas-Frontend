@@ -30,7 +30,8 @@ import {
   usuarioEhEscolaTerceirizada,
   usuarioEscolaEhGestaoDireta,
   usuarioEhNutricionistaSupervisao,
-  usuarioEhMedicao
+  usuarioEhMedicao,
+  usuarioEhEscolaTerceirizadaQualquerPerfil
 } from "helpers/utilities";
 
 const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
@@ -138,6 +139,9 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           title="Relatórios"
           activeMenu={activeMenu}
         >
+          <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
+            Solicitações de Alimentação
+          </LeafItem>
           <LeafItem to={`/relatorio/alunos-matriculados`}>
             Alunos Matriculados
           </LeafItem>
@@ -158,7 +162,12 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
       )}
       {(usuarioEhDRE() ||
         usuarioEhCODAEGestaoAlimentacao() ||
-        usuarioEhMedicao()) && (
+        usuarioEhMedicao() ||
+        usuarioEhCODAENutriManifestacao() ||
+        usuarioEhNutricionistaSupervisao() ||
+        usuarioEhEscolaTerceirizada() ||
+        usuarioEhEscolaTerceirizadaDiretor() ||
+        usuarioEhCODAENutriManifestacao()) && (
         <SubMenu
           icon="fa-chevron-down"
           path="relatorios"
@@ -166,9 +175,17 @@ const MenuGestaoDeAlimentacao = ({ activeMenu, onSubmenuClick }) => {
           title="Relatórios"
           activeMenu={activeMenu}
         >
-          <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
-            Solicitações de Alimentação
-          </LeafItem>
+          {!usuarioEhNutricionistaSupervisao() && (
+            <LeafItem to={`/${RELATORIO_SOLICITACOES_ALIMENTACAO}`}>
+              Solicitações de Alimentação
+            </LeafItem>
+          )}
+
+          {!usuarioEhEscolaTerceirizadaQualquerPerfil() && (
+            <LeafItem to={`/relatorio/alunos-matriculados`}>
+              Alunos Matriculados
+            </LeafItem>
+          )}
         </SubMenu>
       )}
     </Menu>

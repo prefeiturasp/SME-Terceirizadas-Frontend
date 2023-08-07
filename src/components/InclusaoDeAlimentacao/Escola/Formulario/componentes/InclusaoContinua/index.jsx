@@ -88,7 +88,18 @@ const limpaRecorrencia = form => {
   form.change("observacao", undefined);
 };
 
-export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
+export const Recorrencia = ({
+  form,
+  values,
+  periodos,
+  push,
+  meusDados,
+  ehMotivoInclusaoEspecifico,
+  uuid,
+  idExterno
+}) => {
+  form.change("uuid", uuid);
+  form.change("id_externo", idExterno);
   const handleWeekly = async value => {
     const dias_semana = values.dias_semana || [];
     if (dias_semana.includes(value)) {
@@ -101,13 +112,10 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
   };
 
   const adicionarRecorrencia = async (form, values) => {
-    let ehCEU = false;
-    if (
+    const ehCEU =
       meusDados.vinculo_atual.instituicao.tipo_unidade_escolar_iniciais ===
-      "CEU GESTAO"
-    ) {
-      ehCEU = true;
-    }
+      "CEU GESTAO";
+
     if (
       !values.dias_semana ||
       values.dias_semana.length === 0 ||
@@ -124,8 +132,10 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
       !ehCEU &&
       (/\D/.test(values.numero_alunos) ||
         values.numero_alunos <= 0 ||
-        values.numero_alunos >
-          periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos)
+        (!ehMotivoInclusaoEspecifico &&
+          values.numero_alunos >
+            periodos.find(p => p.uuid === values.periodo_escolar)
+              ?.maximo_alunos))
     ) {
       toastError("Número de alunos inválido");
       return;
@@ -143,6 +153,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
       );
       return;
     }
+
     if (!values.quantidades_periodo) {
       form.change("quantidades_periodo", [
         {
@@ -153,6 +164,7 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
           observacao: values.observacao ? deepCopy(values.observacao) : ""
         }
       ]);
+      limpaRecorrencia(form);
     } else {
       await push("quantidades_periodo");
       ["dias_semana", "periodo_escolar", "numero_alunos", "observacao"].forEach(
@@ -171,6 +183,20 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
       );
       limpaRecorrencia(form);
     }
+  };
+
+  const validacaoNumeroAlunos = () => {
+    return ehMotivoInclusaoEspecifico
+      ? composeValidators(naoPodeSerZero, numericInteger)
+      : periodos.find(p => p.uuid === values.periodo_escolar)
+      ? composeValidators(
+          naoPodeSerZero,
+          numericInteger,
+          maxValue(
+            periodos.find(p => p.uuid === values.periodo_escolar).maximo_alunos
+          )
+        )
+      : null;
   };
 
   return (
@@ -212,7 +238,8 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
             name="tipos_alimentacao"
             selected={values.tipos_alimentacao_selecionados || []}
             options={
-              values.periodo_escolar
+              values.periodo_escolar &&
+              periodos.find(p => p.uuid === values.periodo_escolar)
                 ? formatarParaMultiselect(
                     periodos.find(p => p.uuid === values.periodo_escolar)
                       .tipos_alimentacao
@@ -238,14 +265,8 @@ export const Recorrencia = ({ form, values, periodos, push, meusDados }) => {
                 .tipo_unidade_escolar_iniciais !== "CEU GESTAO" &&
               values.numero_alunos &&
               values.periodo_escolar &&
-              composeValidators(
-                naoPodeSerZero,
-                numericInteger,
-                maxValue(
-                  periodos.find(p => p.uuid === values.periodo_escolar)
-                    .maximo_alunos
-                )
-              )
+              values.dias_semana &&
+              validacaoNumeroAlunos()
             }
             name={`numero_alunos`}
             min="0"
@@ -324,7 +345,7 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                             periodo =>
                               periodo.uuid ===
                               values.quantidades_periodo[indice].periodo_escolar
-                          ).nome}
+                          )?.nome}
                       </td>
                       <td className="col-3">
                         {values.quantidades_periodo[indice].tipos_alimentacao &&
@@ -336,7 +357,7 @@ export const RecorrenciaTabela = ({ form, values, periodos }) => {
                                 values.quantidades_periodo[indice]
                                   .periodo_escolar
                             )
-                            .tipos_alimentacao.filter(t =>
+                            ?.tipos_alimentacao.filter(t =>
                               values.quantidades_periodo[
                                 indice
                               ].tipos_alimentacao.includes(t.uuid)

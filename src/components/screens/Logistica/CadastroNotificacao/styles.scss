@@ -1,0 +1,21 @@
+@import "styles/variables.scss";
+
+.guias-notificacoes {
+  .green-dot {
+    height: 10px;
+    width: 10px;
+    background-color: #d4edda;
+    border-radius: 50%;
+    display: inline-block;
+  }
+}
+
+div.title-editar-notificacoes {
+  font-size: 20px;
+  color: $blackInput;
+  font-weight: 900;
+
+  span {
+    color: $green;
+  }
+}

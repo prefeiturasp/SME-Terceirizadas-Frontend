@@ -361,3 +361,29 @@ export const medicaoInicialExportarOcorrenciasPDF = async url => {
   });
   saveAs(data, "ocorrencias_medicao_inicial.pdf");
 };
+
+export const medicaoInicialExportarOcorrenciasXLSX = async url => {
+  const { data } = await axios.get(`${url}`, {
+    responseType: "blob"
+  });
+  saveAs(data, "ocorrencias_medicao_inicial.xlsx");
+};
+
+export const documentoAnaliseSensorial = async url => {
+  const { data } = await axios.get(`${url}`, {
+    responseType: "blob"
+  });
+  const extensao = url.split(".").pop();
+  saveAs(data, `resposta_analise_sensorial.${extensao}`);
+};
+
+export const relatorioMedicaoInicialPDF = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/relatorio-pdf/`;
+  const response = await axios
+    .get(url, { params: { uuid: uuid } })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};

@@ -71,7 +71,6 @@ import PainelPedidosSuspensaoAlimentacaoRelatorio from "../pages/Terceirizada/Su
 import PainelPedidosSuspensaoAlimentacaoCEIRelatorio from "../pages/SuspensaoAlimentacaoCEI/RelatorioPage";
 import FaqPage from "../pages/Faq/FaqPage";
 import RelatorioProdutosHomologadosPage from "pages/RelatorioProdutosHomologados/RelatorioProdutosHomologadosPage";
-import RelatorioSituacaoProduto from "pages/Produto/RelatorioSituacaoProduto";
 import RelatorioReclamacaoProduto from "pages/Produto/RelatorioReclamacaoProduto";
 
 import * as constants from "./constants";
@@ -81,7 +80,6 @@ import {
   dashBoardDietaEspecial,
   painelGestaoAlimentacao,
   painelInicial,
-  permissoes,
   relatorios,
   relatoriosAlteracaoDeCardapio,
   relatoriosAlteracaoDeCardapioCEMEI,
@@ -116,7 +114,6 @@ import {
   usuarioEscolaEhGestaoDireta,
   validaPerfilEscolaMistaParceira,
   usuarioEhCoordenadorCODAE,
-  usuarioEhDiretorEscola,
   usuarioEhDilogQualidade,
   usuarioEhDilogQualidadeOuCronograma,
   usuarioEhCodaeDilog,
@@ -127,8 +124,13 @@ import {
   usuarioEhCoordenadorNutriCODAE,
   usuarioEhCoordenadorGpCODAE,
   usuarioEhDinutreDiretoria,
+  usuarioEhDilogDiretoria,
+  usuarioEhCoordenadorNutriSupervisao,
+  usuarioEhCogestorDRE,
   usuarioEhDiretorUE,
-  usuarioEhDilogDiretoria
+  usuarioEhAdministradorNutriCODAE,
+  usuarioEhDilogJuridico,
+  usuarioEhDilog
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -189,9 +191,10 @@ import CadastroSobremesaDocePage from "pages/Cadastros/CadastroSobremesaDocePage
 import GestaoAcessoCodaeDilogPage from "pages/Configuracoes/GestaoAcessoCodaeDilogPage";
 import GestaoAcessoDiretorEscolaPage from "pages/Configuracoes/GestaoAcessoDiretorEscolaPage";
 import CargasUsuariosPage from "pages/Configuracoes/CargasUsuariosPage";
+import CargasUsuariosServidoresPage from "pages/Configuracoes/CargasUsuariosServidoresPage";
 import CadastroCronogramaPage from "pages/PreRecebimento/CadastroCronogramaPage";
-import StatusSolicitacoesPendentesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesPendentesDinutre";
-import StatusSolicitacoesAguardandoDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAguardandoDilog";
+import StatusCronogramasPendentesDinutre from "pages/Dinutre/Cronogramas/StatusCronogramasPendentesDinutre";
+import StatusCronogramasAguardandoDilog from "pages/Dinutre/Cronogramas/StatusCronogramasAguardandoDilog";
 import CronogramaEntregaPage from "pages/PreRecebimento/CronogramaEntregaPage";
 import DetalharCronogramaPage from "pages/PreRecebimento/DetalharCronogramaPage";
 import StatusSolicitacoesAguardandoDREPage from "pages/DRE/Solicitacoes/StatusSolicitacoesAguardandoDREPage";
@@ -199,21 +202,44 @@ import RelatorioSolicitacoesAlimentacaoPage from "pages/Relatorios/RelatorioSoli
 import RelatorioAlunosMatriculadosPage from "pages/Relatorios/RelatorioAlunosMatriculadosPage";
 import EditarCronogramaPage from "pages/PreRecebimento/EditarCronogramaPage";
 import CadastroLaboratorioPage from "pages/Cadastros/CadastroLaboratorioPage";
+import DetalharCadastroLaboratorioPage from "pages/Cadastros/DetalharCadastroLaboratorioPage";
 import EditarCadastroLaboratorioPage from "pages/Cadastros/EditarCadastroLaboratorioPage ";
 import LaboratoriosCadastradosPage from "pages/Cadastros/LaboratoriosCadastradosPage";
 import CadastroEmbalagemPage from "pages/Cadastros/CadastroEmbalagemPage";
 import EmbalagensCadastradasPage from "pages/Cadastros/EmbalagensCadastradasPage";
 import GestaoAcessoEmpresaPage from "pages/Configuracoes/GestaoAcessoEmpresaPage";
 import EditarCadastroEmbalagemPage from "pages/Cadastros/EditarCadastroEmbalagemPage ";
-import CadastroProdutosCronograma from "pages/Cadastros/CadastroProdutosCronograma";
+import ProdutosLogisticaPage from "pages/Cadastros/ProdutosLogisticaPage";
 import EditarEmpresaPage from "pages/Cadastros/EditarEmpresaPage";
 import GestaoAcessoGeralPage from "pages/Configuracoes/GestaoAcessoGeralPage";
 import AlterarCronogramaPage from "pages/PreRecebimento/AlterarCronogramaPage";
 import PainelAprovacoesPage from "pages/PreRecebimento/PainelAprovacoesPage";
 import AcompanhamentoDeLancamentosPage from "pages/LancamentoMedicaoInicial/AcompanhamentoDeLancamentosPage";
 import SolicitacaoAlteracaoCronogramaPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaPage";
-import StatusSolicitacoesAssinadoCODAE from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAssinadoCODAE";
+import StatusCronogramasAssinadoCODAE from "pages/Dinutre/Cronogramas/StatusCronogramasAssinadoCODAE";
+import StatusSolicitacoesAlteracoesDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDinutre";
 import ConferenciaDosLancamentosPage from "pages/LancamentoMedicaoInicial/ConferenciaDosLancamentosPage";
+import GestaoAcessoMasterPage from "pages/Configuracoes/GestaoAcessoMasterPage";
+import GestaoAcessoCogestorPage from "pages/Configuracoes/GestaoAcessoCogestorPage";
+import AnaliseDilogCronogramaPage from "pages/PreRecebimento/DetalharSolicitacaoCronograma";
+import SolicitacaoAlteracaoCronogramaFornecedorPage from "pages/PreRecebimento/SolicitacaoAlteracaoCronogramaFornecedorPage";
+import StatusSolicitacoesAlteracoesAprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDinutre";
+import StatusSolicitacoesAlteracoesReprovadasDinutre from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDinutre";
+import StatusSolicitacoesAlteracoesDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesDilog";
+import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesAprovadasDilog";
+import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
+import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
+import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
+import GuiasNotificacoesFiscalPage from "pages/Logistica/GuiasNotificacoesFiscalPage";
+import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
+import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
+import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
+import CadastroProdutosLogisticaPage from "pages/Cadastros/CadastroProdutosLogisticaPage";
+import EditarProdutosLogisticaPage from "pages/Cadastros/EditarProdutosLogisticaPage";
+import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
+import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
+import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
+import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 
 const routesConfig = [
   {
@@ -692,31 +718,31 @@ const routesConfig = [
     }`,
     component: LaboratoriosCadastradosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
     }`,
     component: CadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.LABORATORIO
+      constants.CADASTRO_LABORATORIO
+    }/${constants.DETALHAR}`,
+    component: DetalharCadastroLaboratorioPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_LABORATORIO
     }/${constants.EDITAR}`,
     component: EditarCadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
-  },
-  {
-    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
-    }`,
-    component: CadastroEmbalagemPage,
-    exact: true,
-    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -728,18 +754,74 @@ const routesConfig = [
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.PRODUTOS
+      constants.CADASTRO_EMBALAGEM
     }`,
-    component: CadastroProdutosCronograma,
+    component: CadastroEmbalagemPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
-
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
-      constants.EMBALAGEM
+      constants.CADASTRO_EMBALAGEM
     }/${constants.EDITAR}`,
     component: EditarCadastroEmbalagemPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.PRODUTOS
+    }`,
+    component: ProdutosLogisticaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_PRODUTOS
+    }`,
+    component: CadastroProdutosLogisticaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDICAO_PRODUTOS
+    }`,
+    component: EditarProdutosLogisticaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhCodaeDilog() ||
+      usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.UNIDADES_MEDIDA
+    }`,
+    component: UnidadesMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.CADASTRO_UNIDADE_MEDIDA
+    }`,
+    component: CadastroUnidadeMedidaPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
+      constants.EDICAO_UNIDADE_MEDIDA
+    }`,
+    component: EditarUnidadesMedidaPage,
     exact: true,
     tipoUsuario: usuarioEhDilogQualidadeOuCronograma()
   },
@@ -762,19 +844,16 @@ const routesConfig = [
     tipoUsuario: usuarioEhQualquerCODAE()
   },
   {
-    path: `/configuracoes/permissoes`,
-    component: permissoes(),
-    exact: false,
-    tipoUsuario: constants.QUALQUER_USUARIO
-  },
-  {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_CODAE_DILOG}`,
     component: GestaoAcessoCodaeDilogPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_MASTER}`,
+    component: GestaoAcessoMasterPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${
@@ -782,7 +861,7 @@ const routesConfig = [
     }`,
     component: GestaoAcessoDiretorEscolaPage,
     exact: true,
-    tipoUsuario: usuarioEhDiretorEscola()
+    tipoUsuario: usuarioEhDiretorUE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_EMPRESA}`,
@@ -791,20 +870,37 @@ const routesConfig = [
     tipoUsuario: usuarioEhAdmQualquerEmpresa()
   },
   {
+    path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_COGESTOR}`,
+    component: GestaoAcessoCogestorPage,
+    exact: true,
+    tipoUsuario: usuarioEhCogestorDRE()
+  },
+  {
     path: `/${constants.CONFIGURACOES}/${constants.GESTAO_ACESSO_GERAL}`,
     component: GestaoAcessoGeralPage,
     exact: true,
     tipoUsuario:
-      usuarioEhCoordenadorNutriCODAE() || usuarioEhCoordenadorGpCODAE()
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhCoordenadorGpCODAE()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS}`,
     component: CargasUsuariosPage,
     exact: true,
-    tipoUsuario:
-      usuarioEhCoordenadorCODAE() ||
-      usuarioEhLogistica() ||
-      usuarioEhAdministradorRepresentanteCodae()
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.CARGAS_USUARIOS_SERVIDORES}`,
+    component: CargasUsuariosServidoresPage,
+    exact: true,
+    tipoUsuario: usuarioEhAdministradorRepresentanteCodae()
+  },
+  {
+    path: `/${constants.CONFIGURACOES}/${constants.ATUALIZACAO_EMAIL_EOL}`,
+    component: AtualizacaoEmailEOLPage,
+    exact: true,
+    tipoUsuario: usuarioEhCoordenadorCODAE() || usuarioEhCodaeDilog()
   },
   {
     path: `/configuracoes`,
@@ -1058,15 +1154,6 @@ const routesConfig = [
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
-      constants.RELATORIO_SITUACAO_PRODUTO
-    }`,
-    component: RelatorioSituacaoProduto,
-    exact: true,
-    tipoUsuario:
-      validaPerfilEscolaMistaParceira() && !usuarioEscolaEhGestaoDireta()
-  },
-  {
-    path: `/${constants.GESTAO_PRODUTO}/${
       constants.RELATORIO_RECLAMACAO_PRODUTO
     }`,
     component: RelatorioReclamacaoProduto,
@@ -1077,7 +1164,10 @@ const routesConfig = [
       usuarioEhCODAEDietaEspecial() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor()
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-questionamento-ue`,
@@ -1169,7 +1259,10 @@ const routesConfig = [
       usuarioEhCODAEGestaoProduto() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor()
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1182,7 +1275,10 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhNutricionistaSupervisao() ||
       usuarioEhEscolaTerceirizada() ||
-      usuarioEhEscolaTerceirizadaDiretor()
+      usuarioEhEscolaTerceirizadaDiretor() ||
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1274,7 +1370,8 @@ const routesConfig = [
       usuarioEhEmpresaTerceirizada() ||
       usuarioEhEscolaTerceirizada() ||
       usuarioEhEscolaTerceirizadaDiretor() ||
-      usuarioEhCODAENutriManifestacao()
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhCODAEGestaoAlimentacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/${
@@ -1309,7 +1406,11 @@ const routesConfig = [
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/consulta`,
     component: ConsultaResponderReclamacaoPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaTerceirizada()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhCogestorDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao()
   },
   {
     path: `/${constants.GESTAO_PRODUTO}/responder-reclamacao/detalhe`,
@@ -1388,7 +1489,16 @@ const routesConfig = [
     component: RelatorioDietaEspecial,
     exact: true,
     tipoUsuario:
-      usuarioEhEmpresaTerceirizada() || usuarioEhNutricionistaSupervisao()
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriSupervisao() ||
+      usuarioEhAdministradorNutriCODAE() ||
+      usuarioEhCoordenadorNutriCODAE() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.DIETA_ESPECIAL}/${
@@ -1434,13 +1544,25 @@ const routesConfig = [
     component: RelatorioSolicitacoesAlimentacaoPage,
     exact: true,
     tipoUsuario:
-      usuarioEhDRE() || usuarioEhCODAEGestaoAlimentacao() || usuarioEhMedicao()
+      usuarioEhDRE() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhMedicao() ||
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.RELATORIO_ALUNOS_MATRICULADOS}`,
     component: RelatorioAlunosMatriculadosPage,
     exact: true,
-    tipoUsuario: usuarioEhEmpresaTerceirizada()
+    tipoUsuario:
+      usuarioEhEmpresaTerceirizada() ||
+      usuarioEhDRE() ||
+      usuarioEhCODAENutriManifestacao() ||
+      usuarioEhNutricionistaSupervisao() ||
+      usuarioEhCODAEGestaoAlimentacao() ||
+      usuarioEhMedicao()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1448,7 +1570,8 @@ const routesConfig = [
     }`,
     component: LancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LANCAMENTO_INICIAL}/${
@@ -1456,7 +1579,8 @@ const routesConfig = [
     }/${constants.PERIODO_LANCAMENTO}`,
     component: PeriodoLancamentoMedicaoInicialPage,
     exact: true,
-    tipoUsuario: usuarioEhEscolaTerceirizada()
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
@@ -1464,7 +1588,10 @@ const routesConfig = [
     }`,
     component: AcompanhamentoDeLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao() || usuarioEhDiretorUE()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.MEDICAO_INICIAL}/${
@@ -1472,7 +1599,20 @@ const routesConfig = [
     }`,
     component: ConferenciaDosLancamentosPage,
     exact: true,
-    tipoUsuario: usuarioEhDRE() || usuarioEhMedicao()
+    tipoUsuario:
+      usuarioEhDRE() ||
+      usuarioEhMedicao() ||
+      usuarioEhEscolaTerceirizada() ||
+      usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
+    path: `/${constants.MEDICAO_INICIAL}/${
+      constants.DETALHAMENTO_DO_LANCAMENTO
+    }`,
+    component: DetalhamentoDoLancamentoPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
     path: `/${constants.LOGISTICA}/${
@@ -1602,6 +1742,36 @@ const routesConfig = [
     tipoUsuario: usuarioEhDRE()
   },
   {
+    path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO}`,
+    component: GuiasNotificacoesPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
+    component: GuiasNotificacoesFiscalPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
+    component: CadastroNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.NOTIFICAR_EMPRESA}`,
+    component: NotificarEmpresaPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.EDITAR_NOTIFICACAO}`,
+    component: EditarNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
     path: `/${constants.NOTIFICACOES}`,
     component: NotificacoesPage,
     exact: false,
@@ -1625,7 +1795,18 @@ const routesConfig = [
     }`,
     component: SolicitacaoAlteracaoCronogramaPage,
     exact: true,
-    tipoUsuario: usuarioEhCronograma()
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.SOLICITACAO_ALTERACAO_CRONOGRAMA_FORNECEDOR
+    }`,
+    component: SolicitacaoAlteracaoCronogramaFornecedorPage,
+    exact: true,
+    tipoUsuario: usuarioEhEmpresaFornecedor()
   },
   {
     path: `/${constants.PRE_RECEBIMENTO}/${constants.DETALHE_CRONOGRAMA}`,
@@ -1638,6 +1819,18 @@ const routesConfig = [
     component: AlterarCronogramaPage,
     exact: true,
     tipoUsuario: usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor()
+  },
+  {
+    path: `/${constants.PRE_RECEBIMENTO}/${
+      constants.DETALHAR_ALTERACAO_CRONOGRAMA
+    }`,
+    component: AnaliseDilogCronogramaPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhCronograma() ||
+      usuarioEhDinutreDiretoria() ||
+      usuarioEhDilogDiretoria() ||
+      usuarioEhEmpresaFornecedor()
   },
   {
     /*
@@ -1671,21 +1864,57 @@ const routesConfig = [
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
-    component: StatusSolicitacoesPendentesDinutre,
+    component: StatusCronogramasPendentesDinutre,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.AGUARDANDO_DILOG}`,
-    component: StatusSolicitacoesAguardandoDilog,
+    component: StatusCronogramasAguardandoDilog,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
   },
   {
     path: `/${constants.DINUTRE}/${constants.ASSINADO_CODAE}`,
-    component: StatusSolicitacoesAssinadoCODAE,
+    component: StatusCronogramasAssinadoCODAE,
     exact: false,
     tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DINUTRE}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDinutre,
+    exact: false,
+    tipoUsuario: usuarioEhDinutreDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.SOLICITACOES_ALTERACOES}`,
+    component: StatusSolicitacoesAlteracoesDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_APROVADAS}`,
+    component: StatusSolicitacoesAlteracoesAprovadasDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
+  },
+  {
+    path: `/${constants.DILOG}/${constants.ALTERACOES_REPROVADAS}`,
+    component: StatusSolicitacoesAlteracoesReprovadasDilog,
+    exact: false,
+    tipoUsuario: usuarioEhDilogDiretoria()
   }
 ];
 

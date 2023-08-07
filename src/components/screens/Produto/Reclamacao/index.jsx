@@ -1,4 +1,4 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -18,6 +18,7 @@ import {
 import { getProdutosPorParametros } from "services/produto.service";
 
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 class ReclamacaoProduto extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class ReclamacaoProduto extends Component {
     };
     this.TAMANHO_PAGINA = 10;
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { history, reset } = this.props;
     if (history && history.action === "PUSH") {
       reset();
@@ -55,23 +56,18 @@ class ReclamacaoProduto extends Component {
     this.atualizaListaProdutos(this.state.formValues, page);
   };
 
-  atualizaListaProdutos = (formValues, page) => {
-    return new Promise(async (resolve, reject) => {
-      const response = await getProdutosPorParametros(
-        formValues,
-        page,
-        this.TAMANHO_PAGINA
-      );
-      this.setState({ loading: false });
-      if (response.status === 200) {
-        this.props.setIndiceProdutoAtivo(0);
-        this.props.setProdutos(response.data.results);
-        this.props.setProdutosCount(response.data.count);
-        resolve();
-      } else {
-        reject(response.errors);
-      }
-    });
+  atualizaListaProdutos = async (formValues, page) => {
+    const response = await getProdutosPorParametros(
+      formValues,
+      page,
+      this.TAMANHO_PAGINA
+    );
+    this.setState({ loading: false });
+    if (response.status === 200) {
+      this.props.setIndiceProdutoAtivo(0);
+      this.props.setProdutos(response.data.results);
+      this.props.setProdutosCount(response.data.count);
+    }
   };
 
   onSubmitFormBuscaProduto = formValues => {
@@ -122,7 +118,8 @@ class ReclamacaoProduto extends Component {
                   indiceProdutoAtivo={indiceProdutoAtivo}
                   setIndiceProdutoAtivo={setIndiceProdutoAtivo}
                 />
-                <Pagination
+                <Paginacao
+                  className="mt-3 mb-3"
                   current={page || 1}
                   total={produtosCount}
                   showSizeChanger={false}

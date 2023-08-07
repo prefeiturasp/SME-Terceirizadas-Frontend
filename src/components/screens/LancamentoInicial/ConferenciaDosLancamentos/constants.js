@@ -1,9 +1,16 @@
+import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
+
 export const MEDICAO_STATUS_DE_PROGRESSO = {
   MEDICAO_ENVIADA_PELA_UE: {
-    nome: "Recebido para análise"
+    nome: usuarioEhEscolaTerceirizadaDiretor()
+      ? "Enviado para análise"
+      : "Recebido para análise"
   },
   MEDICAO_CORRECAO_SOLICITADA: {
-    nome: "Devolvido para ajustes"
+    nome: "Devolvido para ajustes pela DRE"
+  },
+  MEDICAO_CORRECAO_SOLICITADA_CODAE: {
+    nome: "Devolvido para ajustes pela CODAE"
   },
   MEDICAO_CORRIGIDA_PELA_UE: {
     nome: "Corrigido para DRE"
@@ -16,6 +23,63 @@ export const MEDICAO_STATUS_DE_PROGRESSO = {
   },
   MEDICAO_APROVADA_PELA_CODAE: {
     nome: "Aprovado pela CODAE"
+  },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: "Em aberto para preenchimento pela UE"
+  }
+};
+
+export const OCORRENCIA_STATUS_DE_PROGRESSO = {
+  MEDICAO_ENVIADA_PELA_UE: {
+    nome: "Pendente de Análise"
+  },
+  MEDICAO_CORRECAO_SOLICITADA: {
+    nome: "Devolvido para ajustes pela DRE"
+  },
+  MEDICAO_CORRECAO_SOLICITADA_CODAE: {
+    nome: "Devolvido para ajustes pela CODAE"
+  },
+  MEDICAO_CORRIGIDA_PELA_UE: {
+    nome: "Corrigido para DRE"
+  },
+  MEDICAO_CORRIGIDA_PARA_CODAE: {
+    nome: "Corrigido para CODAE"
+  },
+  MEDICAO_APROVADA_PELA_DRE: {
+    nome: "Aprovado pela DRE"
+  },
+  MEDICAO_APROVADA_PELA_CODAE: {
+    nome: "Aprovado pela CODAE"
+  },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: "Em aberto para preenchimento pela UE"
+  }
+};
+
+export const PERIODO_STATUS_DE_PROGRESSO = {
+  MEDICAO_ENVIADA_PELA_UE: {
+    nome: "Pendente de Análise"
+  },
+  MEDICAO_CORRECAO_SOLICITADA: {
+    nome: "Devolvido para ajustes pela DRE"
+  },
+  MEDICAO_CORRECAO_SOLICITADA_CODAE: {
+    nome: "Devolvido para ajustes pela CODAE"
+  },
+  MEDICAO_CORRIGIDA_PELA_UE: {
+    nome: "Corrigido para DRE"
+  },
+  MEDICAO_CORRIGIDA_PARA_CODAE: {
+    nome: "Corrigido para CODAE"
+  },
+  MEDICAO_APROVADA_PELA_DRE: {
+    nome: "Aprovado pela DRE"
+  },
+  MEDICAO_APROVADA_PELA_CODAE: {
+    nome: "Aprovado pela CODAE"
+  },
+  MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE: {
+    nome: "Em aberto para preenchimento pela UE"
   }
 };
 
@@ -27,4 +91,14 @@ export const initialStateWeekColumns = [
   { position: 4, dia: "03" },
   { position: 5, dia: "04" },
   { position: 6, dia: "05" }
+];
+
+export const diasSemana = [
+  "Seg.",
+  "Ter.",
+  "Qua.",
+  "Qui.",
+  "Sex.",
+  "Sáb.",
+  "Dom."
 ];

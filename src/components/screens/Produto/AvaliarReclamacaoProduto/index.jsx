@@ -1,4 +1,4 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -24,6 +24,7 @@ import {
   getNomesTerceirizadas
 } from "services/produto.service";
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export const AvaliarReclamacaoProduto = ({
   setPropsPageProduto,
@@ -60,7 +61,6 @@ export const AvaliarReclamacaoProduto = ({
         setIndiceProdutoAtivo(undefined);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues, page]);
 
   useEffect(() => {
@@ -88,7 +88,6 @@ export const AvaliarReclamacaoProduto = ({
     getNomesTerceirizadas().then(response => {
       setTerceirizadas(response.data.results);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = values => {
@@ -125,7 +124,8 @@ export const AvaliarReclamacaoProduto = ({
                     setLoading={setLoading}
                     terceirizadas={terceirizadas}
                   />
-                  <Pagination
+                  <Paginacao
+                    className="mt-3 mb-3"
                     current={page || 1}
                     total={produtosCount}
                     showSizeChanger={false}

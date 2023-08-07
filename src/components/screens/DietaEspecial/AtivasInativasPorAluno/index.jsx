@@ -8,7 +8,7 @@ import { bindActionCreators } from "redux";
 
 import { getDietasAtivasInativasPorAluno } from "../../../../services/dietaEspecial.service";
 
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 
 import {
   setDadosResultados,
@@ -21,6 +21,7 @@ import {
 } from "reducers/dietasAtivasInativasPorAlunoReducer";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { TIPO_PERFIL } from "constants/shared";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const AtivasInativasPorAluno = ({
   dadosResultados,
@@ -46,7 +47,6 @@ const AtivasInativasPorAluno = ({
       if (history && history.action === "PUSH") reset();
       setFirstLoad(false);
     } else if (filtros) fetchData({ ...filtros, page: 1 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtros]);
 
   const fetchData = async filtros => {
@@ -59,7 +59,7 @@ const AtivasInativasPorAluno = ({
         escola_ = escola_[0];
       }
       filtros.escola = escolas.find(
-        escola => escola.label === escola_.split("- ")[1]
+        escola => escola.label === escola_.substring(escola_.indexOf("- ") + 2)
       ).value;
     }
     delete filtros.escolas;
@@ -107,7 +107,8 @@ const AtivasInativasPorAluno = ({
               dadosUsuario={meusDados}
             />
             <hr />
-            <Pagination
+            <Paginacao
+              className="mt-3 mb-3"
               total={totalResultados}
               onChange={nextPage}
               current={page}

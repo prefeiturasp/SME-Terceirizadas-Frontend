@@ -1,3 +1,5 @@
+@import "styles/variables.scss";
+
 .modal-cancelar-produto {
   .row-cancelar {
     margin-bottom: 4em;
@@ -5,4 +7,12 @@
 }
 .ajusta-mt {
   margin-top: -0.5rem;
+}
+.editais-vinculados-textarea {
+  min-height: auto !important;
+}
+
+span.msg-atualizacao-em-andamento {
+  font-size: 14px;
+  color: $blackInput;
 }

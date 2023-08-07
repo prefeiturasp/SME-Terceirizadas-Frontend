@@ -5,7 +5,6 @@ import {
   RELATORIO_QUANTITATIVO_SOLIC_DIETA_ESP,
   SOLICITACOES_DIETA_ESPECIAL
 } from "configs/constants";
-import { saveAs } from "file-saver";
 import { API_URL } from "../constants/config";
 import { ENDPOINT } from "../constants/shared";
 import authService from "./auth";
@@ -357,27 +356,51 @@ export const editaProtocoloPadraoDietaEspecial = async payload => {
   );
 };
 
-export const consultaHistoricoProtocoloPadrao = async uuid => {
-  return await axios.get(`/protocolo-padrao-dieta-especial/${uuid}/historico/`);
+export const getFiltrosRelatorioDietasEspeciais = async params => {
+  const url = `/solicitacoes-dieta-especial/filtros-relatorio-dieta-especial/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
-export const getSolicitacoesRelatorioDietasEspeciais = async parametros => {
+export const getSolicitacoesRelatorioDietasEspeciais = async params => {
+  const url = `/solicitacoes-dieta-especial/relatorio-dieta-especial-terceirizada/`;
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const getUnidadesEducacionaisTercTotal = async parametros => {
   return await axios.post(
-    `/solicitacoes-dieta-especial/relatorio-dieta-especial-terceirizada/`,
+    `/escolas-simplissima-com-eol/terc-total/`,
     parametros
   );
 };
 
 export const gerarExcelRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-xlsx/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_dieta_especial.xlsx");
+  const response = await axios
+    .get(url, { params, responseType: "blob" })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const gerarPdfRelatorioDietaEspecial = async params => {
   const url = `/solicitacoes-dieta-especial/exportar-pdf/`;
-  const { data } = await axios.get(url, { params, responseType: "blob" });
-  saveAs(data, "relatorio_dieta_especial.pdf");
+  const response = await axios
+    .get(url, { params, responseType: "blob" })
+    .catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const createSolicitacaoAberta = async payload => {
@@ -405,4 +428,19 @@ export const deleteSolicitacaoAberta = async id => {
     const data = { data: response.data, status: response.status };
     return data;
   }
+};
+
+export const getNomesProtocolosValidosPorEdital = async payload =>
+  axios.get(
+    `/protocolo-padrao-dieta-especial/lista-protocolos-liberados-por-edital/`,
+    {
+      params: payload
+    }
+  );
+
+export const vincularProtocolosEditais = async payload => {
+  return await axios.put(
+    `/protocolo-padrao-dieta-especial/atualizar-editais/`,
+    payload
+  );
 };

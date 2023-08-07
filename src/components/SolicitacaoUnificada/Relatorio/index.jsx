@@ -1,25 +1,23 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
-import { Botao } from "../../Shareable/Botao";
+import { Botao } from "components/Shareable/Botao";
 import {
   BUTTON_STYLE,
-  BUTTON_TYPE,
-  BUTTON_ICON
-} from "../../Shareable/Botao/constants";
+  BUTTON_TYPE
+} from "components/Shareable/Botao/constants";
 import { reduxForm, formValueSelector } from "redux-form";
 import { connect } from "react-redux";
-import { getSolicitacaoUnificada } from "../../../services/solicitacaoUnificada.service";
-import { visualizaBotoesDoFluxoSolicitacaoUnificada } from "../../../helpers/utilities";
+import { getSolicitacaoUnificada } from "services/solicitacaoUnificada.service";
+import { visualizaBotoesDoFluxoSolicitacaoUnificada } from "helpers/utilities";
 import CorpoRelatorio from "./componentes/CorpoRelatorio";
-import { prazoDoPedidoMensagem } from "../../../helpers/utilities";
-import { toastSuccess, toastError } from "../../Shareable/Toast/dialogs";
-import { TIPO_PERFIL } from "../../../constants/shared";
-import { statusEnum } from "../../../constants/shared";
-import RelatorioHistoricoQuestionamento from "../../Shareable/RelatorioHistoricoQuestionamento";
-import RelatorioHistoricoJustificativaEscola from "../../Shareable/RelatorioHistoricoJustificativaEscola";
-import { CODAE, ESCOLA, TERCEIRIZADA } from "../../../configs/constants";
-import { ModalAutorizarAposQuestionamento } from "../../Shareable/ModalAutorizarAposQuestionamento";
+import { prazoDoPedidoMensagem } from "helpers/utilities";
+import { toastSuccess, toastError } from "components/Shareable/Toast/dialogs";
+import { TIPO_PERFIL } from "constants/shared";
+import { statusEnum } from "constants/shared";
+import RelatorioHistoricoQuestionamento from "components/Shareable/RelatorioHistoricoQuestionamento";
+import RelatorioHistoricoJustificativaEscola from "components/Shareable/RelatorioHistoricoJustificativaEscola";
+import { CODAE, ESCOLA, TERCEIRIZADA } from "configs/constants";
+import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 
 class Relatorio extends Component {
@@ -98,7 +96,7 @@ class Relatorio extends Component {
   }
 
   loadSolicitacao(uuid) {
-    getSolicitacaoUnificada(uuid).then(response => {
+    getSolicitacaoUnificada(uuid || this.state.uuid).then(response => {
       this.setState({
         solicitacaoUnificada: response.data
       });
@@ -230,6 +228,7 @@ class Relatorio extends Component {
         {ModalQuestionamento && (
           <ModalQuestionamento
             closeModal={this.closeQuestionamentoModal}
+            solicitacao={solicitacaoUnificada}
             showModal={showQuestionamentoModal}
             justificativa={justificativa}
             uuid={uuid}
@@ -266,16 +265,6 @@ class Relatorio extends Component {
             <span className="page-title">{`Solicitação Unificada - Solicitação # ${
               solicitacaoUnificada.id_externo
             }`}</span>
-            <Link to={`/painel-gestao-alimentacao`}>
-              <Botao
-                texto="Voltar"
-                titulo="voltar"
-                type={BUTTON_TYPE.BUTTON}
-                style={BUTTON_STYLE.GREEN}
-                icon={BUTTON_ICON.ARROW_LEFT}
-                className="float-right"
-              />
-            </Link>
             <div className="card mt-3">
               <div className="card-body">
                 <CorpoRelatorio
@@ -333,7 +322,7 @@ class Relatorio extends Component {
                             ? "Questionar"
                             : "Sim"
                         }
-                        type={BUTTON_TYPE.SUBMIT}
+                        type={BUTTON_TYPE.BUTTON}
                         onClick={() => this.showQuestionamentoModal("Sim")}
                         style={BUTTON_STYLE.GREEN}
                         className="ml-3 mr-3 mt-4"

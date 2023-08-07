@@ -3,7 +3,8 @@ import { FluxoDeStatus } from "../../../Shareable/FluxoDeStatus";
 import {
   corDaMensagem,
   deepCopy,
-  ehInclusaoCei
+  ehInclusaoCei,
+  justificativaAoAprovarSolicitacao
 } from "../../../../helpers/utilities";
 import Botao from "../../../Shareable/Botao";
 import { ToggleExpandir } from "../../../Shareable/ToggleExpandir";
@@ -21,6 +22,7 @@ import { getDetalheKitLancheAvulso } from "../../../../services/relatorios";
 import { fluxoPartindoEscola } from "../../../Shareable/FluxoDeStatus/helper";
 import TabelaFaixaEtaria from "../../../Shareable/TabelaFaixaEtaria";
 import "./style.scss";
+import { existeLogDeQuestionamentoDaCODAE } from "components/Shareable/RelatorioHistoricoQuestionamento/helper";
 
 export const CorpoRelatorio = props => {
   const {
@@ -36,6 +38,14 @@ export const CorpoRelatorio = props => {
   const justificativaNegacao = justificativaAoNegarSolicitacao(
     solicitacaoKitLanche.logs
   );
+
+  const justificativaAprovacao = justificativaAoAprovarSolicitacao(
+    solicitacaoKitLanche.logs
+  );
+
+  const EXIBIR_HISTORICO =
+    solicitacaoKitLanche.prioridade !== "REGULAR" &&
+    existeLogDeQuestionamentoDaCODAE(solicitacaoKitLanche.logs);
 
   const collapseSolicitacaoSimilar = idxSolicitacaoSimilar => {
     let _solicitacoesSimilares = deepCopy(solicitacoesSimilares);
@@ -180,31 +190,35 @@ export const CorpoRelatorio = props => {
         </div>
       </div>
       <table className="table-report">
-        <tr>
-          <th>Nº de Alunos</th>
-          <th>Tempo Previsto de Passeio</th>
-          <th>Opção Desejada</th>
-          <th>Nº Total de Kits</th>
-        </tr>
-        <tr>
-          <td>{solicitacaoKitLanche.quantidade_alunos}</td>
-          <td>
-            {
-              solicitacaoKitLanche.solicitacao_kit_lanche
-                .tempo_passeio_explicacao
-            }
-          </td>
-          <td>
-            {stringSeparadaPorVirgulas(
-              solicitacaoKitLanche.solicitacao_kit_lanche.kits,
-              "nome"
-            )}
-          </td>
-          <td>
-            {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
-              solicitacaoKitLanche.quantidade_alunos}
-          </td>
-        </tr>
+        <thead>
+          <tr>
+            <th>Nº de Alunos</th>
+            <th>Tempo Previsto de Passeio</th>
+            <th>Opção Desejada</th>
+            <th>Nº Total de Kits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{solicitacaoKitLanche.quantidade_alunos}</td>
+            <td>
+              {
+                solicitacaoKitLanche.solicitacao_kit_lanche
+                  .tempo_passeio_explicacao
+              }
+            </td>
+            <td>
+              {stringSeparadaPorVirgulas(
+                solicitacaoKitLanche.solicitacao_kit_lanche.kits,
+                "nome"
+              )}
+            </td>
+            <td>
+              {solicitacaoKitLanche.solicitacao_kit_lanche.kits.length *
+                solicitacaoKitLanche.quantidade_alunos}
+            </td>
+          </tr>
+        </tbody>
       </table>
       {ehInclusaoCei(tipoSolicitacao) && (
         <Fragment>
@@ -260,6 +274,26 @@ export const CorpoRelatorio = props => {
               className="value"
               dangerouslySetInnerHTML={{
                 __html: justificativaNegacao
+              }}
+            />
+          </div>
+        </div>
+      )}
+      {justificativaAprovacao && !EXIBIR_HISTORICO && (
+        <div className="row">
+          <div className="col-12 report-label-value">
+            <p>
+              <b>Autorizou</b>
+            </p>
+            <p>{`${
+              solicitacaoKitLanche.logs.find(
+                log => log.status_evento_explicacao === "CODAE autorizou"
+              ).criado_em
+            } - Informações da CODAE`}</p>
+            <p
+              className="value"
+              dangerouslySetInnerHTML={{
+                __html: justificativaAprovacao
               }}
             />
           </div>

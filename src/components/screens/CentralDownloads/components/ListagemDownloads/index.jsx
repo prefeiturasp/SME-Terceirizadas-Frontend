@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+
 import "./styles.scss";
 import { Checkbox, Tooltip } from "antd";
 import { STATUS_DOWNLOAD } from "constants/shared";

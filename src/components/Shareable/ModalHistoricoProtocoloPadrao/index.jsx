@@ -1,8 +1,9 @@
 import { Modal } from "antd";
 import React, { Component } from "react";
 
-import "antd/dist/antd.css";
 import moment from "moment";
+import { formatarCPFouCNPJ } from "helpers/utilities";
+import "./styles.scss";
 
 export default class ModalHistoricoProtocoloPadrao extends Component {
   constructor(props) {
@@ -68,6 +69,24 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
     return { changes: [] };
   };
 
+  findEditais = history => {
+    if (history !== undefined && history.changes) {
+      const field = history.changes.find(change => {
+        return ["editais"].includes(change.field);
+      });
+      return field;
+    }
+  };
+
+  findOutrasInformacoes = history => {
+    if (history !== undefined && history.changes) {
+      const field = history.changes.find(change => {
+        return ["outras informacoes"].includes(change.field);
+      });
+      return field;
+    }
+  };
+
   ajusta_nome = campo => {
     if (campo === "nome_protocolo") {
       return "Nome Protocolo";
@@ -83,6 +102,19 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
       return "NÃO LIBERADO";
     }
     return valor_campo;
+  };
+
+  formatar_action = action_name => {
+    switch (action_name) {
+      case "CREATE":
+        return "CRIAÇÃO";
+      case "UPDATE":
+        return "EDIÇÃO";
+      case "UPDATE_VINCULOS":
+        return "VÍNCULO DO EDITAL AO PROTOCOLO";
+      default:
+        return action_name;
+    }
   };
 
   render() {
@@ -106,7 +138,9 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
               {history.length > 0 &&
                 history.map((hist, index) => {
                   const { ativo } = hist;
-                  const iniciais = this.retornaIniciais(hist.user.email);
+                  const iniciais = this.retornaIniciais(
+                    hist.user.nome ? hist.user.nome : hist.user.email
+                  );
                   return (
                     <div
                       key={index}
@@ -118,12 +152,14 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                       <div className="usuario">
                         <div>{iniciais}</div>
                       </div>
-                      <div className="descricao">
+                      <div className="descricao d-block">
                         <div className="descicao-titulo" title={hist.action}>
-                          {hist.action === "CREATE" ? "CRIAÇÃO" : "EDIÇÃO"}
+                          {this.formatar_action(hist.action)}
                         </div>
                         <div className="descicao-entidade">
-                          {hist.user.email}
+                          {hist.user.username
+                            ? hist.user.nome
+                            : hist.user.email}
                         </div>
                       </div>
                       <div className="descricao">
@@ -180,11 +216,37 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                     <div className="header-log">
                       <div className="usuario">
                         <div>
-                          {this.retornaIniciais(histSelecionado.user.email)}
+                          {this.retornaIniciais(
+                            histSelecionado.user.nome
+                              ? histSelecionado.user.nome
+                              : histSelecionado.user.email
+                          )}
                         </div>
                       </div>
-                      <div className="nome-fantasia-empresa">
-                        {histSelecionado.user.email}
+                      <div className="nome-fantasia-empresa d-block">
+                        {histSelecionado.user.nome &&
+                        histSelecionado.user.username ? (
+                          <>
+                            <div className="w-100">
+                              {histSelecionado.user.nome}
+                            </div>
+                            {histSelecionado.user.username.length === 11 ? (
+                              <div className="w-100">{`CPF: ${formatarCPFouCNPJ(
+                                histSelecionado.user.username
+                              )}`}</div>
+                            ) : histSelecionado.user.username.length === 14 ? (
+                              <div className="w-100">{`CNPJ: ${formatarCPFouCNPJ(
+                                histSelecionado.user.username
+                              )}`}</div>
+                            ) : (
+                              <div className="w-100">{`RF: ${
+                                histSelecionado.user.username
+                              }`}</div>
+                            )}
+                          </>
+                        ) : (
+                          histSelecionado.user.email
+                        )}
                       </div>
                       <div>
                         {histSelecionado.updated_at !== undefined && (
@@ -321,7 +383,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        {change.hasOwnProperty("tipo") ? (
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
+                                          "tipo"
+                                        ) ? (
                                           <tr
                                             key={`${index}_tipo`}
                                             className="table-body-alimentacao"
@@ -351,7 +416,10 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             </td>
                                           </tr>
                                         ) : null}
-                                        {change.hasOwnProperty("alimento") ? (
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
+                                          "alimento"
+                                        ) ? (
                                           <tr
                                             key={`${index}_alimento`}
                                             className="table-body-alimentacao"
@@ -377,7 +445,8 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                             </td>
                                           </tr>
                                         ) : null}
-                                        {change.hasOwnProperty(
+                                        {Object.prototype.hasOwnProperty.call(
+                                          change,
                                           "substitutos"
                                         ) ? (
                                           <tr
@@ -425,6 +494,99 @@ export default class ModalHistoricoProtocoloPadrao extends Component {
                                     </table>
                                   );
                                 })}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      )}
+                    {histSelecionado !== undefined &&
+                      (this.findEditais(histSelecionado) !== undefined ||
+                        this.findOutrasInformacoes(histSelecionado) !==
+                          undefined) && (
+                        <table className="table table-bordered table-alimentacao">
+                          <tbody>
+                            <tr className="table-body-alimentacao">
+                              <td>
+                                <p className="data-title">Editais</p>
+                                <table className="table table-bordered table-alimentacao">
+                                  <col style={{ width: "30%" }} />
+                                  <col style={{ width: "30%" }} />
+                                  <col style={{ width: "40%" }} />
+                                  <thead>
+                                    <tr className="table-head-alimentacao">
+                                      <th>Campo</th>
+                                      <th>De</th>
+                                      <th>Para</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {this.findEditais(histSelecionado) !==
+                                      undefined && (
+                                      <tr className="table-body-alimentacao">
+                                        <td>Editais</td>
+                                        <td>
+                                          <ul>
+                                            {this.findEditais(histSelecionado)
+                                              .from &&
+                                              this.findEditais(
+                                                histSelecionado
+                                              ).from.map((edital, idx) => {
+                                                return (
+                                                  <li key={idx}>{edital}</li>
+                                                );
+                                              })}
+                                          </ul>
+                                        </td>
+                                        <td>
+                                          <ul>
+                                            {this.findEditais(histSelecionado)
+                                              .to &&
+                                              this.findEditais(
+                                                histSelecionado
+                                              ).to.map((edital, idx) => {
+                                                return (
+                                                  <li key={idx}>{edital}</li>
+                                                );
+                                              })}
+                                          </ul>
+                                        </td>
+                                      </tr>
+                                    )}
+                                    {this.findOutrasInformacoes(
+                                      histSelecionado
+                                    ) !== undefined && (
+                                      <tr className="table-body-alimentacao">
+                                        <td>Outras Informações</td>
+                                        <td>
+                                          {this.findOutrasInformacoes(
+                                            histSelecionado
+                                          ).from && (
+                                            <p
+                                              dangerouslySetInnerHTML={{
+                                                __html: this.findOutrasInformacoes(
+                                                  histSelecionado
+                                                ).from
+                                              }}
+                                            />
+                                          )}
+                                        </td>
+                                        <td>
+                                          {this.findOutrasInformacoes(
+                                            histSelecionado
+                                          ).to && (
+                                            <p
+                                              dangerouslySetInnerHTML={{
+                                                __html: this.findOutrasInformacoes(
+                                                  histSelecionado
+                                                ).to
+                                              }}
+                                            />
+                                          )}
+                                        </td>
+                                      </tr>
+                                    )}
+                                  </tbody>
+                                </table>
                               </td>
                             </tr>
                           </tbody>

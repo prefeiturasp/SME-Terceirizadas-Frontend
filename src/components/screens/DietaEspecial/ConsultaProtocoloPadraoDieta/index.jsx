@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import { getNomesProtocolos } from "services/dietaEspecial.service";
 import Filtros from "./componentes/Filtros";
 import Tabela from "./componentes/Tabela";
@@ -8,6 +8,7 @@ import HTTP_STATUS from "http-status-codes";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import "./style.scss";
 import { getNumerosEditais } from "services/edital.service";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -18,7 +19,7 @@ export default () => {
   const [filtros, setFiltros] = useState({});
   const [editais, setEditais] = useState(undefined);
   const [erroAPI, setErroAPI] = useState(false);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
   const getEditaisAsync = async () => {
     const response = await getNumerosEditais();
@@ -42,7 +43,6 @@ export default () => {
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const changePage = async page => {
@@ -74,15 +74,19 @@ export default () => {
             status={status}
             setCarregando={setCarregando}
             setTotal={setTotal}
+            filtros={filtros}
             setFiltros={setFiltros}
             setPage={setPage}
             editais={editais}
+            onChangePage={() => {
+              changePage(page);
+            }}
           />
         )}
         {resultado && (
           <>
             <Tabela resultado={resultado} />
-            <Pagination
+            <Paginacao
               className="mt-3 mb-3"
               current={page || 1}
               total={total}
