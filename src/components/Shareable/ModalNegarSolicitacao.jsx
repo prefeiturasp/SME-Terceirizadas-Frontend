@@ -1,7 +1,7 @@
 import HTTP_STATUS from "http-status-codes";
 import React from "react";
 import { Modal } from "react-bootstrap";
-import { Field, FormSpy } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import { textAreaRequiredAndAtLeastOneCharacter } from "../../helpers/fieldValidators";
 import { toastError, toastSuccess, toastWarn } from "./Toast/dialogs";
 import Botao from "./Botao";
@@ -36,48 +36,58 @@ const ModalNegarSolicitacao = ({
 
   return (
     <Modal dialogClassName="modal-90w" show={showModal} onHide={closeModal}>
-      <Modal.Header closeButton>
-        <Modal.Title>Deseja negar a solicitação?</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <div className="form-row mb-3">
-          <div className="form-group col-12">
-            <Field
-              component={CKEditorField}
-              label="Justificativa"
-              name="justificativa"
-              required
-              validate={textAreaRequiredAndAtLeastOneCharacter}
-            />
-          </div>
-        </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <div className="row mt-4">
-          <div className="col-12">
-            <Botao
-              texto="Não"
-              type={BUTTON_TYPE.BUTTON}
-              onClick={closeModal}
-              style={BUTTON_STYLE.GREEN_OUTLINE}
-              className="ml-3"
-            />
-            <FormSpy subscription={{ values: true }}>
-              {({ values }) => (
-                <Botao
-                  texto="Sim"
-                  type={BUTTON_TYPE.BUTTON}
-                  onClick={() =>
-                    negarSolicitacaoEscolaOuDre(uuid, values.justificativa)
-                  }
-                  style={BUTTON_STYLE.GREEN}
-                  className="ml-3"
-                />
-              )}
-            </FormSpy>
-          </div>
-        </div>
-      </Modal.Footer>
+      <Form
+        onSubmit={() => {}}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit}>
+            <Modal.Header closeButton>
+              <Modal.Title>Deseja negar a solicitação?</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="form-row mb-3">
+                <div className="form-group col-12">
+                  <Field
+                    component={CKEditorField}
+                    label="Justificativa"
+                    name="justificativa"
+                    required
+                    validate={textAreaRequiredAndAtLeastOneCharacter}
+                  />
+                </div>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <div className="row mt-4">
+                <div className="col-12">
+                  <Botao
+                    texto="Não"
+                    type={BUTTON_TYPE.BUTTON}
+                    onClick={closeModal}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="ml-3"
+                  />
+                  <FormSpy subscription={{ values: true }}>
+                    {({ values }) => (
+                      <Botao
+                        texto="Sim"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() =>
+                          negarSolicitacaoEscolaOuDre(
+                            uuid,
+                            values.justificativa
+                          )
+                        }
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    )}
+                  </FormSpy>
+                </div>
+              </div>
+            </Modal.Footer>
+          </form>
+        )}
+      />
     </Modal>
   );
 };
