@@ -142,6 +142,34 @@ const ModalCadastroVinculo = ({
     }
   };
 
+  const buscaEOLFuncionarioUnidadeParceira = async values => {
+    let response = await getDadosUsuarioEOLCompleto(
+      values.cpf_pesquisado.replace(/[^\w\s]/gi, "")
+    );
+
+    if (response.status === 200) {
+      const usuarioEOL = response.data;
+      values.nome_parceira = usuarioEOL.nome ? usuarioEOL.nome : undefined;
+      values.cargo_parceira = usuarioEOL.cargo ? usuarioEOL.cargo : undefined;
+      values.cpf = usuarioEOL.cpf;
+      values.cpf_parceira = usuarioEOL.cpf
+        ? formatarCPFouCNPJ(usuarioEOL.cpf)
+        : undefined;
+      values.codigo_eol_unidade = usuarioEOL.codigo_eol_unidade;
+
+      let t = document.getElementById("inputCPF");
+      t.blur();
+      t.focus();
+      setRfBuscado(true);
+    } else {
+      if (values.cpf_pesquisado) {
+        toastError(
+          `API do EOL não retornou nada para o CPF ${values.cpf_pesquisado}`
+        );
+      }
+    }
+  };
+
   const abreDeletar = () => {
     toggleExclusao(true, vinculo);
     toggleShow(false, vinculo);
@@ -233,6 +261,9 @@ const ModalCadastroVinculo = ({
                           </Radio>
                           <Radio className="" value={"NAO_SERVIDOR"}>
                             Não Servidor
+                          </Radio>
+                          <Radio className="" value={"UNIDADE_PARCEIRA"}>
+                            Unidade Parceira
                           </Radio>
                         </Radio.Group>
                       </div>
@@ -465,6 +496,125 @@ const ModalCadastroVinculo = ({
                                 : listaPerfis
                             }
                             validate={required}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {tipoUsuario === "UNIDADE_PARCEIRA" && (
+                    <>
+                      <div className="row">
+                        <div className="col-6">
+                          <Field
+                            component={MaskedInputText}
+                            mask={cpfMask}
+                            id="inputCPF"
+                            label="Pesquisar CPF"
+                            name="cpf_pesquisado"
+                            placeholder="Digite o CPF"
+                            className="input-busca-produto"
+                            validate={composeValidators(required, validaCPF)}
+                          />
+                        </div>
+                        <div className="col-6 pl-0">
+                          <Botao
+                            texto=""
+                            icon="fas fa-search"
+                            type={BUTTON_TYPE.BUTTON}
+                            onClick={() =>
+                              buscaEOLFuncionarioUnidadeParceira(values)
+                            }
+                            style={BUTTON_STYLE.GREEN}
+                            className="botao-rf"
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-7">
+                          <Field
+                            component={InputText}
+                            label="Nome do Usuário"
+                            name="nome_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.nome_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="Cargo"
+                            name="cargo_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.cargo_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-7">
+                          <Field
+                            component={InputText}
+                            label="E-mail"
+                            name="email_parceira"
+                            className="input-busca-produto"
+                            validate={email}
+                            required
+                          />
+                        </div>
+                        <div className="col-5">
+                          <Field
+                            component={InputText}
+                            label="CPF"
+                            name="cpf_parceira"
+                            className="input-busca-produto"
+                            disabled={true}
+                            validate={required}
+                            required
+                          />
+                          {rfBuscado && !values.cpf_parceira && (
+                            <InputErroMensagem meta={campoObrigatorio} />
+                          )}
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-6">
+                          <Field
+                            component={SelectSelecione}
+                            label="Visão"
+                            name="visao_parceira"
+                            placeholder="Selecione a visão"
+                            className="input-busca-produto"
+                            required
+                            options={listaVisao}
+                            validate={required}
+                            defaultValue={"ESCOLA"}
+                            disabled={true}
+                          />
+                        </div>
+                        <div className="col-6">
+                          <Field
+                            component={SelectSelecione}
+                            label="Perfil de Acesso"
+                            name="perfil_parceira"
+                            placeholder="Selecione o perfil de acesso"
+                            className="input-busca-produto"
+                            required
+                            options={
+                              visaoUnica
+                                ? listaPerfis
+                                : getPerfis(values.visao_parceira)
+                            }
+                            validate={required}
+                            disabled={!values.visao_parceira}
                           />
                         </div>
                       </div>
