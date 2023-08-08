@@ -22,8 +22,9 @@ import ModalConfirmarEnvio from "./components/ModalConfirmarEnvio";
 import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
 import { useHistory } from "react-router-dom";
 import ModalCancelarEnvio from "./components/ModalCancelarEnvio";
+import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
 
-export default () => {
+export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(false);
   const [notificacao, setNotificacao] = useState({});
@@ -44,9 +45,11 @@ export default () => {
           response.data.previsoes_contratuais,
           notificacao.lista_ocorrencias
         );
+
         setInitialValues({
-          nome_empresa: response.data.empresa.nome_fantasia,
-          processo_sei: response.data.processo_sei,
+          numero_notificacao: notificacao.numero,
+          nome_empresa: notificacao.empresa.nome_fantasia,
+          processo_sei: notificacao.processo_sei,
           ...previsoes_contratuais
         });
 
@@ -166,6 +169,10 @@ export default () => {
     return !values.processo_sei || processosIncompletos;
   };
 
+  const handleClickVoltar = () => {
+    voltarPara ? history.push(voltarPara) : history.goBack();
+  };
+
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <ModalDetalharGuia
@@ -195,8 +202,8 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={InputText}
-                      label="Empresa"
-                      name="nome_empresa"
+                      label="Nº da Notificação"
+                      name="numero_notificacao"
                       className="input-busca-produto"
                       disabled
                     />
@@ -204,21 +211,33 @@ export default () => {
                   <div className="col-6">
                     <Field
                       component={InputText}
-                      label="Nº do Processo SEI"
-                      name="processo_sei"
+                      label="Empresa"
+                      name="nome_empresa"
                       className="input-busca-produto"
-                      placeholder="Digite o Nº do Processo SEI"
-                      required
+                      disabled={naoEditavel}
                     />
                   </div>
+                </div>
+                <div className="row mt-2">
                   <div className="col-6">
-                    Link do Processo SEI: Clique&nbsp;
+                    <Field
+                      component={InputText}
+                      label="Nº do Processo SEI"
+                      name="processo_sei"
+                      placeholder="Digite o Nº do Processo SEI"
+                      className="input-busca-produto"
+                      required
+                      disabled={naoEditavel}
+                    />
+                  </div>
+                  <div className="col-6 align-self-end pb-2">
+                    Acesso ao Processo SEI:&nbsp;
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
                       href="https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx#"
                     >
-                      aqui
+                      Clique aqui
                     </a>
                   </div>
                 </div>
@@ -256,6 +275,7 @@ export default () => {
                               className="input-busca-produto"
                               placeholder="Descreva a Previsão contratual"
                               required
+                              disabled={naoEditavel}
                             />
                           </div>
                         </>
@@ -264,36 +284,39 @@ export default () => {
                   )}
 
                 <div className="row float-right mt-4">
-                  <div className="col-12">
-                    <Botao
-                      texto="Cancelar"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setModalCancelar(true);
-                      }}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                      className="ml-3"
-                    />
-                    <Botao
-                      texto="Salvar Notificação"
-                      className="ml-3"
-                      onClick={() => {
-                        salvarNotificacao(values);
-                      }}
-                      type={BUTTON_TYPE.BUTTON}
-                      style={BUTTON_STYLE.GREEN_OUTLINE}
-                    />
-                    <Botao
-                      texto="Salvar e Enviar Notificação"
-                      type={BUTTON_TYPE.BUTTON}
-                      onClick={() => {
-                        setModalConfirmacao(values);
-                      }}
-                      disabled={validaForm(values)}
-                      style={BUTTON_STYLE.GREEN}
-                      className="ml-3"
-                    />
-                  </div>
+                  {botaoVoltar && <BotaoVoltar onClick={handleClickVoltar} />}
+                  {naoEditavel === false && (
+                    <div className="col-12">
+                      <Botao
+                        texto="Cancelar"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalCancelar(true);
+                        }}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                        className="ml-3"
+                      />
+                      <Botao
+                        texto="Salvar Notificação"
+                        className="ml-3"
+                        onClick={() => {
+                          salvarNotificacao(values);
+                        }}
+                        type={BUTTON_TYPE.BUTTON}
+                        style={BUTTON_STYLE.GREEN_OUTLINE}
+                      />
+                      <Botao
+                        texto="Salvar e Enviar Notificação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalConfirmacao(values);
+                        }}
+                        disabled={validaForm(values)}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    </div>
+                  )}
                 </div>
               </form>
             )}

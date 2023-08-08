@@ -478,6 +478,13 @@ export const usuarioEhDilogJuridico = () => {
   );
 };
 
+export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
+  return [
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,

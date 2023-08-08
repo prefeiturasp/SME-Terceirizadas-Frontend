@@ -130,7 +130,8 @@ import {
   usuarioEhDiretorUE,
   usuarioEhAdministradorNutriCODAE,
   usuarioEhDilogJuridico,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioComAcessoTelaDetalharNotificacaoOcorrencia
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -240,6 +241,7 @@ import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
+import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
 
 const routesConfig = [
   {
@@ -1770,6 +1772,12 @@ const routesConfig = [
     component: EditarNotificacaoPage,
     exact: true,
     tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.DETALHAR_NOTIFICACAO}`,
+    component: DetalharNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoTelaDetalharNotificacaoOcorrencia()
   },
   {
     path: `/${constants.NOTIFICACOES}`,
