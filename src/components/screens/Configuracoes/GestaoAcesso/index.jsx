@@ -145,6 +145,16 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       payload.nome = values.nome;
       payload.eh_servidor = "N";
       payload.visao = "EMPRESA";
+    } else if (tipoUsuario === "UNIDADE_PARCEIRA") {
+      payload.instituicao = values.codigo_eol_unidade;
+      payload.username = values.cpf.replace(/[^\w\s]/gi, "");
+      payload.cpf = values.cpf.replace(/[^\w\s]/gi, "");
+      payload.email = values.email_parceira;
+      payload.nome = values.nome_parceira;
+      payload.perfil = values.perfil_parceira;
+      payload.visao = "ESCOLA";
+      payload.cargo = values.cargo_parceira;
+      payload.eh_servidor = "N";
     } else {
       payload.instituicao = values.codigo_eol_unidade;
       payload.username = values.registro_funcional;
