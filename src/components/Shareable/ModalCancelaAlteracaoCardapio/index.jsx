@@ -11,6 +11,7 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
+import { TIPO_SOLICITACAO } from "constants/shared";
 
 export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
   const {
@@ -24,7 +25,10 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
   } = props;
 
   const onSubmit = async values => {
-    if (!values.datas || values.datas.length === 0) {
+    if (
+      tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI &&
+      (!values.datas || values.datas.length === 0)
+    ) {
       toastError("Selecione pelo menos uma data");
       return;
     }
@@ -41,9 +45,10 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
     if (resp.status === HTTP_STATUS.OK) {
       closeModal();
       if (
+        tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI &&
         values_.datas.length +
           solicitacao.datas_intervalo.filter(i => i.cancelado).length !==
-        solicitacao.datas_intervalo.length
+          solicitacao.datas_intervalo.length
       ) {
         toastSuccess("Solicitação cancelada parcialmente com sucesso");
       } else {
@@ -73,30 +78,34 @@ export const ModalCancelarAlteracaoCardapio = ({ ...props }) => {
                   </p>
                 </div>
               </div>
-              <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
-              <p>
-                Período solicitado: {solicitacao.data_inicial} a{" "}
-                {solicitacao.data_final}
-              </p>
-              {solicitacao.datas_intervalo.map((dia, key_) => {
-                return (
-                  <label key={key_} className="mr-3">
-                    <Field
-                      name="datas"
-                      component="input"
-                      disabled={
-                        solicitacao.datas_intervalo.find(
-                          i => i.data === dia.data
-                        ).cancelado ||
-                        moment(dia.data, "DD/MM/YYYY") <= moment()
-                      }
-                      type="checkbox"
-                      value={dia.data}
-                    />{" "}
-                    {dia.data}
-                  </label>
-                );
-              })}
+              {tipoSolicitacao !== TIPO_SOLICITACAO.SOLICITACAO_CEI && (
+                <>
+                  <p>Selecione a(s) data(s) para solicitar o cancelamento:</p>
+                  <p>
+                    Período solicitado: {solicitacao.data_inicial} a{" "}
+                    {solicitacao.data_final}
+                  </p>
+                  {solicitacao.datas_intervalo.map((dia, key_) => {
+                    return (
+                      <label key={key_} className="mr-3">
+                        <Field
+                          name="datas"
+                          component="input"
+                          disabled={
+                            solicitacao.datas_intervalo.find(
+                              i => i.data === dia.data
+                            ).cancelado ||
+                            moment(dia.data, "DD/MM/YYYY") <= moment()
+                          }
+                          type="checkbox"
+                          value={dia.data}
+                        />{" "}
+                        {dia.data}
+                      </label>
+                    );
+                  })}
+                </>
+              )}
               <div className="row pl-3 pr-3">
                 <span className="required-asterisk">*</span>
                 <label>Justificativa</label>
