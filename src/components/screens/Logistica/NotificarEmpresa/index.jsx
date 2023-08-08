@@ -46,8 +46,6 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
           notificacao.lista_ocorrencias
         );
 
-        console.log(notificacao);
-
         setInitialValues({
           numero_notificacao: notificacao.numero,
           nome_empresa: notificacao.empresa.nome_fantasia,
