@@ -169,7 +169,7 @@ export const SidebarContent = () => {
     exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />
   ];
 };
