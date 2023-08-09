@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Checkbox } from "antd";
+import { Collapse, Input, Checkbox, Skeleton, AutoComplete, Table } from "antd";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
@@ -14,6 +15,7 @@ import {
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getAlunosListagem } from "services/perfil.service";
 
 export default ({
   periodoSelecionado,
@@ -42,9 +44,34 @@ export default ({
   ] = useState(undefined);
   const [emEdicao, setEmEdicao] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showPesquisaAluno, setShowPesquisaAluno] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alunos, setAlunos] = useState([]);
+  const [alunosAdicionados, setAlunosAdicionados] = useState([]);
+  const [valorSelecionado, setValorSelecionado] = useState("");
+
   const { Panel } = Collapse;
 
   const location = useLocation();
+
+  const getAlunos = async () => {
+    const response = await getAlunosListagem({
+      escola: escolaInstituicao.uuid
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      console.log("response.data", response.data);
+      setAlunos(response.data.results);
+      setLoading(false);
+    } else {
+      toastError("Houve um erro ao buscar alunos desta escola");
+    }
+  };
+
+  // const { Option } = Select;
+
+  // const opcoesAlunos = alunos?.map(aluno => {
+  //     return <Option key={aluno.codigo_eol}>{`${aluno.codigo_eol} - ${aluno.nome}`}</Option>;
+  //   }) || [];
 
   useEffect(() => {
     if (solicitacaoMedicaoInicial) {
@@ -52,11 +79,12 @@ export default ({
         return solicitacaoMedicaoInicial.responsaveis[indice] || resp;
       });
       setResponsaveis(resps);
-      setUePossuiAlunosPeriodoParcial(
-        solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial
-          ? "true"
-          : "false"
-      );
+      solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial
+        ? (setUePossuiAlunosPeriodoParcial("true"),
+          setShowPesquisaAluno(true),
+          setLoading(true),
+          getAlunos())
+        : setUePossuiAlunosPeriodoParcial("false");
     }
     setIsOpen(true);
   }, []);
@@ -209,6 +237,109 @@ export default ({
 
   const onChange = e => {
     setUePossuiAlunosPeriodoParcial(e.target.value);
+    setShowPesquisaAluno(e.target.value === "true");
+  };
+
+  const PesquisaAluno = ({ show }) => {
+    if (!show) return null;
+
+    const alunosOptions =
+      alunos?.map(aluno => ({
+        value: `${aluno.codigo_eol} - ${aluno.nome}`
+      })) || [];
+
+    const filterAlunos = (inputValue, option) =>
+      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1;
+
+    return loading ? (
+      <Skeleton paragraph={false} active />
+    ) : (
+      <div className="row">
+        <div className="col-6 info-label">
+          <label className="asterisk-label">*</label>
+          <label className="value-label mt-3 mb-2 mr-3">
+            Pesquise o Código EOL ou o Nome do Aluno
+          </label>
+          <div
+            className="input-icon-right"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <AutoComplete
+              options={alunosOptions.map(option => ({
+                value: option.value
+              }))}
+              style={{ width: 400 }}
+              filterOption={filterAlunos}
+              onChange={setValorSelecionado}
+            >
+              <Input
+                placeholder="Digite o código EOL ou nome"
+                suffix={
+                  <SearchOutlined
+                    style={{
+                      cursor: "pointer",
+                      transform: "rotateX(180deg)"
+                    }}
+                  />
+                }
+              />
+            </AutoComplete>
+            <Botao
+              texto="Adicionar"
+              style={BUTTON_STYLE.GREEN}
+              className="ml-2"
+              onClick={() => {
+                const alunoSelecionado = alunos.find(
+                  aluno =>
+                    `${aluno.codigo_eol} - ${aluno.nome}` === valorSelecionado
+                );
+                if (alunoSelecionado) {
+                  adicionarAluno(alunoSelecionado);
+                }
+              }}
+            />
+          </div>
+        </div>
+        <TabelaAlunos alunos={alunosAdicionados} onExcluir={excluirAluno} />
+      </div>
+    );
+  };
+
+  const adicionarAluno = aluno => {
+    setAlunosAdicionados(prev => [...prev, aluno]);
+  };
+
+  const excluirAluno = codigo_eol => {
+    setAlunosAdicionados(prev =>
+      prev.filter(aluno => aluno.codigo_eol !== codigo_eol)
+    );
+  };
+
+  const TabelaAlunos = ({ alunos, onExcluir }) => {
+    const colunas = [
+      {
+        title: "Alunos em Período Parcial",
+        dataIndex: "nome",
+        key: "nome"
+      },
+      {
+        title: "",
+        key: "acoes",
+        render: (texto, registro) => (
+          <Botao
+            onClick={() => onExcluir(registro.key)}
+            suffix={<DeleteOutlined type="delete" />}
+          />
+        )
+      }
+    ];
+
+    const dataSource = alunos.map(aluno => ({
+      key: aluno.codigo_eol,
+      nome: aluno.nome
+    }));
+
+    return <Table dataSource={dataSource} columns={colunas} />;
   };
 
   return (
@@ -250,7 +381,9 @@ export default ({
                 </div>
               </div>
 
-              <div className="row mt-2 mr-0">
+              <PesquisaAluno show={showPesquisaAluno} />
+
+              <div className="row mt-4 mr-0">
                 <div className="col-8">
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
