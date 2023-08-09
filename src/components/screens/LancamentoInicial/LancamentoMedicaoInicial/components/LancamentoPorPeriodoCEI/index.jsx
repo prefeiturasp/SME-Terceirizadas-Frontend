@@ -29,37 +29,43 @@ export default ({
 
   return (
     <div>
-      <div className="row pb-2">
-        <div className="col">
-          <b className="section-title">Períodos</b>
-        </div>
-      </div>
-      {periodosEscolaSimples.map((periodo, index) => {
-        if (periodo.periodo_escolar.nome === "INTEGRAL") {
-          return (
-            <CardLancamentoCEI
-              key={index}
-              textoCabecalho={periodo.periodo_escolar.nome}
-              cor={CORES[index]}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              escolaInstituicao={escolaInstituicao}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-            />
-          );
-        }
-        return null;
-      })}
+      {solicitacaoMedicaoInicial && (
+        <>
+          <div className="row pb-2">
+            <div className="col">
+              <b className="section-title">Períodos</b>
+            </div>
+          </div>
+          {periodosEscolaSimples.map((periodo, index) => {
+            if (periodo.periodo_escolar.nome === "INTEGRAL") {
+              return (
+                <CardLancamentoCEI
+                  key={index}
+                  textoCabecalho={periodo.periodo_escolar.nome}
+                  cor={CORES[index]}
+                  solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                  escolaInstituicao={escolaInstituicao}
+                  quantidadeAlimentacoesLancadas={
+                    quantidadeAlimentacoesLancadas
+                  }
+                />
+              );
+            }
+            return null;
+          })}
 
-      <div className="mt-4">
-        {renderBotaoFinalizar() && (
-          <Botao
-            texto="Finalizar"
-            style={BUTTON_STYLE.GREEN}
-            className="float-right"
-            disabled={!usuarioEhEscolaTerceirizadaDiretor()}
-          />
-        )}
-      </div>
+          <div className="mt-4">
+            {renderBotaoFinalizar() && (
+              <Botao
+                texto="Finalizar"
+                style={BUTTON_STYLE.GREEN}
+                className="float-right"
+                disabled={!usuarioEhEscolaTerceirizadaDiretor()}
+              />
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 };
