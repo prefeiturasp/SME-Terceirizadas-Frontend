@@ -282,7 +282,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
       />
       <ModalAssinaturaUsuario
         titulo="Assinar Notificação"
-        texto={`Você confirma a assinatura digital desta Notificação e envio para análise da Diretoria DILOG`}
+        texto={`Você confirma a assinatura digital desta Notificação e envio para análise da Diretoria DILOG?`}
         textoBotao={`Sim, Assinar Notificação`}
         show={modalAssinatura}
         loading={carregando}
@@ -354,7 +354,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                 {fiscal && !aprovacoes[index] && (
                                   <div className="col-12">
                                     <Botao
-                                      texto="Solicitar Alteracao"
+                                      texto="Solicitar Alteração"
                                       className="ml-3 botao-menor"
                                       onClick={() => {
                                         setModalAlteracao(index);
@@ -394,7 +394,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                   aprovacoes[index].aprovado === false && (
                                     <div className="col-12">
                                       <Botao
-                                        texto="Solicitar Alteracao"
+                                        texto="Solicitação Justificada"
                                         className="botao-menor"
                                         onClick={() => {
                                           setModalAlteracao(index);
