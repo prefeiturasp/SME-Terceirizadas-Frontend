@@ -8,6 +8,7 @@ import {
   BUTTON_STYLE
 } from "components/Shareable/Botao/constants";
 import "./style.scss";
+import { textAreaRequired } from "helpers/fieldValidators";
 
 export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
   const solicitaAlteracao = async values => {
@@ -54,6 +55,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
                         label={"Justificativa"}
                         name="justificativa"
                         required
+                        validate={textAreaRequired}
                       />
                     </div>
                   </div>
