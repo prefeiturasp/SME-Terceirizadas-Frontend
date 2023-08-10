@@ -83,7 +83,7 @@ export const diasAntecedencia = value => {
 
 // XXX: Workaround for labelAndTextArea component
 export const textAreaRequired = value => {
-  return value !== "<p></p>\n" && value !== undefined
+  return value !== "<p></p>\n" && value !== undefined && value !== ""
     ? undefined
     : "Campo obrigatório";
 };
