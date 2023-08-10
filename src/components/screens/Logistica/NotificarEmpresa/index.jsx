@@ -3,9 +3,11 @@ import HTTP_STATUS from "http-status-codes";
 import { Spin } from "antd";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
+  assinarEnviarNotificacao,
   criarEditarNotificacao,
   enviarNotificacao,
-  getNotificacao
+  getNotificacao,
+  solicitarAlteracaoNotificacao
 } from "services/logistica.service";
 import { Field, Form } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
@@ -19,19 +21,30 @@ import {
   BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import ModalConfirmarEnvio from "./components/ModalConfirmarEnvio";
-import { GUIAS_NOTIFICACAO, LOGISTICA } from "configs/constants";
+import {
+  GUIAS_NOTIFICACAO,
+  GUIAS_NOTIFICACAO_FISCAL,
+  LOGISTICA
+} from "configs/constants";
 import { useHistory } from "react-router-dom";
 import ModalCancelarEnvio from "./components/ModalCancelarEnvio";
 import BotaoVoltar from "components/Shareable/Page/BotaoVoltar";
+import ModalSolicitaAlteracao from "./components/ModalSolicitaAlteracao";
+import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
+import moment from "moment";
+import { MSG_SENHA_INVALIDA } from "components/screens/helper";
 
-export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
+export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   const history = useHistory();
   const [carregando, setCarregando] = useState(false);
+  const [aprovacoes, setAprovacoes] = useState([]);
   const [notificacao, setNotificacao] = useState({});
   const [initialValues, setInitialValues] = useState({});
   const [guiaModal, setGuiaModal] = useState();
   const [modalConfirmacao, setModalConfirmacao] = useState(false);
   const [modalCancelar, setModalCancelar] = useState(false);
+  const [modalAlteracao, setModalAlteracao] = useState(false);
+  const [modalAssinatura, setModalAssinatura] = useState(false);
 
   useEffect(() => {
     const carregarNotificacao = async uuid => {
@@ -141,6 +154,9 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
 
   const voltarPagina = () => history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO}`);
 
+  const voltarPaginaFiscal = () =>
+    history.push(`/${LOGISTICA}/${GUIAS_NOTIFICACAO_FISCAL}`);
+
   const salvarEnviarNotificacao = async values => {
     setCarregando(true);
     let payload = montaPayload(values);
@@ -169,8 +185,76 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
     return !values.processo_sei || processosIncompletos;
   };
 
+  const aprovaPrevisao = index => {
+    let newAprovacoes = [...aprovacoes];
+    newAprovacoes[index] = {
+      aprovado: true,
+      justificativa_alteracao: `Aprovado em ${moment().format(
+        "DD/MM/YYYY - HH:mm"
+      )}`
+    };
+    setAprovacoes(newAprovacoes);
+  };
+
+  const confereAprovacoes = () => {
+    let contador = aprovacoes.filter(x => x).length;
+    return (
+      notificacao.lista_ocorrencias &&
+      Object.keys(notificacao.lista_ocorrencias).length === contador
+    );
+  };
+
+  const confereAssinar = () =>
+    aprovacoes.filter(x => x.aprovado !== true).length === 0;
+
   const handleClickVoltar = () => {
     voltarPara ? history.push(voltarPara) : history.goBack();
+  };
+
+  const assinarNotificacao = async password => {
+    setCarregando(true);
+    let payload = montaPayloadFiscal();
+    payload["password"] = password;
+    let response = await assinarEnviarNotificacao(notificacao.uuid, payload);
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Notificação assinada com sucesso!");
+      setCarregando(false);
+      voltarPaginaFiscal();
+    } else if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      toastError(MSG_SENHA_INVALIDA);
+      setCarregando(false);
+    } else {
+      toastError("Erro ao assinar notificação");
+      setCarregando(false);
+    }
+  };
+
+  const solicitaAlteracao = async () => {
+    setCarregando(true);
+    let payload = montaPayloadFiscal();
+    let response = await solicitarAlteracaoNotificacao(
+      notificacao.uuid,
+      payload
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      toastSuccess("Solicitação de Alteração enviada com sucesso!");
+      setCarregando(false);
+      voltarPaginaFiscal();
+    } else {
+      toastError("Erro ao solicitar alteração");
+      setCarregando(false);
+    }
+  };
+
+  const montaPayloadFiscal = () => {
+    let payload = {};
+
+    payload.previsoes = aprovacoes.map((aprovacao, index) => ({
+      motivo_ocorrencia: Object.keys(notificacao.lista_ocorrencias)[index],
+      ...aprovacao
+    }));
+
+    return payload;
   };
 
   return (
@@ -189,6 +273,21 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
         show={modalCancelar}
         handleClose={() => setModalCancelar(false)}
         voltarPagina={voltarPagina}
+      />
+      <ModalSolicitaAlteracao
+        index={modalAlteracao}
+        handleClose={() => setModalAlteracao(false)}
+        aprovacoes={aprovacoes}
+        setAprovacoes={setAprovacoes}
+      />
+      <ModalAssinaturaUsuario
+        titulo="Assinar Notificação"
+        texto={`Você confirma a assinatura digital desta Notificação e envio para análise da Diretoria DILOG?`}
+        textoBotao={`Sim, Assinar Notificação`}
+        show={modalAssinatura}
+        loading={carregando}
+        handleClose={() => setModalAssinatura(false)}
+        handleSim={assinarNotificacao}
       />
       <div className="card mt-3 card-notificar-empresa">
         <div className="card-body notificar-empresa">
@@ -247,10 +346,66 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
                     (ocorrencia, index) => {
                       return (
                         <>
-                          {index !== 0 && <hr />}
+                          <hr />
                           <div className="ocorrencia" key={index}>
                             <div className="titulo-verde">
                               {labelOcorrencia(ocorrencia)}
+                              <div className="row float-right">
+                                {fiscal && !aprovacoes[index] && (
+                                  <div className="col-12">
+                                    <Botao
+                                      texto="Solicitar Alteração"
+                                      className="ml-3 botao-menor"
+                                      onClick={() => {
+                                        setModalAlteracao(index);
+                                      }}
+                                      type={BUTTON_TYPE.BUTTON}
+                                      style={BUTTON_STYLE.GREEN_OUTLINE}
+                                    />
+                                    <Botao
+                                      texto="Aprovar"
+                                      type={BUTTON_TYPE.BUTTON}
+                                      onClick={() => {
+                                        aprovaPrevisao(index);
+                                      }}
+                                      style={BUTTON_STYLE.GREEN}
+                                      className="ml-3 botao-menor"
+                                      icon="fas fa-check"
+                                    />
+                                  </div>
+                                )}
+
+                                {fiscal &&
+                                  aprovacoes[index] &&
+                                  aprovacoes[index].aprovado && (
+                                    <div className="col-12">
+                                      <div className="texto-aprovacao">
+                                        <i className="fas fa-check mr-2" />
+                                        {
+                                          aprovacoes[index]
+                                            .justificativa_alteracao
+                                        }
+                                      </div>
+                                    </div>
+                                  )}
+
+                                {fiscal &&
+                                  aprovacoes[index] &&
+                                  aprovacoes[index].aprovado === false && (
+                                    <div className="col-12">
+                                      <Botao
+                                        texto="Solicitação Justificada"
+                                        className="botao-menor"
+                                        onClick={() => {
+                                          setModalAlteracao(index);
+                                        }}
+                                        type={BUTTON_TYPE.BUTTON}
+                                        style={BUTTON_STYLE.RED_OUTLINE}
+                                        icon="fas fa-exclamation"
+                                      />
+                                    </div>
+                                  )}
+                              </div>
                             </div>
                             <div className="subtitulo">
                               Guias com Notificações
@@ -316,6 +471,31 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara }) => {
                         className="ml-3"
                       />
                     </div>
+                  )}
+                  {fiscal && (
+                    <>
+                      <Botao
+                        texto="Enviar Solicitação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          solicitaAlteracao();
+                        }}
+                        disabled={!confereAprovacoes() || confereAssinar()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+
+                      <Botao
+                        texto="Assinar e Enviar Notificação"
+                        type={BUTTON_TYPE.BUTTON}
+                        onClick={() => {
+                          setModalAssinatura(true);
+                        }}
+                        disabled={!confereAprovacoes() || !confereAssinar()}
+                        style={BUTTON_STYLE.GREEN}
+                        className="ml-3"
+                      />
+                    </>
                   )}
                 </div>
               </form>
