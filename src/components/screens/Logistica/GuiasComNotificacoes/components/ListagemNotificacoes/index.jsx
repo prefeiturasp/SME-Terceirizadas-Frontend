@@ -1,4 +1,5 @@
 import {
+  ANALISAR_ASSINAR,
   DETALHAR_NOTIFICACAO,
   LOGISTICA,
   NOTIFICAR_EMPRESA
@@ -57,10 +58,25 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
       </span>
     );
 
+    const botaoAssinarEnviarFiscal = (
+      <NavLink
+        to={`/${LOGISTICA}/${ANALISAR_ASSINAR}?uuid=${notificacao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i
+            className="fas fa-file-signature green"
+            title="Analisar e Assinar"
+          />
+        </span>
+      </NavLink>
+    );
+
     const status = notificacao.status.toUpperCase();
 
-    return (
-      <div>
+    return fiscal ? (
+      <>{status === "NOTIFICAÇÃO ENVIADA FISCAL" && botaoAssinarEnviarFiscal}</>
+    ) : (
+      <>
         {status === "RASCUNHO" && botaoRascunho}
         {status === "NOTIFICAÇÃO ENVIADA FISCAL" ? (
           <>
@@ -71,7 +87,7 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
         ) : (
           botaoNotificarEmpresaHabilitado
         )}
-      </div>
+      </>
     );
   };
 
@@ -96,15 +112,7 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
                 <div>
                   {notificacao.processo_sei ? notificacao.processo_sei : "--"}
                 </div>
-                {fiscal ? (
-                  <div>
-                    <span className="link-acoes px-2">
-                      <i className="fas fa-file-signature" />
-                    </span>
-                  </div>
-                ) : (
-                  renderizarBotoesDeAcoes(notificacao)
-                )}
+                <div>{renderizarBotoesDeAcoes(notificacao)}</div>
               </div>
             </>
           );
