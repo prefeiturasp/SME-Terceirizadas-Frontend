@@ -82,6 +82,21 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
     }
   }, []);
 
+  const abriModalGuia = guia => {
+    guia.conferencias.map(conferencia => {
+      conferencia.conferencia_dos_alimentos.map(conferenciaAlimento => {
+        conferenciaAlimento.ocorrencia = conferenciaAlimento.ocorrencia.reduce(
+          (texto, ocorrencia, index) => {
+            let virgula = index === 0 ? "" : ", ";
+            return texto + virgula + labelOcorrencia(ocorrencia);
+          },
+          ""
+        );
+      });
+    });
+    setGuiaModal(guia);
+  };
+
   const labelOcorrencia = id =>
     TIPOS_OCORRENCIAS_OPTIONS.find(x => x.value === id).label;
 
@@ -415,7 +430,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                                 (guia, index) => (
                                   <div
                                     key={index}
-                                    onClick={() => setGuiaModal(guia)}
+                                    onClick={() => abriModalGuia(guia)}
                                     className="numero-guia"
                                   >
                                     {guia.numero_guia}
