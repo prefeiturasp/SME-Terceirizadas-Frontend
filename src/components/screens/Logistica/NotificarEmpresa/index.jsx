@@ -249,10 +249,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   const montaPayloadFiscal = () => {
     let payload = {};
 
-    payload.processo_sei = notificacao.processo_sei;
     payload.previsoes = aprovacoes.map((aprovacao, index) => ({
-      previsao_contratual:
-        notificacao.previsoes_contratuais[index].previsao_contratual,
       motivo_ocorrencia: Object.keys(notificacao.lista_ocorrencias)[index],
       ...aprovacao
     }));
@@ -349,7 +346,6 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                     (ocorrencia, index) => {
                       return (
                         <>
-                          {/* {index !== 0 && <hr />} */}
                           <hr />
                           <div className="ocorrencia" key={index}>
                             <div className="titulo-verde">

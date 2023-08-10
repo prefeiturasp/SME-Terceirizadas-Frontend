@@ -21,7 +21,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
   };
 
   const justificativaInicial = aprovacoes[index]
-    ? aprovacoes[index].justificativa
+    ? aprovacoes[index].justificativa_alteracao
     : "";
 
   return (
@@ -51,7 +51,7 @@ export default ({ index, handleClose, aprovacoes, setAprovacoes }) => {
                     <div className="col">
                       <Field
                         component={TextArea}
-                        label={"Justificativa da alteração"}
+                        label={"Justificativa"}
                         name="justificativa"
                         required
                       />
