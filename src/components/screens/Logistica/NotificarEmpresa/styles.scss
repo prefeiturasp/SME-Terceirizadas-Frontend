@@ -1,44 +1,55 @@
 .card-notificar-empresa {
-}
+  .notificar-empresa {
+    .ocorrencia {
+      margin: 20px 0;
 
-.notificar-empresa {
-  .ocorrencia {
-    margin: 20px 0;
-
-    hr {
-      margin: 120px;
+      hr {
+        margin: 120px;
+      }
     }
-  }
-  .titulo-verde {
-    color: #0c6b45;
-    font-size: 16px;
-    line-height: 20px;
-    margin: 12px 0;
-    font-weight: bold;
-  }
+    .titulo-verde {
+      color: #0c6b45;
+      font-size: 16px;
+      line-height: 20px;
+      margin: 12px 0;
+      font-weight: bold;
+    }
 
-  .subtitulo {
-    color: #42474a;
-    font-size: 14px;
-    line-height: 18px;
-    margin-bottom: 6px;
-    font-weight: bold;
-  }
+    .subtitulo {
+      color: #42474a;
+      font-size: 14px;
+      line-height: 18px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
 
-  .flex-container {
-    display: flex;
-  }
+    .flex-container {
+      display: flex;
+    }
 
-  .numero-guia {
-    color: #086397;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    padding-right: 16px;
-    padding-bottom: 8px;
+    .numero-guia {
+      color: #086397;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      padding-right: 16px;
+      padding-bottom: 8px;
 
-    &:hover {
-      text-decoration: underline;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .botao-menor {
+      font-size: 13px;
+      height: 32px;
+    }
+
+    .texto-aprovacao {
+      color: #198459;
+      font-size: 16px;
+      line-height: 20px;
+      font-weight: bold;
     }
   }
 }
