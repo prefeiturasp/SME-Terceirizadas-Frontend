@@ -20,6 +20,7 @@ export default ({
   const [valorSelecionado, setValorSelecionado] = useState(null);
   const [isModalExcluir, setIsModalExcluir] = useState(false);
   const [registroCodigoEol, setRegistroCodigoEol] = useState(false);
+  const [erro, setErro] = useState(null);
 
   const alunosOptions = useMemo(
     () =>
@@ -151,6 +152,7 @@ export default ({
           style={{ display: "flex", alignItems: "center" }}
         >
           <AutoComplete
+            className={erro ? "input-error" : ""}
             options={alunosOptions.map(option => ({
               value: option.value
             }))}
@@ -174,6 +176,7 @@ export default ({
                   }}
                 />
               }
+              status={erro ? "error" : ""}
             />
           </AutoComplete>
           <Botao
@@ -187,10 +190,14 @@ export default ({
               );
               if (alunoSelecionado) {
                 adicionarAluno(alunoSelecionado);
+                setErro(null);
+              } else {
+                setErro("Selecione uma opção válida");
               }
             }}
           />
         </div>
+        {erro && <span style={{ color: "red" }}>{erro}</span>}
       </div>
       <TabelaAlunos alunos={alunosAdicionados} />
     </div>

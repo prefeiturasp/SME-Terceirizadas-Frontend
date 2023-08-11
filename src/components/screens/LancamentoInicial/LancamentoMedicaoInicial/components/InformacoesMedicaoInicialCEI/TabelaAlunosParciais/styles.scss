@@ -35,3 +35,6 @@
   pointer-events: none;
   opacity: 0.5; /* Opcional: para dar um visual "desativado" */
 }
+.input-error .ant-input {
+  border-color: red !important;
+}
