@@ -16,7 +16,7 @@ import { CODAE, TERCEIRIZADA } from "../../../configs/constants";
 import ModalMarcarConferencia from "components/Shareable/ModalMarcarConferencia";
 import { meusDados } from "services/perfil.service";
 import ModalAutorizarAposQuestionamento from "components/Shareable/ModalAutorizarAposQuestionamento";
-import ModalAprovarSolicitacaoKitLanche from "./componentes/ModalAprovarSolicitacaoKitLanche";
+import { ModalAprovarGenericoSimOpcional } from "components/Shareable/ModalAprovarGenericoSimOpcional";
 
 const Relatorio = props => {
   const [estado, setEstado] = useState({
@@ -373,7 +373,7 @@ const Relatorio = props => {
                     )}
                   </div>
                 </div>
-                <ModalAprovarSolicitacaoKitLanche
+                <ModalAprovarGenericoSimOpcional
                   showModal={estado.showModalObservacaoCodae}
                   loadSolicitacao={() => loadSolicitacao(estado.uuid)}
                   justificativa={justificativa}
