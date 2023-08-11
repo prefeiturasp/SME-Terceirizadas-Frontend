@@ -153,26 +153,15 @@ export const DRENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
   }
 };
 
-export const CODAEAutorizaPedidoDRE = (uuid, justificativa) => {
+export const CODAEAutorizaPedidoDRE = async (uuid, payload) => {
   const url = `${API_URL}/inversoes-dia-cardapio/${uuid}/${
     FLUXO.CODAE_AUTORIZA
   }/`;
-  let status = 0;
-  return fetch(url, {
-    method: "PATCH",
-    body: JSON.stringify({ justificativa: justificativa }),
-    headers: authToken
-  })
-    .then(res => {
-      status = res.status;
-      return res.json();
-    })
-    .then(data => {
-      return { data: data, status: status };
-    })
-    .catch(error => {
-      return error.json();
-    });
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
 };
 
 export const CODAENegaInversaoDeDiaDeCardapio = async (uuid, payload) => {
