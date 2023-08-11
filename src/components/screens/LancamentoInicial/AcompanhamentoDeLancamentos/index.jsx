@@ -94,7 +94,8 @@ export const AcompanhamentoDeLancamentos = () => {
           NovoDashboardResults = NovoDashboardResults.filter(
             medicoes => medicoes.status !== "TODOS_OS_LANCAMENTOS"
           );
-        setDadosDashboard(NovoDashboardResults);
+        if (!dadosDashboard || (diretoriaRegional && !params.mes_ano))
+          setDadosDashboard(NovoDashboardResults);
       }
       if (statusSelecionado) {
         setResultados(
@@ -370,12 +371,21 @@ export const AcompanhamentoDeLancamentos = () => {
                                 options={[
                                   { nome: "Selecione o mês", uuid: "" }
                                 ].concat(
-                                  mesesAnos.map(mesAno => ({
-                                    nome: `${
-                                      MESES[parseInt(mesAno.mes) - 1]
-                                    } - ${mesAno.ano}`,
-                                    uuid: `${mesAno.mes}_${mesAno.ano}`
-                                  }))
+                                  mesesAnos
+                                    .filter(mesAno =>
+                                      statusSelecionado !==
+                                      "TODOS_OS_LANCAMENTOS"
+                                        ? mesAno.status.includes(
+                                            statusSelecionado
+                                          )
+                                        : true
+                                    )
+                                    .map(mesAno => ({
+                                      nome: `${
+                                        MESES[parseInt(mesAno.mes) - 1]
+                                      } - ${mesAno.ano}`,
+                                      uuid: `${mesAno.mes}_${mesAno.ano}`
+                                    }))
                                 )}
                                 naoDesabilitarPrimeiraOpcao
                                 validate={required}
