@@ -189,6 +189,7 @@ export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
 
 export const LANCAMENTO_MEDICAO_INICIAL = "lancamento-medicao-inicial";
 export const PERIODO_LANCAMENTO = "periodo-lancamento";
+export const PERIODO_LANCAMENTO_CEI = "periodo-lancamento-cei";
 export const ACOMPANHAMENTO_DE_LANCAMENTOS = "acompanhamento-de-lancamentos";
 export const CONFERENCIA_DOS_LANCAMENTOS = "conferencia-dos-lancamentos";
 export const DETALHAMENTO_DO_LANCAMENTO = "detalhamento-do-lancamento";
