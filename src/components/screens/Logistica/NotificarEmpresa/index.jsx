@@ -85,13 +85,15 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
   const abriModalGuia = guia => {
     guia.conferencias.map(conferencia => {
       conferencia.conferencia_dos_alimentos.map(conferenciaAlimento => {
-        conferenciaAlimento.ocorrencia = conferenciaAlimento.ocorrencia.reduce(
-          (texto, ocorrencia, index) => {
-            let virgula = index === 0 ? "" : ", ";
-            return texto + virgula + labelOcorrencia(ocorrencia);
-          },
-          ""
-        );
+        if (conferenciaAlimento.ocorrencia) {
+          conferenciaAlimento.ocorrencia = conferenciaAlimento.ocorrencia.reduce(
+            (texto, ocorrencia, index) => {
+              let virgula = index === 0 ? "" : ", ";
+              return texto + virgula + labelOcorrencia(ocorrencia);
+            },
+            ""
+          );
+        }
       });
     });
     setGuiaModal(guia);
