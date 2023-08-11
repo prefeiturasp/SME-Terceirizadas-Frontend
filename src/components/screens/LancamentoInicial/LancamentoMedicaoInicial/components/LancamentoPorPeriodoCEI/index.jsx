@@ -5,11 +5,7 @@ import { CORES } from "../LancamentoPorPeriodo/helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import CardLancamentoCEI from "./CardLancamentoCEI";
 
-export default ({
-  periodosEscolaSimples,
-  solicitacaoMedicaoInicial,
-  escolaInstituicao
-}) => {
+export default ({ solicitacaoMedicaoInicial, escolaInstituicao }) => {
   const quantidadeAlimentacoesLancadas = [
     {
       nome_periodo_grupo: "INTEGRAL",
@@ -17,6 +13,13 @@ export default ({
       qtd_alunos: 100,
       qtd_refeicoes_diarias: 5,
       valor_total: 500
+    },
+    {
+      nome_periodo_grupo: "PARCIAL",
+      status: "MEDICAO_EM_ABERTO_PARA_PREENCHIMENTO_UE",
+      qtd_alunos: 100,
+      qtd_refeicoes_diarias: 3,
+      valor_total: 300
     }
   ];
 
@@ -36,12 +39,15 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
-          {periodosEscolaSimples.map((periodo, index) => {
-            if (periodo.periodo_escolar.nome === "INTEGRAL") {
+          {quantidadeAlimentacoesLancadas.map((periodo, index) => {
+            if (
+              solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial ||
+              periodo.nome_periodo_grupo === "INTEGRAL"
+            ) {
               return (
                 <CardLancamentoCEI
                   key={index}
-                  textoCabecalho={periodo.periodo_escolar.nome}
+                  textoCabecalho={periodo.nome_periodo_grupo}
                   cor={CORES[index]}
                   solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                   escolaInstituicao={escolaInstituicao}
@@ -53,7 +59,6 @@ export default ({
             }
             return null;
           })}
-
           <div className="mt-4">
             {renderBotaoFinalizar() && (
               <Botao

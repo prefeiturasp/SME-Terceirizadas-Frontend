@@ -73,11 +73,14 @@ export default ({
                 <div className="col-8">
                   <div className="mt-4 mb-2">
                     <span style={{ color: cor }}>
-                      <b>{quantidadeAlimentacoesLancadas[0].qtd_alunos}</b>
+                      <b>{qtdAlimentacaoPeriodoFiltrada()[0]?.qtd_alunos}</b>
                     </span>
                     <span className="ml-1">
                       - alunos atendidos com{" "}
-                      {quantidadeAlimentacoesLancadas[0].qtd_refeicoes_diarias}{" "}
+                      {
+                        qtdAlimentacaoPeriodoFiltrada()[0]
+                          ?.qtd_refeicoes_diarias
+                      }{" "}
                       refeições diárias
                     </span>
                     <br />
