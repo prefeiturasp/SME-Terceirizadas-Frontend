@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import HTTP_STATUS from "http-status-codes";
 import { getYear, format } from "date-fns";
-import { Collapse, Input, Checkbox } from "antd";
+import { Collapse, Input, Checkbox, Modal } from "antd";
 import Botao from "components/Shareable/Botao";
 import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import {
   BUTTON_ICON,
-  BUTTON_STYLE
+  BUTTON_STYLE,
+  BUTTON_TYPE
 } from "components/Shareable/Botao/constants";
 import { DETALHAMENTO_DO_LANCAMENTO } from "configs/constants";
 import {
   setSolicitacaoMedicaoInicial,
   updateSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
+import { getAlunosListagem } from "services/perfil.service";
+import TabelaAlunosParciais from "./TabelaAlunosParciais";
 
 export default ({
   periodoSelecionado,
@@ -42,9 +45,28 @@ export default ({
   ] = useState(undefined);
   const [emEdicao, setEmEdicao] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [showPesquisaAluno, setShowPesquisaAluno] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [alunos, setAlunos] = useState([]);
+  const [isModalDuplicata, setIsModalDuplicata] = useState(false);
+  const [isModalNaoParcial, setIsModalNaoParcial] = useState(false);
+  const [alunosAdicionados, setAlunosAdicionados] = useState([]);
+
   const { Panel } = Collapse;
 
   const location = useLocation();
+
+  const getAlunos = async () => {
+    const response = await getAlunosListagem({
+      escola: escolaInstituicao.uuid
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setAlunos(response.data.results);
+      setLoading(false);
+    } else {
+      toastError("Houve um erro ao buscar alunos desta escola");
+    }
+  };
 
   useEffect(() => {
     if (solicitacaoMedicaoInicial) {
@@ -52,11 +74,17 @@ export default ({
         return solicitacaoMedicaoInicial.responsaveis[indice] || resp;
       });
       setResponsaveis(resps);
-      setUePossuiAlunosPeriodoParcial(
-        solicitacaoMedicaoInicial.ue_possui_alunos_periodo_parcial
-          ? "true"
-          : "false"
-      );
+      solicitacaoMedicaoInicial?.ue_possui_alunos_periodo_parcial
+        ? (setUePossuiAlunosPeriodoParcial("true"),
+          setShowPesquisaAluno(true),
+          setLoading(true),
+          getAlunos(),
+          setAlunosAdicionados(
+            solicitacaoMedicaoInicial.alunos_periodo_parcial
+          ))
+        : setUePossuiAlunosPeriodoParcial("false");
+    } else {
+      setEmEdicao(true);
     }
     setIsOpen(true);
   }, []);
@@ -117,6 +145,13 @@ export default ({
       toastError("Obrigatório preencher se UE possui aluno no período Parcial");
       return;
     }
+    if (
+      uePossuiAlunosPeriodoParcial === "true" &&
+      alunosAdicionados.length < 1
+    ) {
+      toastError("Obrigatório adicionar alunos pariciais");
+      return;
+    }
     if (!responsaveis.some(resp => resp.nome !== "" && resp.rf !== "")) {
       toastError("Pelo menos um responsável deve ser cadastrado");
       return;
@@ -144,8 +179,12 @@ export default ({
       data.append("responsaveis", JSON.stringify(responsaveisPayload));
       data.append(
         "ue_possui_alunos_periodo_parcial",
-        uePossuiAlunosPeriodoParcial === "true" ? true : false
+        uePossuiAlunosPeriodoParcial === "true"
       );
+      if (Array.isArray(alunosAdicionados) && alunosAdicionados.length > 0) {
+        const uuidsDosAlunos = alunosAdicionados.map(aluno => aluno.uuid);
+        data.append("alunos_periodo_parcial", JSON.stringify(uuidsDosAlunos));
+      }
       const response = await updateSolicitacaoMedicaoInicial(
         solicitacaoMedicaoInicial.uuid,
         data
@@ -186,10 +225,16 @@ export default ({
         escola: escolaInstituicao.uuid,
         responsaveis: responsaveisPayload,
         ue_possui_alunos_periodo_parcial:
-          uePossuiAlunosPeriodoParcial === "true" ? true : false,
+          uePossuiAlunosPeriodoParcial === "true",
         mes: format(new Date(periodoSelecionado), "MM").toString(),
         ano: getYear(new Date(periodoSelecionado)).toString()
       };
+      if (alunosAdicionados && alunosAdicionados.length > 0) {
+        const uuidsDosAlunos = alunosAdicionados.map(aluno => ({
+          aluno: aluno.uuid
+        }));
+        payload.alunos_periodo_parcial = uuidsDosAlunos;
+      }
       const response = await setSolicitacaoMedicaoInicial(payload);
       if (response.status === HTTP_STATUS.CREATED) {
         toastSuccess("Informações salvas com sucesso");
@@ -209,12 +254,78 @@ export default ({
 
   const onChange = e => {
     setUePossuiAlunosPeriodoParcial(e.target.value);
+    if (alunosAdicionados?.length > 0) {
+      if (e.target.value === "false") {
+        setIsModalNaoParcial(true);
+      }
+    } else {
+      let simCheck = e.target.value === "true";
+      if (simCheck && alunos.length === 0) {
+        setLoading(true);
+        getAlunos();
+      }
+      setShowPesquisaAluno(simCheck);
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalDuplicata(false);
+  };
+
+  const handleModalNaoParcialClose = () => {
+    setIsModalNaoParcial(false);
+  };
+
+  const handleModalNaoParcialDelete = () => {
+    setShowPesquisaAluno(false);
+    setAlunosAdicionados([]);
+    setIsModalNaoParcial(false);
   };
 
   return (
     <div className="row mt-4 info-med-inicial collapse-adjustments">
       <div className="col-12 panel-med-inicial">
         <div className="pl-0 label-adjustments">
+          <Modal
+            title="Erro ao adicionar"
+            open={isModalDuplicata}
+            onCancel={handleModalClose}
+            footer={[
+              <Botao
+                key="ok"
+                texto="Ok"
+                type={BUTTON_TYPE.BUTTON}
+                onClick={handleModalClose}
+              />
+            ]}
+          >
+            <p>Não é possível adicionar o mesmo aluno mais de uma vez.</p>
+          </Modal>
+          <Modal
+            title="Fechar Perído Parcial"
+            open={isModalNaoParcial}
+            onCancel={handleModalClose}
+            footer={[
+              <>
+                <Botao
+                  key="sim"
+                  texto="SIM"
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={handleModalNaoParcialDelete}
+                  className="ml-3"
+                />
+                <Botao
+                  key="nao"
+                  texto="NÃO"
+                  type={BUTTON_TYPE.BUTTON}
+                  onClick={handleModalNaoParcialClose}
+                  className="ml-3"
+                />
+              </>
+            ]}
+          >
+            <p>Atenção! Você deseja excluir o período parcial?</p>
+          </Modal>
           <Collapse
             expandIconPosition="end"
             activeKey={isOpen ? ["1"] : []}
@@ -249,8 +360,18 @@ export default ({
                   ))}
                 </div>
               </div>
+              {showPesquisaAluno && (
+                <TabelaAlunosParciais
+                  setIsModalDuplicata={setIsModalDuplicata}
+                  alunos={alunos}
+                  loading={loading}
+                  alunosAdicionados={alunosAdicionados}
+                  setAlunosAdicionados={setAlunosAdicionados}
+                  emEdicao={emEdicao}
+                />
+              )}
 
-              <div className="row mt-2 mr-0">
+              <div className="row mt-4 mr-0">
                 <div className="col-8">
                   <label>
                     Responsáveis por acompanhar a prestação de serviços
