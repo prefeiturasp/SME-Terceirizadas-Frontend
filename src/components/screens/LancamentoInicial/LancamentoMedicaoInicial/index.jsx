@@ -86,12 +86,14 @@ export default () => {
         solicitacoesLancadas = await getSolicitacoesLancadas(payload);
       }
 
-      for (let mes = 0; mes <= proximosDozeMeses; mes++) {
-        const dataBRT = addMonths(new Date(), -mes);
+      for (let mes_ = 0; mes_ <= proximosDozeMeses; mes_++) {
+        const dataBRT = addMonths(new Date(), -mes_);
         const mesString = format(dataBRT, "LLLL", { locale: ptBR }).toString();
         if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
           const temSolicitacaoLancada = solicitacoesLancadas.data.filter(
-            solicitacao => Number(solicitacao.mes) === getMonth(dataBRT) + 1
+            solicitacao =>
+              Number(solicitacao.mes) === getMonth(dataBRT) + 1 &&
+              Number(solicitacao.ano) === getYear(dataBRT)
           ).length;
           if (!temSolicitacaoLancada) {
             periodos.push({
@@ -102,6 +104,14 @@ export default () => {
                 " / " +
                 getYear(dataBRT).toString()
             });
+            if (!location.search && periodos.length === 1) {
+              history.replace({
+                pathname: location.pathname,
+                search: `?mes=${(getMonth(dataBRT) + 1)
+                  .toString()
+                  .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`
+              });
+            }
           }
         } else {
           periodos.push({
@@ -163,14 +173,6 @@ export default () => {
       setLoadingSolicitacaoMedicaoInicial(false);
     }
     fetch();
-
-    !location.search &&
-      history.replace({
-        pathname: location.pathname,
-        search: `?mes=${format(new Date(), "MM").toString()}&ano=${getYear(
-          new Date()
-        ).toString()}`
-      });
   }, []);
 
   const getSolicitacaoMedInicial = async (periodo, escolaUuid) => {
