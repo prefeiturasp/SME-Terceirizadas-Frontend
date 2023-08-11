@@ -243,6 +243,7 @@ import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
+import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 
 const routesConfig = [
   {
@@ -1788,6 +1789,12 @@ const routesConfig = [
     component: DetalharNotificacaoPage,
     exact: true,
     tipoUsuario: usuarioComAcessoTelaDetalharNotificacaoOcorrencia()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ANALISAR_ASSINAR}`,
+    component: AnalisarAssinarPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
   },
   {
     path: `/${constants.NOTIFICACOES}`,

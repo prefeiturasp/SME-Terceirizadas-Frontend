@@ -182,6 +182,7 @@ export const GUIAS_NOTIFICACAO_FISCAL = "guias-notificacao-fiscal";
 export const CADASTRO_NOTIFICACAO = "cadastro-notificacao";
 export const EDITAR_NOTIFICACAO = "editar-notificacao";
 export const NOTIFICAR_EMPRESA = "notificar-empresa";
+export const ANALISAR_ASSINAR = "analisar-assinar";
 export const DETALHAR_NOTIFICACAO = "detalhar-notificacao";
 
 export const DETALHE_DASHBOARD_DRE = "detalhe-dashboard-dre";
