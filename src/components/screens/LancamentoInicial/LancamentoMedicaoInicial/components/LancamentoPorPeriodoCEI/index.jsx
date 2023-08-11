@@ -8,7 +8,8 @@ import CardLancamentoCEI from "./CardLancamentoCEI";
 export default ({
   periodosEscolaSimples,
   solicitacaoMedicaoInicial,
-  escolaInstituicao
+  escolaInstituicao,
+  periodoSelecionado
 }) => {
   const quantidadeAlimentacoesLancadas = [
     {
@@ -48,6 +49,7 @@ export default ({
                   quantidadeAlimentacoesLancadas={
                     quantidadeAlimentacoesLancadas
                   }
+                  periodoSelecionado={periodoSelecionado}
                 />
               );
             }
