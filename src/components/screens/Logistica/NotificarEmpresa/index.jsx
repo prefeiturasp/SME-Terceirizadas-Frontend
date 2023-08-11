@@ -328,7 +328,7 @@ export default ({ naoEditavel = false, botaoVoltar, voltarPara, fiscal }) => {
                       label="Empresa"
                       name="nome_empresa"
                       className="input-busca-produto"
-                      disabled={naoEditavel}
+                      disabled
                     />
                   </div>
                 </div>
