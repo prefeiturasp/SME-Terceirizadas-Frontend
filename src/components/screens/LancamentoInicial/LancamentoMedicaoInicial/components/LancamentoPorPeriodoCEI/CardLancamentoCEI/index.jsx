@@ -1,18 +1,25 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { Form } from "react-final-form";
 import { Botao } from "components/Shareable/Botao";
 import { BUTTON_STYLE } from "components/Shareable/Botao/constants";
-import "./styles.scss";
 import { PERIODO_STATUS_DE_PROGRESSO } from "components/screens/LancamentoInicial/ConferenciaDosLancamentos/constants";
-import { ehEscolaTipoCEI } from "helpers/utilities";
+import {
+  LANCAMENTO_INICIAL,
+  LANCAMENTO_MEDICAO_INICIAL,
+  PERIODO_LANCAMENTO_CEI
+} from "configs/constants";
+import "./styles.scss";
 
 export default ({
   textoCabecalho = null,
   cor,
   solicitacaoMedicaoInicial,
   quantidadeAlimentacoesLancadas,
-  escolaInstituicao
+  periodoSelecionado
 }) => {
+  const history = useHistory();
+
   const qtdAlimentacaoPeriodoFiltrada = () => {
     return quantidadeAlimentacoesLancadas.filter(
       qtdAlimentacaoPeriodo =>
@@ -34,6 +41,20 @@ export default ({
     } else {
       return "Não Preenchido";
     }
+  };
+
+  const handleClickEditar = () => {
+    history.push({
+      pathname: `/${LANCAMENTO_INICIAL}/${LANCAMENTO_MEDICAO_INICIAL}/${PERIODO_LANCAMENTO_CEI}`,
+      search: `uuid=${solicitacaoMedicaoInicial.uuid}`,
+      state: {
+        periodo: textoCabecalho,
+        mesAnoSelecionado: periodoSelecionado,
+        status_periodo: statusPeriodo(),
+        status_solicitacao: solicitacaoMedicaoInicial.status,
+        ...location.state
+      }
+    });
   };
 
   return (
@@ -93,8 +114,8 @@ export default ({
                 texto="Editar"
                 style={BUTTON_STYLE.GREEN_OUTLINE}
                 className="float-right ml-3 botao-editar-visualizar-card"
-                disabled={ehEscolaTipoCEI(escolaInstituicao)}
-                // Por enquanto ehEscolaTipoCEI até definiar as regras para habilitar botão editar
+                onClick={() => handleClickEditar()}
+                disabled={false}
               />
             </div>
           </div>

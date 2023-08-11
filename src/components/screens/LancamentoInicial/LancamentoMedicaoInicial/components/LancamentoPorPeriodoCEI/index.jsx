@@ -5,7 +5,11 @@ import { CORES } from "../LancamentoPorPeriodo/helpers";
 import { usuarioEhEscolaTerceirizadaDiretor } from "helpers/utilities";
 import CardLancamentoCEI from "./CardLancamentoCEI";
 
-export default ({ solicitacaoMedicaoInicial, escolaInstituicao }) => {
+export default ({
+  solicitacaoMedicaoInicial,
+  escolaInstituicao,
+  periodoSelecionado
+}) => {
   const quantidadeAlimentacoesLancadas = [
     {
       nome_periodo_grupo: "INTEGRAL",
@@ -54,6 +58,7 @@ export default ({ solicitacaoMedicaoInicial, escolaInstituicao }) => {
                   quantidadeAlimentacoesLancadas={
                     quantidadeAlimentacoesLancadas
                   }
+                  periodoSelecionado={periodoSelecionado}
                 />
               );
             }

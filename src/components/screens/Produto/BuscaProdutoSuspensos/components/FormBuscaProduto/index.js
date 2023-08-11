@@ -16,6 +16,7 @@ import {
 } from "services/produto.service";
 import { InputComData } from "components/Shareable/DatePicker";
 import "./style.scss";
+import { required } from "helpers/fieldValidators";
 
 const initialState = {
   dados: {},
@@ -105,6 +106,8 @@ const FormBuscaProduto = ({ onSubmit, bloquearEdital, initialStateForm }) => {
                 onSearch={v => onSearch("editais", v)}
                 name="nome_edital"
                 disabled={bloquearEdital}
+                validate={required}
+                required
               />
             </div>
             <div className="col-md-6 col-xl-6">

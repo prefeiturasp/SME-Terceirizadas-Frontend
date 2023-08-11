@@ -166,6 +166,7 @@ import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDie
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
 import PeriodoLancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
+import PeriodoLancamentoMedicaoInicialCEIPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
@@ -242,6 +243,7 @@ import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
 import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
+import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 
 const routesConfig = [
   {
@@ -1585,6 +1587,15 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }/${constants.PERIODO_LANCAMENTO_CEI}`,
+    component: PeriodoLancamentoMedicaoInicialCEIPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
     path: `/${constants.MEDICAO_INICIAL}/${
       constants.ACOMPANHAMENTO_DE_LANCAMENTOS
     }`,
@@ -1778,6 +1789,12 @@ const routesConfig = [
     component: DetalharNotificacaoPage,
     exact: true,
     tipoUsuario: usuarioComAcessoTelaDetalharNotificacaoOcorrencia()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ANALISAR_ASSINAR}`,
+    component: AnalisarAssinarPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
   },
   {
     path: `/${constants.NOTIFICACOES}`,

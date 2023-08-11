@@ -12,10 +12,16 @@ import InputPassword from "../Input/InputPassword";
 import { Field, Form } from "react-final-form";
 import "./style.scss";
 
-export const ModalAssinaturaUsuario = props => {
+export const ModalAssinaturaUsuario = ({
+  show,
+  handleClose,
+  handleSim,
+  titulo,
+  texto,
+  loading,
+  textoBotao = "Sim, assinar cronograma"
+}) => {
   const [concordaAssinar, setConcordaAssinar] = useState(false);
-
-  const { show, handleClose, handleSim, titulo, texto, loading } = props;
 
   return (
     <Modal
@@ -48,7 +54,7 @@ export const ModalAssinaturaUsuario = props => {
                   onSubmit={() => {}}
                   render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
-                      <div className="row">
+                      <div className="row mb-2">
                         <div className="col-8">
                           <Field
                             component={InputPassword}
@@ -77,9 +83,10 @@ export const ModalAssinaturaUsuario = props => {
             </div>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          {!concordaAssinar && (
-            <>
+
+        {!concordaAssinar && (
+          <>
+            <Modal.Footer>
               <Botao
                 texto="Não"
                 type={BUTTON_TYPE.BUTTON}
@@ -91,7 +98,7 @@ export const ModalAssinaturaUsuario = props => {
                 className="ml-3"
               />
               <Botao
-                texto="Sim, assinar cronograma"
+                texto={textoBotao}
                 type={BUTTON_TYPE.BUTTON}
                 style={BUTTON_STYLE.GREEN}
                 className="ml-3"
@@ -99,9 +106,9 @@ export const ModalAssinaturaUsuario = props => {
                   setConcordaAssinar(true);
                 }}
               />
-            </>
-          )}
-        </Modal.Footer>
+            </Modal.Footer>
+          </>
+        )}
       </Spin>
     </Modal>
   );

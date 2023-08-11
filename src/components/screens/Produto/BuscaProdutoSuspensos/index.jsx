@@ -68,6 +68,7 @@ const BuscaProdutoSuspensos = () => {
       const response = await getProdutosRelatorioSuspenso(params);
       setProdutos(response.data.results);
       setProdutosCount(response.data.count);
+      setTotalSuspensos(response.data.count);
       setCarregando(false);
     }
 
