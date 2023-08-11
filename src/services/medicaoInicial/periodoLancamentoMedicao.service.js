@@ -129,3 +129,12 @@ export const getSolicitacoesKitLanchesAutorizadasEscola = async params => {
     return data;
   }
 };
+
+export const getLogMatriculadosPorFaixaEtariaDia = async params => {
+  const url = "log-alunos-matriculados-faixa-etaria-dia/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
