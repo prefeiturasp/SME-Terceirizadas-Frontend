@@ -85,7 +85,7 @@ const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
             {botaoNotificarEmpresaDesabilitado}
           </>
         ) : (
-          ["RASCUNHO", "NOTIFICACAO_CRIADA"].includes(status) &&
+          ["RASCUNHO", "NOTIFICAÇÃO CRIADA"].includes(status) &&
           botaoNotificarEmpresaHabilitado
         )}
       </>
