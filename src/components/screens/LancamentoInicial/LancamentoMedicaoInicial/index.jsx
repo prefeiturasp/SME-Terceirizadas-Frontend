@@ -91,7 +91,9 @@ export default () => {
         const mesString = format(dataBRT, "LLLL", { locale: ptBR }).toString();
         if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
           const temSolicitacaoLancada = solicitacoesLancadas.data.filter(
-            solicitacao => Number(solicitacao.mes) === getMonth(dataBRT) + 1
+            solicitacao =>
+              Number(solicitacao.mes) === getMonth(dataBRT) + 1 &&
+              Number(solicitacao.ano) === getYear(dataBRT)
           ).length;
           if (!temSolicitacaoLancada) {
             periodos.push({
