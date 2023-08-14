@@ -871,7 +871,8 @@ export const exibirGA = () => {
     "SAO MATEUS",
     "SAO MIGUEL",
     "JACANA/TREMEMBE",
-    "ITAQUERA"
+    "ITAQUERA",
+    "PENHA"
   ];
 
   if (["production"].includes(ENVIRONMENT)) {
@@ -885,20 +886,8 @@ export const exibirGA = () => {
           localStorage.getItem("dre_nome").includes(dre)
         );
       case `"terceirizada"`:
-        return (
-          [
-            `"Anga"`,
-            `"ANGA"`,
-            `"VERDE MAIS"`,
-            `"Verde Mais"`,
-            `"Apetece"`,
-            `"APETECE"`
-          ].includes(localStorage.getItem("nome_instituicao")) ||
-          JSON.parse(localStorage.getItem("lotes")).find(lote =>
-            dresPermitidas.some(dre =>
-              lote.diretoria_regional.nome.includes(dre)
-            )
-          )
+        return JSON.parse(localStorage.getItem("lotes")).find(lote =>
+          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
         );
       case `"gestao_alimentacao_terceirizada"`:
       case `"nutricao_manifestacao"`:
