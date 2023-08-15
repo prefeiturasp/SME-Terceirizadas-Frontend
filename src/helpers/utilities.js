@@ -650,6 +650,13 @@ export const usuarioEhMedicao = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
 };
 
+export const acessoModuloMedicaoInicial = () => {
+  return (
+    localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
+    localStorage.getItem("dre_acesso_modulo_medicao_inicial") === "true"
+  );
+};
+
 export const converterDDMMYYYYparaYYYYMMDD = data => {
   return moment(data, "DD/MM/YYYY").format("YYYY-MM-DD");
 };
@@ -874,52 +881,55 @@ export const exibirGA = () => {
     "ITAQUERA"
   ];
 
-  if (["production"].includes(ENVIRONMENT)) {
-    switch (localStorage.getItem("tipo_perfil")) {
-      case `"diretoriaregional"`:
-        return dresPermitidas.some(dre =>
-          localStorage.getItem("nome_instituicao").includes(dre)
-        );
-      case `"escola"`:
-        return dresPermitidas.some(dre =>
-          localStorage.getItem("dre_nome").includes(dre)
-        );
-      case `"terceirizada"`:
-        return (
-          [
-            `"Anga"`,
-            `"ANGA"`,
-            `"VERDE MAIS"`,
-            `"Verde Mais"`,
-            `"Apetece"`,
-            `"APETECE"`
-          ].includes(localStorage.getItem("nome_instituicao")) ||
-          JSON.parse(localStorage.getItem("lotes")).find(lote =>
-            dresPermitidas.some(dre =>
-              lote.diretoria_regional.nome.includes(dre)
-            )
-          )
-        );
-      case `"gestao_alimentacao_terceirizada"`:
-      case `"nutricao_manifestacao"`:
-      case `"supervisao_nutricao"`:
-      case `"medicao"`:
-        return true;
-      default:
-        return false;
-    }
+  switch (localStorage.getItem("tipo_perfil")) {
+    case `"diretoriaregional"`:
+      return dresPermitidas.some(dre =>
+        localStorage.getItem("nome_instituicao").includes(dre)
+      );
+    case `"escola"`:
+      return dresPermitidas.some(dre =>
+        localStorage.getItem("dre_nome").includes(dre)
+      );
+    case `"terceirizada"`:
+      return (
+        [
+          `"Anga"`,
+          `"ANGA"`,
+          `"VERDE MAIS"`,
+          `"Verde Mais"`,
+          `"Apetece"`,
+          `"APETECE"`
+        ].includes(localStorage.getItem("nome_instituicao")) ||
+        JSON.parse(localStorage.getItem("lotes")).find(lote =>
+          dresPermitidas.some(dre => lote.diretoria_regional.nome.includes(dre))
+        )
+      );
+    case `"gestao_alimentacao_terceirizada"`:
+    case `"nutricao_manifestacao"`:
+    case `"supervisao_nutricao"`:
+    case `"medicao"`:
+      return true;
+    default:
+      return false;
   }
 };
 
 export const exibirModuloMedicaoInicial = () => {
-  return (
-    !["production"].includes(ENVIRONMENT) &&
-    (usuarioEhDRE() ||
+  if (!["production"].includes(ENVIRONMENT))
+    return (
+      usuarioEhDRE() ||
       ((usuarioEhEscolaTerceirizada() ||
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
-      usuarioEhMedicao())
-  );
+      usuarioEhMedicao()
+    );
+
+  switch (localStorage.getItem("tipo_perfil")) {
+    case `"escola"`:
+      return acessoModuloMedicaoInicial();
+    default:
+      return false;
+  }
 };
 
 export const justificativaAoNegarSolicitacao = logs => {
