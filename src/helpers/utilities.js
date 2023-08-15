@@ -878,7 +878,8 @@ export const exibirGA = () => {
     "SAO MATEUS",
     "SAO MIGUEL",
     "JACANA/TREMEMBE",
-    "ITAQUERA"
+    "ITAQUERA",
+    "PENHA"
   ];
 
   switch (localStorage.getItem("tipo_perfil")) {
