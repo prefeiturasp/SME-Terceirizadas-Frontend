@@ -384,11 +384,13 @@ export default () => {
       const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Refeição"
       );
-      cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
-        nome: "Refeição",
-        name: "refeicao",
-        uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid
-      });
+      if (indexRefeicaoDieta !== -1) {
+        cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
+          nome: "Refeição",
+          name: "refeicao",
+          uuid: cloneTiposAlimentacao[indexRefeicaoDieta].uuid
+        });
+      }
 
       setTabelaDietaEnteralRows(cloneRowsDietas);
 

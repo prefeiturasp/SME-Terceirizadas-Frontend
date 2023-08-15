@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { Modal, Spin, Pagination } from "antd";
+import { Modal, Spin } from "antd";
 import Botao from "components/Shareable/Botao";
 import {
   BUTTON_TYPE,
@@ -11,6 +11,7 @@ import { getRelatorioEmAnaliseSensorial } from "services/relatorios";
 import { getProdutosRelatorioAnaliseSensorial } from "services/produto.service";
 import { gerarParametrosConsulta } from "helpers/utilities";
 import { getTituloRelatorio } from "./helpers";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 const ModalRelatorioAnaliseSensorial = ({
   showModal,
@@ -44,11 +45,11 @@ const ModalRelatorioAnaliseSensorial = ({
       onCancel={closeModal}
       width={"95%"}
       footer={[
-        <Pagination
+        <Paginacao
+          className="mt-3 mb-3"
           key={0}
           current={page}
           total={produtosCount}
-          className="float-left"
           showSizeChanger={false}
           onChange={page => {
             nextPage(page);

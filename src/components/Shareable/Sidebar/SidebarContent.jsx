@@ -28,7 +28,8 @@ import {
   usuarioEhQualquerUsuarioEmpresa,
   exibirModuloMedicaoInicial,
   usuarioEhCodaeDilog,
-  usuarioEhDilog
+  usuarioEhDilog,
+  usuarioEhDilogQualidade
 } from "helpers/utilities";
 import { ListItem } from "./menus/shared";
 import {
@@ -142,7 +143,8 @@ export const SidebarContent = () => {
     usuarioEhDRE() ||
     usuarioEhEscolaAbastecimento() ||
     usuarioEhEscolaAbastecimentoDiretor() ||
-    usuarioComAcessoTelaEntregasDilog();
+    usuarioComAcessoTelaEntregasDilog() ||
+    usuarioEhDilogQualidade();
 
   const exibirMenuPreRecebimento =
     usuarioEhPreRecebimento() || usuarioEhEmpresaFornecedor();
@@ -167,7 +169,7 @@ export const SidebarContent = () => {
     exibirModuloMedicaoInicial() && <MenuLancamentoInicial key={6} />,
     exibirMenuLogistica && <MenuLogistica key={7} {..._props} />,
     exibirRelatorios && <MenuRelatorios key={8} />,
-    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />,
-    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />
+    exibirMenuPreRecebimento && <MenuPreRecebimento key={10} />,
+    exibirConfiguracoes && <MenuConfiguracoes key={9} {..._props} />
   ];
 };

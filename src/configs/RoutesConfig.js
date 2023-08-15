@@ -129,7 +129,9 @@ import {
   usuarioEhCogestorDRE,
   usuarioEhDiretorUE,
   usuarioEhAdministradorNutriCODAE,
-  usuarioEhDilogJuridico
+  usuarioEhDilogJuridico,
+  usuarioEhDilog,
+  usuarioComAcessoTelaDetalharNotificacaoOcorrencia
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -164,6 +166,7 @@ import RelatorioGestaoDietaEspecial from "pages/DietaEspecial/RelatorioGestaoDie
 import CancelamentoDietaPage from "pages/DietaEspecial/CancelamentoDietaPage";
 import LancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/LancamentoMedicaoInicialPage";
 import PeriodoLancamentoMedicaoInicialPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialPage";
+import PeriodoLancamentoMedicaoInicialCEIPage from "pages/LancamentoMedicaoInicial/PeriodoLancamentoMedicaoInicialCEIPage";
 import DisponibilizacaoDeSolicitacoesPage from "pages/Logistica/DisponibilizacaoDeSolicitacoesPage";
 import FiltroRequisicaoDilog from "pages/Logistica/FiltroRequisicaoDilog";
 import ConsultaRequisicaoEntregaDilog from "pages/Logistica/ConsultaRequisicaoEntregaDilog";
@@ -229,6 +232,7 @@ import StatusSolicitacoesAlteracoesAprovadasDilog from "pages/Dinutre/Solicitaco
 import StatusSolicitacoesAlteracoesReprovadasDilog from "pages/Dinutre/Solicitacoes/StatusSolicitacoesAlteracoesReprovadasDilog";
 import AtualizacaoEmailEOLPage from "pages/Configuracoes/AtualizacaoEmailEOLPage";
 import GuiasNotificacoesPage from "pages/Logistica/GuiasNotificacoesPage";
+import GuiasNotificacoesFiscalPage from "pages/Logistica/GuiasNotificacoesFiscalPage";
 import CadastroNotificacaoPage from "pages/Logistica/CadastroNotificacao.page";
 import NotificarEmpresaPage from "pages/Logistica/NotificarEmpresaPage";
 import EditarNotificacaoPage from "pages/Logistica/EditarNotificacaoPage";
@@ -238,6 +242,8 @@ import UnidadesMedidaPage from "pages/Cadastros/UnidadesMedidaPage";
 import CadastroUnidadeMedidaPage from "pages/Cadastros/CadastroUnidadeMedidaPage";
 import EditarUnidadesMedidaPage from "pages/Cadastros/EditarUnidadesMedidaPage";
 import DetalhamentoDoLancamentoPage from "pages/LancamentoMedicaoInicial/DetalhamentoDoLancamentoPage";
+import DetalharNotificacaoPage from "pages/Logistica/DetalharNotificacaoPage";
+import AnalisarAssinarPage from "pages/Logistica/AnalisarAssinarPage";
 
 const routesConfig = [
   {
@@ -716,7 +722,7 @@ const routesConfig = [
     }`,
     component: LaboratoriosCadastradosPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -724,7 +730,7 @@ const routesConfig = [
     }`,
     component: CadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -732,7 +738,7 @@ const routesConfig = [
     }/${constants.DETALHAR}`,
     component: DetalharCadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -740,7 +746,7 @@ const routesConfig = [
     }/${constants.EDITAR}`,
     component: EditarCadastroLaboratorioPage,
     exact: true,
-    tipoUsuario: usuarioEhDilogQualidade()
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhCodaeDilog()
   },
   {
     path: `/${constants.CONFIGURACOES}/${constants.CADASTROS}/${
@@ -1581,6 +1587,15 @@ const routesConfig = [
       usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
   },
   {
+    path: `/${constants.LANCAMENTO_INICIAL}/${
+      constants.LANCAMENTO_MEDICAO_INICIAL
+    }/${constants.PERIODO_LANCAMENTO_CEI}`,
+    component: PeriodoLancamentoMedicaoInicialCEIPage,
+    exact: true,
+    tipoUsuario:
+      usuarioEhEscolaTerceirizada() || usuarioEhEscolaTerceirizadaDiretor()
+  },
+  {
     path: `/${constants.MEDICAO_INICIAL}/${
       constants.ACOMPANHAMENTO_DE_LANCAMENTOS
     }`,
@@ -1746,6 +1761,12 @@ const routesConfig = [
     tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
   },
   {
+    path: `/${constants.LOGISTICA}/${constants.GUIAS_NOTIFICACAO_FISCAL}`,
+    component: GuiasNotificacoesFiscalPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
+  },
+  {
     path: `/${constants.LOGISTICA}/${constants.CADASTRO_NOTIFICACAO}`,
     component: CadastroNotificacaoPage,
     exact: true,
@@ -1762,6 +1783,18 @@ const routesConfig = [
     component: EditarNotificacaoPage,
     exact: true,
     tipoUsuario: usuarioEhCodaeDilog() || usuarioEhDilogJuridico()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.DETALHAR_NOTIFICACAO}`,
+    component: DetalharNotificacaoPage,
+    exact: true,
+    tipoUsuario: usuarioComAcessoTelaDetalharNotificacaoOcorrencia()
+  },
+  {
+    path: `/${constants.LOGISTICA}/${constants.ANALISAR_ASSINAR}`,
+    component: AnalisarAssinarPage,
+    exact: true,
+    tipoUsuario: usuarioEhDilogQualidade() || usuarioEhDilog()
   },
   {
     path: `/${constants.NOTIFICACOES}`,

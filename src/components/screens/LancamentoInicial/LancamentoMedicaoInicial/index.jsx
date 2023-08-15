@@ -23,7 +23,10 @@ import {
   getSolicitacoesLancadas
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { getVinculosTipoAlimentacaoPorEscola } from "services/cadastroTipoAlimentacao.service";
+import { ehEscolaTipoCEI } from "../../../../helpers/utilities";
 import "./styles.scss";
+import InformacoesMedicaoInicialCEI from "./components/InformacoesMedicaoInicialCEI";
+import LancamentoPorPeriodoCEI from "./components/LancamentoPorPeriodoCEI";
 
 export default () => {
   const [ano, setAno] = useState(null);
@@ -83,12 +86,14 @@ export default () => {
         solicitacoesLancadas = await getSolicitacoesLancadas(payload);
       }
 
-      for (let mes = 0; mes <= proximosDozeMeses; mes++) {
-        const dataBRT = addMonths(new Date(), -mes);
+      for (let mes_ = 0; mes_ <= proximosDozeMeses; mes_++) {
+        const dataBRT = addMonths(new Date(), -mes_);
         const mesString = format(dataBRT, "LLLL", { locale: ptBR }).toString();
         if (location.pathname.includes(LANCAMENTO_MEDICAO_INICIAL)) {
           const temSolicitacaoLancada = solicitacoesLancadas.data.filter(
-            solicitacao => Number(solicitacao.mes) === getMonth(dataBRT) + 1
+            solicitacao =>
+              Number(solicitacao.mes) === getMonth(dataBRT) + 1 &&
+              Number(solicitacao.ano) === getYear(dataBRT)
           ).length;
           if (!temSolicitacaoLancada) {
             periodos.push({
@@ -99,6 +104,14 @@ export default () => {
                 " / " +
                 getYear(dataBRT).toString()
             });
+            if (!location.search && periodos.length === 1) {
+              history.replace({
+                pathname: location.pathname,
+                search: `?mes=${(getMonth(dataBRT) + 1)
+                  .toString()
+                  .padStart(2, "0")}&ano=${getYear(dataBRT).toString()}`
+              });
+            }
           }
         } else {
           periodos.push({
@@ -160,14 +173,6 @@ export default () => {
       setLoadingSolicitacaoMedicaoInicial(false);
     }
     fetch();
-
-    !location.search &&
-      history.replace({
-        pathname: location.pathname,
-        search: `?mes=${format(new Date(), "MM").toString()}&ano=${getYear(
-          new Date()
-        ).toString()}`
-      });
   }, []);
 
   const getSolicitacaoMedInicial = async (periodo, escolaUuid) => {
@@ -264,6 +269,14 @@ export default () => {
         </div>
         {loadingSolicitacaoMedInicial ? (
           <Skeleton paragraph={false} active />
+        ) : ehEscolaTipoCEI(escolaInstituicao) ? (
+          <InformacoesMedicaoInicialCEI
+            periodoSelecionado={periodoSelecionado}
+            escolaInstituicao={escolaInstituicao}
+            nomeTerceirizada={nomeTerceirizada}
+            solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+            onClickInfoBasicas={onClickInfoBasicas}
+          />
         ) : (
           <InformacoesMedicaoInicial
             periodoSelecionado={periodoSelecionado}
@@ -295,7 +308,27 @@ export default () => {
         {mes &&
           ano &&
           periodosEscolaSimples &&
-          !loadingSolicitacaoMedInicial && (
+          !loadingSolicitacaoMedInicial &&
+          (ehEscolaTipoCEI(escolaInstituicao) ? (
+            <LancamentoPorPeriodoCEI
+              panoramaGeral={panoramaGeral}
+              mes={mes}
+              ano={ano}
+              periodoSelecionado={periodoSelecionado}
+              escolaInstituicao={escolaInstituicao}
+              periodosEscolaSimples={periodosEscolaSimples}
+              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+              onClickInfoBasicas={onClickInfoBasicas}
+              setLoadingSolicitacaoMedicaoInicial={value =>
+                setLoadingSolicitacaoMedicaoInicial(value)
+              }
+              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+              setObjSolicitacaoMIFinalizada={value =>
+                setObjSolicitacaoMIFinalizada(value)
+              }
+              setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
+            />
+          ) : (
             <LancamentoPorPeriodo
               panoramaGeral={panoramaGeral}
               mes={mes}
@@ -314,7 +347,7 @@ export default () => {
               }
               setSolicitacaoMedicaoInicial={setSolicitacaoMedicaoInicial}
             />
-          )}
+          ))}
       </div>
     </div>
   );

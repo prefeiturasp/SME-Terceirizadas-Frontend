@@ -478,6 +478,13 @@ export const usuarioEhDilogJuridico = () => {
   );
 };
 
+export const usuarioComAcessoTelaDetalharNotificacaoOcorrencia = () => {
+  return [
+    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA,
+    PERFIL.ADMINISTRADOR_CODAE_DILOG_JURIDICO
+  ].includes(localStorage.getItem("perfil"));
+};
+
 export const usuarioEhLogistica = () => {
   return [
     PERFIL.COORDENADOR_LOGISTICA,
@@ -493,12 +500,8 @@ export const usuarioEhCronogramaCriacaoEdicao = () => {
   ].includes(localStorage.getItem("perfil"));
 };
 
-export const usuarioEhDilogQualidade = () => {
-  return [
-    PERFIL.DILOG_QUALIDADE,
-    PERFIL.COORDENADOR_CODAE_DILOG_LOGISTICA
-  ].includes(localStorage.getItem("perfil"));
-};
+export const usuarioEhDilogQualidade = () =>
+  localStorage.getItem("perfil") === PERFIL.DILOG_QUALIDADE;
 
 export const usuarioEhDilogQualidadeOuCronograma = () => {
   return [
@@ -919,6 +922,16 @@ export const exibirModuloMedicaoInicial = () => {
         usuarioEhEscolaTerceirizadaDiretor()) &&
         !usuarioEscolaEhGestaoDireta()) ||
       usuarioEhMedicao())
+  );
+};
+
+export const exibirModuloOcorrencias = () => {
+  return (
+    !["production"].includes(ENVIRONMENT) &&
+    (usuarioEhCodaeDilog() ||
+      usuarioEhDilogJuridico() ||
+      usuarioEhDilogQualidade() ||
+      usuarioEhDilog())
   );
 };
 

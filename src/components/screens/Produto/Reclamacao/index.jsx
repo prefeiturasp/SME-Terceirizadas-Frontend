@@ -1,4 +1,4 @@
-import { Spin, Pagination } from "antd";
+import { Spin } from "antd";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -18,6 +18,7 @@ import {
 import { getProdutosPorParametros } from "services/produto.service";
 
 import "./style.scss";
+import { Paginacao } from "components/Shareable/Paginacao";
 
 class ReclamacaoProduto extends Component {
   constructor(props) {
@@ -117,7 +118,8 @@ class ReclamacaoProduto extends Component {
                   indiceProdutoAtivo={indiceProdutoAtivo}
                   setIndiceProdutoAtivo={setIndiceProdutoAtivo}
                 />
-                <Pagination
+                <Paginacao
+                  className="mt-3 mb-3"
                   current={page || 1}
                   total={produtosCount}
                   showSizeChanger={false}

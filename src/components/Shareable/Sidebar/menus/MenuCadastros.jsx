@@ -56,7 +56,7 @@ const MenuCadastros = () => {
           </LeafItem>
         </>
       )}
-      {usuarioEhDilogQualidade() && (
+      {(usuarioEhDilogQualidade() || usuarioEhCodaeDilog()) && (
         <LeafItem
           to={`/${CONFIGURACOES}/${CADASTROS}/${LABORATORIOS_CADASTRADOS}`}
         >

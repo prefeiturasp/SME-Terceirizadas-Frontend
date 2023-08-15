@@ -220,6 +220,24 @@ export const enviarNotificacao = async (uuid, payload) => {
   }
 };
 
+export const solicitarAlteracaoNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/solicitar-alteracao/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
+export const assinarEnviarNotificacao = async (uuid, payload) => {
+  const url = `/notificacao-guias-com-ocorrencias/${uuid}/assinar/`;
+  const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
+
 export const getNotificacoesOcorrencia = async params => {
   const url = `/notificacao-guias-com-ocorrencias/`;
   return await axios.get(url, { params });

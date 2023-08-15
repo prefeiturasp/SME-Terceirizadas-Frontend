@@ -1,13 +1,96 @@
-import { LOGISTICA, NOTIFICAR_EMPRESA } from "configs/constants";
+import {
+  ANALISAR_ASSINAR,
+  DETALHAR_NOTIFICACAO,
+  LOGISTICA,
+  NOTIFICAR_EMPRESA
+} from "configs/constants";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 import "./styles.scss";
 import { EDITAR_NOTIFICACAO } from "configs/constants";
+import { usuarioComAcessoTelaDetalharNotificacaoOcorrencia } from "helpers/utilities";
 
-const ListagemNotificacoes = ({ notificacoes }) => {
+const ListagemNotificacoes = ({ notificacoes, fiscal }) => {
   const history = useHistory();
+
+  const renderizarBotoesDeAcoes = notificacao => {
+    const botaoRascunho = (
+      <span
+        className="link-acoes px-2"
+        onClick={() =>
+          history.push({
+            pathname: `/${LOGISTICA}/${EDITAR_NOTIFICACAO}`,
+            state: {
+              guia: notificacao
+            }
+          })
+        }
+      >
+        <i title="Editar Rascunho" className="verde fas fa-edit" />
+      </span>
+    );
+
+    const botaoVisualizarNotificacao = (
+      <NavLink
+        to={`/${LOGISTICA}/${DETALHAR_NOTIFICACAO}?uuid=${notificacao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Notificação" className="fas fa-eye green" />
+        </span>
+      </NavLink>
+    );
+
+    const botaoNotificarEmpresaHabilitado = (
+      <NavLink
+        to={`/${LOGISTICA}/${NOTIFICAR_EMPRESA}?uuid=${notificacao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i title="Notificação" className="fas fa-bell green" />
+        </span>
+      </NavLink>
+    );
+
+    const botaoNotificarEmpresaDesabilitado = (
+      <span className="link-acoes px-2">
+        <i title="Notificação Enviada" className="fas fa-bell" />
+      </span>
+    );
+
+    const botaoAssinarEnviarFiscal = (
+      <NavLink
+        to={`/${LOGISTICA}/${ANALISAR_ASSINAR}?uuid=${notificacao.uuid}`}
+      >
+        <span className="link-acoes px-2">
+          <i
+            className="fas fa-file-signature green"
+            title="Analisar e Assinar"
+          />
+        </span>
+      </NavLink>
+    );
+
+    const status = notificacao.status.toUpperCase();
+
+    return fiscal ? (
+      <>{status === "NOTIFICAÇÃO ENVIADA FISCAL" && botaoAssinarEnviarFiscal}</>
+    ) : (
+      <>
+        {status === "RASCUNHO" && botaoRascunho}
+        {status === "NOTIFICAÇÃO ENVIADA FISCAL" ? (
+          <>
+            {usuarioComAcessoTelaDetalharNotificacaoOcorrencia() &&
+              botaoVisualizarNotificacao}
+            {botaoNotificarEmpresaDesabilitado}
+          </>
+        ) : (
+          ["RASCUNHO", "NOTIFICAÇÃO CRIADA"].includes(status) &&
+          botaoNotificarEmpresaHabilitado
+        )}
+      </>
+    );
+  };
 
   return (
     <section className="resultado-guias-notificacoes">
@@ -30,48 +113,7 @@ const ListagemNotificacoes = ({ notificacoes }) => {
                 <div>
                   {notificacao.processo_sei ? notificacao.processo_sei : "--"}
                 </div>
-                <div>
-                  <span
-                    onClick={() =>
-                      notificacao.status.toUpperCase() === "RASCUNHO"
-                        ? history.push({
-                            pathname: `/logistica/${EDITAR_NOTIFICACAO}`,
-                            state: {
-                              guia: notificacao
-                            }
-                          })
-                        : "#"
-                    }
-                  >
-                    <i
-                      title={
-                        notificacao.status.toUpperCase() === "RASCUNHO"
-                          ? "Editar Rascunho"
-                          : "Visualizar Notificação"
-                      }
-                      className={`verde fas fa-${
-                        notificacao.status.toUpperCase() === "RASCUNHO"
-                          ? "edit"
-                          : "eye"
-                      }`}
-                    />
-                  </span>
-                  {notificacao.status === "Notificação Enviada Fiscal" ? (
-                    <span className="link-acoes px-2">
-                      <i title="Notificação Enviada" className="fas fa-bell" />
-                    </span>
-                  ) : (
-                    <NavLink
-                      to={`/${LOGISTICA}/${NOTIFICAR_EMPRESA}?uuid=${
-                        notificacao.uuid
-                      }`}
-                    >
-                      <span className="link-acoes px-2">
-                        <i title="Notificação" className="fas fa-bell green" />
-                      </span>
-                    </NavLink>
-                  )}
-                </div>
+                <div>{renderizarBotoesDeAcoes(notificacao)}</div>
               </div>
             </>
           );
