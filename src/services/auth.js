@@ -90,6 +90,20 @@ const login = async (login, password) => {
               result_.vinculo_atual.instituicao.lotes &&
                 JSON.stringify(result_.vinculo_atual.instituicao.lotes)
             );
+            localStorage.setItem(
+              "acesso_modulo_medicao_inicial",
+              JSON.stringify(
+                result_.vinculo_atual.instituicao.acesso_modulo_medicao_inicial
+              )
+            );
+            localStorage.setItem(
+              "dre_acesso_modulo_medicao_inicial",
+              JSON.stringify(
+                result_.vinculo_atual.instituicao.diretoria_regional &&
+                  result_.vinculo_atual.instituicao.diretoria_regional
+                    .acesso_modulo_medicao_inicial
+              )
+            );
             window.location.href = "/";
           } else {
             toastError(getError(result_));
@@ -118,6 +132,8 @@ const logout = () => {
   localStorage.removeItem("dre_nome");
   localStorage.removeItem("lotes");
   localStorage.removeItem("modalCestas");
+  localStorage.removeItem("acesso_modulo_medicao_inicial");
+  localStorage.removeItem("dre_acesso_modulo_medicao_inicial");
   window.location.href = "/login";
 };
 
