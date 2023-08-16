@@ -1053,8 +1053,10 @@ export const exibirTooltipRepeticao = (
     Number(value) > 0 &&
     !["Mês anterior", "Mês posterior"].includes(value) &&
     ((row.name.includes("repeticao_refeicao") &&
-      (!maxRefeicao || (Number(maxRefeicao) && value > maxRefeicao))) ||
+      (!maxRefeicao ||
+        (Number(maxRefeicao) && Number(value) > Number(maxRefeicao)))) ||
       (row.name.includes("repeticao_sobremesa") &&
-        (!maxSobremesa || (Number(maxSobremesa) && value > maxSobremesa))))
+        (!maxSobremesa ||
+          (Number(maxSobremesa) && Number(value) > Number(maxSobremesa)))))
   );
 };
