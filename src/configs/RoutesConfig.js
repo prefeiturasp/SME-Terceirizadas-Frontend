@@ -131,7 +131,8 @@ import {
   usuarioEhAdministradorNutriCODAE,
   usuarioEhDilogJuridico,
   usuarioEhDilog,
-  usuarioComAcessoTelaDetalharNotificacaoOcorrencia
+  usuarioComAcessoTelaDetalharNotificacaoOcorrencia,
+  usuarioComAcessoAoPainelAprovacoes
 } from "../helpers/utilities";
 import CadastroProdutoPage from "../pages/Produto/CadastroProdutoPage";
 import AtualizacaoProdutoFormPage from "../pages/Produto/AtualizacaoProdutoFormPage";
@@ -1855,7 +1856,8 @@ const routesConfig = [
       usuarioEhCronograma() ||
       usuarioEhDinutreDiretoria() ||
       usuarioEhDilogDiretoria() ||
-      usuarioEhEmpresaFornecedor()
+      usuarioEhEmpresaFornecedor() ||
+      usuarioEhCodaeDilog()
   },
   {
     /*
@@ -1885,7 +1887,7 @@ const routesConfig = [
     path: `/${constants.PRE_RECEBIMENTO}/${constants.PAINEL_APROVACOES}`,
     component: PainelAprovacoesPage,
     exact: true,
-    tipoUsuario: usuarioEhDinutreDiretoria() || usuarioEhDilogDiretoria()
+    tipoUsuario: usuarioComAcessoAoPainelAprovacoes()
   },
   {
     path: `/${constants.DINUTRE}/${constants.SOLICITACOES_PENDENTES}`,
