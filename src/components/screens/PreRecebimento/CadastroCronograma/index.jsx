@@ -11,14 +11,12 @@ import {
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesDistribuidores } from "services/logistica.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   cadastraCronograma,
   editaCronograma,
   getCronograma,
-  getEtapas,
   getRascunhos,
   getUnidadesDeMedidaLogistica
 } from "services/cronograma.service";
@@ -34,6 +32,7 @@ import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
+import FormEtapa from "./FormEtapa";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -45,7 +44,6 @@ export default () => {
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [etapas, setEtapas] = useState([{}]);
-  const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
@@ -85,24 +83,6 @@ export default () => {
     return fornecedores;
   };
 
-  const getEtapasFiltrado = etapa => {
-    if (etapa) {
-      const reg = new RegExp(etapa, "iu");
-      return etapasOptions.filter(a => reg.test(a.value));
-    }
-    return etapasOptions;
-  };
-
-  const adicionaEtapa = () => {
-    setEtapas([...etapas, {}]);
-  };
-
-  const deletaEtapa = index => {
-    let etapasNovo = [...etapas];
-    etapasNovo.splice(index, 1);
-    setEtapas(etapasNovo);
-  };
-
   const adicionaRecebimento = () => {
     setRecebimentos([...recebimentos, {}]);
   };
@@ -117,46 +97,6 @@ export default () => {
     setCollapse({
       [index]: !collapse[index]
     });
-  };
-
-  const quantidadeFaltante = values => {
-    let restante = values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (values[`quantidade_${index}`])
-        restante = restante - values[`quantidade_${index}`];
-    });
-    return restante;
-  };
-
-  const textoFaltante = values => {
-    let qtdFaltante = quantidadeFaltante(values);
-    let textoPadrao = (
-      <div>
-        Faltam
-        <span className="font-weight-bold">
-          &nbsp;
-          {qtdFaltante}
-          &nbsp;
-          {unidadeSelecionada.nome}
-          &nbsp;
-        </span>
-        para programar
-      </div>
-    );
-
-    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
-
-    return (
-      <div className="row">
-        <div
-          className={`col-12 texto-alimento-faltante ${
-            qtdFaltante === 0 ? "verde" : "vermelho"
-          }`}
-        >
-          {qtdFaltante < 0 ? textoAcima : textoPadrao}
-        </div>
-      </div>
-    );
   };
 
   const getOptionsDataProgramada = values => {
@@ -388,11 +328,6 @@ export default () => {
       );
     };
 
-    const buscaEtapas = async () => {
-      const response = await getEtapas();
-      setEtapasOptions(response.data);
-    };
-
     const buscaProdutos = async () => {
       const response = await getListaCompletaProdutosLogistica();
       setProdutosOptions(response.data.results);
@@ -404,7 +339,6 @@ export default () => {
     };
 
     buscaArmazens();
-    buscaEtapas();
     buscaFornecedores();
     buscaProdutos();
     buscaUnidadesMedida();
@@ -632,150 +566,14 @@ export default () => {
                             </div>
                           </div>
 
-                          <div className="subtitulo">
-                            Cronograma das Entregas
-                          </div>
-                          <hr className="linha-verde" />
-                          {etapas &&
-                            etapas.map((etapa, index) => (
-                              <>
-                                {index !== 0 && (
-                                  <>
-                                    <hr />
-                                    <div className="row">
-                                      <div className="w-100">
-                                        <Botao
-                                          texto=""
-                                          type={BUTTON_TYPE.BUTTON}
-                                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                                          icon="fas fa-trash"
-                                          className="float-right ml-3"
-                                          onClick={() => deletaEtapa(index)}
-                                          disabled={submitting}
-                                        />
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
-                                <div className="row">
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Nº do Empenho"
-                                      name={`empenho_${index}`}
-                                      placeholder="Informe o Nº do Empenho"
-                                      required
-                                      validate={required}
-                                      proibeLetras
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={AutoCompleteField}
-                                      options={getEtapasFiltrado(
-                                        values[`etapa_${index}`]
-                                      )}
-                                      label="Etapa"
-                                      name={`etapa_${index}`}
-                                      className="input-busca-produto"
-                                      placeholder="Selecione a Etapa"
-                                      required
-                                      validate={required}
-                                      esconderIcone
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={SelectSelecione}
-                                      naoDesabilitarPrimeiraOpcao
-                                      options={[
-                                        {
-                                          uuid: "Parte 1",
-                                          nome: "Parte 1"
-                                        },
-                                        {
-                                          uuid: "Parte 2",
-                                          nome: "Parte 2"
-                                        },
-                                        {
-                                          uuid: "Parte 3",
-                                          nome: "Parte 3"
-                                        },
-                                        {
-                                          uuid: "Parte 4",
-                                          nome: "Parte 4"
-                                        },
-                                        {
-                                          uuid: "Parte 5",
-                                          nome: "Parte 5"
-                                        }
-                                      ]}
-                                      label="Parte"
-                                      name={`parte_${index}`}
-                                      placeholder={"Selecione a Parte"}
-                                      validate={() =>
-                                        duplicados.includes(index) &&
-                                        "Parte já selecionada"
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                                <div className="row">
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputComData}
-                                      label="Data Programada"
-                                      name={`data_programada_${index}`}
-                                      placeholder="Selecionar a Data"
-                                      required
-                                      validate={required}
-                                      writable={false}
-                                      minDate={null}
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Quantidade"
-                                      name={`quantidade_${index}`}
-                                      placeholder="Digite a Quantidade"
-                                      validate={() =>
-                                        restante !== 0 &&
-                                        `quantidade total é diferente de ${values.quantidade_total ||
-                                          0}`
-                                      }
-                                      required
-                                      type="number"
-                                      pattern="[0-9]*"
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Total de Embalagens"
-                                      name={`total_embalagens_${index}`}
-                                      placeholder="Digite a Quantidade"
-                                      required
-                                      validate={required}
-                                      apenasNumeros
-                                    />
-                                  </div>
-                                </div>
-                              </>
-                            ))}
-
-                          {values.quantidade_total && textoFaltante(values)}
-
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Etapa"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaEtapa()}
-                              disabled={submitting}
-                            />
-                          </div>
+                          <FormEtapa
+                            etapas={etapas}
+                            setEtapas={setEtapas}
+                            values={values}
+                            duplicados={duplicados}
+                            restante={restante}
+                            unidadeMedida={unidadeSelecionada}
+                          />
                         </div>
                       </div>
                     </div>
