@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { Spin } from "antd";
 import {
@@ -7,7 +8,6 @@ import {
 } from "services/cronograma.service";
 import AcoesDetalhar from "../AcoesDetalhar";
 import { usuarioEhEmpresaFornecedor } from "helpers/utilities";
-import AcoesDetalharCronograma from "../AcoesDetalharCronograma";
 import AcoesDetalharDinutreDiretoria from "../AcoesDetalharDinutreDiretoria";
 import AcoesDetalharDilogDiretoria from "../AcoesDetalharDilogDiretoria";
 import {
@@ -31,6 +31,8 @@ export default () => {
   const uuid = urlParams.get("uuid");
   const [cronograma, setCronograma] = useState(null);
   const [carregando, setCarregando] = useState(false);
+
+  const history = useHistory();
 
   const esconderLogFornecedor = logs => {
     return logs.filter(
@@ -84,6 +86,11 @@ export default () => {
         onClick={() => baixarPDFCronograma()}
       />
     );
+
+  const handleBack = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    history.goBack();
+  };
 
   useEffect(() => {
     getDetalhes();
@@ -144,7 +151,13 @@ export default () => {
               )}
               {usuarioEhCronograma() && (
                 <div className="mt-4 mb-4">
-                  <AcoesDetalharCronograma cronograma={cronograma} />
+                  <Botao
+                    texto="Voltar"
+                    type={BUTTON_TYPE.BUTTON}
+                    style={BUTTON_STYLE.GREEN_OUTLINE}
+                    className="float-right ml-3"
+                    onClick={() => handleBack()}
+                  />
                   {botaoImprimir}
                 </div>
               )}
