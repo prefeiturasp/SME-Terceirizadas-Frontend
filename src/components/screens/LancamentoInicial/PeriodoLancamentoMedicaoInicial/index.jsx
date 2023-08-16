@@ -586,8 +586,8 @@ export default () => {
               return !categoria.nome.includes("DIETA");
             }
           );
-          setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
         }
+        setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
         setCategoriasDeMedicao(response_categorias_medicao);
       }
 
@@ -1088,6 +1088,7 @@ export default () => {
       });
       setWeekColumns(week);
     }
+
     const formatar = async () => {
       formatarDadosValoresMedicao(
         mesAnoFormatadoState,
