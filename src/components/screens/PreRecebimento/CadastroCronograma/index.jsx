@@ -32,7 +32,8 @@ import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
-import FormEtapa from "./FormEtapa";
+import FormEtapa from "../../../PreRecebimento/FormEtapa";
+import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -355,32 +356,8 @@ export default () => {
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
-    let restante = changes.values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (changes.values[`quantidade_${index}`])
-        restante = restante - changes.values[`quantidade_${index}`];
-    });
-    setRestante(restante);
-    if (etapas.length < 2) return;
-    const partes_etapas = [];
-    etapas.forEach((_, i) => {
-      partes_etapas.push({
-        parte: changes.values[`parte_${i}`],
-        etapa: changes.values[`etapa_${i}`],
-        index: i
-      });
-    });
-    const duplicados = [];
-    partes_etapas.forEach(pe => {
-      if (
-        partes_etapas.filter(
-          pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
-        ).length > 1
-      ) {
-        duplicados.push(pe.index);
-      }
-    });
-    setDuplicados(duplicados);
+
+    onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
   return (
     <Spin tip="Carregando..." spinning={carregando}>

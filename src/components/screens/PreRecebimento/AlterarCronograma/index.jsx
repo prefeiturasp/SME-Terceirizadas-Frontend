@@ -29,8 +29,9 @@ import {
 } from "helpers/utilities";
 import { Radio, Spin } from "antd";
 import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
-import FormEtapa from "../CadastroCronograma/FormEtapa";
+import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { textAreaRequired } from "helpers/fieldValidators";
+import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -244,35 +245,6 @@ export default ({ analiseSolicitacao }) => {
     // eslint-disable-next-line
   }, [uuid]);
 
-  const onChangeFormSpy = async changes => {
-    let restante = changes.values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (changes.values[`quantidade_${index}`])
-        restante = restante - changes.values[`quantidade_${index}`];
-    });
-    setRestante(restante);
-    if (etapas.length < 2) return;
-    const partes_etapas = [];
-    etapas.forEach((_, i) => {
-      partes_etapas.push({
-        parte: changes.values[`parte_${i}`],
-        etapa: changes.values[`etapa_${i}`],
-        index: i
-      });
-    });
-    const duplicados = [];
-    partes_etapas.forEach(pe => {
-      if (
-        partes_etapas.filter(
-          pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
-        ).length > 1
-      ) {
-        duplicados.push(pe.index);
-      }
-    });
-    setDuplicados(duplicados);
-  };
-
   return (
     <Spin tip="Carregando..." spinning={carregando}>
       <div className="card mt-3">
@@ -316,7 +288,14 @@ export default ({ analiseSolicitacao }) => {
                   <form onSubmit={handleSubmit}>
                     <FormSpy
                       subscription={{ values: true, active: true, valid: true }}
-                      onChange={changes => onChangeFormSpy(changes)}
+                      onChange={changes =>
+                        onChangeEtapas(
+                          changes,
+                          etapas,
+                          setRestante,
+                          setDuplicados
+                        )
+                      }
                     />
                     <p className="head-green">
                       Informe as Alterações Necessárias
@@ -409,8 +388,6 @@ export default ({ analiseSolicitacao }) => {
                         setAprovacaoDilog={setAprovacaoDilog}
                       />
                     )}
-
-                    {console.log(values)}
 
                     <div className="mt-4 mb-4">
                       <AcoesAlterar
