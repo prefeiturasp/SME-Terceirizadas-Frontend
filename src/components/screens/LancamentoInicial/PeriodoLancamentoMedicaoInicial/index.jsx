@@ -630,23 +630,16 @@ export default () => {
         );
         setValoresMatriculados(response_matriculados.data);
 
-        if (
-          location &&
-          location.state &&
-          location.state.periodosInclusaoContinua
-        ) {
-          const periodos_escolares = Object.keys(
-            location.state.periodosInclusaoContinua
-          );
-          response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
-            escola.uuid,
-            mes,
-            ano,
-            periodos_escolares,
-            location
-          );
-          setInclusoesAutorizadas(response_inclusoes_autorizadas);
-        }
+        response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+          escola.uuid,
+          mes,
+          ano,
+          location && location.state && location.state.periodosInclusaoContinua
+            ? Object.keys(location.state.periodosInclusaoContinua)
+            : [periodo.periodo_escolar.nome],
+          location
+        );
+        setInclusoesAutorizadas(response_inclusoes_autorizadas);
 
         response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
           escola.uuid,
