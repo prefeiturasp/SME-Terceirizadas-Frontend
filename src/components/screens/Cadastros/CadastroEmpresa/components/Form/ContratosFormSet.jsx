@@ -13,6 +13,8 @@ import { useState } from "react";
 import { encerraContratoTerceirizada } from "services/terceirizada.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { ModalRemoveContrato } from "../ModalRemoveContrato";
+import MaskedInputText from "components/Shareable/Input/MaskedInputText";
+import { numeroProcessoContratoSEIMask } from "constants/shared";
 
 const contratosEstadoInicial = {
   numero_processo: null,
@@ -90,8 +92,9 @@ export const ContratosFormSet = ({
                       <div className="col-6">
                         <Field
                           name={`numero_processo_${index}`}
-                          component={InputText}
-                          label="Nº do Processo Administrativo do Contrato"
+                          component={MaskedInputText}
+                          mask={numeroProcessoContratoSEIMask}
+                          label="Nº do Processo Administrativo do Contrato (SEI)"
                           required
                           validate={required}
                           apenasNumeros
