@@ -19,6 +19,8 @@ import { numeroProcessoContratoSEIMask } from "constants/shared";
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
+  numero_ata_chamada_publica: null,
+  numero_pregao: null,
   vigencia_de: null,
   vigencia_ate: null
 };
@@ -89,7 +91,7 @@ export const ContratosFormSet = ({
                 return (
                   <div key={index}>
                     <div className="row">
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_processo_${index}`}
                           component={MaskedInputText}
@@ -100,7 +102,7 @@ export const ContratosFormSet = ({
                           apenasNumeros
                         />
                       </div>
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_contrato_${index}`}
                           component={InputText}
@@ -109,7 +111,25 @@ export const ContratosFormSet = ({
                           validate={required}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
+                        <Field
+                          name={`numero_ata_chamada_publica_${index}`}
+                          component={InputText}
+                          label="Nº da ATA/Chamada Pública"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          name={`numero_pregao_${index}`}
+                          component={InputText}
+                          label="Nº do Pregão Eletrônico"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-4">
                         <Field
                           component={InputComData}
                           label="Vigência do Contrato"
@@ -119,7 +139,7 @@ export const ContratosFormSet = ({
                           required
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
                         <Field
                           component={InputComData}
                           label="&nbsp;"

@@ -93,6 +93,8 @@ export const CadastroEmpresa = () => {
     {
       numero_processo: null,
       numero_contrato: null,
+      numero_ata_chamada_publica: null,
+      numero_pregao: null,
       vigencia_de: null,
       vigencia_ate: null
     }
@@ -260,11 +262,14 @@ export const CadastroEmpresa = () => {
 
   const atribuiContratosForm = data => {
     setContratos(data.contratos);
-    data.contratos.forEach((contato, indice) => {
-      data[`numero_contrato_${indice}`] = contato.numero;
-      data[`numero_processo_${indice}`] = contato.processo;
-      data[`vigencia_de_${indice}`] = contato.vigencias[0].data_inicial;
-      data[`vigencia_ate_${indice}`] = contato.vigencias[0].data_final;
+    data.contratos.forEach((contrato, indice) => {
+      data[`numero_contrato_${indice}`] = contrato.numero;
+      data[`numero_processo_${indice}`] = contrato.processo;
+      data[`numero_ata_chamada_publica_${indice}`] =
+        contrato.ata_chamada_publica;
+      data[`numero_pregao_${indice}`] = contrato.pregao;
+      data[`vigencia_de_${indice}`] = contrato.vigencias[0].data_inicial;
+      data[`vigencia_ate_${indice}`] = contrato.vigencias[0].data_final;
     });
 
     return data;
