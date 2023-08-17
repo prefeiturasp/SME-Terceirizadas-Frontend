@@ -39,6 +39,7 @@ import "./style.scss";
 import ModalSolicitacaoDownload from "components/Shareable/ModalSolicitacaoDownload";
 import { ModalEnviarParaCodaeECodaeAprovar } from "./components/ModalEnviarParaCodaeECodaeAprovar";
 import { ModalSolicitarCorrecaoUE } from "./components/ModalSolicitarCorrecaoUE";
+import { ModalHistoricoCorrecoesPeriodo } from "./components/ModalHistoricoCorrecoesPeriodo";
 import ModalHistorico from "components/Shareable/ModalHistorico";
 import { usuarioEhDRE, usuarioEhMedicao } from "helpers/utilities";
 
@@ -69,6 +70,10 @@ export const ConferenciaDosLancamentos = () => {
   const [
     showModalSolicitarCorrecaoUE,
     setShowModalSolicitarCorrecaoUE
+  ] = useState(false);
+  const [
+    showModalHistoricoCorrecoesPeriodo,
+    setShowModalHistoricoCorrecoesPeriodo
   ] = useState(false);
   const [logCorrecaoOcorrencia, setLogCorrecaoOcorrencia] = useState(null);
   const [logCorrecaoOcorrenciaCODAE, setLogCorrecaoOcorrenciaCODAE] = useState(
@@ -649,36 +654,56 @@ export const ConferenciaDosLancamentos = () => {
                       </div>
                     </div>
                     <hr />
-                    <div>
-                      <p className="section-title-conf-lancamentos">
-                        Acompanhamento do lançamento
-                      </p>
-                      {periodosGruposMedicao.map((periodoGrupo, index) => {
-                        return (
-                          <TabelaLancamentosPeriodo
-                            key={index}
-                            periodoGrupo={periodoGrupo}
-                            periodosSimples={periodosSimples}
-                            mesSolicitacao={mesSolicitacao}
-                            anoSolicitacao={anoSolicitacao}
-                            form={form}
-                            aprovarPeriodo={(
-                              periodoGrupo,
-                              nomePeridoFormatado
-                            ) =>
-                              aprovarPeriodo(periodoGrupo, nomePeridoFormatado)
-                            }
-                            values={values}
-                            getPeriodosGruposMedicaoAsync={() =>
-                              getPeriodosGruposMedicaoAsync()
-                            }
-                            setOcorrenciaExpandida={() =>
-                              setOcorrenciaExpandida(false)
-                            }
-                            solicitacao={solicitacao}
-                          />
-                        );
-                      })}
+                    <div className="row">
+                      <div className="col-6">
+                        <p className="section-title-conf-lancamentos">
+                          Acompanhamento do lançamento
+                        </p>
+                      </div>
+                      <div className="col-6">
+                        {solicitacao.historico &&
+                          solicitacao.historico !== "" && (
+                            <Botao
+                              className="float-right"
+                              texto="Histórico de correções"
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
+                              onClick={() =>
+                                setShowModalHistoricoCorrecoesPeriodo(true)
+                              }
+                            />
+                          )}
+                      </div>
+                      <div className="col-12 mt-3">
+                        {periodosGruposMedicao.map((periodoGrupo, index) => {
+                          return (
+                            <TabelaLancamentosPeriodo
+                              key={index}
+                              periodoGrupo={periodoGrupo}
+                              periodosSimples={periodosSimples}
+                              mesSolicitacao={mesSolicitacao}
+                              anoSolicitacao={anoSolicitacao}
+                              form={form}
+                              aprovarPeriodo={(
+                                periodoGrupo,
+                                nomePeridoFormatado
+                              ) =>
+                                aprovarPeriodo(
+                                  periodoGrupo,
+                                  nomePeridoFormatado
+                                )
+                              }
+                              values={values}
+                              getPeriodosGruposMedicaoAsync={() =>
+                                getPeriodosGruposMedicaoAsync()
+                              }
+                              setOcorrenciaExpandida={() =>
+                                setOcorrenciaExpandida(false)
+                              }
+                              solicitacao={solicitacao}
+                            />
+                          );
+                        })}
+                      </div>
                     </div>
                     <div className="float-right">
                       <Botao
@@ -774,6 +799,18 @@ export const ConferenciaDosLancamentos = () => {
             solicitarCorrecaoMedicao();
           }}
         />
+        {solicitacao &&
+          solicitacao.historico &&
+          solicitacao.historico !== "" && (
+            <ModalHistoricoCorrecoesPeriodo
+              showModal={showModalHistoricoCorrecoesPeriodo}
+              setShowModal={value =>
+                setShowModalHistoricoCorrecoesPeriodo(value)
+              }
+              solicitacao={solicitacao}
+              historicos={solicitacao.historico}
+            />
+          )}
       </Spin>
     </div>
   );
