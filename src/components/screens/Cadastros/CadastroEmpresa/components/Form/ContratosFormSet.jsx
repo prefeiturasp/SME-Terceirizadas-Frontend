@@ -161,7 +161,7 @@ export const ContratosFormSet = ({
                               texto="Remover Contrato"
                               icon="fas fa-trash"
                               type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() => {
                                 removeContrato(index);
                               }}
