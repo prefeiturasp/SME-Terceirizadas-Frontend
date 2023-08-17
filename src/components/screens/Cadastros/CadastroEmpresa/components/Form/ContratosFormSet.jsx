@@ -123,6 +123,7 @@ export const ContratosFormSet = ({
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
+                          maxDate={null}
                         />
                       </div>
                       {terceirizada &&
