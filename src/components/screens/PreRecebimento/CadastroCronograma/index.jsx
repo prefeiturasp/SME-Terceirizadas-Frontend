@@ -565,7 +565,10 @@ export default () => {
                               />
                             </div>
                           </div>
-
+                          <div className="subtitulo">
+                            Cronograma das Entregas
+                          </div>
+                          <hr className="linha-verde" />
                           <FormEtapa
                             etapas={etapas}
                             setEtapas={setEtapas}

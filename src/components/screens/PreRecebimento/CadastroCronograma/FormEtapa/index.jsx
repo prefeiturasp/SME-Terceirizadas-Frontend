@@ -11,8 +11,8 @@ import AutoCompleteField from "components/Shareable/AutoCompleteField";
 import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
-//import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
+import moment from "moment";
 
 export default ({
   etapas,
@@ -24,6 +24,7 @@ export default ({
   fornecedor = false
 }) => {
   const [etapasOptions, setEtapasOptions] = useState([{}]);
+  const [desabilitar, setDesabilitar] = useState([]);
 
   const getEtapasFiltrado = etapa => {
     if (etapa) {
@@ -43,15 +44,6 @@ export default ({
     setEtapas(etapasNovo);
   };
 
-  // const quantidadeFaltante = values => {
-  //   let restante = values.quantidade_total;
-  //   etapas.forEach((e, index) => {
-  //     if (values[`quantidade_${index}`])
-  //       restante = restante - values[`quantidade_${index}`];
-  //   });
-  //   return restante;
-  // };
-
   const textoFaltante = () => {
     let qtdFaltante = restante;
     let textoPadrao = (
@@ -61,7 +53,7 @@ export default ({
           &nbsp;
           {qtdFaltante}
           &nbsp;
-          {unidadeMedida.nome}
+          {unidadeMedida && unidadeMedida.nome}
           &nbsp;
         </span>
         para programar
@@ -92,10 +84,28 @@ export default ({
     buscaEtapas();
   }, []);
 
+  useEffect(() => {
+    const desativaCampos = () => {
+      if (fornecedor) {
+        let array = [];
+        etapas.forEach((etapa, index) => {
+          let dataProgramada = moment(
+            values[`data_programada_${index}`],
+            "DD/MM/YYYY"
+          ).toDate();
+          if (dataProgramada < new Date().setHours(0, 0, 0, 0)) {
+            array[index] = true;
+          }
+        });
+        setDesabilitar(array);
+      }
+    };
+
+    desativaCampos();
+  }, [values]);
+
   return (
     <>
-      <div className="subtitulo">Cronograma das Entregas</div>
-      <hr className="linha-verde" />
       {etapas &&
         etapas.map((etapa, index) => (
           <>
@@ -128,6 +138,7 @@ export default ({
                       required
                       validate={required}
                       proibeLetras
+                      disabled={desabilitar[index]}
                     />
                   }
                 </div>
@@ -143,6 +154,7 @@ export default ({
                   required
                   validate={required}
                   esconderIcone
+                  disabled={desabilitar[index]}
                 />
               </div>
               <div className="col-4">
@@ -177,10 +189,9 @@ export default ({
                   validate={() =>
                     duplicados.includes(index) && "Parte já selecionada"
                   }
+                  disabled={desabilitar[index]}
                 />
               </div>
-            </div>
-            <div className="row">
               <div className="col-4">
                 <Field
                   component={InputComData}
@@ -190,7 +201,8 @@ export default ({
                   required
                   validate={required}
                   writable={false}
-                  minDate={null}
+                  minDate={new Date()}
+                  disabled={desabilitar[index]}
                 />
               </div>
               <div className="col-4">
@@ -207,6 +219,7 @@ export default ({
                   required
                   type="number"
                   pattern="[0-9]*"
+                  disabled={desabilitar[index]}
                 />
               </div>
               <div className="col-4">
@@ -218,6 +231,7 @@ export default ({
                   required
                   validate={required}
                   apenasNumeros
+                  disabled={desabilitar[index]}
                 />
               </div>
             </div>

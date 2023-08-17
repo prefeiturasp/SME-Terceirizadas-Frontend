@@ -30,6 +30,7 @@ import {
 import { Radio, Spin } from "antd";
 import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCronograma";
 import FormEtapa from "../CadastroCronograma/FormEtapa";
+import { textAreaRequired } from "helpers/fieldValidators";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -37,7 +38,6 @@ export default ({ analiseSolicitacao }) => {
   const [restante, setRestante] = useState(undefined);
   const [duplicados, setDuplicados] = useState([]);
   const [etapas, setEtapas] = useState([{}]);
-  //const [etapasNovas, setEtapasNovas] = useState([{}]);
   const [initialValues, setInitialValues] = useState({});
   const [cronograma, setCronograma] = useState(null);
   const [aprovacaoDinutre, setAprovacaoDinutre] = useState(null);
@@ -76,7 +76,6 @@ export default ({ analiseSolicitacao }) => {
       geraInitialValuesSolicitacao(responseSolicitacaoCronograma.data);
       setCronograma(responseCronograma);
       setEtapas(responseCronograma.etapas);
-      //setEtapasNovas(responseCronograma.etapas);
       setRestante(responseCronograma.qtd_total_programada);
       setDuplicados([]);
       setCarregando(false);
@@ -247,7 +246,6 @@ export default ({ analiseSolicitacao }) => {
 
   const onChangeFormSpy = async changes => {
     let restante = changes.values.quantidade_total;
-    console.log(changes.values);
     etapas.forEach((e, index) => {
       if (changes.values[`quantidade_${index}`])
         restante = restante - changes.values[`quantidade_${index}`];
@@ -309,15 +307,20 @@ export default ({ analiseSolicitacao }) => {
                   esconderInformacoesAdicionais={false}
                 />
               )}
+              <hr />
               <Form
                 onSubmit={defineSubmit}
                 initialValues={initialValues}
+                validate={() => {}}
                 render={({ handleSubmit, values, errors }) => (
                   <form onSubmit={handleSubmit}>
                     <FormSpy
                       subscription={{ values: true, active: true, valid: true }}
                       onChange={changes => onChangeFormSpy(changes)}
                     />
+                    <p className="head-green">
+                      Informe as Alterações Necessárias
+                    </p>
                     <FormEtapa
                       etapas={etapas}
                       setEtapas={setEtapas}
@@ -337,6 +340,7 @@ export default ({ analiseSolicitacao }) => {
                         placeholder="Escreva o motivo da solicitação de alteração"
                         className="input-busca-produto"
                         disabled={solicitacaoAlteracaoCronograma !== null}
+                        validate={textAreaRequired}
                       />
                     </div>
                     {(usuarioEhDinutreDiretoria() ||
@@ -405,6 +409,8 @@ export default ({ analiseSolicitacao }) => {
                         setAprovacaoDilog={setAprovacaoDilog}
                       />
                     )}
+
+                    {console.log(values)}
 
                     <div className="mt-4 mb-4">
                       <AcoesAlterar
