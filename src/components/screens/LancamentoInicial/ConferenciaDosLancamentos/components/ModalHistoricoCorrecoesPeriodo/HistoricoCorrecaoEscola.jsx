@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
+import { formataMesNome } from "helpers/utilities";
 import "./style.scss";
 
 export const HistoricoCorrecaoEscola = ({ ...props }) => {
-  const { solicitacao, historico, retornaIniciais, formataMesNome } = props;
+  const { solicitacao, historico, retornaIniciais } = props;
 
   return (
     <Fragment>

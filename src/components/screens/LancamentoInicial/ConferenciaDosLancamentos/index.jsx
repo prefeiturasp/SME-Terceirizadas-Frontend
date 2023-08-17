@@ -799,18 +799,14 @@ export const ConferenciaDosLancamentos = () => {
             solicitarCorrecaoMedicao();
           }}
         />
-        {solicitacao &&
-          solicitacao.historico &&
-          solicitacao.historico !== "" && (
-            <ModalHistoricoCorrecoesPeriodo
-              showModal={showModalHistoricoCorrecoesPeriodo}
-              setShowModal={value =>
-                setShowModalHistoricoCorrecoesPeriodo(value)
-              }
-              solicitacao={solicitacao}
-              historicos={solicitacao.historico}
-            />
-          )}
+        {solicitacao && solicitacao.historico && (
+          <ModalHistoricoCorrecoesPeriodo
+            showModal={showModalHistoricoCorrecoesPeriodo}
+            setShowModal={value => setShowModalHistoricoCorrecoesPeriodo(value)}
+            solicitacao={solicitacao}
+            historicos={solicitacao.historico}
+          />
+        )}
       </Spin>
     </div>
   );
