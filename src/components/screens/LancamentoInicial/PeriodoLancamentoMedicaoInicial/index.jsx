@@ -497,6 +497,12 @@ export default () => {
         mes: mes,
         ano: ano
       };
+      if (location.state.grupo !== "Programas e Projetos") {
+        params_dietas_autorizadas["periodo_escolar"] =
+          periodo.periodo_escolar.uuid;
+      } else {
+        params_dietas_autorizadas["unificado"] = true;
+      }
       response_log_dietas_autorizadas = await getLogDietasAutorizadasPeriodo(
         params_dietas_autorizadas
       );
