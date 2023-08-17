@@ -12,13 +12,14 @@ import {
   usuarioEhDilogDiretoria,
   usuarioEhDinutreDiretoria,
   usuarioEhPreRecebimento,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
+  usuarioComAcessoAoPainelAprovacoes
 } from "helpers/utilities";
 
 const MenuPreRecebimento = () => {
   return (
     <Menu id="PreRecebimento" icon="fa-calendar-check" title="Pré-Recebimento">
-      {(usuarioEhDinutreDiretoria() || usuarioEhDilogDiretoria()) && (
+      {usuarioComAcessoAoPainelAprovacoes() && (
         <LeafItem to={`/${PRE_RECEBIMENTO}/${PAINEL_APROVACOES}`}>
           Painel de Aprovações
         </LeafItem>

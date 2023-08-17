@@ -45,6 +45,19 @@ export const CARD_PENDENTES_ASSINATURA_DILOG = {
   href: `/${DINUTRE}/${SOLICITACOES_PENDENTES}`
 };
 
+export const CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS = {
+  id: "Aguardando Assinaturas",
+  titulo: "Aguardando Assinaturas",
+  icon: "fa-exclamation-triangle",
+  style: "card-pendente-assinatura",
+  incluir_status: [
+    "ASSINADO_E_ENVIADO_AO_FORNECEDOR",
+    "ASSINADO_FORNECEDOR",
+    "ASSINADO_DINUTRE"
+  ],
+  href: `#`
+};
+
 export const CARD_SOLICITACOES_ALTERACOES_DINUTRE = {
   id: "Solicitações de Alterações",
   titulo: "Solicitações de Alterações",
@@ -52,6 +65,15 @@ export const CARD_SOLICITACOES_ALTERACOES_DINUTRE = {
   style: "card-solicitacoes-alteracoes",
   incluir_status: ["CRONOGRAMA_CIENTE"],
   href: `/${DINUTRE}/${SOLICITACOES_ALTERACOES}`
+};
+
+export const CARD_VISAO_CRONOGRAMA_SOLICITACOES_ALTERACOES_EM_ANALISE = {
+  id: "Solicitações de Alterações",
+  titulo: "Solicitações de Alterações",
+  icon: "fa-exclamation-triangle",
+  style: "card-solicitacoes-alteracoes",
+  incluir_status: ["EM_ANALISE"],
+  href: `#`
 };
 
 export const CARD_SOLICITACOES_APROVADAS_DINUTRE = {
@@ -110,6 +132,11 @@ export const cards_dilog = [
   CARD_CRONOGRAMAS_ASSINADOS
 ];
 
+export const cards_visao_cronograma = [
+  CARD_VISAO_CRONOGRAMA_AGUARDANDO_ASSINATURAS,
+  CARD_CRONOGRAMAS_ASSINADOS
+];
+
 export const cards_alteracao_dinutre = [
   CARD_SOLICITACOES_ALTERACOES_DINUTRE,
   CARD_SOLICITACOES_APROVADAS_DINUTRE,
@@ -118,6 +145,12 @@ export const cards_alteracao_dinutre = [
 
 export const cards_alteracao_dilog = [
   CARD_SOLICITACOES_ALTERACOES_DILOG,
+  CARD_SOLICITACOES_APROVADAS_DILOG,
+  CARD_SOLICITACOES_REPROVADAS_DILOG
+];
+
+export const cards_alteracao_visao_cronograma = [
+  CARD_VISAO_CRONOGRAMA_SOLICITACOES_ALTERACOES_EM_ANALISE,
   CARD_SOLICITACOES_APROVADAS_DILOG,
   CARD_SOLICITACOES_REPROVADAS_DILOG
 ];
