@@ -18,7 +18,8 @@ export default ({
   visoes,
   perfis,
   visaoUnica,
-  desabilitaCadastro
+  desabilitaCadastro,
+  qtdLimiteCadastro
 }) => {
   const initialValues = visaoUnica
     ? {
@@ -31,6 +32,7 @@ export default ({
     const filtros = { ...values };
     setFiltros({ ...filtros });
   };
+
   return (
     <div className="filtros-gestao-acesso">
       <Form
@@ -91,10 +93,10 @@ export default ({
                 style={BUTTON_STYLE.GREEN}
                 className="float-left"
                 onClick={() => setShowCadastro(true)}
-                disabled={desabilitaCadastro}
+                disabled={desabilitaCadastro()}
                 tooltipExterno={
-                  desabilitaCadastro
-                    ? "É possível manter até 4 usuários utilizando o SIGPAE em sua UE."
+                  desabilitaCadastro()
+                    ? `É possível manter até ${qtdLimiteCadastro} usuários utilizando o SIGPAE em sua UE.`
                     : ""
                 }
               />
