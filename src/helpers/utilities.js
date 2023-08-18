@@ -662,10 +662,17 @@ export const usuarioEhMedicao = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
 };
 
-export const acessoModuloMedicaoInicial = () => {
+export const acessoModuloMedicaoInicialEscola = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
     localStorage.getItem("dre_acesso_modulo_medicao_inicial") === "true"
+  );
+};
+
+export const acessoModuloMedicaoInicialDRE = () => {
+  return (
+    localStorage.getItem("possui_escolas_com_acesso_ao_medicao_inicial") ===
+    "true"
   );
 };
 
@@ -939,7 +946,9 @@ export const exibirModuloMedicaoInicial = () => {
 
   switch (localStorage.getItem("tipo_perfil")) {
     case `"escola"`:
-      return acessoModuloMedicaoInicial();
+      return acessoModuloMedicaoInicialEscola();
+    case `"diretoriaregional"`:
+      return acessoModuloMedicaoInicialDRE();
     default:
       return false;
   }

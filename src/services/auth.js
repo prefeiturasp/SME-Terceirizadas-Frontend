@@ -104,6 +104,14 @@ const login = async (login, password) => {
                     .acesso_modulo_medicao_inicial
               )
             );
+            localStorage.setItem(
+              "possui_escolas_com_acesso_ao_medicao_inicial",
+              JSON.stringify(
+                result_.vinculo_atual.instituicao
+                  .possui_escolas_com_acesso_ao_medicao_inicial
+              )
+            );
+
             window.location.href = "/";
           } else {
             toastError(getError(result_));
@@ -134,6 +142,7 @@ const logout = () => {
   localStorage.removeItem("modalCestas");
   localStorage.removeItem("acesso_modulo_medicao_inicial");
   localStorage.removeItem("dre_acesso_modulo_medicao_inicial");
+  localStorage.removeItem("possui_escolas_com_acesso_ao_medicao_inicial");
   window.location.href = "/login";
 };
 
