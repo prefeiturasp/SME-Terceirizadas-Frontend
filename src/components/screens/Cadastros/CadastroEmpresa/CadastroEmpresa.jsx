@@ -283,29 +283,37 @@ export const CadastroEmpresa = () => {
     setExibirModal(false);
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uuid = urlParams.get("uuid");
-    if (uuid) {
-      setUuid(uuid);
-      setCarregando(true);
-      setTituloModal("Confirma atualização de Empresa?");
-      getTerceirizadaUUID(uuid).then(response => {
-        if (response.status !== HTTP_STATUS.NOT_FOUND) {
-          let lotesNomesSelecionados = [];
-          let lotesSelecionados = [];
-          response.data.lotes.forEach(lote => {
-            lotesNomesSelecionados.push(lote.nome);
-            lotesSelecionados.push(lote.uuid);
-          });
-          setLotesSelecionados(lotesSelecionados);
-        }
-        setaValoresForm(response.data);
-        setCarregando(false);
-      });
-    }
-    setEhDistribuidor(verificarUsuarioEhDistribuidor());
-  }, []);
+  const atualizarEmpresa = (uuid, dados, ehDistribuidor) => {
+    const service = ehDistribuidor ? updateNaoTerceirizada : updateTerceirizada;
+
+    service(uuid, dados).then(response => {
+      if (response.status === HTTP_STATUS.OK) {
+        toastSuccess("Empresa atualizada com sucesso!");
+        history.push("/configuracoes/cadastros/empresas-cadastradas");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(
+          `Erro ao atualizar cadastro de empresa: ${getError(response.data)}.`
+        );
+      } else {
+        toastError(`Erro ao atualizar cadastro de empresa`);
+      }
+    });
+  };
+
+  const cadastrarEmpresa = (dados, ehDistribuidor) => {
+    const service = ehDistribuidor ? createNaoTerceirizada : createTerceirizada;
+
+    service(dados).then(response => {
+      if (response.status === HTTP_STATUS.CREATED) {
+        toastSuccess("Empresa cadastrada com sucesso!");
+        history.push("/configuracoes/cadastros/empresas-cadastradas");
+      } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
+        toastError(`Erro ao cadastrar empresa: ${getError(response.data)}.`);
+      } else {
+        toastError(`Erro ao cadastrar empresa`);
+      }
+    });
+  };
 
   const onSubmit = async values => {
     const dados = {
@@ -316,69 +324,43 @@ export const CadastroEmpresa = () => {
       contatosNutricionista: contatosNutricionista,
       lotesSelecionados: lotesSelecionados
     };
+
     const data = formataJsonParaEnvio(values, dados);
+
     if (uuid !== null) {
-      if (!ehDistribuidor) {
-        updateTerceirizada(uuid, data).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Empresa atualizada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao atualizar cadastro de empresa: ${getError(
-                response.data
-              )}.`
-            );
-          } else {
-            toastError(`Erro ao atualizar cadastro de empresa`);
-          }
-        });
-      } else {
-        updateNaoTerceirizada(uuid, data).then(response => {
-          if (response.status === HTTP_STATUS.OK) {
-            toastSuccess("Empresa atualizada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao atualizar cadastro de empresa: ${getError(
-                response.data
-              )}.`
-            );
-          } else {
-            toastError(`Erro ao atualizar cadastro de empresa`);
-          }
-        });
-      }
+      atualizarEmpresa(uuid, data, ehDistribuidor);
     } else {
-      if (!ehDistribuidor) {
-        createTerceirizada(data).then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Empresa cadastrada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao cadastrar empresa: ${getError(response.data)}.`
-            );
-          } else {
-            toastError(`Erro ao cadastrar empresa`);
-          }
-        });
-      } else {
-        createNaoTerceirizada(data).then(response => {
-          if (response.status === HTTP_STATUS.CREATED) {
-            toastSuccess("Empresa cadastrada com sucesso!");
-            history.push("/configuracoes/cadastros/empresas-cadastradas");
-          } else if (response.status === HTTP_STATUS.BAD_REQUEST) {
-            toastError(
-              `Erro ao cadastrar empresa: ${getError(response.data)}.`
-            );
-          } else {
-            toastError(`Erro ao cadastrar empresa`);
-          }
-        });
-      }
+      cadastrarEmpresa(data, ehDistribuidor);
     }
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const uuid = urlParams.get("uuid");
+
+    if (uuid) {
+      setUuid(uuid);
+      setCarregando(true);
+      setTituloModal("Confirma atualização de Empresa?");
+
+      getTerceirizadaUUID(uuid).then(response => {
+        if (response.status !== HTTP_STATUS.NOT_FOUND) {
+          let lotesNomesSelecionados = [];
+          let lotesSelecionados = [];
+          response.data.lotes.forEach(lote => {
+            lotesNomesSelecionados.push(lote.nome);
+            lotesSelecionados.push(lote.uuid);
+          });
+          setLotesSelecionados(lotesSelecionados);
+        }
+
+        setaValoresForm(response.data);
+        setCarregando(false);
+      });
+    }
+
+    setEhDistribuidor(verificarUsuarioEhDistribuidor());
+  }, []);
 
   return (
     <Spin tip="Carregando..." spinning={carregando}>
