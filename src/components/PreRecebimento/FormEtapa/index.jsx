@@ -121,6 +121,7 @@ export default ({
                       icon="fas fa-trash"
                       className="float-right ml-3"
                       onClick={() => deletaEtapa(index)}
+                      tooltipExterno="Remover Etapa"
                     />
                   </div>
                 </div>
@@ -189,6 +190,7 @@ export default ({
                   validate={() =>
                     duplicados.includes(index) && "Parte já selecionada"
                   }
+                  required
                   disabled={desabilitar[index]}
                 />
               </div>
