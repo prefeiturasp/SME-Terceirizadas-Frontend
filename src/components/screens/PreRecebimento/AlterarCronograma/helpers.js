@@ -1,44 +1,31 @@
 import moment from "moment";
 
-export const prepararPayloadCronograma = (cronograma, values) => {
-  let etapas = prepararPayloadEtapas(cronograma, values);
+export const prepararPayloadCronograma = (cronograma, values, etapas) => {
+  let etapasPayload = prepararPayloadEtapas(cronograma, values, etapas);
   return {
     cronograma: cronograma.uuid,
-    motivo: values.motivos,
-    etapas: etapas,
+    etapas: etapasPayload,
     justificativa: values.justificativa
   };
 };
 
-export const prepararPayloadEtapas = (cronograma, values) => {
-  let etapas = [];
-  if (!values.motivos) {
-    return;
-  }
-  if (!values.motivos.includes("outros")) {
-    etapas = cronograma.etapas.map(etapa => {
-      let etapas_payload = {
-        uuid: etapa.uuid
-      };
-      if (
-        values.motivos.includes("ALTERAR_DATA_ENTREGA") &&
-        values[`data_programada_${etapa.uuid}`]
-      ) {
-        etapas_payload["nova_data_programada"] = moment(
-          values[`data_programada_${etapa.uuid}`]
-        ).format("YYYY-MM-DD");
-      }
-      if (
-        values.motivos.includes("ALTERAR_QTD_ALIMENTO") &&
-        values[`quantidade_total_${etapa.uuid}`]
-      ) {
-        etapas_payload["nova_quantidade"] =
-          values[`quantidade_total_${etapa.uuid}`];
-      }
-      return etapas_payload;
-    });
-    return etapas;
-  }
+export const prepararPayloadEtapas = (cronograma, values, etapas) => {
+  let etapasPayload = [];
+
+  etapasPayload = etapas.map((etapa, index) => ({
+    numero_empenho: values[`empenho_${index}`],
+    etapa: values[`etapa_${index}`],
+    parte: values[`parte_${index}`],
+    data_programada: values[`data_programada_${index}`]
+      ? moment(values[`data_programada_${index}`], "DD/MM/YYYY").format(
+          "YYYY-MM-DD"
+        )
+      : undefined,
+    quantidade: values[`quantidade_${index}`],
+    total_embalagens: values[`total_embalagens_${index}`]
+  }));
+
+  return etapasPayload;
 };
 
 export const calculaRestante = (values, cronograma) => {
