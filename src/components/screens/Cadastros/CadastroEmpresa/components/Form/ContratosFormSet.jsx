@@ -129,7 +129,7 @@ export const ContratosFormSet = ({
                           validate={required}
                         />
                       </div>
-                      <div className="col-4">
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="Vigência do Contrato"
@@ -139,7 +139,7 @@ export const ContratosFormSet = ({
                           required
                         />
                       </div>
-                      <div className="col-4">
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="&nbsp;"
@@ -151,22 +151,24 @@ export const ContratosFormSet = ({
                       </div>
                       {terceirizada &&
                         (contrato.encerrado ? (
-                          <div className="col-6">
+                          <div className="col-12">
                             <div className="aviso-encerramento">
                               <strong>Aviso:</strong> Contrato encerrado em{" "}
                               {contrato.data_hora_encerramento}
                             </div>
                           </div>
                         ) : (
-                          <div className="col-3">
-                            <Botao
-                              className="btn-encerrar-contrato"
-                              texto="Encerrar Contrato"
-                              onClick={() => abrirModalRemoverContrato(index)}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
-                            />
-                          </div>
+                          contrato.numero_contrato !== null && (
+                            <div className="col-2">
+                              <Botao
+                                className="btn-encerrar-contrato"
+                                texto="Encerrar Contrato"
+                                onClick={() => abrirModalRemoverContrato(index)}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.RED_OUTLINE}
+                              />
+                            </div>
+                          )
                         ))}
                     </div>
                     <div className="flex-center my-3">
