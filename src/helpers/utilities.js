@@ -231,6 +231,11 @@ export const formataCPFCensurado = cpf => {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.***.***-$4");
 };
 
+export const formataMilhar = value => {
+  const valor = value.toString().replace(/\D/g, "");
+  return valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 export const truncarString = (str, numeroMaximoChars) => {
   if (str.length > numeroMaximoChars) {
     return str.slice(0, numeroMaximoChars) + "...";
