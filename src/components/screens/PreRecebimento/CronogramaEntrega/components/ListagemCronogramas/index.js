@@ -11,7 +11,8 @@ import {
 } from "configs/constants";
 import {
   usuarioEhCronogramaCriacaoEdicao,
-  usuarioEhEmpresaFornecedor
+  usuarioEhEmpresaFornecedor,
+  formataMilhar
 } from "helpers/utilities";
 import { deParaStatusCronograma } from "../Filtros/utils";
 import { Tooltip } from "antd";
@@ -96,7 +97,7 @@ const ListagemCronogramas = ({ cronogramas, ativos, setCarregando }) => {
                     </Tooltip>
                   </div>
                   <div className={`${bordas}`}>
-                    {cronograma.qtd_total_programada}
+                    {formataMilhar(cronograma.qtd_total_programada)}
                   </div>
                   <div className={`${bordas}`}>
                     {cronograma.armazem
