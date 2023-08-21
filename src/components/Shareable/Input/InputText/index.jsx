@@ -34,7 +34,8 @@ export const InputText = props => {
     apenasNumeros,
     id,
     proibeLetras,
-    proibeNumeros
+    proibeNumeros,
+    agrupadorMilhar
   } = props;
   return (
     <div className={`input ${icone && "icon"}`}>
@@ -87,6 +88,12 @@ export const InputText = props => {
             : e.target.value;
           e.target.value = proibeNumeros
             ? e.target.value.replace(/[0-9]/, "")
+            : e.target.value;
+          e.target.value = agrupadorMilhar
+            ? e.target.value
+                .toString()
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             : e.target.value;
         }}
       />
