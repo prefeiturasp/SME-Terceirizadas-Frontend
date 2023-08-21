@@ -9,7 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { ehEscolaTipoCEUGESTAO, tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -334,6 +334,21 @@ export const desabilitarField = (
         return false;
       }
     }
+  }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return (
+      !validacaoDiaLetivo(dia) ||
+      validacaoSemana(dia) ||
+      rowName === "matriculados" ||
+      rowName === "numero_de_alunos" ||
+      rowName === "dietas_autorizadas" ||
+      !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`] ||
+      Number(
+        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+      ) === 0 ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd"))
+    );
   }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;

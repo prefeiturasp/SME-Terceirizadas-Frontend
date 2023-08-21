@@ -130,6 +130,7 @@ export default ({
         status_solicitacao: solicitacaoMedicaoInicial.status,
         justificativa_periodo: justificativaPeriodo(),
         periodosInclusaoContinua: periodosInclusaoContinua,
+        solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
         ...location.state
       }
     });

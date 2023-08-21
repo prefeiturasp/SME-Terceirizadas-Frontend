@@ -777,6 +777,10 @@ export const ehEscolaTipoCEMEI = escola => {
   return nome.startsWith("CEMEI") || nome.startsWith("CEU CEMEI");
 };
 
+export const ehEscolaTipoCEUGESTAO = nome_escola => {
+  return nome_escola.startsWith("CEU GESTAO");
+};
+
 export const tipoSolicitacaoComoQuery = obj => {
   return `tipoSolicitacao=${comoTipo(obj)}`;
 };

@@ -1,4 +1,4 @@
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -530,6 +530,7 @@ export const validacoesTabelaAlimentacao = (
     alteracoesAlimentacaoAutorizadas.filter(
       alteracao => alteracao.dia === dia && alteracao.motivo.includes("RPL")
     ).length > 0;
+
   const existeAlteracaoAlimentacaoLPR =
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
@@ -577,7 +578,11 @@ export const validacoesTabelaAlimentacao = (
     !(inputName in dadosValoresInclusoesAutorizadasState)
   ) {
     return "Frequência acima inválida ou não preenchida.";
-  } else if (inputName in dadosValoresInclusoesAutorizadasState) {
+  } else if (
+    inputName in dadosValoresInclusoesAutorizadasState &&
+    !existeAlteracaoAlimentacaoRPL &&
+    !existeAlteracaoAlimentacaoLPR
+  ) {
     if (
       validacaoDiaLetivo(dia) &&
       allValues[inputName] >
@@ -632,13 +637,17 @@ export const validacoesTabelaAlimentacao = (
   } else if (
     value &&
     Number(value) >
-      (location.state && location.state.grupo === "Programas e Projetos"
+      (location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? maxNumeroDeAlunos
         : maxMatriculados) &&
     inputName.includes("frequencia")
   ) {
     const complemento =
-      location.state && location.state.grupo === "Programas e Projetos"
+      location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? "em Número de Alunos"
         : "de alunos matriculados";
     return `A quantidade de alunos frequentes não pode ser maior do que a quantidade ${complemento}.`;

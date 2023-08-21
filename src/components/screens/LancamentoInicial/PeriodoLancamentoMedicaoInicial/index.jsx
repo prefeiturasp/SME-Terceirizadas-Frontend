@@ -36,7 +36,12 @@ import ModalErro from "./components/ModalErro";
 import ModalSalvarCorrecoes from "./components/ModalSalvarCorrecoes";
 import { ModalVoltarPeriodoLancamento } from "./components/ModalVoltarPeriodoLancamento";
 import CKEditorField from "components/Shareable/CKEditorField";
-import { deepCopy, deepEqual, tiposAlimentacaoETEC } from "helpers/utilities";
+import {
+  deepCopy,
+  deepEqual,
+  ehEscolaTipoCEUGESTAO,
+  tiposAlimentacaoETEC
+} from "helpers/utilities";
 import {
   botaoAddObrigatorioDiaNaoLetivoComInclusaoAutorizada,
   botaoAdicionarObrigatorio,
@@ -110,8 +115,8 @@ export default () => {
   const [weekColumns, setWeekColumns] = useState(initialStateWeekColumns);
   const [tabelaAlimentacaoRows, setTabelaAlimentacaoRows] = useState([]);
   const [
-    tabelaAlimentacaoProgramasProjetosRows,
-    setTabelaAlimentacaoProgramasProjetosRows
+    tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows,
+    setTabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
   ] = useState([]);
   const [tabelaDietaRows, setTabelaDietaRows] = useState([]);
   const [tabelaDietaEnteralRows, setTabelaDietaEnteralRows] = useState([]);
@@ -283,7 +288,7 @@ export default () => {
         });
       }
 
-      const tiposAlimentacaoProgramasProjetos = deepCopy(
+      const tiposAlimentacaoProgramasProjetosOuCEUGESTAO = deepCopy(
         tiposAlimentacaoFormatadas
       );
 
@@ -307,7 +312,7 @@ export default () => {
       });
       setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
 
-      tiposAlimentacaoProgramasProjetos.unshift(
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.unshift(
         {
           nome: "Número de Alunos",
           name: "numero_de_alunos",
@@ -320,13 +325,13 @@ export default () => {
         }
       );
 
-      tiposAlimentacaoProgramasProjetos.push({
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.push({
         nome: "Observações",
         name: "observacoes",
         uuid: null
       });
-      setTabelaAlimentacaoProgramasProjetosRows(
-        tiposAlimentacaoProgramasProjetos
+      setTabelaAlimentacaoProgramasProjetosOuCEUGESTAORows(
+        tiposAlimentacaoProgramasProjetosOuCEUGESTAO
       );
 
       const rowsDietas = [];
@@ -857,7 +862,10 @@ export default () => {
         );
 
         if (
-          grupoLocation === "Programas e Projetos" &&
+          (grupoLocation === "Programas e Projetos" ||
+            ehEscolaTipoCEUGESTAO(
+              location.state.solicitacaoMedicaoInicial.escola
+            )) &&
           solInclusoesAutorizadas
         ) {
           for (let i = 1; i <= 31; i++) {
@@ -1427,6 +1435,7 @@ export default () => {
   };
 
   const validacaoSemana = dia => {
+    // valida se é mês anterior ou mês posterior e desabilita
     return (
       (Number(semanaSelecionada) === 1 && Number(dia) > 20) ||
       ([4, 5, 6].includes(Number(semanaSelecionada)) && Number(dia) < 10)
@@ -1723,8 +1732,11 @@ export default () => {
       return tabelaSolicitacoesAlimentacaoRows;
     } else if (ehGrupoETECUrlParam) {
       return tabelaEtecsAlimentacaoRows;
-    } else if (grupoLocation === "Programas e Projetos") {
-      return tabelaAlimentacaoProgramasProjetosRows;
+    } else if (
+      grupoLocation === "Programas e Projetos" ||
+      ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+    ) {
+      return tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows;
     } else {
       return tabelaAlimentacaoRows;
     }

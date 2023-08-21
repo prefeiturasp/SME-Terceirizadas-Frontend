@@ -12,7 +12,8 @@ import {
   getPeriodosInclusaoContinua,
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesAlteracoesAlimentacaoAutorizadasEscola,
-  getSolicitacoesInclusoesEtecAutorizadasEscola
+  getSolicitacoesInclusoesEtecAutorizadasEscola,
+  getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
 import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
@@ -23,6 +24,7 @@ import {
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
 import { CORES, removeObjetosDuplicados } from "./helpers";
 import {
+  ehEscolaTipoCEUGESTAO,
   getError,
   usuarioEhDiretorUE,
   usuarioEhEscolaTerceirizadaDiretor
@@ -64,6 +66,7 @@ export default ({
     solicitacoesInclusoesEtecAutorizadas,
     setSolicitacoesInclusoesEtecAutorizadas
   ] = useState(undefined);
+  const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
   const [
     quantidadeAlimentacoesLancadas,
     setQuantidadeAlimentacoesLancadas
@@ -159,12 +162,31 @@ export default ({
     }
   };
 
+  const getPeriodosCEUGESTAOAsync = async () => {
+    const escola_uuid = escolaInstituicao.uuid;
+    const response = await getCEUGESTAOPeriodosSolicitacoesAutorizadasEscola({
+      escola_uuid,
+      mes,
+      ano
+    });
+    if (response.status === HTTP_STATUS.OK) {
+      setPeriodosCEUGESTAO(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar períodos de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
     getSolicitacoesAlteracaoLancheEmergencialAutorizadasAsync();
     getSolicitacoesInclusoesEtecAutorizadasAsync();
     getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
+    solicitacaoMedicaoInicial &&
+      ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+      getPeriodosCEUGESTAOAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
 
   const getPathPlanilhaOcorr = () => {
@@ -298,18 +320,33 @@ export default ({
               <b className="section-title">Períodos</b>
             </div>
           </div>
-          {periodosEscolaSimples.map((periodo, index) => (
-            <CardLancamento
-              key={index}
-              textoCabecalho={periodo.periodo_escolar.nome}
-              cor={CORES[index]}
-              tipos_alimentacao={periodo.tipos_alimentacao}
-              periodoSelecionado={periodoSelecionado}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-            />
-          ))}
+          {!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            periodosEscolaSimples.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.periodo_escolar.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              />
+            ))}
+          {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
+            periodosCEUGESTAO &&
+            periodosCEUGESTAO.map((periodo, index) => (
+              <CardLancamento
+                key={index}
+                textoCabecalho={periodo.nome}
+                cor={CORES[index]}
+                tipos_alimentacao={periodo.tipos_alimentacao}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+              />
+            ))}
           {periodosInclusaoContinua && (
             <CardLancamento
               grupo="Programas e Projetos"
