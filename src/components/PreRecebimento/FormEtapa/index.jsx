@@ -221,7 +221,6 @@ export default ({
                       0}`
                   }
                   required
-                  type="number"
                   apenasNumeros
                   disabled={desabilitar[index]}
                 />
