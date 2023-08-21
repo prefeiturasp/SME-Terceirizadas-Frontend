@@ -12,6 +12,8 @@ import { InputComData } from "components/Shareable/DatePicker";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import { getEtapas } from "services/cronograma.service";
 import { required } from "helpers/fieldValidators";
+import { formataMilhar } from "helpers/utilities";
+
 import moment from "moment";
 
 export default ({
@@ -51,7 +53,7 @@ export default ({
         Faltam
         <span className="font-weight-bold">
           &nbsp;
-          {qtdFaltante}
+          {formataMilhar(qtdFaltante)}
           &nbsp;
           {unidadeMedida && unidadeMedida.nome}
           &nbsp;
@@ -219,8 +221,7 @@ export default ({
                       0}`
                   }
                   required
-                  type="number"
-                  pattern="[0-9]*"
+                  apenasNumeros
                   disabled={desabilitar[index]}
                 />
               </div>
