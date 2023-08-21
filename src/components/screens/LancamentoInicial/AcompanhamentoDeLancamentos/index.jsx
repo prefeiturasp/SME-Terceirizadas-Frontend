@@ -51,6 +51,9 @@ export const AcompanhamentoDeLancamentos = () => {
   const { meusDados } = useContext(MeusDadosContext);
   const DEFAULT_STATE = usuarioEhEscolaTerceirizadaQualquerPerfil() ? [] : null;
 
+  const [carreandoEscolas, setCarregandoEscolas] = useState(false);
+  const [carreandoLotes, setCarregandoLotes] = useState(false);
+
   const [dadosDashboard, setDadosDashboard] = useState(null);
   const [statusSelecionado, setStatusSelecionado] = useState(null);
   const [resultados, setResultados] = useState(null);
@@ -73,11 +76,11 @@ export const AcompanhamentoDeLancamentos = () => {
 
   const PAGE_SIZE = 10;
   const LOADING =
+    carreandoLotes ||
+    carreandoEscolas ||
     (!usuarioEhMedicao && !dadosDashboard) ||
     !mesesAnos ||
     !tiposUnidades ||
-    !lotes ||
-    !nomesEscolas ||
     loading;
 
   const getDashboardMedicaoInicialAsync = async (params = {}) => {
@@ -151,6 +154,7 @@ export const AcompanhamentoDeLancamentos = () => {
         : diretoriaRegional;
 
       const getLotesAsync = async () => {
+        setCarregandoLotes(true);
         const response = await getLotesSimples({
           diretoria_regional__uuid: uuid
         });
@@ -159,9 +163,11 @@ export const AcompanhamentoDeLancamentos = () => {
         } else {
           setErroAPI("Erro ao carregar lotes. Tente novamente mais tarde.");
         }
+        setCarregandoLotes(false);
       };
 
       const getEscolasTrecTotalAsync = async () => {
+        setCarregandoEscolas(true);
         const response = await getEscolasTrecTotal({ dre: uuid });
         if (response.status === HTTP_STATUS.OK) {
           setNomesEscolas(
@@ -170,10 +176,11 @@ export const AcompanhamentoDeLancamentos = () => {
         } else {
           setErroAPI("Erro ao carregar escolas. Tente novamente mais tarde.");
         }
+        setCarregandoEscolas(false);
       };
 
-      meusDados && getLotesAsync();
-      meusDados && getEscolasTrecTotalAsync();
+      meusDados && uuid && getLotesAsync();
+      meusDados && uuid && getEscolasTrecTotalAsync();
     }
     if (diretoriaRegional) {
       getDashboardMedicaoInicialAsync();
