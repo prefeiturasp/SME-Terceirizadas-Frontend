@@ -13,10 +13,14 @@ import { useState } from "react";
 import { encerraContratoTerceirizada } from "services/terceirizada.service";
 import { toastError } from "components/Shareable/Toast/dialogs";
 import { ModalRemoveContrato } from "../ModalRemoveContrato";
+import MaskedInputText from "components/Shareable/Input/MaskedInputText";
+import { numeroProcessoContratoSEIMask } from "constants/shared";
 
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
+  numero_ata_chamada_publica: null,
+  numero_pregao: null,
   vigencia_de: null,
   vigencia_ate: null
 };
@@ -87,17 +91,18 @@ export const ContratosFormSet = ({
                 return (
                   <div key={index}>
                     <div className="row">
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_processo_${index}`}
-                          component={InputText}
-                          label="Nº do Processo Administrativo do Contrato"
+                          component={MaskedInputText}
+                          mask={numeroProcessoContratoSEIMask}
+                          label="Nº do Processo Administrativo do Contrato (SEI)"
                           required
                           validate={required}
                           apenasNumeros
                         />
                       </div>
-                      <div className="col-6">
+                      <div className="col-4">
                         <Field
                           name={`numero_contrato_${index}`}
                           component={InputText}
@@ -106,7 +111,25 @@ export const ContratosFormSet = ({
                           validate={required}
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-4">
+                        <Field
+                          name={`numero_ata_chamada_publica_${index}`}
+                          component={InputText}
+                          label="Nº da ATA/Chamada Pública"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-4">
+                        <Field
+                          name={`numero_pregao_${index}`}
+                          component={InputText}
+                          label="Nº do Pregão Eletrônico"
+                          required
+                          validate={required}
+                        />
+                      </div>
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="Vigência do Contrato"
@@ -116,33 +139,36 @@ export const ContratosFormSet = ({
                           required
                         />
                       </div>
-                      <div className="col-3">
+                      <div className="col-2">
                         <Field
                           component={InputComData}
                           label="&nbsp;"
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
+                          maxDate={null}
                         />
                       </div>
                       {terceirizada &&
                         (contrato.encerrado ? (
-                          <div className="col-6">
+                          <div className="col-12">
                             <div className="aviso-encerramento">
                               <strong>Aviso:</strong> Contrato encerrado em{" "}
                               {contrato.data_hora_encerramento}
                             </div>
                           </div>
                         ) : (
-                          <div className="col-3">
-                            <Botao
-                              className="btn-encerrar-contrato"
-                              texto="Encerrar Contrato"
-                              onClick={() => abrirModalRemoverContrato(index)}
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
-                            />
-                          </div>
+                          contrato.numero_contrato !== null && (
+                            <div className="col-2">
+                              <Botao
+                                className="btn-encerrar-contrato"
+                                texto="Encerrar Contrato"
+                                onClick={() => abrirModalRemoverContrato(index)}
+                                type={BUTTON_TYPE.BUTTON}
+                                style={BUTTON_STYLE.RED_OUTLINE}
+                              />
+                            </div>
+                          )
                         ))}
                     </div>
                     <div className="flex-center my-3">
@@ -161,7 +187,7 @@ export const ContratosFormSet = ({
                               texto="Remover Contrato"
                               icon="fas fa-trash"
                               type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.RED_OUTLINE}
+                              style={BUTTON_STYLE.GREEN_OUTLINE}
                               onClick={() => {
                                 removeContrato(index);
                               }}

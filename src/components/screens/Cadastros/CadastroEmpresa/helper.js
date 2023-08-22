@@ -140,9 +140,12 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         email: item.email
       };
     });
+
     const contratos = valoresState.contratos.map((contrato, index) => ({
       numero: valoresForm[`numero_contrato_${index}`],
       processo: valoresForm[`numero_processo_${index}`],
+      ata_chamada_publica: valoresForm[`numero_ata_chamada_publica_${index}`],
+      pregao: valoresForm[`numero_pregao_${index}`],
       vigencias: [
         {
           data_inicial: valoresForm[`vigencia_de_${index}`],
@@ -151,7 +154,9 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
       ],
       encerrado: contrato.encerrado ? true : false
     }));
+
     const contatos = [...contatosEmpresa];
+
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       tipo_alimento: valoresForm.tipo_alimento,
@@ -193,13 +198,16 @@ export const formataJsonParaEnvio = (valoresForm, valoresState) => {
         eh_nutricionista: true
       });
     });
+
     const contatosEmpresaFormatado = valoresState.contatosEmpresa.map(item => {
       return {
         telefone: removeCaracteresEspeciais(item.telefone),
         email: item.email
       };
     });
+
     const contatosEmpresa = [...contatosEmpresaFormatado, ...contatosNutri];
+
     return {
       nome_fantasia: valoresForm.nome_fantasia,
       razao_social: valoresForm.razao_social,

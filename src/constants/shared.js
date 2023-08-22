@@ -538,6 +538,27 @@ export const cpfMask = [
   /\d/
 ];
 
+export const numeroProcessoContratoSEIMask = [
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "/",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/
+];
+
 export const MESES = [
   "Janeiro",
   "Fevereiro",
