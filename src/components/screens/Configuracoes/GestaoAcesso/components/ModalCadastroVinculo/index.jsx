@@ -55,7 +55,8 @@ const ModalCadastroVinculo = ({
   empresa,
   visaoUnica,
   codae,
-  cogestor
+  cogestor,
+  ehUEParceira
 }) => {
   const [tipoUsuario, setTipoUsuario] = useState();
   const [subdivisoes, setSubdivisoes] = useState();
@@ -177,7 +178,11 @@ const ModalCadastroVinculo = ({
 
   const onKeyPress = (event, values) => {
     if (event.which === ENTER) {
-      buscaEOL(values);
+      if (ehUEParceira) {
+        buscaEOLFuncionarioUnidadeParceira(values);
+      } else {
+        buscaEOL(values);
+      }
     }
   };
 
@@ -213,13 +218,23 @@ const ModalCadastroVinculo = ({
       toggleShow(false, null);
       toastError("Ocorreu um erro ao carregar este usuário.", error);
     }
-
     if (empresa) {
       setTipoUsuario("NAO_SERVIDOR");
+    } else if (diretor_escola && ehUEParceira) {
+      setTipoUsuario("UNIDADE_PARCEIRA");
     } else if (diretor_escola || visaoUnica || codae) {
       setTipoUsuario("SERVIDOR");
     }
-  }, [vinculo, show, diretor_escola, empresa, toggleShow, visaoUnica, codae]);
+  }, [
+    vinculo,
+    show,
+    diretor_escola,
+    empresa,
+    toggleShow,
+    visaoUnica,
+    codae,
+    ehUEParceira
+  ]);
 
   return (
     <>

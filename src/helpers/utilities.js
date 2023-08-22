@@ -231,6 +231,11 @@ export const formataCPFCensurado = cpf => {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.***.***-$4");
 };
 
+export const formataMilhar = value => {
+  const valor = value.toString().replace(/\D/g, "");
+  return valor.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
 export const truncarString = (str, numeroMaximoChars) => {
   if (str.length > numeroMaximoChars) {
     return str.slice(0, numeroMaximoChars) + "...";
@@ -662,10 +667,17 @@ export const usuarioEhMedicao = () => {
   return localStorage.getItem("tipo_perfil") === TIPO_PERFIL.MEDICAO;
 };
 
-export const acessoModuloMedicaoInicial = () => {
+export const acessoModuloMedicaoInicialEscola = () => {
   return (
     localStorage.getItem("acesso_modulo_medicao_inicial") === "true" ||
     localStorage.getItem("dre_acesso_modulo_medicao_inicial") === "true"
+  );
+};
+
+export const acessoModuloMedicaoInicialDRE = () => {
+  return (
+    localStorage.getItem("possui_escolas_com_acesso_ao_medicao_inicial") ===
+    "true"
   );
 };
 
@@ -939,7 +951,9 @@ export const exibirModuloMedicaoInicial = () => {
 
   switch (localStorage.getItem("tipo_perfil")) {
     case `"escola"`:
-      return acessoModuloMedicaoInicial();
+      return acessoModuloMedicaoInicialEscola();
+    case `"diretoriaregional"`:
+      return acessoModuloMedicaoInicialDRE();
     default:
       return false;
   }
@@ -1032,4 +1046,35 @@ export const fimDoCalendario = () => {
 
 export const tiposAlimentacaoETEC = () => {
   return ["Lanche 4h", "Refeição", "Sobremesa", "Lanche Emergencial"];
+};
+
+export const formataMesNome = mes => {
+  switch (mes) {
+    case "01":
+      return "Janeiro";
+    case "02":
+      return "Fevereiro";
+    case "03":
+      return "Março";
+    case "04":
+      return "Abril";
+    case "05":
+      return "Maio";
+    case "06":
+      return "Junho";
+    case "07":
+      return "Julho";
+    case "08":
+      return "Agosto";
+    case "09":
+      return "Setembro";
+    case "10":
+      return "Outubro";
+    case "11":
+      return "Novembro";
+    case "12":
+      return "Dezembro";
+    default:
+      return mes;
+  }
 };

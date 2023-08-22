@@ -99,6 +99,25 @@ export const DashboardCODAE = props => {
     canceladas: []
   });
 
+  const params_periodo = params => {
+    let parametros = { ...params };
+    let isAllUndefined = true;
+    for (let key in parametros) {
+      if (
+        key !== "limit" &&
+        key !== "offset" &&
+        parametros[key] !== undefined
+      ) {
+        isAllUndefined = false;
+        break;
+      }
+    }
+    if (isAllUndefined) {
+      parametros.periodo = 60;
+    }
+    return parametros;
+  };
+
   const getSolicitacoesAsync = async (params = null) => {
     let pendentesAutorizacaoListSolicitacao = [];
     let canceladasListSolicitacao = [];
@@ -116,17 +135,21 @@ export const DashboardCODAE = props => {
       }
     );
 
-    await getSolicitacoesCanceladasCodae(params).then(response => {
-      canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    await getSolicitacoesCanceladasCodae(params_periodo(params)).then(
+      response => {
+        canceladasListSolicitacao = ajustarFormatoLog(response.data.results);
+      }
+    );
 
-    await getSolicitacoesNegadasCodae(params).then(response => {
+    await getSolicitacoesNegadasCodae(params_periodo(params)).then(response => {
       negadasListSolicitacao = ajustarFormatoLog(response.data.results);
     });
 
-    await getSolicitacoesAutorizadasCodae(params).then(response => {
-      autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
-    });
+    await getSolicitacoesAutorizadasCodae(params_periodo(params)).then(
+      response => {
+        autorizadasListSolicitacao = ajustarFormatoLog(response.data.results);
+      }
+    );
 
     await getSolicitacoesComQuestionamentoCodae(params).then(response => {
       questionamentosListSolicitacao = ajustarFormatoLog(response.data.results);

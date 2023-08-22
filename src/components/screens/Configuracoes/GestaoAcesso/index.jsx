@@ -19,6 +19,7 @@ import { toastError, toastSuccess } from "components/Shareable/Toast/dialogs";
 import ModalCadastroVinculo from "./components/ModalCadastroVinculo";
 import ModalExclusaoVinculo from "./components/ModalExclusaoVinculo";
 import { Paginacao } from "components/Shareable/Paginacao";
+import { TIPO_GESTAO } from "constants/shared";
 
 export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [carregando, setCarregando] = useState(false);
@@ -35,6 +36,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
   const [page, setPage] = useState(1);
   const [vinculoModal, setVinculoModal] = useState();
   const [perfisSubordinados, setPerfisSubordinados] = useState();
+  const [ehUEParceira, setEhUEParceira] = useState(false);
 
   const buscaFiltros = async () => {
     setCarregando(true);
@@ -53,27 +55,14 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
       nome: visao.nome
     }));
 
-    if (codae) {
-      setVisoes(options_visoes.filter(visao => visao.uuid === "CODAE"));
-      setPerfis(
-        lista_perfis
-          .filter(perfil => perfil.visao && perfil.visao === "CODAE")
-          .map(visao => ({
-            uuid: visao.id,
-            nome: visao.nome
-          }))
-      );
-      setListaPerfis(lista_perfis);
-      setFiltros({});
-      return;
-    }
-
     if (diretor_escola) {
       setPerfisVisao(lista_perfis, "ESCOLA");
     } else if (empresa) {
       setPerfisVisao(lista_perfis, "EMPRESA");
     } else if (cogestor) {
       setPerfisVisao(lista_perfis, "DRE");
+    } else if (codae) {
+      setPerfisVisao(lista_perfis, "CODAE");
     } else if (geral) {
       const perfis_subordinados = await getPerfisSubordinados();
       const visao = localStorage.getItem("visao_perfil").replace(/['"]+/g, "");
@@ -230,8 +219,20 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
     }
   };
 
+  const qtdLimiteCadastro = ehUEParceira ? 2 : 4;
+  const desabilitaCadastro = () => {
+    if (diretor_escola && totalVinculos >= qtdLimiteCadastro) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     buscaFiltros();
+    setEhUEParceira(
+      [TIPO_GESTAO.PARCEIRA].includes(localStorage.getItem("tipo_gestao"))
+    );
   }, []);
 
   useEffect(() => {
@@ -249,6 +250,7 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
         listaPerfis={visaoUnica ? perfis : listaPerfis}
         listaVisao={visoes}
         diretor_escola={diretor_escola}
+        ehUEParceira={ehUEParceira}
         cogestor={cogestor}
         empresa={empresa}
         onSubmit={salvarAcesso}
@@ -278,7 +280,8 @@ export default ({ diretor_escola, empresa, geral, cogestor, codae }) => {
             visoes={visoes}
             setShowCadastro={setShowCadastro}
             visaoUnica={visaoUnica}
-            desabilitaCadastro={diretor_escola && totalVinculos >= 4}
+            desabilitaCadastro={desabilitaCadastro}
+            qtdLimiteCadastro={qtdLimiteCadastro}
           />
           {vinculos && (
             <>

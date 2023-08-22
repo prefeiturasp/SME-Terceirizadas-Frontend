@@ -11,14 +11,12 @@ import {
 import { Field, Form, FormSpy } from "react-final-form";
 import InputText from "components/Shareable/Input/InputText";
 import AutoCompleteField from "components/Shareable/AutoCompleteField";
-import { InputComData } from "components/Shareable/DatePicker";
 import { getNomesDistribuidores } from "services/logistica.service";
 import SelectSelecione from "components/Shareable/SelectSelecione";
 import {
   cadastraCronograma,
   editaCronograma,
   getCronograma,
-  getEtapas,
   getRascunhos,
   getUnidadesDeMedidaLogistica
 } from "services/cronograma.service";
@@ -29,11 +27,13 @@ import Rascunhos from "../RascunhosCronograma";
 import "../CronogramaEntrega/styles.scss";
 import { required } from "helpers/fieldValidators";
 import { OnChange } from "react-final-form-listeners";
-import { agregarDefault, exibeError } from "helpers/utilities";
+import { agregarDefault, exibeError, formataMilhar } from "helpers/utilities";
 import { getEmpresasCronograma } from "services/terceirizada.service";
 import { getListaCompletaProdutosLogistica } from "services/produto.service";
 import { ModalAssinaturaUsuario } from "components/Shareable/ModalAssinaturaUsuario";
 import { MSG_SENHA_INVALIDA } from "components/screens/helper";
+import FormEtapa from "../../../PreRecebimento/FormEtapa";
+import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
 
 export default () => {
   const [carregando, setCarregando] = useState(true);
@@ -45,7 +45,6 @@ export default () => {
   const [contratoSelecionado, setContratoSelecionado] = useState(undefined);
   const [unidadeSelecionada, setUnidadeSelecionada] = useState({});
   const [etapas, setEtapas] = useState([{}]);
-  const [etapasOptions, setEtapasOptions] = useState([{}]);
   const [recebimentos, setRecebimentos] = useState([{}]);
   const [armazens, setArmazens] = useState([{}]);
   const [fornecedores, setFornecedores] = useState([{}]);
@@ -85,24 +84,6 @@ export default () => {
     return fornecedores;
   };
 
-  const getEtapasFiltrado = etapa => {
-    if (etapa) {
-      const reg = new RegExp(etapa, "iu");
-      return etapasOptions.filter(a => reg.test(a.value));
-    }
-    return etapasOptions;
-  };
-
-  const adicionaEtapa = () => {
-    setEtapas([...etapas, {}]);
-  };
-
-  const deletaEtapa = index => {
-    let etapasNovo = [...etapas];
-    etapasNovo.splice(index, 1);
-    setEtapas(etapasNovo);
-  };
-
   const adicionaRecebimento = () => {
     setRecebimentos([...recebimentos, {}]);
   };
@@ -117,46 +98,6 @@ export default () => {
     setCollapse({
       [index]: !collapse[index]
     });
-  };
-
-  const quantidadeFaltante = values => {
-    let restante = values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (values[`quantidade_${index}`])
-        restante = restante - values[`quantidade_${index}`];
-    });
-    return restante;
-  };
-
-  const textoFaltante = values => {
-    let qtdFaltante = quantidadeFaltante(values);
-    let textoPadrao = (
-      <div>
-        Faltam
-        <span className="font-weight-bold">
-          &nbsp;
-          {qtdFaltante}
-          &nbsp;
-          {unidadeSelecionada.nome}
-          &nbsp;
-        </span>
-        para programar
-      </div>
-    );
-
-    let textoAcima = <div>Quantidade maior que a prevista em contrato</div>;
-
-    return (
-      <div className="row">
-        <div
-          className={`col-12 texto-alimento-faltante ${
-            qtdFaltante === 0 ? "verde" : "vermelho"
-          }`}
-        >
-          {qtdFaltante < 0 ? textoAcima : textoPadrao}
-        </div>
-      </div>
-    );
   };
 
   const getOptionsDataProgramada = values => {
@@ -181,7 +122,7 @@ export default () => {
     payload.contrato = values.contrato;
     payload.empresa = empresaSelecionada.uuid;
     payload.produto = values.produto;
-    payload.qtd_total_programada = values.quantidade_total;
+    payload.qtd_total_programada = values.quantidade_total.replace(".", "");
     payload.unidade_medida = values.unidade_medida;
     payload.armazem = values.armazem;
     payload.tipo_embalagem = values.tipo_embalagem;
@@ -271,7 +212,7 @@ export default () => {
           crono.contrato.processo
         );
         cronogramaValues["quantidade_total"] = lengthOrUnderfined(
-          crono.qtd_total_programada
+          formataMilhar(crono.qtd_total_programada)
         );
         cronogramaValues["unidade_medida"] = lengthOrUnderfined(
           crono.unidade_medida ? crono.unidade_medida.uuid : undefined
@@ -388,11 +329,6 @@ export default () => {
       );
     };
 
-    const buscaEtapas = async () => {
-      const response = await getEtapas();
-      setEtapasOptions(response.data);
-    };
-
     const buscaProdutos = async () => {
       const response = await getListaCompletaProdutosLogistica();
       setProdutosOptions(response.data.results);
@@ -404,7 +340,6 @@ export default () => {
     };
 
     buscaArmazens();
-    buscaEtapas();
     buscaFornecedores();
     buscaProdutos();
     buscaUnidadesMedida();
@@ -421,32 +356,8 @@ export default () => {
     if (changes.values.contrato) selecionaContrato(changes.values);
     if (changes.values.unidade_medida)
       selecionaUnidade(changes.values.unidade_medida);
-    let restante = changes.values.quantidade_total;
-    etapas.forEach((e, index) => {
-      if (changes.values[`quantidade_${index}`])
-        restante = restante - changes.values[`quantidade_${index}`];
-    });
-    setRestante(restante);
-    if (etapas.length < 2) return;
-    const partes_etapas = [];
-    etapas.forEach((_, i) => {
-      partes_etapas.push({
-        parte: changes.values[`parte_${i}`],
-        etapa: changes.values[`etapa_${i}`],
-        index: i
-      });
-    });
-    const duplicados = [];
-    partes_etapas.forEach(pe => {
-      if (
-        partes_etapas.filter(
-          pe_ => pe_.parte === pe.parte && pe_.etapa === pe.etapa
-        ).length > 1
-      ) {
-        duplicados.push(pe.index);
-      }
-    });
-    setDuplicados(duplicados);
+
+    onChangeEtapas(changes, etapas, setRestante, setDuplicados);
   };
   return (
     <Spin tip="Carregando..." spinning={carregando}>
@@ -574,7 +485,7 @@ export default () => {
                                 name="quantidade_total"
                                 className="input-busca-produto"
                                 disabled={false}
-                                apenasNumeros
+                                agrupadorMilhar
                                 required
                                 placeholder="Informe a Quantidade Total"
                               />
@@ -631,151 +542,18 @@ export default () => {
                               />
                             </div>
                           </div>
-
                           <div className="subtitulo">
                             Cronograma das Entregas
                           </div>
                           <hr className="linha-verde" />
-                          {etapas &&
-                            etapas.map((etapa, index) => (
-                              <>
-                                {index !== 0 && (
-                                  <>
-                                    <hr />
-                                    <div className="row">
-                                      <div className="w-100">
-                                        <Botao
-                                          texto=""
-                                          type={BUTTON_TYPE.BUTTON}
-                                          style={BUTTON_STYLE.GREEN_OUTLINE}
-                                          icon="fas fa-trash"
-                                          className="float-right ml-3"
-                                          onClick={() => deletaEtapa(index)}
-                                          disabled={submitting}
-                                        />
-                                      </div>
-                                    </div>
-                                  </>
-                                )}
-                                <div className="row">
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Nº do Empenho"
-                                      name={`empenho_${index}`}
-                                      placeholder="Informe o Nº do Empenho"
-                                      required
-                                      validate={required}
-                                      proibeLetras
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={AutoCompleteField}
-                                      options={getEtapasFiltrado(
-                                        values[`etapa_${index}`]
-                                      )}
-                                      label="Etapa"
-                                      name={`etapa_${index}`}
-                                      className="input-busca-produto"
-                                      placeholder="Selecione a Etapa"
-                                      required
-                                      validate={required}
-                                      esconderIcone
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={SelectSelecione}
-                                      naoDesabilitarPrimeiraOpcao
-                                      options={[
-                                        {
-                                          uuid: "Parte 1",
-                                          nome: "Parte 1"
-                                        },
-                                        {
-                                          uuid: "Parte 2",
-                                          nome: "Parte 2"
-                                        },
-                                        {
-                                          uuid: "Parte 3",
-                                          nome: "Parte 3"
-                                        },
-                                        {
-                                          uuid: "Parte 4",
-                                          nome: "Parte 4"
-                                        },
-                                        {
-                                          uuid: "Parte 5",
-                                          nome: "Parte 5"
-                                        }
-                                      ]}
-                                      label="Parte"
-                                      name={`parte_${index}`}
-                                      placeholder={"Selecione a Parte"}
-                                      validate={() =>
-                                        duplicados.includes(index) &&
-                                        "Parte já selecionada"
-                                      }
-                                    />
-                                  </div>
-                                </div>
-                                <div className="row">
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputComData}
-                                      label="Data Programada"
-                                      name={`data_programada_${index}`}
-                                      placeholder="Selecionar a Data"
-                                      required
-                                      validate={required}
-                                      writable={false}
-                                      minDate={null}
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Quantidade"
-                                      name={`quantidade_${index}`}
-                                      placeholder="Digite a Quantidade"
-                                      validate={() =>
-                                        restante !== 0 &&
-                                        `quantidade total é diferente de ${values.quantidade_total ||
-                                          0}`
-                                      }
-                                      required
-                                      type="number"
-                                      pattern="[0-9]*"
-                                    />
-                                  </div>
-                                  <div className="col-4">
-                                    <Field
-                                      component={InputText}
-                                      label="Total de Embalagens"
-                                      name={`total_embalagens_${index}`}
-                                      placeholder="Digite a Quantidade"
-                                      required
-                                      validate={required}
-                                      apenasNumeros
-                                    />
-                                  </div>
-                                </div>
-                              </>
-                            ))}
-
-                          {values.quantidade_total && textoFaltante(values)}
-
-                          <div className="text-center mb-2 mt-2">
-                            <Botao
-                              texto="+ Adicionar Etapa"
-                              type={BUTTON_TYPE.BUTTON}
-                              style={BUTTON_STYLE.GREEN_OUTLINE}
-                              className=""
-                              onClick={() => adicionaEtapa()}
-                              disabled={submitting}
-                            />
-                          </div>
+                          <FormEtapa
+                            etapas={etapas}
+                            setEtapas={setEtapas}
+                            values={values}
+                            duplicados={duplicados}
+                            restante={restante}
+                            unidadeMedida={unidadeSelecionada}
+                          />
                         </div>
                       </div>
                     </div>
