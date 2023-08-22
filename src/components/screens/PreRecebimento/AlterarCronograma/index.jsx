@@ -32,6 +32,8 @@ import { FluxoDeStatusCronograma } from "components/Shareable/FluxoDeStatusCrono
 import FormEtapa from "../../../PreRecebimento/FormEtapa";
 import { textAreaRequired } from "helpers/fieldValidators";
 import { onChangeEtapas } from "components/PreRecebimento/FormEtapa/helper";
+import TabelaFormAlteracao from "./components/TabelaFormAlteracao";
+import FormRecebimento from "components/PreRecebimento/FormRecebimento";
 
 export default ({ analiseSolicitacao }) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -47,6 +49,7 @@ export default ({ analiseSolicitacao }) => {
     solicitacaoAlteracaoCronograma,
     setSolicitacaoAlteracaoCronograma
   ] = useState(null);
+  const [recebimentos, setRecebimentos] = useState([{}]);
   const [carregando, setCarregando] = useState(false);
   const history = useHistory();
 
@@ -97,7 +100,6 @@ export default ({ analiseSolicitacao }) => {
   const geraInitialValuesSolicitacao = solicitacao => {
     let values;
     values = {
-      motivos: solicitacao ? solicitacao.motivo : undefined,
       justificativa: solicitacao.justificativa,
       justificativa_cronograma: buscaLogJustificativaCronograma(
         solicitacao.logs,
@@ -108,9 +110,11 @@ export default ({ analiseSolicitacao }) => {
         "dinutre"
       )
     };
-    solicitacao.etapas.forEach(e => {
-      values[`quantidade_total_${e.etapa}`] = e.nova_quantidade;
-      values[`data_programada_${e.etapa}`] = e.nova_data_programada;
+    solicitacao.etapas_novas.forEach((etapa, index) => {
+      values[`total_embalagens_${index}`] = etapa.total_embalagens;
+      values[`etapa_${index}`] = etapa.etapa;
+      values[`parte_${index}`] = etapa.parte;
+      values[`data_programada_${index}`] = etapa.data_programada;
     });
     setInitialValues(values);
   };
@@ -279,12 +283,11 @@ export default ({ analiseSolicitacao }) => {
                   esconderInformacoesAdicionais={false}
                 />
               )}
-              <hr />
               <Form
                 onSubmit={defineSubmit}
                 initialValues={initialValues}
                 validate={() => {}}
-                render={({ handleSubmit, values, errors }) => (
+                render={({ form, handleSubmit, values, errors }) => (
                   <form onSubmit={handleSubmit}>
                     <FormSpy
                       subscription={{ values: true, active: true, valid: true }}
@@ -297,18 +300,33 @@ export default ({ analiseSolicitacao }) => {
                         )
                       }
                     />
-                    <p className="head-green">
-                      Informe as Alterações Necessárias
-                    </p>
-                    <FormEtapa
-                      etapas={etapas}
-                      setEtapas={setEtapas}
-                      values={values}
-                      duplicados={duplicados}
-                      restante={restante}
-                      unidadeMedida={values.unidade_medida}
-                      fornecedor={true}
-                    />
+                    {analiseSolicitacao && (
+                      <>
+                        <p className="titulo-laranja">
+                          Solicitação de Alteração do Fornecedor
+                        </p>
+                        <TabelaFormAlteracao
+                          solicitacao={solicitacaoAlteracaoCronograma}
+                        />
+                      </>
+                    )}
+                    {!analiseSolicitacao && (
+                      <>
+                        <hr />
+                        <div className="head-green">
+                          Informe as Alterações Necessárias
+                        </div>
+                        <FormEtapa
+                          etapas={etapas}
+                          setEtapas={setEtapas}
+                          values={values}
+                          duplicados={duplicados}
+                          restante={restante}
+                          unidadeMedida={values.unidade_medida}
+                          fornecedor={true}
+                        />
+                      </>
+                    )}
                     <div className="mt-4">
                       <label className="label font-weight-normal">
                         <span>* </span>Justificativa
@@ -382,6 +400,15 @@ export default ({ analiseSolicitacao }) => {
                         )}
                       </>
                     )}
+                    <div className="accordion mt-1" id="accordionCronograma">
+                      <FormRecebimento
+                        values={values}
+                        form={form}
+                        etapas={solicitacaoAlteracaoCronograma.etapas_novas}
+                        recebimentos={recebimentos}
+                        setRecebimentos={setRecebimentos}
+                      />
+                    </div>
                     {usuarioEhDilogDiretoria() && analisadoPelaDinutre() && (
                       <AnaliseDilogDiretoria
                         aprovacaoDilog={aprovacaoDilog}
