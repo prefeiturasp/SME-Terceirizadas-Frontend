@@ -206,14 +206,25 @@ export const valorZeroFrequencia = (
   return;
 };
 
-const validaAlimentacoesCEUGESTAO = (inclusoesAutorizadas, rowName, dia) => {
+const validaAlimentacoesEDietasCEUGESTAO = (
+  inclusoesAutorizadas,
+  rowName,
+  dia,
+  nomeCategoria
+) => {
   /* REGRA VÁLIDA APENAS PARA CEU GESTÃO
 
     Desabilita slot caso o dia com inclusão autorizada não possua o tipo de alimentação */
+  if (rowName === "frequencia" && nomeCategoria === "ALIMENTAÇÃO") return false;
   if (
-    !rowName.includes("lanche") &&
-    !rowName.includes("refeicao") &&
-    !rowName.includes("sobremesa")
+    ![
+      "lanche",
+      "refeicao",
+      "repeticao_refeicao",
+      "sobremesa",
+      "repeticao_sobremesa",
+      "frequencia"
+    ].includes(rowName)
   )
     return false;
   const tiposAlimentacaoExistentes = [];
@@ -226,11 +237,22 @@ const validaAlimentacoesCEUGESTAO = (inclusoesAutorizadas, rowName, dia) => {
         }
       });
     });
+  if (rowName === "frequencia") {
+    if (nomeCategoria.includes("ENTERAL")) {
+      return (
+        !tiposAlimentacaoExistentes.includes("refeicao") &&
+        !tiposAlimentacaoExistentes.includes("lanche")
+      );
+    }
+    if (!tiposAlimentacaoExistentes.includes("lanche")) {
+      return true;
+    }
+    return false;
+  }
 
-  const tipoAlimentacao =
-    rowName.split("_")[0] === "repeticao"
-      ? rowName.split("_")[1]
-      : rowName.split("_")[0];
+  const tipoAlimentacao = rowName.includes("repeticao")
+    ? rowName.split("_")[1]
+    : rowName;
   return !tiposAlimentacaoExistentes.includes(tipoAlimentacao);
 };
 
@@ -252,7 +274,8 @@ export const desabilitarField = (
   grupoLocation = null,
   valoresPeriodosLancamentos,
   feriadosNoMes,
-  inclusoesAutorizadas
+  inclusoesAutorizadas,
+  categoriasDeMedicao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     valor =>
@@ -369,16 +392,27 @@ export const desabilitarField = (
     return (
       !validacaoDiaLetivo(dia) ||
       validacaoSemana(dia) ||
-      rowName === "matriculados" ||
       rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||
-      !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`] ||
-      Number(
-        values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-      ) === 0 ||
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
+      (nomeCategoria.includes("DIETA ESPECIAL") &&
+        (Number(
+          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+        ) === 0 ||
+          !values[
+            `numero_de_alunos__dia_${dia}__categoria_${
+              categoriasDeMedicao.find(cat => cat.nome === "ALIMENTAÇÃO").id
+            }`
+          ])) ||
       (mesConsiderado === mesAtual &&
         Number(dia) >= format(mesAnoDefault, "dd")) ||
-      validaAlimentacoesCEUGESTAO(inclusoesAutorizadas, rowName, dia)
+      validaAlimentacoesEDietasCEUGESTAO(
+        inclusoesAutorizadas,
+        rowName,
+        dia,
+        nomeCategoria
+      )
     );
   }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {

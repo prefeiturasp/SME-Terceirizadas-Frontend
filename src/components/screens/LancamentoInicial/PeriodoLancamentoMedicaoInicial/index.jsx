@@ -280,6 +280,28 @@ export default () => {
     return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
   };
 
+  const trataCategoriasMedicaoCEUGESTAO = (
+    response_categorias_medicao,
+    tiposAlimentacaoCEUGESTAO
+  ) => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return response_categorias_medicao;
+    if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
+      response_categorias_medicao = response_categorias_medicao.filter(
+        categoria => !categoria.nome.includes("ENTERAL")
+      );
+    }
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      response_categorias_medicao = response_categorias_medicao.filter(
+        categoria =>
+          !categoria.nome.includes("DIETA ESPECIAL") ||
+          categoria.nome.includes("ENTERAL")
+      );
+    }
+
+    return response_categorias_medicao;
+  };
+
   useEffect(() => {
     const mesAnoSelecionado = location.state
       ? typeof location.state.mesAnoSelecionado === String
@@ -457,7 +479,13 @@ export default () => {
       const indexLanche = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Lanche"
       );
-      if (indexLanche !== -1) {
+      if (
+        indexLanche !== -1 &&
+        (!ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+          tiposAlimentacaoCEUGESTAO.includes("lanche"))
+      ) {
         rowsDietas.push({
           nome: "Lanche",
           name: "Lanche"
@@ -480,7 +508,13 @@ export default () => {
       const indexRefeicaoDieta = cloneTiposAlimentacao.findIndex(
         ali => ali.nome === "Refeição"
       );
-      if (indexRefeicaoDieta !== -1) {
+      if (
+        indexRefeicaoDieta !== -1 &&
+        (!ehEscolaTipoCEUGESTAO(
+          location.state.solicitacaoMedicaoInicial.escola
+        ) ||
+          tiposAlimentacaoCEUGESTAO.includes("refeicao"))
+      ) {
         cloneRowsDietas.splice(cloneRowsDietas.length - 1, 0, {
           nome: "Refeição",
           name: "refeicao",
@@ -591,7 +625,10 @@ export default () => {
         mes: mes,
         ano: ano
       };
-      if (location.state.grupo !== "Programas e Projetos") {
+      if (
+        location.state.grupo !== "Programas e Projetos" &&
+        !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+      ) {
         params_dietas_autorizadas["periodo_escolar"] =
           periodo.periodo_escolar.uuid;
       } else {
@@ -688,7 +725,12 @@ export default () => {
           );
         }
         setLogQtdDietasAutorizadas(response_log_dietas_autorizadas.data);
-        setCategoriasDeMedicao(response_categorias_medicao);
+        setCategoriasDeMedicao(
+          trataCategoriasMedicaoCEUGESTAO(
+            response_categorias_medicao,
+            tiposAlimentacaoCEUGESTAO
+          )
+        );
       }
 
       let params = {
@@ -887,11 +929,11 @@ export default () => {
                     categoria.id
                   }`
                 ] = `${logFiltrado.quantidade +
-                  logQtdDietasAutorizadas.find(
+                  (logQtdDietasAutorizadas.find(
                     log =>
                       logFiltrado.dia === log.dia &&
                       log.classificacao.toUpperCase().includes("AMINOÁCIDOS")
-                  ).quantidade}`)
+                  )?.quantidade || 0)}`)
             );
 
         logQtdDietasAutorizadas &&
@@ -2180,7 +2222,8 @@ export default () => {
                                                         grupoLocation,
                                                         valoresPeriodosLancamentos,
                                                         feriadosNoMes,
-                                                        inclusoesAutorizadas
+                                                        inclusoesAutorizadas,
+                                                        categoriasDeMedicao
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2386,7 +2429,8 @@ export default () => {
                                                           grupoLocation,
                                                           valoresPeriodosLancamentos,
                                                           feriadosNoMes,
-                                                          inclusoesAutorizadas
+                                                          inclusoesAutorizadas,
+                                                          categoriasDeMedicao
                                                         )}
                                                         exibeTooltipDiaSobremesaDoce={
                                                           row.name ===
