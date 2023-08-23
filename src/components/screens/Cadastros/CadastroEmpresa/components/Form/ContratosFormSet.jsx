@@ -15,6 +15,7 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { ModalRemoveContrato } from "../ModalRemoveContrato";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { numeroProcessoContratoSEIMask } from "constants/shared";
+import { dateDelta, getDataObj } from "helpers/utilities";
 
 const contratosEstadoInicial = {
   numero_processo: null,
@@ -71,6 +72,19 @@ export const ContratosFormSet = ({
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
   };
+
+  const calcularDataFinalMinimaVigencia = index => {
+    const dataInicialVigencia = values[`vigencia_de_${index}`];
+    const dataFinalMinima = dataInicialVigencia
+      ? getDataObj(dataInicialVigencia)
+      : dateDelta(0);
+
+    return dataFinalMinima;
+  };
+
+  console.log("DADOS DENTRO DO FORM CONTRATOS:", contratos);
+
+  console.log("VALUES:", values);
 
   return (
     <>
@@ -146,6 +160,7 @@ export const ContratosFormSet = ({
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
+                          minDate={calcularDataFinalMinimaVigencia(index)}
                           maxDate={null}
                         />
                       </div>
