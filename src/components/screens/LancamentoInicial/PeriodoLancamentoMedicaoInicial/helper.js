@@ -225,11 +225,12 @@ export const desabilitarField = (
   valoresPeriodosLancamentos,
   feriadosNoMes
 ) => {
-  const valorField = valoresPeriodosLancamentos
-    .filter(valor => valor.nome_campo === rowName)
-    .filter(valor => String(valor.dia) === String(dia))
-    .filter(valor => String(valor.categoria_medicao) === String(categoria))
-    .filter(valor => valor.habilitado_correcao === true)[0];
+  const valorField = valoresPeriodosLancamentos.some(
+    valor =>
+      String(valor.categoria_medicao) === String(categoria) &&
+      String(valor.dia) === String(dia) &&
+      valor.habilitado_correcao === true
+  );
   if (
     location.state &&
     (location.state.status_periodo === "MEDICAO_APROVADA_PELA_DRE" ||
