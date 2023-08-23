@@ -213,6 +213,73 @@ export default () => {
     }
   };
 
+  const getTiposAlimentacaoCEUGESTAO = inclusoesAutorizadas => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return [];
+    const tiposAlimentacao = [];
+    inclusoesAutorizadas.forEach(inclusao => {
+      inclusao.alimentacoes.split(", ").forEach(alimentacao => {
+        if (!tiposAlimentacao.includes(alimentacao)) {
+          tiposAlimentacao.push(alimentacao);
+        }
+      });
+    });
+    return tiposAlimentacao;
+  };
+
+  const trataTabelaAlimentacaoCEUGESTAO = (
+    tiposAlimentacaoProgramasProjetosOuCEUGESTAO,
+    tiposAlimentacaoCEUGESTAO
+  ) => {
+    if (!ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
+      return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
+    if (!tiposAlimentacaoCEUGESTAO.includes("refeicao")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Refeição 1ª Oferta"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+      const indexRefeicaoRepeticao = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Repetição Refeição"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicaoRepeticao,
+        1
+      );
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("sobremesa")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Sobremesa 1º Oferta"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+      const indexRefeicaoRepeticao = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Repetição Sobremesa"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicaoRepeticao,
+        1
+      );
+    }
+
+    if (!tiposAlimentacaoCEUGESTAO.includes("lanche")) {
+      const indexRefeicao1Oferta = tiposAlimentacaoProgramasProjetosOuCEUGESTAO.findIndex(
+        ali => ali.nome === "Lanche"
+      );
+      tiposAlimentacaoProgramasProjetosOuCEUGESTAO.splice(
+        indexRefeicao1Oferta,
+        1
+      );
+    }
+
+    return tiposAlimentacaoProgramasProjetosOuCEUGESTAO;
+  };
+
   useEffect(() => {
     const mesAnoSelecionado = location.state
       ? typeof location.state.mesAnoSelecionado === String
@@ -241,7 +308,9 @@ export default () => {
       const response_vinculos = await getVinculosTipoAlimentacaoPorEscola(
         escola.uuid
       );
+
       getListaDiasSobremesaDoceAsync(escola.uuid);
+
       const periodos_escolares = response_vinculos.data.results;
       const periodo =
         periodos_escolares.find(
@@ -249,7 +318,25 @@ export default () => {
             periodo.periodo_escolar.nome ===
             (location.state ? location.state.periodo : "MANHA")
         ) || periodos_escolares[0];
+
+      const mes = format(mesAnoSelecionado, "MM");
+      const ano = getYear(mesAnoSelecionado);
+
+      response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
+        escola.uuid,
+        mes,
+        ano,
+        location && location.state && location.state.periodosInclusaoContinua
+          ? Object.keys(location.state.periodosInclusaoContinua)
+          : [periodo.periodo_escolar.nome],
+        location
+      );
+      setInclusoesAutorizadas(response_inclusoes_autorizadas);
+
       const tipos_alimentacao = periodo.tipos_alimentacao;
+      const tiposAlimentacaoCEUGESTAO = getTiposAlimentacaoCEUGESTAO(
+        response_inclusoes_autorizadas
+      );
       const cloneTiposAlimentacao = deepCopy(tipos_alimentacao);
       const tiposAlimentacaoFormatadas = cloneTiposAlimentacao
         .filter(alimentacao => alimentacao.nome !== "Lanche Emergencial")
@@ -263,7 +350,6 @@ export default () => {
               .replaceAll(/ /g, "_")
           };
         });
-
       const indexRefeicao = tiposAlimentacaoFormatadas.findIndex(
         ali => ali.nome === "Refeição"
       );
@@ -310,6 +396,7 @@ export default () => {
         name: "observacoes",
         uuid: null
       });
+
       setTabelaAlimentacaoRows(tiposAlimentacaoFormatadas);
 
       tiposAlimentacaoProgramasProjetosOuCEUGESTAO.unshift(
@@ -330,8 +417,12 @@ export default () => {
         name: "observacoes",
         uuid: null
       });
+
       setTabelaAlimentacaoProgramasProjetosOuCEUGESTAORows(
-        tiposAlimentacaoProgramasProjetosOuCEUGESTAO
+        trataTabelaAlimentacaoCEUGESTAO(
+          tiposAlimentacaoProgramasProjetosOuCEUGESTAO,
+          tiposAlimentacaoCEUGESTAO
+        )
       );
 
       const rowsDietas = [];
@@ -491,8 +582,6 @@ export default () => {
 
       setTabelaEtecAlimentacaoRows(tiposAlimentacaoEtecFormatadas);
 
-      const mes = format(mesAnoSelecionado, "MM");
-      const ano = getYear(mesAnoSelecionado);
       let response_log_dietas_autorizadas = [];
 
       let response_categorias_medicao = await getCategoriasDeMedicao();
@@ -640,17 +729,6 @@ export default () => {
           params_matriculados
         );
         setValoresMatriculados(response_matriculados.data);
-
-        response_inclusoes_autorizadas = await getSolicitacoesInclusaoAutorizadasAsync(
-          escola.uuid,
-          mes,
-          ano,
-          location && location.state && location.state.periodosInclusaoContinua
-            ? Object.keys(location.state.periodosInclusaoContinua)
-            : [periodo.periodo_escolar.nome],
-          location
-        );
-        setInclusoesAutorizadas(response_inclusoes_autorizadas);
 
         response_suspensoes_autorizadas = await getSolicitacoesSuspensoesAutorizadasAsync(
           escola.uuid,
