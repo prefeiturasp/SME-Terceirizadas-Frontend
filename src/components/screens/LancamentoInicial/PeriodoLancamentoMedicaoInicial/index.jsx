@@ -2179,7 +2179,8 @@ export default () => {
                                                         inclusoesEtecAutorizadas,
                                                         grupoLocation,
                                                         valoresPeriodosLancamentos,
-                                                        feriadosNoMes
+                                                        feriadosNoMes,
+                                                        inclusoesAutorizadas
                                                       )}
                                                       dia={column.dia}
                                                       defaultValue={defaultValue(
@@ -2384,7 +2385,8 @@ export default () => {
                                                           inclusoesEtecAutorizadas,
                                                           grupoLocation,
                                                           valoresPeriodosLancamentos,
-                                                          feriadosNoMes
+                                                          feriadosNoMes,
+                                                          inclusoesAutorizadas
                                                         )}
                                                         exibeTooltipDiaSobremesaDoce={
                                                           row.name ===

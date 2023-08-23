@@ -580,8 +580,7 @@ export const validacoesTabelaAlimentacao = (
     return "Frequência acima inválida ou não preenchida.";
   } else if (
     inputName in dadosValoresInclusoesAutorizadasState &&
-    !existeAlteracaoAlimentacaoRPL &&
-    !existeAlteracaoAlimentacaoLPR
+    !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
   ) {
     if (
       validacaoDiaLetivo(dia) &&

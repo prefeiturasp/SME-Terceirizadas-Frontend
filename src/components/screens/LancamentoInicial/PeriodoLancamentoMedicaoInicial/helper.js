@@ -206,6 +206,34 @@ export const valorZeroFrequencia = (
   return;
 };
 
+const validaAlimentacoesCEUGESTAO = (inclusoesAutorizadas, rowName, dia) => {
+  /* REGRA VÁLIDA APENAS PARA CEU GESTÃO
+
+    Desabilita slot caso o dia com inclusão autorizada não possua o tipo de alimentação */
+  if (
+    !rowName.includes("lanche") &&
+    !rowName.includes("refeicao") &&
+    !rowName.includes("sobremesa")
+  )
+    return false;
+  const tiposAlimentacaoExistentes = [];
+  inclusoesAutorizadas
+    .filter(inc => inc.dia === dia)
+    .forEach(inclusao => {
+      inclusao.alimentacoes.split(", ").forEach(alimentacao => {
+        if (!tiposAlimentacaoExistentes.includes(alimentacao)) {
+          tiposAlimentacaoExistentes.push(alimentacao);
+        }
+      });
+    });
+
+  const tipoAlimentacao =
+    rowName.split("_")[0] === "repeticao"
+      ? rowName.split("_")[1]
+      : rowName.split("_")[0];
+  return !tiposAlimentacaoExistentes.includes(tipoAlimentacao);
+};
+
 export const desabilitarField = (
   dia,
   rowName,
@@ -223,7 +251,8 @@ export const desabilitarField = (
   inclusoesEtecAutorizadas = null,
   grupoLocation = null,
   valoresPeriodosLancamentos,
-  feriadosNoMes
+  feriadosNoMes,
+  inclusoesAutorizadas
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     valor =>
@@ -348,7 +377,8 @@ export const desabilitarField = (
         values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
       ) === 0 ||
       (mesConsiderado === mesAtual &&
-        Number(dia) >= format(mesAnoDefault, "dd"))
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      validaAlimentacoesCEUGESTAO(inclusoesAutorizadas, rowName, dia)
     );
   }
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
