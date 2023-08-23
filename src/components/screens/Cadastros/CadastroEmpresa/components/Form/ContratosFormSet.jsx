@@ -150,6 +150,7 @@ export const ContratosFormSet = ({
                           name={`vigencia_de_${index}`}
                           placeholder="De"
                           writable={false}
+                          minDate={null}
                           required
                         />
                       </div>
