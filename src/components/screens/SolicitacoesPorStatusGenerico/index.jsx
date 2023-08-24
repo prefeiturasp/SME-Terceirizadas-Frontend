@@ -211,12 +211,12 @@ function SolicitacoesPorStatusGenerico(props) {
                         <Field
                           component={InputText}
                           name="titulo"
-                          placeholder="Pesquisar AAA"
+                          placeholder="Pesquisar"
                           disabled={props.disabled}
                           initialValue={propsAlimentacaoRedux.tituloAlimentacao}
                         />
                         <div className="warning-num-charac">
-                          * mínimo de 3 caracteres aaa
+                          * mínimo de 3 caracteres
                         </div>
                         <OnChange name="titulo">
                           {value => {
