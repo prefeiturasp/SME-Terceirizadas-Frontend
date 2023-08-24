@@ -367,18 +367,21 @@ export default ({
                 frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
               />
             ))}
-          {periodosInclusaoContinua && (
-            <CardLancamento
-              grupo="Programas e Projetos"
-              cor={CORES[4]}
-              tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
-              periodoSelecionado={periodoSelecionado}
-              solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
-              objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
-              quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
-              periodosInclusaoContinua={periodosInclusaoContinua}
-            />
-          )}
+          {periodosInclusaoContinua &&
+            (!ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) ||
+              frequenciasDietasCEUGESTAO) && (
+              <CardLancamento
+                grupo="Programas e Projetos"
+                cor={CORES[4]}
+                tipos_alimentacao={tiposAlimentacaoProgramasEProjetos()}
+                periodoSelecionado={periodoSelecionado}
+                solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
+                objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
+                quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                periodosInclusaoContinua={periodosInclusaoContinua}
+                frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
+              />
+            )}
           {((solicitacoesKitLanchesAutorizadas &&
             solicitacoesKitLanchesAutorizadas.length > 0) ||
             (solicitacoesAlteracaoLancheEmergencialAutorizadas &&
