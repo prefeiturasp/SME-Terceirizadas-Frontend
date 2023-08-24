@@ -3,10 +3,11 @@ pipeline {
       branchname =  env.BRANCH_NAME.toLowerCase()
       kubeconfig = getKubeconf(env.branchname)
       registryCredential = 'jenkins_registry'
+      namespace = "${env.branchname == 'development' ? 'sme-sigpae-dev' : env.branchname == 'homolog' ? 'sme-sigpae' : env.branchname == 'homolog-r2' ? 'sme-sigpae' : 'sme-sigpae' }" 
     }
   
     agent {
-      node { label 'AGENT-NODES' }
+      node { label 'builder' }
     }
 
     options {
@@ -33,7 +34,7 @@ pipeline {
         }
 
         stage('Testes') {
-          when { branch 'homolog' }
+          when { branch 'homolog_' }
           steps {
                 sh 'npm install'
                 sh 'npm run-script eslint'
@@ -48,15 +49,11 @@ pipeline {
           steps {
             script {
               imagename1 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-sigpae-frontend"
-              //imagename2 = "registry.sme.prefeitura.sp.gov.br/${env.branchname}/sme-outra"
               dockerImage1 = docker.build(imagename1, "-f Dockerfile .")
-              //dockerImage2 = docker.build(imagename2, "-f Dockerfile_outro .")
               docker.withRegistry( 'https://registry.sme.prefeitura.sp.gov.br', registryCredential ) {
               dockerImage1.push()
-              //dockerImage2.push()
               }
               sh "docker rmi $imagename1"
-              //sh "docker rmi $imagename2"
             }
           }
         }
@@ -75,14 +72,16 @@ pipeline {
                     }
                     if ( env.branchname == 'homolog' || env.branchname == 'release' ) {
                         withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('rm -f '+"$home"+'/.kube/config')
                             sh('cp $config '+"$home"+'/.kube/config')
                             sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae-treino'
                             sh('rm -f '+"$home"+'/.kube/config')
                         }
                     }
                     withCredentials([file(credentialsId: "${kubeconfig}", variable: 'config')]){
+                            sh('rm -f '+"$home"+'/.kube/config')
                             sh('cp $config '+"$home"+'/.kube/config')
-                            sh 'kubectl rollout restart deployment/sigpae-frontend -n sme-sigpae'
+                            sh "kubectl rollout restart deployment/sigpae-frontend -n ${namespace}"
                             sh('rm -f '+"$home"+'/.kube/config')
                     }
                 }
@@ -114,5 +113,5 @@ def getKubeconf(branchName) {
     else if ("master".equals(branchName)) { return "config_prd"; }
     else if ("homolog".equals(branchName)) { return "config_hom"; }
     else if ("release".equals(branchName)) { return "config_hom"; }
-    else if ("development".equals(branchName)) { return "config_dev"; }  
+    else if ("development".equals(branchName)) { return "config_release"; }  
 }
