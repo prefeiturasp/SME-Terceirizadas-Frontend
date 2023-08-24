@@ -409,6 +409,7 @@ export const CadastroEmpresa = () => {
                         contratos={contratos}
                         setContratos={setContratos}
                         terceirizada={terceirizada}
+                        values={values}
                       />
                       <LotesFormSet
                         ehDistribuidor={ehDistribuidor}
