@@ -9,7 +9,7 @@ import {
   getSolicitacoesKitLanchesAutorizadasEscola,
   getSolicitacoesSuspensoesAutorizadasEscola
 } from "services/medicaoInicial/periodoLancamentoMedicao.service";
-import { tiposAlimentacaoETEC } from "helpers/utilities";
+import { ehEscolaTipoCEUGESTAO, tiposAlimentacaoETEC } from "helpers/utilities";
 
 export const formatarPayloadPeriodoLancamento = (
   values,
@@ -19,7 +19,8 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada,
   ehGrupoSolicitacoesDeAlimentacaoUrlParam,
   ehGrupoETECUrlParam,
-  grupoLocation
+  grupoLocation,
+  tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
     values["periodo_escolar"].includes("Solicitações") ||
@@ -56,6 +57,11 @@ export const formatarPayloadPeriodoLancamento = (
 
     if (!tipoAlimentacao) {
       tipoAlimentacao = tabelaDietaEnteralRows.find(
+        row => row.name === nome_campo
+      );
+    }
+    if (!tipoAlimentacao) {
+      tipoAlimentacao = tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows.find(
         row => row.name === nome_campo
       );
     }
@@ -206,6 +212,56 @@ export const valorZeroFrequencia = (
   return;
 };
 
+const validaAlimentacoesEDietasCEUGESTAO = (
+  inclusoesAutorizadas,
+  rowName,
+  dia,
+  nomeCategoria
+) => {
+  /* REGRA VÁLIDA APENAS PARA CEU GESTÃO
+
+    Desabilita slot caso o dia com inclusão autorizada não possua o tipo de alimentação */
+  if (rowName === "frequencia" && nomeCategoria === "ALIMENTAÇÃO") return false;
+  if (
+    ![
+      "lanche",
+      "refeicao",
+      "repeticao_refeicao",
+      "sobremesa",
+      "repeticao_sobremesa",
+      "frequencia"
+    ].includes(rowName)
+  )
+    return false;
+  const tiposAlimentacaoExistentes = [];
+  inclusoesAutorizadas
+    .filter(inc => inc.dia === dia)
+    .forEach(inclusao => {
+      inclusao.alimentacoes.split(", ").forEach(alimentacao => {
+        if (!tiposAlimentacaoExistentes.includes(alimentacao)) {
+          tiposAlimentacaoExistentes.push(alimentacao);
+        }
+      });
+    });
+  if (rowName === "frequencia") {
+    if (nomeCategoria.includes("ENTERAL")) {
+      return (
+        !tiposAlimentacaoExistentes.includes("refeicao") &&
+        !tiposAlimentacaoExistentes.includes("lanche")
+      );
+    }
+    if (!tiposAlimentacaoExistentes.includes("lanche")) {
+      return true;
+    }
+    return false;
+  }
+
+  const tipoAlimentacao = rowName.includes("repeticao")
+    ? rowName.split("_")[1]
+    : rowName;
+  return !tiposAlimentacaoExistentes.includes(tipoAlimentacao);
+};
+
 export const desabilitarField = (
   dia,
   rowName,
@@ -223,7 +279,9 @@ export const desabilitarField = (
   inclusoesEtecAutorizadas = null,
   grupoLocation = null,
   valoresPeriodosLancamentos,
-  feriadosNoMes
+  feriadosNoMes,
+  inclusoesAutorizadas,
+  categoriasDeMedicao
 ) => {
   const valorField = valoresPeriodosLancamentos.some(
     valor =>
@@ -306,6 +364,33 @@ export const desabilitarField = (
       );
     }
   }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return (
+      validacaoSemana(dia) ||
+      rowName === "numero_de_alunos" ||
+      rowName === "dietas_autorizadas" ||
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
+      ((nomeCategoria.includes("DIETA ESPECIAL") &&
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]) ||
+        (Number(
+          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+        ) === 0 ||
+          !values[
+            `numero_de_alunos__dia_${dia}__categoria_${
+              categoriasDeMedicao.find(cat => cat.nome === "ALIMENTAÇÃO").id
+            }`
+          ])) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      validaAlimentacoesEDietasCEUGESTAO(
+        inclusoesAutorizadas,
+        rowName,
+        dia,
+        nomeCategoria
+      )
+    );
+  }
   if (
     grupoLocation === "Programas e Projetos" &&
     dadosValoresInclusoesAutorizadasState
@@ -336,6 +421,7 @@ export const desabilitarField = (
       }
     }
   }
+
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }

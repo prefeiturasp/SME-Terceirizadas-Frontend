@@ -23,7 +23,9 @@ export const Botao = props => {
     tooltipExterno,
     tabindex
   } = props;
+
   const [exibeMensagem, setExibeMensagem] = useState(false);
+
   return (
     <button
       type={type}
@@ -31,8 +33,8 @@ export const Botao = props => {
       data-cy={texto}
       className={`general-button ${style} ${className}`}
       onClick={onClick}
-      onMouseOver={() => setExibeMensagem(true)}
-      onMouseOut={() => setExibeMensagem(false)}
+      onMouseOver={() => tooltipExterno && setExibeMensagem(true)}
+      onMouseOut={() => tooltipExterno && setExibeMensagem(false)}
       disabled={disabled}
       accept={accept}
       tabIndex={tabindex}

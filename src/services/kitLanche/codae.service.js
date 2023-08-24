@@ -92,7 +92,6 @@ export const CODAENegaKitLancheCEMEI = async (uuid, payload) => {
 };
 
 export const CODAEAutorizaKitLancheCEMEI = async (uuid, payload) => {
-  console.log(payload);
   const url = `solicitacao-kit-lanche-cemei/${uuid}/${FLUXO.CODAE_AUTORIZA}/`;
   const response = await axios.patch(url, payload).catch(ErrorHandlerFunction);
   if (response) {

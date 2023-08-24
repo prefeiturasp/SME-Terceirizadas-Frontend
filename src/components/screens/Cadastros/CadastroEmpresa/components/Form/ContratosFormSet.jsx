@@ -15,14 +15,14 @@ import { toastError } from "components/Shareable/Toast/dialogs";
 import { ModalRemoveContrato } from "../ModalRemoveContrato";
 import MaskedInputText from "components/Shareable/Input/MaskedInputText";
 import { numeroProcessoContratoSEIMask } from "constants/shared";
+import { dateDelta, getDataObj } from "helpers/utilities";
 
 const contratosEstadoInicial = {
   numero_processo: null,
   numero_contrato: null,
   numero_ata_chamada_publica: null,
   numero_pregao: null,
-  vigencia_de: null,
-  vigencia_ate: null
+  vigencias: null
 };
 
 export const ContratosFormSet = ({
@@ -136,6 +136,12 @@ export const ContratosFormSet = ({
                           name={`vigencia_de_${index}`}
                           placeholder="De"
                           writable={false}
+                          minDate={null}
+                          maxDate={
+                            values[`vigencia_ate_${index}`]
+                              ? getDataObj(values[`vigencia_ate_${index}`])
+                              : null
+                          }
                           required
                         />
                       </div>
@@ -146,6 +152,11 @@ export const ContratosFormSet = ({
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
+                          minDate={
+                            values[`vigencia_de_${index}`]
+                              ? getDataObj(values[`vigencia_de_${index}`])
+                              : dateDelta(0)
+                          }
                           maxDate={null}
                         />
                       </div>

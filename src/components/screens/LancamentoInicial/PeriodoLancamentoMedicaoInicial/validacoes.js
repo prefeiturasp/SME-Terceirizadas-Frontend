@@ -1,4 +1,4 @@
-import { deepCopy } from "helpers/utilities";
+import { deepCopy, ehEscolaTipoCEUGESTAO } from "helpers/utilities";
 
 export const repeticaoSobremesaDoceComValorESemObservacao = (
   values,
@@ -530,6 +530,7 @@ export const validacoesTabelaAlimentacao = (
     alteracoesAlimentacaoAutorizadas.filter(
       alteracao => alteracao.dia === dia && alteracao.motivo.includes("RPL")
     ).length > 0;
+
   const existeAlteracaoAlimentacaoLPR =
     alteracoesAlimentacaoAutorizadas &&
     alteracoesAlimentacaoAutorizadas.filter(
@@ -577,7 +578,10 @@ export const validacoesTabelaAlimentacao = (
     !(inputName in dadosValoresInclusoesAutorizadasState)
   ) {
     return "Frequência acima inválida ou não preenchida.";
-  } else if (inputName in dadosValoresInclusoesAutorizadasState) {
+  } else if (
+    inputName in dadosValoresInclusoesAutorizadasState &&
+    !ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)
+  ) {
     if (
       validacaoDiaLetivo(dia) &&
       allValues[inputName] >
@@ -632,18 +636,48 @@ export const validacoesTabelaAlimentacao = (
   } else if (
     value &&
     Number(value) >
-      (location.state && location.state.grupo === "Programas e Projetos"
+      (location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? maxNumeroDeAlunos
         : maxMatriculados) &&
     inputName.includes("frequencia")
   ) {
     const complemento =
-      location.state && location.state.grupo === "Programas e Projetos"
+      location.state &&
+      (location.state.grupo === "Programas e Projetos" ||
+        ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola))
         ? "em Número de Alunos"
         : "de alunos matriculados";
     return `A quantidade de alunos frequentes não pode ser maior do que a quantidade ${complemento}.`;
   }
   return undefined;
+};
+
+const validaFrequenciaDietasCEUGESTAO = (
+  location,
+  categoria,
+  dia,
+  value,
+  rowName,
+  medicaoUuid,
+  maxDietasAutorizadas
+) => {
+  if (rowName !== "frequencia") return false;
+  const totalFrequencia = location.state.frequenciasDietasCEUGESTAO
+    .filter(
+      campoFrequencia =>
+        campoFrequencia.categoria_medicao === categoria &&
+        Number(campoFrequencia.dia) === Number(dia) &&
+        campoFrequencia.medicao_uuid !== medicaoUuid
+    )
+    .reduce(function(total, cf) {
+      return total + Number(cf.valor);
+    }, 0);
+  if (Number(value) + totalFrequencia > maxDietasAutorizadas) {
+    return "Quantidade de dietas especiais autorizadas foi excedida";
+  }
+  return false;
 };
 
 export const validacoesTabelasDietas = (
@@ -652,7 +686,9 @@ export const validacoesTabelasDietas = (
   dia,
   categoria,
   value,
-  allValues
+  allValues,
+  location,
+  medicaoUuid
 ) => {
   const idCategoriaAlimentacao = categoriasDeMedicao.find(categoria =>
     categoria.nome.includes("ALIMENTAÇÃO")
@@ -723,6 +759,17 @@ export const validacoesTabelasDietas = (
       inputName.includes("refeicao"))
   ) {
     return "Frequência acima inválida ou não preenchida.";
+  }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return validaFrequenciaDietasCEUGESTAO(
+      location,
+      categoria,
+      dia,
+      value,
+      rowName,
+      medicaoUuid,
+      maxDietasAutorizadas
+    );
   }
   return undefined;
 };

@@ -21,7 +21,8 @@ export default ({
   ehGrupoSolicitacoesDeAlimentacao = false,
   ehGrupoETEC = false,
   quantidadeAlimentacoesLancadas,
-  periodosInclusaoContinua = null
+  periodosInclusaoContinua = null,
+  frequenciasDietasCEUGESTAO
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -130,6 +131,8 @@ export default ({
         status_solicitacao: solicitacaoMedicaoInicial.status,
         justificativa_periodo: justificativaPeriodo(),
         periodosInclusaoContinua: periodosInclusaoContinua,
+        solicitacaoMedicaoInicial: solicitacaoMedicaoInicial,
+        frequenciasDietasCEUGESTAO: frequenciasDietasCEUGESTAO,
         ...location.state
       }
     });
