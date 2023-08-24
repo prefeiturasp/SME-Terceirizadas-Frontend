@@ -223,3 +223,12 @@ export const getSolicitacoesLancadas = async params => {
     return data;
   }
 };
+
+export const getCEUGESTAOFrequenciasDietas = async uuid => {
+  const url = `medicao-inicial/solicitacao-medicao-inicial/${uuid}/ceu-gestao-frequencias-dietas/`;
+  const response = await axios.get(url).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data, status: response.status };
+    return data;
+  }
+};
