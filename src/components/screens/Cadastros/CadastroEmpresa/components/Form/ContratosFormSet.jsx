@@ -22,8 +22,7 @@ const contratosEstadoInicial = {
   numero_contrato: null,
   numero_ata_chamada_publica: null,
   numero_pregao: null,
-  vigencia_de: null,
-  vigencia_ate: null
+  vigencias: null
 };
 
 export const ContratosFormSet = ({
@@ -72,19 +71,6 @@ export const ContratosFormSet = ({
     setExibirModalRemoverContrato(true);
     setContratoARemover(contratos[index]);
   };
-
-  const calcularDataFinalMinimaVigencia = index => {
-    const dataInicialVigencia = values[`vigencia_de_${index}`];
-    const dataFinalMinima = dataInicialVigencia
-      ? getDataObj(dataInicialVigencia)
-      : dateDelta(0);
-
-    return dataFinalMinima;
-  };
-
-  console.log("DADOS DENTRO DO FORM CONTRATOS:", contratos);
-
-  console.log("VALUES:", values);
 
   return (
     <>
@@ -151,6 +137,11 @@ export const ContratosFormSet = ({
                           placeholder="De"
                           writable={false}
                           minDate={null}
+                          maxDate={
+                            values[`vigencia_ate_${index}`]
+                              ? getDataObj(values[`vigencia_ate_${index}`])
+                              : null
+                          }
                           required
                         />
                       </div>
@@ -161,7 +152,11 @@ export const ContratosFormSet = ({
                           name={`vigencia_ate_${index}`}
                           placeholder="Até"
                           writable={false}
-                          minDate={calcularDataFinalMinimaVigencia(index)}
+                          minDate={
+                            values[`vigencia_de_${index}`]
+                              ? getDataObj(values[`vigencia_de_${index}`])
+                              : dateDelta(0)
+                          }
                           maxDate={null}
                         />
                       </div>
