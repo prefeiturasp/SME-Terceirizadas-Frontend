@@ -364,6 +364,33 @@ export const desabilitarField = (
       );
     }
   }
+  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
+    return (
+      validacaoSemana(dia) ||
+      rowName === "numero_de_alunos" ||
+      rowName === "dietas_autorizadas" ||
+      (nomeCategoria === "ALIMENTAÇÃO" &&
+        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
+      ((nomeCategoria.includes("DIETA ESPECIAL") &&
+        !values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]) ||
+        (Number(
+          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
+        ) === 0 ||
+          !values[
+            `numero_de_alunos__dia_${dia}__categoria_${
+              categoriasDeMedicao.find(cat => cat.nome === "ALIMENTAÇÃO").id
+            }`
+          ])) ||
+      (mesConsiderado === mesAtual &&
+        Number(dia) >= format(mesAnoDefault, "dd")) ||
+      validaAlimentacoesEDietasCEUGESTAO(
+        inclusoesAutorizadas,
+        rowName,
+        dia,
+        nomeCategoria
+      )
+    );
+  }
   if (
     grupoLocation === "Programas e Projetos" &&
     dadosValoresInclusoesAutorizadasState
@@ -394,32 +421,7 @@ export const desabilitarField = (
       }
     }
   }
-  if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
-    return (
-      validacaoSemana(dia) ||
-      rowName === "numero_de_alunos" ||
-      rowName === "dietas_autorizadas" ||
-      (nomeCategoria === "ALIMENTAÇÃO" &&
-        !values[`numero_de_alunos__dia_${dia}__categoria_${categoria}`]) ||
-      (nomeCategoria.includes("DIETA ESPECIAL") &&
-        (Number(
-          values[`dietas_autorizadas__dia_${dia}__categoria_${categoria}`]
-        ) === 0 ||
-          !values[
-            `numero_de_alunos__dia_${dia}__categoria_${
-              categoriasDeMedicao.find(cat => cat.nome === "ALIMENTAÇÃO").id
-            }`
-          ])) ||
-      (mesConsiderado === mesAtual &&
-        Number(dia) >= format(mesAnoDefault, "dd")) ||
-      validaAlimentacoesEDietasCEUGESTAO(
-        inclusoesAutorizadas,
-        rowName,
-        dia,
-        nomeCategoria
-      )
-    );
-  }
+
   if (!values[`matriculados__dia_${dia}__categoria_${categoria}`]) {
     return true;
   }
