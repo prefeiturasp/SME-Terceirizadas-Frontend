@@ -20,11 +20,12 @@ import InputText from "components/Shareable/Input/InputText";
 import { OnChange } from "react-final-form-listeners";
 import Select from "components/Shareable/Select";
 import { connect } from "react-redux";
-import { TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
+import { PERIODOS_OPTIONS, TIPOS_SOLICITACOES_OPTIONS } from "constants/shared";
 import { InputComData } from "components/Shareable/DatePicker";
 import { resetCamposAlimentacao } from "reducers/filtersAlimentacaoReducer";
 import { getDiretoriaregionalSimplissimaAxios } from "services/diretoriaRegional.service";
 import { getLotesSimples } from "services/lote.service";
+import "./style.scss";
 
 function SolicitacoesPorStatusGenerico(props) {
   const {
@@ -83,6 +84,9 @@ function SolicitacoesPorStatusGenerico(props) {
     const params = TIPO_PAGINACAO
       ? { limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE }
       : { page };
+    if (values.periodo) {
+      params["periodo"] = values.periodo;
+    }
     if (values.titulo && values.titulo.length > 2) {
       params["busca"] = values.titulo;
     }
@@ -141,7 +145,8 @@ function SolicitacoesPorStatusGenerico(props) {
       status: propsAlimentacao.statusAlimentacao || "",
       tipo_solicitacao: propsAlimentacao.tipoSolicitacaoAlimentacao || "",
       data_evento: propsAlimentacao.dataEventoAlimentacao || "",
-      diretoria_regional: propsAlimentacao.dreAlimentacao || ""
+      diretoria_regional: propsAlimentacao.dreAlimentacao || "",
+      periodo: PERIODOS_OPTIONS[0].uuid
     };
     props.resetCamposAlimentacao();
     getSolicitacoesAsync(values);
@@ -177,25 +182,53 @@ function SolicitacoesPorStatusGenerico(props) {
                 {({ handleSubmit, values }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="row">
+                      <div className="col-3">
+                        <Field
+                          component={Select}
+                          name="periodo"
+                          naoDesabilitarPrimeiraOpcao
+                          placeholder="Período"
+                          initialValue={PERIODOS_OPTIONS[0]}
+                          options={PERIODOS_OPTIONS}
+                        />
+                      </div>
+                      <OnChange name="periodo">
+                        {value => {
+                          getSolicitacoesAsync({
+                            lote: values.lote,
+                            status: values.status,
+                            busca:
+                              values.titulo && values.titulo.length > 2
+                                ? values.titulo
+                                : null,
+                            tipo_solicitacao: values.tipo_solicitacao,
+                            data_evento: values.data_evento,
+                            periodo: value,
+                            diretoria_regional: values.diretoria_regional,
+                            ...PARAMS
+                          });
+                          setCurrentPage(1);
+                        }}
+                      </OnChange>
                       <div
-                        className={`${
+                        className={`ver-mais-titulo ${
                           usuarioEhEscola() ||
                           ehCODAE ||
                           usuarioEhCODAENutriManifestacao() ||
                           usuarioEhNutricionistaSupervisao()
-                            ? "offset-3"
+                            ? ""
                             : ""
                         } col-3`}
                       >
                         <Field
                           component={InputText}
                           name="titulo"
-                          placeholder="Pesquisar"
+                          placeholder="Pesquisar AAA"
                           disabled={props.disabled}
                           initialValue={propsAlimentacaoRedux.tituloAlimentacao}
                         />
                         <div className="warning-num-charac">
-                          * mínimo de 3 caracteres
+                          * mínimo de 3 caracteres aaa
                         </div>
                         <OnChange name="titulo">
                           {value => {
@@ -204,6 +237,7 @@ function SolicitacoesPorStatusGenerico(props) {
                               getSolicitacoesAsync({
                                 busca: value && value.length > 2 ? value : null,
                                 status: values.status,
+                                periodo: values.periodo,
                                 lote: values.lote,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
@@ -236,6 +270,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                   values.titulo && values.titulo.length > 2
                                     ? values.titulo
                                     : null,
+                                periodo: values.periodo,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
                                 diretoria_regional: values.diretoria_regional,
@@ -268,6 +303,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                   ? values.titulo
                                   : null,
                               tipo_solicitacao: value,
+                              periodo: values.periodo,
                               data_evento: values.data_evento,
                               diretoria_regional: values.diretoria_regional,
                               ...PARAMS
@@ -298,6 +334,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                   : null,
                               tipo_solicitacao: values.tipo_solicitacao,
                               data_evento: value,
+                              periodo: values.periodo,
                               diretoria_regional: values.diretoria_regional,
                               ...PARAMS
                             });
@@ -326,6 +363,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                     : null,
                                 tipo_solicitacao: values.tipo_solicitacao,
                                 data_evento: values.data_evento,
+                                periodo: values.periodo,
                                 diretoria_regional: value,
                                 ...PARAMS
                               });
@@ -362,6 +400,7 @@ function SolicitacoesPorStatusGenerico(props) {
                                       : null,
                                   tipo_solicitacao: values.tipo_solicitacao,
                                   data_evento: values.data_evento,
+                                  periodo: values.periodo,
                                   diretoria_regional: values.diretoria_regional,
                                   ...PARAMS
                                 });

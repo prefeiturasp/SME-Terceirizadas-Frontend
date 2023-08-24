@@ -552,3 +552,10 @@ export const MESES = [
   "Novembro",
   "Dezembro"
 ];
+
+export const PERIODOS_OPTIONS = [
+  { nome: "últimos 2 meses", uuid: 60 },
+  { nome: "últimos 6 meses", uuid: 180 },
+  { nome: "últimos 12 meses", uuid: 365 },
+  { nome: "Todos", uuid: "" }
+];
