@@ -4,11 +4,8 @@ import {
   agregarDefault,
   converterDDMMYYYYparaYYYYMMDD,
   getError,
-  usuarioEhCODAENutriManifestacao,
   usuarioEhDRE,
   usuarioEhEmpresaTerceirizada,
-  usuarioEhEscola,
-  usuarioEhNutricionistaSupervisao,
   usuarioEhQualquerCODAE
 } from "helpers/utilities";
 import { Spin } from "antd";
@@ -210,16 +207,7 @@ function SolicitacoesPorStatusGenerico(props) {
                           setCurrentPage(1);
                         }}
                       </OnChange>
-                      <div
-                        className={`ver-mais-titulo ${
-                          usuarioEhEscola() ||
-                          ehCODAE ||
-                          usuarioEhCODAENutriManifestacao() ||
-                          usuarioEhNutricionistaSupervisao()
-                            ? ""
-                            : ""
-                        } col-3`}
-                      >
+                      <div className="ver-mais-titulo col-3">
                         <Field
                           component={InputText}
                           name="titulo"
