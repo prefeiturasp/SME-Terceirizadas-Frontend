@@ -76,6 +76,15 @@ export const getLogDietasAutorizadasPeriodo = async params => {
   }
 };
 
+export const getLogDietasAutorizadasCEIPeriodo = async params => {
+  const url = "log-quantidade-dietas-autorizadas-cei/";
+  const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
+  if (response) {
+    const data = { data: response.data };
+    return data;
+  }
+};
+
 export const getSolicitacoesInclusoesAutorizadasEscola = async params => {
   const url = "escola-solicitacoes/inclusoes-autorizadas/";
   const response = await axios.get(url, { params }).catch(ErrorHandlerFunction);
