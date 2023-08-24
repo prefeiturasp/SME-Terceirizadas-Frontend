@@ -1445,7 +1445,8 @@ export default () => {
       diasDaSemanaSelecionada,
       ehGrupoSolicitacoesDeAlimentacaoUrlParam,
       ehGrupoETECUrlParam,
-      grupoLocation
+      grupoLocation,
+      tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
     );
     if (payload.valores_medicao.length === 0)
       return (
@@ -1825,7 +1826,9 @@ export default () => {
       dia,
       categoria,
       value,
-      allValues
+      allValues,
+      location,
+      valoresPeriodosLancamentos[0].medicao_uuid
     );
   };
 

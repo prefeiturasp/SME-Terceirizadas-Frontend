@@ -19,7 +19,8 @@ export const formatarPayloadPeriodoLancamento = (
   diasDaSemanaSelecionada,
   ehGrupoSolicitacoesDeAlimentacaoUrlParam,
   ehGrupoETECUrlParam,
-  grupoLocation
+  grupoLocation,
+  tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows
 ) => {
   if (
     values["periodo_escolar"].includes("Solicitações") ||
@@ -56,6 +57,11 @@ export const formatarPayloadPeriodoLancamento = (
 
     if (!tipoAlimentacao) {
       tipoAlimentacao = tabelaDietaEnteralRows.find(
+        row => row.name === nome_campo
+      );
+    }
+    if (!tipoAlimentacao) {
+      tipoAlimentacao = tabelaAlimentacaoProgramasProjetosOuCEUGESTAORows.find(
         row => row.name === nome_campo
       );
     }
@@ -390,7 +396,6 @@ export const desabilitarField = (
   }
   if (ehEscolaTipoCEUGESTAO(location.state.solicitacaoMedicaoInicial.escola)) {
     return (
-      !validacaoDiaLetivo(dia) ||
       validacaoSemana(dia) ||
       rowName === "numero_de_alunos" ||
       rowName === "dietas_autorizadas" ||

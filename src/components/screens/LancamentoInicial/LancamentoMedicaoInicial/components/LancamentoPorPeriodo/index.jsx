@@ -19,6 +19,7 @@ import { relatorioMedicaoInicialPDF } from "services/relatorios";
 import {
   escolaEnviaCorrecaoMedicaoInicialCODAE,
   escolaEnviaCorrecaoMedicaoInicialDRE,
+  getCEUGESTAOFrequenciasDietas,
   getQuantidadeAlimentacoesLancadasPeriodoGrupo,
   getSolicitacaoMedicaoInicial
 } from "services/medicaoInicial/solicitacaoMedicaoInicial.service";
@@ -67,6 +68,9 @@ export default ({
     setSolicitacoesInclusoesEtecAutorizadas
   ] = useState(undefined);
   const [periodosCEUGESTAO, setPeriodosCEUGESTAO] = useState(undefined);
+  const [frequenciasDietasCEUGESTAO, setFrequenciasDietasCEUGESTAO] = useState(
+    undefined
+  );
   const [
     quantidadeAlimentacoesLancadas,
     setQuantidadeAlimentacoesLancadas
@@ -178,6 +182,19 @@ export default ({
     }
   };
 
+  const getCEUGESTAOFrequenciasDietasAsync = async () => {
+    const response = await getCEUGESTAOFrequenciasDietas(
+      solicitacaoMedicaoInicial.uuid
+    );
+    if (response.status === HTTP_STATUS.OK) {
+      setFrequenciasDietasCEUGESTAO(response.data);
+    } else {
+      setErroAPI(
+        "Erro ao carregar frequência de dietas de escolas CEU GESTÃO. Tente novamente mais tarde."
+      );
+    }
+  };
+
   useEffect(() => {
     getPeriodosInclusaoContinuaAsync();
     getSolicitacoesKitLanchesAutorizadasAsync();
@@ -186,7 +203,8 @@ export default ({
     getQuantidadeAlimentacoesLancadasPeriodoGrupoAsync();
     solicitacaoMedicaoInicial &&
       ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
-      getPeriodosCEUGESTAOAsync();
+      getPeriodosCEUGESTAOAsync() &&
+      getCEUGESTAOFrequenciasDietasAsync();
   }, [periodoSelecionado, solicitacaoMedicaoInicial]);
 
   const getPathPlanilhaOcorr = () => {
@@ -335,6 +353,7 @@ export default ({
             ))}
           {ehEscolaTipoCEUGESTAO(solicitacaoMedicaoInicial.escola) &&
             periodosCEUGESTAO &&
+            frequenciasDietasCEUGESTAO &&
             periodosCEUGESTAO.map((periodo, index) => (
               <CardLancamento
                 key={index}
@@ -345,6 +364,7 @@ export default ({
                 solicitacaoMedicaoInicial={solicitacaoMedicaoInicial}
                 objSolicitacaoMIFinalizada={objSolicitacaoMIFinalizada}
                 quantidadeAlimentacoesLancadas={quantidadeAlimentacoesLancadas}
+                frequenciasDietasCEUGESTAO={frequenciasDietasCEUGESTAO}
               />
             ))}
           {periodosInclusaoContinua && (
