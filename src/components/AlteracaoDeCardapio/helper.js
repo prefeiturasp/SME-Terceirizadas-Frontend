@@ -74,7 +74,6 @@ const getDaysArray = (start, end) => {
     dt <= new Date(end);
     dt.setDate(dt.getDate() + 1)
   ) {
-    console.log(dt);
     arr.push(new Date(dt).toISOString().split("T")[0]);
   }
   return arr;
